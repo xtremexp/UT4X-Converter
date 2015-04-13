@@ -9,7 +9,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -35,7 +38,16 @@ import org.xtx.ut4converter.tools.Installation;
  */
 public class FXMLController implements Initializable {
     
+    /**
+     * Link to UT3 Converter topic 
+     * Until we create topic for UT4 converter
+     */
     final String URL_UTCONV_FORUM = "http://utforums.epicgames.com/showthread.php?p=25131566";
+    
+    /**
+     * Url to git hub for source code
+     */
+    final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
     
     @FXML
     private Menu menuConvert;
@@ -53,6 +65,10 @@ public class FXMLController implements Initializable {
     private Label welcomeLabel;
     @FXML
     private Pane paneSettings;
+    @FXML
+    private MenuItem menuCheckForUpdates;
+    @FXML
+    private MenuItem menuCheckoutSourceCode;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -148,15 +164,53 @@ public class FXMLController implements Initializable {
     
     /**
      * Opens url in web browser
-     * @param uri 
+     * @param if <code>true</code> then display a confirmation dialog before opening directly web browser.
+     * @param url Url to open with web browser 
      */
-    private void open(URI uri) {
-        if (Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(uri);
-            } catch (IOException e) {}
-        } else {
+    private void openUrl(String url, boolean confirmBeforeOpen) {
+        
+        if(url == null){
+            return;
         }
+        
+        if(confirmBeforeOpen){
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Web browser access");
+            alert.setContentText("Do you want to open web browser to this url ?\n"+url);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            
+            if (result.get() != ButtonType.OK){
+                return;
+            }
+        }
+        
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop desktop = Desktop.getDesktop();
+                
+                desktop.browse(new URI(url));
+            } catch (URISyntaxException | IOException ex) {
+                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }   
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Impossible to open web browser");
+            alert.setContentText("Your system is not or does not support desktop. \n Manually go to:"+url);
+
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void openUtTopicUrl(ActionEvent event) {
+        openUrl(URL_UTCONV_FORUM, true);
+    }
+
+    @FXML
+    private void openGitHubUrl(ActionEvent event) {
+        openUrl(URL_UTCONV_GITHUB, true);
     }
 }

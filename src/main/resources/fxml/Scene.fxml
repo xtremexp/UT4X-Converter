@@ -9,7 +9,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="200" prefWidth="320" fx:controller="org.xtx.ut4converter.FXMLController">
     <children>
         <VBox>
-            <MenuBar id="XXX" prefWidth="400" >
+            <MenuBar prefWidth="400" >
                 <Menu text="Convert" fx:id="menuConvert">
                     <MenuItem text="UT99 Map" onAction="#handleConvert" fx:id="menuItemUT99Map"/>
                     <SeparatorMenuItem/>
@@ -19,6 +19,8 @@
                     <MenuItem text="Settings" onAction="#handleSettings" fx:id="menuSettings"/>
                 </Menu>
                 <Menu text="?">
+                    <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
+                    <MenuItem text="Checkout source code" onAction="#openGitHubUrl" fx:id="menuCheckoutSourceCode"/>
                     <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
                 </Menu>
             </MenuBar>
