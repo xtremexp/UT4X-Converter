@@ -140,7 +140,11 @@ public class FXMLController implements Initializable {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Map Converted!");
                 alert.setHeaderText("Operation successful.");
-                alert.setContentText("Map was succesfully converted to "+mc.getOutT3d().getAbsolutePath());
+                String msg = "Map was succesfully converted to "+mc.getOutT3d().getAbsolutePath();
+                msg += "\nRemember this file";
+                msg += "\nRead the embedded readme.txt file for further instructions";
+                
+                alert.setContentText(msg);
                 
                 alert.showAndWait();
             } catch (Exception ex) {
