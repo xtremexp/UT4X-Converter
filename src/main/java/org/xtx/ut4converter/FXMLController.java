@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -21,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -132,11 +135,34 @@ public class FXMLController implements Initializable {
         
         if(t3dFile != null){
             try {
-                MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, 2.2d);
-                mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
-                
                 ugc.setLastConverted(t3dFile);
                 uc.saveFile();
+                
+                List<String> choices = new ArrayList<>();
+                choices.add("1.5");
+                choices.add("2");
+                choices.add("2.2");
+                choices.add("2.5");
+                choices.add("3");
+
+                ChoiceDialog<String> dialog = new ChoiceDialog<>("2.2", choices);
+                dialog.setTitle("Which map scale factor you want to use?");
+                dialog.setHeaderText("Set map scale factor");
+                dialog.setContentText("Choose the map scale factor (2.2 is default):");
+
+                // Traditional way to get the response value.
+                Optional<String> result = dialog.showAndWait();
+                Double scaleFactor = null;
+                
+                if (result.isPresent()){
+                    scaleFactor = Double.valueOf(result.get());
+                } else {
+                    return;
+                }
+                
+                MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, scaleFactor);
+                mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
+                
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Map Converted!");
                 alert.setHeaderText("Operation successful.");
