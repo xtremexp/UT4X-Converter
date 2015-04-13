@@ -17,7 +17,7 @@ Unreal Tournament (1999) maps to Unreal Tournament (2015)
 UT games supported
 ------------------------------
 UT4 Converter only convert the following game for the moment:
-X) Unreal Tournament (1999) -> Unreal Tournament (2015)
+- Unreal Tournament (1999) -> Unreal Tournament (2015)
 
 If you want to convert UT games to Unreal Tournament 3,
 please download and use UT3 Converter program instead of UT4 Converter.
@@ -48,8 +48,8 @@ Windows 7 / Vista / 8 - 64 Bit
 Unreal Tournament (1999) game
 
 Java:
-X) Minimum Version required: 1.8.0_40
-X) Installation: www.java.com 
+- Minimum Version required: 1.8.0_40
+- Installation: www.java.com 
 	
 Installation and first start
 ------------------------------
@@ -67,28 +67,28 @@ How to convert map?
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
 In UT99 Editor:
-X) Open the Unreal Tournament (1999) Editor
-X) Open the map you want to convert 
+- Open the Unreal Tournament (1999) Editor
+- Open the map you want to convert 
 (note if it does not seems to load (on Windows Vista/7/8/+), copy map to some folder without spaces and re-open)
-X) Export and save map to Unreal Text map using menu "File -> Export"
+- Export and save map to Unreal Text map using menu "File -> Export"
 
 In UT4 Converter:
-X) Launch UT4 Converter
-X) Go to "Convert -> UT99 Map"
-X) Select the .t3d map file you have just saved before and press OK.
+- Launch UT4 Converter
+- Go to "Convert -> UT99 Map"
+- Select the .t3d map file you have just saved before and press OK.
 
 In UT4 Editor:
-X) Open the UT4 Editor
-X) Create new level ("File -> New level ...") and select "Empty level"
-X) Create an additive brush to simulate subtractive level: (Unreal Engine 4 does not support levels in "Subtract" mode)
+- Open the UT4 Editor
+- Create new level ("File -> New level ...") and select "Empty level"
+- Create an additive brush to simulate subtractive level: (Unreal Engine 4 does not support levels in "Subtract" mode)
 -- Go to "Modes" panel (left top of screen)
 -- Go to "BSP"
 -- Drag and drop a "Box" in the map
-X) Import converted map
+- Import converted map
 -- "File -> Import ..."
 -- Select the file and click on OK to import the map
-X) Rebuid Geometry ("Build" -> "Build Geometry")
-X) Re-size the additive brush so the entire level fits in the brush
+- Rebuid Geometry ("Build" -> "Build Geometry")
+- Re-size the additive brush so the entire level fits in the brush
 
 Optional:
 Select all surfaces of subtractive brush (select one surface + press "Ctrl+B"
