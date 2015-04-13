@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefWidth="600.0" styleClass="mainFxmlClass" fx:controller="org.xtx.ut4converter.SettingsSceneController">
+    <stylesheets>
+        <URL value="@/styles/Styles.css"/>
+    </stylesheets>
+    <VBox >
+        <GridPane hgap="10" vgap="10" alignment="CENTER" >
+            <Label text="Unreal 1 Folder" GridPane.columnIndex="0" GridPane.rowIndex="1"></Label>
+            <TextField fx:id="u1Path" GridPane.columnIndex="1" prefWidth="400.0" GridPane.rowIndex="1" disable="true">Maybe for future releases ...</TextField>
+            <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1" disable="true">Select</Button>
+            
+            <Label text="Unreal 2 Folder" GridPane.columnIndex="0" GridPane.rowIndex="2" ></Label>
+            <TextField fx:id="u2Path" GridPane.columnIndex="1" prefWidth="400.0" GridPane.rowIndex="2" disable="true">Maybe for future releases ...</TextField>
+            <Button onAction="#selectU2Folder" GridPane.columnIndex="2" GridPane.rowIndex="2" disable="true">Select</Button>
+            
+            <Label text="UT99 Folder" GridPane.columnIndex="0" GridPane.rowIndex="3" ></Label>
+            <TextField fx:id="ut99Path" GridPane.columnIndex="1" prefWidth="400.0" GridPane.rowIndex="3" editable="false" >C:\ProgramFiles</TextField>
+            <Button onAction="#selectUt99Folder" GridPane.columnIndex="2" GridPane.rowIndex="3">Select</Button>
+
+            <Label text="UT2003 Folder" GridPane.columnIndex="0" GridPane.rowIndex="4" ></Label>
+            <TextField fx:id="ut2003Folder" disable="true" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="4">Maybe for future releases ...</TextField>
+            <Button disable="true" onAction="#selectUt2003Folder" GridPane.columnIndex="2" GridPane.rowIndex="4">Select</Button>
+            
+            <Label text="UT2004 Folder" GridPane.columnIndex="0" GridPane.rowIndex="5" ></Label>
+            <TextField fx:id="ut2004Path" disable="true" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="5">Maybe for future releases ...</TextField>
+            <Button disable="true" onAction="#selectUt2004Folder" GridPane.columnIndex="2" GridPane.rowIndex="5">Select</Button>
+            
+            <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6" ></Label>
+            <TextField fx:id="ut3Folder" disable="true" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="6">Maybe for future releases ...</TextField>
+            <Button disable="true" onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
+            
+            <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="7" ></Label>
+            <TextField fx:id="ut4EditorFolder" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="TEST" ></TextField>
+            <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
+        </GridPane>
+        <Label fx:id="settingsLog" alignment="CENTER" ></Label>
+    </VBox>
+</AnchorPane>

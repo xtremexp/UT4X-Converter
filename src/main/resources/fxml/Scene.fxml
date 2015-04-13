@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="200" prefWidth="320" fx:controller="org.xtx.ut4converter.FXMLController">
+    <children>
+        <VBox>
+            <MenuBar id="XXX" prefWidth="400" >
+                <Menu text="Convert" fx:id="menuConvert">
+                    <MenuItem text="UT99 Map" onAction="#handleConvert" fx:id="menuItemUT99Map"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
+                </Menu>
+                <Menu text="Options" fx:id="menuOptions">
+                    <MenuItem text="Settings" onAction="#handleSettings" fx:id="menuSettings"/>
+                </Menu>
+                <Menu text="?">
+                    <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
+                </Menu>
+            </MenuBar>
+            
+            <Label fx:id="welcomeLabel" alignment="CENTER" >Welcome to UT4 Converter!</Label>
+            
+            <Pane fx:id="paneSettings">
+                <visible>false</visible>
+                <VBox>
+                <fx:include fx:id="test" source="SettingsScene.fxml">
+                </fx:include>
+                <Separator orientation="HORIZONTAL"/> 
+                <Button onAction="#closeSettings" GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER" >Close</Button>
+                </VBox>
+            </Pane>
+        </VBox>
+    </children>
+</AnchorPane>
