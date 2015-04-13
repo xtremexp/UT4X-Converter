@@ -15,10 +15,18 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     /**
+     * Program Name
+     */
+    public static final String PROGRAM_NAME = "UT4 Converter";
+    
+    /**
      * Version of UT4 Converter
      */
     public static final String VERSION = "0.1.0";
     
+    /**
+     * Author
+     */
     public static final String AUTHOR = "XtremeXp";
     
     @Override
@@ -28,7 +36,7 @@ public class MainApp extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("UT4 Converter - "+VERSION);
+        stage.setTitle(PROGRAM_NAME+" - "+VERSION);
         stage.setScene(scene);
         stage.show();
     }

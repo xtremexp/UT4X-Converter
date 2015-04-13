@@ -34,6 +34,7 @@ import org.xtx.ut4converter.tools.Installation;
 
 /**
  * FXML Controller class
+ * TODO i18n
  * @author XtremeXp
  */
 public class FXMLController implements Initializable {
@@ -72,14 +73,24 @@ public class FXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // TODO i18n
     }   
     
+    
+    /**
+     * Exit program
+     * @param event 
+     */
     @FXML
     private void handleExit(ActionEvent event) {
         System.exit(0);
     }
     
+    /**
+     * Opens file browser for UT99 .t3d map,
+     * then convert it.
+     * @param event 
+     */
     @FXML
     private void handleConvert(ActionEvent event) {
         // TODo refactor that code ...
@@ -140,22 +151,35 @@ public class FXMLController implements Initializable {
 
 
     
+    /**
+     * Show credits about program
+     * TODO history, library used, licence
+     * @param event 
+     */
     @FXML
     private void handleAbout(ActionEvent event) {
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("About UT4 Converter");
-        alert.setHeaderText("Version: "+MainApp.VERSION);
-        alert.setContentText("Using Java 1.8_40 version");
+        alert.setTitle("About");
+        alert.setHeaderText("About "+MainApp.PROGRAM_NAME+": ");
+        alert.setContentText("Version: "+MainApp.VERSION+"\nAuthor: "+MainApp.AUTHOR+"\nPowered by Java "+System.getProperty("java.version"));
 
         alert.showAndWait();
     }
 
+    /**
+     * Display Settings panel
+     * @param event 
+     */
     @FXML
     private void handleSettings(ActionEvent event) {
         paneSettings.setVisible(true);
         welcomeLabel.setVisible(false);
     }
 
+    /**
+     * Close settings panel and go pack to main page
+     * @param event 
+     */
     @FXML
     private void closeSettings(ActionEvent event) {
         paneSettings.setVisible(false);
