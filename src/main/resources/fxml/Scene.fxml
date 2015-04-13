@@ -27,7 +27,7 @@
             
             <Pane fx:id="paneSettings">
                 <visible>false</visible>
-                <VBox>
+                <VBox alignment="CENTER" >
                 <fx:include fx:id="test" source="SettingsScene.fxml">
                 </fx:include>
                 <Separator orientation="HORIZONTAL"/> 
