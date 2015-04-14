@@ -91,7 +91,7 @@ X) Rebuid Geometry ("Build" -> "Build Geometry")
 X) Re-size the additive brush so the entire level fits in the brush
 
 Optional:
-Select all surfaces of subtractive brush (select one surface + press "Ctrl+B"
+Select all surfaces of the brush in additive mode added (select one surface + press "Ctrl+B"
 Change "LightMap Resolution" from 32 to 1024.
 This will save a lot of filesize space for the map ! (and outside of that brush is never displayed to player)
 
