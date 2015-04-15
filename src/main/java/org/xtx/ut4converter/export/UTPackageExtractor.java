@@ -7,25 +7,49 @@ package org.xtx.ut4converter.export;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.Installation;
 
 /**
- * Will allow extra ressources from Unreal Engine packages
- * Work in progress!
+ * Base class for exporting stuff from Unreal Packages (including levels)
+ * such as Textures, Sounds, StaticMeshes and so on.
  * @author XtremeXp
  */
 public abstract class UTPackageExtractor {
     
+    /**
+     * Map converter
+     */
     protected MapConverter mapConverter;
+    
+    /**
+     * Ressource to export, 
+     * can be level, textures, sounds, ...
+     */
     protected T3DRessource ressource;
+    
+    /**
+     * Temporary logger until we embed one in MapConverter class
+     */
+    protected Logger logger;
 
+    /**
+     * 
+     * @param mapConverter Map converter
+     * @param ressource 
+     */
     public UTPackageExtractor(MapConverter mapConverter, T3DRessource ressource) {
         this.mapConverter = mapConverter;
         this.ressource = ressource;
+        this.logger = Logger.getLogger("PackageExtractor");
     }
     
+    /**
+     * Relative path from UT4 Converter program
+     * where unreal stuff will be exported
+     */
     final String CONVERSION_PATH = "Conversion";
     
     /**
@@ -56,6 +80,15 @@ public abstract class UTPackageExtractor {
      * @return 
      */
     public static UTPackageExtractor getExtractor(MapConverter mapConverter, T3DRessource ressource){
+        
+        // Only this one for the moment
+        // until we use UModel or make our own package reader to get stuff
         return new UCCExporter(mapConverter, ressource);
     }
+
+    public T3DRessource getRessource() {
+        return ressource;
+    }
+    
+    
 }

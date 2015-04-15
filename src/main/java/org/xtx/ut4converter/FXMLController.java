@@ -129,7 +129,7 @@ public class FXMLController implements Initializable {
         }
 
         // disabled until the "Unr" to "t3d" Ucc Exporter is finalized
-        //chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("UT99 Map (*.unr)", "*.unr"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("UT99 Map (*.unr)", "*.unr"));
         
         File t3dFile = chooser.showOpenDialog(new Stage());
         
@@ -137,6 +137,10 @@ public class FXMLController implements Initializable {
             try {
                 ugc.setLastConverted(t3dFile);
                 uc.saveFile();
+                
+                if(t3dFile.getName().endsWith(UTGames.UTGame.UT99.mapExtension)){
+                    //
+                }
                 
                 List<String> choices = new ArrayList<>();
                 choices.add("1.5");

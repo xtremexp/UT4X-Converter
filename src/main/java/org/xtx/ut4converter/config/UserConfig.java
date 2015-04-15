@@ -44,6 +44,21 @@ public class UserConfig {
         return new File(Installation.getProgramFolder().getAbsolutePath() + File.separator + UserConfig.USER_CONFIG_XML_FILE );
     }
     
+    /**
+     * Tells if use have specifies the path of the game
+     * @param game UT Game
+     * @return <code>true</code> if UT game path is set in settings
+     */
+    public boolean hasGamePathSet(UTGames.UTGame game){
+        UserGameConfig gameConfig = getGameConfigByGame(game);
+        
+        if(gameConfig != null){
+            return gameConfig.getPath() != null && gameConfig.getPath().exists();
+        } else {
+            return false;
+        }
+    }
+    
     public UserGameConfig getGameConfigByGame(UTGames.UTGame game){
         for(UserGameConfig gameConfig : games){
             if(gameConfig.id == game){
