@@ -2,11 +2,11 @@
 UT4 Converter Readme file
 ------------------------------
 
-Version: 0.1.0
-Author: XtremeXp
-Release Date: 13/04/2015
-Forum Topic (UT3 forums): http://utforums.epicgames.com/showthread.php?t=588848 (some topic might be created in UT4 forums)
-Source Code: Available at https://github.com/xtremexp/UT4Converter (feel free to contribute!)
+- Version: 0.1.0
+- Author: XtremeXp
+- Release Date: 13/04/2015
+- Forum Topic (UT3 forums): http://utforums.epicgames.com/showthread.php?t=588848 (some topic might be created in UT4 forums)
+- Source Code: Available at https://github.com/xtremexp/UT4Converter (feel free to contribute!)
 
 
 Description
@@ -24,20 +24,20 @@ please download and use UT3 Converter program instead of UT4 Converter.
 
 What is converted
 ------------------------------
-Brushes (mostly good but textures alignement may not be correct sometimes)
-Movers (partial)
-Pick-ups (most of them)
-Lightning (color good but brightness a bit 'high', also note that "ZoneInfo" actors from UT99
+- Brushes (mostly good but textures alignement may not be correct sometimes)
+- Movers (partial)
+- Pick-ups (most of them)
+- Lightning (color good but brightness a bit 'high', also note that "ZoneInfo" actors from UT99
 are not converted)
 
 What is NOT converted
 ------------------------------
-Model brushes
-Textures
-Sounds
-Music
-All custom scripts
-Some special actors such as TriggerEvent, ...
+- Model brushes
+- Textures
+- Sounds
+- Music
+- All custom scripts
+- Some special actors such as TriggerEvent, ...
 
 Requirements
 ------------------------------
@@ -87,22 +87,26 @@ In UT4 Editor:
 - Import converted map
 -- "File -> Import ..."
 -- Select the file and click on OK to import the map
-- Rebuid Geometry ("Build" -> "Build Geometry")
 - Re-size the additive brush so the entire level fits in the brush
+- Rebuid Geometry ("Build" -> "Build Geometry")
 
 Optional:
-Select all surfaces of the brush in additive mode added (select one surface + press "Ctrl+B"
-Change "LightMap Resolution" from 32 to 1024.
-This will save a lot of filesize space for the map ! (and outside of that brush is never displayed to player)
+- Select all surfaces of the brush in additive mode added manually (select one surface + press "Ctrl+B"
+Since we don't need to have accurate lightmap of this huge brush because
+its surfaces will never be shown to player, change "LightMap Resolution" from 32 to 1024.
+This operation will decrease a lot filezise of map!
 
 Note:
-For some maps you may have to use subtractive brushes before importing level.
+- For some maps you may have to use subtractive brushes before importing level.
 This depends mainly on layout of map (outdoor map such as CTF-Face and so on ...)
+- If after conversion your maps got lot of bsp holes, remove all
+"sheet" brushes (e.g: flat lava/water surface). The converter does remove most of them,
+but not all of them.
 
 
-Limitation/Issues/Known bugs
+Limitations / Issues
 ------------------------------
-- Ctf flagpoint not converted
+- Bug with Ctf flagbases not being converted
 
 Copyright / License
 ------------------------------
@@ -113,13 +117,27 @@ MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
 YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
 CONVERTED MAP.
 
+How to build and run latest version ?
+------------------------------
+- Download and install Java 8 JDK (Java Developement Kit)
+- Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
+- Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
+- Set "Repository URL" = https://github.com/xtremexp/UT4Converter
+- Click "Next" and select "Master" to get latest code (you may select other branches if you want to)
+- Click "Finish" and wait while project is being imported.
+Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
+- Right-Click on project and press "Run". At first time it might take several minutes to download required librairies.
+
+Note:
+Since it's a maven project, importing project with Eclipse IDE should work 
+but it has not been yet tested.
 
 Librairies / Technologies used
 ------------------------------
-Java 1.8.0_40
-Java 3D Vecmath - For handling brush data - https://vecmath.dev.java.net/
+- Java 1.8.0_40
+- Java 3D Vecmath - For handling brush data - https://vecmath.dev.java.net/
 
 History
 ------------------------------
-0.1.0: First version with basic brush, lights and pickup conversion for UT99 to UT4
+- 0.1.0: [UT99->UT4] First version with basic brush, lights and pickups conversion
 
