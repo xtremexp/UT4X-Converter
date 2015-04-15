@@ -5,6 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
@@ -61,18 +64,25 @@ public class MapConverter {
      */
     private Boolean isTeamGameType;
     
+    /**
+     * TODO move this to T3D Level converter
+     */
     SupU1UT99ToUT4Classes supportedActorClasses;
     
+    /**
+     * T3d level converter
+     */
     T3DLevelConvertor t3dLvlConvertor;
     
     
     /**
-     * Global config about where games are
+     * User configuration which allows to know
+     * where UT games are installed for exemple
      */
-    UserConfig config;
+    UserConfig userConfig;
 
     /**
-     *
+     * Original UT game the map comes from
      * @return
      */
     public UTGame getInputGame() {
@@ -80,7 +90,7 @@ public class MapConverter {
     }
 
     /**
-     *
+     * UT game the map will be converted to
      * @return
      */
     public UTGame getOutputGame() {
@@ -88,7 +98,8 @@ public class MapConverter {
     }
 
     /**
-     *
+     * Input map that will be converted 
+     * (Unreal Map (.unr, .ut2) or Unreal Text Map file (.t3d)
      * @return
      */
     public File getInMap() {
@@ -96,7 +107,7 @@ public class MapConverter {
     }
 
     /**
-     *
+     * Scale factor applied when converting
      * @return
      */
     public Double getScale() {
@@ -156,23 +167,28 @@ public class MapConverter {
     
     private void init(){
         
-        //config = Configuration.getInstance();
-        
-        if(inMap.getName().endsWith(".t3d")){
-            inT3d = inMap;
+        try {
+            //config = Configuration.getInstance();
+            
+            if(inMap.getName().endsWith(".t3d")){
+                inT3d = inMap;
+            }
+            
+            if(isTeamGameType == null){
+                isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
+            }
+            
+            
+            if(outMapName==null){
+                outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName + "-" + outputGame.shortName;
+            }
+            
+            supportedActorClasses = new SupU1UT99ToUT4Classes(this);
+            
+            userConfig = UserConfig.load();
+        } catch (JAXBException ex) {
+            Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(isTeamGameType == null){
-            isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
-        }
-        
-
-        if(outMapName==null){
-            outMapName = inT3d.getName().split("\\.")[0] + "-" + inputGame.shortName + "-" + outputGame.shortName;
-        }
-        
-        supportedActorClasses = new SupU1UT99ToUT4Classes(this);
-
     }
     
     /**
@@ -236,8 +252,8 @@ public class MapConverter {
      * Current user configuration such as program path for UT99 and so on ...
      * @return 
      */
-    public UserConfig getConfig() {
-        return config;
+    public UserConfig getUserConfig() {
+        return userConfig;
     }
     
     /**

@@ -18,7 +18,7 @@ public class T3DRessource {
     
     public static enum Type{
         UNKNOWN("Unknown"),
-        MAP("Map"),
+        LEVEL("Level"),
         TEXTURE("Texture"),
         MESH("Mesh"),
         STATICMESH("StaticMesh"),
@@ -58,7 +58,7 @@ public class T3DRessource {
      */
     String outName;
     
-    Type type;
+    public Type type;
     
     MapConverter mapConverter;
     
@@ -160,6 +160,10 @@ public class T3DRessource {
      * @return 
      */
     public File getFileContainer(){
+        
+        if(type == Type.LEVEL){
+            return new File(inName);
+        }
         
         // format is 
         if(mapConverter.getInputGame() == UTGames.UTGame.UT4){
