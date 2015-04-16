@@ -128,19 +128,14 @@ public class FXMLController implements Initializable {
             ugc.setId(UTGames.UTGame.UT99);
         }
 
-        // disabled until the "Unr" to "t3d" Ucc Exporter is finalized
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("UT99 Map (*.unr)", "*.unr"));
         
-        File t3dFile = chooser.showOpenDialog(new Stage());
+        File unrealMap = chooser.showOpenDialog(new Stage());
         
-        if(t3dFile != null){
+        if(unrealMap != null){
             try {
-                ugc.setLastConverted(t3dFile);
+                ugc.setLastConverted(unrealMap);
                 uc.saveFile();
-                
-                if(t3dFile.getName().endsWith(UTGames.UTGame.UT99.mapExtension)){
-                    //
-                }
                 
                 List<String> choices = new ArrayList<>();
                 choices.add("1.5");
@@ -164,7 +159,7 @@ public class FXMLController implements Initializable {
                     return;
                 }
                 
-                MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, scaleFactor);
+                MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, scaleFactor);
                 mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
                 
                 Alert alert = new Alert(AlertType.INFORMATION);

@@ -34,7 +34,7 @@ public abstract class UTPackageExtractor {
      * Temporary logger until we embed one in MapConverter class
      */
     protected Logger logger;
-
+    
     /**
      * 
      * @param mapConverter Map converter
