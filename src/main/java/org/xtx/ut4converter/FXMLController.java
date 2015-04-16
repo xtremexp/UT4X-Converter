@@ -17,6 +17,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +30,9 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -34,6 +40,7 @@ import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.test.TableRowLog;
 import org.xtx.ut4converter.tools.Installation;
 
 /**
@@ -74,13 +81,26 @@ public class FXMLController implements Initializable {
     private MenuItem menuCheckForUpdates;
     @FXML
     private MenuItem menuCheckoutSourceCode;
+    @FXML
+    private Pane conversion;
+    @FXML
+    private TableView<TableRowLog> convLogTableView;
+
+    @FXML
+    private TableColumn<TableRowLog, String> logTime;
+    @FXML
+    private TableColumn<TableRowLog, String> logLevel;
+    @FXML
+    private TableColumn<TableRowLog, String> logMsg;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO i18n
+
+        logTime.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("time"));
+        logLevel.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("level"));
+        logMsg.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("message"));
     }   
-    
-    
+
     /**
      * Exit program
      * @param event 
@@ -162,12 +182,15 @@ public class FXMLController implements Initializable {
                 }
                 
                 MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, scaleFactor);
+                mc.setFxmlController(this);
                 mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
                 
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Map Converted!");
                 alert.setHeaderText("Operation successful.");
                 String msg = "Map was succesfully converted to "+mc.getOutT3d().getAbsolutePath();
+                mc.getLogger().info(msg);
+                
                 msg += "\nRemember this file";
                 msg += "\nRead the embedded readme.txt file for further instructions";
                 
@@ -268,4 +291,10 @@ public class FXMLController implements Initializable {
     private void openGitHubUrl(ActionEvent event) {
         openUrl(URL_UTCONV_GITHUB, true);
     }
+
+    public TableView<TableRowLog> getConvLogTableView() {
+        return convLogTableView;
+    }
+    
+    
 }

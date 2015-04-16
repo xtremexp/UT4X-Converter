@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="200" prefWidth="320" fx:controller="org.xtx.ut4converter.FXMLController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="200" prefWidth="600" fx:controller="org.xtx.ut4converter.FXMLController">
     <children>
         <VBox>
             <MenuBar prefWidth="400" >
@@ -26,6 +26,19 @@
             </MenuBar>
             
             <Label fx:id="welcomeLabel" alignment="CENTER" >Welcome to UT4 Converter!</Label>
+            
+            <Pane fx:id="conversion">
+                <visible>true</visible>
+                <VBox alignment="CENTER" >
+                <TableView tableMenuButtonVisible="true" fx:id="convLogTableView" prefWidth="1024" >
+                    <columns>
+                        <TableColumn text="Time" fx:id="logTime"></TableColumn>
+                        <TableColumn text="Type" fx:id="logLevel"></TableColumn>
+                        <TableColumn text="Message" fx:id="logMsg" prefWidth="800"></TableColumn>
+                    </columns>
+                </TableView>
+                </VBox>
+            </Pane>
             
             <Pane fx:id="paneSettings">
                 <visible>false</visible>

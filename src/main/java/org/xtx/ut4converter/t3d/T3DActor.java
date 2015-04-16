@@ -10,6 +10,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
@@ -118,6 +119,8 @@ public abstract class T3DActor {
      *
      */
     protected boolean validWriting = true;
+    
+    protected Logger logger;
 
     /**
      * Read line of t3d file to parse data about current t3d actor being read
@@ -136,6 +139,7 @@ public abstract class T3DActor {
         this.mapConverter = mc;
         sbf = new StringBuilder();
         properties = new HashMap<>();
+        logger = mc.getLogger();
     }
     
     /**

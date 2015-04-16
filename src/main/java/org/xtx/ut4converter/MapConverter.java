@@ -5,14 +5,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javafx.scene.control.TableView;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
+import org.xtx.ut4converter.test.TableRowLog;
 
 /**
  * 
@@ -84,6 +88,17 @@ public class MapConverter {
      */
     UserConfig userConfig;
 
+    /**
+     * Reference to user interface
+     * TODO remove that name ...
+     */
+    FXMLController fxmlController;
+    
+    /**
+     * Global logger
+     */
+    static final Logger logger = Logger.getLogger("MapConverter");
+    
     /**
      * Original UT game the map comes from
      * @return
@@ -192,6 +207,38 @@ public class MapConverter {
         } catch (JAXBException ex) {
             Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    /**
+     * All logs redirect to user interface thought table
+     */
+    private void addLoggerHandlers(){
+        
+        if(fxmlController == null || fxmlController.getConvLogTableView() == null){
+            return;
+        }
+        
+        final TableView<TableRowLog> t = fxmlController.getConvLogTableView();
+        
+        
+        
+        logger.addHandler(new Handler() {
+
+            @Override
+            public void publish(LogRecord record) {
+                t.getItems().add(new TableRowLog(record));
+            }
+
+            @Override
+            public void flush() {
+                t.getItems().clear();
+            }
+
+            @Override
+            public void close() throws SecurityException {
+                // nothing to do
+            }
+        });
     }
     
     /**
@@ -330,6 +377,14 @@ public class MapConverter {
     public File getOutT3d() {
         return outT3d;
     }
+
+    public void setFxmlController(FXMLController fxmlController) {
+        this.fxmlController = fxmlController;
+        addLoggerHandlers();
+    }
     
+    public Logger getLogger(){
+        return logger;
+    }
     
 }
