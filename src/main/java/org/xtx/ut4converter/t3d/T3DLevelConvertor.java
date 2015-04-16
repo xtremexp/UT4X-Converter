@@ -94,6 +94,8 @@ public class T3DLevelConvertor  {
             throw new Exception("File "+inT3dFile.getAbsolutePath()+" does not exists!");
         }
 
+        logger.info("Converting t3d map "+inT3dFile.getName()+" to "+mapConverter.getOutputGame().name+" t3d level");
+        
         try {
             
             bfr = new BufferedReader(new FileReader(inT3dFile));
