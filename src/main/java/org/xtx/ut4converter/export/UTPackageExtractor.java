@@ -46,11 +46,7 @@ public abstract class UTPackageExtractor {
         this.logger = Logger.getLogger("PackageExtractor");
     }
     
-    /**
-     * Relative path from UT4 Converter program
-     * where unreal stuff will be exported
-     */
-    final String CONVERSION_PATH = "Conversion";
+
     
     /**
      * Tells where to export files.
@@ -60,7 +56,7 @@ public abstract class UTPackageExtractor {
     protected File getExportFolder(){
         File programFolder = Installation.getProgramFolder();
         
-        return new File(programFolder.getAbsolutePath() + File.separator + CONVERSION_PATH + File.separator + mapConverter.getInputGame().shortName + File.separator);
+        return new File(programFolder.getAbsolutePath() + File.separator + MapConverter.CONV_PATH + File.separator + mapConverter.getInputGame().shortName + File.separator);
     }
     
     
