@@ -31,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
@@ -109,16 +110,17 @@ public class FXMLController implements Initializable {
        FileChooser chooser = new FileChooser();
         chooser.setTitle("Select UT99 t3d map");
         
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("UT99 Text Map (*.t3d)", "*.t3d"));
         
         UserGameConfig ugc;
         
         if(uc != null){
             ugc = uc.getGameConfigByGame(UTGames.UTGame.UT99);
             
-            if(ugc != null && ugc.getLastConverted() != null){
-                chooser.setInitialDirectory(ugc.getLastConverted().getParentFile());
+            if(ugc != null && ugc.getPath() != null){
+                chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.shortName+" Map (*."+UTGame.UT99.mapExtension+")", "*."+UTGame.UT99.mapExtension));
+                chooser.setInitialDirectory(new File(ugc.getPath().getAbsolutePath() + File.separator + "Maps"));
             } else {
+                // TODO redirect to settings panel so user can set game path?
                 ugc = new UserGameConfig();
                 ugc.setId(UTGames.UTGame.UT99);
             }
@@ -128,7 +130,7 @@ public class FXMLController implements Initializable {
             ugc.setId(UTGames.UTGame.UT99);
         }
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("UT99 Map (*.unr)", "*.unr"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.name+" Text Map (*.t3d)", "*.t3d"));
         
         File unrealMap = chooser.showOpenDialog(new Stage());
         

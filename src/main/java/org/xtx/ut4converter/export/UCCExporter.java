@@ -27,6 +27,7 @@ import org.xtx.ut4converter.t3d.T3DRessource;
  * such as sounds to .wav,
  * textures to .bmp and so on ...
  * using the original 'ucc.exe program' ...
+ * TODO test exporter when UT4 Converter as parent folder with spaces
  * @author XtremeXp
  */
 public final class UCCExporter extends UTPackageExtractor {
@@ -204,18 +205,18 @@ public final class UCCExporter extends UTPackageExtractor {
     }
     
     /**
-     * 
-     * @param game
-     * @param fileName
-     * @param options
+     * Get command line for exporting Unreal Package ressources
+     * TODO handle other type of exports
+     * @param fileName File name or full path filename of Unreal Package to extract
      * @return 
      */
     private String getCommandLine(String fileName){
         
+        if( mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version ){
+            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + UccOptions.LEVEL_T3D + " " + getExportFolder();
+        } 
         
-        if(mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version){
-            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + UccOptions.LEVEL_T3D;
-        } else {
+        else {
             return "\"" + uccExporterPath.getAbsolutePath() + "\" batchexport  "+ fileName+ " " + UccOptions.LEVEL_T3D;
         }
     }
@@ -269,7 +270,7 @@ public final class UCCExporter extends UTPackageExtractor {
                 }
             } 
 
-
+            // TODO handle exit value
             pp.waitFor();
             pp.exitValue();
             pp.destroy();
@@ -288,6 +289,13 @@ public final class UCCExporter extends UTPackageExtractor {
                     logger.log(Level.SEVERE, logLine);
                     return null;
                 }
+                
+                // Exported Level MapCopy.MyLevel to Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
+                else if(logLine.contains("Exported Level")){
+                    File t3dMap = new File(logLine.split(" to ")[1]);
+                    logger.log(Level.INFO, "Map exported to {0}", t3dMap.getAbsolutePath());
+                    return t3dMap;
+                }
             }
 
 
@@ -302,7 +310,6 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         
-        // TODO return correct .t3d filename
         return null;
     }
     
@@ -313,5 +320,6 @@ public final class UCCExporter extends UTPackageExtractor {
         
         MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, Double.NaN);
         File t3dLevelFile = UCCExporter.exportLevelToT3d(mc, unrealMap);
+        System.exit(0);
     }
 }

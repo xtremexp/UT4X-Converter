@@ -30,6 +30,8 @@ public class MapConverter {
      */
     UTGame outputGame;
     
+    public static final String CONV_PATH = File.separator + "Converted";
+    
     /**
      * Input map. Can be either a map (.unr, ...) or unreal text map (.t3d)
      */
@@ -205,19 +207,17 @@ public class MapConverter {
             outPath.toFile().mkdirs();
         }
         
-        // t3d ever exported or directly converting from t3d file, then skip export of it 
-        // and directly convert it
-        if(inT3d != null){
-            outT3d = new File(path + File.separator + outMapName + ".t3d");
-            t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
-            t3dLvlConvertor.convert();
-        }
-        
         // Export unreal map to Unreal Text map
-        else {
+        if(inT3d == null){
             inT3d = UCCExporter.exportLevelToT3d(this, inMap);
         }
-
+        
+        outT3d = new File(path + File.separator + outMapName + ".t3d");
+        
+        // t3d ever exported or directly converting from t3d file, then skip export of it 
+        // and directly convert it
+        t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
+        t3dLvlConvertor.convert();
     }
 
     /**
