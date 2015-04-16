@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 
@@ -212,9 +213,9 @@ public class MapConverter {
             t3dLvlConvertor.convert();
         }
         
-        // TODO export t3d map
+        // Export unreal map to Unreal Text map
         else {
-            throw new UnsupportedOperationException();
+            inT3d = UCCExporter.exportLevelToT3d(this, inMap);
         }
 
     }
