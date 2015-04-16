@@ -76,7 +76,7 @@ public class T3DMatch {
         // TODO use some proper xml file to set actor 'matches'
         
         // U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, null, null, null, null, new String[]{"Health_Small_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"HealthVial"}, null, null, null, new String[]{"Health_Small_C"})
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 24f}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"MedBox"}, null, null, null, new String[]{"Health_Medium_C"})
