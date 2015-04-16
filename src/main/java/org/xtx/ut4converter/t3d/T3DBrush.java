@@ -190,6 +190,8 @@ public class T3DBrush extends T3DActor {
         // BUG UE4 DON'T LIKE SHEETS (one polygon) or "Light Brushes" mainly coming from UE1/UE2 ...
         // Else geometry building got holes so need to get rid of them ...
         if(mapConverter.toUnrealEngine4() && polyList.size() <= 4 ){
+            // TODO add note? (some sheet brushes are movers ...)
+            logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
             return false;
         }
         
