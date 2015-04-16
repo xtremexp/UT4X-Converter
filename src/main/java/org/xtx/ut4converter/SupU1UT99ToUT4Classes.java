@@ -36,7 +36,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         
         putUtClass("Light", T3DLight.class);
         putUtClass("AmbientSound", T3DSound.class);
-        
+        putUtClass("DynamicAmbientSound", T3DSound.class);
         //addPickups();
         
         addMatches(mc);
