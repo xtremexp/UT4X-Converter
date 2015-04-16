@@ -5,7 +5,9 @@
 
 package org.xtx.ut4converter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Tells which UT actor classes will be converted
@@ -20,6 +22,14 @@ public class SupportedClasses {
     protected HashMap<String, Class> classToUtActor = new HashMap();
 
 
+    /**
+     * Actors that are no longer needed for output game.
+     * E.G: PathNodes in Unreal Engine 4 which no longer exists (using some navigation volume
+     * to border the "navigation area")
+     * Useful to avoid some spammy log message 
+     * and create notes in editor for unconverted actors info
+     */
+    protected List<String> uneededActors = new ArrayList<>();
 
     /**
      *
@@ -70,6 +80,15 @@ public class SupportedClasses {
      */
     public Class getConvertActorClass(String utClassName){
         return classToUtActor.get(utClassName.toLowerCase());
+    }
+    
+    /**
+     * 
+     * @param utClassName
+     * @return 
+     */
+    public boolean noNotifyUnconverted(String utClassName){
+        return uneededActors.contains(utClassName);
     }
 
 }

@@ -40,6 +40,9 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         //addPickups();
         
         addMatches(mc);
+        
+        uneededActors.add("PathNode");
+        uneededActors.add("InventorySpot");
     }
     
     private void addMatches(MapConverter mc){
