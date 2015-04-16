@@ -168,17 +168,20 @@ public class T3DLevelConvertor  {
                     bwr.write(line + "\n");
                 }
             } else {
-                unconvertedActors.add(currentClass);
-                
-                
-                if(createNoteWhenUnconverted) {
-                    banalyseline = true;
-                    utActorClass = T3DNote.class;
-                    uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
-                    uta.analyseT3DData(line);
-                } else {
-                    logger.warning("Unconverted "+currentClass);
-                    banalyseline = false;
+                // skips some useless/uneeded actors to notify unconverted (e.g: pathnodes for UE4/UT4)
+                if(!mapConverter.getSupportedActorClasses().noNotifyUnconverted(currentClass)){
+                    unconvertedActors.add(currentClass);
+
+
+                    if(createNoteWhenUnconverted) {
+                        banalyseline = true;
+                        utActorClass = T3DNote.class;
+                        uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
+                        uta.analyseT3DData(line);
+                    } else {
+                        logger.warning("Unconverted "+currentClass);
+                        banalyseline = false;
+                    }
                 }
             }
         } 
