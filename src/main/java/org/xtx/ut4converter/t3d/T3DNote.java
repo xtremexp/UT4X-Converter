@@ -19,6 +19,13 @@ public class T3DNote extends T3DActor {
     String text;
     
     /**
+     * If true means this actor provides info
+     * about some unconverted actor
+     * so logger should display actor info
+     */
+    boolean isUnconvertedInfo;
+    
+    /**
      *
      * @param mc
      */
@@ -30,10 +37,12 @@ public class T3DNote extends T3DActor {
      *
      * @param mc
      * @param text
+     * @param isUnconvertedInfo
      */
-    public T3DNote(MapConverter mc, String text) {
+    public T3DNote(MapConverter mc, String text, boolean isUnconvertedInfo) {
         super(mc);
         this.text = text;
+        this.isUnconvertedInfo = isUnconvertedInfo;
     }
     
     /**
@@ -42,6 +51,10 @@ public class T3DNote extends T3DActor {
      */
     @Override
     public String toString(){
+        
+        if(isUnconvertedInfo){
+            logger.warning("Unconverted "+name);
+        }
         
         sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");

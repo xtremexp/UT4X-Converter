@@ -43,7 +43,7 @@ public abstract class UTPackageExtractor {
     public UTPackageExtractor(MapConverter mapConverter, T3DRessource ressource) {
         this.mapConverter = mapConverter;
         this.ressource = ressource;
-        this.logger = Logger.getLogger("PackageExtractor");
+        this.logger = mapConverter.getLogger();
     }
     
 

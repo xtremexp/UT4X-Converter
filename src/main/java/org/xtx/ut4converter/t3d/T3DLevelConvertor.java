@@ -67,6 +67,8 @@ public class T3DLevelConvertor  {
     
     boolean createNoteWhenUnconverted = true;
     
+    Logger logger;
+    
     /**
      * 
      * @param originalT3d Original t3d ut3 file
@@ -79,6 +81,7 @@ public class T3DLevelConvertor  {
         this.outT3dFile = convertedT3d;
         this.mapConverter = mc;
         this.mapConverter.setT3dLvlConvertor(this);
+        this.logger = mc.getLogger();
     }
     
     /**
@@ -171,9 +174,10 @@ public class T3DLevelConvertor  {
                 if(createNoteWhenUnconverted) {
                     banalyseline = true;
                     utActorClass = T3DNote.class;
-                    uta = new T3DNote(mapConverter, "Need convert: "+currentClass);
+                    uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
                     uta.analyseT3DData(line);
                 } else {
+                    logger.warning("Unconverted "+currentClass);
                     banalyseline = false;
                 }
             }
