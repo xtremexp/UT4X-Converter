@@ -89,10 +89,14 @@ public class UTGameTypes {
         
         if(mapName.contains("-")){
             String prefix = mapName.split("\\-")[0];
-            return getGameType(prefix).isTeamBased;
-        } else{
-            return false;
+            GameType gameType = getGameType(prefix);
+            
+            if(gameType != null){
+                return gameType.isTeamBased;
+            }
         }
+        
+        return false;
     }
     
     private static GameType getGameType(String prefix){
@@ -100,6 +104,8 @@ public class UTGameTypes {
         if(prefix == null){
             return null;
         }
+        
+        prefix = prefix.toUpperCase();
         
         switch (prefix) {
             case "DM":
