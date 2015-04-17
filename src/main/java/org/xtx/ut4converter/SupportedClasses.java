@@ -50,14 +50,17 @@ public class SupportedClasses {
     
     /**
      *
-     * @param className
+     * @param classNames
      * @param utActorClass
      */
-    public void putUtClass(String className, Class utActorClass){
-        if(className == null){
+    public void putUtClass(Class utActorClass, String... classNames){
+        if(classNames == null){
             return;
         }
-        classToUtActor.put(className.toLowerCase(), utActorClass);
+        
+        for(String className : classNames){
+            classToUtActor.put(className.toLowerCase(), utActorClass);
+        }
     }
 
 
