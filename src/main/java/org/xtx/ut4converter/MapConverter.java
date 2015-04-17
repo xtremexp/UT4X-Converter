@@ -1,5 +1,6 @@
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +17,7 @@ import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
-import org.xtx.ut4converter.test.TableRowLog;
+import org.xtx.ut4converter.ui.TableRowLog;
 
 /**
  * 
@@ -92,7 +93,7 @@ public class MapConverter {
      * Reference to user interface
      * TODO remove that name ...
      */
-    FXMLController fxmlController;
+    MainSceneController fxmlController;
     
     /**
      * Global logger
@@ -378,7 +379,7 @@ public class MapConverter {
         return outT3d;
     }
 
-    public void setFxmlController(FXMLController fxmlController) {
+    public void setFxmlController(MainSceneController fxmlController) {
         this.fxmlController = fxmlController;
         addLoggerHandlers();
     }
