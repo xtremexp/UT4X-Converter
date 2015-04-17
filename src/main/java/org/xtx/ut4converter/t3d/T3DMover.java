@@ -20,15 +20,20 @@ public class T3DMover extends T3DBrush {
     String closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
 
     /**
-     * List of positions where mover moves
-     * UTUE4: Lift Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several nav localisations unlike UE1/2)
-     * UT99: SavedPos=(X=-12345.000000,Y=-12345.000000,Z=-12345.000000), 
-     * Is relative position
+     * CHECK usage?
      */
     List<Vector3d> savedPositions = new ArrayList<>();
     
+    
     /**
-     * List of saved rotations for each "move point"
+     * List of positions where mover moves
+     * UTUE4: Lift Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several nav localisations unlike UE1/2)
+     * UT99: KeyPos(1)=(Y=72.000000)
+     */
+    List<Vector3d> positions = new ArrayList<>();
+    
+    /**
+     * CHECK usage?
      * U1: BaseRot=(Yaw=-49152)
      */
     List<Vector3d> savedRotations = new ArrayList<>();;
@@ -109,9 +114,13 @@ public class T3DMover extends T3DBrush {
         else if(line.contains("SavedRot=")){
             savedRotations.add(T3DUtils.getVector3dRot(line.split("SavedRot")[1]));
         }
-
-        // TODO check "KeyPos(1)=(Y=72.000000)" usage ? 
         
+        // UE1 -> 'Saved Positions' (UE12)
+        else if(line.contains("KeyPos")){
+            positions.add(T3DUtils.getVector3d(line.split("\\)=")[1], 0D));
+        }
+
+
         else {
             return super.analyseT3DData(line);
         }
@@ -122,8 +131,8 @@ public class T3DMover extends T3DBrush {
     @Override
     public void scale(Double newScale){
         
-        for(Vector3d savedPosition : savedPositions){
-            savedPosition.scale(newScale);
+        for(Vector3d position : positions){
+            position.scale(newScale);
         }
         
         super.scale(newScale);
@@ -151,43 +160,34 @@ public class T3DMover extends T3DBrush {
             }
             
 
-            if(!savedPositions.isEmpty()){
-                // IN UT4, at this stage, movers can only go to one location
-                // so we only take the first one
-                Vector3d liftD = savedPositions.get(0);
+            if(!positions.isEmpty()){
+                Vector3d v = positions.get(0);
                 
-                // Lift Destination in UT4 is relative position
-                if(location != null){
-                    liftD.x -= location.x;
-                    liftD.y -= location.y;
-                    liftD.z -= location.z;
-                }
-                
-                sbf.append(IDT).append("Lift Destination=(X=").append(fmt(liftD.x)).append(",Y=").append(fmt(liftD.y)).append(",Z=").append(fmt(liftD.z)).append(")\n");
+                sbf.append(IDT).append("\tLift Destination=(X=").append(fmt(v.x)).append(",Y=").append(fmt(v.y)).append(",Z=").append(fmt(v.z)).append(")\n");
             }
 
             if(openingSound != null){
-                sbf.append(IDT).append("OpenStartSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tOpenStartSound=SoundWave'").append(openingSound).append("'\n");
             }
             
             if(openedSound != null){
-                sbf.append(IDT).append("OpenStopSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tOpenStopSound=SoundWave'").append(openingSound).append("'\n");
             }
             
             if(closingSound != null){
-                sbf.append(IDT).append("CloseStartSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tCloseStartSound=SoundWave'").append(openingSound).append("'\n");
             }
             
             if(closedSound != null){
-                sbf.append(IDT).append("CloseStopSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tCloseStopSound=SoundWave'").append(openingSound).append("'\n");
             }
             
             if(stayOpenTime != null){
-                sbf.append(IDT).append("Wait at top time=").append(stayOpenTime).append("'\n");
+                sbf.append(IDT).append("\tWait at top time=").append(stayOpenTime).append("\n");
             }
             
             if(delayTime != null){
-                sbf.append(IDT).append("Retrigger Delay=").append(delayTime).append("'\n");
+                sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
             }
             
             writeEndActor();
