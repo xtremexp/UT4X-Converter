@@ -90,7 +90,7 @@ public class T3DLevelConvertor  {
      */
     public void convert() throws Exception
     {
-        if(!inT3dFile.exists()){
+        if(inT3dFile == null || !inT3dFile.exists()){
             throw new Exception("File "+inT3dFile.getAbsolutePath()+" does not exists!");
         }
 
@@ -273,13 +273,12 @@ public class T3DLevelConvertor  {
     
     /**
      * Test map conversion
-     * @param args 
      */
-    public static void main (String args[]){
+    public static void test(){
         
         try {
             
-            File t3dFile = new File("Z:\\TEMP\\UT99Maps\\CTF-Niven.t3d");
+            File t3dFile = new File("Z:\\TEMP\\UT99Maps\\Test\\DM-UT99-MoverTest.t3d");
             MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, 2.5d);
             
             //((SupU1UT99ToUT4Classes) mc.getSupportedActorClasses()).setConvertOnly("AmbientSound", T3DSound.class);
@@ -292,7 +291,10 @@ public class T3DLevelConvertor  {
             }
         } catch (Exception ex) {
             Logger.getLogger(T3DLevelConvertor.class.getName()).log(Level.SEVERE, null, ex);
+            System.exit(1);
         }
+        
+        System.exit(0);
     }
     
     
