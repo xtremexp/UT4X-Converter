@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefWidth="650.0" styleClass="mainFxmlClass" fx:controller="org.xtx.ut4converter.SettingsSceneController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefWidth="650.0" styleClass="mainFxmlClass" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
     </stylesheets>

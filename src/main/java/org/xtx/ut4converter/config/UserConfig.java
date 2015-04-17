@@ -16,7 +16,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.xtx.ut4converter.SettingsSceneController;
+import org.xtx.ut4converter.ui.SettingsSceneController;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.Installation;
 
