@@ -165,6 +165,30 @@ public class T3DMover extends T3DBrush {
                 
                 sbf.append(IDT).append("Lift Destination=(X=").append(fmt(liftD.x)).append(",Y=").append(fmt(liftD.y)).append(",Z=").append(fmt(liftD.z)).append(")\n");
             }
+
+            if(openingSound != null){
+                sbf.append(IDT).append("OpenStartSound=SoundWave'").append(openingSound).append("'\n");
+            }
+            
+            if(openedSound != null){
+                sbf.append(IDT).append("OpenStopSound=SoundWave'").append(openingSound).append("'\n");
+            }
+            
+            if(closingSound != null){
+                sbf.append(IDT).append("CloseStartSound=SoundWave'").append(openingSound).append("'\n");
+            }
+            
+            if(closedSound != null){
+                sbf.append(IDT).append("CloseStopSound=SoundWave'").append(openingSound).append("'\n");
+            }
+            
+            if(stayOpenTime != null){
+                sbf.append(IDT).append("Wait at top time=").append(stayOpenTime).append("'\n");
+            }
+            
+            if(delayTime != null){
+                sbf.append(IDT).append("Retrigger Delay=").append(delayTime).append("'\n");
+            }
             
             writeEndActor();
             

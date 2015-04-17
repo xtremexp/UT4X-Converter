@@ -30,13 +30,12 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         super();
         this.mapConv = mc;
         
-        putUtClass("Brush", T3DBrush.class);
-        putUtClass("Mover", T3DMover.class);
-        putUtClass("PlayerStart", T3DPlayerStart.class);
+        putUtClass(T3DBrush.class, "Brush");
+        putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
+        putUtClass(T3DPlayerStart.class, "PlayerStart");
         
-        putUtClass("Light", T3DLight.class);
-        putUtClass("AmbientSound", T3DSound.class);
-        putUtClass("DynamicAmbientSound", T3DSound.class);
+        putUtClass(T3DLight.class, "Light", "SpotLight", "ChargeLight");
+        putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
         //addPickups();
         
         addMatches(mc);
@@ -49,7 +48,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         HashMap<String, Match> hm = mc.getActorClassMatch();
         
         for(String c : hm.keySet()){
-            putUtClass(c, hm.get(c).t3dClass);
+            putUtClass(hm.get(c).t3dClass, c);
         }
     }
 
