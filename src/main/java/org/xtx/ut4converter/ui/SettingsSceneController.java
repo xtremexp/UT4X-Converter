@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter;
+package org.xtx.ut4converter.ui;
 
 import java.io.File;
 import java.net.URL;
@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.config.UserConfig;
 

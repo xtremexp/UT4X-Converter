@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter;
+package org.xtx.ut4converter.ui;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -17,9 +17,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,10 +34,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
+import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.test.TableRowLog;
 import org.xtx.ut4converter.tools.Installation;
 
 /**
@@ -48,7 +47,7 @@ import org.xtx.ut4converter.tools.Installation;
  * TODO i18n
  * @author XtremeXp
  */
-public class FXMLController implements Initializable {
+public class MainSceneController implements Initializable {
     
     /**
      * Link to UT3 Converter topic 
@@ -124,7 +123,7 @@ public class FXMLController implements Initializable {
             
             uc = UserConfig.load();
         } catch (JAXBException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
        FileChooser chooser = new FileChooser();
@@ -198,7 +197,7 @@ public class FXMLController implements Initializable {
                 
                 alert.showAndWait();
             } catch (Exception ex) {
-                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -270,7 +269,7 @@ public class FXMLController implements Initializable {
                 
                 desktop.browse(new URI(url));
             } catch (URISyntaxException | IOException ex) {
-                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
             }   
         } else {
             Alert alert = new Alert(AlertType.ERROR);

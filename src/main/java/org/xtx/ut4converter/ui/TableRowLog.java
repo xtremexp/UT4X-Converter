@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter.test;
+package org.xtx.ut4converter.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
