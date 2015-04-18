@@ -101,7 +101,7 @@ public abstract class T3DActor {
      * Used to add extra Z location
      * (for converting pickup for exemple not having same 'origin')solar
      */
-    Float offsetZLocation = 0f;
+    Double offsetZLocation = 0D;
     
     /**
      * TODO make global StringBuilder
@@ -336,7 +336,7 @@ public abstract class T3DActor {
      *
      * @param offsetZLocation
      */
-    public void setOffsetZLocation(float offsetZLocation) {
+    public void setOffsetZLocation(Double offsetZLocation) {
         this.offsetZLocation = offsetZLocation;
     }
     
