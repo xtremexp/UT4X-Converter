@@ -39,7 +39,13 @@ public class TableRowLog {
 
     public TableRowLog(LogRecord logRecord) {
         this.level = new SimpleStringProperty(logRecord.getLevel().getName());
-        this.message = new SimpleStringProperty(logRecord.getMessage());
+
+        if(logRecord.getThrown() != null){
+            this.message =new SimpleStringProperty(logRecord.getMessage() + " " + logRecord.getThrown().getMessage());
+        } else {
+            this.message = new SimpleStringProperty(logRecord.getMessage());
+        }
+        
         this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
     }
 

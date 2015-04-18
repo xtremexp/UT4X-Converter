@@ -118,8 +118,8 @@ public class T3DLevelConvertor  {
                     linenumber ++;
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "Error while parsing data from T3D Level File "+inT3dFile.getName());
-                    logger.log(Level.SEVERE, "Line #"+linenumber+" Original Line String:");
-                    logger.log(Level.SEVERE, "\""+line+"\"");
+                    logger.log(Level.SEVERE, "Line #"+linenumber+" Original Line String:"+line);
+                    logger.log(Level.SEVERE, "Current Actor Class: "+uta.t3dClass);
                     logger.log(Level.SEVERE, "ERROR:", e);
                     throw e;
                 }
