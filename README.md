@@ -140,8 +140,8 @@ Librairies / Technologies used
 History
 ------------------------------
 - 0.2 (in progress): 
---[UI] Added conversion log display
---[UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
+*[UI] Added conversion log display
+*[UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
 [UT99->UT4] Added support for UT99 Binary maps (.unr) as input file
 [UT99->UT4] Improved mover conversion (movement)
 [UT99->UT4] Added missing weapons conversion for
