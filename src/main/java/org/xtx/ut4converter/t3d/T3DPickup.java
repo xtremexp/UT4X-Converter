@@ -90,10 +90,6 @@ public class T3DPickup extends T3DActor {
                 // TODO refactor
                 if(match.convertProperties.containsKey(T3DMatch.Z_OFFSET) && this.getMapConverter().getInputGame() == UTGames.UTGame.UT99){
                     offsetZLocation = (Double) match.convertProperties.get(T3DMatch.Z_OFFSET);
-                    
-                    if(mapConverter.getScale() != null){
-                        offsetZLocation *= mapConverter.getScale();
-                    }
                 }
             } else {
                 validWriting = false;
