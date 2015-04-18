@@ -139,18 +139,25 @@ Librairies / Technologies used
 
 History
 ------------------------------
-- 0.2 (in progress): 
-* [UI] Added conversion log display
-* [UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
-[UT99->UT4] Added support for UT99 Binary maps (.unr) as input file
-[UT99->UT4] Improved mover conversion (movement)
-[UT99->UT4] Added missing weapons conversion for
-"FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
+- 0.2.0 - 18/04/2015: 
+  *[UI] Added conversion log display
+  *[UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
+  *[UT99->UT4] Added support for UT99 Binary maps (.unr) as input file
+  *[UT99->UT4] Improved mover conversion (moving good now)
+  *[UT99->UT4] Added LavaZone, SlimeZone, WaterZone conversion
+  *[UT99->UT4] Added missing weapons conversion for
+  "FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
 "ImpactHammer", "ASMD", "Rifle", "Minigun", "SuperShockRifle" (instagib)
-[UT99->UT4] Removed unecessary auto-created notes for unconverted actor
-for PathNodes, InventorySpot
+  *[UT99->UT4] Added teleporter conversion
+  *[UT99->UT4] Added conversion for powerup "invisibility", "ut_invisibility",
+ "ut_stealth", "nalifruit" (replaced with normal health),
+ "bandages" (replaced with healthvial), "PowerBelt"
+  *[UT99->UT4] Added conversion for ammo "Sludge", "EClip", "FlakShellAmmo", "ASMDAmmo",
+ "RifleAmmo", "RifleRound", "RifleShell", "Minigun", "SuperShockRifle" (instagib)
+  *[UT99->UT4] Removed unecessary auto-created notes for unconverted actor
+for PathNodes, InventorySpot, TranslocDest
 ...
 
 - 0.1.0 - 13/04/2015: 
-[UT99->UT4] First version with basic brush, lights and pickups conversion
+  *[UT99->UT4] First version with basic brush, lights and pickups conversion
 
