@@ -2,10 +2,10 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.2.0 (in progress)
+- Version: 0.3.0 (in progress)
 - Author: XtremeXp
-- Release Date: 13/04/2015
-- Download 0.1.0 version at: http://utforums.epicgames.com/showthread.php?t=588848
+- Release Date: 18/04/2015
+- Download 0.2.0 version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter (license undetermined yet)
 
 
@@ -139,6 +139,8 @@ Librairies / Technologies used
 
 History
 ------------------------------
+- 0.3.0 - In development
+
 - 0.2.0 - 18/04/2015: 
   * [UI] Added conversion log display
   * [UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
