@@ -198,6 +198,6 @@ public class T3DPolygon {
     } 
     
     public void setTexV(Double x, Double y, Double z){
-        texture_u = new Vector3d(x, y, z);
+        texture_v = new Vector3d(x, y, z);
     }
 }

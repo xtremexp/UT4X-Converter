@@ -60,6 +60,7 @@ public class T3DMover extends T3DBrush {
      */
     public T3DMover(MapConverter mc) {
         super(mc);
+        brushClass = BrushClass.MOVER;
     }
     
     @Override

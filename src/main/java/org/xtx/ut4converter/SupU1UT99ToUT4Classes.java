@@ -31,7 +31,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         super();
         this.mapConv = mc;
         
-        putUtClass(T3DBrush.class, "Brush");
+        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");
         putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         
@@ -44,6 +44,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         
         uneededActors.add("PathNode");
         uneededActors.add("InventorySpot");
+        uneededActors.add("TranslocDest");
     }
     
     private void addMatches(MapConverter mc){

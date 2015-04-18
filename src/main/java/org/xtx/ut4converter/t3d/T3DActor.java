@@ -128,6 +128,12 @@ public abstract class T3DActor {
      */
     protected boolean validWriting = true;
     
+    /**
+     * Force these lines to be written
+     * (not used yet for each subclass of this class)
+     */
+    protected List<String> forcedWrittenLines = new ArrayList<>();
+    
     protected Logger logger;
     
     /**
