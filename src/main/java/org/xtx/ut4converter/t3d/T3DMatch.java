@@ -34,7 +34,7 @@ public class T3DMatch {
      * to fit with floor.
      * It's import that
      */
-    private final float UT99_UT4_WP_ZOFFSET = 26f;
+    private final double UT99_UT4_WP_ZOFFSET = 26d;
     
     /**
      * Root component type for UT4 actor.
@@ -93,13 +93,13 @@ public class T3DMatch {
         
         // U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"HealthVial", "Bandages"}, null, null, null, new String[]{"Health_Small_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"MedBox", "NaliFruit"}, null, null, null, new String[]{"Health_Medium_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"HealthPack"}, null, null, null, new String[]{"Health_Large_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
         initialiseWeapons();
         
@@ -128,33 +128,33 @@ public class T3DMatch {
         // Items - ThighPads
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ThighPads.Armor_ThighPads_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         
         // PowerUp - Armor
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"Armor", "Armor2"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Chest.Armor_Chest_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         // PowerUp - ShieldBelt
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ShieldBelt.Armor_ShieldBelt_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         // PowerUp - JumpBoots
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"UT_Jumpboots", "JumpBoots"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_JumpBoots.BP_JumpBoots_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         // PowerUp - Damage Amplifier
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"UDamage", "Amplifier"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
 
         // PowerUp - Invisibility
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"Invisibility", "UT_Invisibility", "UT_Stealth"}, null, null, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Invis.BP_Invis_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
     }
     
     /**
@@ -162,25 +162,25 @@ public class T3DMatch {
      */
     private void initialiseAmmos(){
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"BioAmmo", "Sludge"}, null, null, null, new String[]{"BioAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"Miniammo", "EClip"}, null, null, null, new String[]{"MinigunAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, null, null, new String[]{"FlakAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"RocketPack", "RocketCan"}, null, null, null, new String[]{"RocketAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ShockCore", "ASMDAmmo"}, null, null, null, new String[]{"ShockAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, null, null, null, new String[]{"SniperAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, null, null, null, new String[]{"LinkAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
     }
     
     private void initialiseWeapons(){
