@@ -75,7 +75,8 @@ public class T3DPolygon {
      *
      */
     public T3DPolygon(){
-        
+        origin = new Vector3d(0d, 0d, 0d);
+        normal = new Vector3d(0d, 0d, 0d);
     }
     
     /**
@@ -174,4 +175,29 @@ public class T3DPolygon {
         
     }
     
+    
+    public void addVertex(Vector3d vertex){
+        vertices.add(vertex);
+    }
+    
+    public T3DPolygon addVertex(Double x, Double y, Double z){
+        vertices.add(new Vector3d(x, y, z));
+        return this;
+    }
+    
+    public void setNormal(Vector3d v){
+        normal = v;
+    } 
+    
+    public void setNormal(Double x, Double y, Double z){
+        normal = new Vector3d(x, y, z);
+    } 
+    
+    public void setTexU(Double x, Double y, Double z){
+        texture_u = new Vector3d(x, y, z);
+    } 
+    
+    public void setTexV(Double x, Double y, Double z){
+        texture_u = new Vector3d(x, y, z);
+    }
 }
