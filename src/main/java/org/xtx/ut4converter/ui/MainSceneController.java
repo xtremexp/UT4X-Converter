@@ -131,17 +131,19 @@ public class MainSceneController implements Initializable {
         
         
         UserGameConfig ugc;
+        boolean needSetGamePath = true;
         
         if(uc != null){
             ugc = uc.getGameConfigByGame(UTGames.UTGame.UT99);
             
             if(ugc != null && ugc.getPath() != null){
-                chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.shortName+" Map (*."+UTGame.UT99.mapExtension+")", "*."+UTGame.UT99.mapExtension));
                 chooser.setInitialDirectory(new File(ugc.getPath().getAbsolutePath() + File.separator + "Maps"));
+                needSetGamePath = false;
             } else {
                 // TODO redirect to settings panel so user can set game path?
                 ugc = new UserGameConfig();
                 ugc.setId(UTGames.UTGame.UT99);
+
             }
         } else {
             uc = new UserConfig();
@@ -149,12 +151,27 @@ public class MainSceneController implements Initializable {
             ugc.setId(UTGames.UTGame.UT99);
         }
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.name+" Text Map (*.t3d)", "*.t3d"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.shortName+" Map (*."+UTGame.UT99.mapExtension+")", "*."+UTGame.UT99.mapExtension));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(UTGame.UT99.shortName+" Text Map (*.t3d)", "*.t3d"));
         
         File unrealMap = chooser.showOpenDialog(new Stage());
         
         if(unrealMap != null){
             try {
+                // stops if selected file if .unr map file and user did not set game path in settings
+                if(unrealMap.getName().endsWith(".unr") && needSetGamePath){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Need to set game path");
+                    alert.setHeaderText("UT Game path not set");
+                    alert.setContentText("You need to set "+UTGames.UTGame.UT99+" game path to convert from .unr binary map file\n You may also convert without game path set from .t3d unreal text map.");
+
+                    alert.showAndWait();
+                    
+                    paneSettings.setVisible(true);
+                    welcomeLabel.setVisible(false);
+                    return;
+                }
+                
                 ugc.setLastConverted(unrealMap);
                 uc.saveFile();
                 
