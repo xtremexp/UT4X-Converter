@@ -25,6 +25,7 @@ public class T3DBrush extends T3DActor {
     
     protected enum BrushClass {
         BRUSH("Brush"),
+        MOVER("Mover"),
         KILLZ_VOLUME("KillZVolume"),
         UT_PAIN_VOLUME("UTPainVolume"),
         UT_WATER_VOLUME("UTWaterVolume"),
@@ -191,6 +192,19 @@ public class T3DBrush extends T3DActor {
             isAnalysingPolyData = false;
         }
         
+        // Hack, normally analysed in T3DActor but needed 
+        // for waterzone, lavazone to be converted ...
+        else if(line.contains("Begin Actor")){
+            t3dClass = getActorClass(line);
+            
+            if(isU1ZoneVolume(t3dClass)){
+                forceToBox(90d);
+            }
+            
+            // need force trigger function else name is null
+            return super.analyseT3DData(line);
+        }
+        
         else {
             return super.analyseT3DData(line);
         }
@@ -198,6 +212,34 @@ public class T3DBrush extends T3DActor {
         return true;
     }
     
+    /**
+     * 
+     * @param t3dBrushClass
+     * @return 
+     */
+    private boolean isU1ZoneVolume(String t3dBrushClass){
+        
+        if(t3dBrushClass.equals(BrushClass.BRUSH.className)){
+            return false;
+        } 
+        
+        else if(t3dBrushClass.equals("LavaZone") 
+                || t3dBrushClass.equals("SlimeZone") 
+                || t3dBrushClass.equals("VaccuumZone")
+                || t3dBrushClass.equals("NitrogenZone")
+                || t3dBrushClass.equals("VaccuumZone")){
+            brushClass = BrushClass.UT_PAIN_VOLUME;
+            forcedWrittenLines.add("DamagePerSec=10.000000");
+            return true;
+        } 
+        
+        else if(t3dBrushClass.equals("WaterZone")){
+            brushClass = BrushClass.UT_WATER_VOLUME;
+            return true;
+        }
+
+        return false;
+    }
     
     /**
      * 
@@ -230,7 +272,7 @@ public class T3DBrush extends T3DActor {
     public String toString(){
         
         
-        sbf.append(IDT).append("Begin Actor Class=Brush Name=").append(name).append("\n");
+        sbf.append(IDT).append("Begin Actor Class=").append(brushClass.getClassName()).append(" Name=").append(name).append("\n");
                 
         // Location Data
         sbf.append(IDT).append("\tBegin Object Name=\"BrushComponent0\"\n");
@@ -256,7 +298,29 @@ public class T3DBrush extends T3DActor {
         sbf.append(IDT).append("\tBrush=Model'Model_6'\n");
         sbf.append(IDT).append("\tBrushComponent=BrushComponent0\n");
         
+        for(String line : forcedWrittenLines){
+            sbf.append(IDT).append(line).append("\n");
+        }
+        
         writeEndActor();
+        
+        if(brushClass == BrushClass.UT_WATER_VOLUME || brushClass == BrushClass.UT_PAIN_VOLUME){
+            
+            // add post processvolume
+            T3DBrush postProcessVolume = createBox(mapConverter, 95d, isAdditiveMode);
+            postProcessVolume.brushClass = BrushClass.POST_PROCESS_VOLUME;
+            postProcessVolume.name = this.name+"PPVolume";
+            postProcessVolume.location = this.location;
+            
+            if("SlimeZone".equals(t3dClass)){
+                // slimy ppv copied/pasted from DM-DeckTest (UT4)
+                postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+            }
+            
+            sbf.append(postProcessVolume.toString());
+            
+            // TODO add sheet surface
+        }
         
         return sbf.toString();
     }
@@ -273,40 +337,49 @@ public class T3DBrush extends T3DActor {
         
         T3DBrush volume = new T3DBrush(mc);
         volume.isAdditiveMode = isAdditiveMode;
+        volume.forceToBox(size);
         
+        return volume;
+    }
+    
+    /**
+     * Force brush to be a box
+     * @param size 
+     */
+    public void forceToBox(Double size){
         Double s = size;
+        
+        polyList.clear();
         
         T3DPolygon p = new T3DPolygon();
         p.setNormal(-1d, 0d, 0d); p.setTexU(0d, 1d, 0d); p.setTexV(0d, 0d, -1d);
         p.addVertex(-s, -s, -s).addVertex(-s, -s, s).addVertex(-s, s, s).addVertex(-s, s, -s);
-        volume.addPolygon(p);
+        addPolygon(p);
         
         p = new T3DPolygon();
         p.setNormal(0d, 1d, 0d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
         p.addVertex(-s, s, -s).addVertex(-s, s, s).addVertex(s, s, s).addVertex(s, s, -s);
-        volume.addPolygon(p);
+        addPolygon(p);
         
         p = new T3DPolygon();
         p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d);
         p.addVertex(s, s, -s).addVertex(s, s, s).addVertex(s, -s, s).addVertex(s, -s, -s);
-        volume.addPolygon(p);
+        addPolygon(p);
         
         p = new T3DPolygon();
         p.setNormal(0d, -1d, 0d); p.setTexU(-1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
         p.addVertex(s, -s, -s).addVertex(s, -s, s).addVertex(-s, -s, s).addVertex(-s, -s, -s);
-        volume.addPolygon(p);
+        addPolygon(p);
         
         p = new T3DPolygon();
         p.setNormal(0d, 0d, 1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 1d, 0d);
         p.addVertex(-s, s, s).addVertex(-s, -s, s).addVertex(s, -s, s).addVertex(s, s, s);
-        volume.addPolygon(p);
+        addPolygon(p);
         
         p = new T3DPolygon();
         p.setNormal(0d, 0d, -1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, -1d, 0d);
         p.addVertex(-s, -s, -s).addVertex(-s, s, -s).addVertex(s, s, -s).addVertex(s, -s, -s);
-        volume.addPolygon(p);
-        
-        return volume;
+        addPolygon(p);
     }
     
     /**
