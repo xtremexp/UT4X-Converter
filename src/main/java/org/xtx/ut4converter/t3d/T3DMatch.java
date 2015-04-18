@@ -140,6 +140,9 @@ public class T3DMatch {
 
     }
     
+    /**
+     * Add matches for ammo picksups
+     */
     private void initialiseAmmos(){
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"BioAmmo", "Sludge"}, null, null, null, new String[]{"BioAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8f}));
@@ -309,7 +312,7 @@ public class T3DMatch {
         /**
          * Will use this class for convert
          */
-        public Class t3dClass;
+        public Class<? extends T3DActor> t3dClass;
         
 
         
@@ -333,7 +336,7 @@ public class T3DMatch {
          * @param game
          * @param t3dClass
          */
-        public Match(String[] names, UTGames.UTGame game, Class t3dClass){
+        public Match(String[] names, UTGames.UTGame game, Class<? extends T3DActor> t3dClass){
             
             this.actorClass.addAll(Arrays.asList(names));
             this.game = game;
@@ -348,7 +351,7 @@ public class T3DMatch {
          * @param t3dClass
          * @param convertProperty
          */
-        public Match(String[] names, UTGames.UTGame game, Class t3dClass, String convertProperty){
+        public Match(String[] names, UTGames.UTGame game, Class<? extends T3DActor> t3dClass, String convertProperty){
             this.actorClass.addAll(Arrays.asList(names));
             this.game = game;
             this.engine = game.engine;
@@ -401,7 +404,7 @@ public class T3DMatch {
         initialise();
     }
     
-    private GlobalMatch iByGame(Class t3dClass, String convertProp, String[] u1Class, String[] u2Class, String[] ut99Class, String[] ut2003Class, String[] ut2004Class, String[] ut3Class, String[] ut4Class){
+    private GlobalMatch iByGame(Class<? extends T3DActor> t3dClass, String convertProp, String[] u1Class, String[] u2Class, String[] ut99Class, String[] ut2003Class, String[] ut2004Class, String[] ut3Class, String[] ut4Class){
         
         List<Match> matches = new ArrayList<>();
         
