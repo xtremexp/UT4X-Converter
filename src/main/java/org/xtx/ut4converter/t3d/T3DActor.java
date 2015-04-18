@@ -7,7 +7,9 @@ package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -47,6 +49,12 @@ public abstract class T3DActor {
      * Original actor class
      */
     protected String t3dClass;
+    
+    
+    /**
+     * UE1/2/3? property in Events->Tag 
+     */
+    protected String tag;
     
     /**
      * Name or label of actor
@@ -121,6 +129,21 @@ public abstract class T3DActor {
     protected boolean validWriting = true;
     
     protected Logger logger;
+    
+    /**
+     * Linked actors to this one.
+     * (e.g: teleporters)
+     */
+    protected List<T3DActor> linkedTo = new ArrayList<>();
+    
+    
+    /**
+     * If true means this actor should 
+     * have a linked actor.
+     * This impact on conversion that should be always done after
+     * converting all other actors to set the linked actor
+     */
+    boolean isLinked;
 
     /**
      * Read line of t3d file to parse data about current t3d actor being read
@@ -196,6 +219,10 @@ public abstract class T3DActor {
         else if(line.contains(" Group=")||line.contains("\tGroup=")){
             addOtherData(line); 
         } 
+        
+        else if(line.contains("Tag=")){
+            tag = line.split("Tag=")[1];
+        }
         
         else {
             return false;

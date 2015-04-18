@@ -333,4 +333,57 @@ public class Geometry {
         updateDoubleZeroes(v);
     }
 
+    /**
+     * Null-safe operation to sum vectors
+     * @param a
+     * @param b
+     * @return 
+     */
+    public static Vector3d sum(Vector3d a, Vector3d b){
+        
+        if(a == null && b == null){
+            return new Vector3d(0d, 0d, 0d);
+        }
+        
+        if(a == null && b != null){
+            return new Vector3d(b.x, b.y, b.z);
+        }
+        
+        if(a != null && b == null){
+            return new Vector3d(a.x, a.y, a.z);
+        }
+        
+        if(a != null && b != null){
+            return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+        
+        return new Vector3d(0d, 0d, 0d);
+    }
+    
+    /**
+     * Null-safe operation to subtract vectors
+     * @param a
+     * @param b
+     * @return Vector a - Vector b
+     */
+    public static Vector3d subtract(Vector3d a, Vector3d b){
+        
+        if(a == null && b == null){
+            return new Vector3d(0d, 0d, 0d);
+        }
+        
+        if(a == null && b != null){
+            return new Vector3d(-b.x, -b.y, -b.z);
+        }
+        
+        if(a != null && b == null){
+            return new Vector3d(a.x, a.y, a.z);
+        }
+        
+        if(a != null && b != null){
+            return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z);
+        }
+        
+        return new Vector3d(0d, 0d, 0d);
+    }
 }
