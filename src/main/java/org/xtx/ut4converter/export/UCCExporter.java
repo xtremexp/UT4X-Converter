@@ -96,7 +96,7 @@ public final class UCCExporter extends UTPackageExtractor {
     public List<File> extract() {
                 
         if(userGameConfig.getPath() == null || !userGameConfig.getPath().exists()){
-            logger.log(Level.SEVERE, "Game path not set or does not exists in user settings for game {0}", mapConverter.getInputGame().name);
+            logger.log(Level.SEVERE, "Game path not set or does not exists in user settings for game "+ mapConverter.getInputGame().name);
             return null;
         }
         
@@ -234,12 +234,12 @@ public final class UCCExporter extends UTPackageExtractor {
         File u1Batch = null;
         
         try {
-            logger.log(Level.INFO, "Exporting {0} to Unreal Text File (.t3d)", getRessource().getInName());
+            logger.log(Level.INFO, "Exporting "+getRessource().getInName()+" to Unreal Text File (.t3d)");
 
             // Copy Unreal Map to folder of ucc.exe (/System) for U1/U2
             // or ut3.com (/Binaries) for UT3
             unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + "MapCopy.unr");
-            logger.log(Level.INFO, "Creating {0}", unrealMapCopy.getAbsolutePath());
+            logger.log(Level.INFO, "Creating " + unrealMapCopy.getAbsolutePath());
             unrealMapCopy.createNewFile();
             Files.copy(new File(getRessource().getInName()).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -281,7 +281,7 @@ public final class UCCExporter extends UTPackageExtractor {
 
                 if(logLine.contains("Failed")) {
                     String missingpackage = logLine.split("\\'")[2];
-                    logger.log(Level.SEVERE, "Impossible to export. Unreal Package {0} missing", missingpackage);
+                    logger.log(Level.SEVERE, "Impossible to export. Unreal Package "+missingpackage+" missing");
                     return null;
                 } 
 
@@ -293,7 +293,7 @@ public final class UCCExporter extends UTPackageExtractor {
                 // Exported Level MapCopy.MyLevel to Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
                 else if(logLine.contains("Exported Level")){
                     File t3dMap = new File(logLine.split(" to ")[1]);
-                    logger.log(Level.INFO, "Map exported to {0}", t3dMap.getAbsolutePath());
+                    logger.log(Level.INFO, "Map exported to "+ t3dMap.getAbsolutePath());
                     return t3dMap;
                 }
             }
