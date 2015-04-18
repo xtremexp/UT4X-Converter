@@ -48,6 +48,10 @@ public class T3DTeleporter extends T3DActor {
             
             sbf.append(IDT).append("Begin Actor Class=BP_Teleporter_New_C Name=").append(name).append("\n");
             sbf.append(IDT).append("\tBegin Object Name=\"TriggerBox\"\n");
+            
+            // to reset rotation of teleporter else teleporter destination invalid is rotation set
+            // TODO maybe make rotation the translation vector instead of doing this
+            this.rotation = null;
             writeLocRotAndScale();
             sbf.append(IDT).append("\tEnd Object\n");
             sbf.append(IDT).append("\tTriggerBox=TriggerBox\n");
@@ -56,9 +60,9 @@ public class T3DTeleporter extends T3DActor {
             // unlike U1/UT99/? do support multiple destinations
             T3DTeleporter linkedTel = (T3DTeleporter) linkedTo.get(0);
             Vector3d t = Geometry.subtract(linkedTel.location, this.location);
+            linkedTel.rotation = null;
             
-            // TODO handle "rotation" (?)
-            sbf.append(IDT).append("\tTeleportTarget=(Rotation=(X=0.000000,Y=0.000000,Z=-0.000001,W=0.999999),Translation=(X=").append(t.x).append(",Y=").append(t.y).append(",Z=").append(t.z).append("))\n");
+            sbf.append(IDT).append("\tTeleportTarget=(Translation=(X=").append(t.x).append(",Y=").append(t.y).append(",Z=").append(t.z).append("))\n");
             sbf.append(IDT).append("\tRootComponent=TriggerBox\n");
             writeEndActor();
             
@@ -83,6 +87,7 @@ public class T3DTeleporter extends T3DActor {
                     
                     if(linkedActor.tag != null && this.url.equals("\""+linkedActor.tag+"\"")){
                         this.linkedTo.add(linkedActor);
+                        linkedActor.linkedTo.add(this);
                         break;
                     }
                 }
