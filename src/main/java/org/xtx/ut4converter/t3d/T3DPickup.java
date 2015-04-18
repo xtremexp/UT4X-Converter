@@ -88,8 +88,8 @@ public class T3DPickup extends T3DActor {
                 convertedPickupClass = match.actorClass.get(0);
                 
                 // TODO refactor
-                if(match.convertProperties.containsKey(T3DMatch.FROM_UT99_Z_OFFSET) && this.getMapConverter().getInputGame() == UTGames.UTGame.UT99){
-                    offsetZLocation = (Float) match.convertProperties.get(T3DMatch.FROM_UT99_Z_OFFSET);
+                if(match.convertProperties.containsKey(T3DMatch.Z_OFFSET) && this.getMapConverter().getInputGame() == UTGames.UTGame.UT99){
+                    offsetZLocation = (Float) match.convertProperties.get(T3DMatch.Z_OFFSET);
                 }
             } else {
                 validWriting = false;
