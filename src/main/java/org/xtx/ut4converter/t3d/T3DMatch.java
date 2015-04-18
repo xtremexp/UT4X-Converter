@@ -74,6 +74,9 @@ public class T3DMatch {
         final String UT4_PROP_IT = "InventoryType";
         
         // TODO use some proper xml file to set actor 'matches'
+        // UT99->UT4, no match / check for:
+        // DispersionPistol, QuadShot, Stinger, Razorjack, Chainsaw, ripper
+
         
         // U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"HealthVial"}, null, null, null, new String[]{"Health_Small_C"})
@@ -85,47 +88,62 @@ public class T3DMatch {
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"HealthPack"}, null, null, null, new String[]{"Health_Large_C"})
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 24f}));
         
-        // Weapons UT99 -> UT4
+        // Weapons - Rocket Launcher
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"Eightball", "UT_Eightball"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/RocketLauncher/BP_RocketLauncher.BP_RocketLauncher_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
+        // Weapons - Link Gun
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PulseGun"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/LinkGun/BP_LinkGun.BP_LinkGun_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"UT_FlakCannon"}, null, null, null, new String[]{UT4_CLS_WPT})
+        // Weapons - Flak Cannon
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"UT_FlakCannon", "FlakCannon"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/Flak/BP_FlakCannon.BP_FlakCannon_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
+        // Weapons - Enforcer
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"AutoMag", "enforcer", "doubleenforcer"}, null, null, null, new String[]{UT4_CLS_WPT})
+                .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/Enforcer/Enforcer.Enforcer_C'")
+                .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
+        
+        // Weapons - Impact Hammer
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ImpactHammer"}, null, null, null, new String[]{UT4_CLS_WPT})
+                .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/ImpactHammer/BP_ImpactHammer.BP_ImpactHammer_C'")
+                .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
+        
+        // Weapons - Redeemer
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"WarheadLauncher"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/Redeemer/BP_Redeemer.BP_Redeemer_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ShockRifle"}, null, null, null, new String[]{UT4_CLS_WPT})
+        // Weapons - Shock Rifle
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ShockRifle", "ASMD"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/ShockRifle/ShockRifle.ShockRifle_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
+        // Weapons - Bio Rifle
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ut_biorifle", "GESBioRifle"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/BioRifle/BP_BioRifle.BP_BioRifle_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"SniperRifle"}, null, null, null, new String[]{UT4_CLS_WPT})
+        // Weapons - Sniper
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"SniperRifle", "Rifle"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/Sniper/BP_Sniper.BP_Sniper_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"minigun2"}, null, null, null, new String[]{UT4_CLS_WPT})
+        // Weapons - Minigun
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"minigun2", "Minigun"}, null, null, null, new String[]{UT4_CLS_WPT})
                 .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/Minigun/BP_Minigun.BP_Minigun_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
         
-        // Weapons UT99 -> UT4
+        // Weapons - Instagib
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"SuperShockRifle"}, null, null, null, new String[]{UT4_CLS_WPT})
+                .withUT4P(UT4_PROP_WPT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Weapons/ShockRifle/BP_InstagibRifle.BP_InstagibRifle_C'")
+                .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 26f}));
+        
+        // Items - ThighPads
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, null, new String[]{"PowerupBase_C"})
                 .withUT4P(UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ThighPads.Armor_ThighPads_C'")
                 .addConvP(new Object[]{FROM_UT99_Z_OFFSET, 8f}));
