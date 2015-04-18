@@ -2,11 +2,11 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.1.0
+- Version: 0.2.0 (in progress)
 - Author: XtremeXp
 - Release Date: 13/04/2015
-- Forum Topic (UT3 forums): http://utforums.epicgames.com/showthread.php?t=588848 (some topic might be created in UT4 forums)
-- Source Code: Available at https://github.com/xtremexp/UT4Converter (feel free to contribute!)
+- Download 0.1.0 version at: http://utforums.epicgames.com/showthread.php?t=588848
+- Source Code: https://github.com/xtremexp/UT4Converter (license undetermined yet)
 
 
 Description
@@ -139,5 +139,18 @@ Librairies / Technologies used
 
 History
 ------------------------------
-- 0.1.0: [UT99->UT4] First version with basic brush, lights and pickups conversion
+- 0.2 (in progress): 
+[UI] Added conversion log display
+[UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
+[UT99->UT4] Added support for UT99 Binary maps (.unr) as input file
+[UT99->UT4] Improved mover conversion (movement)
+[UT99->UT4] Added missing weapons conversion for
+"FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
+"ImpactHammer", "ASMD", "Rifle", "Minigun", "SuperShockRifle" (instagib)
+[UT99->UT4] Removed unecessary auto-created notes for unconverted actor
+for PathNodes, InventorySpot
+...
+
+- 0.1.0 - 13/04/2015: 
+[UT99->UT4] First version with basic brush, lights and pickups conversion
 
