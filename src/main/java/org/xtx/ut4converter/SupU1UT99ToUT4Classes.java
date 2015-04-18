@@ -13,6 +13,7 @@ import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.t3d.T3DMover;
 import org.xtx.ut4converter.t3d.T3DPlayerStart;
 import org.xtx.ut4converter.t3d.T3DSound;
+import org.xtx.ut4converter.t3d.T3DTeleporter;
         
 /**
  * FXML Controller class
@@ -35,6 +36,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         
         putUtClass(T3DLight.class, "Light", "SpotLight", "ChargeLight");
+        putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
         //addPickups();
         

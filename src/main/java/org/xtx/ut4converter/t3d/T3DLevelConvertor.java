@@ -14,6 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -115,9 +117,10 @@ public class T3DLevelConvertor  {
                     analyzeLine(line);
                     linenumber ++;
                 } catch (Exception e) {
-                    System.out.println("Error while parsing data from T3D Level File "+inT3dFile.getName());
-                    System.out.println("Line #"+linenumber+" Original Line String:");
-                    System.out.println("\""+line+"\"");
+                    logger.log(Level.SEVERE, "Error while parsing data from T3D Level File "+inT3dFile.getName());
+                    logger.log(Level.SEVERE, "Line #"+linenumber+" Original Line String:");
+                    logger.log(Level.SEVERE, "\""+line+"\"");
+                    logger.log(Level.SEVERE, "ERROR:", e);
                     throw e;
                 }
             }
@@ -142,6 +145,7 @@ public class T3DLevelConvertor  {
      */
     Class utActorClass = null;
     T3DActor uta = null;
+    List<T3DActor> linkedActors = new ArrayList<>();
     
     
     /**
@@ -164,6 +168,10 @@ public class T3DLevelConvertor  {
                     Constructor cons = utActorClass.getConstructor(MapConverter.class);
                     uta = (T3DActor) cons.newInstance(mapConverter);
                     uta.analyseT3DData(line);
+                    
+                    if(uta.isLinked){
+                        linkedActors.add(uta);
+                    }
                 } 
                 // Means we copy line without any "conversion"
                 else {
@@ -296,6 +304,19 @@ public class T3DLevelConvertor  {
         
         System.exit(0);
     }
+
+    /**
+     * Get list of actors that are set as linked with other one
+     * This helps converting actor to set properties
+     * dependant of other linked actor 
+     * (e.g: teleporter, property "URL" in UT99 linked with other actor
+     * with tag property
+     * @return List of linked actors
+     */
+    public List<T3DActor> getLinkedActors() {
+        return linkedActors;
+    }
+    
     
     
 }
