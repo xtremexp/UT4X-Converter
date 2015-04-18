@@ -85,7 +85,7 @@ public class T3DTeleporter extends T3DActor {
             for(T3DActor linkedActor : tlc.getLinkedActors()){
                 if(linkedActor instanceof T3DTeleporter){
                     
-                    if(linkedActor.tag != null && this.url.equals("\""+linkedActor.tag+"\"")){
+                    if(linkedActor.tag != null && this.url != null && this.url.equals("\""+linkedActor.tag+"\"")){
                         this.linkedTo.add(linkedActor);
                         linkedActor.linkedTo.add(this);
                         break;
