@@ -159,6 +159,7 @@ public class MainSceneController implements Initializable {
                 uc.saveFile();
                 
                 List<String> choices = new ArrayList<>();
+                choices.add("1");
                 choices.add("1.5");
                 choices.add("2");
                 choices.add("2.2");
