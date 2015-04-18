@@ -21,6 +21,25 @@ import org.xtx.ut4converter.tools.Geometry;
  */
 public class T3DBrush extends T3DActor {
 
+    BrushClass brushClass = BrushClass.BRUSH;
+    
+    protected enum BrushClass {
+        BRUSH("Brush"),
+        KILLZ_VOLUME("KillZVolume"),
+        UT_PAIN_VOLUME("UTPainVolume"),
+        UT_WATER_VOLUME("UTWaterVolume"),
+        POST_PROCESS_VOLUME("PostProcessVolume");
+        
+        String className;
+        
+        BrushClass(String className){
+            this.className = className;
+        }
+        
+        public String getClassName(){
+            return this.className;
+        }
+    }
     
     private static final String UE4_BRUSH_TYPE_SUBTRACT = "Brush_Subtract";
     
@@ -245,94 +264,49 @@ public class T3DBrush extends T3DActor {
     /**
      * Since UE4 does not support create level in 'substractive' mode we
      * need to create a big brush in substractive mode to simulate this.
-     * @param boxSize
+     * @param mc
+     * @param size
      * @param isAdditiveMode
-     * @param material Défault material to aply
      * @return 
      */
-    public static String writeUE4BoxBrush(Integer boxSize, boolean isAdditiveMode, String material){
+    public static T3DBrush createBox(MapConverter mc, Double size, boolean isAdditiveMode){
         
-        String size = "25000.00000";
+        T3DBrush volume = new T3DBrush(mc);
+        volume.isAdditiveMode = isAdditiveMode;
         
-        StringBuilder sbf = new StringBuilder();
-        sbf.append(IDT).append("Begin Actor Class=Brush\n");
-        sbf.append(IDT).append("Begin Object Class=BrushComponent Name=\"BrushComponent0\"\n");
-        sbf.append(IDT).append("End Object\n");
-        sbf.append(IDT).append("Begin Object Name=\"BrushComponent0\"\n");
-        sbf.append(IDT).append("\tBrush=Model'Model_10'\n");
-        sbf.append(IDT).append("End Object\n");
-        sbf.append(IDT).append("BrushType=").append(isAdditiveMode ? UE4_BRUSH_TYPE_ADD : UE3_BRUSH_TYPE_SUBTRACT).append("\n");
-        sbf.append(IDT).append("Begin Brush Name=Model_10\n");
-        sbf.append(IDT).append("\tBegin PolyList\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   -").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   -00001.000000,+00000.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU +00000.000000,+00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,+00000.000000,-00001.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   -").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   +00000.000000,+00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU +00001.000000,-00000.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,+00000.000000,-00001.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   +").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   +00001.000000,+00000.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU +00000.000000,-00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,+00000.000000,-00001.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   +").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   +00000.000000,-00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU -00001.000000,-00000.000000,-00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,+00000.000000,-00001.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   -").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   +00000.000000,+00000.000000,+00001.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU +00001.000000,+00000.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,+00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",+").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\t\t\tOrigin   -").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tNormal   +00000.000000,+00000.000000,-00001.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureU +00001.000000,+00000.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tTextureV +00000.000000,-00001.000000,+00000.000000\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   -").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",+").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\t\tVertex   +").append(size).append(",-").append(size).append(",-").append(size).append("\n");
-        sbf.append(IDT).append("\t\tBegin Polygon\n");
-        sbf.append(IDT).append("\tEnd PolyList\n");
-        sbf.append(IDT).append("End Brush\n");
-        sbf.append(IDT).append("Brush=Model'Model_10'\n");
-        sbf.append(IDT).append("BrushComponent=BrushComponent0\n");
-        sbf.append(IDT).append("RootComponent=BrushComponent0\n");
-        sbf.append(IDT).append("ActorLabel=\"Box Brush\"\n");
-        sbf.append(IDT).append("End Actor\n");
-
-        return sbf.toString();
+        Double s = size;
+        
+        T3DPolygon p = new T3DPolygon();
+        p.setNormal(-1d, 0d, 0d); p.setTexU(0d, 1d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(-s, -s, -s).addVertex(-s, -s, s).addVertex(-s, s, s).addVertex(-s, s, -s);
+        volume.addPolygon(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 1d, 0d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(-s, s, -s).addVertex(-s, s, s).addVertex(s, s, s).addVertex(s, s, -s);
+        volume.addPolygon(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(s, s, -s).addVertex(s, s, s).addVertex(s, -s, s).addVertex(s, -s, -s);
+        volume.addPolygon(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, -1d, 0d); p.setTexU(-1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(s, -s, -s).addVertex(s, -s, s).addVertex(-s, -s, s).addVertex(-s, -s, -s);
+        volume.addPolygon(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 0d, 1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 1d, 0d);
+        p.addVertex(-s, s, s).addVertex(-s, -s, s).addVertex(s, -s, s).addVertex(s, s, s);
+        volume.addPolygon(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 0d, -1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, -1d, 0d);
+        p.addVertex(-s, -s, -s).addVertex(-s, s, -s).addVertex(s, s, -s).addVertex(s, -s, -s);
+        volume.addPolygon(p);
+        
+        return volume;
     }
     
     /**
@@ -438,5 +412,10 @@ public class T3DBrush extends T3DActor {
         
         
         super.scale(newScale);
+    }
+    
+    
+    private void addPolygon(T3DPolygon p){
+        polyList.add(p);
     }
 }
