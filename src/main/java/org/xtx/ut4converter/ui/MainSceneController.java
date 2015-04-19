@@ -40,7 +40,9 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.UIUtils;
 
 /**
  * FXML Controller class
@@ -200,20 +202,24 @@ public class MainSceneController implements Initializable {
                 
                 MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, scaleFactor);
                 mc.setMainSceneController(this);
-                mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
+                // TODO make getter in mc to know where to convert stuff!
+                mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + T3DRessource.Type.LEVEL.name());
                 
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Map Converted!");
-                alert.setHeaderText("Operation successful.");
                 String msg = "Map was succesfully converted to "+mc.getOutT3d().getAbsolutePath();
                 mc.getLogger().info(msg);
+
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText("Map Converted");
+                alert.setContentText(msg + ".\n Do you want to open folder with converted stuff?");
+
+                Optional<ButtonType> result2 = alert.showAndWait();
+
+                if (result2.get() != ButtonType.OK){
+                    return;
+                }
                 
-                msg += "\nRemember this file";
-                msg += "\nRead the embedded readme.txt file for further instructions";
-                
-                alert.setContentText(msg);
-                
-                alert.showAndWait();
+                UIUtils.openExplorer(mc.getOutT3d().getParentFile().getParentFile());
             } catch (Exception ex) {
                 Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
             }

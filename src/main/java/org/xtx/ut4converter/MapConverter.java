@@ -2,8 +2,10 @@ package org.xtx.ut4converter;
 
 import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -119,6 +121,11 @@ public class MapConverter {
     public Map<String, UPackageRessource> exportedRessources = new HashMap<>();
     
     public List<File> mapRessourceFiles = new ArrayList<>();
+    
+    /**
+     * Redundant 
+     */
+    public List<UPackageRessource> mapRessources = new ArrayList<>();
     
     /**
      * User configuration which allows to know
@@ -310,6 +317,22 @@ public class MapConverter {
                     logger.info(upkg.getExportedFile()+" unused file deleted");
                 }
             }
+        }
+        
+        // rename map ressources with good ones
+        // e.g: DoorsMod.Requests.mach2L_Cue
+        // mach2L(.wav) -> DoorsMod.Requests.mach2L(.wav)
+        for(UPackageRessource uPackageRessource : mapRessources){
+            File currentFile = uPackageRessource.getExportedFile();
+            String s[] = currentFile.getName().split("\\.");
+            String currentFileExt = s[s.length -1];
+            
+            // TODO SYNC WITH T3DRessource.outName !
+            File newFile = new File(uPackageRessource.getExportedFile().getParent() + File.separator + uPackageRessource.getFullName() + "." +currentFileExt);
+            
+            Files.copy(currentFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            currentFile.delete();
+            logger.info("Renamed "+currentFile.getName()+" to "+newFile.getName());
         }
     }
 

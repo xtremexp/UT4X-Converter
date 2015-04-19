@@ -337,6 +337,7 @@ public final class UCCExporter extends UTPackageExtractor {
                         ressource.uPacRessource.setExportedFile(ressourceFile);
                         mapConverter.exportedRessources.put(ressourceName, ressource.uPacRessource);
                         mapConverter.mapRessourceFiles.add(ressourceFile);
+                        mapConverter.mapRessources.add(ressource.uPacRessource);
                     } else {
                         UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage, ressourceFile);
                         unrealPackage.addRessource(r);
