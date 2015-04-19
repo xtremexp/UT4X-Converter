@@ -91,9 +91,8 @@ public class MapConverter {
 
     /**
      * Reference to user interface
-     * TODO remove that name ...
      */
-    MainSceneController fxmlController;
+    MainSceneController mainSceneController;
     
     /**
      * Global logger
@@ -215,11 +214,11 @@ public class MapConverter {
      */
     private void addLoggerHandlers(){
         
-        if(fxmlController == null || fxmlController.getConvLogTableView() == null){
+        if(mainSceneController == null || mainSceneController.getConvLogTableView() == null){
             return;
         }
         
-        final TableView<TableRowLog> t = fxmlController.getConvLogTableView();
+        final TableView<TableRowLog> t = mainSceneController.getConvLogTableView();
         
         
         
@@ -379,8 +378,8 @@ public class MapConverter {
         return outT3d;
     }
 
-    public void setFxmlController(MainSceneController fxmlController) {
-        this.fxmlController = fxmlController;
+    public void setMainSceneController(MainSceneController mainSceneController) {
+        this.mainSceneController = mainSceneController;
         addLoggerHandlers();
     }
     

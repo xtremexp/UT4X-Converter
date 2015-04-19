@@ -59,7 +59,7 @@ public class T3DTeleporter extends T3DActor {
             // Note UT4 only support teleporting to one possible location
             // unlike U1/UT99/? do support multiple destinations
             T3DTeleporter linkedTel = (T3DTeleporter) linkedTo.get(0);
-            Vector3d t = Geometry.subtract(linkedTel.location, this.location);
+            Vector3d t = Geometry.sub(linkedTel.location, this.location);
             linkedTel.rotation = null;
             
             sbf.append(IDT).append("\tTeleportTarget=(Translation=(X=").append(t.x).append(",Y=").append(t.y).append(",Z=").append(t.z).append("))\n");

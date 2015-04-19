@@ -199,7 +199,7 @@ public class MainSceneController implements Initializable {
                 }
                 
                 MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, scaleFactor);
-                mc.setFxmlController(this);
+                mc.setMainSceneController(this);
                 mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted");
                 
                 Alert alert = new Alert(AlertType.INFORMATION);

@@ -345,19 +345,17 @@ public class Geometry {
             return new Vector3d(0d, 0d, 0d);
         }
         
-        if(a == null && b != null){
+        else if(a == null && b != null){
             return new Vector3d(b.x, b.y, b.z);
         }
         
-        if(a != null && b == null){
+        else if(a != null && b == null){
             return new Vector3d(a.x, a.y, a.z);
         }
         
-        if(a != null && b != null){
+        else {
             return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z);
         }
-        
-        return new Vector3d(0d, 0d, 0d);
     }
     
     /**
@@ -366,24 +364,22 @@ public class Geometry {
      * @param b
      * @return Vector a - Vector b
      */
-    public static Vector3d subtract(Vector3d a, Vector3d b){
+    public static Vector3d sub(Vector3d a, Vector3d b){
         
         if(a == null && b == null){
             return new Vector3d(0d, 0d, 0d);
-        }
+        } 
         
-        if(a == null && b != null){
+        else if(a == null && b != null){
             return new Vector3d(-b.x, -b.y, -b.z);
         }
         
-        if(a != null && b == null){
+        else if(a != null && b == null){
             return new Vector3d(a.x, a.y, a.z);
         }
         
-        if(a != null && b != null){
+        else {
             return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z);
         }
-        
-        return new Vector3d(0d, 0d, 0d);
     }
 }

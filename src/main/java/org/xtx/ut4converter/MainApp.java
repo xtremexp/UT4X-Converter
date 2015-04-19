@@ -21,7 +21,7 @@ public class MainApp extends Application {
     /**
      * Version of UT4 Converter
      */
-    public static final String VERSION = "0.2.DEV";
+    public static final String VERSION = "0.3-DEV";
     
     /**
      * Author
