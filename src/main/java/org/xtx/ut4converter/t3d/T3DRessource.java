@@ -109,9 +109,10 @@ public class T3DRessource {
      */
     private void initialise(){
         
-        if(this.type != Type.LEVEL){
-            uPacRessource = new UPackageRessource(this.inName);
-        }
+        
+        uPacRessource = new UPackageRessource(inName, mapConverter.getInputGame(), type);
+        uPacRessource.setPackageFile(getFileContainer());
+        
         
         if(mapConverter.getOutputGame().engine == UTGames.UnrealEngine.UE4){
             //  /Game/RestrictedAsset/Maps/WIP/<mapname>/<inName>.uasset
@@ -194,7 +195,7 @@ public class T3DRessource {
                 UserGameConfig ugc = uc.getGameConfigByGame(mapConverter.getInputGame());
                 
                 if(ugc != null && ugc.getPath() != null){
-                    return new File(ugc.getPath().getAbsolutePath() + File.separator + getFolderForPackageType() + File.separator + uPacRessource.packageName + getUnrealPackageFileExtension());
+                    return new File(ugc.getPath().getAbsolutePath() + File.separator + getFolderForPackageType() + File.separator + uPacRessource.getUnrealPackage().getName() + getUnrealPackageFileExtension());
                 }
             }
         }

@@ -7,6 +7,7 @@ package org.xtx.ut4converter.export;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DRessource;
@@ -59,7 +60,7 @@ public abstract class UTPackageExtractor {
      * @return List of files exported
      * @throws java.lang.Exception If anythings goes wrong when exporting this ressource
      */
-    public abstract List<File> extract(T3DRessource ressource) throws Exception;
+    public abstract Set<File> extract(T3DRessource ressource) throws Exception;
     
     public abstract File getExporterPath();
     

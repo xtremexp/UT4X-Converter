@@ -15,13 +15,16 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackage;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * Export ressources from map
@@ -123,8 +126,18 @@ public final class UCCExporter extends UTPackageExtractor {
     }
 
     @Override
-    public List<File> extract(T3DRessource ressource) throws Exception {
-                
+    public Set<File> extract(T3DRessource ressource) throws Exception {
+        
+        Set<File> exportedFiles = new HashSet<>();
+        
+        // Ressource ever extracted, we skip ...
+        if(mapConverter.exportedRessources.containsKey(ressource.getInName())){
+            
+            ressource.uPacRessource = mapConverter.exportedRessources.get(ressource.getInName());
+            exportedFiles.add(ressource.uPacRessource.getExportedFile());
+            return exportedFiles;
+        }
+         
         if(userGameConfig.getPath() == null || !userGameConfig.getPath().exists()){
             logger.log(Level.SEVERE, "Game path not set or does not exists in user settings for game "+ mapConverter.getInputGame().name);
             return null;
@@ -145,20 +158,9 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         
-        List<File> exportedFiles = exportT3DMap(ressource);
-        // notify map converter of exported files
-        UPackage uPackage = new UPackage(mapConverter.getInputGame().engine, uccExporterPath, ressource.type);
+        exportRessource(ressource);
 
-        if(!mapConverter.exportedPackages.containsKey(uPackage)){
-            mapConverter.exportedPackages.put(uPackage, exportedFiles);
-        }
-
-        if(!mapConverter.exportedRessources.containsKey(ressource.uPacRessource)){
-            mapConverter.exportedRessources.put(ressource.uPacRessource, ressource.getFileContainer());
-        }
-
-        
-        return exportedFiles;
+        return ressource.uPacRessource.getUnrealPackage().getExportedFiles();
     }
     
     
@@ -178,9 +180,9 @@ public final class UCCExporter extends UTPackageExtractor {
         T3DRessource t3dRessource = new T3DRessource(unrealMap.getAbsolutePath(), T3DRessource.Type.LEVEL, mapConverter);
         UCCExporter ucE = new UCCExporter(mapConverter);
         
-        List<File> files = ucE.extract(t3dRessource);
+        Set<File> files = ucE.extract(t3dRessource);
         
-        return !files.isEmpty()?files.get(0):null;
+        return !files.isEmpty()?files.iterator().next():null;
     }
     
    
@@ -249,13 +251,20 @@ public final class UCCExporter extends UTPackageExtractor {
     
     /**
      * 
-     * @return
+     * @param ressource
+     * @return Exported file for the ressource. If null means that ucc exported was not able to export the ressource.
      * @throws IOException
      * @throws InterruptedException 
      */
-    private List<File> exportT3DMap(T3DRessource ressource) throws IOException, InterruptedException
+    private void exportRessource(T3DRessource ressource) throws IOException, InterruptedException
     {
-        List<File> exportedFiles = new ArrayList<>();
+        /**
+         * All files that have been exported during the process.
+         * This might not be files related to the ressource (can be other texture for exemple)
+         */
+        Set<File> exportedFiles = new HashSet<>();
+        
+        UPackage unrealPackage = ressource.uPacRessource.getUnrealPackage();
         
         File unrealMapCopy = null;
         File u1Batch = null;
@@ -309,18 +318,29 @@ public final class UCCExporter extends UTPackageExtractor {
                 if(logLine.contains("Failed")) {
                     String missingpackage = logLine.split("\\'")[2];
                     logger.log(Level.SEVERE, "Impossible to export. Unreal Package "+missingpackage+" missing");
-                    return null;
+                    return;
                 } 
 
                 else if (logLine.contains("Commandlet batchexport not found")) {
                     logger.log(Level.SEVERE, logLine);
-                    return null;
+                    return;
                 }
                 
                 // Exported Level MapCopy.MyLevel to Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
                 // Exported Texture GenWarp.Sun128a to Z:\\TEMP\Sun128a.bmp
                 else if(logLine.contains("Exported ")){
+                    
                     File ressourceFile = new File(logLine.split(" to ")[1]);
+                    String ressourceName = logLine.split("\\ ")[2];
+                    
+                    if(ressourceName.equals(ressource.uPacRessource.getFullName())){
+                        ressource.uPacRessource.setExportedFile(ressourceFile);
+                        mapConverter.exportedRessources.put(ressourceName, ressource.uPacRessource);
+                    } else {
+                        UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage);
+                        unrealPackage.addRessource(new UPackageRessource(ressourceName, unrealPackage, ressourceFile));
+                        mapConverter.exportedRessources.put(ressourceName, ressource.uPacRessource);
+                    }
                     exportedFiles.add(ressourceFile);
                 }
             }
@@ -342,7 +362,6 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         
-        return exportedFiles;
     }
     
     

@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -97,7 +98,7 @@ public class MapConverter {
      * If <code>true</code> sounds of the map
      * will be exported and converted
      */
-    public boolean convertSounds;
+    public boolean convertSounds = true;
     
     /**
      * Allow to extract packages.
@@ -110,19 +111,11 @@ public class MapConverter {
      * Contains, original ressource name
      * and exported ressource file
      * E.G:
-     * DoorsAnc.Other.chaindS6, UT4ConverterPath/Converted/Sounds/chainds6.wav
+     * <DoorsAnc.Other.chaindS6, UPackageRessource>
      * 
      * If ressource was not
      */
-    public Map<UPackageRessource, File> exportedRessources = new HashMap<>();
-    
-    
-    /**
-     * Contains info about which unreal packages have been exported
-     * A single package contains multiple ressources (= files)
-     * Used to avoid exporting same package if it has ever been exported
-     */
-    public Map<UPackage, List<File>> exportedPackages = new HashMap<>();
+    public Map<String, UPackageRessource> exportedRessources = new HashMap<>();
     
     /**
      * User configuration which allows to know
