@@ -122,18 +122,18 @@ public class T3DRessource {
             // 'AmbModern.Looping.comp1' -> /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackagename>_<oldpckgroupename>/<inName>
             // tested UT4: Sound=SoundCue'/Game/RestrictedAssets/Maps/WIP/AS-HiSpeed-UT99-UT4/Sound/AmbModern_Looping_hum31_Cue.AmbModern_Looping_hum31_Cue'
             
-            String prefix = "";
+            String suffix = "";
             
             // in UT4 editor click on ressource file -> Create Cue adds a "_Cue" suffix
             if(type == Type.SOUND){
-                prefix = "_Cue";
+                suffix = "_Cue";
             } 
             
             else if(type == Type.TEXTURE){
-                prefix = "_Mat";
+                suffix = "_Mat";
             }
             
-            outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + uPacRessource.getFullNameWithoutDots() + prefix + "." + uPacRessource.getFullNameWithoutDots() + prefix;
+            outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + uPacRessource.getFullNameWithoutDots() + suffix + "." + uPacRessource.getFullNameWithoutDots() + suffix;
             
             
         } 
