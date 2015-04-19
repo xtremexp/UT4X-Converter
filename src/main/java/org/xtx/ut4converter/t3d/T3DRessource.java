@@ -122,6 +122,15 @@ public class T3DRessource {
             // 'AmbModern.Looping.comp1' -> /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackagename>_<oldpckgroupename>/<inName>
             // AmbientSoundAmbientSoundAmbientSound
             outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + inName;
+            
+            // in UT4 editor click on ressource file -> Create Cue adds a "_Cue" suffix
+            if(type == Type.SOUND){
+                outName += "_Cue";
+            } 
+            
+            else if(type == Type.TEXTURE){
+                outName += "_Mat";
+            }
         } 
         
         // UE3: <outMapName>.<typeName>.<inName>_Map
