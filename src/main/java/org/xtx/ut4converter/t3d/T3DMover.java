@@ -17,7 +17,7 @@ import org.xtx.ut4converter.UTGames;
  */
 public class T3DMover extends T3DBrush {
 
-    String closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
+    T3DRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
 
     /**
      * CHECK usage?
@@ -83,27 +83,27 @@ public class T3DMover extends T3DBrush {
         
         // UE1 -> 'CloseStartSound' ? (UE4)
         else if(line.contains("ClosedSound=")){
-            closedSound = line.split("\\=")[1];
+            closedSound = new T3DRessource(line.split("\\=")[1], T3DRessource.Type.SOUND, mapConverter);;
         }
         
         // UE1 -> 'CloseStopSound' ? (UE4)
         else if(line.contains("ClosingSound=")){
-            closingSound = line.split("\\=")[1];
+            closingSound = new T3DRessource(line.split("\\=")[1], T3DRessource.Type.SOUND, mapConverter);;
         }
         
         // UE1 -> 'OpenStartSound' ? (UE4)
         else if(line.contains("OpeningSound=")){
-            openingSound = line.split("\\=")[1];
+            openingSound = new T3DRessource(line.split("\\=")[1], T3DRessource.Type.SOUND, mapConverter);;
         }
         
         // UE1 -> 'OpenStopSound' ? (UE4)
         else if(line.contains("OpenedSound=")){
-            openedSound = line.split("\\=")[1];
+            openedSound = new T3DRessource(line.split("\\=")[1], T3DRessource.Type.SOUND, mapConverter);;
         }
         
         // UE1 -> 'Closed Sound' (UE4)
-        else if(line.contains("ClosedSound=")){
-            closedSound = line.split("\\=")[1];
+        else if(line.contains("MoveAmbientSound=")){
+            moveAmbientSound = new T3DRessource(line.split("\\=")[1], T3DRessource.Type.SOUND, mapConverter);;
         }
         
         // UE1 -> 'Lift Destination' (UE12)
@@ -168,19 +168,23 @@ public class T3DMover extends T3DBrush {
             }
 
             if(openingSound != null){
-                sbf.append(IDT).append("\tOpenStartSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tOpenStartSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
             }
             
             if(openedSound != null){
-                sbf.append(IDT).append("\tOpenStopSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tOpenStopSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
             }
             
             if(closingSound != null){
-                sbf.append(IDT).append("\tCloseStartSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tCloseStartSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
             }
             
             if(closedSound != null){
-                sbf.append(IDT).append("\tCloseStopSound=SoundWave'").append(openingSound).append("'\n");
+                sbf.append(IDT).append("\tCloseStopSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
+            }
+            
+            if(moveAmbientSound != null){
+                // no property for sound when moving in UT4
             }
             
             if(stayOpenTime != null){

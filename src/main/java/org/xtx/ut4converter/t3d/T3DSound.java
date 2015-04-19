@@ -16,7 +16,7 @@ public class T3DSound extends T3DActor {
     /**
      * UE1, UE4
      */
-    String ambientSound;
+    T3DRessource ambientSound;
     
     /**
      * UE1, not UE4
@@ -60,7 +60,7 @@ public class T3DSound extends T3DActor {
         
         // AmbientSound=Sound'AmbAncient.Looping.Stower51'
         else if(line.contains("AmbientSound=")){
-            ambientSound = line.split("\\=")[1].split("\\.")[1];
+            ambientSound = new T3DRessource(line.split("\\'")[1], T3DRessource.Type.SOUND, mapConverter);
         } 
         else {
             return super.analyseT3DData(line);
@@ -90,6 +90,10 @@ public class T3DSound extends T3DActor {
                soundVolume /= 255D;
             }
         }
+        
+        if(mapConverter.convertSounds){
+            ambientSound.export();
+        }
     }
     
     /**
@@ -106,7 +110,7 @@ public class T3DSound extends T3DActor {
             sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
             
             if(ambientSound != null){
-                sbf.append(IDT).append("\t\tSound=SoundWave'").append(ambientSound).append("'\n");
+                sbf.append(IDT).append("\t\tSound=SoundWave'").append(ambientSound.getOutName()).append("'\n");
             }
             
             //bOverrideAttenuation=True

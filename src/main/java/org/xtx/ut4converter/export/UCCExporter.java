@@ -85,15 +85,15 @@ public final class UCCExporter extends UTPackageExtractor {
         }
     }
     
-    public UCCExporter(MapConverter mapConverter, T3DRessource ressource) {
-        super(mapConverter, ressource);
+    public UCCExporter(MapConverter mapConverter) {
+        super(mapConverter);
         
         userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
         uccExporterPath = getExporterPath();
     }
 
     @Override
-    public List<File> extract() {
+    public List<File> extract(T3DRessource ressource) {
                 
         if(userGameConfig.getPath() == null || !userGameConfig.getPath().exists()){
             logger.log(Level.SEVERE, "Game path not set or does not exists in user settings for game "+ mapConverter.getInputGame().name);
@@ -114,9 +114,9 @@ public final class UCCExporter extends UTPackageExtractor {
             return null;
         }
         
-        if(this.ressource.type == T3DRessource.Type.LEVEL){
+        if(ressource.type == T3DRessource.Type.LEVEL){
             try {
-                File t3dMap = exportT3DMap();
+                File t3dMap = exportT3DMap(ressource);
                 
                 if(t3dMap != null){
                     List<File> t3dFiles = new ArrayList<>();
@@ -130,7 +130,7 @@ public final class UCCExporter extends UTPackageExtractor {
             }
         } 
         else {
-            throw new UnsupportedOperationException("Extraction of "+this.ressource.type.getName()+" not implemented yet");
+            throw new UnsupportedOperationException("Extraction of "+ressource.type.getName()+" not implemented yet");
         }
         
         return null;
@@ -151,9 +151,9 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         T3DRessource t3dRessource = new T3DRessource(unrealMap.getAbsolutePath(), T3DRessource.Type.LEVEL, mapConverter);
-        UCCExporter ucE = new UCCExporter(mapConverter, t3dRessource);
+        UCCExporter ucE = new UCCExporter(mapConverter);
         
-        List<File> files = ucE.extract();
+        List<File> files = ucE.extract(t3dRessource);
         
         return !files.isEmpty()?files.get(0):null;
     }
@@ -227,21 +227,21 @@ public final class UCCExporter extends UTPackageExtractor {
      * @throws IOException
      * @throws InterruptedException 
      */
-    private File exportT3DMap() throws IOException, InterruptedException
+    private File exportT3DMap(T3DRessource ressource) throws IOException, InterruptedException
     {
 
         File unrealMapCopy = null;
         File u1Batch = null;
         
         try {
-            logger.log(Level.INFO, "Exporting "+getRessource().getInName()+" to Unreal Text File (.t3d)");
+            logger.log(Level.INFO, "Exporting "+ressource.getInName()+" to Unreal Text File (.t3d)");
 
             // Copy Unreal Map to folder of ucc.exe (/System) for U1/U2
             // or ut3.com (/Binaries) for UT3
             unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + "MapCopy.unr");
             logger.log(Level.INFO, "Creating " + unrealMapCopy.getAbsolutePath());
             unrealMapCopy.createNewFile();
-            Files.copy(new File(getRessource().getInName()).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(new File(ressource.getInName()).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             List<String> logLines = new ArrayList<>();
 

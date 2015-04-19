@@ -24,11 +24,6 @@ public abstract class UTPackageExtractor {
      */
     protected MapConverter mapConverter;
     
-    /**
-     * Ressource to export, 
-     * can be level, textures, sounds, ...
-     */
-    protected T3DRessource ressource;
     
     /**
      * Temporary logger until we embed one in MapConverter class
@@ -37,12 +32,10 @@ public abstract class UTPackageExtractor {
     
     /**
      * 
-     * @param mapConverter Map converter
-     * @param ressource 
+     * @param mapConverter Map converter 
      */
-    public UTPackageExtractor(MapConverter mapConverter, T3DRessource ressource) {
+    public UTPackageExtractor(MapConverter mapConverter) {
         this.mapConverter = mapConverter;
-        this.ressource = ressource;
         this.logger = mapConverter.getLogger();
     }
     
@@ -62,9 +55,10 @@ public abstract class UTPackageExtractor {
     
     /**
      * Extract ressource, generally some package that contains multiple files (ressources)
+     * @param ressource
      * @return List of files exported
      */
-    public abstract List<File> extract();
+    public abstract List<File> extract(T3DRessource ressource);
     
     public abstract File getExporterPath();
     
@@ -77,14 +71,13 @@ public abstract class UTPackageExtractor {
      */
     public static UTPackageExtractor getExtractor(MapConverter mapConverter, T3DRessource ressource){
         
-        // Only this one for the moment
-        // until we use UModel or make our own package reader to get stuff
-        return new UCCExporter(mapConverter, ressource);
+        if(mapConverter.packageExtractor != null){
+            return mapConverter.packageExtractor;
+        } else {
+            // TODO handle for multiple extractors
+            mapConverter.packageExtractor = new UCCExporter(mapConverter);
+            return mapConverter.packageExtractor;
+        }
     }
 
-    public T3DRessource getRessource() {
-        return ressource;
-    }
-    
-    
 }

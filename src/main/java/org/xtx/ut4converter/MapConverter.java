@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.ui.TableRowLog;
@@ -82,6 +83,23 @@ public class MapConverter {
      */
     T3DLevelConvertor t3dLvlConvertor;
     
+    /**
+     * If <code>true</code> textures of the map
+     * will be exported and converted.
+     */
+    public boolean convertTextures;
+    
+    /**
+     * If <code>true</code> sounds of the map
+     * will be exported and converted
+     */
+    public boolean convertSounds;
+    
+    /**
+     * Allow to extract packages.
+     * There should be always only one instanced
+     */
+    public UTPackageExtractor packageExtractor;
     
     /**
      * User configuration which allows to know
@@ -386,5 +404,5 @@ public class MapConverter {
     public Logger getLogger(){
         return logger;
     }
-    
+
 }

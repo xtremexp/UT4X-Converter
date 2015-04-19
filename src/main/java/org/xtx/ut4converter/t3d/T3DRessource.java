@@ -114,8 +114,10 @@ public class T3DRessource {
             //  /Game/RestrictedAsset/Maps/WIP/<mapname>/<inName>.uasset
             // TODO use some subfolder for original packages
             // E.G: /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackage>/<inName>.uasset
-            // 'AmbModern.Looping.comp1' -> /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackagename>_<oldpckgroupename>/<inName>.uasset
-            outName = UE4_BASEPATH + File.separator + mapConverter.getOutMapName() + File.separator + inName + UE4_RES_EXTENSION;
+            // /Game/RestrictedAssets/Audio/Ambient/Exteriors/air_wind01.air_wind01
+            // 'AmbModern.Looping.comp1' -> /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackagename>_<oldpckgroupename>/<inName>
+            // AmbientSoundAmbientSoundAmbientSound
+            outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + inName;
         } 
         
         // UE3: <outMapName>.<typeName>.<inName>_Map
@@ -139,10 +141,8 @@ public class T3DRessource {
      */
     public void export(){
     
-        // TODO MAKE AN EXTRACTOR BY TYPE (hashmap in converter)
-        // so avoid doing an instance of extractor at each 'SINGLE' ressource ...
         extractor = UTPackageExtractor.getExtractor(mapConverter, this);
-        extractor.extract();
+        extractor.extract(this);
     }
 
     public String getInName() {
