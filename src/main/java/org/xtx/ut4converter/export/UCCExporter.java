@@ -21,7 +21,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource;
-import ucore.UPackage;
+import org.xtx.ut4converter.ucore.UPackage;
 
 /**
  * Export ressources from map

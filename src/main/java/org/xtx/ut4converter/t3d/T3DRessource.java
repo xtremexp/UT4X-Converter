@@ -12,7 +12,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-import ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * 

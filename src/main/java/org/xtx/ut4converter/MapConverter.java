@@ -21,8 +21,8 @@ import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ui.TableRowLog;
-import ucore.UPackage;
-import ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UPackage;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * 
