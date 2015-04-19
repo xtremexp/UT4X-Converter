@@ -99,7 +99,7 @@ public class T3DRessource {
     }
     
   
-    final String UE4_BASEPATH = "/Game/RestrictedAsset/Maps/WIP";
+    final String UE4_BASEPATH = "/Game/RestrictedAssets/Maps/WIP";
     final String UE4_RES_EXTENSION = ".uasset";
     final String UE12_PACKAGE_MYLEVEL = "myLevel";
     
@@ -120,17 +120,22 @@ public class T3DRessource {
             // E.G: /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackage>/<inName>.uasset
             // /Game/RestrictedAssets/Audio/Ambient/Exteriors/air_wind01.air_wind01
             // 'AmbModern.Looping.comp1' -> /Game/RestrictedAsset/Maps/WIP/<mapname>/<oldpackagename>_<oldpckgroupename>/<inName>
-            // AmbientSoundAmbientSoundAmbientSound
-            outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + inName;
+            // tested UT4: Sound=SoundCue'/Game/RestrictedAssets/Maps/WIP/AS-HiSpeed-UT99-UT4/Sound/AmbModern_Looping_hum31_Cue.AmbModern_Looping_hum31_Cue'
+            
+            String prefix = "";
             
             // in UT4 editor click on ressource file -> Create Cue adds a "_Cue" suffix
             if(type == Type.SOUND){
-                outName += "_Cue";
+                prefix = "_Cue";
             } 
             
             else if(type == Type.TEXTURE){
-                outName += "_Mat";
+                prefix = "_Mat";
             }
+            
+            outName = UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.name + "/" + uPacRessource.getFullNameWithoutDots() + prefix + "." + uPacRessource.getFullNameWithoutDots() + prefix;
+            
+            
         } 
         
         // UE3: <outMapName>.<typeName>.<inName>_Map

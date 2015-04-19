@@ -110,7 +110,7 @@ public class T3DSound extends T3DActor {
             sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
             
             if(ambientSound != null){
-                sbf.append(IDT).append("\t\tSound=SoundWave'").append(ambientSound.getOutName()).append("'\n");
+                sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getOutName()).append("'\n");
             }
             
             //bOverrideAttenuation=True

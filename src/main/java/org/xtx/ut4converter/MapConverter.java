@@ -328,7 +328,7 @@ public class MapConverter {
             String currentFileExt = s[s.length -1];
             
             // TODO SYNC WITH T3DRessource.outName !
-            File newFile = new File(uPackageRessource.getExportedFile().getParent() + File.separator + uPackageRessource.getFullName() + "." +currentFileExt);
+            File newFile = new File(uPackageRessource.getExportedFile().getParent() + File.separator + uPackageRessource.getFullNameWithoutDots() + "." +currentFileExt);
             
             Files.copy(currentFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             currentFile.delete();

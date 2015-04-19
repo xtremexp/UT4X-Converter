@@ -144,6 +144,10 @@ public class UPackageRessource {
         
         return "";
     }
+    
+    public String getFullNameWithoutDots(){
+        return getFullName().replaceAll("\\.", "_");
+    }
 
     public UPackage getUnrealPackage() {
         return unrealPackage;
