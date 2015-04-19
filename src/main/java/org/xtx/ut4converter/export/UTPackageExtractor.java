@@ -57,8 +57,9 @@ public abstract class UTPackageExtractor {
      * Extract ressource, generally some package that contains multiple files (ressources)
      * @param ressource
      * @return List of files exported
+     * @throws java.lang.Exception If anythings goes wrong when exporting this ressource
      */
-    public abstract List<File> extract(T3DRessource ressource);
+    public abstract List<File> extract(T3DRessource ressource) throws Exception;
     
     public abstract File getExporterPath();
     
@@ -78,6 +79,15 @@ public abstract class UTPackageExtractor {
             mapConverter.packageExtractor = new UCCExporter(mapConverter);
             return mapConverter.packageExtractor;
         }
+    }
+    
+    /**
+     * Tells if this ressource has ever been extracted
+     * @param ressource
+     * @return 
+     */
+    protected boolean isExtracted(T3DRessource ressource){
+        return mapConverter.exportedRessources.containsKey(ressource.uPacRessource);
     }
 
 }

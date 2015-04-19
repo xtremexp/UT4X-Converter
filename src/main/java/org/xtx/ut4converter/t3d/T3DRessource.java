@@ -6,9 +6,13 @@
 package org.xtx.ut4converter.t3d;
 
 import java.io.File;
+import java.util.logging.Level;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import ucore.UPackageRessource;
 
 /**
  * 
@@ -23,6 +27,7 @@ public class T3DRessource {
         MESH("Mesh"),
         STATICMESH("StaticMesh"),
         MUSIC("Music"),
+        SCRIPT("Script"),
         SOUND("Sound");
         
         String name;
@@ -34,8 +39,6 @@ public class T3DRessource {
         public String getName() {
             return name;
         }
-        
-        
     }
     
     /**
@@ -57,6 +60,8 @@ public class T3DRessource {
      * UT4: /Game/RestrictedAsset/Maps/WIP/<mapname>/<inName>.uasset
      */
     String outName;
+    
+    public UPackageRessource uPacRessource;
     
     public Type type;
     
@@ -90,25 +95,23 @@ public class T3DRessource {
         this.inName = inName;
         this.type = type;
         this.mapConverter = mapConverter;
-        init();
+        initialise();
     }
     
-    /**
-     * 
-     */
-    private void init(){
-        initOutName();
-    }
-    
+  
     final String UE4_BASEPATH = "/Game/RestrictedAsset/Maps/WIP";
     final String UE4_RES_EXTENSION = ".uasset";
     final String UE12_PACKAGE_MYLEVEL = "myLevel";
     
     /**
-     * 
+     * Guess what will be the converted file name
      * @return 
      */
-    private void initOutName(){
+    private void initialise(){
+        
+        if(this.type != Type.LEVEL){
+            uPacRessource = new UPackageRessource(this.inName);
+        }
         
         if(mapConverter.getOutputGame().engine == UTGames.UnrealEngine.UE4){
             //  /Game/RestrictedAsset/Maps/WIP/<mapname>/<inName>.uasset
@@ -141,8 +144,12 @@ public class T3DRessource {
      */
     public void export(){
     
-        extractor = UTPackageExtractor.getExtractor(mapConverter, this);
-        extractor.extract(this);
+        try {
+            extractor = UTPackageExtractor.getExtractor(mapConverter, this);
+            extractor.extract(this);
+        } catch (Exception ex) {
+            mapConverter.getLogger().log(Level.SEVERE, null, ex);
+        }
     }
 
     public String getInName() {
@@ -169,36 +176,90 @@ public class T3DRessource {
         if(mapConverter.getInputGame() == UTGames.UTGame.UT4){
             // <UT4Folder>/Content/<NAME>
             //return new File(mapConverter.getConfig().getUT4RootFolder() + File.separator + getInName());
+            // TODO
+            throw new UnsupportedOperationException("Unsupported operation");
         } 
         
         else if(mapConverter.getInputGame() == UTGames.UTGame.UT3){
-            // <UT3Folder>/UTGame/CookedPC/? (hard to say ...)
-            // TODO getFileContainer UT3
-            throw new UnsupportedOperationException("Impossible to find linked container file from ressource "+getInName());
+            // <UT3Folder>/UTGame/CookedPC/? (hard to say ...) -> do file search on UT3 package)
+            throw new UnsupportedOperationException("Unsupported operation");
         }
         
-        else if(mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE2 || mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE1){
-            //return new File(mapConverter.getConfig().getUTxRootFolder(mapConverter.getInputGame()) + File.separator + getRelativePathForUE12Ressource() + File.separator + getInName());
+        // U1/UT/U2/UT2003/UT2004
+        else if(mapConverter.getInputGame().engine.version <  UTGames.UnrealEngine.UE3.version){
+            
+            UserConfig uc = mapConverter.getUserConfig();
+            
+            if(uc != null){
+                UserGameConfig ugc = uc.getGameConfigByGame(mapConverter.getInputGame());
+                
+                if(ugc != null && ugc.getPath() != null){
+                    return new File(ugc.getPath().getAbsolutePath() + File.separator + getFolderForPackageType() + File.separator + uPacRessource.packageName + getUnrealPackageFileExtension());
+                }
+            }
         }
 
         return null;
     }
     
-    private String getRelativePathForUE12Ressource(){
+    /**
+     * Return path where unreal packages are stored depending
+     * on type of ressource
+     * @return Relative folder from UT path where the unreal package file should be
+     */
+    private String getFolderForPackageType(){
         
         if(type == Type.MUSIC){
-            return File.separator + "Music";
+            return "Music";
         } 
+        
         else if (type == Type.SOUND){
-            return File.separator + "Sounds";
+            return "Sounds";
         }
         
         else if (type == Type.TEXTURE){
-            return File.separator + "Textures";
+            return "Textures";
         }
         
         else if (type == Type.STATICMESH){
-            return File.separator + "StaticMeshes";
+            return "StaticMeshes";
+        }
+        
+        else if (type == Type.LEVEL){
+            return "Maps";
+        }
+        
+        else if (type == Type.SCRIPT){
+            return "System";
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Return relative path
+     * @return 
+     */
+    private String getUnrealPackageFileExtension(){
+        
+        if(type == Type.MUSIC){
+            return ".umx";
+        } 
+        
+        else if (type == Type.SOUND){
+            return ".uax";
+        }
+        
+        else if (type == Type.TEXTURE){
+            return ".utx";
+        }
+        
+        else if (type == Type.STATICMESH){
+            return ".usx";
+        }
+        
+        else if (type == Type.SCRIPT){
+            return ".u";
         }
         
         return null;

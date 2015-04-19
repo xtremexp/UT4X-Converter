@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -18,7 +19,10 @@ import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
+import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ui.TableRowLog;
+import ucore.UPackage;
+import ucore.UPackageRessource;
 
 /**
  * 
@@ -100,6 +104,25 @@ public class MapConverter {
      * There should be always only one instanced
      */
     public UTPackageExtractor packageExtractor;
+    
+    /**
+     * Used when extracting unreal packages.
+     * Contains, original ressource name
+     * and exported ressource file
+     * E.G:
+     * DoorsAnc.Other.chaindS6, UT4ConverterPath/Converted/Sounds/chainds6.wav
+     * 
+     * If ressource was not
+     */
+    public Map<UPackageRessource, File> exportedRessources = new HashMap<>();
+    
+    
+    /**
+     * Contains info about which unreal packages have been exported
+     * A single package contains multiple ressources (= files)
+     * Used to avoid exporting same package if it has ever been exported
+     */
+    public Map<UPackage, List<File>> exportedPackages = new HashMap<>();
     
     /**
      * User configuration which allows to know
