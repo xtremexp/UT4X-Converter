@@ -172,15 +172,15 @@ public class T3DMover extends T3DBrush {
             }
             
             if(openedSound != null){
-                sbf.append(IDT).append("\tOpenStopSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
+                sbf.append(IDT).append("\tOpenStopSound=SoundWave'").append(openedSound.getOutName()).append("'\n");
             }
             
             if(closingSound != null){
-                sbf.append(IDT).append("\tCloseStartSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
+                sbf.append(IDT).append("\tCloseStartSound=SoundWave'").append(closingSound.getOutName()).append("'\n");
             }
             
             if(closedSound != null){
-                sbf.append(IDT).append("\tCloseStopSound=SoundWave'").append(openingSound.getOutName()).append("'\n");
+                sbf.append(IDT).append("\tCloseStopSound=SoundWave'").append(closedSound.getOutName()).append("'\n");
             }
             
             if(moveAmbientSound != null){
