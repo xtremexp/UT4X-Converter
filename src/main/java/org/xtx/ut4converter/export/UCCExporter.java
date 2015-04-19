@@ -241,7 +241,7 @@ public final class UCCExporter extends UTPackageExtractor {
     private String getCommandLine(String fileName, T3DRessource.Type type){
         
         if( mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version ){
-            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " " + getExportFolder();
+            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " " + getExportFolder(type);
         } 
         
         else {
@@ -336,10 +336,11 @@ public final class UCCExporter extends UTPackageExtractor {
                     if(ressourceName.equals(ressource.uPacRessource.getFullName())){
                         ressource.uPacRessource.setExportedFile(ressourceFile);
                         mapConverter.exportedRessources.put(ressourceName, ressource.uPacRessource);
+                        mapConverter.mapRessourceFiles.add(ressourceFile);
                     } else {
-                        UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage);
-                        unrealPackage.addRessource(new UPackageRessource(ressourceName, unrealPackage, ressourceFile));
-                        mapConverter.exportedRessources.put(ressourceName, ressource.uPacRessource);
+                        UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage, ressourceFile);
+                        unrealPackage.addRessource(r);
+                        mapConverter.exportedRessources.put(ressourceName, r);
                     }
                     exportedFiles.add(ressourceFile);
                 }

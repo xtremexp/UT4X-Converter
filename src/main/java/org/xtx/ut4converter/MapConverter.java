@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Handler;
@@ -116,6 +117,8 @@ public class MapConverter {
      * If ressource was not
      */
     public Map<String, UPackageRessource> exportedRessources = new HashMap<>();
+    
+    public List<File> mapRessourceFiles = new ArrayList<>();
     
     /**
      * User configuration which allows to know
@@ -299,6 +302,15 @@ public class MapConverter {
         // and directly convert it
         t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
         t3dLvlConvertor.convert();
+        
+        // remove unecessary exported files
+        for(UPackageRessource upkg : exportedRessources.values()){
+            if(upkg.getExportedFile() != null && !mapRessourceFiles.contains(upkg.getExportedFile())){
+                if(upkg.getExportedFile().delete()){
+                    logger.info(upkg.getExportedFile()+" unused file deleted");
+                }
+            }
+        }
     }
 
     /**

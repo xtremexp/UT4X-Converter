@@ -44,13 +44,15 @@ public abstract class UTPackageExtractor {
     
     /**
      * Tells where to export files.
-     * Basically: <programfolder>/Conversion/Export/<utshortname>/inName (better package)
+     * Basically: <programfolder>/Converted/<mapname>/<ressourcetype> (better package)
+     * @param type Type of ressource to export
      * @return 
      */
-    protected File getExportFolder(){
+    protected File getExportFolder(T3DRessource.Type type){
         File programFolder = Installation.getProgramFolder();
+        String mapName = mapConverter.getInMap().getName();
         
-        return new File(programFolder.getAbsolutePath() + File.separator + MapConverter.CONV_PATH + File.separator + mapConverter.getInputGame().shortName + File.separator);
+        return new File(programFolder.getAbsolutePath() + File.separator + MapConverter.CONV_PATH + File.separator + mapName.split("\\.")[0] + File.separator + type.name() + File.separator);
     }
     
     
