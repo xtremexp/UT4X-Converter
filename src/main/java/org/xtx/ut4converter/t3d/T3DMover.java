@@ -60,7 +60,6 @@ public class T3DMover extends T3DBrush {
      */
     public T3DMover(MapConverter mc) {
         super(mc);
-        brushClass = BrushClass.MOVER;
     }
     
     @Override
@@ -198,6 +197,7 @@ public class T3DMover extends T3DBrush {
             // TODO for UT4 make converter from brush to .fbx Autodesk file and transform into StaticMesh
             // TODO for UT3 make converter from brush to .ase file and transform into StaticMesh
             // Write the mover as brush as well so we can convert it in staticmesh in UE4 Editor ...
+            this.name += "Brush";
             return super.toString();
         }
         // TODO write mover UT UE<=3
