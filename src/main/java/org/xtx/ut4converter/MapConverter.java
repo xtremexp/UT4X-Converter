@@ -109,23 +109,13 @@ public class MapConverter {
      */
     public UTPackageExtractor packageExtractor;
     
+
+
     /**
-     * Used when extracting unreal packages.
-     * Contains, original ressource name
-     * and exported ressource file
-     * E.G:
-     * <DoorsAnc.Other.chaindS6, UPackageRessource>
-     * 
-     * If ressource was not
+     * Unreal packages used in map
+     * Can be sounds, textures, ...
      */
-    public Map<String, UPackageRessource> exportedRessources = new HashMap<>();
-    
-    public List<File> mapRessourceFiles = new ArrayList<>();
-    
-    /**
-     * Redundant 
-     */
-    public List<UPackageRessource> mapRessources = new ArrayList<>();
+    public Map<String, UPackage> mapPackages = new HashMap<>();
     
     /**
      * User configuration which allows to know
@@ -311,29 +301,25 @@ public class MapConverter {
         t3dLvlConvertor.convert();
         
         // remove unecessary exported files
-        for(UPackageRessource upkg : exportedRessources.values()){
-            if(upkg.getExportedFile() != null && !mapRessourceFiles.contains(upkg.getExportedFile())){
-                if(upkg.getExportedFile().delete()){
-                    logger.info(upkg.getExportedFile()+" unused file deleted");
+        // and rename those used in map
+        for(UPackage unrealPackage : mapPackages.values()){
+            
+            for(UPackageRessource ressource : unrealPackage.getRessources()){
+                if(!ressource.isUsedInMap()){
+                    if(ressource.getExportedFile().delete()){
+                        logger.info(ressource.getExportedFile()+" unused file deleted");
+                    }
+                } 
+                // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
+                else {
+                    File newFile = new File(ressource.getConvertedFileName());
+                    Files.copy(ressource.getExportedFile().toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    ressource.getExportedFile().delete();
+                    logger.info("Renamed "+ressource.getExportedFile().getName()+" to "+newFile.getName());
                 }
             }
         }
-        
-        // rename map ressources with good ones
-        // e.g: DoorsMod.Requests.mach2L_Cue
-        // mach2L(.wav) -> DoorsMod.Requests.mach2L(.wav)
-        for(UPackageRessource uPackageRessource : mapRessources){
-            File currentFile = uPackageRessource.getExportedFile();
-            String s[] = currentFile.getName().split("\\.");
-            String currentFileExt = s[s.length -1];
-            
-            // TODO SYNC WITH T3DRessource.outName !
-            File newFile = new File(uPackageRessource.getExportedFile().getParent() + File.separator + uPackageRessource.getFullNameWithoutDots() + "." +currentFileExt);
-            
-            Files.copy(currentFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            currentFile.delete();
-            logger.info("Renamed "+currentFile.getName()+" to "+newFile.getName());
-        }
+
     }
 
     /**

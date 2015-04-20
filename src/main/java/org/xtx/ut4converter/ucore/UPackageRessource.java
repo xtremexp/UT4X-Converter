@@ -6,8 +6,10 @@
 package org.xtx.ut4converter.ucore;
 
 import java.io.File;
+import java.util.logging.Level;
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
@@ -44,6 +46,7 @@ public class UPackageRessource {
      */
     File convertedFile;
     
+    boolean isUsedInMap;
 
     /**
      * Group of ressource (optional)
@@ -54,15 +57,18 @@ public class UPackageRessource {
      * Name of ressource
      */
     public String name;
+    
+    Type type;
 
     /**
      *
      * @param fullName Full package ressource name (e.g:
      * "AmbAncient.Looping.Stower51"
-     * @param game
      * @param type
+     * @param game UT game this ressource belongs to
+     * @param isUsedInMap
      */
-    public UPackageRessource(String fullName, UTGame game, T3DRessource.Type type) {
+    public UPackageRessource(String fullName, Type type, UTGame game, boolean isUsedInMap) {
 
         String s[] = fullName.split("\\.");
 
@@ -72,7 +78,9 @@ public class UPackageRessource {
         
         parseNameAndGroup(fullName);
         
-        unrealPackage = new UPackage(packageName, type);
+        this.type = type;
+        unrealPackage = new UPackage(packageName, type, game, this);
+        this.isUsedInMap = isUsedInMap;
     }
     
     public void setPackageFile(File f){
@@ -80,15 +88,21 @@ public class UPackageRessource {
     }
     
     /**
-     * 
-     * @param fullName
-     * @param uPackage 
+     * Creates a package ressource
+     * @param fullName Full name of ressource
+     * @param uPackage Package this ressource belongs to
+     * @param game
+     * @param ressourceType Type of ressource (texture, sound, ...)
+     * @param isUsedInMap <code>true<code> if this ressource is used in map that is being converted
      */
-    public UPackageRessource(String fullName, UPackage uPackage) {
+    public UPackageRessource(String fullName, Type ressourceType, UTGame game, UPackage uPackage, boolean isUsedInMap) {
 
         parseNameAndGroup(fullName);
         
+        this.type = ressourceType;
         unrealPackage = uPackage;
+        unrealPackage.addRessource(this);
+        this.isUsedInMap = isUsedInMap;
     }
     
     /**
@@ -103,6 +117,8 @@ public class UPackageRessource {
         
         this.unrealPackage = uPackage;
         this.exportedFile = exportedFile;
+        this.type = uPackage.type;
+        uPackage.ressources.add(this);
     }
     
     private void parseNameAndGroup(String fullName){
@@ -117,8 +133,65 @@ public class UPackageRessource {
         }
     }
     
+    /**
+     * Tells if this ressource can be exported.
+     * If it has never been exported or export ever failed,
+     * it cannot be exported again
+     * @return 
+     */
     public boolean needExport(){
         return !exportFailed && exportedFile == null;
+    }
+    
+    
+    /**
+     * Export the ressource from unreal package to file
+     * @param packageExtractor
+     */
+    public void export(UTPackageExtractor packageExtractor) {
+        if(needExport()){
+            try {
+                packageExtractor.extract(this);
+            } catch (Exception ex) {
+                packageExtractor.logger.log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @param mapConverter
+     * @return 
+     */
+    public String getConvertedName(MapConverter mapConverter){
+        
+        final String UE4_BASEPATH = "/Game/RestrictedAssets/Maps/WIP";
+        
+        String suffix = "";
+            
+        // in UT4 editor click on ressource file -> Create Cue adds a "_Cue" suffix
+        if(type == Type.SOUND){
+            suffix = "_Cue";
+        } 
+
+        else if(type == Type.TEXTURE){
+            suffix = "_Mat";
+        }
+        
+        return UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.getName() + "/" + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
+    }
+    
+    /**
+     * Sometimes we need to change name of exported file
+     * to have info about from which package this file comes from
+     * @return 
+     */
+    public String getConvertedFileName(){
+        String s[] = exportedFile.getName().split("\\.");
+        String currentFileExt = s[s.length -1];
+            
+        // TODO SYNC WITH T3DRessource.outName !
+        return exportedFile.getParent() + File.separator + getFullNameWithoutDots() + "." +currentFileExt;
     }
     
     /**
@@ -164,7 +237,14 @@ public class UPackageRessource {
     public void setExportedFile(File exportedFile) {
         this.exportedFile = exportedFile;
     }
+
     
+    public void setIsUsedInMap(boolean isUsedInMap){
+        this.isUsedInMap = isUsedInMap;
+    }
     
+    public boolean isUsedInMap(){
+        return this.isUsedInMap;
+    }
     
 }

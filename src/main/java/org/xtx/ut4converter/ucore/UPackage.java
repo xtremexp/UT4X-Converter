@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
@@ -17,7 +19,11 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
  */
 public class UPackage {
     
-    private UTGames.UnrealEngine engine = UTGames.UnrealEngine.NONE;
+    
+    /**
+     * UT game this package comes from
+     */
+    private UTGames.UTGame game;
     
     /**
      * Name of package
@@ -36,29 +42,53 @@ public class UPackage {
     
     /**
      * Type of package (level, sound, textures, ...)
+     * TODO remove some package may not contain only one type of ressource
+     * (e.g: map packages)
      */
-    Type type;
+    public Type type;
     
     /**
      * 
      * @param name Package Name
      * @param type Type of package (sounds, textures, ...)
+     * @param game UT game this package belong to
+     * @param uRessource
      */
-    public UPackage(String name, Type type){
+    public UPackage(String name, Type type, UTGames.UTGame game, UPackageRessource uRessource){
         this.name = name;
         this.type = type;
+        this.game = game;
+        ressources.add(uRessource);
     }
 
-    public UPackage(UTGames.UnrealEngine engine, File file, Type type) {
-        this.engine = engine;
-        this.file = file;
-        this.type = type;
-    }
+
 
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the associated file with this package.
+     * @param gamePath Base path of the ut game this unreal package comes from
+     * @return 
+     */
+    public File getFileContainer(File gamePath){
+        
+        if(this.file != null){
+            return this.file;
+        }
+        
+        // refactor this
+        if(type == Type.LEVEL){
+            this.file = new File(name);
+        }
+        else {
+            this.file = new File(gamePath.getAbsolutePath() + File.separator + getFolderForPackageType() + File.separator + getName() + getUnrealPackageFileExtension());
+        }
+        
+        return this.file;
+    }
+    
     public void setFile(File file) {
         this.file = file;
     }
@@ -79,6 +109,90 @@ public class UPackage {
         }
         
         return exportedFiles;
+    }
+    
+    /**
+     * Returns ressource package by full name
+     * @param fullName
+     * @return 
+     */
+    public UPackageRessource findRessource(String fullName){
+        
+        for(UPackageRessource packageRessource : ressources){
+            if(fullName.equals(packageRessource.getFullName())){
+                return packageRessource;
+            }
+        }
+        
+        return null;
+    }
+    
+
+    public Set<UPackageRessource> getRessources() {
+        return ressources;
+    }
+    
+    /**
+     * Return path where unreal packages are stored depending
+     * on type of ressource
+     * @return Relative folder from UT path where the unreal package file should be
+     */
+    private String getFolderForPackageType(){
+        
+        if(type == Type.MUSIC){
+            return "Music";
+        } 
+        
+        else if (type == Type.SOUND){
+            return "Sounds";
+        }
+        
+        else if (type == Type.TEXTURE){
+            return "Textures";
+        }
+        
+        else if (type == Type.STATICMESH){
+            return "StaticMeshes";
+        }
+        
+        else if (type == Type.LEVEL){
+            return "Maps";
+        }
+        
+        else if (type == Type.SCRIPT){
+            return "System";
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Return relative path
+     * @return 
+     */
+    private String getUnrealPackageFileExtension(){
+        
+        if(type == Type.MUSIC){
+            return ".umx";
+        } 
+        
+        else if (type == Type.SOUND){
+            return ".uax";
+        }
+        
+        else if (type == Type.TEXTURE){
+            return ".utx";
+        }
+        
+        else if (type == Type.STATICMESH){
+            return ".usx";
+        }
+        
+        else if (type == Type.SCRIPT){
+            return ".u";
+        }
+        
+        return null;
     }
     
 }

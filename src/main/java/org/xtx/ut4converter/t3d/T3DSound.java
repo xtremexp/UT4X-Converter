@@ -6,6 +6,8 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * Class for converting any actor related to sound (might be music as well)
@@ -16,7 +18,7 @@ public class T3DSound extends T3DActor {
     /**
      * UE1, UE4
      */
-    T3DRessource ambientSound;
+    UPackageRessource ambientSound;
     
     /**
      * UE1, not UE4
@@ -60,7 +62,7 @@ public class T3DSound extends T3DActor {
         
         // AmbientSound=Sound'AmbAncient.Looping.Stower51'
         else if(line.contains("AmbientSound=")){
-            ambientSound = new T3DRessource(line.split("\\'")[1], T3DRessource.Type.SOUND, mapConverter);
+            ambientSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         } 
         else {
             return super.analyseT3DData(line);
@@ -92,7 +94,7 @@ public class T3DSound extends T3DActor {
         }
         
         if(mapConverter.convertSounds){
-            ambientSound.export();
+            ambientSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
         }
     }
     
@@ -110,7 +112,7 @@ public class T3DSound extends T3DActor {
             sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
             
             if(ambientSound != null){
-                sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getOutName()).append("'\n");
+                sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
             }
             
             //bOverrideAttenuation=True

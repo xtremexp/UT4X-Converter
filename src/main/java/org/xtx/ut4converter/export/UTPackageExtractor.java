@@ -6,12 +6,12 @@
 package org.xtx.ut4converter.export;
 
 import java.io.File;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * Base class for exporting stuff from Unreal Packages (including levels)
@@ -29,7 +29,7 @@ public abstract class UTPackageExtractor {
     /**
      * Temporary logger until we embed one in MapConverter class
      */
-    protected Logger logger;
+    public Logger logger;
     
     /**
      * 
@@ -62,7 +62,7 @@ public abstract class UTPackageExtractor {
      * @return List of files exported
      * @throws java.lang.Exception If anythings goes wrong when exporting this ressource
      */
-    public abstract Set<File> extract(T3DRessource ressource) throws Exception;
+    public abstract Set<File> extract(UPackageRessource ressource) throws Exception;
     
     public abstract File getExporterPath();
     
@@ -73,7 +73,7 @@ public abstract class UTPackageExtractor {
      * @param ressource
      * @return 
      */
-    public static UTPackageExtractor getExtractor(MapConverter mapConverter, T3DRessource ressource){
+    public static UTPackageExtractor getExtractor(MapConverter mapConverter, UPackageRessource ressource){
         
         if(mapConverter.packageExtractor != null){
             return mapConverter.packageExtractor;
@@ -84,13 +84,4 @@ public abstract class UTPackageExtractor {
         }
     }
     
-    /**
-     * Tells if this ressource has ever been extracted
-     * @param ressource
-     * @return 
-     */
-    protected boolean isExtracted(T3DRessource ressource){
-        return mapConverter.exportedRessources.containsKey(ressource.uPacRessource);
-    }
-
 }
