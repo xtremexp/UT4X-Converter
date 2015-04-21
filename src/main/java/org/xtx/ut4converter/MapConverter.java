@@ -305,17 +305,25 @@ public class MapConverter {
         for(UPackage unrealPackage : mapPackages.values()){
             
             for(UPackageRessource ressource : unrealPackage.getRessources()){
-                if(!ressource.isUsedInMap()){
-                    if(ressource.getExportedFile().delete()){
-                        logger.info(ressource.getExportedFile()+" unused file deleted");
+                
+                File exportedFile = ressource.getExportedFile();
+                
+                if(exportedFile != null){
+                    
+                    if(!ressource.isUsedInMap()){
+                        if(exportedFile.delete()){
+                            logger.info(ressource.getExportedFile()+" unused file deleted");
+                        }
+                    } 
+                    
+                    // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
+                    else  {
+
+                        File newFile = new File(exportedFile.getParent() + File.separator + ressource.getConvertedFileName());
+                        Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        ressource.getExportedFile().delete();
+                        logger.info("Renamed "+exportedFile.getName()+" to "+newFile.getName());
                     }
-                } 
-                // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
-                else {
-                    File newFile = new File(ressource.getConvertedFileName());
-                    Files.copy(ressource.getExportedFile().toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    ressource.getExportedFile().delete();
-                    logger.info("Renamed "+ressource.getExportedFile().getName()+" to "+newFile.getName());
                 }
             }
         }

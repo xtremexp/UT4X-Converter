@@ -207,8 +207,7 @@ public class UPackageRessource {
         String s[] = exportedFile.getName().split("\\.");
         String currentFileExt = s[s.length -1];
             
-        // TODO SYNC WITH T3DRessource.outName !
-        return exportedFile.getParent() + File.separator + getFullNameWithoutDots() + "." +currentFileExt;
+        return getFullNameWithoutDots() + "." +currentFileExt;
     }
     
     /**
