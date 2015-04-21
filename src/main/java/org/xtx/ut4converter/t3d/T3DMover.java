@@ -10,6 +10,8 @@ import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -18,6 +20,10 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  */
 public class T3DMover extends T3DBrush {
 
+    /**
+     * Sounds used by movers when it started moving, is moving ...
+     * TODO make a list of UPackageRessource binded with some property name
+     */
     UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
 
     /**
@@ -83,27 +89,27 @@ public class T3DMover extends T3DBrush {
         
         // UE1 -> 'CloseStartSound' ? (UE4)
         else if(line.contains("ClosedSound=")){
-            closedSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);;
+            closedSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);;
         }
         
         // UE1 -> 'CloseStopSound' ? (UE4)
         else if(line.contains("ClosingSound=")){
-            closingSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            closingSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'OpenStartSound' ? (UE4)
         else if(line.contains("OpeningSound=")){
-            openingSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            openingSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'OpenStopSound' ? (UE4)
         else if(line.contains("OpenedSound=")){
-            openedSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            openedSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'Closed Sound' (UE4)
         else if(line.contains("MoveAmbientSound=")){
-            moveAmbientSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            moveAmbientSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'Lift Destination' (UE12)
@@ -208,6 +214,28 @@ public class T3DMover extends T3DBrush {
         // TODO write mover UT UE<=3
         else {
             return "";
+        }
+    }
+    
+    @Override
+    public void convert(){
+        
+        if(mapConverter.convertSounds){
+            if(openingSound != null){
+                openingSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            }
+            
+            if(openedSound != null){
+                openedSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            }
+            
+            if(closingSound != null){
+                closingSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            }
+            
+            if(closedSound != null){
+                closedSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            }
         }
     }
     
