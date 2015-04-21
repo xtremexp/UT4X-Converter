@@ -234,7 +234,7 @@ public final class UCCExporter extends UTPackageExtractor {
     private String getCommandLine(String fileName, T3DRessource.Type type){
         
         if( mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version ){
-            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " " + getExportFolder(type);
+            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " \"" + getExportFolder(type) + "\"";
         } 
         
         else {
