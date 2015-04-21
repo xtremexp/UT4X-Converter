@@ -237,6 +237,8 @@ public class T3DMover extends T3DBrush {
                 closedSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
             }
         }
+        
+        super.convert();
     }
     
 }
