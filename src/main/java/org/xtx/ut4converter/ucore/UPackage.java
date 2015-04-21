@@ -9,8 +9,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
