@@ -13,14 +13,14 @@ import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
- * TODO refactor / merge with T3DRessource.
- * It's becoming messy!
+ * Some ressource such as texture, sound, ... 
+ * embedded into some unreal package
  * @author XtremeXp
  */
 public class UPackageRessource {
 
     /**
-     * Unreal Package linked to this ressource
+     * Unreal Package this ressource belongs to
      */
     UPackage unrealPackage;
     
@@ -58,15 +58,19 @@ public class UPackageRessource {
      */
     public String name;
     
+    /**
+     * Type of ressource
+     * (texture, sounds, staticmesh, mesh, ...)
+     */
     Type type;
 
     /**
-     *
+     * Creates an unreal package ressource information object.
      * @param fullName Full package ressource name (e.g:
-     * "AmbAncient.Looping.Stower51"
-     * @param type
+     * "AmbAncient.Looping.Stower51")
+     * @param type Type of ressource (texture, sound, staticmesh, mesh, ...)
      * @param game UT game this ressource belongs to
-     * @param isUsedInMap
+     * @param isUsedInMap if <code>true</code> means ressource is being used 
      */
     public UPackageRessource(String fullName, Type type, UTGame game, boolean isUsedInMap) {
 
@@ -74,6 +78,8 @@ public class UPackageRessource {
 
         // TODO handle brush polygon texture info
         // which only have "name" info
+        // TODO move out creating upackageressource from level
+        // which should be directly an unreal package
         String packageName = type != Type.LEVEL ? s[0] : fullName;
         
         parseNameAndGroup(fullName);
@@ -91,7 +97,7 @@ public class UPackageRessource {
      * Creates a package ressource
      * @param fullName Full name of ressource
      * @param uPackage Package this ressource belongs to
-     * @param game
+     * @param game 
      * @param ressourceType Type of ressource (texture, sound, ...)
      * @param isUsedInMap <code>true<code> if this ressource is used in map that is being converted
      */
@@ -107,7 +113,7 @@ public class UPackageRessource {
     
     /**
      * 
-     * @param fullName
+     * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
      * @param uPackage 
      * @param exportedFile 
      */
@@ -121,6 +127,13 @@ public class UPackageRessource {
         uPackage.ressources.add(this);
     }
     
+    /**
+     * Parse group and name of ressource from full name.
+     * e.g: Full ressource name (e.g: "AmbAncient.Looping.Stower51")
+     * x) group = "Looping"
+     * x) name = "Stower51"
+     * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
+     */
     private void parseNameAndGroup(String fullName){
         String s[] = fullName.split("\\.");
 
@@ -137,7 +150,7 @@ public class UPackageRessource {
      * Tells if this ressource can be exported.
      * If it has never been exported or export ever failed,
      * it cannot be exported again
-     * @return 
+     * @return <code>true</code> if the file need to be exported
      */
     public boolean needExport(){
         return !exportFailed && exportedFile == null;
@@ -159,12 +172,15 @@ public class UPackageRessource {
     }
     
     /**
-     * 
-     * @param mapConverter
+     * Guess the converted name used in converted t3d unreal map
+     * E.G:
+     * UT99:
+     * @param mapConverter Map Converter
      * @return 
      */
     public String getConvertedName(MapConverter mapConverter){
         
+        // TODO move out this param to some core/config class
         final String UE4_BASEPATH = "/Game/RestrictedAssets/Maps/WIP";
         
         String suffix = "";
@@ -178,6 +194,7 @@ public class UPackageRessource {
             suffix = "_Mat";
         }
         
+        // /Game/RestrictedAssets/Maps/WIP/<convertedmapname>/<ressourcetype>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
         return UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.getName() + "/" + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
     }
     
@@ -218,14 +235,27 @@ public class UPackageRessource {
         return "";
     }
     
+    /**
+     * Replace all dots in full name with underscores.
+     * This is used to get converted name or filename
+     * @return 
+     */
     public String getFullNameWithoutDots(){
         return getFullName().replaceAll("\\.", "_");
     }
 
+    /**
+     * 
+     * @return Unreal Package this ressource belongs to
+     */
     public UPackage getUnrealPackage() {
         return unrealPackage;
     }
     
+    /**
+     * 
+     * @return true if this ressource has been exported to a file
+     */
     public boolean isExported(){
         return exportedFile != null;
     }
@@ -238,11 +268,20 @@ public class UPackageRessource {
         this.exportedFile = exportedFile;
     }
 
-    
+    /**
+     * Set this ressource as "used in map"
+     * This helps deleting unused ressources after extracting
+     * multiple ressources from single unreal package
+     * @param isUsedInMap true if this ressource is used in map
+     */
     public void setIsUsedInMap(boolean isUsedInMap){
         this.isUsedInMap = isUsedInMap;
     }
     
+    /**
+     * 
+     * @return true if this ressource is used in the map being converted
+     */
     public boolean isUsedInMap(){
         return this.isUsedInMap;
     }

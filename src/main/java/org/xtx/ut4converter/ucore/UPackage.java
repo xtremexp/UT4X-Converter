@@ -83,7 +83,7 @@ public class UPackage {
             this.file = new File(name);
         }
         else {
-            this.file = new File(gamePath.getAbsolutePath() + File.separator + getFolderForPackageType() + File.separator + getName() + getUnrealPackageFileExtension());
+            this.file = new File(gamePath.getAbsolutePath() + File.separator + getFileFolder() + File.separator + getName() + getFileExtension());
         }
         
         return this.file;
@@ -98,6 +98,10 @@ public class UPackage {
         ressources.add(ressource);
     }
 
+    /**
+     * List all ressources of packages that have been exported
+     * @return List of exported ressources
+     */
     public Set<File> getExportedFiles() {
         
         Set<File> exportedFiles = new HashSet<>();
@@ -113,8 +117,8 @@ public class UPackage {
     
     /**
      * Returns ressource package by full name
-     * @param fullName
-     * @return 
+     * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
+     * @return ressource with same full name
      */
     public UPackageRessource findRessource(String fullName){
         
@@ -128,6 +132,12 @@ public class UPackage {
     }
     
 
+    /**
+     * Get ressources used by the package.
+     * The ressource list is built on extracting ressource packages
+     * with unreal package extractor
+     * @return List of ressources of the package
+     */
     public Set<UPackageRessource> getRessources() {
         return ressources;
     }
@@ -137,7 +147,7 @@ public class UPackage {
      * on type of ressource
      * @return Relative folder from UT path where the unreal package file should be
      */
-    private String getFolderForPackageType(){
+    private String getFileFolder(){
         
         if(type == Type.MUSIC){
             return "Music";
@@ -170,7 +180,7 @@ public class UPackage {
      * Return relative path
      * @return 
      */
-    private String getUnrealPackageFileExtension(){
+    private String getFileExtension(){
         
         if(type == Type.MUSIC){
             return ".umx";
@@ -190,6 +200,10 @@ public class UPackage {
         
         else if (type == Type.SCRIPT){
             return ".u";
+        }
+        
+        else if (type == Type.LEVEL){
+            return ".unr";
         }
         
         return null;
