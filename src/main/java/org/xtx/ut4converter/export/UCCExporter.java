@@ -118,11 +118,27 @@ public final class UCCExporter extends UTPackageExtractor {
         return UccOptions.UNKNOWN;
     }
     
-    public UCCExporter(MapConverter mapConverter) {
+    private UCCExporter(MapConverter mapConverter) {
         super(mapConverter);
         
         userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
         uccExporterPath = getExporterPath();
+    }
+    
+    /**
+     * 
+     * @param mapConverter
+     * @return 
+     */
+    public static UCCExporter getInstance(MapConverter mapConverter){
+        
+        UserGameConfig userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
+        
+        if(userGameConfig == null){
+            return null;
+        } else {
+            return new UCCExporter(mapConverter);
+        }
     }
 
     @Override
@@ -209,6 +225,10 @@ public final class UCCExporter extends UTPackageExtractor {
     
     @Override
     public File getExporterPath(){
+        
+        if(userGameConfig == null){
+            return null;
+        }
         
         // U1, UT, U2(TODO CHECK), UT2003(TODO CHECK), UT2004
         if(mapConverter.getInputGame().engine.version < UTGames.UnrealEngine.UE3.version){

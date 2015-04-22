@@ -162,7 +162,7 @@ public class UPackageRessource {
      * @param packageExtractor
      */
     public void export(UTPackageExtractor packageExtractor) {
-        if(needExport()){
+        if(needExport() && packageExtractor != null){
             try {
                 packageExtractor.extract(this);
             } catch (Exception ex) {

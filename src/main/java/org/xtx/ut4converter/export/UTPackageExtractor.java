@@ -79,7 +79,7 @@ public abstract class UTPackageExtractor {
             return mapConverter.packageExtractor;
         } else {
             // TODO handle for multiple extractors
-            mapConverter.packageExtractor = new UCCExporter(mapConverter);
+            mapConverter.packageExtractor = UCCExporter.getInstance(mapConverter);
             return mapConverter.packageExtractor;
         }
     }
