@@ -15,7 +15,8 @@ import org.xtx.ut4converter.tools.ImageUtils;
 public class T3DLight extends T3DActor {
 
     /**
-     * 
+     * Light Effect
+     * Used in unreal engine 1 / 2
      */
     enum UE12_LightEffect {
         LE_None,
@@ -244,7 +245,9 @@ public class T3DLight extends T3DActor {
      * @return 
      */
     private boolean isSpotLight(){
-        return t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_SpotLight;
+        return t3dClass.equals(UE4_LightActor.SpotLight.name()) 
+                || lightEffect == UE12_LightEffect.LE_SpotLight 
+                || lightEffect == UE12_LightEffect.LE_StaticSpot;
     }
     
     /**
@@ -255,7 +258,7 @@ public class T3DLight extends T3DActor {
         
         if(isSpotLight()){
             return UE4_LightActor.SpotLight.name();
-        } 
+        }
         
         else {
             return UE4_LightActor.PointLight.name();
