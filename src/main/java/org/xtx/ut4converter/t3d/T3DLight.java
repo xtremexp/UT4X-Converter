@@ -90,6 +90,9 @@ public class T3DLight extends T3DActor {
     // *** Unreal Engine 1 / 2 Properties ***
     // Skin=Texture'GenFX.LensFlar.3'
     String skin;
+    
+
+    boolean isCorona;
 
     /**
      * UE1/2 brightness
@@ -130,7 +133,7 @@ public class T3DLight extends T3DActor {
      * How much attenuation radius will be multiplied
      * Attenuation Radius = Radius(UE123) * Factor
      */
-    private static final int UE123_UE4_ATTENUATION_RADIUS_FACTOR = 15;
+    private static final int UE123_UE4_ATTENUATION_RADIUS_FACTOR = 20;
 
     Double intensity;
     
@@ -225,7 +228,7 @@ public class T3DLight extends T3DActor {
         this.radius = 64;
         
         
-        this.intensity = 100d;
+        this.intensity = 60d;
         this.lightFalloffExponent = 2.5d;
     }
     
@@ -258,6 +261,10 @@ public class T3DLight extends T3DActor {
         
         else if(line.contains("LightCone")){
             outerConeAngle = T3DUtils.getDouble(line);
+        }
+        
+        else if(line.contains("isCorona")){
+            isCorona = Boolean.getBoolean(line.split("\\=")[1]);
         }
         
         else {
@@ -297,7 +304,7 @@ public class T3DLight extends T3DActor {
      * Default light source lenght for 
      * converted UE1/2 light with cylinder light effect
      */
-    final int lightEffectCylinderSourceLength = 5000;
+    final int lightEffectCylinderSourceLength = 100;
     
     /**
      *
@@ -309,7 +316,7 @@ public class T3DLight extends T3DActor {
         if(mapConverter.toUnrealEngine4()){
             sbf.append(IDT).append("Begin Actor Class=").append(getConvertedLightClass()).append(" Name=").append(name).append("\n");
             
-            sbf.append(IDT).append("\tBegin Object Class=PointLightComponent Name=\"LightComponent0\"\n");
+            sbf.append(IDT).append("\tBegin Object Class=").append(isSpotLight()?"SpotLightComponent":"PointLightComponent").append(" Name=\"LightComponent0\"\n");
             sbf.append(IDT).append("\tEnd Object\n");
             
             sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
@@ -318,10 +325,12 @@ public class T3DLight extends T3DActor {
             sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
             sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
             
-            sbf.append(IDT).append("\t\tSourceRadius=").append(radius).append("\n");
-            
+
             if(lightEffect == UE12_LightEffect.LE_Cylinder){
-                sbf.append(IDT).append("\t\tSourceLength=").append(lightEffectCylinderSourceLength).append("\n");
+                sbf.append(IDT).append("\t\tSourceLength=").append(attenuationRadius/2).append("\n");
+                sbf.append(IDT).append("\t\tSourceRadius=").append(attenuationRadius/2).append("\n");
+            } else {
+                sbf.append(IDT).append("\t\tSourceRadius=").append(radius).append("\n");
             }
             
             sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
@@ -332,8 +341,9 @@ public class T3DLight extends T3DActor {
             }
             
             if(isSpotLight()){
-                Double angle = outerConeAngle != null ? outerConeAngle : 128d; // 128 is default angle for UE1/2 
-                sbf.append(IDT).append("\t\tInnerConeAngle=").append(angle).append("\n");
+                // 128 is default angle for UE1/2 (in 0 -> 255 range) = 90 in (0 -> 180° range)
+                Double angle = outerConeAngle != null ? outerConeAngle : 90d;  
+                sbf.append(IDT).append("\t\tInnerConeAngle=").append((angle/2)).append("\n");
                 sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
             }
             
@@ -342,7 +352,7 @@ public class T3DLight extends T3DActor {
             writeLocRotAndScale();
             sbf.append(IDT).append("\tEnd Object\n");
             
-            sbf.append(IDT).append("\tPointLightComponent=\"LightComponent0\"\n");
+            sbf.append(IDT).append("\t").append(isSpotLight()?"SpotLightComponent":"PointLightComponent").append("\"LightComponent0\"\n");
             sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
 
             writeEndActor();
@@ -365,9 +375,18 @@ public class T3DLight extends T3DActor {
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
             convertColorToRGB();
             
+            if(isCorona){
+                radius = 0;
+            }
+            
             attenuationRadius = radius;
             
             attenuationRadius *= UE123_UE4_ATTENUATION_RADIUS_FACTOR;
+            
+            if(outerConeAngle != null){
+                // 0 -> 255 range to 0 -> 360 range
+                outerConeAngle *= 255d/360d;
+            }
         }
         
         super.convert();
