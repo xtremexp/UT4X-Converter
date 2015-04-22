@@ -115,7 +115,7 @@ public class T3DSound extends T3DActor {
         
         if(mapConverter.toUnrealEngine4()){
             
-            if(!name.endsWith("Sound")){
+            if(!name.contains("Sound")){
                 name += "Sound";
             }
             
