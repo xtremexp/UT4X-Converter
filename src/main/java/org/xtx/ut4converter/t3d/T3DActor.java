@@ -522,5 +522,8 @@ public abstract class T3DActor {
         }
     }
     
+    public String toString(){
+        return sbf.toString();
+    }
 }
 

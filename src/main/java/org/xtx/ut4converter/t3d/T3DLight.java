@@ -12,7 +12,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
  * Class for converting lights.
  * @author XtremeXp
  */
-public class T3DLight extends T3DActor {
+public class T3DLight extends T3DSound {
 
     /**
      * Light Effect
@@ -308,15 +308,20 @@ public class T3DLight extends T3DActor {
     
     private UE4_Mobility getMobility() {
         
+        // force to stationary until we fix
+        // perf issues with stationary mobility
+        /**
         if(lightEffect == UE12_LightEffect.LE_None 
                 || lightEffect == UE12_LightEffect.LE_StaticSpot 
                 || lightEffect == UE12_LightEffect.LE_Unused
+                || lightEffect == UE12_LightEffect.LE_Cylinder
                 ){
             return UE4_Mobility.Static;
         } else {
             return UE4_Mobility.Stationary;
-        }
+        }*/
         
+        return UE4_Mobility.Static;
     }
     
     /**
@@ -331,6 +336,10 @@ public class T3DLight extends T3DActor {
      */
     @Override
     public String toString(){
+        
+        if("Light361".equals(name)){
+            System.out.println("YEAH");
+        }
         
         if(mapConverter.toUnrealEngine4()){
             sbf.append(IDT).append("Begin Actor Class=").append(getConvertedLightClass()).append(" Name=").append(name).append("\n");
@@ -380,7 +389,7 @@ public class T3DLight extends T3DActor {
 
         
         
-        return sbf.toString();
+        return super.toString();
     }
     
     

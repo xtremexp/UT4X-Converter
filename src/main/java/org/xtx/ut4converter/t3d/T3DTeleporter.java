@@ -14,7 +14,7 @@ import org.xtx.ut4converter.tools.Geometry;
  * Base class for teleporters
  * @author XtremeXp
  */
-public class T3DTeleporter extends T3DActor {
+public class T3DTeleporter extends T3DSound {
 
     /**
      * Unreal 1 property refering to 

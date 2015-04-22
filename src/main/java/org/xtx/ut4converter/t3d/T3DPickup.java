@@ -12,7 +12,7 @@ import org.xtx.ut4converter.MapConverter;
  * 
  * @author XtremeXp
  */
-public class T3DPickup extends T3DActor {
+public class T3DPickup extends T3DSound {
     
     String convertedPickupClass;
     
@@ -70,7 +70,7 @@ public class T3DPickup extends T3DActor {
 
         
         
-        return sbf.toString();
+        return super.toString();
     }
     
     

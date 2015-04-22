@@ -19,7 +19,7 @@ import org.xtx.ut4converter.tools.Geometry;
  * Generic Class for T3D brushes (includes movers as well)
  * @author XtremeXp
  */
-public class T3DBrush extends T3DActor {
+public class T3DBrush extends T3DSound {
 
     BrushClass brushClass = BrushClass.BRUSH;
     
@@ -322,7 +322,7 @@ public class T3DBrush extends T3DActor {
             // TODO add sheet surface
         }
         
-        return sbf.toString();
+        return super.toString();
     }
     
     /**

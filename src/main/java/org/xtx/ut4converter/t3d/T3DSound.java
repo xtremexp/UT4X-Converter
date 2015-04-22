@@ -11,6 +11,8 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * Class for converting any actor related to sound (might be music as well)
+ * TODO merge with T3D Actor and delete this class
+ * because any actors can have sound property
  * @author XtremeXp
  */
 public class T3DSound extends T3DActor {
@@ -96,6 +98,8 @@ public class T3DSound extends T3DActor {
         if(mapConverter.convertSounds && ambientSound != null){
             ambientSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
         }
+        
+        super.convert();
     }
     
     /**
@@ -105,7 +109,16 @@ public class T3DSound extends T3DActor {
     @Override
     public String toString(){
         
+        if(ambientSound == null){
+            return super.toString();
+        }
+        
         if(mapConverter.toUnrealEngine4()){
+            
+            if(!name.endsWith("Sound")){
+                name += "Sound";
+            }
+            
             sbf.append(IDT).append("Begin Actor Class=AmbientSound Name=").append(name).append("\n");
             sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"AudioComponent0\"\n");
             sbf.append(IDT).append("\tEnd Object\n");
@@ -131,6 +144,6 @@ public class T3DSound extends T3DActor {
         }
         
         
-        return sbf.toString();
+        return super.toString();
     }
 }

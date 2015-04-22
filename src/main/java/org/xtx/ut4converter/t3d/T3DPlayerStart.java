@@ -11,7 +11,7 @@ import org.xtx.ut4converter.MapConverter;
  * 
  * @author XtremeXp
  */
-public class T3DPlayerStart extends T3DActor {
+public class T3DPlayerStart extends T3DSound {
 
     private static final int DEFAULT_TEAM = 0;
     
@@ -73,7 +73,7 @@ public class T3DPlayerStart extends T3DActor {
         }
         
         writeEndActor();
-        return sbf.toString();
+        return super.toString();
     }
     
 }
