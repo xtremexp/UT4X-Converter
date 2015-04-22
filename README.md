@@ -6,7 +6,7 @@ UT4 Converter Readme file
 - Author: XtremeXp
 - Release Date: 18/04/2015
 - Download 0.2.0 version at: http://utforums.epicgames.com/showthread.php?t=588848
-- Source Code: https://github.com/xtremexp/UT4Converter (license undetermined yet)
+- Source Code: https://github.com/xtremexp/UT4Converter
 
 
 Description
@@ -16,8 +16,9 @@ Unreal Tournament (1999) maps to Unreal Tournament (2015)
 
 UT games supported
 ------------------------------
-UT4 Converter only convert the following game for the moment:
-- Unreal Tournament (1999) -> Unreal Tournament (2015)
+UT4 Converter helps converting UT maps to Unreal Tournament 2015.
+Only Unreal Tournament (1999) for the moment is supported.
+(support for other ut games might be added for futures releases)
 
 If you want to convert UT games to Unreal Tournament 3,
 please download and use UT3 Converter program instead of UT4 Converter.
@@ -106,9 +107,9 @@ but not all of them.
 
 Limitations / Issues
 ------------------------------
-- Bug with Ctf flagbases not being converted
+- Extraction of sound ressources only works with Windows (0.3.0 version in development)
 
-Copyright / License
+License
 ------------------------------
 License to be determined / set. Just feel free to browse code or/and 
 contribute !
@@ -119,7 +120,7 @@ CONVERTED MAP.
 
 How to build and run latest version ?
 ------------------------------
-- Download and install Java 8 JDK (Java Developement Kit)
+- Download and install Java 8 JDK (Java Developement Kit) for Windows 64 bit or Linux 64 bit
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
 - Set "Repository URL" = https://github.com/xtremexp/UT4Converter
@@ -140,6 +141,11 @@ Librairies / Technologies used
 History
 ------------------------------
 - 0.3.0 - In development
+  * Improved lightning
+  * Sound export and conversion
+  * Better alignment of FlagBases
+  * Fixed crash if UT4 converter has whitespace in one of his parent folders
+  * ?
 
 - 0.2.1 - 19/04/2015: 
   * Fixed movers not importing correctly in UT4 editor
