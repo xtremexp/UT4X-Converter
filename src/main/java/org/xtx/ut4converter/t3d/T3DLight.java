@@ -34,11 +34,28 @@ public class T3DLight extends T3DActor {
         LE_SpotLight,
         LE_NonIncidence,
         LE_Shell,
-        LE_OmniBumMap,
+        LE_OmniBumpMap,
         LE_Interference,
         LE_Cylinder,
         LE_Rotor,
         LE_Unused;
+    }
+    
+    /**
+     * Light Type 
+     * UE 1 / 2
+     */
+    enum UE12_LightType {
+        LT_None,
+        LT_Steady,
+        LT_Pulse,
+        LT_Blink,
+        LT_Flicker,
+        LT_Strobe,
+        LT_BackdropLight,
+        LT_SubtlePulse,
+        LT_TexturePaletteLoop,
+        LT_TexturePaletteOnce
     }
     
     /**
@@ -57,6 +74,12 @@ public class T3DLight extends T3DActor {
      * Used in Unreal Engine 1 / 2
      */
     UE12_LightEffect lightEffect = UE12_LightEffect.LE_None;
+    
+    /**
+     * Default light type (TODO check isdefaut)
+     * Used in Unreal Engine 1 / 2
+     */
+    UE12_LightType lightType = UE12_LightType.LT_Steady;
     
     /**
      * UE1/2: LightCone - default 128
@@ -229,6 +252,10 @@ public class T3DLight extends T3DActor {
             lightEffect = UE12_LightEffect.valueOf(line.split("\\=")[1]);
         }
         
+        else if(line.contains("LightType")){
+            lightType = UE12_LightType.valueOf(line.split("\\=")[1]);
+        }
+        
         else if(line.contains("LightCone")){
             outerConeAngle = T3DUtils.getDouble(line);
         }
@@ -267,6 +294,12 @@ public class T3DLight extends T3DActor {
     }
     
     /**
+     * Default light source lenght for 
+     * converted UE1/2 light with cylinder light effect
+     */
+    final int lightEffectCylinderSourceLength = 5000;
+    
+    /**
      *
      * @return
      */
@@ -286,6 +319,11 @@ public class T3DLight extends T3DActor {
             sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
             
             sbf.append(IDT).append("\t\tSourceRadius=").append(radius).append("\n");
+            
+            if(lightEffect == UE12_LightEffect.LE_Cylinder){
+                sbf.append(IDT).append("\t\tSourceLength=").append(lightEffectCylinderSourceLength).append("\n");
+            }
+            
             sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
             sbf.append(IDT).append("\t\tLightColor=(B=").append(blue).append(",G=").append(green).append(",R=").append(red).append(",A=").append(alpha).append(")\n");
             
