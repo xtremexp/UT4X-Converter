@@ -108,12 +108,13 @@ public class T3DMatch {
         initialisePowerUps();
         
         // FIXME / NOT WORKING     
-        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, null, null, null, new String[]{"UTRedFlagBase_C"}));
+        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, null, null, null, new String[]{"UTRedFlagBase_C"})
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, -64d}));
         
         // UT99 Actor with class 'FlagBase' and property "Team" equals 1 = UTBlueFlagBase for UT4
-        // FIXME / NOT WORKING 
         list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, null, null, null, new String[]{"UTBlueFlagBase_C"})
-                .withP(UTGame.UT99, "Team", "1"));
+                .withP(UTGame.UT99, "Team", "1")
+                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, -64d}));
         
         // TODO improve t3d matcher to sync / convert properties "on the fly"
         // TODO handle radius and height
