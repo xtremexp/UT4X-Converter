@@ -14,13 +14,72 @@ import org.xtx.ut4converter.tools.ImageUtils;
  */
 public class T3DLight extends T3DActor {
 
+    /**
+     * 
+     */
+    enum UE12_LightEffect {
+        LE_None,
+        LE_TorchWaver,
+        LE_FireWaver,
+        LE_WateryShimmer,
+        LE_Searchlight,
+        LE_SlowWave,
+        LE_FastWave,
+        LE_CloudCast,
+        LE_StaticSpot,
+        LE_Shock,
+        LE_Disco,
+        LE_Warp,
+        LE_SpotLight,
+        LE_NonIncidence,
+        LE_Shell,
+        LE_OmniBumMap,
+        LE_Interference,
+        LE_Cylinder,
+        LE_Rotor,
+        LE_Unused;
+    }
+    
+    /**
+     * Unreal Engine 4 light actors
+     * TODO check UE3 (might be same)
+     */
+    enum UE4_LightActor {
+        PointLight,
+        SkyLight,
+        SpotLight,
+        DirectionalLight;
+    }
+    
+    /**
+     * Default light effect
+     * Used in Unreal Engine 1 / 2
+     */
+    UE12_LightEffect lightEffect = UE12_LightEffect.LE_None;
+    
+    /**
+     * UE1/2: LightCone - default 128
+     * UE4: OuterConeAngle - default 44
+     */
+    Double outerConeAngle;
+    
     // *** Unreal Engine 1 / 2 Properties ***
     // Skin=Texture'GenFX.LensFlar.3'
     String skin;
 
+    /**
+     * UE1/2 brightness
+     */
     int brightness;
+    
+    /**
+     * UE1/2 hue
+     */
     int hue;
 
+    /**
+     * UE1/2 saturation
+     */
     int saturation;
     int radius;
     
@@ -164,11 +223,44 @@ public class T3DLight extends T3DActor {
         else if(line.contains("LightRadius")){
             radius = T3DUtils.getShort(line);
         } 
+        
+        else if(line.contains("LightEffect")){
+            lightEffect = UE12_LightEffect.valueOf(line.split("\\=")[1]);
+        }
+        
+        else if(line.contains("LightCone")){
+            outerConeAngle = T3DUtils.getDouble(line);
+        }
+        
         else {
             return super.analyseT3DData(line);
         }
         
         return true;
+    }
+    
+    /**
+     * Tell if this light is spotlight or not
+     * @return 
+     */
+    private boolean isSpotLight(){
+        return t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_SpotLight;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    private String getConvertedLightClass(){
+        
+        if(isSpotLight()){
+            return UE4_LightActor.SpotLight.name();
+        } 
+        
+        else {
+            return UE4_LightActor.PointLight.name();
+        }
+        
     }
     
     /**
@@ -179,7 +271,7 @@ public class T3DLight extends T3DActor {
     public String toString(){
         
         if(mapConverter.toUnrealEngine4()){
-            sbf.append(IDT).append("Begin Actor Class=PointLight Name=").append(name).append("\n");
+            sbf.append(IDT).append("Begin Actor Class=").append(getConvertedLightClass()).append(" Name=").append(name).append("\n");
             
             sbf.append(IDT).append("\tBegin Object Class=PointLightComponent Name=\"LightComponent0\"\n");
             sbf.append(IDT).append("\tEnd Object\n");
@@ -196,6 +288,12 @@ public class T3DLight extends T3DActor {
             
             if(intensity != null){
                 sbf.append(IDT).append("\t\tIntensity=").append(intensity).append("\n");
+            }
+            
+            if(isSpotLight()){
+                Double angle = outerConeAngle != null ? outerConeAngle : 128d; // 128 is default angle for UE1/2 
+                sbf.append(IDT).append("\t\tInnerConeAngle=").append(angle).append("\n");
+                sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
             }
             
             sbf.append(IDT).append("\t\tMobility=Static\n");
