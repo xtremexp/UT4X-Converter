@@ -141,6 +141,9 @@ History
 ------------------------------
 - 0.3.0 - In development
 
+- 0.2.1 - 19/04/2015: 
+  * Fixed movers not importing correctly in UT4 editor
+
 - 0.2.0 - 18/04/2015: 
   * [UI] Added conversion log display
   * [UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
