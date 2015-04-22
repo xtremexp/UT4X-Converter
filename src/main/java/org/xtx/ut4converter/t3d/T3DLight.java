@@ -58,6 +58,12 @@ public class T3DLight extends T3DActor {
         LT_TexturePaletteOnce
     }
     
+    enum UE4_Mobility {
+        Static,
+        Stationary,
+        Movable
+    }
+    
     /**
      * Unreal Engine 4 light actors
      * TODO check UE3 (might be same)
@@ -300,6 +306,19 @@ public class T3DLight extends T3DActor {
         
     }
     
+    private UE4_Mobility getMobility() {
+        
+        if(lightEffect == UE12_LightEffect.LE_None 
+                || lightEffect == UE12_LightEffect.LE_StaticSpot 
+                || lightEffect == UE12_LightEffect.LE_Unused
+                ){
+            return UE4_Mobility.Static;
+        } else {
+            return UE4_Mobility.Stationary;
+        }
+        
+    }
+    
     /**
      * Default light source lenght for 
      * converted UE1/2 light with cylinder light effect
@@ -347,7 +366,7 @@ public class T3DLight extends T3DActor {
                 sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
             }
             
-            sbf.append(IDT).append("\t\tMobility=Static\n");
+            sbf.append(IDT).append("\t\tMobility=").append(getMobility().name()).append("\n");
             
             writeLocRotAndScale();
             sbf.append(IDT).append("\tEnd Object\n");
