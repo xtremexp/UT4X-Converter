@@ -14,8 +14,8 @@
     <VBox>
         <GridPane hgap="10" vgap="10" alignment="CENTER" >
             <Label text="Unreal 1 Folder" GridPane.columnIndex="0" GridPane.rowIndex="1"></Label>
-            <TextField fx:id="u1Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="1" disable="true">Maybe for future releases ...</TextField>
-            <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1" disable="true">Select</Button>
+            <TextField fx:id="u1Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="1" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Gold"></TextField>
+            <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1">Select</Button>
             
             <Label text="Unreal 2 Folder" GridPane.columnIndex="0" GridPane.rowIndex="2" ></Label>
             <TextField fx:id="u2Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="2" disable="true">Maybe for future releases ...</TextField>

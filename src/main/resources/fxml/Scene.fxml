@@ -11,7 +11,8 @@
         <VBox>
             <MenuBar prefWidth="400" >
                 <Menu text="Convert" fx:id="menuConvert">
-                    <MenuItem text="UT99 Map" onAction="#handleConvert" fx:id="menuItemUT99Map"/>
+                    <MenuItem text="Unreal 1 Map" onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
+                    <MenuItem text="Unreal Tournament (1999) Map" onAction="#handleConvert" fx:id="menuItemUT99Map"/>
                     <SeparatorMenuItem/>
                     <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
                 </Menu>

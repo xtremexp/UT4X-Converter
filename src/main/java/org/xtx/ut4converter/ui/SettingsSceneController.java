@@ -20,6 +20,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.config.UserConfig;
 
@@ -60,20 +61,12 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectU1Folder(ActionEvent event) {
+        setUTxFolder(UTGame.U1, u1Path);
     }
-
+    
     @FXML
     private void selectUt99Folder(ActionEvent event) {
-        
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select UT99 folder");
-
-        File ut99Folder = chooser.showDialog(new Stage());
-        
-        if(ut99Folder != null){
-            ut99Path.setText(ut99Folder.getAbsolutePath());
-            saveGamePath(ut99Path, UTGames.UTGame.UT99);
-        }
+        setUTxFolder(UTGame.UT99, ut99Path);
     }
 
     @FXML
@@ -168,5 +161,22 @@ public class SettingsSceneController implements Initializable {
         }
     }
 
+    /**
+     * Sets and save ut path to xml user config file 
+     * on click "Select"
+     * @param utGame UT game to set path
+     * @param utPathTxtField Textfield for path game display in settings
+     */
+    private void setUTxFolder(UTGame utGame, TextField utPathTxtField){
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select "+utGame.name+" folder");
+
+        File utxFolder = chooser.showDialog(new Stage());
+        
+        if(utxFolder != null){
+            utPathTxtField.setText(utxFolder.getAbsolutePath());
+            saveGamePath(utPathTxtField, utGame);
+        }
+    }
     
 }
