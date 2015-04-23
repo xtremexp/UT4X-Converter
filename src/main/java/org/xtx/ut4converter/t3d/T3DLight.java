@@ -11,6 +11,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
 /**
  * Class for converting lights.
  * @author XtremeXp
+ * TODO handle "light skins" (coronas)
  */
 public class T3DLight extends T3DSound {
 
@@ -58,10 +59,36 @@ public class T3DLight extends T3DSound {
         LT_TexturePaletteOnce
     }
     
+    /**
+     * 
+     */
     enum UE4_Mobility {
-        Static,
-        Stationary,
-        Movable
+        Static, // don't move and don't change color
+        Stationary, // don't move but can change of color
+        Movable // can move and change color
+    }
+    
+    /**
+     * Light actors for UT99.
+     * Basically are normal lights with either some skin
+     * or special light effect + type
+     * TODO move out this to some "core class"
+     */
+    public static enum UE12_LightActors {
+        Light,
+        ChargeLight,
+        DistanceLightning,
+        FlashLightBeam,
+        OverHeatLight,
+        QueenTeleportLight,
+        SightLight,
+        SpotLight,
+        TorchFlame,
+        TriggerLight,
+        TriggerLightRad,
+        WeaponLight,
+        EffectLight,
+        PurpleLight;
     }
     
     /**

@@ -35,7 +35,10 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         
-        putUtClass(T3DLight.class, "Light", "SpotLight", "ChargeLight");
+        for(T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()){
+            putUtClass(T3DLight.class, ut99LightActor.name());
+        }
+        
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
         //addPickups();
