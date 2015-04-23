@@ -18,7 +18,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * A mover is a brush that moves in level.
  * @author XtremeXp
  */
-public class T3DMover extends T3DSound {
+public class T3DMover extends T3DBrush {
 
     /**
      * Sounds used by movers when it started moving, is moving ...
