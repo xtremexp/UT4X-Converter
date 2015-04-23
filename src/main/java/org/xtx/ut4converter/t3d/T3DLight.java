@@ -337,10 +337,6 @@ public class T3DLight extends T3DSound {
     @Override
     public String toString(){
         
-        if("Light361".equals(name)){
-            System.out.println("YEAH");
-        }
-        
         if(mapConverter.toUnrealEngine4()){
             sbf.append(IDT).append("Begin Actor Class=").append(getConvertedLightClass()).append(" Name=").append(name).append("\n");
             
