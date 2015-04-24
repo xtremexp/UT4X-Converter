@@ -89,9 +89,43 @@ public class Installation {
      * @return
      */
     public static File getProgramFolder()
-  {
-      return Installation.getInstallDirectory(MainApp.class);
-  }
+    {
+        return Installation.getInstallDirectory(MainApp.class);
+    }
+    
+    private static final String OS = System.getProperty("os.name").toLowerCase();
+
+    /**
+     * Means program running on windows
+     * @return 
+     */
+    public static boolean isWindows() {
+        return (OS.contains("win"));
+    }
+
+    /**
+     * Means program running on mac
+     * @return 
+     */
+    public static boolean isMac() {
+        return (OS.contains("mac"));
+    }
+
+    /**
+     * Means program running on Unix
+     * @return 
+     */
+    public static boolean isUnix() {
+        return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0 );
+    }
+
+    /**
+     * Means program running on linux
+     * @return 
+     */
+    public static boolean isLinux() {
+        return (OS.contains("nux") );
+    }
 }
 
 

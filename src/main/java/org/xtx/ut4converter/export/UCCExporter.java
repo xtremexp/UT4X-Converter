@@ -23,7 +23,8 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -58,6 +59,7 @@ public final class UCCExporter extends UTPackageExtractor {
     
     private enum Name{
         UCC_EXE("ucc.exe"),
+        UCC_BIN("UCCLinux.bin"),
         UT3_COM("ut3.com");
         
         String programName;
@@ -104,21 +106,21 @@ public final class UCCExporter extends UTPackageExtractor {
      * @param type Type of ressource
      * @return ucc command line options
      */
-    private UccOptions getUccOptions(T3DRessource.Type type){
+    private UccOptions getUccOptions(Type type){
         
-        if(type == T3DRessource.Type.SOUND){
+        if(type == Type.SOUND){
             return UccOptions.SOUND_WAV;
         } 
         
-        else if (type == T3DRessource.Type.MUSIC){
+        else if (type == Type.MUSIC){
             return UccOptions.UNKNOWN;
         }
         
-        else if (type == T3DRessource.Type.TEXTURE){
+        else if (type == Type.TEXTURE){
             return UccOptions.TEXTURE_TGA;
         }
         
-        else if (type == T3DRessource.Type.LEVEL){
+        else if (type == Type.LEVEL){
             return UccOptions.LEVEL_T3D;
         }
         
@@ -193,7 +195,7 @@ public final class UCCExporter extends UTPackageExtractor {
             return null;
         }
         
-        UPackageRessource t3dRessource = new UPackageRessource(unrealMap.getAbsolutePath(), T3DRessource.Type.LEVEL, mapConverter.getInputGame(), true);
+        UPackageRessource t3dRessource = new UPackageRessource(unrealMap.getAbsolutePath(), Type.LEVEL, mapConverter.getInputGame(), true);
         UCCExporter ucE = new UCCExporter(mapConverter);
         
         Set<File> files = ucE.extract(t3dRessource);
@@ -212,7 +214,7 @@ public final class UCCExporter extends UTPackageExtractor {
      * @param unrealPackage Unreal package file to export (can be a map (.unr) file or single package (.uax sound file package)
      * @return Batch file created
      */
-    private File createExportFileBatch(File unrealPackage, T3DRessource.Type type) throws IOException
+    private File createExportFileBatch(File unrealPackage, Type type) throws IOException
     {
 
         File fbat = File.createTempFile("UCCExportPackage", ".bat");
@@ -239,7 +241,15 @@ public final class UCCExporter extends UTPackageExtractor {
         
         // U1, UT, U2(TODO CHECK), UT2003(TODO CHECK), UT2004
         if(mapConverter.getInputGame().engine.version < UTGames.UnrealEngine.UE3.version){
-            return new File(userGameConfig.getPath() + File.separator + "System" + File.separator + Name.UCC_EXE);
+            String basePathUcc = userGameConfig.getPath() + File.separator + "System" + File.separator;
+            
+            if(supportLinux() && Installation.isLinux()){
+                basePathUcc += Name.UCC_BIN; // basically only U1 for the moment TODO check UT2003, U2, UT2004
+            } else {
+                basePathUcc += Name.UCC_EXE;
+            }
+            
+            return new File(basePathUcc);
         } 
         
         // UT3
@@ -258,7 +268,7 @@ public final class UCCExporter extends UTPackageExtractor {
      * @param fileName File name or full path filename of Unreal Package to extract
      * @return Full command line for extracting stuff from unreal packages (including maps)
      */
-    private String getCommandLine(String fileName, T3DRessource.Type type){
+    private String getCommandLine(String fileName, Type type){
         
         if( mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version ){
             return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " \"" + getExportFolder(type) + "\"";
