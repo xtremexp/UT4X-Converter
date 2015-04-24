@@ -66,6 +66,13 @@ public abstract class UTPackageExtractor {
     
     public abstract File getExporterPath();
     
+    
+    /**
+     * Says if this extractor support linux.
+     * @return <code>true<code> If this extractor does support linux 
+     */
+    public abstract boolean supportLinux();
+    
     /**
      * Returns and start an instance of an extractor.
      * This depends of unreal engine version as well as game.

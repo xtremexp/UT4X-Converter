@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackage;
@@ -48,6 +49,12 @@ public final class UCCExporter extends UTPackageExtractor {
      * Depends of user game settings
      */
     File uccExporterPath;
+
+    @Override
+    public boolean supportLinux() {
+        // oldunreal.com u1 patch as some UCCLinux.bin file (but is optional during patch install)
+        return mapConverter.getInputGame() == UTGame.U1;
+    }
     
     private enum Name{
         UCC_EXE("ucc.exe"),
