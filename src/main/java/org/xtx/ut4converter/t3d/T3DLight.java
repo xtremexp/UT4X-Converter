@@ -32,7 +32,7 @@ public class T3DLight extends T3DSound {
         LE_Shock,
         LE_Disco,
         LE_Warp,
-        LE_SpotLight,
+        LE_Spotlight,
         LE_NonIncidence,
         LE_Shell,
         LE_OmniBumpMap,
@@ -313,7 +313,7 @@ public class T3DLight extends T3DSound {
      */
     private boolean isSpotLight(){
         return t3dClass.equals(UE4_LightActor.SpotLight.name()) 
-                || lightEffect == UE12_LightEffect.LE_SpotLight 
+                || lightEffect == UE12_LightEffect.LE_Spotlight 
                 || lightEffect == UE12_LightEffect.LE_StaticSpot;
     }
     
