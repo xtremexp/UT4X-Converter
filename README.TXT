@@ -133,7 +133,7 @@ Note:
 Since it's a maven project, importing project with Eclipse IDE should work 
 but it has not been yet tested.
 
-Librairies / Technologies used
+Libraries / Technologies used
 ------------------------------
 - Java 1.8.0_40 - http://www.java.com
 - Sox by Chris Bagwell - 14.4.2 - http://sox.sourceforge.net/
@@ -141,11 +141,13 @@ Librairies / Technologies used
 
 History
 ------------------------------
-- 0.3.0 - In development
+- 0.3.0 - In development:
   * Improved lightning
   * Sound export and conversion
   * Better alignment of FlagBases
   * Fixed crash if UT4 converter has whitespace in one of his parent folders
+  * Fixed some bsp holes (sheet brushes) remaining in some maps
+  * Added / Activated support for Unreal 1
   * ?
 
 - 0.2.1 - 19/04/2015: 
