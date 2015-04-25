@@ -435,8 +435,8 @@ public class T3DLight extends T3DSound {
             attenuationRadius *= UE123_UE4_ATTENUATION_RADIUS_FACTOR;
             
             if(outerConeAngle != null){
-                // 0 -> 255 range to 0 -> 360 range
-                outerConeAngle *= 255d/360d;
+                // 0 -> 255 range to 0 -> 180 range
+                outerConeAngle *= (255d/360d)/2;
             }
         }
         
