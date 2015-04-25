@@ -119,7 +119,7 @@ public class T3DMatch {
         
         // TODO improve t3d matcher to sync / convert properties "on the fly"
         // TODO handle radius and height
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Trigger"}, null, new String[]{"Trigger"}, null, null, null, new String[]{"TriggerCapsule"}));
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Trigger"}, null, new String[]{"Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger"}, null, null, null, new String[]{"TriggerCapsule"}));
 
     }
     
