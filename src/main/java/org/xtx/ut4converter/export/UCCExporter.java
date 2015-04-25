@@ -319,22 +319,8 @@ public final class UCCExporter extends UTPackageExtractor {
             }
 
             logger.log(Level.INFO, command);
-
-            Runtime run = Runtime.getRuntime();
-            Process pp = run.exec(command);
-
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(pp.getInputStream()))){
-                String line;
-
-                while ((line = in.readLine()) != null) {
-                    logLines.add(line);
-                }
-            } 
-
-            // TODO handle exit value
-            pp.waitFor();
-            pp.exitValue();
-            pp.destroy();
+            
+            Installation.executeProgram(command, logLines);
 
             for (String logLine : logLines) {
 

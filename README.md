@@ -135,8 +135,9 @@ but it has not been yet tested.
 
 Librairies / Technologies used
 ------------------------------
-- Java 1.8.0_40
-- Java 3D Vecmath - For handling brush data - https://vecmath.dev.java.net/
+- Java 1.8.0_40 - http://www.java.com
+- Sox by Chris Bagwell - 14.4.2 - http://sox.sourceforge.net/
+- Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 
 History
 ------------------------------

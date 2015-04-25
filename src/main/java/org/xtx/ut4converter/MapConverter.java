@@ -2,6 +2,7 @@ package org.xtx.ut4converter;
 
 import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -296,8 +297,22 @@ public class MapConverter {
         t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
         t3dLvlConvertor.convert();
         
+        
+        cleanAndConvertRessources();
+    }
+    
+    
+    /**
+     * Delete unused files
+     * and convert them to good format if needed.
+     * (e.g: convert staticmeshes to .ase or .fbx format for import in UE4)
+     * @throws IOException 
+     */
+    private void cleanAndConvertRessources() throws IOException {
+        
         // remove unecessary exported files
-        // and rename those used in map
+        // convert them to some new file format if needed
+        // and rename them to fit with "naming" standards
         for(UPackage unrealPackage : mapPackages.values()){
             
             for(UPackageRessource ressource : unrealPackage.getRessources()){
@@ -314,7 +329,13 @@ public class MapConverter {
                     
                     // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
                     else  {
-
+                        // Some sounds might need to be converted for correct import in UE4
+                        if(ressource.needsConversion(this)){
+                            ressource.convert(logger);
+                            // TODO delete exportedFile
+                        }
+                        
+                        // TODO use convertedFile if needed for renaming
                         File newFile = new File(exportedFile.getParent() + File.separator + ressource.getConvertedFileName());
                         Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         ressource.getExportedFile().delete();
@@ -323,7 +344,6 @@ public class MapConverter {
                 }
             }
         }
-
     }
 
     /**

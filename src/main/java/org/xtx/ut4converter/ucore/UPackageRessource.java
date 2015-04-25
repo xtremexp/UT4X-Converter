@@ -6,11 +6,16 @@
 package org.xtx.ut4converter.ucore;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.SoxSoundConverter;
 
 /**
  * Some ressource such as texture, sound, ... 
@@ -38,13 +43,7 @@ public class UPackageRessource {
      */
     boolean exportFailed;
     
-    /**
-     * Where this ressource have been converted
-     * (sometime needed).
-     * E.G: UT99 do export .pcx files as textures
-     * but UTs with engine > 2 do not support them
-     */
-    File convertedFile;
+
     
     boolean isUsedInMap;
 
@@ -285,4 +284,44 @@ public class UPackageRessource {
         return this.isUsedInMap;
     }
     
+    /**
+     * Says if this ressource needs to be converted
+     * to be correctly imported in unreal engine 4.
+     * For example so old sounds from unreal 1 / ut99 are not correctly imported
+     * we need to convert them to 44k frequency
+     * @param mc Map Converter
+     * @return <code>true</code> true if needs conversion
+     */
+    public boolean needsConversion(MapConverter mc){
+        return mc.isFromUE1UE2ToUE3UE4() && type == Type.SOUND;
+    }
+    
+    
+    /**
+     * Convert ressource to good format if needed
+     * @param logger 
+     */
+    public void convert(Logger logger){
+        
+       // TODO convert sound ressources to wav 44k  using sox (like the good old UT3 converter)
+        if(type == Type.SOUND){
+            SoxSoundConverter scs = new SoxSoundConverter(logger);
+            
+            try {
+                File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
+                scs.convertTo44k(exportedFile, tempFile);
+                
+                if(exportedFile.delete()){
+                    logger.log(Level.FINE, exportedFile.getAbsolutePath() + " deleted ");
+                }
+                
+                logger.info(tempFile.getAbsolutePath() + " -> " + exportedFile.getAbsolutePath());
+                Files.copy(tempFile.toPath(), exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                
+                tempFile.delete();
+            } catch (IOException ex) {
+                Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

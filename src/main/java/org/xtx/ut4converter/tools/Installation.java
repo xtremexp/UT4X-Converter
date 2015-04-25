@@ -12,10 +12,14 @@ package org.xtx.ut4converter.tools;
  */
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.List;
 import org.xtx.ut4converter.MainApp;
 
 /**
@@ -24,6 +28,12 @@ import org.xtx.ut4converter.MainApp;
  */
 public class Installation {
  
+    /**
+     * Where all "external" programs should be for converting/extracting stuff
+     */
+    private static final String BINARIES_FOLDER = "bin";
+    private static final String SOX_FOLDER = "Sox";
+    
   /**
    * Test is the current running program is installed.
    * <br>
@@ -125,6 +135,44 @@ public class Installation {
      */
     public static boolean isLinux() {
         return (OS.contains("nux") );
+    }
+    
+    /**
+     * Returns sox executable file to convert sounds
+     * @return 
+     */
+    public static File getSoxSoundConverter(){
+
+        return new File(getProgramFolder().getAbsolutePath() + File.separator + BINARIES_FOLDER + File.separator + SOX_FOLDER + File.separator + "sox.exe");
+    }
+    
+    /**
+     * 
+     * @param command Command line / path to exec file
+     * @param logLines Store program lofs
+     * @return Program exit code (0 if everything went fine)
+     * @throws InterruptedException
+     * @throws IOException 
+     */
+    public static synchronized int executeProgram(String command, List<String> logLines) throws InterruptedException, IOException {
+        
+        Runtime run = Runtime.getRuntime();
+        Process pp = run.exec(command);
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(pp.getInputStream()))){
+            
+            String log;
+
+            while ((log = in.readLine()) != null) {
+                logLines.add(log);
+            }
+        } 
+
+        pp.waitFor();
+        int exitVal = pp.exitValue();
+        pp.destroy();
+        
+        return exitVal;
     }
 }
 
