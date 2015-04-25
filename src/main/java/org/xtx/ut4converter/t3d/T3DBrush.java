@@ -250,13 +250,61 @@ public class T3DBrush extends T3DSound {
         
         // BUG UE4 DON'T LIKE SHEETS (one polygon) or "Light Brushes" mainly coming from UE1/UE2 ...
         // Else geometry building got holes so need to get rid of them ...
-        if(mapConverter.toUnrealEngine4() && polyList.size() <= 4 ){
+        if(mapConverter.toUnrealEngine4() && isSheetBrush() ){
             // TODO add note? (some sheet brushes are movers ...)
             logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
             return false;
         }
         
         return super.isValid();
+    }
+    
+    
+    /**
+     * Detect if this current brush is a sheet brush.
+     * Generally is a "flat" brush used in Unreal Engine 1 / 2
+     * as a "Torch", "Water surface" and so on ...
+     * @return <code>true</code> If this brush is a sheet brush
+     */
+    protected boolean isSheetBrush(){
+        
+        if(polyList.size() <= 4){
+            return true;
+        }
+        
+        // for each vertices we check that it is link to 3 polygons
+        for(T3DPolygon poly : polyList){
+            for(Vector3d v : poly.vertices){
+                if(getPolyCountWithVertexCoordinate(v) < 3){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Return how many polygons are attached to this vertex.
+     * @param v Brush vertex
+     * @return Number of polygons attached to this vertex.
+     */
+    private int getPolyCountWithVertexCoordinate(Vector3d v){
+        
+        int count = 0;
+        
+        for(T3DPolygon poly : polyList){
+            
+            for(Vector3d v2 : poly.vertices){
+                
+                if(v.x == v2.x && v.y == v2.y && v.z == v2.z){
+                    count ++;
+                    break;
+                }
+            }
+        }
+        
+        return count;
     }
     
     /**
