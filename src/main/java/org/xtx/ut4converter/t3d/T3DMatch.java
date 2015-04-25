@@ -170,7 +170,7 @@ public class T3DMatch {
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, null, null, null, new String[]{"BioAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{""}, null, new String[]{"Miniammo", "EClip"}, null, null, null, new String[]{"MinigunAmmoPickup_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, null, null, null, new String[]{"MinigunAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, null, null, new String[]{"FlakAmmoPickup_C"})
