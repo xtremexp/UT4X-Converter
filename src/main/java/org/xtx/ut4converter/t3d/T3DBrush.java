@@ -315,6 +315,10 @@ public class T3DBrush extends T3DSound {
             if("SlimeZone".equals(t3dClass)){
                 // slimy ppv copied/pasted from DM-DeckTest (UT4)
                 postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+            } 
+            
+            else if("WaterZone".equals(t3dClass)){
+                postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
             }
             
             sbf.append(postProcessVolume.toString());
