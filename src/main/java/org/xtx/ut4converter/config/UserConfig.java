@@ -59,7 +59,13 @@ public class UserConfig {
         }
     }
     
+    /**
+     * Get the game config for some UT game
+     * @param game UT game
+     * @return User game configuration for the ut game
+     */
     public UserGameConfig getGameConfigByGame(UTGames.UTGame game){
+        
         for(UserGameConfig gameConfig : games){
             if(gameConfig.id == game){
                 return gameConfig;
@@ -109,10 +115,37 @@ public class UserConfig {
             JAXBContext jaxbContext = JAXBContext.newInstance(UserConfig.class);
             
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            return (UserConfig) jaxbUnmarshaller.unmarshal(UserConfig.getUserConfigFile());
+            UserConfig userConfig = (UserConfig) jaxbUnmarshaller.unmarshal(UserConfig.getUserConfigFile());
+            
+            userConfig.checkGameConfigPaths();
+            
+            return userConfig;
         } catch (JAXBException ex) {
             Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
+        }
+    }
+    
+    
+    /**
+     * Checks that user game configuration paths does exits.
+     * If not existing, the paths are set to "null" and the user config file is saved.
+     * @throws javax.xml.bind.JAXBException
+     */
+    public void checkGameConfigPaths() throws JAXBException{
+        
+        boolean saveConfig = false;
+        
+        for(UserGameConfig userGameConfig : games){
+            
+            if(userGameConfig.getPath() != null && !userGameConfig.getPath().exists()){
+                userGameConfig.setPath(null);
+                saveConfig = true;
+            }
+        }
+        
+        if(saveConfig){
+            saveFile();
         }
     }
     
