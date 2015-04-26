@@ -148,10 +148,18 @@ public class SettingsSceneController implements Initializable {
             
             for(UserGameConfig game : userConfig.getGame()){
                 
-                if(game.getId() == UTGames.UTGame.UT99){
-                    ut99Path.setText(game.getPath().getAbsolutePath());
-                } else if(game.getId() == UTGames.UTGame.UT4){
-                    ut4EditorFolder.setText(game.getPath().getAbsolutePath());
+                if(game.getPath() != null){
+                    if(game.getId() == UTGames.UTGame.UT99){
+                        ut99Path.setText(game.getPath().getAbsolutePath());
+                    } 
+                    
+                    else if(game.getId() == UTGames.UTGame.UT4){
+                        ut4EditorFolder.setText(game.getPath().getAbsolutePath());
+                    } 
+                    
+                    else if(game.getId() == UTGames.UTGame.U1){
+                        u1Path.setText(game.getPath().getAbsolutePath());
+                    }
                 }
             }
             
