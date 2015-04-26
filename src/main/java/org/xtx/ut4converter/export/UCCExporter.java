@@ -358,17 +358,12 @@ public final class UCCExporter extends UTPackageExtractor {
             
 
         } finally {
-            if(unrealMapCopy != null && unrealMapCopy.exists()){
-                if(unrealMapCopy.delete()){
-                    logger.info(unrealMapCopy+" unreal package file copy deleted");
-                }
+            if(unrealMapCopy != null &&  unrealMapCopy.delete()){
+                logger.info(unrealMapCopy+" unreal package file copy deleted");
             }
             
-            if(u1Batch != null && u1Batch.exists()){
-                
-                if(u1Batch.delete()){
-                    logger.info(u1Batch+" batch file deleted");
-                }
+            if(u1Batch != null && u1Batch.delete()){
+                logger.info(u1Batch+" batch file deleted");
             }
         }
         
@@ -376,6 +371,9 @@ public final class UCCExporter extends UTPackageExtractor {
     }
     
     
+    /**
+     * For testing export of map to t3d unreal text map ...
+     */
     public static void test (){
         
         File unrealMap = new File("Z:\\TEMP\\UT99Maps\\AS-Mazon.unr");
