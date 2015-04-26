@@ -10,9 +10,13 @@
     <children>
         <VBox>
             <MenuBar prefWidth="400" >
-                <Menu text="Convert" fx:id="menuConvert">
-                    <MenuItem text="Unreal 1 Map" onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
-                    <MenuItem text="Unreal Tournament (1999) Map" onAction="#handleConvert" fx:id="menuItemUT99Map"/>
+                <Menu text="File">
+                    <Menu text="Unreal 1 Map">
+                        <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
+                    </Menu>
+                    <Menu text="Unreal Tournament Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvert" fx:id="menuItemUT99Map"/>
+                        </Menu>
                     <SeparatorMenuItem/>
                     <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
                 </Menu>

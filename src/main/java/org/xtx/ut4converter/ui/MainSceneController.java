@@ -63,8 +63,6 @@ public class MainSceneController implements Initializable {
     final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
     
     @FXML
-    private Menu menuConvert;
-    @FXML
     private MenuItem menuItemUT99Map;
     @FXML
     private MenuItem menuExit;
