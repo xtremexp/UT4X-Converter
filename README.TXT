@@ -5,20 +5,23 @@ UT4 Converter Readme file
 - Version: 0.3.0 (in progress)
 - Author: XtremeXp
 - Release Date: 18/04/2015
-- Download 0.2.0 version at: http://utforums.epicgames.com/showthread.php?t=588848
+- Download latest released version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter
 
 
 Description
 ------------------------------
-UT4 Converter helps converting
-Unreal Tournament (1999) maps to Unreal Tournament (2015)
+UT4 Converter helps converting maps from Unreal (Tournament) previous games
+to Unreal Tournament 4.
+
 
 UT games supported
 ------------------------------
-UT4 Converter helps converting UT maps to Unreal Tournament 2015.
-Only Unreal Tournament (1999) for the moment is supported.
-(support for other ut games might be added for futures releases)
+UT4 Converter helps converting UT maps to Unreal Tournament 4 (2015).
+- Unreal 1
+- Unreal Tournament (1999)
+
+Some other games might be supported in the future.
 
 If you want to convert UT games to Unreal Tournament 3,
 please download and use UT3 Converter program instead of UT4 Converter.
@@ -33,7 +36,7 @@ are not converted)
 
 What is NOT converted
 ------------------------------
-- Model brushes
+- Model brushes (decorations, ...)
 - Textures
 - Sounds
 - Music
@@ -46,7 +49,7 @@ Requirements
 Operating System:
 Windows 7 / Vista / 8 - 64 Bit
 
-Unreal Tournament (1999) game
+Unreal Tournament (1999) or Unreal 1 game
 
 Java:
 - Minimum Version required: 1.8.0_40
@@ -55,27 +58,27 @@ Java:
 Installation and first start
 ------------------------------
 Decompress the ZIP archive to any folder of your choice.
-Double-click on UT4-Converter-0.1.0.jar, the program should be launching.
+Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java tecknology version at www.java.com
 and create some "run.bat" batch file with notepad that you will save in the 
 program folder with this commande line:
-"java -jar UT4-Converter-0.1.0.jar" (will force launching this file associating it 
+"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
 as java program)
 
 How to convert map?
 ------------------------------
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
-In UT99 Editor:
-- Open the Unreal Tournament (1999) Editor
+In Unreal Editor:
+- Open the Unreal Tournament (1999) or Unreal 1 Editor
 - Open the map you want to convert 
 (note if it does not seems to load (on Windows Vista/7/8/+), copy map to some folder without spaces and re-open)
 - Export and save map to Unreal Text map using menu "File -> Export"
 
 In UT4 Converter:
 - Launch UT4 Converter
-- Go to "Convert -> UT99 Map"
+- Go to "Convert -> <Unreal Tournament/Unreal 1> Map"
 - Select the .t3d map file you have just saved before and press OK.
 
 In UT4 Editor:
@@ -154,23 +157,23 @@ History
 
 - 0.2.0 - 18/04/2015: 
   * [UI] Added conversion log display
-  * [UT99->UT4] Fixed conversion crash with some maps with incorrect name prefix
-  * [UT99->UT4] Added support for UT99 Binary maps (.unr) as input file
-  * [UT99->UT4] Improved mover conversion (moving good now)
-  * [UT99->UT4] Added LavaZone, SlimeZone, WaterZone conversion
-  * [UT99->UT4] Added missing weapons conversion for
+  * Fixed conversion crash with some maps with incorrect name prefix
+  * Added support for UT99 Binary maps (.unr) as input file
+  * Improved mover conversion (moving good now)
+  * Added LavaZone, SlimeZone, WaterZone conversion
+  * Added missing weapons conversion for
   "FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
 "ImpactHammer", "ASMD", "Rifle", "Minigun", "SuperShockRifle" (instagib)
-  * [UT99->UT4] Added teleporter conversion
-  * [UT99->UT4] Added conversion for powerup "invisibility", "ut_invisibility",
+  * Added teleporter conversion
+  * Added conversion for powerup "invisibility", "ut_invisibility",
  "ut_stealth", "nalifruit" (replaced with normal health),
  "bandages" (replaced with healthvial), "PowerBelt"
-  * [UT99->UT4] Added conversion for ammo "Sludge", "EClip", "FlakShellAmmo", "ASMDAmmo",
+  * Added conversion for ammo "Sludge", "EClip", "FlakShellAmmo", "ASMDAmmo",
  "RifleAmmo", "RifleRound", "RifleShell", "Minigun", "SuperShockRifle" (instagib)
-  * [UT99->UT4] Removed unecessary auto-created notes for unconverted actor
+  * Removed unecessary auto-created notes for unconverted actor
 for PathNodes, InventorySpot, TranslocDest
 ...
 
 - 0.1.0 - 13/04/2015: 
-  * [UT99->UT4] First version with basic brush, lights and pickups conversion
+  * First version with basic brush, lights and pickups conversion
 
