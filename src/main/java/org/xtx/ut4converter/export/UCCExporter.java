@@ -320,7 +320,7 @@ public final class UCCExporter extends UTPackageExtractor {
 
             logger.log(Level.INFO, command);
             
-            Installation.executeProgram(command, logLines);
+            Installation.executeProcess(command, logLines);
 
             for (String logLine : logLines) {
 

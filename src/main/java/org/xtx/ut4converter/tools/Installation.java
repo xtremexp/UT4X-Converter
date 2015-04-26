@@ -154,25 +154,34 @@ public class Installation {
      * @throws InterruptedException
      * @throws IOException 
      */
-    public static synchronized int executeProgram(String command, List<String> logLines) throws InterruptedException, IOException {
+    public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
         
-        Runtime run = Runtime.getRuntime();
-        Process pp = run.exec(command);
+        Runtime run;
+        Process pp = null;
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(pp.getInputStream()))){
+        try {
+            run = Runtime.getRuntime();
+            pp = run.exec(command);
             
-            String log;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(pp.getInputStream()))){
 
-            while ((log = in.readLine()) != null) {
-                logLines.add(log);
+                String log;
+
+                while ((log = in.readLine()) != null) {
+                    logLines.add(log);
+                }
+            } 
+
+            pp.waitFor();
+            int exitVal = pp.exitValue();
+            
+            return exitVal;
+        } finally {
+
+            if( pp != null ){
+                pp.destroy();
             }
-        } 
-
-        pp.waitFor();
-        int exitVal = pp.exitValue();
-        pp.destroy();
-        
-        return exitVal;
+        }
     }
 }
 

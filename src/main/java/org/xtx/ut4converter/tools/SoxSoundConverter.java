@@ -41,7 +41,7 @@ public  class SoxSoundConverter {
         List<String> logLines = new ArrayList<>();
         
         try {
-            Installation.executeProgram(command, logLines);
+            Installation.executeProcess(command, logLines);
         } catch (InterruptedException | IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
