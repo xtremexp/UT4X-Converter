@@ -224,6 +224,7 @@ public class MainSceneController implements Initializable {
     /**
      * Display file chooser for map to convert
      * and launch the conversion
+     * TODO refactor/cleanup
      * @param inputGame UT game
      */
     private void convertUtxMap(UTGame inputGame){
@@ -265,6 +266,7 @@ public class MainSceneController implements Initializable {
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Text Map (*.t3d)", "*.t3d"));
         
         File unrealMap = chooser.showOpenDialog(new Stage());
+        MapConverter mapConverter = null;
         
         if(unrealMap != null){
             try {
@@ -312,13 +314,13 @@ public class MainSceneController implements Initializable {
                     return;
                 }
                 
-                MapConverter mc = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
-                mc.setMainSceneController(this);
+                mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
+                mapConverter.setMainSceneController(this);
                 // TODO make getter in mc to know where to convert stuff!
-                mc.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());
+                mapConverter.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());
                 
-                String msg = "Map was succesfully converted to "+mc.getOutT3d().getAbsolutePath();
-                mc.getLogger().info(msg);
+                String msg = "Map was succesfully converted to "+mapConverter.getOutT3d().getAbsolutePath();
+                mapConverter.getLogger().info(msg);
 
                 Alert alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation");
@@ -331,9 +333,17 @@ public class MainSceneController implements Initializable {
                     return;
                 }
                 
-                UIUtils.openExplorer(mc.getOutT3d().getParentFile().getParentFile());
+                UIUtils.openExplorer(mapConverter.getOutT3d().getParentFile().getParentFile());
             } catch (Exception ex) {
-                Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                
+                if( mapConverter != null ){
+                    mapConverter.getLogger().log(Level.SEVERE, null, ex);
+                } 
+                
+                else {
+                    Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
         }
     }
