@@ -17,7 +17,6 @@ to Unreal Tournament 4.
 
 UT games supported
 ------------------------------
-UT4 Converter helps converting UT maps to Unreal Tournament 4 (2015).
 - Unreal 1
 - Unreal Tournament (1999)
 
