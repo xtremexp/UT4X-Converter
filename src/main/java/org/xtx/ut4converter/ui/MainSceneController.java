@@ -238,7 +238,7 @@ public class MainSceneController implements Initializable {
         }
         
        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select UT99 t3d map");
+        chooser.setTitle("Select "+inputGame.shortName+" t3d map");
         
         
         UserGameConfig ugc;
