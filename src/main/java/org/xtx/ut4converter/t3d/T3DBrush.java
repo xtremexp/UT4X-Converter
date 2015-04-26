@@ -270,9 +270,17 @@ public class T3DBrush extends T3DSound {
         
         if(polyList.size() <= 4){
             return true;
+        } else {
+            return false;
         }
         
-        // for each vertices we check that it is link to 3 polygons
+        
+        // FIXME all sheet brushes are well deleted but some (a very few)
+        // normal brushes are detected as sheet ones (eg.: stairs / test AS-HighSpeed)
+        // so they are not being converted.
+        // so the test is not reliable yet
+        // for each vertices we check that it is linked to 3 polygons
+        /*
         for(T3DPolygon poly : polyList){
             for(Vector3d v : poly.vertices){
                 if(getPolyCountWithVertexCoordinate(v) < 3){
@@ -282,6 +290,7 @@ public class T3DBrush extends T3DSound {
         }
         
         return false;
+        */
     }
     
     /**

@@ -146,7 +146,6 @@ History
   * Sound export and conversion
   * Better alignment of FlagBases
   * Fixed crash if UT4 converter has whitespace in one of his parent folders
-  * Fixed some bsp holes (sheet brushes) remaining in some maps
   * Added / Activated support for Unreal 1
   * ?
 
