@@ -460,14 +460,16 @@ public class T3DBrush extends T3DSound {
             Double radD = (rad != null?Double.valueOf(rad):14d);
             Double heightD = (height != null?Double.valueOf(height):20d);
             
-            polyList.clear();
-            polyList = Geometry.createCylinder(radD, heightD, 8);
-            
             Double newScale = mapConverter.getScale();
             
             if(newScale != null){
-                scale(newScale);
+                radD *= newScale;
+                heightD *= newScale;
+                // not using scale() function because location ever scaled ...
             }
+            
+            polyList.clear();
+            polyList = Geometry.createCylinder(radD, heightD, 8);
         }
 
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
