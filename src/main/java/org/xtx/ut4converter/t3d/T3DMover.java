@@ -67,6 +67,7 @@ public class T3DMover extends T3DBrush {
      */
     public T3DMover(MapConverter mc) {
         super(mc);
+        isLinked = true;
     }
     
     @Override
@@ -208,8 +209,15 @@ public class T3DMover extends T3DBrush {
             // TODO for UT4 make converter from brush to .fbx Autodesk file and transform into StaticMesh
             // TODO for UT3 make converter from brush to .ase file and transform into StaticMesh
             // Write the mover as brush as well so we can convert it in staticmesh in UE4 Editor ...
+            
+            // TODO refactor this
+            String originalName = this.name;
             this.name += "Brush";
-            return super.toString();
+            String x = super.toString();
+            // put back original name (might be used later for linked actors . e.g: liftexit)
+            this.name = originalName; 
+            
+            return x;
         }
         // TODO write mover UT UE<=3
         else {
