@@ -263,6 +263,15 @@ public class T3DLevelConvertor  {
      * @throws IOException 
      */
     private void writeFooter() throws IOException{
+        
+        // Automatically add a tight lightMassVolume
+        if(mapConverter.toUnrealEngine4()){
+            T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, 100d);
+            lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
+            bwr.write(lightMassVolume.toString());
+        }
+        
+        
         bwr.write("\tEnd Level\n");
         bwr.write("\tBegin Surface\n");
         bwr.write("\tEnd Surface\n");

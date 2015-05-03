@@ -22,14 +22,15 @@ public class T3DBrush extends T3DSound {
 
     BrushClass brushClass = BrushClass.Brush;
     
-    protected enum BrushClass {
+    public static enum BrushClass {
         Brush,
         Mover,
         KillZVolume,
         UTPainVolume,
         UTWaterVolume,
         PostProcessVolume,
-        BlockingVolume;
+        BlockingVolume,
+        LightmassImportanceVolume;
     }
     
     /**
