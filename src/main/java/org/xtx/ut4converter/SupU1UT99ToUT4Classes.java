@@ -8,6 +8,7 @@ package org.xtx.ut4converter;
 
 import java.util.HashMap;
 import org.xtx.ut4converter.t3d.T3DBrush;
+import org.xtx.ut4converter.t3d.T3DJumpPad;
 import org.xtx.ut4converter.t3d.T3DLight;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.t3d.T3DMover;
@@ -41,6 +42,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
+        putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker");
         //addPickups();
         
         addMatches(mc);

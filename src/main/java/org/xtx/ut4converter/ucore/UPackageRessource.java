@@ -140,8 +140,24 @@ public class UPackageRessource {
         // which only have "name" info
         name = s[s.length - 1];
 
-        if (s.length == 3) {
+        if (s.length == 2) {
+            group = null;
+        } 
+        else if (s.length == 3) {
             group = s[1];
+        } 
+        // UT3 does not handle groups like previous unreal engines
+        // e.g: "A_Gameplay.JumpPad.Cue.A_Gameplay_JumpPad_Activate_Cue"
+        else if (s.length > 3){
+            group = "";
+            
+            for(int i = 1; i <= s.length - 2; i++){
+                group += s[i];
+                
+                if(i < s.length - 2 ){
+                    group += ".";
+                }
+            }
         }
     }
     
