@@ -30,7 +30,8 @@ public class T3DBrush extends T3DSound {
         UTWaterVolume,
         PostProcessVolume,
         BlockingVolume,
-        LightmassImportanceVolume;
+        LightmassImportanceVolume,
+        NavMeshBoundsVolume;
     }
     
     /**

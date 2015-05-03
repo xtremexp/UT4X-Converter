@@ -292,7 +292,7 @@ public class T3DLevelConvertor  {
                 }
             }
             
-            final Double offset = 150d;
+            Double offset = 100d;
             
             // box dimensions that would fit perfectly the level in
             Vector3d boundBox = new Vector3d();
@@ -300,18 +300,30 @@ public class T3DLevelConvertor  {
             boundBox.y = Math.abs(max.y) + Math.abs(min.y);
             boundBox.z = Math.abs(max.z) + Math.abs(min.z);
             
-            // Automatically add a lightMassVolume around the whole level
-            T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
             Vector3d loc = new Vector3d(0d, 0d, 0d);
             
             loc.x = (max.x + min.x) / 2;
             loc.y = (max.y + min.y) / 2;
             loc.z = (max.z + min.z) / 2;
             
+            // Automatically add a lightMassVolume around the whole level
+            T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
             lightMassVolume.location = loc;
             lightMassVolume.name = "LightMassImpVolume";
             lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
             bwr.write(lightMassVolume.toString());
+            
+            offset = 150d;
+            
+            // Automatically add a navigation volume
+            // FIXME UED4 editor crashes for unknown reason
+            /*
+            T3DBrush navMeshBoundsVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
+            navMeshBoundsVolume.location = loc;
+            navMeshBoundsVolume.name = "NavMeshBndsVolume";
+            navMeshBoundsVolume.brushClass = T3DBrush.BrushClass.NavMeshBoundsVolume;
+            bwr.write(navMeshBoundsVolume.toString());
+            */
         }
         
         
