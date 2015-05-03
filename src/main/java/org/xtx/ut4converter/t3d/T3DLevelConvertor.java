@@ -15,11 +15,13 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 
@@ -66,6 +68,8 @@ public class T3DLevelConvertor  {
      * Actors that were not converted.
      */
     public SortedSet<String> unconvertedActors = new TreeSet<>();
+    
+    LinkedList<T3DActor> convertedActors = new LinkedList<T3DActor>();
     
     boolean createNoteWhenUnconverted = true;
     
@@ -167,6 +171,7 @@ public class T3DLevelConvertor  {
                 if (utActorClass != null) {
                     Constructor cons = utActorClass.getConstructor(MapConverter.class);
                     uta = (T3DActor) cons.newInstance(mapConverter);
+                    convertedActors.add(uta);
                     uta.analyseT3DData(line);
                     
                     if(uta.isLinked){
@@ -264,9 +269,47 @@ public class T3DLevelConvertor  {
      */
     private void writeFooter() throws IOException{
         
-        // Automatically add a tight lightMassVolume
+        
         if(mapConverter.toUnrealEngine4()){
-            T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, 100d);
+            
+            Vector3d max = new Vector3d(0d, 0d, 0d);
+            Vector3d min = new Vector3d(0d, 0d, 0d);
+            
+            // get the max/min boundaries of brush vertices on whole level
+            for(T3DActor actor : convertedActors){
+                
+                if(actor instanceof T3DBrush){
+                    Vector3d maxA = ((T3DBrush) actor).getMaxVertexPos();
+                    Vector3d minA = ((T3DBrush) actor).getMinVertexPos();
+
+                    max.x = Math.max(max.x, maxA.x);
+                    max.y = Math.max(max.y, maxA.y);
+                    max.z = Math.max(max.z, maxA.z);
+                    
+                    min.x = Math.min(min.x, minA.x);
+                    min.y = Math.min(min.y, minA.y);
+                    min.z = Math.min(min.z, minA.z);
+                }
+            }
+            
+            final Double offset = 150d;
+            
+            // box dimensions that would fit perfectly the level in
+            Vector3d boundBox = new Vector3d();
+            boundBox.x = Math.abs(max.x) + Math.abs(min.x);
+            boundBox.y = Math.abs(max.y) + Math.abs(min.y);
+            boundBox.z = Math.abs(max.z) + Math.abs(min.z);
+            
+            // Automatically add a lightMassVolume around the whole level
+            T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
+            Vector3d loc = new Vector3d(0d, 0d, 0d);
+            
+            loc.x = (max.x + min.x) / 2;
+            loc.y = (max.y + min.y) / 2;
+            loc.z = (max.z + min.z) / 2;
+            
+            lightMassVolume.location = loc;
+            lightMassVolume.name = "LightMassImpVolume";
             lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
             bwr.write(lightMassVolume.toString());
         }

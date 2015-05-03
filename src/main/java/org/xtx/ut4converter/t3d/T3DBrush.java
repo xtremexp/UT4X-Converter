@@ -352,7 +352,7 @@ public class T3DBrush extends T3DSound {
         if(brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume){
             
             // add post processvolume
-            T3DBrush postProcessVolume = createBox(mapConverter, 95d);
+            T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);
             postProcessVolume.brushClass = BrushClass.PostProcessVolume;
             postProcessVolume.name = this.name+"PPVolume";
             postProcessVolume.location = this.location;
@@ -381,11 +381,11 @@ public class T3DBrush extends T3DSound {
      * @param size Size of box in unreal units
      * @return 
      */
-    public static T3DBrush createBox(MapConverter mc, Double size){
+    public static T3DBrush createBox(MapConverter mc, Double width, Double length, Double height){
         
         T3DBrush volume = new T3DBrush(mc);
-        volume.forceToBox(size);
-        
+        volume.polyList = Geometry.createBox(width, length, height);
+                
         return volume;
     }
     
@@ -398,35 +398,7 @@ public class T3DBrush extends T3DSound {
         
         polyList.clear();
         
-        T3DPolygon p = new T3DPolygon();
-        p.setNormal(-1d, 0d, 0d); p.setTexU(0d, 1d, 0d); p.setTexV(0d, 0d, -1d);
-        p.addVertex(-s, -s, -s).addVertex(-s, -s, s).addVertex(-s, s, s).addVertex(-s, s, -s);
-        addPolygon(p);
-        
-        p = new T3DPolygon();
-        p.setNormal(0d, 1d, 0d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
-        p.addVertex(-s, s, -s).addVertex(-s, s, s).addVertex(s, s, s).addVertex(s, s, -s);
-        addPolygon(p);
-        
-        p = new T3DPolygon();
-        p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d);
-        p.addVertex(s, s, -s).addVertex(s, s, s).addVertex(s, -s, s).addVertex(s, -s, -s);
-        addPolygon(p);
-        
-        p = new T3DPolygon();
-        p.setNormal(0d, -1d, 0d); p.setTexU(-1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
-        p.addVertex(s, -s, -s).addVertex(s, -s, s).addVertex(-s, -s, s).addVertex(-s, -s, -s);
-        addPolygon(p);
-        
-        p = new T3DPolygon();
-        p.setNormal(0d, 0d, 1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 1d, 0d);
-        p.addVertex(-s, s, s).addVertex(-s, -s, s).addVertex(s, -s, s).addVertex(s, s, s);
-        addPolygon(p);
-        
-        p = new T3DPolygon();
-        p.setNormal(0d, 0d, -1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, -1d, 0d);
-        p.addVertex(-s, -s, -s).addVertex(-s, s, -s).addVertex(s, s, -s).addVertex(s, -s, -s);
-        addPolygon(p);
+        polyList = Geometry.createBox(size, size, size);
     }
     
     /**
@@ -573,5 +545,55 @@ public class T3DBrush extends T3DSound {
     
     private void addPolygon(T3DPolygon p){
         polyList.add(p);
+    }
+    
+    /**
+     * Returns the max position of vertex belonging to this brush.
+     * @return Max position
+     */
+    public Vector3d getMaxVertexPos(){
+        
+        Vector3d max = new Vector3d(0d, 0d, 0d);
+        
+        for(T3DPolygon p : polyList){
+            for(Vector3d v : p.vertices){
+                max.x = Math.max(max.x, v.x);
+                max.y = Math.max(max.y, v.y);
+                max.z = Math.max(max.z, v.z);
+            }
+        }
+        
+        if(location != null){
+            max.x = Math.max(max.x, location.x + max.x);
+            max.y = Math.max(max.y, location.y + max.y);
+            max.z = Math.max(max.z, location.z + max.z);
+        }
+        
+        return max;
+    }
+    
+    /**
+     * Returns the min position of vertex belonging to this brush.
+     * @return Min position
+     */
+    public Vector3d getMinVertexPos(){
+        
+        Vector3d min = new Vector3d(0d, 0d, 0d);
+        
+        for(T3DPolygon p : polyList){
+            for(Vector3d v : p.vertices){
+                min.x = Math.min(min.x, v.x);
+                min.y = Math.min(min.y, v.y);
+                min.z = Math.min(min.z, v.z);
+            }
+        }
+        
+        if(location != null){
+            min.x = Math.min(min.x, location.x + min.x);
+            min.y = Math.min(min.y, location.y + min.y);
+            min.z = Math.min(min.z, location.z + min.z);
+        }
+        
+        return min;
     }
 }

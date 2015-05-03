@@ -5,9 +5,7 @@
 
 package org.xtx.ut4converter.tools;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.t3d.T3DBrush;
@@ -386,6 +384,53 @@ public class Geometry {
         else {
             return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z);
         }
+    }
+    
+    /**
+     * Create poly data for creating a box brush
+     * @param width
+     * @param length
+     * @param height
+     * @return 
+     */
+    public static LinkedList<T3DPolygon> createBox(Double width, Double length, Double height){
+        LinkedList<T3DPolygon> polyList = new LinkedList<>();
+        
+        Double w = width / 2d;
+        Double l = length / 2d;
+        Double h = height / 2d;
+        
+        T3DPolygon p = new T3DPolygon();
+        p.setNormal(-1d, 0d, 0d); p.setTexU(0d, 1d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(-w, -l, -h).addVertex(-w, -l, h).addVertex(-w, l, h).addVertex(-w, l, -h);
+        polyList.add(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 1d, 0d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(-w, l, -h).addVertex(-w, l, h).addVertex(w, l, h).addVertex(w, l, -h);
+        polyList.add(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(w, l, -h).addVertex(w, l, h).addVertex(w, -l, h).addVertex(w, -l, -h);
+        polyList.add(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, -1d, 0d); p.setTexU(-1d, 0d, 0d); p.setTexV(0d, 0d, -1d);
+        p.addVertex(w, -l, -h).addVertex(w, -l, h).addVertex(-w, -l, h).addVertex(-w, -l, -h);
+        polyList.add(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 0d, 1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, 1d, 0d);
+        p.addVertex(-w, l, h).addVertex(-w, -l, h).addVertex(w, -l, h).addVertex(w, l, h);
+        polyList.add(p);
+        
+        p = new T3DPolygon();
+        p.setNormal(0d, 0d, -1d); p.setTexU(1d, 0d, 0d); p.setTexV(0d, -1d, 0d);
+        p.addVertex(-w, -l, -h).addVertex(-w, l, -h).addVertex(w, l, -h).addVertex(w, -l, -h);
+        polyList.add(p);
+        
+        return polyList;
     }
     
     /**
