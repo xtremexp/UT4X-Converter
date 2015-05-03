@@ -20,7 +20,7 @@ public class T3DPolygon {
      * Original texture or material applied to the polygon
      */
     String texture;
-
+    
     /**
      *
      */
@@ -52,7 +52,7 @@ public class T3DPolygon {
      * UE3: ?
      * UE4: Light Map resolution.
      */
-    public Double lightMapScale;
+    Double lightMapScale;
     public double pan_u, 
 
     /**

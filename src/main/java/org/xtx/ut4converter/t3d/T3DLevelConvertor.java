@@ -69,11 +69,15 @@ public class T3DLevelConvertor  {
      */
     public SortedSet<String> unconvertedActors = new TreeSet<>();
     
-    LinkedList<T3DActor> convertedActors = new LinkedList<T3DActor>();
+    LinkedList<T3DActor> convertedActors = new LinkedList<>();
     
     boolean createNoteWhenUnconverted = true;
     
     Logger logger;
+    
+    Vector3d levelDimension;
+    
+    Vector3d boundBoxLocalisation;
     
     /**
      * 
@@ -113,8 +117,8 @@ public class T3DLevelConvertor  {
             int linenumber=1;
             String line;
 
-            writeHeader();
-
+            
+            // Read input t3d file and convert actors
             while((line=bfr.readLine())!=null)
             {
                 try {
@@ -129,12 +133,31 @@ public class T3DLevelConvertor  {
                 }
             }
 
-            writeFooter();
-            
+            // Write T3D converted file
+            write(bwr);
         } finally {
             bwr.close();
             bfr.close();
         }
+    }
+    
+    /**
+     * 
+     * @param bw
+     * @throws IOException 
+     */
+    private void write(BufferedWriter bw) throws IOException {
+        
+        writeHeader();
+            
+        for(T3DActor uta : convertedActors){
+            
+            if(uta.isValid() && uta.isValidWriting()){
+                bw.write(uta.toString());
+            }
+        }
+
+        writeFooter();
     }
 
     /**
@@ -178,10 +201,6 @@ public class T3DLevelConvertor  {
                         linkedActors.add(uta);
                     }
                 } 
-                // Means we copy line without any "conversion"
-                else {
-                    bwr.write(line + "\n");
-                }
             } else {
                 // skips some useless/uneeded actors to notify unconverted (e.g: pathnodes for UE4/UT4)
                 if(!mapConverter.getSupportedActorClasses().noNotifyUnconverted(currentClass)){
@@ -193,6 +212,7 @@ public class T3DLevelConvertor  {
                         utActorClass = T3DNote.class;
                         uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
                         uta.analyseT3DData(line);
+                        convertedActors.add(uta);
                     } else {
                         logger.warning("Unconverted "+currentClass);
                         banalyseline = false;
@@ -213,13 +233,7 @@ public class T3DLevelConvertor  {
                     // rescale if needed 
                     // must always be done after convert
                     uta.scale(mapConverter.getScale()); 
-                    bwr.write(uta.toString());
                 } 
-                // Means we copy line without any "conversion"
-                // not recommended since can crash editor on import sometimes
-                else {
-                    bwr.write(line + "\n");
-                }
             }
 
             // Reset
@@ -233,8 +247,6 @@ public class T3DLevelConvertor  {
             if (banalyseline) {
                 if (uta != null) {
                     uta.analyseT3DData(line);
-                } else {
-                    bwr.write(line + "\n");
                 }
             }
         }
@@ -258,20 +270,35 @@ public class T3DLevelConvertor  {
     private void writeHeader() throws IOException{
         bwr.write("Begin Map\n");
         bwr.write("\tBegin Level NAME=PersistentLevel\n");
+        
+        // Auto creates a big additive brush surrounding level
+        // to simulate creating a level in subtract mode (not existing in UE4 ...)
+        if(mapConverter.fromUE123ToUE4()){
+            
+            Double offset = 200d;
+            Vector3d boundBox = getLevelDimensions();
+            
+            T3DBrush additiveBrush = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
+            additiveBrush.location = boundBoxLocalisation;
+            additiveBrush.name = "BigAdditiveBrush";
+            additiveBrush.brushClass = T3DBrush.BrushClass.Brush;
+            
+            // no need accurate light map resolution on this brush since it will be never seen by player
+            for(T3DPolygon p : additiveBrush.polyList){
+                p.lightMapScale = 2048d;
+            }
+            
+            bwr.write(additiveBrush.toString());
+        }
     }
     
     /**
-     * Write footer of converted t3d file
-     * // Begin Map Name=/Game/RestrictedAssets/Maps/WIP/DM-SolarTest
-     * // Begin Level NAME=PersistentLevel
-     * TODO check for UE1/UE2
-     * @throws IOException 
+     * 
+     * @return 
      */
-    private void writeFooter() throws IOException{
+    private Vector3d getLevelDimensions(){
         
-        
-        if(mapConverter.toUnrealEngine4()){
-            
+        if(levelDimension == null){
             Vector3d max = new Vector3d(0d, 0d, 0d);
             Vector3d min = new Vector3d(0d, 0d, 0d);
             
@@ -295,20 +322,41 @@ public class T3DLevelConvertor  {
             Double offset = 100d;
             
             // box dimensions that would fit perfectly the level in
-            Vector3d boundBox = new Vector3d();
-            boundBox.x = Math.abs(max.x) + Math.abs(min.x);
-            boundBox.y = Math.abs(max.y) + Math.abs(min.y);
-            boundBox.z = Math.abs(max.z) + Math.abs(min.z);
+            levelDimension = new Vector3d();
+            levelDimension.x = Math.abs(max.x) + Math.abs(min.x);
+            levelDimension.y = Math.abs(max.y) + Math.abs(min.y);
+            levelDimension.z = Math.abs(max.z) + Math.abs(min.z);
             
-            Vector3d loc = new Vector3d(0d, 0d, 0d);
-            
+            Vector3d loc = new Vector3d();
             loc.x = (max.x + min.x) / 2;
             loc.y = (max.y + min.y) / 2;
             loc.z = (max.z + min.z) / 2;
             
+            boundBoxLocalisation = loc;
+        }
+        
+        return levelDimension;
+    }
+    
+    /**
+     * Write footer of converted t3d file
+     * // Begin Map Name=/Game/RestrictedAssets/Maps/WIP/DM-SolarTest
+     * // Begin Level NAME=PersistentLevel
+     * TODO check for UE1/UE2
+     * @throws IOException 
+     */
+    private void writeFooter() throws IOException{
+        
+        
+        if(mapConverter.toUnrealEngine4()){
+            
+
+            Vector3d boundBox = getLevelDimensions();
+            Double offset = 100d;
+
             // Automatically add a lightMassVolume around the whole level
             T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
-            lightMassVolume.location = loc;
+            lightMassVolume.location = boundBoxLocalisation;
             lightMassVolume.name = "LightMassImpVolume";
             lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
             bwr.write(lightMassVolume.toString());
