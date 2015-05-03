@@ -421,6 +421,16 @@ public class MapConverter {
      * Indicates games being converted from some UT game in unreal engine 3 or 4
      * @return 
      */
+    public boolean fromUE1orUE2OrUE3(){
+        return UTGames.isUnrealEngine1(this.getInputGame()) 
+                || UTGames.isUnrealEngine2(this.getInputGame()) 
+                    || UTGames.isUnrealEngine3(this.getInputGame());
+    }
+    
+    /**
+     * Indicates games being converted from some UT game in unreal engine 3 or 4
+     * @return 
+     */
     public boolean fromUE3OrUE4(){
         return UTGames.isUnrealEngine3(this.getInputGame()) || UTGames.isUnrealEngine4(this.getInputGame());
     }
@@ -441,6 +451,10 @@ public class MapConverter {
      */
     public boolean isFromUE1UE2ToUE3UE4(){
         return fromUE1OrUE2() && toUE3OrUE4();
+    }
+    
+    public boolean fromUE123ToUE4(){
+        return fromUE1orUE2OrUE3() && toUnrealEngine4();
     }
     
     /**

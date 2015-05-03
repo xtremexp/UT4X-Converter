@@ -11,7 +11,6 @@ import java.text.DecimalFormatSymbols;
 import java.util.LinkedList;
 import java.util.Locale;
 import javax.vecmath.Vector3d;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.Geometry;
 
@@ -42,14 +41,21 @@ public class T3DBrush extends T3DSound {
         }
     }
     
-    private static final String UE4_BRUSH_TYPE_SUBTRACT = "Brush_Subtract";
+    /**
+     * UE1/2/3
+     */
+    private enum UE123_BrushType {
+        CSG_Active, CSG_Add, CSG_Subtract, CSG_Intersect, CSG_Deintersect;
+    }
     
-    private static final String UE4_BRUSH_TYPE_ADD = "Brush_Add";
+    /**
+     * UE4
+     */
+    private enum UE4_BrushType {
+        Brush_Subtract, Brush_Add;
+    }
     
-    private static final String UE3_BRUSH_TYPE_ADD = "CSG_Add";
-    
-    private static final String UE3_BRUSH_TYPE_SUBTRACT = "CSG_Subtract";
-    
+    private String brushType;
     
     /**
      * Used by Unreal Engine 1
@@ -75,30 +81,18 @@ public class T3DBrush extends T3DSound {
     
     LinkedList<T3DPolygon> polyList = new LinkedList<>();
 
-    
-    // BrushType=Brush_Subtract / BrushType=Brush_Add UE4
-    // CsgOper=CSG_Subtract UE <= 3
-    /**
-     * Begin Object Name="BrushComponent0"
-            Brush=Model'Model_12'
-            RelativeLocation=(X=-720.000000,Y=-640.000000,Z=230.000000)
-         End Object
-     */
-    
-    /**
-     * If true then brush is in additive mode else in subtract mode
-     */
-    boolean isAdditiveMode = true;
             
     /**
      *
-     * @param mc
+     * @param mapConverter
      */
-    public T3DBrush(MapConverter mc) {
-        super(mc);
+    public T3DBrush(MapConverter mapConverter) {
+        super(mapConverter);
         
-        if(mapConverter.getUnrealEngineTo().version < UTGames.UnrealEngine.UE4.version){
-            throw new UnsupportedOperationException("Unsupported Unreal Engine "+mapConverter.getUnrealEngineTo()+" Version for convert to");
+        if(mapConverter.fromUE1orUE2OrUE3()){
+            brushType = UE123_BrushType.CSG_Add.name();
+        } else {
+            brushType = UE4_BrushType.Brush_Add.name();
         }
     }
     
@@ -118,18 +112,7 @@ public class T3DBrush extends T3DSound {
         // CsgOper=CSG_Subtract
         // BrushType=Brush_Subtract
         if(line.contains("CsgOper")){
-            String csgOper = line.split("\\=")[1];
-            
-            switch (csgOper) {
-                case UE3_BRUSH_TYPE_SUBTRACT:
-                    isAdditiveMode = false;
-                    break;
-                case UE3_BRUSH_TYPE_ADD:
-                    isAdditiveMode = true;
-                    break;
-                default:
-                    throw new UnsupportedOperationException("Unsupported Brush Csg:"+csgOper);
-            }
+            brushType = line.split("\\=")[1];
         } 
 
         // MainScale=(Scale=(Y=-1.000000),SheerAxis=SHEER_ZX)
@@ -248,12 +231,28 @@ public class T3DBrush extends T3DSound {
     @Override
     public boolean isValid(){
         
-        // BUG UE4 DON'T LIKE SHEETS (one polygon) or "Light Brushes" mainly coming from UE1/UE2 ...
-        // Else geometry building got holes so need to get rid of them ...
-        if(mapConverter.toUnrealEngine4() && isSheetBrush() ){
+        boolean valid = true;
+        
+        if(mapConverter.fromUE123ToUE4()){
+            
+            // BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly coming from UE1/UE2 ...
+            // Else geometry building got holes so need to get rid of them ...
             // TODO add note? (some sheet brushes are movers ...)
-            logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
-            return false;
+            if(isSheetBrush()){
+                logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+                valid = false;
+            }
+            
+            if(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Active 
+                    || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Intersect
+                        || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Deintersect){
+                logger.warning("Skipped unsupported CsgOper '"+brushType+"' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+                valid = false;
+            }
+            
+            if(!valid){
+                return valid;
+            }
         }
         
         return super.isValid();
@@ -268,13 +267,7 @@ public class T3DBrush extends T3DSound {
      */
     protected boolean isSheetBrush(){
         
-        if(polyList.size() <= 4){
-            return true;
-        } else {
-            return false;
-        }
-        
-        
+        return polyList.size() <= 4;
         // FIXME all sheet brushes are well deleted but some (a very few)
         // normal brushes are detected as sheet ones (eg.: stairs / test AS-HighSpeed)
         // so they are not being converted.
@@ -282,15 +275,14 @@ public class T3DBrush extends T3DSound {
         // for each vertices we check that it is linked to 3 polygons
         /*
         for(T3DPolygon poly : polyList){
-            for(Vector3d v : poly.vertices){
-                if(getPolyCountWithVertexCoordinate(v) < 3){
-                    return true;
-                }
-            }
+        for(Vector3d v : poly.vertices){
+        if(getPolyCountWithVertexCoordinate(v) < 3){
+        return true;
         }
-        
+        }        
+        }
         return false;
-        */
+         */
     }
     
     /**
@@ -336,7 +328,7 @@ public class T3DBrush extends T3DSound {
         writeLocRotAndScale();
         sbf.append(IDT).append("\tEnd Object\n");
         
-        sbf.append(IDT).append("\tBrushType=").append(isAdditiveMode?UE4_BRUSH_TYPE_ADD:UE4_BRUSH_TYPE_SUBTRACT).append("\n");
+        sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add?UE4_BrushType.Brush_Add:UE4_BrushType.Brush_Subtract).append("\n");
         
         sbf.append(IDT).append("\tBegin Brush Name=Model_6\n");
         sbf.append(IDT).append("\t\tBegin PolyList\n");
@@ -364,18 +356,19 @@ public class T3DBrush extends T3DSound {
         if(brushClass == BrushClass.UT_WATER_VOLUME || brushClass == BrushClass.UT_PAIN_VOLUME){
             
             // add post processvolume
-            T3DBrush postProcessVolume = createBox(mapConverter, 95d, isAdditiveMode);
+            T3DBrush postProcessVolume = createBox(mapConverter, 95d);
             postProcessVolume.brushClass = BrushClass.POST_PROCESS_VOLUME;
             postProcessVolume.name = this.name+"PPVolume";
             postProcessVolume.location = this.location;
             
-            if("SlimeZone".equals(t3dClass)){
-                // slimy ppv copied/pasted from DM-DeckTest (UT4)
-                postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
-            } 
-            
-            else if("WaterZone".equals(t3dClass)){
-                postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
+            if(null != t3dClass) switch (t3dClass) {
+                case "SlimeZone":
+                    // slimy ppv copied/pasted from DM-DeckTest (UT4)
+                    postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+                    break;
+                case "WaterZone":
+                    postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
+                    break;
             }
             
             sbf.append(postProcessVolume.toString());
@@ -387,17 +380,14 @@ public class T3DBrush extends T3DSound {
     }
     
     /**
-     * Since UE4 does not support create level in 'substractive' mode we
-     * need to create a big brush in substractive mode to simulate this.
-     * @param mc
-     * @param size
-     * @param isAdditiveMode
+     * Creates a brush box.
+     * @param mc Map Converter
+     * @param size Size of box in unreal units
      * @return 
      */
-    public static T3DBrush createBox(MapConverter mc, Double size, boolean isAdditiveMode){
+    public static T3DBrush createBox(MapConverter mc, Double size){
         
         T3DBrush volume = new T3DBrush(mc);
-        volume.isAdditiveMode = isAdditiveMode;
         volume.forceToBox(size);
         
         return volume;
