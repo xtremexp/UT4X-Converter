@@ -200,4 +200,10 @@ public class T3DPolygon {
     public void setTexV(Double x, Double y, Double z){
         texture_v = new Vector3d(x, y, z);
     }
+
+    public void setOrigin(Vector3d origin) {
+        this.origin = origin;
+    }
+    
+    
 }

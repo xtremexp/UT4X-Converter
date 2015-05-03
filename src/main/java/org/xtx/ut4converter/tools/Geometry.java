@@ -5,8 +5,13 @@
 
 package org.xtx.ut4converter.tools;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
+import org.xtx.ut4converter.t3d.T3DBrush;
+import org.xtx.ut4converter.t3d.T3DPolygon;
 
 /**
  * Utility class for geometry operations
@@ -381,5 +386,100 @@ public class Geometry {
         else {
             return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z);
         }
+    }
+    
+    /**
+     * Creates a cylinder
+     * @param radius
+     * @param height
+     * @param sides Number of sides
+     * @return  List of polygons that make a cylinder brush
+     */
+    public static LinkedList<T3DPolygon> createCylinder(Double radius, Double height, int sides){
+        
+        LinkedList<T3DPolygon> polyList = new LinkedList<>();
+        
+        Double h = height / 2;
+                
+        Double angle = 2 * Math.PI / sides;
+        Double a = angle / 2d;
+        Double r = radius / (Math.cos(a)); // Circle radius
+        
+        // Sides polygons
+        for(int i = 0 ; i < sides; i ++){
+            T3DPolygon p = new T3DPolygon();
+            p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d); // unrealiable - values
+            
+            for(int j = 0 ; j < 4; j ++){
+                
+
+                if(j == 0 || j == 3){
+                    p.addVertex(Math.sin(a) * r, Math.cos(a) * r, -h);
+                }
+                else {
+                    p.addVertex(Math.sin(a) * r, Math.cos(a) * r, h);
+                }
+                
+                
+                if(j == 1){
+                    a += angle;
+                }
+            }
+            
+            p.setOrigin(p.vertices.getFirst());
+            polyList.add(p);
+        }
+        
+        h = Math.abs(h);
+        
+        // Reset angle
+        a = -(angle / 2d);
+        
+        // Top polygon
+        T3DPolygon p = new T3DPolygon();
+        
+        for(int i = 0 ; i < sides; i ++){
+            p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d); // unrealiable - values
+            p.addVertex(Math.sin(a) * r, Math.cos(a) * r, +h);
+            
+            a -= angle;
+        }
+        
+        p.setOrigin(p.vertices.getFirst());
+        polyList.add(p);
+        
+        a = angle / 2d;
+        
+        // Bottom polygon
+        p = new T3DPolygon();
+        
+        for(int i = 0 ; i < sides; i ++){
+            p.setNormal(1d, 0d, 0d); p.setTexU(0d, -1d, 0d); p.setTexV(0d, 0d, -1d); // unrealiable - values
+            p.addVertex(Math.sin(a) * r, Math.cos(a) * r, -h);
+            
+            a += angle;
+        }
+        
+        p.setOrigin(p.vertices.getFirst());
+        polyList.add(p);
+        
+        return polyList;
+    }
+    
+    public static void test(String args[]){
+        LinkedList<T3DPolygon> polys = createCylinder(100d, 500d, 8);
+        
+        StringBuilder sb = new StringBuilder("");
+        
+        int i = 0;
+        
+        for(T3DPolygon p : polys){
+            
+            p.toT3D(sb, T3DBrush.df, "\t", i, false);
+        }
+        
+        System.out.println(sb.toString());
+        
+        System.exit(0);
     }
 }

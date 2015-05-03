@@ -525,5 +525,20 @@ public abstract class T3DActor {
     public String toString(){
         return sbf.toString();
     }
+    
+    
+    /**
+     * Null-safe property getter
+     * @param name
+     * @return 
+     */
+    protected String getProperty(String name){
+        
+        if(properties.containsKey(name)){
+            return properties.get(name);
+        } else {
+            return null;
+        }
+    }
 }
 

@@ -33,7 +33,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         super();
         this.mapConv = mc;
         
-        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");
+        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone", "BlockAll");
         putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         

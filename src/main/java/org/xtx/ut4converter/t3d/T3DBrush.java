@@ -20,25 +20,16 @@ import org.xtx.ut4converter.tools.Geometry;
  */
 public class T3DBrush extends T3DSound {
 
-    BrushClass brushClass = BrushClass.BRUSH;
+    BrushClass brushClass = BrushClass.Brush;
     
     protected enum BrushClass {
-        BRUSH("Brush"),
-        MOVER("Mover"),
-        KILLZ_VOLUME("KillZVolume"),
-        UT_PAIN_VOLUME("UTPainVolume"),
-        UT_WATER_VOLUME("UTWaterVolume"),
-        POST_PROCESS_VOLUME("PostProcessVolume");
-        
-        String className;
-        
-        BrushClass(String className){
-            this.className = className;
-        }
-        
-        public String getClassName(){
-            return this.className;
-        }
+        Brush,
+        Mover,
+        KillZVolume,
+        UTPainVolume,
+        UTWaterVolume,
+        PostProcessVolume,
+        BlockingVolume;
     }
     
     /**
@@ -202,7 +193,7 @@ public class T3DBrush extends T3DSound {
      */
     private boolean isU1ZoneVolume(String t3dBrushClass){
         
-        if(t3dBrushClass.equals(BrushClass.BRUSH.className)){
+        if(t3dBrushClass.equals(BrushClass.Brush.name())){
             return false;
         } 
         
@@ -211,13 +202,13 @@ public class T3DBrush extends T3DSound {
                 || t3dBrushClass.equals("VaccuumZone")
                 || t3dBrushClass.equals("NitrogenZone")
                 || t3dBrushClass.equals("VaccuumZone")){
-            brushClass = BrushClass.UT_PAIN_VOLUME;
+            brushClass = BrushClass.UTPainVolume;
             forcedWrittenLines.add("DamagePerSec=10.000000");
             return true;
         } 
         
         else if(t3dBrushClass.equals("WaterZone")){
-            brushClass = BrushClass.UT_WATER_VOLUME;
+            brushClass = BrushClass.UTWaterVolume;
             return true;
         }
 
@@ -234,6 +225,10 @@ public class T3DBrush extends T3DSound {
         boolean valid = true;
         
         if(mapConverter.fromUE123ToUE4()){
+            
+            if("BlockAll".equals(t3dClass)){
+                return true;
+            }
             
             // BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly coming from UE1/UE2 ...
             // Else geometry building got holes so need to get rid of them ...
@@ -321,7 +316,7 @@ public class T3DBrush extends T3DSound {
     public String toString(){
         
         
-        sbf.append(IDT).append("Begin Actor Class=").append(brushClass.getClassName()).append(" Name=").append(name).append("\n");
+        sbf.append(IDT).append("Begin Actor Class=").append(brushClass.name()).append(" Name=").append(name).append("\n");
                 
         // Location Data
         sbf.append(IDT).append("\tBegin Object Name=\"BrushComponent0\"\n");
@@ -353,11 +348,11 @@ public class T3DBrush extends T3DSound {
         
         writeEndActor();
         
-        if(brushClass == BrushClass.UT_WATER_VOLUME || brushClass == BrushClass.UT_PAIN_VOLUME){
+        if(brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume){
             
             // add post processvolume
             T3DBrush postProcessVolume = createBox(mapConverter, 95d);
-            postProcessVolume.brushClass = BrushClass.POST_PROCESS_VOLUME;
+            postProcessVolume.brushClass = BrushClass.PostProcessVolume;
             postProcessVolume.name = this.name+"PPVolume";
             postProcessVolume.location = this.location;
             
@@ -434,13 +429,47 @@ public class T3DBrush extends T3DSound {
     }
     
     /**
+     * Creates a cylinder brush
+     * @param mc Map Converter
+     * @param radius Radius of cylinder
+     * @param height Height
+     * @param sides Number of sides for cylinder
+     * @return 
+     */
+    public static T3DBrush createCylinder(MapConverter mc, Double radius, Double height, int sides){
+        
+        T3DBrush volume = new T3DBrush(mc);
+        volume.polyList.clear();
+        volume.polyList = Geometry.createCylinder(radius, height, sides);
+        
+        return volume;
+    }
+    
+    /**
      *
      */
     @Override
     public void convert(){
         
+        if("BlockAll".equals(t3dClass)){
+            brushClass = BrushClass.BlockingVolume;
+            String rad = getProperty("CollisionRadius");
+            String height = getProperty("CollisionHeight");
+            
+            Double radD = (rad != null?Double.valueOf(rad):14d);
+            Double heightD = (height != null?Double.valueOf(height):20d);
+            
+            polyList.clear();
+            polyList = Geometry.createCylinder(radD, heightD, 8);
+            
+            Double newScale = mapConverter.getScale();
+            
+            if(newScale != null){
+                scale(newScale);
+            }
+        }
 
-        if(mapConverter.fromUE1OrUE2() && mapConverter.toUE3OrUE4()){
+        if(mapConverter.isFromUE1UE2ToUE3UE4()){
             transformPermanently();
         }
         
