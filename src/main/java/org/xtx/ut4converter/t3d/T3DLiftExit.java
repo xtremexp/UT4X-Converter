@@ -8,7 +8,7 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 
 /**
- * Checked: UT99, U1, U2, UT2004
+ * Checked: UT99, U1, U2, UT2004, UT3
  * 
  * UT99: DM-Cybrosis][
  * UT4: DM-Vortex
@@ -38,10 +38,6 @@ public class T3DLiftExit extends T3DSound {
     
     @Override
     public boolean analyseT3DData(String line) {
-        
-        if(line.contains("LiftExit5")){
-            System.out.println("TEST");
-        }
         
         // UE1 -> "LiftTag=lastone"
         if(line.contains("LiftTag=")){
@@ -90,7 +86,6 @@ public class T3DLiftExit extends T3DSound {
         }
         
         if(linkedLift != null){
-            // MyLift=Generic_Lift_C'/Game/RestrictedAssets/Maps/WIP/DM-Vortex.DM-Vortex:PersistentLevel.Generic_Lift_26'
             sbf.append(IDT).append("\tMyLift='").append(linkedLift.name).append("'\n");
         }
          
@@ -109,13 +104,15 @@ public class T3DLiftExit extends T3DSound {
         if(linkedTo == null || linkedTo.isEmpty()){
             T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
             
-            for(T3DActor linkedActor : tlc.getLinkedActors()){
-                if(linkedActor instanceof T3DMover){
+            for(T3DActor actor : tlc.convertedActors){
+                
+                // Note in previous UTs lifttag could be link to actor not necessarly movers (e.g: SpecialEvents)
+                if(actor instanceof T3DMover){
                     
-                    if(linkedActor.tag != null && this.liftTag != null && this.liftTag.equals(linkedActor.tag)){
-                        this.linkedTo.add(linkedActor);
-                        linkedActor.linkedTo.add(this);
-                        linkedLift = (T3DMover) linkedActor;
+                    if(actor.tag != null && this.liftTag != null && this.liftTag.equals(actor.tag)){
+                        this.linkedTo.add(actor);
+                        actor.linkedTo.add(this);
+                        linkedLift = (T3DMover) actor;
                         break;
                     }
                 }
