@@ -110,13 +110,14 @@ public class T3DJumpPad extends T3DSound {
             
             if(jumpZ != null){
                 jumpTarget = new Vector3d(0d, 0d, jumpZ);
-            }
-            
-            // TODO convert properly velocity to target
-            if(jumpVelocity != null){
-                jumpTarget = jumpVelocity;
             } else {
-                jumpTarget = new Vector3d(0d, 0d, 250d);
+            
+                // TODO convert properly velocity to target
+                if(jumpVelocity != null){
+                    jumpTarget = jumpVelocity;
+                } else {
+                    jumpTarget = new Vector3d(0d, 0d, 250d);
+                }
             }
         }
         
