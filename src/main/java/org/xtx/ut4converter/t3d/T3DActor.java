@@ -144,14 +144,6 @@ public abstract class T3DActor {
      */
     protected List<T3DActor> linkedTo = new ArrayList<>();
     
-    
-    /**
-     * If true means this actor should 
-     * have a linked actor.
-     * This impact on conversion that should be always done after
-     * converting all other actors to set the linked actor
-     */
-    boolean isLinked;
 
     /**
      * Read line of t3d file to parse data about current t3d actor being read
@@ -246,7 +238,7 @@ public abstract class T3DActor {
         
         String baseText = IDT+"\t\t";
         
-        if(getOutputGame().engine== UTGames.UnrealEngine.UE4){
+        if(getOutputGame().engine.version >= UTGames.UnrealEngine.UE4.version){
             if(location != null){
                 sbf.append(baseText).append("RelativeLocation=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
             }
@@ -260,7 +252,9 @@ public abstract class T3DActor {
             if(scale3d != null){
                 sbf.append(baseText).append("RelativeScale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
             }
-        } else {
+        } 
+        // checked U1, UT99, U2, UT2004, UT3
+        else {
             if(location != null){
                 sbf.append(baseText).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
             }
@@ -293,7 +287,6 @@ public abstract class T3DActor {
             if(coLocation != null) coLocation.scale(newScale);
             if(drawScale != null ) drawScale *= newScale;
             if(scale3d != null) scale3d.scale(newScale);
-            //if(drawScale != null) drawScale *= newScale;
         }
     }
     
@@ -374,15 +367,7 @@ public abstract class T3DActor {
     public void setOffsetZLocation(Double offsetZLocation) {
         this.offsetZLocation = offsetZLocation;
     }
-    
-    /**
-     *
-     * @return
-     */
-    public String getOtherdata(){
-        throw new UnsupportedOperationException("NEED RECODE OR DELETE");
-    }
-    
+
     /**
      *
      * @return
@@ -405,19 +390,7 @@ public abstract class T3DActor {
             
             coLocation = null;
         }
-        
-        /*
-        if(oldLocation != null){
-            if(location != null){
-                oldLocation.negate();
-                location.add(oldLocation);
-            } else {
-                location = oldLocation;
-            }
-            
-            oldLocation = null;
-        }*/
-        
+
         //changes height of actor if needed (so aligned with floor for example)
         if(offsetZLocation != null){
             if(location != null){
@@ -437,6 +410,11 @@ public abstract class T3DActor {
                 rotation.x /= 360d;
                 rotation.y /= 360d;
                 rotation.z /= 360d;
+            } 
+            else if(mapConverter.isFromUE3UE4ToUE1UE2()){
+                rotation.x *= 360d;
+                rotation.y *= 360d;
+                rotation.z *= 360d;
             }
         }
         
@@ -466,7 +444,9 @@ public abstract class T3DActor {
                 sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");;
             }
             sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
-        } else {
+        } 
+        // Checked u1, ut99, ut2004, ut3
+        else {
             if(drawScale != null){
                 sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");;
             }

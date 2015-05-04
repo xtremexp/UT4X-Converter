@@ -33,7 +33,6 @@ public class T3DLiftExit extends T3DSound {
     
     public T3DLiftExit(MapConverter mc) {
         super(mc);
-        isLinked = true;
     }
     
     @Override

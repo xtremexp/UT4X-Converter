@@ -23,7 +23,6 @@ public class T3DTeleporter extends T3DSound {
     
     public T3DTeleporter(MapConverter mc) {
         super(mc);
-        isLinked = true;
     }
     
     @Override
