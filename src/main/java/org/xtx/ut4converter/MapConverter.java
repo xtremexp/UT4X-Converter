@@ -229,7 +229,8 @@ public class MapConverter {
             
             
             if(outMapName==null){
-                outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName + "-" + outputGame.shortName;
+                // TODO being able to set it manually (chosen by user)
+                outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
             }
             
             supportedActorClasses = new SupU1UT99ToUT4Classes(this);
