@@ -59,6 +59,10 @@ public class T3DJumpPad extends T3DSound {
     
     public T3DJumpPad(MapConverter mc) {
         super(mc);
+        
+        if(mc.toUT4()){
+            offsetZLocation = -40.5d;
+        }
     }
     
     @Override
@@ -115,6 +119,8 @@ public class T3DJumpPad extends T3DSound {
                 jumpTarget = new Vector3d(0d, 0d, 250d);
             }
         }
+        
+        super.convert();
     }
     
     @Override
