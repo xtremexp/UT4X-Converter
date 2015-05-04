@@ -134,10 +134,6 @@ public class T3DPolygon {
         
         sb.append(" Link=").append(numPoly);
         
-        if(lightMapScale != null){
-            sb.append(" LightMapScale=").append(lightMapScale);
-        }
-        
         sb.append("\n");
         
         sb.append(prefix).append("\tOrigin   ").append(T3DUtils.toPolyStringVector3d(origin, df)).append("\n");
