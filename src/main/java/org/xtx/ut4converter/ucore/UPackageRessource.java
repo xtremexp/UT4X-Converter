@@ -316,8 +316,9 @@ public class UPackageRessource {
     /**
      * Convert ressource to good format if needed
      * @param logger 
+     * @return  
      */
-    public void convert(Logger logger){
+    public File convert(Logger logger){
         
        // TODO convert sound ressources to wav 44k  using sox (like the good old UT3 converter)
         if(type == Type.SOUND){
@@ -326,18 +327,18 @@ public class UPackageRessource {
             try {
                 File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
                 scs.convertTo44k(exportedFile, tempFile);
-                
-                if(exportedFile.delete()){
-                    logger.log(Level.FINE, exportedFile.getAbsolutePath() + " deleted ");
-                }
-                
-                logger.info(tempFile.getAbsolutePath() + " -> " + exportedFile.getAbsolutePath());
-                Files.copy(tempFile.toPath(), exportedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                
-                tempFile.delete();
+                return tempFile;
             } catch (IOException ex) {
                 Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        return null;
     }
+
+    public Type getType() {
+        return type;
+    }
+    
+    
 }

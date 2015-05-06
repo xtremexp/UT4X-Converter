@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -44,15 +43,13 @@ public abstract class UTPackageExtractor {
     
     /**
      * Tells where to export files.
-     * Basically: <programfolder>/Converted/<mapname>/<ressourcetype> (better package)
+     * Basically: <programfolder>/Converted/<mapname>/Temp/<ressourcetype> (better package)
      * @param type Type of ressource to export
      * @return 
      */
     protected File getExportFolder(T3DRessource.Type type){
-        File programFolder = Installation.getProgramFolder();
-        String mapName = mapConverter.getInMap().getName();
         
-        return new File(programFolder.getAbsolutePath() + File.separator + MapConverter.CONV_PATH + File.separator + mapName.split("\\.")[0] + File.separator + type.name() + File.separator);
+        return new File(mapConverter.getTempExportFolder() + File.separator + type.name() + File.separator);
     }
     
     

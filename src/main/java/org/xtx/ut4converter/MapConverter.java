@@ -17,10 +17,12 @@ import javafx.scene.control.TableView;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
+import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ui.TableRowLog;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -323,27 +325,52 @@ public class MapConverter {
                 if(exportedFile != null){
                     
                     if(!ressource.isUsedInMap()){
-                        if(exportedFile.delete()){
-                            logger.info(ressource.getExportedFile()+" unused file deleted");
-                        }
+                        exportedFile.delete();
                     } 
                     
                     // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
                     else  {
+
                         // Some sounds might need to be converted for correct import in UE4
                         if(ressource.needsConversion(this)){
-                            ressource.convert(logger);
-                            // TODO delete exportedFile
+                            exportedFile = ressource.convert(logger);
+                            System.out.println("Exists "+exportedFile.getAbsolutePath()+" -> "+exportedFile.exists());
                         }
                         
-                        // TODO use convertedFile if needed for renaming
-                        File newFile = new File(exportedFile.getParent() + File.separator + ressource.getConvertedFileName());
+                        File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
+                        newFile.mkdirs();
+                        newFile.createNewFile();
                         Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        ressource.getExportedFile().delete();
-                        logger.info("Renamed "+exportedFile.getName()+" to "+newFile.getName());
+                        exportedFile.delete();
+                        exportedFile = newFile;
+                        logger.info("Converted "+newFile.getAbsolutePath());
                     }
                 }
             }
+        }
+        
+        // DELETE ALL IN TEMP FOLDER
+        for(File f : getTempExportFolder().listFiles()){
+            f.delete();
+            f.deleteOnExit();
+        }
+        
+        getTempExportFolder().delete();
+        
+        // Create a folder for this map in UE4Editor
+        // and copy a simple existing .uasset file so we can see the folder created in UT4 editor ...
+        if(toUT4()){
+            UserGameConfig userGameConfig = userConfig.getGameConfigByGame(UTGame.UT4);
+            File restrictedAssetsFolder = new File(userGameConfig.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
+            File wipFolder = new File(restrictedAssetsFolder + File.separator + "Maps" + File.separator + "WIP");
+            File wipConvertedMapFolder = new File(wipFolder + File.separator + getOutMapName());
+            wipConvertedMapFolder.mkdirs();
+            
+            // copy small .uasset file so the folder will appear in UT4 editor ....
+            File uassetFile = new File(restrictedAssetsFolder + File.separator + "Blueprints" + File.separator + "Lift" + File.separator + "Curves" + File.separator + "EaseIn-Out.uasset");
+            File uassetCopy = new File(wipConvertedMapFolder + File.separator + "dummyfile.uasset");
+            
+            Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -485,4 +512,28 @@ public class MapConverter {
         return logger;
     }
 
+    /**
+     * <UT4ConverterFolder>/Converted
+     * @return 
+     */
+    private static File getBaseConvertFolder(){
+        return new File(Installation.getProgramFolder().getAbsolutePath() + File.separator + CONV_PATH);
+    }
+    
+    /**
+     * <UT4ConverterFolder>/Converted/<MapName>
+     * @return 
+     */
+    private File getMapConvertFolder(){
+        return new File(getBaseConvertFolder()+ File.separator + getInMap().getName().split("\\.")[0]);
+    }
+    
+    /**
+     * <UT4ConverterFolder>/Converted/<MapName>/Temp
+     * @return 
+     */
+    public  File getTempExportFolder(){
+        return new File(getMapConvertFolder() + File.separator + "Temp");
+    }
 }
+
