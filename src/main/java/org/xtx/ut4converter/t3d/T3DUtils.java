@@ -208,4 +208,28 @@ public class T3DUtils {
         return v;
     }
 
+    /**
+     * Remove bad chars from string
+     * (basically unsupported chars for UE4 editor)
+     * @param mapName
+     * @return 
+     */
+    public static String filterName(String mapName){
+        
+        String s = "";
+        
+        for(char x : mapName.toCharArray()){
+            
+            int val = (int) x;
+
+            if( (val == 45) // "-" 
+                    || (48 <= val && val <= 57) // 0 -> 9
+                        || (65 <= val && val <= 90) // A -> Z
+                            || (97 <= val && val <= 125)){ // a -> z
+                s += (char) val;
+            }
+        }
+        
+        return s;
+    }
 }

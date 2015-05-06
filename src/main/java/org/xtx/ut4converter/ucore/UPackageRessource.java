@@ -209,8 +209,8 @@ public class UPackageRessource {
             suffix = "_Mat";
         }
         
-        // /Game/RestrictedAssets/Maps/WIP/<convertedmapname>/<ressourcetype>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
-        return UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/" + type.getName() + "/" + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
+        // /Game/RestrictedAssets/Maps/WIP/<convertedmapname>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
+        return UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/"  + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
     }
     
     /**

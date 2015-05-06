@@ -22,6 +22,7 @@ import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
+import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ui.TableRowLog;
 import org.xtx.ut4converter.ucore.UPackage;
@@ -233,6 +234,10 @@ public class MapConverter {
             if(outMapName==null){
                 // TODO being able to set it manually (chosen by user)
                 outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
+                
+                // Remove bad chars from name (e.g: DM-Cybrosis][ ->  DM-Cybrosis)
+                // else ue4 editor won't be able to set sounds or textures to actors
+                outMapName = T3DUtils.filterName(outMapName);
             }
             
             supportedActorClasses = new SupU1UT99ToUT4Classes(this);
