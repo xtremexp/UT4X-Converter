@@ -35,7 +35,9 @@ public  class SoxSoundConverter {
      */
     public synchronized void convertTo44k(File inWaveFile, File outWaveFile){
         
-        String command = Installation.getSoxSoundConverter().getAbsolutePath() +  " \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 \"" + outWaveFile.getAbsolutePath() + "\"";
+        // note, UT4 editor does not support 8 bit wav files
+        // so need force to 16 bits
+        String command = Installation.getSoxSoundConverter().getAbsolutePath() +  " \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 -b 16 \"" + outWaveFile.getAbsolutePath() + "\"";
         
         logger.info(command);
         List<String> logLines = new ArrayList<>();
