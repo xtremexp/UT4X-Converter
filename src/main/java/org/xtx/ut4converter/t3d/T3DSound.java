@@ -222,10 +222,10 @@ public class T3DSound extends T3DActor {
     public void scale(Double newScale){
         
         T3DUtils.scale(attenuation.attenuationShapeExtents, newScale);
-        T3DUtils.scale(attenuation.LPFRadiusMin, newScale);
-        T3DUtils.scale(attenuation.LPFRadiusMax, newScale);
-        T3DUtils.scale(attenuation.fallOffDistance, newScale);
-        T3DUtils.scale(attenuation.omniRadius, newScale);
+        attenuation.LPFRadiusMin = T3DUtils.scale(attenuation.LPFRadiusMin, newScale);
+        attenuation.LPFRadiusMax = T3DUtils.scale(attenuation.LPFRadiusMax, newScale);
+        attenuation.fallOffDistance = T3DUtils.scale(attenuation.fallOffDistance, newScale);
+        attenuation.omniRadius = T3DUtils.scale(attenuation.omniRadius, newScale);
         
         super.scale(newScale);
     }
@@ -245,10 +245,9 @@ public class T3DSound extends T3DActor {
                 soundPitch /= 64D; // default pitch is 64 in UE1/2
             }
             
-            // Make sure MinRadius <= MaxRadius
-            if(attenuation.fallOffDistance != null){
-                attenuation.fallOffDistance = Math.max(attenuation.attenuationShapeExtents.x, attenuation.fallOffDistance);
-            }
+            // tested DM-ArcaneTemple (UT99)
+            attenuation.fallOffDistance = attenuation.attenuationShapeExtents.x * 24;
+
         }
         
         if(mapConverter.convertSounds && ambientSound != null){

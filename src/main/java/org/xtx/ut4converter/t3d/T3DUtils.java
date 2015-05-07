@@ -250,11 +250,14 @@ public class T3DUtils {
      * null-safe double scaling
      * @param d
      * @param scale
+     * @return 
      */
-    public static void scale(Double d, Double scale){
+    public static Double scale(Double d, Double scale){
         
         if(d != null){
-            d *= (scale!=null?scale:d);
+            return (scale!=null?d*scale:d);
+        } else {
+            return null;
         }
     }
     
