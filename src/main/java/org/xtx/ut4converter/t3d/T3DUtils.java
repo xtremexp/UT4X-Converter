@@ -7,6 +7,7 @@
 package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 import javax.vecmath.Vector3d;
 
 /**
@@ -231,5 +232,75 @@ public class T3DUtils {
         }
         
         return s;
+    }
+    
+    /**
+     * null-safe vector scaling
+     * @param v Vector
+     * @param scale
+     */
+    public static void scale(Vector3d v, Double scale){
+        
+        if(v != null){
+            v.scale(scale!=null?scale:1d);
+        }
+    }
+    
+    /**
+     * null-safe double scaling
+     * @param d
+     * @param scale
+     */
+    public static void scale(Double d, Double scale){
+        
+        if(d != null){
+            d *= (scale!=null?scale:d);
+        }
+    }
+    
+    public static String getT3DLine(Map<String, Object> props){
+        
+        StringBuilder s = new StringBuilder("");
+        int count = 0;
+        
+        for(String name : props.keySet()){
+            
+            if(name == null || props.get(name) == null){
+                continue;
+            }
+            
+            Object value = props.get(name);
+            
+            s.append(name).append("=");
+            
+            if(value instanceof Vector3d){
+                s.append(toStringVec((Vector3d) value));
+            } else {
+                s.append(value.toString());
+            }
+            
+            s.append(",");
+            count ++;
+        }
+        
+        if(count > 0){
+            s.deleteCharAt(s.length() - 1); // remove the last ","
+        }
+        
+        return s.toString();
+    }
+    
+    /**
+     * Convert vector to string
+     * @param v
+     * @return 
+     */
+    private static String toStringVec(Vector3d v){
+        
+        if(v == null){
+            return null;
+        }
+        
+        return "(X="+v.x+",Y="+v.y+",Z="+v.z+")";
     }
 }

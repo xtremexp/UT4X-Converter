@@ -200,9 +200,12 @@ public class UPackageRessource {
         
         String suffix = "";
             
-        // in UT4 editor click on ressource file -> Create Cue adds a "_Cue" suffix
         if(type == Type.SOUND){
-            suffix = "_Cue";
+            if(mapConverter.toUE3()){
+                // beware UT3 needs cue for AmbientSound but not for AmbientSoundSimple actor
+               suffix = "_Cue";
+            }
+            // UE4 handles both wave and cue sounds for AmbientSound actor
         } 
 
         else if(type == Type.TEXTURE){

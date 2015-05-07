@@ -5,7 +5,11 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -22,21 +26,151 @@ public class T3DSound extends T3DActor {
      */
     UPackageRessource ambientSound;
     
-    /**
-     * UE1, not UE4
-     */
-    Double soundRadius;
+    AttenuationSettings attenuation = new AttenuationSettings();
     
     /**
-     * UE1 (default: 190 max 255),
-     * UE4
+     * UE1/2: (default: 190 max 255)
+     * UE3:
+     * UE4: 
      */
     Double soundVolume;
     
     /**
-     * UE1, UE4
+     * UE1/2: default 64
+     * UE3: default 1
+     * UE4: "Pitch Multiplier" default 1
      */
     Double soundPitch;
+    
+    /**
+     * UE3/4
+     */
+    enum DistanceAlgorithm {
+        ATTENUATION_Linear,
+        ATTENUATION_Logarithmic,
+        ATTENUATION_Inverse,
+        ATTENUATION_LogReverse,
+        ATTENUATION_NaturalSound
+    }
+    
+    /**
+     * Shape of "sound volume" only Sphere available for UE3
+     */
+    enum Shape {
+        Sphere, Capsule, Box, Cone
+    }
+    
+    /**
+     * TODO move out to ucore package ?
+     */
+    class AttenuationSettings {
+        
+        /**
+         * UE3/UE4: default true
+         */
+        Boolean bAttenuate;
+        
+        /**
+         * UE3/UE4: default true
+         */
+        Boolean bSpatialize;
+        
+        
+        /**
+         * UE4 only default 20
+         */
+        Double omniRadius;
+        
+        /**
+         * In UE3 it's "DistanceModel"
+         */
+        DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.ATTENUATION_Linear;
+        
+        /**
+         * Only with UE4
+         * and distance algorithm ATTENUATION_NaturalSound
+         */
+        Double dBAttenuationAtMax = -60d;
+        
+        /**
+         * Only in UE4, in UE3 it seems to be sphere by default
+         */
+        Shape attenuationShape = Shape.Sphere;
+        
+        
+        /**
+         * UE4: is radius
+         * UE3: "MinRadius" (400 default)
+         * 
+         */
+        Vector3d attenuationShapeExtents = new Vector3d(400d, 0, 0);
+        
+        /**
+         * UE4 only with attenuation shape "Cone" (default : 0)
+         */
+        Double coneOffset;
+        
+        /**
+         * in UE4: "MaxRadius" ? (5000 default)
+         * UE3: default 3600
+         */
+        Double fallOffDistance;
+        
+        /**
+         * UE3: LPFMinRadius (default 1500)
+         * UE4: default 3000
+         */
+        Double LPFRadiusMin;
+        
+        /**
+         * UE3: LPFMaxRadius (default 2500)
+         * UE4: default 6000
+         */
+        Double LPFRadiusMax;
+        
+        /**
+         * UE3: bAttenuateWithLowPassFilter
+         * UE4: default false
+         */
+        Boolean bAttenuateWithLPF;
+        
+        public String toString(UTGames.UnrealEngine engine){
+            if(engine.version <= 3){
+                return null;
+            }
+            // only UE4 support right now
+            else 
+            {
+                StringBuilder s = new StringBuilder("AttenuationOverrides=(");
+                
+                Map<String, Object> props = new HashMap<>();
+                
+                props.put("bAttenuateWithLPF", bAttenuateWithLPF);
+                props.put("bSpatialize", bSpatialize);
+                
+                if(bSpatialize != null && bSpatialize){
+                    props.put("OmniRadius", omniRadius);
+                }
+                
+                if(distanceAlgorithm == DistanceAlgorithm.ATTENUATION_NaturalSound){
+                    props.put("dBAttenuationAtMax", dBAttenuationAtMax);
+                }
+                
+                if(attenuationShape == Shape.Cone){
+                    props.put("coneOffset", coneOffset);
+                }
+                
+                props.put("AttenuationShapeExtents", attenuationShapeExtents);
+                props.put("FalloffDistance", fallOffDistance);
+                props.put("LPFRadiusMin", LPFRadiusMin);
+                props.put("LPFRadiusMax", LPFRadiusMax);
+                
+                s.append(T3DUtils.getT3DLine(props));
+                s.append(")\n");
+                return s.toString();
+            }
+        }
+    }
     
     /**
      *
@@ -45,13 +179,24 @@ public class T3DSound extends T3DActor {
     public T3DSound(MapConverter mc) {
         super(mc);
         ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
+        
+        setDefaults();
+    }
+    
+    /**
+     * TODO some outside kind of UProperty class with defaults value for each UE version
+     */
+    private void setDefaults(){
+        if(mapConverter.fromUE1OrUE2()){
+            attenuation.attenuationShapeExtents.x = 64d; // Default Radius in UE1/2
+        }
     }
     
     @Override
     public boolean analyseT3DData(String line) {
         
         if(line.contains("SoundRadius")){
-            soundRadius = T3DUtils.getDouble(line);
+            attenuation.attenuationShapeExtents.x = T3DUtils.getDouble(line);
         }
         
         else if(line.contains("SoundVolume")){
@@ -76,9 +221,11 @@ public class T3DSound extends T3DActor {
     @Override
     public void scale(Double newScale){
         
-        if(soundRadius != null){
-            soundRadius *= newScale;
-        }
+        T3DUtils.scale(attenuation.attenuationShapeExtents, newScale);
+        T3DUtils.scale(attenuation.LPFRadiusMin, newScale);
+        T3DUtils.scale(attenuation.LPFRadiusMax, newScale);
+        T3DUtils.scale(attenuation.fallOffDistance, newScale);
+        T3DUtils.scale(attenuation.omniRadius, newScale);
         
         super.scale(newScale);
     }
@@ -91,7 +238,16 @@ public class T3DSound extends T3DActor {
         
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
             if(soundVolume != null){
-               soundVolume /= 255D;
+               soundVolume /= 190D; // default volume is 190 in UE1/2
+            }
+            
+            if(soundPitch != null){
+                soundPitch /= 64D; // default pitch is 64 in UE1/2
+            }
+            
+            // Make sure MinRadius <= MaxRadius
+            if(attenuation.fallOffDistance != null){
+                attenuation.fallOffDistance = Math.max(attenuation.attenuationShapeExtents.x, attenuation.fallOffDistance);
             }
         }
         
@@ -124,6 +280,9 @@ public class T3DSound extends T3DActor {
             sbf.append(IDT).append("\tEnd Object\n");
             sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
             
+            sbf.append(IDT).append("\t\tbOverrideAttenuation=True\n");
+            sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
+            
             if(ambientSound != null){
                 sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
             }
@@ -136,6 +295,7 @@ public class T3DSound extends T3DActor {
             if(soundPitch != null){
                 sbf.append(IDT).append("\t\tPitchMultiplier=").append(soundPitch).append("\n");
             }
+            
             writeLocRotAndScale();
             sbf.append(IDT).append("\tEnd Object\n");
             sbf.append(IDT).append("\tAudioComponent=AudioComponent0\n");

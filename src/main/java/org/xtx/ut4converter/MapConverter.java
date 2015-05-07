@@ -477,6 +477,14 @@ public class MapConverter {
     }
     
     /**
+     * Indicated game being converted to Unreal Engine 3 game (basically only UT3)
+     * @return 
+     */
+    public boolean toUE3(){
+        return UTGames.isUnrealEngine3(this.getOutputGame());
+    }
+    
+    /**
      * Tells if converting UT game using Unreal Engine 1 or 2
      * is being converted to some other UT game using Unreal Engine 3 or 4.
      * 
