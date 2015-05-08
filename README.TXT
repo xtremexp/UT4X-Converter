@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.3.0
+- Version: 0.4-DEV
 - Author: XtremeXp
-- Release Date: 08/05/2015
+- Release Date: 08/05/2015 (0.3.0)
 - Download latest released version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter
 
