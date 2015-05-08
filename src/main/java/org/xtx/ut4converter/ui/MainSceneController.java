@@ -69,8 +69,7 @@ public class MainSceneController implements Initializable {
     private Menu menuOptions;
     @FXML
     private MenuItem menuSettings;
-    private Label welcomeLabel;
-    private Pane paneSettings;
+
     @FXML
     private MenuItem menuCheckForUpdates;
     @FXML
@@ -222,10 +221,24 @@ public class MainSceneController implements Initializable {
         
         
         UserGameConfig ugc;
+        UserGameConfig ugcUt4;
         boolean needSetGamePath = true;
         
         if(uc != null){
             ugc = uc.getGameConfigByGame(inputGame);
+            ugcUt4 = uc.getGameConfigByGame(UTGame.UT4);
+            
+            if(ugcUt4 == null || ugcUt4.getPath() == null || !ugcUt4.getPath().exists()){
+                
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Need to set UT4 editor folder");
+                alert.setHeaderText("Path not set");
+                alert.setContentText("You need to set "+UTGame.UT4.shortName+" editor path (go to \"Options\" -> \"Settings\" in menu, set UT4 Editor path and try again)");
+
+                alert.showAndWait();
+
+                return;
+            }
             
             if(ugc != null && ugc.getPath() != null){
                 chooser.setInitialDirectory(new File(ugc.getPath().getAbsolutePath() + File.separator + "Maps"));
@@ -233,13 +246,13 @@ public class MainSceneController implements Initializable {
             } else {
                 // TODO redirect to settings panel so user can set game path?
                 ugc = new UserGameConfig();
-                ugc.setId(UTGames.UTGame.UT99);
+                ugc.setId(inputGame);
 
             }
         } else {
             uc = new UserConfig();
             ugc = new UserGameConfig();
-            ugc.setId(UTGames.UTGame.UT99);
+            ugc.setId(inputGame);
         }
 
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+")", "*."+inputGame.mapExtension));
@@ -259,8 +272,6 @@ public class MainSceneController implements Initializable {
 
                     alert.showAndWait();
                     
-                    paneSettings.setVisible(true);
-                    welcomeLabel.setVisible(false);
                     return;
                 }
                 
