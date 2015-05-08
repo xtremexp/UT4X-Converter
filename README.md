@@ -83,9 +83,10 @@ In UT4 Editor:
 - Open the UT4 Editor
 - Create new level ("File -> New level ...") and select "Empty level"
 - Import sounds
--- Browser to /Maps/WIP/<MapName>-UT99/U1
--- Click on "Import" and select converted sounds file from <UT4ConverterPath>/Converted/<MapName>/Sounds
+-- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+-- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
 -- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
+(e.g:  "AmbOutside_Looping_waves4")
 - Import converted map
 -- "File -> Import ..."
 -- Select the file <UT4ConverterPath>/Converted/<MapName>/Level/<MapName>-UT99/U1.t3d
@@ -149,7 +150,7 @@ History
   * UI: improved log display
   * Fixed crash if UT4 converter has whitespace in one of his parent folders
   * Added / Activated support for Unreal 1
-  * Auto-creates additive and lightning brush
+  * Auto-creates big additive brush to simulate level in subtract mode and lightning importance volume for level 
 
 - 0.2.1 - 19/04/2015: 
   * Fixed movers not importing correctly in UT4 editor
