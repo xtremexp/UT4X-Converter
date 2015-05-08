@@ -1,7 +1,10 @@
 package org.xtx.ut4converter;
 
+import java.io.BufferedReader;
 import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +25,7 @@ import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
+import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ui.TableRowLog;
@@ -96,7 +100,7 @@ public class MapConverter {
      * If <code>true</code> textures of the map
      * will be exported and converted.
      */
-    public boolean convertTextures;
+    public boolean convertTextures = true;
     
     /**
      * If <code>true</code> sounds of the map
@@ -243,8 +247,14 @@ public class MapConverter {
             
             supportedActorClasses = new SupU1UT99ToUT4Classes(this);
             
+            if(inputGame.engine.version == 1){
+                loadNameToPackage();
+            }
+            
             userConfig = UserConfig.load();
         } catch (JAXBException ex) {
+            Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -554,6 +564,79 @@ public class MapConverter {
      */
     public  File getTempExportFolder(){
         return new File(getMapConvertFolder() + File.separator + "Temp");
+    }
+    
+    Map<String, String> nameToPackage = new HashMap<>();
+    
+    
+    private void loadNameToPackage() throws FileNotFoundException, IOException {
+        
+        File dbFile = new File(Installation.getProgramFolder() + File.separator + "conf" + File.separator + inputGame.shortName+"TexNameToPackage.txt");
+        
+        try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr);) {
+            
+            String line;
+            
+            while((line=bfr.readLine())!=null){
+                String[] sp = line.split("\\:");
+                nameToPackage.put(sp[0], sp[1]);
+            }
+        }
+    }
+    
+     /**
+     * T3D actor properties which are ressources (basically sounds, music, textures, ...)
+     * 
+     * @param fullRessourceName Full name of ressource (e.g: AmbModern.Looping.comp1 )
+     * @param type Type of ressource (sound, staticmesh, texture, ...)
+     * @return 
+     */
+    public UPackageRessource getUPackageRessource(String fullRessourceName, T3DRessource.Type type){
+        
+        if(fullRessourceName == null){
+            return null;
+        }
+        
+        String[] split = fullRessourceName.split("\\.");
+        
+        String packageName;
+        
+        // having only name of ressource not which package it belongs to
+        // happens for UE1/2 where polygon t3d data only store name
+        // so we using the old "ut3 converter" name to package db until finding a better way ...
+        if(split.length <= 1 && type == T3DRessource.Type.TEXTURE){
+            String name = split[0];
+            packageName = nameToPackage.get(name);
+            fullRessourceName = packageName + "." + name;
+        } else {
+            packageName = fullRessourceName.split("\\.")[0];
+        }
+
+        
+        // Ressource ever created while parsing previous t3d lines
+        // we return it
+        if(mapPackages.containsKey(packageName)){
+            
+            UPackage unrealPackage = mapPackages.get(packageName);
+            UPackageRessource uPackageRessource = unrealPackage.findRessource(fullRessourceName);
+                    
+            if(uPackageRessource != null){
+                uPackageRessource.setIsUsedInMap(true);
+                return uPackageRessource;
+            }
+            // Need to create one
+            else {
+                return new UPackageRessource(fullRessourceName, type, getInputGame(), unrealPackage, true);
+            }
+        } 
+        
+        else {
+            
+            // need to create one (unreal package info is auto-created)
+            UPackageRessource upRessource =  new UPackageRessource(fullRessourceName, type, getInputGame(), true);
+            mapPackages.put(packageName, upRessource.getUnrealPackage());
+            return upRessource;
+        }
     }
 }
 

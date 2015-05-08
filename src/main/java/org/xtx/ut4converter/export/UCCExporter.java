@@ -82,6 +82,7 @@ public final class UCCExporter extends UTPackageExtractor {
         LEVEL_T3D("Level t3d"),
         SOUND_WAV("Sound wav"),
         TEXTURE_TGA("Texture tga"), // TODO check UE support other type like dds, tga
+        TEXTURE_PCX("Texture pcx"),
         STATICMESH_T3D("StaticMesh t3d"),
         CLASS_UC("Class uc");
 
@@ -106,7 +107,7 @@ public final class UCCExporter extends UTPackageExtractor {
      * @param type Type of ressource
      * @return ucc command line options
      */
-    private UccOptions getUccOptions(Type type){
+    private UccOptions getUccOptions(Type type, UTGames.UnrealEngine engine){
         
         if(type == Type.SOUND){
             return UccOptions.SOUND_WAV;
@@ -117,7 +118,11 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         else if (type == Type.TEXTURE){
-            return UccOptions.TEXTURE_TGA;
+            if(engine.version == 2){
+                return UccOptions.TEXTURE_TGA;
+            } else if(engine.version == 1){
+                return UccOptions.TEXTURE_PCX;
+            }
         }
         
         else if (type == Type.LEVEL){
@@ -154,7 +159,7 @@ public final class UCCExporter extends UTPackageExtractor {
     public Set<File> extract(UPackageRessource ressource) throws Exception {
         
         // Ressource ever extracted, we skip ...
-        if(ressource.isExported()){
+        if(ressource.isExported() || ressource.getUnrealPackage().getName().equals("null") || ressource.getUnrealPackage().isExported()){
             return null;
         }
          
@@ -272,12 +277,14 @@ public final class UCCExporter extends UTPackageExtractor {
      */
     private String getCommandLine(String fileName, Type type){
         
-        if( mapConverter.getInputGame().engine.version == UTGames.UnrealEngine.UE1.version ){
-            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type) + " \"" + getExportFolder(type) + "\"";
+        UTGames.UnrealEngine inEngine = mapConverter.getInputGame().engine;
+        
+        if( inEngine.version == UTGames.UnrealEngine.UE1.version ){
+            return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
         } 
         
         else {
-            return "\"" + uccExporterPath.getAbsolutePath() + "\" batchexport  "+ fileName+ " " + getUccOptions(type);
+            return "\"" + uccExporterPath.getAbsolutePath() + "\" batchexport  "+ fileName+ " " + getUccOptions(type, inEngine);
         }
     }
     
@@ -321,7 +328,7 @@ public final class UCCExporter extends UTPackageExtractor {
             }
 
             
-            Installation.executeProcess(command, logLines);
+            int exitValue = Installation.executeProcess(command, logLines);
 
             for (String logLine : logLines) {
 
@@ -342,6 +349,7 @@ public final class UCCExporter extends UTPackageExtractor {
                 // Exported Texture GenWarp.Sun128a to Z:\\TEMP\Sun128a.bmp
                 else if(logLine.contains("Exported ")){
                     
+                    unrealPackage.setExported(true);
                     File exportedFile = new File(logLine.split(" to ")[1]);
                     exportedFiles.add(exportedFile);
                     String ressourceName = logLine.split("\\ ")[2];
@@ -350,6 +358,7 @@ public final class UCCExporter extends UTPackageExtractor {
                     
                     if(uRessource != null){
                         uRessource.setExportedFile(exportedFile);
+                        uRessource.parseNameAndGroup(ressourceName); // for texture db that don't have group we retrieve the group ...
                     }
                     else {
                         UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage, exportedFile);

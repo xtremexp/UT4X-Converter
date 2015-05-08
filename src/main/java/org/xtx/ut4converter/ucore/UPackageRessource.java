@@ -133,7 +133,7 @@ public class UPackageRessource {
      * x) name = "Stower51"
      * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
      */
-    private void parseNameAndGroup(String fullName){
+    public void parseNameAndGroup(String fullName){
         String s[] = fullName.split("\\.");
 
         // TODO handle brush polygon texture info
@@ -250,6 +250,14 @@ public class UPackageRessource {
         // other cases should not happen normally ...
         
         return "";
+    }
+    
+    public String getFullNameWithoutGroup(){
+        if(unrealPackage.name != null && group != null && name != null){
+            return unrealPackage.name + "." + name;
+        } else {
+            return "";
+        }
     }
     
     /**

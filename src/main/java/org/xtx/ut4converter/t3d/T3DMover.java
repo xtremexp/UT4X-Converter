@@ -89,27 +89,27 @@ public class T3DMover extends T3DBrush {
         
         // UE1 -> 'CloseStartSound' ? (UE4)
         else if(line.contains("ClosedSound=")){
-            closedSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);;
+            closedSound = mapConverter.getUPackageRessource(line.split("\\'")[1], Type.SOUND);;
         }
         
         // UE1 -> 'CloseStopSound' ? (UE4)
         else if(line.contains("ClosingSound=")){
-            closingSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
+            closingSound = mapConverter.getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'OpenStartSound' ? (UE4)
         else if(line.contains("OpeningSound=")){
-            openingSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
+            openingSound = mapConverter.getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'OpenStopSound' ? (UE4)
         else if(line.contains("OpenedSound=")){
-            openedSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
+            openedSound = mapConverter.getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'Closed Sound' (UE4)
         else if(line.contains("MoveAmbientSound=")){
-            moveAmbientSound = getUPackageRessource(line.split("\\'")[1], Type.SOUND);
+            moveAmbientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], Type.SOUND);
         }
         
         // UE1 -> 'Lift Destination' (UE12)

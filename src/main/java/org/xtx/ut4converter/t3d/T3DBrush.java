@@ -133,7 +133,7 @@ public class T3DBrush extends T3DSound {
         // Begin Polygon Item=Rise Texture=r-plates-g Link=0
         else if(line.contains("Begin Polygon")){
             isAnalysingPolyData = true;
-            polyList.add(new T3DPolygon(line));
+            polyList.add(new T3DPolygon(line, mapConverter));
         }
         
         // Origin   -00128.000000,-00128.000000,-00128.000000
@@ -465,6 +465,10 @@ public class T3DBrush extends T3DSound {
         
         // TODO check texture alignement after convert
         // TODO export textures from UT packages
+        for(T3DPolygon p : polyList){
+            p.convert();
+        }
+        
         // TODO change texture name on polygons
         
         super.convert();

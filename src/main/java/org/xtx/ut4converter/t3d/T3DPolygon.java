@@ -9,6 +9,9 @@ package org.xtx.ut4converter.t3d;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import javax.vecmath.Vector3d;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * 
@@ -19,7 +22,7 @@ public class T3DPolygon {
     /**
      * Original texture or material applied to the polygon
      */
-    String texture;
+    UPackageRessource texture;
     
     /**
      *
@@ -71,10 +74,13 @@ public class T3DPolygon {
      */
     public LinkedList<Vector3d> vertices = new LinkedList<>();
     
+    MapConverter mapConverter;
+    
     /**
      *
      */
     public T3DPolygon(){
+        this.mapConverter = mapConverter;
         origin = new Vector3d(0d, 0d, 0d);
         normal = new Vector3d(0d, 0d, 0d);
     }
@@ -83,9 +89,10 @@ public class T3DPolygon {
      *
      * @param t3dLine
      */
-    public T3DPolygon(String t3dLine){
+    public T3DPolygon(String t3dLine, MapConverter mapConverter){
         // Begin Polygon Texture=Rockwal4 Flags=32768 Link=322
-        this.texture = T3DUtils.getString(t3dLine, "Texture");
+        this.mapConverter = mapConverter;
+        this.texture = mapConverter.getUPackageRessource(T3DUtils.getString(t3dLine, "Texture"),  T3DRessource.Type.TEXTURE);
         this.link = T3DUtils.getInteger(t3dLine, "Link");
         this.flag = T3DUtils.getInteger(t3dLine, "Flags");
     }
@@ -125,7 +132,7 @@ public class T3DPolygon {
         sb.append(prefix).append("Begin Polygon Item=Side");
         
         if(texture != null){
-            sb.append(" Texture=").append(texture);
+            sb.append(" Texture=").append(texture.getConvertedName(mapConverter));
         }
         
         if(lightMapScale != null){
@@ -201,5 +208,10 @@ public class T3DPolygon {
         this.origin = origin;
     }
     
+    public void convert(){
+        if(mapConverter != null && mapConverter.convertTextures && texture != null){
+            texture.export(UTPackageExtractor.getExtractor(mapConverter, null));
+        }
+    }
     
 }

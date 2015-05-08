@@ -466,43 +466,7 @@ public abstract class T3DActor {
     }
 
     
-    /**
-     * T3D actor properties which are ressources (basically sounds, music, textures, ...)
-     * 
-     * @param fullRessourceName Full name of ressource (e.g: AmbModern.Looping.comp1 )
-     * @param type Type of ressource (sound, staticmesh, texture, ...)
-     * @return 
-     */
-    protected UPackageRessource getUPackageRessource(String fullRessourceName, T3DRessource.Type type){
-        
-        String packageName = fullRessourceName.split("\\.")[0];
-        
-        // Ressource ever created while parsing previous t3d lines
-        // we return it
-        if(mapConverter.mapPackages.containsKey(packageName)){
-            
-            UPackage unrealPackage = mapConverter.mapPackages.get(packageName);
-            UPackageRessource uPackageRessource = unrealPackage.findRessource(fullRessourceName);
-                    
-            if(uPackageRessource != null){
-                uPackageRessource.setIsUsedInMap(true);
-                return uPackageRessource;
-            }
-            // Need to create one
-            else {
-                return new UPackageRessource(fullRessourceName, type, mapConverter.getInputGame(), unrealPackage, true);
-            }
-        } 
-        
-        else {
-            
-            // need to create one (unreal package info is auto-created)
-            UPackageRessource upRessource =  new UPackageRessource(fullRessourceName, type, mapConverter.getInputGame(), true);
-            mapConverter.mapPackages.put(packageName, upRessource.getUnrealPackage());
-            return upRessource;
-        }
-    }
-    
+
     public String toString(){
         return sbf.toString();
     }

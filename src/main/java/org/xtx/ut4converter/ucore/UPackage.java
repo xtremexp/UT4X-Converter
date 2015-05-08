@@ -9,8 +9,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
@@ -39,6 +37,8 @@ public class UPackage {
      * Package ressources (textures, staticmeshes, ...)
      */
     Set<UPackageRessource> ressources = new HashSet<>();
+    
+    boolean exported;
     
     /**
      * Type of package (level, sound, textures, ...)
@@ -123,7 +123,7 @@ public class UPackage {
     public UPackageRessource findRessource(String fullName){
         
         for(UPackageRessource packageRessource : ressources){
-            if(fullName.equals(packageRessource.getFullName())){
+            if(fullName.equals(packageRessource.getFullName()) || fullName.equals(packageRessource.getFullNameWithoutGroup())){
                 return packageRessource;
             }
         }
@@ -208,5 +208,15 @@ public class UPackage {
         
         return null;
     }
+
+    public boolean isExported() {
+        return exported;
+    }
+
+    public void setExported(boolean exported) {
+        this.exported = exported;
+    }
+    
+    
     
 }

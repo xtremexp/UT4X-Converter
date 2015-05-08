@@ -209,7 +209,7 @@ public class T3DSound extends T3DActor {
         
         // AmbientSound=Sound'AmbAncient.Looping.Stower51'
         else if(line.contains("AmbientSound=")){
-            ambientSound = getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            ambientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         } 
         else {
             return super.analyseT3DData(line);
