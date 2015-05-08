@@ -122,7 +122,7 @@ CONVERTED MAP.
 
 How to build and run latest version ?
 ------------------------------
-- Download and install Java 8 JDK (Java Developement Kit) for Windows 64 bit or Linux 64 bit
+- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
 - Set "Repository URL" = https://github.com/xtremexp/UT4Converter
