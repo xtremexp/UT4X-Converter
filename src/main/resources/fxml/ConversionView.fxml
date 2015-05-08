@@ -6,12 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
-    <TableView tableMenuButtonVisible="true" fx:id="convLogTableView" prefWidth="1024" >
-        <columns>
-            <TableColumn text="Time" fx:id="logTime"></TableColumn>
-            <TableColumn text="Type" fx:id="logLevel"></TableColumn>
-            <TableColumn text="Message" fx:id="logMsg" prefWidth="800"></TableColumn>
-        </columns>
-    </TableView>
-</AnchorPane>
+<GridPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
+    <children>
+        <TableView tableMenuButtonVisible="true" fx:id="convLogTableView"  GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="Time" fx:id="logTime"></TableColumn>
+                <TableColumn text="Type" fx:id="logLevel"></TableColumn>
+                <TableColumn text="Message" fx:id="logMsg"></TableColumn>
+            </columns>
+        </TableView>
+    </children>
+</GridPane>

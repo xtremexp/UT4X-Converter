@@ -5,8 +5,8 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.MainSceneController;
@@ -34,11 +34,7 @@ public class MainApp extends Application {
     
     Stage primaryStage;
     BorderPane rootLayout;
-    
-    /**
-     * Reference to conversion panel
-     */
-    AnchorPane conversionLayout;
+
     
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -91,7 +87,7 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource(name));
-            AnchorPane userSettingsView = (AnchorPane) loader.load();
+            Pane userSettingsView = (Pane) loader.load();
 
             rootLayout.setCenter(userSettingsView);
             
