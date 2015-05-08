@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.3.0 (in progress)
+- Version: 0.3.0
 - Author: XtremeXp
-- Release Date: 18/04/2015
+- Release Date: 08/05/2015
 - Download latest released version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -23,21 +23,20 @@ UT games supported
 Some other games might be supported in the future.
 
 If you want to convert UT games to Unreal Tournament 3,
-please download and use UT3 Converter program instead of UT4 Converter.
+download and use UT3 Converter program instead of UT4 Converter.
 
 What is converted
 ------------------------------
 - Brushes (mostly good but textures alignement may not be correct sometimes)
-- Movers (partial)
+- Movers (working good except for doors (the current ut4 lift actor does not handle good door right now))
 - Pick-ups (most of them)
 - Lightning (color good but brightness a bit 'high', also note that "ZoneInfo" actors from UT99
 are not converted)
 
 What is NOT converted
 ------------------------------
-- Model brushes (decorations, ...)
+- Models
 - Textures
-- Sounds
 - Music
 - All custom scripts
 - Some special actors such as TriggerEvent, ...
@@ -83,33 +82,31 @@ In UT4 Converter:
 In UT4 Editor:
 - Open the UT4 Editor
 - Create new level ("File -> New level ...") and select "Empty level"
-- Create an additive brush to simulate subtractive level: (Unreal Engine 4 does not support levels in "Subtract" mode)
--- Go to "Modes" panel (left top of screen)
--- Go to "BSP"
--- Drag and drop a "Box" in the map
+- Import sounds
+-- Browser to /Maps/WIP/<MapName>-UT99/U1
+-- Click on "Import" and select converted sounds file from <UT4ConverterPath>/Converted/<MapName>/Sounds
+-- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
 - Import converted map
 -- "File -> Import ..."
--- Select the file and click on OK to import the map
-- Re-size the additive brush so the entire level fits in the brush
+-- Select the file <UT4ConverterPath>/Converted/<MapName>/Level/<MapName>-UT99/U1.t3d
+-- click on OK to import the map
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
-Optional:
-- Select all surfaces of the brush in additive mode added manually (select one surface + press "Ctrl+B"
-Since we don't need to have accurate lightmap of this huge brush because
-its surfaces will never be shown to player, change "LightMap Resolution" from 32 to 1024.
-This operation will decrease a lot filezise of map!
+
 
 Note:
-- For some maps you may have to use subtractive brushes before importing level.
-This depends mainly on layout of map (outdoor map such as CTF-Face and so on ...)
-- If after conversion your maps got lot of bsp holes, remove all
-"sheet" brushes (e.g: flat lava/water surface). The converter does remove most of them,
-but not all of them.
+- If after conversion your map got some bsp holes, remove all
+"sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
+ The converter does remove most of them, but not all of them yet.
 
 
 Limitations / Issues
 ------------------------------
-- Extraction of sound ressources only works with Windows (0.3.0 version in development)
+- Extraction of sound ressources only works with Windows
+- Movers are replaced with lift actor which won't work correctly for doors
+- Since Unreal Engine 4 does not support sheet brushes (e.g: flat lava/water surface, ...) , and as the converter
+does not remove all of them, some "bsp holes" may appear (in that case try to find out all these brushes
+and remove them until bsp holes dissapear)
 
 License
 ------------------------------
@@ -138,18 +135,21 @@ but it has not been yet tested.
 Libraries / Technologies used
 ------------------------------
 - Java 1.8.0_40 - http://www.java.com
-- Sox by Chris Bagwell - 14.4.2 - http://sox.sourceforge.net/
+- Sox by Chris Bagwell - 14.4.2 - http://sox.sourceforge.net/ (sound conversion)
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 
 History
 ------------------------------
-- 0.3.0 - In development:
-  * Improved lightning
+- 0.3.0 - 08/05/2015:
+  * Improved lightning (brightness, lightning type, ...)
   * Sound export and conversion
+  * Added LiftExit, Jumppad and BlockAll for conversion
+  * Converts Triggers with "CapsuleTrigger" volume
   * Better alignment of FlagBases
+  * UI: improved log display
   * Fixed crash if UT4 converter has whitespace in one of his parent folders
   * Added / Activated support for Unreal 1
-  * ?
+  * Auto-creates additive and lightning brush
 
 - 0.2.1 - 19/04/2015: 
   * Fixed movers not importing correctly in UT4 editor
