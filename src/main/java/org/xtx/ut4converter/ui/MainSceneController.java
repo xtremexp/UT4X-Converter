@@ -27,9 +27,6 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -72,34 +69,32 @@ public class MainSceneController implements Initializable {
     private Menu menuOptions;
     @FXML
     private MenuItem menuSettings;
-    @FXML
     private Label welcomeLabel;
-    @FXML
     private Pane paneSettings;
     @FXML
     private MenuItem menuCheckForUpdates;
     @FXML
     private MenuItem menuCheckoutSourceCode;
-    @FXML
-    private Pane conversion;
-    @FXML
-    private TableView<TableRowLog> convLogTableView;
 
     @FXML
-    private TableColumn<TableRowLog, String> logTime;
-    @FXML
-    private TableColumn<TableRowLog, String> logLevel;
-    @FXML
-    private TableColumn<TableRowLog, String> logMsg;
-    @FXML
     private MenuItem menuItemU1Map;
+    @FXML
+    private MenuItem menuItemTest;
+    
+    public MainApp mainApp;
+    public Stage mainStage;
+
+    public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+        this.mainStage = mainApp.getPrimaryStage();
+    }
+    
+    
+    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        logTime.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("time"));
-        logLevel.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("level"));
-        logMsg.setCellValueFactory(new PropertyValueFactory<TableRowLog, String>("message"));
+        
     }   
 
     /**
@@ -144,19 +139,10 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     private void handleSettings(ActionEvent event) {
-        paneSettings.setVisible(true);
-        welcomeLabel.setVisible(false);
+        mainApp.showUserSettingsView();
     }
 
-    /**
-     * Close settings panel and go pack to main page
-     * @param event 
-     */
-    @FXML
-    private void closeSettings(ActionEvent event) {
-        paneSettings.setVisible(false);
-        welcomeLabel.setVisible(true);
-    }
+
     
     /**
      * Opens url in web browser
@@ -208,10 +194,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private void openGitHubUrl(ActionEvent event) {
         openUrl(URL_UTCONV_GITHUB, true);
-    }
-
-    public TableView<TableRowLog> getConvLogTableView() {
-        return convLogTableView;
     }
 
     @FXML
@@ -313,7 +295,7 @@ public class MainSceneController implements Initializable {
                 }
                 
                 mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
-                mapConverter.setMainSceneController(this);
+                mapConverter.setConversionViewController(mainApp.showConversionView());
                 // TODO make getter in mc to know where to convert stuff!
                 mapConverter.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());
                 
@@ -345,5 +327,5 @@ public class MainSceneController implements Initializable {
             }
         }
     }
-    
+
 }

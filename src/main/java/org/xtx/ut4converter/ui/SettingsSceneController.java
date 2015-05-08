@@ -83,15 +83,7 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectUt4EditorFolder(ActionEvent event) {
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select UT4 Editor folder");
-
-        File ut4Editor = chooser.showDialog(new Stage());
-        
-        if(ut4Editor != null){
-            ut4EditorFolder.setText(ut4Editor.getAbsolutePath());
-            saveGamePath(ut4EditorFolder, UTGames.UTGame.UT4);
-        }
+        setUTxFolder(UTGame.UT4, ut4EditorFolder);
     }
 
     @FXML
@@ -176,8 +168,17 @@ public class SettingsSceneController implements Initializable {
      * @param utPathTxtField Textfield for path game display in settings
      */
     private void setUTxFolder(UTGame utGame, TextField utPathTxtField){
+        
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select "+utGame.name+" folder");
+        
+        if(utPathTxtField != null && utPathTxtField.getText() != null && new File(utPathTxtField.getText()).exists()){
+            chooser.setInitialDirectory(new File(utPathTxtField.getText()));
+        }
+        
+        if(utGame == UTGame.UT4){
+            chooser.setTitle("Select "+utGame.name+" editor folder");
+        }
 
         File utxFolder = chooser.showDialog(new Stage());
         

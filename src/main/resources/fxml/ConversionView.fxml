@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
+    <TableView tableMenuButtonVisible="true" fx:id="convLogTableView" prefWidth="1024" >
+        <columns>
+            <TableColumn text="Time" fx:id="logTime"></TableColumn>
+            <TableColumn text="Type" fx:id="logLevel"></TableColumn>
+            <TableColumn text="Message" fx:id="logMsg" prefWidth="800"></TableColumn>
+        </columns>
+    </TableView>
+</AnchorPane>

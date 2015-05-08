@@ -27,6 +27,7 @@ import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ui.TableRowLog;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ui.ConversionViewController;
 
 /**
  * 
@@ -126,7 +127,7 @@ public class MapConverter {
     /**
      * Reference to user interface
      */
-    MainSceneController mainSceneController;
+    ConversionViewController conversionViewController;
     
     /**
      * Global logger
@@ -253,11 +254,11 @@ public class MapConverter {
      */
     private void addLoggerHandlers(){
         
-        if(mainSceneController == null || mainSceneController.getConvLogTableView() == null){
+        if(conversionViewController == null || conversionViewController.getConvLogTableView() == null){
             return;
         }
         
-        final TableView<TableRowLog> t = mainSceneController.getConvLogTableView();
+        final TableView<TableRowLog> t = conversionViewController.getConvLogTableView();
         
         
         
@@ -516,8 +517,8 @@ public class MapConverter {
         return outT3d;
     }
 
-    public void setMainSceneController(MainSceneController mainSceneController) {
-        this.mainSceneController = mainSceneController;
+    public void setConversionViewController(ConversionViewController conversionViewController) {
+        this.conversionViewController = conversionViewController;
         addLoggerHandlers();
     }
     

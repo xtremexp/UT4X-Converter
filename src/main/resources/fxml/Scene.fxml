@@ -6,54 +6,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="200" prefWidth="600" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
-    <children>
-        <VBox>
-            <MenuBar prefWidth="400" >
-                <Menu text="File">
-                    <Menu text="Unreal 1 Map">
-                        <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="600" prefWidth="800" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
+    <!-- MENU BAR -->
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <Menu text="Unreal 1 Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
+                </Menu>
+                <Menu text="Unreal Tournament Map">
+                <MenuItem text="Convert to UT4 ..." onAction="#handleConvert" fx:id="menuItemUT99Map"/>
                     </Menu>
-                    <Menu text="Unreal Tournament Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvert" fx:id="menuItemUT99Map"/>
-                        </Menu>
-                    <SeparatorMenuItem/>
-                    <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
-                </Menu>
-                <Menu text="Options" fx:id="menuOptions">
-                    <MenuItem text="Settings" onAction="#handleSettings" fx:id="menuSettings"/>
-                </Menu>
-                <Menu text="?">
-                    <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
-                    <MenuItem text="Checkout source code" onAction="#openGitHubUrl" fx:id="menuCheckoutSourceCode"/>
-                    <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
-                </Menu>
-            </MenuBar>
-            
-            <Label fx:id="welcomeLabel" alignment="CENTER" >Welcome to UT4 Converter!</Label>
-            
-            <Pane fx:id="conversion">
-                <visible>true</visible>
-                <VBox alignment="CENTER" >
-                <TableView tableMenuButtonVisible="true" fx:id="convLogTableView" prefWidth="1024" >
-                    <columns>
-                        <TableColumn text="Time" fx:id="logTime"></TableColumn>
-                        <TableColumn text="Type" fx:id="logLevel"></TableColumn>
-                        <TableColumn text="Message" fx:id="logMsg" prefWidth="800"></TableColumn>
-                    </columns>
-                </TableView>
-                </VBox>
-            </Pane>
-            
-            <Pane fx:id="paneSettings">
-                <visible>false</visible>
-                <VBox alignment="CENTER" >
-                <fx:include fx:id="test" source="SettingsScene.fxml">
-                </fx:include>
-                <Separator orientation="HORIZONTAL"/> 
-                <Button onAction="#closeSettings" GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER" >Close</Button>
-                </VBox>
-            </Pane>
-        </VBox>
-    </children>
-</AnchorPane>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
+            </Menu>
+            <Menu text="Options" fx:id="menuOptions">
+                <MenuItem text="Settings" onAction="#handleSettings" fx:id="menuSettings"/>
+            </Menu>
+            <Menu text="?">
+                <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
+                <MenuItem text="Checkout source code" onAction="#openGitHubUrl" fx:id="menuCheckoutSourceCode"/>
+                <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
+            </Menu>
+        </MenuBar>
+    </top>
+</BorderPane>
