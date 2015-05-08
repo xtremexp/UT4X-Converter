@@ -259,7 +259,7 @@ public class MapConverter {
         }
         
         final TableView<TableRowLog> t = conversionViewController.getConvLogTableView();
-        
+        t.getItems().clear();
         
         
         logger.addHandler(new Handler() {
