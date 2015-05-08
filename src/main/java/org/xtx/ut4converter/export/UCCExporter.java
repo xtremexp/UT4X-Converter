@@ -224,6 +224,8 @@ public final class UCCExporter extends UTPackageExtractor {
             String drive = uccExporterPath.getAbsolutePath().substring(0, 2);
             bwr.write(drive+"\n"); //switch to good drive (e.g, executing UT4 converter from Z:\\ drive but map is in C:\\ drive
             bwr.write("cd \""+uccExporterPath.getParent()+"\"\n");
+            String cmd = getCommandLine(unrealPackage.getName(), type);
+            logger.fine(cmd);
             bwr.write(getCommandLine(unrealPackage.getName(), type));
             
             bwr.close();
@@ -295,12 +297,12 @@ public final class UCCExporter extends UTPackageExtractor {
         Set<File> exportedFiles = new HashSet<>();
         
         try {
-            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" package");
+            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" "+unrealPackage.type.name()+" package");
 
             // Copy of unreal package to folder of ucc.exe (/System) for U1/U2
             unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(gamePath).getName());
             
-            logger.log(Level.INFO, "Creating " + unrealMapCopy.getAbsolutePath());
+            logger.log(Level.FINE, "Creating " + unrealMapCopy.getAbsolutePath());
             unrealMapCopy.createNewFile();
             Files.copy(unrealPackage.getFileContainer(gamePath).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -318,13 +320,12 @@ public final class UCCExporter extends UTPackageExtractor {
                 command = getCommandLine(unrealMapCopy.getName(), unrealPackage.type);
             }
 
-            logger.log(Level.INFO, command);
             
             Installation.executeProcess(command, logLines);
 
             for (String logLine : logLines) {
 
-                logger.info(logLine);
+                logger.log(Level.FINE, logLine);
 
                 if(logLine.contains("Failed")) {
                     String missingpackage = logLine.split("\\'")[2];
@@ -359,11 +360,11 @@ public final class UCCExporter extends UTPackageExtractor {
 
         } finally {
             if(unrealMapCopy != null &&  unrealMapCopy.delete()){
-                logger.info(unrealMapCopy+" unreal package file copy deleted");
+                logger.fine(unrealMapCopy+" unreal package file copy deleted");
             }
             
             if(u1Batch != null && u1Batch.delete()){
-                logger.info(u1Batch+" batch file deleted");
+                logger.fine(u1Batch+" batch file deleted");
             }
         }
         

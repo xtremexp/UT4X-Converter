@@ -319,6 +319,8 @@ public class MapConverter {
      */
     private void cleanAndConvertRessources() throws IOException {
         
+        boolean wasConverted;
+        
         // remove unecessary exported files
         // convert them to some new file format if needed
         // and rename them to fit with "naming" standards
@@ -326,6 +328,7 @@ public class MapConverter {
             
             for(UPackageRessource ressource : unrealPackage.getRessources()){
                 
+                wasConverted = false;
                 File exportedFile = ressource.getExportedFile();
                 
                 if(exportedFile != null){
@@ -340,7 +343,7 @@ public class MapConverter {
                         // Some sounds might need to be converted for correct import in UE4
                         if(ressource.needsConversion(this)){
                             exportedFile = ressource.convert(logger);
-                            System.out.println("Exists "+exportedFile.getAbsolutePath()+" -> "+exportedFile.exists());
+                            wasConverted = true;
                         }
                         
                         File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
@@ -349,7 +352,10 @@ public class MapConverter {
                         Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         exportedFile.delete();
                         exportedFile = newFile;
-                        logger.info("Converted "+newFile.getAbsolutePath());
+                        
+                        if(wasConverted){
+                            logger.fine("Converted "+ressource.getType().name()+" :"+newFile.getName());
+                        }
                     }
                 }
             }

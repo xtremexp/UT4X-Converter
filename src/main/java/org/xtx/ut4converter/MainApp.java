@@ -87,9 +87,9 @@ public class MainApp extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource(name));
-            Pane userSettingsView = (Pane) loader.load();
+            Pane view = (Pane) loader.load();
 
-            rootLayout.setCenter(userSettingsView);
+            rootLayout.setCenter(view);
             
             return loader.getController();
         } catch (IOException e) {

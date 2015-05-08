@@ -39,7 +39,7 @@ public  class SoxSoundConverter {
         // so need force to 16 bits
         String command = Installation.getSoxSoundConverter().getAbsolutePath() +  " \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 -b 16 \"" + outWaveFile.getAbsolutePath() + "\"";
         
-        logger.info(command);
+        logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
         List<String> logLines = new ArrayList<>();
         
         try {
@@ -49,7 +49,7 @@ public  class SoxSoundConverter {
         }
         
         for(String logLine : logLines){
-            logger.info(logLine);
+            logger.log(Level.FINE, logLine);
         }
     }
 }

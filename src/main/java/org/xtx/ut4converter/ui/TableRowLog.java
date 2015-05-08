@@ -7,6 +7,7 @@ package org.xtx.ut4converter.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -20,7 +21,7 @@ public class TableRowLog {
     /**
      * Log level
      */
-    private final SimpleStringProperty level;
+    private Level level;
     
     /**
      * Log message
@@ -38,7 +39,7 @@ public class TableRowLog {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
 
     public TableRowLog(LogRecord logRecord) {
-        this.level = new SimpleStringProperty(logRecord.getLevel().getName());
+        this.level = logRecord.getLevel();
 
         if(logRecord.getThrown() != null){
             this.message =new SimpleStringProperty(logRecord.getMessage() + " " + logRecord.getThrown().getMessage());
@@ -49,12 +50,12 @@ public class TableRowLog {
         this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
     }
 
-    public String getLevel() {
-        return level.get();
+    public Level getLevel() {
+        return level;
     }
 
-    public void setLevel(String fName) {
-        level.set(fName);
+    public void setLevel(Level logLevel) {
+        level = logLevel;
     }
 
     public String getMessage() {
