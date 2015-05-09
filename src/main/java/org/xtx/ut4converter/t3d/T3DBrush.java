@@ -222,7 +222,7 @@ public class T3DBrush extends T3DSound {
      * @return 
      */
     @Override
-    public boolean isValid(){
+    public boolean isValidWriting(){
         
         boolean valid = true;
         
@@ -235,9 +235,16 @@ public class T3DBrush extends T3DSound {
             // BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly coming from UE1/UE2 ...
             // Else geometry building got holes so need to get rid of them ...
             // TODO add note? (some sheet brushes are movers ...)
-            if(isSheetBrush()){
-                logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+            // TODO replace sheetbrush with sheet staticmesh
+            // if 2 polygons and sheetbrush not a portal
+            if(isUnsupportedUE4Brush()){
+                
                 valid = false;
+                
+                // only notify if this brush could not be replaced by another actor
+                if(children.isEmpty()){
+                    logger.warning("Skipped unsupported 'sheet brush' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+                }
             }
             
             if(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Active 
@@ -252,17 +259,30 @@ public class T3DBrush extends T3DSound {
             }
         }
         
-        return super.isValid();
+        return super.isValidWriting();
     }
     
     
     /**
-     * Detect if this current brush is a sheet brush.
-     * Generally is a "flat" brush used in Unreal Engine 1 / 2
-     * as a "Torch", "Water surface" and so on ...
-     * @return <code>true</code> If this brush is a sheet brush
+     * Tells if current brush is sheet brush:
+     * - one polygon
+     * - 4 vertices for this polygon
+     * @return 
      */
     protected boolean isSheetBrush(){
+        return polyList.size() == 1 && polyList.get(0).vertices.size() == 4;
+    }
+    
+    /**
+     * Detect if this current brush is not supported by Unreal Engine 4.
+     * This kind of brush makes bsp holes on import.
+     * Generally is a "flat" brush used in Unreal Engine 1 / 2
+     * as a "Torch", "Water surface" and so on ...
+     * 1 poly = sheet brush
+     * 2+ poly (generally torch)
+     * @return <code>true</code> If this brush is a sheet brush
+     */
+    protected boolean isUnsupportedUE4Brush(){
         
         return polyList.size() <= 4;
         // FIXME all sheet brushes are well deleted but some (a very few)
@@ -469,8 +489,12 @@ public class T3DBrush extends T3DSound {
             p.convert();
         }
         
-        // TODO change texture name on polygons
-        
+        // Replace Sheet Brush with Sheet StaticMesh
+        if(polyList.size() == 1){
+            T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
+            children.add(sheetStaticMesh);
+        }
+
         super.convert();
     }
     

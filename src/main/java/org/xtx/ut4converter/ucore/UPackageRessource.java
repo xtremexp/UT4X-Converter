@@ -253,7 +253,7 @@ public class UPackageRessource {
     }
     
     public String getFullNameWithoutGroup(){
-        if(unrealPackage.name != null && group != null && name != null){
+        if(unrealPackage.name != null && name != null){
             return unrealPackage.name + "." + name;
         } else {
             return "";

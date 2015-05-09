@@ -476,7 +476,7 @@ public class T3DLight extends T3DSound {
     }
     
     @Override
-    public boolean isValid(){
+    public boolean isValidConverting(){
         // Lights with brightness = 0 are corona lights (light with skin) in UE1/UE2
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
             return true; //return brightness < 255 && super.isValid();

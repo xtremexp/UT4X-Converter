@@ -8,6 +8,7 @@ package org.xtx.ut4converter.tools;
 import java.util.LinkedList;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 
@@ -66,44 +67,56 @@ public class Geometry {
 
         return new double[]{cosx};
     }
+    
 
-    /**
-     * Returns the angles in radians
-     * @param va
-     * @return 
-     */
-    public static double[] getAnglesInRadians(Vector3d va)
-    {
-        double cosx;
-        double cosy;
-        double cosz;
-        double tmp;
-        double tmp2;
+    public static Vector3d getRotation(Vector3d normal, UTGames.UnrealEngine engine){
         
-        Vector3d vb=new Vector3d(1D, 0D, 0D);
-        //(2,3,4)
-        //cos a = (XaXb+YaYb+ZaZb) / sqrt((Xa²+Ya²+Za²)(Xb²+Yb²+Zb² ))
-
-        tmp = va.x*vb.x+va.y*vb.y+va.z*vb.z;
-        tmp2 = Math.sqrt((Math.pow(va.x, 2)+Math.pow(va.y, 2)+Math.pow(va.z, 2))*(Math.pow(vb.x, 2)+Math.pow(vb.y, 2)+Math.pow(vb.z, 2)));
-        cosx = tmp/tmp2;
-
-        vb=new Vector3d(0D, 1D, 0D);
-        tmp = va.x*vb.x+va.y*vb.y+va.z*vb.z;
-        tmp2 = Math.sqrt((Math.pow(va.x, 2)+Math.pow(va.y, 2)+Math.pow(va.z, 2))*(Math.pow(vb.x, 2)+Math.pow(vb.y, 2)+Math.pow(vb.z, 2)));
-        cosy = tmp/tmp2;
-
-        vb=new Vector3d(0D, 0D, 1D);
-        tmp = va.x*vb.x+va.y*vb.y+va.z*vb.z;
-        tmp2 = Math.sqrt((Math.pow(va.x, 2)+Math.pow(va.y, 2)+Math.pow(va.z, 2))*(Math.pow(vb.x, 2)+Math.pow(vb.y, 2)+Math.pow(vb.z, 2)));
-        cosz = tmp/tmp2;
-
-        //System.out.println("X: "+cosx+" Y: "+cosy+" Z: "+cosz);
-        //System.out.println("X: "+radToDegree(Math.acos(cosx))+" Y: "+radToDegree(Math.acos(cosy))+" Z: "+radToDegree(Math.acos(cosz)));
-
-        return new double[]{cosx,cosy,cosz};
+        Vector3d r =  getRotationInRadian(normal);
+        
+        // 0 -> 65536 range for Unreal Engine 1/2
+        if(engine.version <= 2){
+            r.scale(65536f / (Math.PI));
+        } 
+        // 0 -> 360 range for UE3/4
+        else {
+            r.x = Math.toDegrees(r.x);
+            r.y = Math.toDegrees(r.y);
+            r.z = Math.toDegrees(r.z);
+        }
+        
+        return r;
     }
 
+
+    /**
+     * Get the rotation vector (pitch, yaw, roll) from normal vector
+     * @param normal Normal vector
+     * @return Rotate vector in radians
+     */
+    public static Vector3d getRotationInRadian(Vector3d normal){
+        
+        normal.normalize();
+        Vector3d axis = new Vector3d(0, 0 , 1);
+        
+        double dX = axis.x - normal.x;
+        double dY = axis.y - normal.y;
+        double dZ = axis.z - normal.z;
+        
+        // Rotator X
+        double roll = Math.atan2(dY, dZ);
+        
+        // Rotator Y
+        double pitch = Math.atan2(Math.sqrt(dZ * dZ + dX * dX), dY);
+        
+        // Rotator Z
+        double yaw = Math.atan2(dY, dX);
+        
+
+        // order different in t3d not Roll, Pitch, Yaw (X, Y, Z) ...
+        // RelativeRotation=(Pitch=20.000000,Yaw=30.000000,Roll=10.000000)
+        return new Vector3d(pitch, yaw, roll);
+    }
+    
 
     /**
      * Rotates the vector

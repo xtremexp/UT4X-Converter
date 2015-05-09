@@ -298,7 +298,7 @@ public class T3DUtils {
      * @param v
      * @return 
      */
-    private static String toStringVec(Vector3d v){
+    public static String toStringVec(Vector3d v){
         
         if(v == null){
             return null;

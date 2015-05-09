@@ -150,8 +150,14 @@ public class T3DLevelConvertor  {
             
         for(T3DActor actor : convertedActors){
             
-            if(actor.isValid() && actor.isValidWriting()){
+            // write parent actor
+            if(actor.isValidWriting()){
                 bw.write(actor.toString());
+            }
+            
+            // write replacement actors
+            for(T3DActor repActor : actor.children){
+                bw.write(repActor.toString());
             }
         }
 
@@ -218,7 +224,7 @@ public class T3DLevelConvertor  {
         else if (line.contains("End Actor")) {
 
             if (banalyseline) {
-                if (uta != null && uta.isValid() && uta.isValidWriting()) {
+                if (uta != null && uta.isValidConverting()) {
                     // we might want to only re-scale map
                     if(uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()){
                         uta.convert();

@@ -16,9 +16,8 @@ import java.util.logging.Logger;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
-import org.xtx.ut4converter.ucore.UPackage;
-import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * 
@@ -26,6 +25,12 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  */
 public abstract class T3DActor {
 
+    /**
+     * Current game compatibility state for actor.
+     * Should automatically change after convert
+     */
+    UTGame game = UTGame.NONE;
+    
     /**
      * All original properties stored for this actor.
      * Basically is a map of "key" and value"
@@ -144,6 +149,20 @@ public abstract class T3DActor {
      */
     protected List<T3DActor> linkedTo = new ArrayList<>();
     
+    
+    /**
+     * If this actor has been created from another one.
+     * This property should be not null
+     */
+    T3DActor parent;
+    
+    /**
+     * If not empty current actor will be replaced by these ones
+     * when writing t3d converted stuff.
+     */
+    protected List<T3DActor> children = new ArrayList<>();
+    
+    
 
     /**
      * Read line of t3d file to parse data about current t3d actor being read
@@ -163,6 +182,7 @@ public abstract class T3DActor {
         sbf = new StringBuilder();
         properties = new HashMap<>();
         logger = mc.getLogger();
+        game = mapConverter.getInputGame();
     }
     
     /**
@@ -419,6 +439,15 @@ public abstract class T3DActor {
             }
         }
         
+        // Notify actor was converted
+        game = mapConverter.getOutputGame();
+        
+        // Converts all child actors as well
+        children.stream().forEach((child) -> {
+            if(child.needsConverting()){
+                child.convert();
+            }
+        });
     }
 
     /**
@@ -426,7 +455,7 @@ public abstract class T3DActor {
      * that's the purpose of this.
      * @return true is this t3d actor is allowed to be converted else not
      */
-    public boolean isValid(){
+    public boolean isValidConverting(){
         return true;
     }
     
@@ -458,13 +487,23 @@ public abstract class T3DActor {
     }
 
     /**
-     *
+     * Says if this actor is valid to be written to t3d
+     * Should be called always after isValidConverting
+     * Some actors might be valid for convert but not for write.
+     * E.g: sheet brushes not valid for write
+     * but valid for convert(auto-create sheet static mesh)
+     * isValidConverting() --> convert() -> isValidWritting() -> write(actor.toString())
      * @return
      */
     public boolean isValidWriting() {
         return validWriting;
     }
 
+    public void setValidWriting(boolean validWriting) {
+        this.validWriting = validWriting;
+    }
+
+    
     
 
     public String toString(){
@@ -484,6 +523,14 @@ public abstract class T3DActor {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Indicates if this actor needs to be converted
+     * @return <ocde>true</code>> If actor needs to be converted
+     */
+    private boolean needsConverting(){
+        return game != mapConverter.getOutputGame();
     }
 }
 
