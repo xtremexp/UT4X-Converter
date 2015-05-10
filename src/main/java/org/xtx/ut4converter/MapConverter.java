@@ -225,7 +225,6 @@ public class MapConverter {
     private void init(){
         
         try {
-            //config = Configuration.getInstance();
             
             if(inMap.getName().endsWith(".t3d")){
                 inT3d = inMap;
@@ -606,7 +605,7 @@ public class MapConverter {
         // so we using the old "ut3 converter" name to package db until finding a better way ...
         if(split.length <= 1 && type == T3DRessource.Type.TEXTURE){
             String name = split[0];
-            packageName = nameToPackage.get(name);
+            packageName = nameToPackage.get(name.toLowerCase());
             fullRessourceName = packageName + "." + name;
         } else {
             packageName = fullRessourceName.split("\\.")[0];
