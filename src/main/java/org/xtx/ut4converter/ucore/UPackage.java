@@ -84,6 +84,11 @@ public class UPackage {
         }
         else {
             this.file = new File(gamePath.getAbsolutePath() + File.separator + getFileFolder() + File.separator + getName() + getFileExtension());
+            
+            // Temp hack sometimes textures are embedded not only in .utx files but .u files
+            if(!this.file.exists()){
+                this.file = new File(gamePath.getAbsolutePath() + File.separator + "System" + File.separator + getName() + ".u");
+            }
         }
         
         return this.file;

@@ -329,7 +329,15 @@ public final class UCCExporter extends UTPackageExtractor {
 
             
             int exitValue = Installation.executeProcess(command, logLines);
-
+            
+            // Program did not work as expected
+            // some ressources may have been partially extracted
+            if(exitValue != 0){
+                logger.log(Level.SEVERE, "Full export for "+unrealPackage.getFileContainer(gamePath).getName()+" failed with ucc.exe batchexport");
+            }
+            
+            unrealPackage.setExported(true);
+            
             for (String logLine : logLines) {
 
                 logger.log(Level.FINE, logLine);
@@ -349,7 +357,6 @@ public final class UCCExporter extends UTPackageExtractor {
                 // Exported Texture GenWarp.Sun128a to Z:\\TEMP\Sun128a.bmp
                 else if(logLine.contains("Exported ")){
                     
-                    unrealPackage.setExported(true);
                     File exportedFile = new File(logLine.split(" to ")[1]);
                     exportedFiles.add(exportedFile);
                     String ressourceName = logLine.split("\\ ")[2];
