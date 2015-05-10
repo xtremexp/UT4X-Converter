@@ -140,22 +140,22 @@ public class BodyInstance {
         sb.append("BodyInstance=(");
         
         if(scale3D != null){
-            sb.append("Scale3D=(").append(T3DUtils.toStringVec(scale3D)).append("),");
+            sb.append("Scale3D=").append(T3DUtils.toStringVec(scale3D)).append(",");
         }
         
-        sb.append("CollisionEnabled=\"").append(collisionEnabled.name()).append("\",");
         sb.append("CollisionProfileName=\"").append(collisionProfileName).append("\",");
+        sb.append("CollisionEnabled=\"").append(collisionEnabled.name()).append("\",");
         
         if(collisionProfileName.equals("Custom")){
             
             if(!collisionResponses.isEmpty()){
-                sb.append("CollisionResponses=(");
+                sb.append("CollisionResponses=(ResponseArray=(");
                 
                 collisionResponses.stream().forEach((cr) -> {
                     cr.toT3d(sb);
                 });
                 
-                sb.append(")");
+                sb.append("))");
             }
         }
         
