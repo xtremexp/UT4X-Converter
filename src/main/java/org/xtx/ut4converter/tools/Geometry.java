@@ -96,20 +96,19 @@ public class Geometry {
     public static Vector3d getRotationInRadian(Vector3d normal){
         
         normal.normalize();
-        Vector3d axis = new Vector3d(0, 0 , 1);
-        
-        double dX = axis.x - normal.x;
-        double dY = axis.y - normal.y;
-        double dZ = axis.z - normal.z;
-        
+
+        double dX = normal.x;
+        double dY = normal.y;
+        double dZ = normal.z;
+         
         // Rotator X
         double roll = Math.atan2(dY, dZ);
         
         // Rotator Y
-        double pitch = Math.atan2(Math.sqrt(dZ * dZ + dX * dX), dY);
+        double pitch = Math.atan2(dZ, Math.sqrt(dY * dY + dX * dX));
         
         // Rotator Z
-        double yaw = Math.atan2(dY, dX);
+        double yaw = Math.atan2(dX, dY);// - Math.PI / 2;
         
 
         // order different in t3d not Roll, Pitch, Yaw (X, Y, Z) ...
@@ -525,19 +524,30 @@ public class Geometry {
     }
     
     public static void test(String args[]){
-        LinkedList<T3DPolygon> polys = createCylinder(100d, 500d, 8);
-        
-        StringBuilder sb = new StringBuilder("");
-        
-        int i = 0;
-        
-        for(T3DPolygon p : polys){
-            
-            p.toT3D(sb, T3DBrush.df, "\t", i, false);
-        }
-        
-        System.out.println(sb.toString());
-        
-        System.exit(0);
+       Vector3d n = new Vector3d(0, 0, 1);
+       Vector3d r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       n = new Vector3d(0, 1, 0);
+       r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       n = new Vector3d(1, 0, 0);
+       r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       n = new Vector3d(-1, 0, 0);
+       r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       n = new Vector3d(0, -1, 0);
+       r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       n = new Vector3d(0, 0, -1);
+       r = getRotationInRadian(n);
+       System.out.println("Normal:"+n+" -> Rotation: X:"+r.z+ " Y:"+r.x+" Z:"+r.y);
+       
+       System.exit(0);
     }
 }

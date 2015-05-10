@@ -484,13 +484,12 @@ public class T3DBrush extends T3DSound {
         }
         
         // TODO check texture alignement after convert
-        // TODO export textures from UT packages
         for(T3DPolygon p : polyList){
             p.convert();
         }
         
         // Replace Sheet Brush with Sheet StaticMesh
-        if(polyList.size() == 1){
+        if(isSheetBrush()){
             T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
             children.add(sheetStaticMesh);
         }
@@ -516,13 +515,8 @@ public class T3DBrush extends T3DSound {
             
             Geometry.transformPermanently(polygon.origin, mainScale, rotation, postScale, false);
             
-            Geometry.rotate(polygon.normal, rotation);
-            
-            if(mainScale != null){
-                polygon.normal.x = mainScale.x / Math.abs(mainScale.x);
-                polygon.normal.y = mainScale.y / Math.abs(mainScale.y);
-                polygon.normal.z = mainScale.z / Math.abs(mainScale.z);
-            }
+            //Geometry.rotate(polygon.normal, rotation);
+            Geometry.transformPermanently(polygon.normal, mainScale, rotation, postScale, false);
             
             if(polygon.texture_u != null){
                 Geometry.transformPermanently(polygon.texture_u, mainScale, rotation, postScale, true);
