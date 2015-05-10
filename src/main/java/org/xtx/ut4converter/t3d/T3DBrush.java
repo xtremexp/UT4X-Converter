@@ -8,11 +8,14 @@ package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.Geometry;
+import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
@@ -49,6 +52,13 @@ public class T3DBrush extends T3DSound {
     }
     
     private String brushType;
+    
+
+    /**
+     * Type of brush (regular, portal, semi-solid, ...)
+     * UE1/UE2 only
+     */
+    List<BrushPolyflag> polyflags = new ArrayList<>();
     
     /**
      * Used by Unreal Engine 1
@@ -128,6 +138,10 @@ public class T3DBrush extends T3DSound {
         
         else if(line.contains("PrePivot")){
             prePivot = T3DUtils.getVector3d(line, 0D);
+        }
+        
+        else if(line.contains("PolyFlags=")){
+            polyflags = BrushPolyflag.parse(T3DUtils.getInteger(line));
         }
         
         // Begin Polygon Item=Rise Texture=r-plates-g Link=0
@@ -217,6 +231,31 @@ public class T3DBrush extends T3DSound {
         return false;
     }
     
+    @Override
+    public boolean isValidConverting(){
+        
+        boolean valid = true;
+        
+        if(mapConverter.fromUE123ToUE4()){
+            // do not convert invisible brushes such as portals and so on
+            for(BrushPolyflag polyflag : polyflags){
+                if(polyflag ==  BrushPolyflag.INVISIBLE){
+                    logger.warning("Skipped invisible brush "+name);
+                    valid = false;
+                }
+            }
+        }
+        
+        if(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Active 
+                || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Intersect
+                    || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Deintersect){
+            logger.warning("Skipped unsupported CsgOper '"+brushType+"' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+            valid = false;
+        }
+        
+        return valid && super.isValidConverting();
+    }
+    
     /**
      * 
      * @return 
@@ -247,12 +286,6 @@ public class T3DBrush extends T3DSound {
                 }
             }
             
-            if(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Active 
-                    || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Intersect
-                        || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Deintersect){
-                logger.warning("Skipped unsupported CsgOper '"+brushType+"' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
-                valid = false;
-            }
             
             if(!valid){
                 return valid;

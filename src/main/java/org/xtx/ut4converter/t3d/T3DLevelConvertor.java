@@ -224,14 +224,19 @@ public class T3DLevelConvertor  {
         else if (line.contains("End Actor")) {
 
             if (banalyseline) {
-                if (uta != null && uta.isValidConverting()) {
-                    // we might want to only re-scale map
-                    if(uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()){
-                        uta.convert();
+                if (uta != null) {
+                    
+                    if(uta.isValidConverting()){
+                        // we might want to only re-scale map
+                        if(uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()){
+                            uta.convert();
+                        }
+                        // rescale if needed 
+                        // must always be done after convert
+                        uta.scale(mapConverter.getScale()); 
+                    } else {
+                        convertedActors.removeLast();
                     }
-                    // rescale if needed 
-                    // must always be done after convert
-                    uta.scale(mapConverter.getScale()); 
                 } 
             }
 
