@@ -10,6 +10,7 @@ import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.Geometry;
+import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 
 /**
@@ -65,14 +66,15 @@ public class T3DStaticMesh extends T3DSound {
         // TODO get good scale from brush  poly size
         // force small scale because rotation not good yet (so converted map looks less 'weird')
         this.scale3d = new Vector3d(0.2d, 0.2d, 0.2d);
-        //this.overriddenLightMapRes = 256;
+        this.overriddenLightMapRes = 128;
         
         bodyInstance = new BodyInstance();
         bodyInstance.scale3D = this.scale3d;
         
-        // No collision until we handle UE1 flags to know if colliding or not
-        // TODO detect collision
-        bodyInstance.setCollisionResponse(BodyInstance.ECollisionResponse.ECR_Ignore);
+        // Set no colission if originally not a solid brush
+        if(BrushPolyflag.isNonSolid(sheetBrush.polyflags)){
+            bodyInstance.setCollisionEnabled(BodyInstance.CollisionEnabled.NoCollision);
+        }
     }
     
     @Override

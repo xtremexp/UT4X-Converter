@@ -37,7 +37,7 @@ public enum BrushPolyflag {
     
     /**
      * Parse integer to polyflags list.
-     * Unreal engine store all flag in one single number
+     * Unreal engine stores all flag in one single number
      * doing the sum of each value which are power of 2)
      * @param polyflag
      * @return 
@@ -55,5 +55,13 @@ public enum BrushPolyflag {
         }
         
         return flags;
+    }
+    
+    public static boolean hasInvisibleFlag(List<BrushPolyflag> polyflags){
+        return polyflags != null && polyflags.contains(INVISIBLE);
+    }
+    
+    public static boolean isNonSolid(List<BrushPolyflag> polyflags){
+        return polyflags != null && polyflags.contains(NON_SOLID);
     }
 }

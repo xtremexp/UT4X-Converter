@@ -28,6 +28,19 @@ public class BodyInstance {
     
     List<CollisionResponse> collisionResponses = new ArrayList<>();
     
+    CollisionEnabled collisionEnabled = CollisionEnabled.QueryAndPhysics;
+
+    public void setCollisionEnabled(CollisionEnabled collisionEnabled) {
+        this.collisionEnabled = collisionEnabled;
+    }
+    
+    
+    public static enum CollisionEnabled {
+        NoCollision,
+        QueryOnly,
+        QueryAndPhysics
+    }
+    
     public static enum ECollisionChannel {
         WorldStatic,
         WorldDynamic,
@@ -130,6 +143,7 @@ public class BodyInstance {
             sb.append("Scale3D=(").append(T3DUtils.toStringVec(scale3D)).append("),");
         }
         
+        sb.append("CollisionEnabled=\"").append(collisionEnabled.name()).append("\",");
         sb.append("CollisionProfileName=\"").append(collisionProfileName).append("\",");
         
         if(collisionProfileName.equals("Custom")){
