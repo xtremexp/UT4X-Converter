@@ -20,7 +20,7 @@ import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 public class T3DStaticMesh extends T3DSound {
     
     final String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
-    final String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Water_Cave_BG.M_Shell_Water_Cave_BG";
+    final String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
     final int UT4_SHEET_SM_SIZE = 500; // in UE4 units
     
     List<String> overiddeMaterials = new ArrayList<>();
@@ -34,9 +34,16 @@ public class T3DStaticMesh extends T3DSound {
     
     /**
      * If not null overiddes light map resolution
-     * for this static mesh (which is normally equals to 32 by default)
+     * for this static mesh (which is normally equal to 64 by default)
+     * TODO move this to some "Lightning" class
      */
     Integer overriddenLightMapRes;
+    
+    /**
+     * CastShadow=False
+     * TODO move this to some "Lightning" class
+     */
+    Boolean castShadow;
 
     public T3DStaticMesh(MapConverter mc) {
         super(mc);
@@ -67,6 +74,7 @@ public class T3DStaticMesh extends T3DSound {
         // force small scale because rotation not good yet (so converted map looks less 'weird')
         this.scale3d = new Vector3d(0.2d, 0.2d, 0.2d);
         this.overriddenLightMapRes = 128;
+        this.castShadow = Boolean.FALSE;
         
         bodyInstance = new BodyInstance();
         bodyInstance.scale3D = this.scale3d;
@@ -98,6 +106,10 @@ public class T3DStaticMesh extends T3DSound {
             for(int idx = 0; idx < overiddeMaterials.size(); idx ++){
                 sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=MaterialInstanceConstant'").append(overiddeMaterials.get(idx)).append("'\n");
             }
+        }
+        
+        if(castShadow != null){
+            sbf.append(IDT).append("\t\tCastShadow="+castShadow+"\n");
         }
         
         writeLocRotAndScale();
