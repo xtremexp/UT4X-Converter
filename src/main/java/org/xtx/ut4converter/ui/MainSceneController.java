@@ -255,8 +255,7 @@ public class MainSceneController implements Initializable {
             ugc.setId(inputGame);
         }
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+")", "*."+inputGame.mapExtension));
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Text Map (*.t3d)", "*.t3d"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", .t3d)", "*."+inputGame.mapExtension, "*.t3d"));
         
         File unrealMap = chooser.showOpenDialog(new Stage());
         MapConverter mapConverter = null;
