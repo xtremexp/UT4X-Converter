@@ -240,14 +240,15 @@ public class T3DBrush extends T3DSound {
             // do not convert invisible brushes such as portals and so on
             if(BrushPolyflag.hasInvisibleFlag(polyflags)){
                 logger.warning("Skipped invisible brush "+name);
+                valid = false;
             }
             
             if(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Active 
                 || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Intersect
                     || UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Deintersect){
-            logger.warning("Skipped unsupported CsgOper '"+brushType+"' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
-            valid = false;
-        }
+                logger.warning("Skipped unsupported CsgOper '"+brushType+"' in "+mapConverter.getUnrealEngineTo().name()+" for "+name);
+                valid = false;
+            }
         }
         
         
