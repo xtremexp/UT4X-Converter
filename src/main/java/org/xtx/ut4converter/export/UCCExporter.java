@@ -303,16 +303,22 @@ public final class UCCExporter extends UTPackageExtractor {
         File gamePath = userGameConfig.getPath();
         Set<File> exportedFiles = new HashSet<>();
         
+        boolean noDelete = false;
+        
         try {
             logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" "+unrealPackage.type.name()+" package");
 
             // Copy of unreal package to folder of ucc.exe (/System) for U1/U2
             unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(gamePath).getName());
             
-            logger.log(Level.FINE, "Creating " + unrealMapCopy.getAbsolutePath());
-            unrealMapCopy.createNewFile();
-            Files.copy(unrealPackage.getFileContainer(gamePath).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
+            // we might be exporting a .u file
+            if(unrealMapCopy.exists()){
+                logger.log(Level.FINE, "Creating " + unrealMapCopy.getAbsolutePath());
+                unrealMapCopy.createNewFile();
+                Files.copy(unrealPackage.getFileContainer(gamePath).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                noDelete = true;
+            }
+            
             List<String> logLines = new ArrayList<>();
 
             String command;
@@ -375,7 +381,7 @@ public final class UCCExporter extends UTPackageExtractor {
             
 
         } finally {
-            if(unrealMapCopy != null &&  unrealMapCopy.delete()){
+            if(!noDelete && unrealMapCopy != null &&  unrealMapCopy.delete()){
                 logger.fine(unrealMapCopy+" unreal package file copy deleted");
             }
             
