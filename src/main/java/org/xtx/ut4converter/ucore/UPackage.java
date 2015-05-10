@@ -127,8 +127,30 @@ public class UPackage {
      */
     public UPackageRessource findRessource(String fullName){
         
+        String s[] = fullName.split("\\.");
+        String fullNameWithoutGroup = null;
+        String group = null;
+        
+        if(s.length == 3){
+            fullNameWithoutGroup = s[0] + "." + s[2];
+            group = s[1];
+        }
+        
         for(UPackageRessource packageRessource : ressources){
-            if(fullName.equals(packageRessource.getFullName()) || fullName.equals(packageRessource.getFullNameWithoutGroup())){
+
+            if(fullName.equals(packageRessource.getFullName()) 
+                    || fullName.equals(packageRessource.getFullNameWithoutGroup())){
+                return packageRessource;
+            } 
+            
+            // Package ressource was created without group info
+            // since we have this info now, update the ressource and return it
+            else if(packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)){
+                
+                if(group != null){
+                    packageRessource.group = s[2];
+                }
+                
                 return packageRessource;
             }
         }

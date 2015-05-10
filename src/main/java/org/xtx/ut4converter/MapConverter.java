@@ -225,7 +225,7 @@ public class MapConverter {
     private void init(){
         
         try {
-            
+                      
             if(inMap.getName().endsWith(".t3d")){
                 inT3d = inMap;
             }
