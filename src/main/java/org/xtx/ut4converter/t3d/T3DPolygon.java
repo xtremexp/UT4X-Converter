@@ -98,13 +98,25 @@ public class T3DPolygon {
     }
     
     /**
-     *
+     * Scales the polygon
      * @param newScale
      */
     public void scale(Double newScale){
+        
         if(newScale != null){
-            // TODO
+            if(texture_u != null){
+                texture_u.scale(1/newScale);
+            }
+            
+            if(texture_v != null){
+                texture_v.scale(1/newScale);
+            }
+            
+            for(Vector3d vertex : vertices){
+                vertex.scale(newScale);
+            }
         }
+        
     }
     
     /**

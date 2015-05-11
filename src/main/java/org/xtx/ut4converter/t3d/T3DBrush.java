@@ -580,28 +580,12 @@ public class T3DBrush extends T3DSound {
     public void scale(Double newScale){
         
         for(T3DPolygon polygon: polyList){
-            
-            if(polygon.texture_u != null){
-                polygon.texture_u.scale(1/newScale);
-            }
-            
-            if(polygon.texture_v != null){
-                polygon.texture_v.scale(1/newScale);
-            }
-            
-            for(Vector3d vertex : polygon.vertices){
-                vertex.scale(newScale);
-            }
+            polygon.scale(newScale);
         }
-        
         
         super.scale(newScale);
     }
     
-    
-    private void addPolygon(T3DPolygon p){
-        polyList.add(p);
-    }
     
     /**
      * Returns the max position of vertex belonging to this brush.
