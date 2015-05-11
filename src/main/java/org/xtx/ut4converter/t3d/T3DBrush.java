@@ -545,23 +545,7 @@ public class T3DBrush extends T3DSound {
         }
         
         for(T3DPolygon polygon: polyList){
-            
-            Geometry.transformPermanently(polygon.origin, mainScale, rotation, postScale, false);
-            
-            //Geometry.rotate(polygon.normal, rotation);
-            Geometry.transformPermanently(polygon.normal, mainScale, rotation, postScale, false);
-            
-            if(polygon.texture_u != null){
-                Geometry.transformPermanently(polygon.texture_u, mainScale, rotation, postScale, true);
-            }
-            
-            if(polygon.texture_v != null){
-                Geometry.transformPermanently(polygon.texture_v, mainScale, rotation, postScale, true);
-            }
-                    
-            for(Vector3d vertex : polygon.vertices){
-                Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
-            }
+            polygon.transformPermanently(mainScale, rotation, postScale);
         }
         
         rotation = null;

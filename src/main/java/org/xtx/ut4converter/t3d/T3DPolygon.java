@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -80,7 +81,6 @@ public class T3DPolygon {
      *
      */
     public T3DPolygon(){
-        this.mapConverter = mapConverter;
         origin = new Vector3d(0d, 0d, 0d);
         normal = new Vector3d(0d, 0d, 0d);
     }
@@ -88,6 +88,7 @@ public class T3DPolygon {
     /**
      *
      * @param t3dLine
+     * @param mapConverter
      */
     public T3DPolygon(String t3dLine, MapConverter mapConverter){
         // Begin Polygon Texture=Rockwal4 Flags=32768 Link=322
@@ -120,12 +121,30 @@ public class T3DPolygon {
     }
     
     /**
-     *
+     * Transform permanently the polygon 
+     * as like in Unreal 1/2 editor "Transform permanently"
+     * when selecting brush
      * @param mainScale
+     * @param rotation
      * @param postScale
      */
-    public void transformPermanently(Vector3d mainScale, Vector3d postScale){
+    public void transformPermanently(Vector3d mainScale, Vector3d rotation, Vector3d postScale){
         
+        Geometry.transformPermanently(origin, mainScale, rotation, postScale, false);
+            
+            Geometry.transformPermanently(normal, mainScale, rotation, postScale, false);
+            
+            if(texture_u != null){
+                Geometry.transformPermanently(texture_u, mainScale, rotation, postScale, true);
+            }
+            
+            if(texture_v != null){
+                Geometry.transformPermanently(texture_v, mainScale, rotation, postScale, true);
+            }
+                    
+            for(Vector3d vertex : vertices){
+                Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
+            }
     }
     
     
