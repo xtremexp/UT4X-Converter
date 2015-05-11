@@ -246,7 +246,17 @@ public class MapConverter {
             
             supportedActorClasses = new SupU1UT99ToUT4Classes(this);
             
-            if(inputGame.engine.version == 1){
+            // Unreal Text map level files (.t3d)
+            // do not export full info about textures on polygon but only name
+            // (not package)
+            // E.g: "Begin Polygon Texture=Ebwl Link=1""
+            // so need to load the name to package db
+            // not for Unreal 1 no need that since latest Unreal 1 patch
+            // from oldunreal.com got better version of unreal engine with full info export
+            // E.G: "Begin Polygon Texture=Skaarj.Wall.Ebwl Link=1"
+            // TODO test if Unreal 1 path set try export t3d level with Unreal 1 for ut99 map
+            // so we have always package info at all circumstances
+            if(inputGame == UTGame.UT99){
                 loadNameToPackage();
             }
             
