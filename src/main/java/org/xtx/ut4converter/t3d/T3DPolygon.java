@@ -104,7 +104,8 @@ public class T3DPolygon {
      */
     public void scale(Double newScale){
         
-        scaleUV(newScale);
+        this.origin.scale(newScale);
+        scaleUV(newScale, false);
         
         if(newScale != null){
 
@@ -118,9 +119,15 @@ public class T3DPolygon {
      * Scales UV
      * @param newScale Scale factor
      */
-    private void scaleUV(Double newScale){
+    private void scaleUV(Double newScale, boolean noPanScale){
         
         if(newScale != null){
+            
+            if(!noPanScale){
+                pan_u *= newScale;
+                pan_v *= newScale;
+            }
+            
             if(texture_u != null){
                 texture_u.scale(1 / newScale);
             }
@@ -264,7 +271,14 @@ public class T3DPolygon {
                 if(texture.getTextureDimensions() != null){
                     // TODO check how it works if texture does not have a "square" dimensions (e.g: 1024x512)
                     Double scaleFactor = texture.getTextureDimensions().width / 100d;
-                    scaleUV(scaleFactor);
+                    scaleUV(scaleFactor, true);
+                }
+                
+                if(origin != null){
+                    // i guess it depends of normal
+                    // todo check
+                    origin.x -= pan_u;
+                    origin.y -= pan_v;
                 }
             }
         }
