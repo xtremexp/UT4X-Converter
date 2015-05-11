@@ -104,20 +104,31 @@ public class T3DPolygon {
      */
     public void scale(Double newScale){
         
+        scaleUV(newScale);
+        
         if(newScale != null){
-            if(texture_u != null){
-                texture_u.scale(1/newScale);
-            }
-            
-            if(texture_v != null){
-                texture_v.scale(1/newScale);
-            }
-            
+
             for(Vector3d vertex : vertices){
                 vertex.scale(newScale);
             }
         }
+    }
+    
+    /**
+     * Scales UV
+     * @param newScale Scale factor
+     */
+    private void scaleUV(Double newScale){
         
+        if(newScale != null){
+            if(texture_u != null){
+                texture_u.scale(1 / newScale);
+            }
+
+            if(texture_v != null){
+                texture_v.scale(1 / newScale);
+            }
+        }
     }
     
     /**
@@ -242,6 +253,20 @@ public class T3DPolygon {
     public void convert(){
         if(mapConverter != null && mapConverter.convertTextures && texture != null){
             texture.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            
+            // For Unreal 3 and 4
+            // we need to update the UV scaling which is dependant from texture size
+            if(mapConverter.isFromUE1UE2ToUE3UE4()){
+                
+                texture.readTextureDimensions();
+                
+                // maybe bufferedimagereader could not read the dimensions of texture
+                if(texture.getTextureDimensions() != null){
+                    // TODO check how it works if texture does not have a "square" dimensions (e.g: 1024x512)
+                    Double scaleFactor = texture.getTextureDimensions().width / 100d;
+                    scaleUV(scaleFactor);
+                }
+            }
         }
     }
     

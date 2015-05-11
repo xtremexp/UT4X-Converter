@@ -5,6 +5,16 @@
  */
 package org.xtx.ut4converter.tools;
 
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.xtx.ut4converter.t3d.T3DLight.HSVColor;
 import org.xtx.ut4converter.t3d.T3DLight.RGBColor;
 
@@ -83,5 +93,23 @@ public class ImageUtils {
         rgb.A = 255f;
 
         return rgb;
+    }
+    
+    /**
+     * Get texture dimension from texture size
+     * @param ftex Texture file
+     * @return Texture dimensions
+     * @throws IOException 
+     */
+    public static Dimension getTexureDimensions(File ftex) throws IOException
+    {
+        BufferedImage bufferedImage = loadImage(ftex);
+
+        return new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight());
+    }
+    
+    private static BufferedImage loadImage(File imageFile) throws IOException 
+    { 
+        return ImageIO.read(imageFile);
     }
 }

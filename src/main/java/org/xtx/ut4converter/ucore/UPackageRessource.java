@@ -5,16 +5,16 @@
  */
 package org.xtx.ut4converter.ucore;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoxSoundConverter;
 
 /**
@@ -62,6 +62,11 @@ public class UPackageRessource {
      * (texture, sounds, staticmesh, mesh, ...)
      */
     Type type;
+    
+    /**
+     * Texture dimension if type of ressource is texture
+     */
+    Dimension textureDimensions;
 
     /**
      * Creates an unreal package ressource information object.
@@ -124,6 +129,23 @@ public class UPackageRessource {
         this.exportedFile = exportedFile;
         this.type = uPackage.type;
         uPackage.ressources.add(this);
+    }
+    
+    /**
+     * From exported texture file get the dimension of the texture
+     * Should be only called when converting polygon with the texture associated
+     */
+    public void readTextureDimensions(){
+        
+        if(type != Type.TEXTURE || exportedFile == null || this.textureDimensions != null){
+            return;
+        }
+        
+        try {
+            this.textureDimensions = ImageUtils.getTexureDimensions(exportedFile);
+        } catch (Exception e){
+            Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, e.getMessage());
+        }
     }
     
     /**
@@ -350,6 +372,16 @@ public class UPackageRessource {
     public Type getType() {
         return type;
     }
-    
+
+    /**
+     * Return the dimension of the texture
+     * if ressource is a texture.
+     * Might be null if this ressource is unused in map (optimisation)
+     * @return Dimension of texture
+     */
+    public Dimension getTextureDimensions() {
+        return textureDimensions;
+    }
+
     
 }
