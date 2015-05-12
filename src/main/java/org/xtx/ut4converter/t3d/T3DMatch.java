@@ -174,25 +174,35 @@ public class T3DMatch {
      * Add matches for ammo picksups
      */
     private void initialiseAmmos(){
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, null, null, null, new String[]{"BioAmmoPickup_C"})
+        
+        // UT2004, no ammo for enforcer
+        
+        // Ammo - BioAmmo
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, null, new String[]{"BioAmmoPickup"}, null, new String[]{"BioAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, null, null, null, new String[]{"MinigunAmmoPickup_C"})
+        // Ammo - Minigun
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, null, new String[]{"MinigunAmmoPickup"}, null, new String[]{"MinigunAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, null, null, new String[]{"FlakAmmoPickup_C"})
+        // Ammo - Flak
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmoPickup"}, null, new String[]{"FlakAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, null, null, null, new String[]{"RocketAmmoPickup_C"})
+        // Ammo - Rocket
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, null, new String[]{"RocketAmmoPickup"}, null, new String[]{"RocketAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, null, null, null, new String[]{"ShockAmmoPickup_C"})
+        // Ammo - Shock
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, null, new String[]{"ShockAmmoPickup"}, null, new String[]{"ShockAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, null, null, null, new String[]{"SniperAmmoPickup_C"})
+        // Ammo - Sniper
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, null, new String[]{"SniperAmmoPickup"}, null, new String[]{"SniperAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, null, null, null, new String[]{"LinkAmmoPickup_C"})
+        // Ammo - LinkGun
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, null, new String[]{"LinkAmmoPickup"}, null, new String[]{"LinkAmmoPickup_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
     }
     
