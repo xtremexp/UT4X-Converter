@@ -88,7 +88,7 @@ public class T3DPickup extends T3DSound {
                 convertedPickupClass = match.actorClass.get(0);
                 
                 // TODO refactor
-                if(match.convertProperties.containsKey(T3DMatch.Z_OFFSET) && this.getMapConverter().getInputGame() == UTGames.UTGame.UT99){
+                if(match.convertProperties.containsKey(T3DMatch.Z_OFFSET)){
                     offsetZLocation = (Double) match.convertProperties.get(T3DMatch.Z_OFFSET);
                 }
             } else {

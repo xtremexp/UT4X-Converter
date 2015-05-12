@@ -12,11 +12,14 @@
         <MenuBar>
             <Menu text="File">
                 <Menu text="Unreal 1 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map" fx:id="menuItemU1Map"/>
+                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map"/>
                 </Menu>
                 <Menu text="Unreal Tournament Map">
-                <MenuItem text="Convert to UT4 ..." onAction="#handleConvert" fx:id="menuItemUT99Map"/>
-                    </Menu>
+                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvert"/>
+                </Menu>
+                <Menu text="Unreal Tournament 2004 Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt2004Map"/>
+                </Menu>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
             </Menu>

@@ -79,7 +79,7 @@ public class MapConverter {
      * E.G:
      * "Mover" (U1/UT99) -> "InterpActor" (UT3)
      */
-    T3DMatch tm = new T3DMatch();
+    T3DMatch tm;
     
     /**
      * Tells whether or not map is team based
@@ -225,6 +225,8 @@ public class MapConverter {
     private void init(){
         
         try {
+            
+            tm = new T3DMatch(inputGame);
                       
             if(inMap.getName().endsWith(".t3d")){
                 inT3d = inMap;
