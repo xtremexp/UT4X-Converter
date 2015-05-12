@@ -402,7 +402,7 @@ public abstract class T3DActor {
      */
     public void convert(){
         
-        if(coLocation != null){
+        if(coLocation != null && mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE1){
             if(location != null){
                 location.add(coLocation);
             } else {
