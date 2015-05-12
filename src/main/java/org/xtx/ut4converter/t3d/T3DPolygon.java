@@ -258,7 +258,9 @@ public class T3DPolygon {
     }
     
     public void convert(){
+        
         if(mapConverter != null && mapConverter.convertTextures && texture != null){
+            
             texture.export(UTPackageExtractor.getExtractor(mapConverter, null));
             
             // For Unreal 3 and 4
@@ -269,9 +271,15 @@ public class T3DPolygon {
                 
                 // maybe bufferedimagereader could not read the dimensions of texture
                 if(texture.getTextureDimensions() != null){
-                    // TODO check how it works if texture does not have a "square" dimensions (e.g: 1024x512)
-                    Double scaleFactor = texture.getTextureDimensions().width / 100d;
-                    scaleUV(scaleFactor, true);
+                    
+                    if(texture_u != null){
+                        texture_u.scale(1 / (texture.getTextureDimensions().width / 100d) );
+                    }
+
+                    if(texture_v != null){
+                        texture_v.scale(1 / (texture.getTextureDimensions().height / 100d) );
+                    }
+                    
                 }
                 
                 if(origin != null){
