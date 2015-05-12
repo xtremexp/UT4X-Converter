@@ -285,8 +285,8 @@ public class T3DPolygon {
                 if(origin != null){
                     // i guess it depends of normal
                     // todo check
-                    origin.x -= pan_u;
-                    origin.y -= pan_v;
+                    origin.x += pan_u;
+                    origin.y += pan_v;
                 }
             }
         }
