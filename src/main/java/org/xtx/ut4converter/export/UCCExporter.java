@@ -6,12 +6,10 @@
 package org.xtx.ut4converter.export;
 
 import com.sun.istack.internal.logging.Logger;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -279,7 +277,7 @@ public final class UCCExporter extends UTPackageExtractor {
         
         UTGames.UnrealEngine inEngine = mapConverter.getInputGame().engine;
         
-        if( inEngine.version == UTGames.UnrealEngine.UE1.version ){
+        if( inEngine.version <= UTGames.UnrealEngine.UE2.version ){
             return uccExporterPath.getName() + " batchexport  "+ fileName+ " " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
         } 
         
@@ -313,10 +311,11 @@ public final class UCCExporter extends UTPackageExtractor {
             
             // we might be exporting a .u file
             if(unrealMapCopy.exists()){
+                noDelete = true;
+            } else {
                 logger.log(Level.FINE, "Creating " + unrealMapCopy.getAbsolutePath());
                 unrealMapCopy.createNewFile();
                 Files.copy(unrealPackage.getFileContainer(gamePath).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                noDelete = true;
             }
             
             List<String> logLines = new ArrayList<>();
@@ -326,7 +325,7 @@ public final class UCCExporter extends UTPackageExtractor {
             // For unreal 1 or ut99 we do need to create a batch file
             // because ucc.exe don't work if executing itself with parent folders with whitespaces in name
             // TODO use only if whitespaces in ucc.exe or map folder name
-            if(mapConverter.getInputGame().engine.version < UTGames.UnrealEngine.UE2.version){
+            if(mapConverter.getInputGame().engine.version <= UTGames.UnrealEngine.UE2.version){
                 u1Batch = createExportFileBatch(unrealMapCopy, unrealPackage.type);
                 command = u1Batch.getAbsolutePath();
             } else {

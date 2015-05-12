@@ -75,6 +75,7 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectUt2004Folder(ActionEvent event) {
+        setUTxFolder(UTGame.UT2004, ut2004Path);
     }
 
     @FXML

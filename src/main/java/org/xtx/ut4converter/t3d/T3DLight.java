@@ -130,18 +130,18 @@ public class T3DLight extends T3DSound {
     /**
      * UE1/2 brightness
      */
-    int brightness;
+    float brightness;
     
     /**
      * UE1/2 hue
      */
-    int hue;
+    float hue;
 
     /**
      * UE1/2 saturation
      */
-    int saturation;
-    int radius;
+    float saturation;
+    float radius;
     
     // *** Unreal Engine 3 / 4 Properties ***
     
@@ -160,7 +160,7 @@ public class T3DLight extends T3DSound {
     /**
      * Default Attenuation Radius for unreal engine 4
      */
-    private static final int DEFAULT_ATTENUATION_RADIUS = 1000;
+    private static final float DEFAULT_ATTENUATION_RADIUS = 1000f;
     
     /**
      * How much attenuation radius will be multiplied
@@ -180,7 +180,7 @@ public class T3DLight extends T3DSound {
      * Attenuation Radius
      * (dunno how it works yet compared with sourceRadius)
      */
-    int attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
+    float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
     
     /**
     * A color represented by the four components Hue, Saturation, Value, and Alpha.
@@ -256,9 +256,9 @@ public class T3DLight extends T3DSound {
         
         // Default Values when u put some light in UE1/UE2 editor
         this.hue = 0;
-        this.saturation = 255;
-        this.brightness = 64;
-        this.radius = 64;
+        this.saturation = 255f;
+        this.brightness = 64f;
+        this.radius = 64f;
         
         
         this.intensity = 60d;
@@ -269,19 +269,19 @@ public class T3DLight extends T3DSound {
     public boolean analyseT3DData(String line) {
         
         if(line.contains("LightBrightness")){
-            brightness = T3DUtils.getShort(line);
+            brightness = T3DUtils.getFloat(line);
         }
         
         else if(line.contains("LightHue")){
-            hue = T3DUtils.getShort(line);
+            hue = T3DUtils.getFloat(line);
         }
         
         else if(line.contains("LightSaturation")){
-            saturation = T3DUtils.getShort(line);
+            saturation = T3DUtils.getFloat(line);
         }
         
         else if(line.contains("LightRadius")){
-            radius = T3DUtils.getShort(line);
+            radius = T3DUtils.getFloat(line);
         } 
         
         else if(line.contains("LightEffect")){

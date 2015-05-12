@@ -24,10 +24,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
@@ -60,8 +58,6 @@ public class MainSceneController implements Initializable {
     final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
     
     @FXML
-    private MenuItem menuItemUT99Map;
-    @FXML
     private MenuItem menuExit;
     @FXML
     private MenuItem menuItemAbout;
@@ -75,10 +71,6 @@ public class MainSceneController implements Initializable {
     @FXML
     private MenuItem menuCheckoutSourceCode;
 
-    @FXML
-    private MenuItem menuItemU1Map;
-    @FXML
-    private MenuItem menuItemTest;
     
     public MainApp mainApp;
     public Stage mainStage;
@@ -305,6 +297,10 @@ public class MainSceneController implements Initializable {
                 }
                 
                 mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
+                if(inputGame == UTGame.UT2004){
+                    mapConverter.convertSounds = false;
+                    mapConverter.convertTextures = false;
+                }
                 mapConverter.setConversionViewController(mainApp.showConversionView());
                 // TODO make getter in mc to know where to convert stuff!
                 mapConverter.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());
@@ -336,6 +332,11 @@ public class MainSceneController implements Initializable {
                 
             }
         }
+    }
+
+    @FXML
+    private void convertUt2004Map(ActionEvent event) {
+        convertUtxMap(UTGame.UT2004);
     }
 
 }

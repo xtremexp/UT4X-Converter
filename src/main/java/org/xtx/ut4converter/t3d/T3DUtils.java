@@ -72,6 +72,15 @@ public class T3DUtils {
     /**
      *
      * @param line
+     * @return
+     */
+    public static Float getFloat(String line){
+        return Float.valueOf(line.split("\\=")[1]);
+    }
+    
+    /**
+     *
+     * @param line
      * @param defaut
      * @return
      */
