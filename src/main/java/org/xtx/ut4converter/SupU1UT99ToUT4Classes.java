@@ -37,6 +37,11 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         
+        
+        for(T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()){
+            putUtClass(T3DBrush.class, brushClass.name());
+        }
+        
         for(T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()){
             putUtClass(T3DLight.class, ut99LightActor.name());
         }
@@ -52,6 +57,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         uneededActors.add("PathNode");
         uneededActors.add("InventorySpot");
         uneededActors.add("TranslocDest");
+        uneededActors.add("AntiPortalActor"); //ut2004
     }
     
     private void addMatches(MapConverter mc){

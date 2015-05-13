@@ -9,6 +9,7 @@ package org.xtx.ut4converter.t3d;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -186,6 +187,12 @@ public class T3DBrush extends T3DSound {
         // for waterzone, lavazone to be converted ...
         else if(line.contains("Begin Actor")){
             t3dClass = getActorClass(line);
+            
+            for(BrushClass bClass : BrushClass.values()){
+                if(t3dClass.equals(bClass.name())){
+                    this.brushClass = bClass;
+                }
+            }
             
             if(isU1ZoneVolume(t3dClass)){
                 forceToBox(90d);
@@ -496,6 +503,7 @@ public class T3DBrush extends T3DSound {
             
             polyList.clear();
             polyList = Geometry.createCylinder(radD, heightD, 8);
+            super.convert();
         }
 
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
