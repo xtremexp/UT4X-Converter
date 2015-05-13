@@ -298,7 +298,6 @@ public class MainSceneController implements Initializable {
                 
                 mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
                 if(inputGame == UTGame.UT2004){
-                    mapConverter.convertSounds = false;
                     mapConverter.convertTextures = false;
                 }
                 mapConverter.setConversionViewController(mainApp.showConversionView());

@@ -238,8 +238,15 @@ public class T3DSound extends T3DActor {
         
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
             if(soundVolume != null){
-               soundVolume /= 190D; // default volume is 190 in UE1/2
+               soundVolume /= 255D; // default volume is 190 in UE1/2, default is 1 in UE3/4
+               
+               // decreasing sound volume from UT2004 because seems "loudy" in UT4 ...
+                if(mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE2){
+                    soundVolume *= 0.4;
+                }
             }
+            
+            
             
             if(soundPitch != null){
                 soundPitch /= 64D; // default pitch is 64 in UE1/2
