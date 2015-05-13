@@ -16,8 +16,16 @@
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Your Organisation</name>
+        <name>Xtreme Labs</name>
     </organization>
+    
+    <repositories>
+        <repository>
+            <id>maven.nikr.net</id>
+            <name>maven.nikr.net</name>
+            <url>http://maven.nikr.net/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -111,6 +119,7 @@
             <artifactId>vecmath</artifactId>
             <version>1.3.1</version>
         </dependency>
+        <!-- for reading .pcx textures -->
         <dependency>
             <groupId>com.github.jai-imageio</groupId>
             <artifactId>jai-imageio-core</artifactId>

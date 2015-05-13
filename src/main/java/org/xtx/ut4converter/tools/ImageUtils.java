@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import jogl.DDSImage;
 import org.xtx.ut4converter.t3d.T3DLight.HSVColor;
 import org.xtx.ut4converter.t3d.T3DLight.RGBColor;
 
@@ -103,6 +104,16 @@ public class ImageUtils {
      */
     public static Dimension getTexureDimensions(File ftex) throws IOException
     {
+        if(ftex == null){
+            return null;
+        }
+        
+        if(ftex.getName().endsWith(".dds")){
+            DDSImage ddsImage = DDSImage.read(ftex);
+            ddsImage.write(ftex.getAbsolutePath().split("\\.")[0] + "-TEST.dds");
+            return new Dimension(ddsImage.getWidth(), ddsImage.getHeight());
+        }
+        
         BufferedImage bufferedImage = loadImage(ftex);
 
         return new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight());

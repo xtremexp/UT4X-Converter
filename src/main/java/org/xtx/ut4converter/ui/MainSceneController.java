@@ -297,9 +297,7 @@ public class MainSceneController implements Initializable {
                 }
                 
                 mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
-                if(inputGame == UTGame.UT2004){
-                    mapConverter.convertTextures = false;
-                }
+
                 mapConverter.setConversionViewController(mainApp.showConversionView());
                 // TODO make getter in mc to know where to convert stuff!
                 mapConverter.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());

@@ -79,6 +79,7 @@ public final class UCCExporter extends UTPackageExtractor {
         UNKNOWN("UNKNOWN"), // fake option so will make crash export
         LEVEL_T3D("Level t3d"),
         SOUND_WAV("Sound wav"),
+        TEXTURE_DDS("Texture dds"),
         TEXTURE_TGA("Texture tga"), // TODO check UE support other type like dds, tga
         TEXTURE_PCX("Texture pcx"),
         STATICMESH_T3D("StaticMesh t3d"),
@@ -116,9 +117,12 @@ public final class UCCExporter extends UTPackageExtractor {
         }
         
         else if (type == Type.TEXTURE){
+            
             if(engine.version == 2){
-                return UccOptions.TEXTURE_TGA;
-            } else if(engine.version == 1){
+                return UccOptions.TEXTURE_DDS;
+            } 
+            
+            else if(engine.version == 1){
                 return UccOptions.TEXTURE_PCX;
             }
         }
