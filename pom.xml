@@ -19,14 +19,6 @@
         <name>Xtreme Labs</name>
     </organization>
     
-    <repositories>
-        <repository>
-            <id>maven.nikr.net</id>
-            <name>maven.nikr.net</name>
-            <url>http://maven.nikr.net/</url>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>

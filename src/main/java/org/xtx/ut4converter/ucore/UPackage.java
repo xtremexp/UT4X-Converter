@@ -89,6 +89,11 @@ public class UPackage {
             if(!this.file.exists()){
                 this.file = new File(gamePath.getAbsolutePath() + File.separator + "System" + File.separator + getName() + ".u");
             }
+            
+            // might be map itself
+            if(!this.file.exists()){
+                this.file = new File(gamePath.getAbsolutePath() + File.separator + "Maps" + File.separator + getName() + "." + game.mapExtension);
+            }
         }
         
         return this.file;
