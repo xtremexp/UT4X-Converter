@@ -129,6 +129,8 @@ public class T3DLight extends T3DSound {
 
     /**
      * UE1/2 brightness
+     * UE1 range: 0-255
+     * UE2 range: 0-Infinite
      */
     float brightness;
     
@@ -424,6 +426,18 @@ public class T3DLight extends T3DSound {
         
         // Convert HSB to RGB
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
+            
+            // UE1 has brightness range 0-255
+            // but UE2 has not limit for brightness
+            // so we make sure brightness does not go above 255
+            // but give extra intensity "boost"
+            // e.g: brightness of 1000 --> brightness = 255 and intensity = 60 + log(1000) * 10 = 90
+            if(brightness > 255){
+                intensity += Math.log(brightness - 255) * 10; // using log because brightness can be nearly infinite
+            }
+            
+            brightness = Math.min(brightness, 255);
+            
             convertColorToRGB();
             
             if(isCorona){
@@ -455,6 +469,9 @@ public class T3DLight extends T3DSound {
         // Saturation is reversed in Unreal Engine 1/2 compared with standards ...
         saturation = Math.abs(saturation - 255);
         
+        // UE2
+        float realBrightness = Math.min(brightness, 255);
+        
         RGBColor rgb = ImageUtils.HSVToLinearRGB(hue, saturation, brightness);
         
         this.red = rgb.R;
@@ -476,13 +493,8 @@ public class T3DLight extends T3DSound {
     }
     
     @Override
-    public boolean isValidConverting(){
-        // Lights with brightness = 0 are corona lights (light with skin) in UE1/UE2
-        if(mapConverter.isFromUE1UE2ToUE3UE4()){
-            return true; //return brightness < 255 && super.isValid();
-        } else {
-            return true;
-        }
+    public boolean isValidWriting(){
+        return brightness > 0;
     }
     
     
