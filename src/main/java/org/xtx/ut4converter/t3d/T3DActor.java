@@ -17,6 +17,7 @@ import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 
 /**
@@ -252,14 +253,23 @@ public abstract class T3DActor {
         return true;
     }
 
+    protected void writeLocRotAndScale(){
+        writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
+    }
+    
     /**
      * Write Location Rotation and drawScale of converted actor
+     * @param sbf
+     * @param outEngine
+     * @param location
+     * @param rotation
+     * @param scale3d
      */
-    protected void writeLocRotAndScale(){
+    public static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d){
         
         String baseText = IDT+"\t\t";
         
-        if(getOutputGame().engine.version >= UTGames.UnrealEngine.UE4.version){
+        if(outEngine.version >= UTGames.UnrealEngine.UE4.version){
             if(location != null){
                 sbf.append(baseText).append("RelativeLocation=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
             }
@@ -339,7 +349,7 @@ public abstract class T3DActor {
      * @param value
      * @return
      */
-    public String fmt(double value){
+    public static String fmt(double value){
         return formatValue(value);
     }
     

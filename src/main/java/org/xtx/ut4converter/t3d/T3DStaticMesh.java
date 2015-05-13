@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 
@@ -29,8 +31,14 @@ public class T3DStaticMesh extends T3DSound {
     
     /**
      * e.g: "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500"
+     * e.g/ StaticMesh=StaticMesh'BarrenHardware-epic.Decos.rec-lift'
      */
-    String staticMesh;
+    UPackageRessource staticMesh;
+    
+    /**
+     * Temp hack
+     */
+    String forcedStaticMesh;
     
     /**
      * If not null overiddes light map resolution
@@ -47,6 +55,18 @@ public class T3DStaticMesh extends T3DSound {
 
     public T3DStaticMesh(MapConverter mc) {
         super(mc);
+    }
+    
+    @Override
+    public boolean analyseT3DData(String line) {
+        
+        if(line.contains("StaticMesh=")){
+            staticMesh = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.STATICMESH);
+        } else {
+            super.analyseT3DData(line);
+        }
+        
+        return true;
     }
     
     /**
@@ -68,7 +88,7 @@ public class T3DStaticMesh extends T3DSound {
         this.rotation = Geometry.getRotation(sheetBrush.polyList.get(0).normal, mc.getInputGame().engine);
         this.tag = sheetBrush.tag + "_SM";
         this.name = sheetBrush.name + "_SM";
-        this.staticMesh = UT4_SHEET_SM;
+        this.forcedStaticMesh = UT4_SHEET_SM;
         
         // TODO get good scale from brush  poly size
         // force small scale because rotation not good yet (so converted map looks less 'weird')
@@ -95,7 +115,14 @@ public class T3DStaticMesh extends T3DSound {
         sbf.append(IDT).append("\tEnd Object\n");
         
         sbf.append(IDT).append("\tBegin Object Name=\"StaticMeshComponent0\"\n");
-        sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh).append("'\n");
+        
+        // backward compatibility for created sheet SM from brushes
+        if(forcedStaticMesh != null){
+            sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
+        } else {
+            sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh).append("'\n");
+        }
+        
         
         if(overriddenLightMapRes != null){
             sbf.append(IDT).append("\t\tbOverrideLightMapRes=True\n");
@@ -109,7 +136,7 @@ public class T3DStaticMesh extends T3DSound {
         }
         
         if(castShadow != null){
-            sbf.append(IDT).append("\t\tCastShadow="+castShadow+"\n");
+            sbf.append(IDT).append("\t\tCastShadow=").append(castShadow).append("\n");
         }
         
         writeLocRotAndScale();
@@ -128,5 +155,17 @@ public class T3DStaticMesh extends T3DSound {
         writeEndActor();
         
         return sbf.toString();
+    }
+    
+    @Override
+    public void convert(){
+        
+        if(mapConverter.convertSounds){
+            if(staticMesh != null){
+                staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            }
+        }
+        
+        super.convert();
     }
 }

@@ -7,12 +7,14 @@
 package org.xtx.ut4converter;
 
 import java.util.HashMap;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DJumpPad;
 import org.xtx.ut4converter.t3d.T3DLiftExit;
 import org.xtx.ut4converter.t3d.T3DLight;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.t3d.T3DMover;
+import org.xtx.ut4converter.t3d.T3DMoverSM;
 import org.xtx.ut4converter.t3d.T3DPlayerStart;
 import org.xtx.ut4converter.t3d.T3DSound;
 import org.xtx.ut4converter.t3d.T3DTeleporter;
@@ -34,12 +36,18 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         this.mapConv = mc;
         
         putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone", "BlockAll");
-        putUtClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
+        
+        boolean isUE1 = mc.getInputGame().engine == UnrealEngine.UE1;
+        putUtClass(isUE1 ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         
         
         for(T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()){
-            putUtClass(T3DBrush.class, brushClass.name());
+            
+            // mover is special case because is dependant of staticmesh for UE2 not brush (UE1)
+            if(brushClass != T3DBrush.BrushClass.Mover){
+                putUtClass(T3DBrush.class, brushClass.name());
+            }
         }
         
         for(T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()){

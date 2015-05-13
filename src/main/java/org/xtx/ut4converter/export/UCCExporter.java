@@ -80,8 +80,8 @@ public final class UCCExporter extends UTPackageExtractor {
         LEVEL_T3D("Level t3d"),
         SOUND_WAV("Sound wav"),
         TEXTURE_DDS("Texture dds"),
-        TEXTURE_TGA("Texture tga"), // TODO check UE support other type like dds, tga
-        TEXTURE_PCX("Texture pcx"),
+        TEXTURE_TGA("Texture tga"), // not working good always 0 bytes created files ... (tested UT2004)
+        TEXTURE_PCX("Texture pcx"), // for U1, UT99
         STATICMESH_T3D("StaticMesh t3d"),
         CLASS_UC("Class uc");
 
@@ -129,6 +129,10 @@ public final class UCCExporter extends UTPackageExtractor {
         
         else if (type == Type.LEVEL){
             return UccOptions.LEVEL_T3D;
+        }
+        
+        else if (type == Type.STATICMESH){
+            return UccOptions.STATICMESH_T3D;
         }
         
         return UccOptions.UNKNOWN;

@@ -109,6 +109,12 @@ public class MapConverter {
     public boolean convertSounds = true;
     
     /**
+     * If <code>true</code> staticmeshes of the map
+     * will be exported and converted
+     */
+    public boolean convertStaticMeshes = true;
+    
+    /**
      * Allow to extract packages.
      * There should be always only one instanced
      */
