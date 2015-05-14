@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Locale;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
@@ -201,13 +203,6 @@ public class T3DBrush extends T3DSound {
         // Hack, normally analysed in T3DActor but needed 
         // for waterzone, lavazone to be converted ...
         else if(line.contains("Begin Actor")){
-            t3dClass = getActorClass(line);
-            
-            for(BrushClass bClass : BrushClass.values()){
-                if(t3dClass.equals(bClass.name())){
-                    this.brushClass = bClass;
-                }
-            }
             
             if(isU1ZoneVolume(t3dClass)){
                 forceToBox(90d);
@@ -425,7 +420,9 @@ public class T3DBrush extends T3DSound {
         
         writeEndActor();
         
-        if(brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume){
+        // UT3 has postprocess volumes
+        if( (mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version)
+            && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume)){
             
             // add post processvolume
             T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);

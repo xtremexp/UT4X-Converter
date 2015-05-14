@@ -95,7 +95,7 @@ public class T3DLight extends T3DSound {
      * Unreal Engine 4 light actors
      * TODO check UE3 (might be same)
      */
-    enum UE4_LightActor {
+    public static enum UE4_LightActor {
         PointLight,
         SkyLight,
         SpotLight,
@@ -113,6 +113,13 @@ public class T3DLight extends T3DSound {
      * Used in Unreal Engine 1 / 2
      */
     UE12_LightType lightType = UE12_LightType.LT_Steady;
+    
+    
+    /**
+     * For spot lights
+     * UE3 only default 0
+     */
+    Double innerConeAngle;
     
     /**
      * UE1/2: LightCone - default 128
@@ -297,12 +304,27 @@ public class T3DLight extends T3DSound {
             lightType = UE12_LightType.valueOf(line.split("\\=")[1]);
         }
         
-        else if(line.startsWith("LightCone")){
+        else if(line.startsWith("InnerConeAngle")){
+            innerConeAngle = T3DUtils.getDouble(line);
+        }
+        
+        else if(line.startsWith("LightCone") || line.startsWith("OuterConeAngle")){
             outerConeAngle = T3DUtils.getDouble(line);
         }
         
         else if(line.startsWith("isCorona")){
             isCorona = Boolean.getBoolean(line.split("\\=")[1]);
+        }
+        
+        
+        // UT3
+        // LightColor=(B=58,G=152,R=197,A=0)
+        else if(line.startsWith("LightColor=")){
+            parseRGBA(line);
+        }
+        
+        else if(line.startsWith("FalloffExponent=")){
+            lightFalloffExponent = T3DUtils.getDouble(line);
         }
         
         else {
@@ -428,34 +450,39 @@ public class T3DLight extends T3DSound {
     public void convert(){
         
         // Convert HSB to RGB
+        
+            
+        // UE1 has brightness range 0-255
+        // but UE2 has not limit for brightness
+        // so we make sure brightness does not go above 255
+        // but give extra intensity "boost"
+        // e.g: brightness of 1000 --> brightness = 255 and intensity = 60 + log(1000) * 10 = 90
+        if(brightness > 255){
+            intensity += Math.log(brightness - 255) * 10; // using log because brightness can be nearly infinite
+        }
+
+        brightness = Math.min(brightness, 255);
+
+        // Old engines using hue, brightness, saturation system
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
-            
-            // UE1 has brightness range 0-255
-            // but UE2 has not limit for brightness
-            // so we make sure brightness does not go above 255
-            // but give extra intensity "boost"
-            // e.g: brightness of 1000 --> brightness = 255 and intensity = 60 + log(1000) * 10 = 90
-            if(brightness > 255){
-                intensity += Math.log(brightness - 255) * 10; // using log because brightness can be nearly infinite
-            }
-            
-            brightness = Math.min(brightness, 255);
-            
             convertColorToRGB();
             
             if(isCorona){
                 radius = 0;
             }
-            
-            attenuationRadius = radius;
-            
-            attenuationRadius *= UE123_UE4_ATTENUATION_RADIUS_FACTOR;
-            
-            if(outerConeAngle != null){
-                // 0 -> 255 range to 0 -> 180 range
-                outerConeAngle *= (255d/360d)/2;
-            }
         }
+        
+        
+
+        attenuationRadius = radius;
+
+        attenuationRadius *= UE123_UE4_ATTENUATION_RADIUS_FACTOR;
+
+        if(outerConeAngle != null){
+            // 0 -> 255 range to 0 -> 180 range
+            outerConeAngle *= (255d/360d)/2;
+        }
+        
         
         super.convert();
     }
@@ -471,10 +498,7 @@ public class T3DLight extends T3DSound {
     {
         // Saturation is reversed in Unreal Engine 1/2 compared with standards ...
         saturation = Math.abs(saturation - 255);
-        
-        // UE2
-        float realBrightness = Math.min(brightness, 255);
-        
+
         RGBColor rgb = ImageUtils.HSVToLinearRGB(hue, saturation, brightness);
         
         this.red = rgb.R;
@@ -500,5 +524,35 @@ public class T3DLight extends T3DSound {
         return brightness > 0;
     }
     
+    
+    /**
+     * Parse RGBA color property data from t3d line
+     * E.G: "LightColor=(B=58,G=152,R=197,A=0)"
+     */
+    private void parseRGBA(String line){
+        
+        String s = line.split("\\(")[1].split("\\)")[0];
+        
+        String s2[] = s.split("\\,");
+        
+        for(int i = 0; i < s2.length; i++){
+            
+            String s3[] = s2[i].split("\\=");
+
+            switch(s3[0]) {
+                case "A":
+                    this.alpha = Float.valueOf(s3[1]); break;
+                case "R":
+                    this.red = Float.valueOf(s3[1]); break;
+                case "G":
+                    this.green = Float.valueOf(s3[1]); break;
+                case "B":
+                    this.blue = Float.valueOf(s3[1]); break;
+                default:
+                    break;
+            }
+        }
+        
+    }
     
 }
