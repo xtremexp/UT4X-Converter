@@ -5,11 +5,17 @@
 
 package org.xtx.ut4converter;
 
+import java.io.File;
+
 /**
  * Class defining all UT Games
  * @author XtremeXp
  */
 public class UTGames {
+    
+    public static final String T3D_LEVEL_NAME_UE12 = "myLevel.t3d";
+    
+    public static final String T3D_LEVEL_NAME_UE3 = "PersistentLevel.t3d";
 
     /**
      * List all unreal engines
@@ -193,6 +199,44 @@ public class UTGames {
      */
     public static boolean isUnrealEngine1(UTGames.UTGame utGame){
         return utGame.engine == UnrealEngine.UE1;
+    }
+    
+    public static File getMapsFolder(File basePath, UTGames.UTGame utgame){
+        
+        if(utgame.engine.version <= UnrealEngine.UE2.version){
+            return new File(basePath + File.separator + "Maps");
+        }
+        
+        // not really a specific "Maps" folder but most of them are in parent folder cookedpc
+        else if(utgame == UTGame.UT3){
+            return new File(basePath + File.separator + "UTGame" + File.separator + "CookedPC");
+        }
+        
+        else {
+            return basePath;
+        }
+    }
+    
+    /**
+     * 
+     * @param basePath
+     * @param utgame
+     * @return 
+     */
+    public static File getBinariesFolder(File basePath, UTGames.UTGame utgame){
+        
+        if(utgame.engine.version <= UnrealEngine.UE2.version){
+            return new File(basePath + File.separator + "System");
+        }
+        
+        // not really a specific "Maps" folder but most of them are in parent folder cookedpc
+        else if(utgame == UTGame.UT3){
+            return new File(basePath + File.separator + "Binaries");
+        }
+        
+        else {
+            return basePath;
+        }
     }
 
 }

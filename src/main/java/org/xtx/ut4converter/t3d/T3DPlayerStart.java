@@ -27,8 +27,8 @@ public class T3DPlayerStart extends T3DSound {
      * Indicate this player start is team player start
      * @param mc 
      */
-    public T3DPlayerStart(MapConverter mc) {
-        super(mc);
+    public T3DPlayerStart(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         
         if(mc.isTeamGameType()){
             isTeamPlayerStart = true;

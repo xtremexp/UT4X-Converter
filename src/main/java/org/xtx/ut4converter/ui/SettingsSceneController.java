@@ -71,6 +71,7 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectUt2003Folder(ActionEvent event) {
+        setUTxFolder(UTGame.UT2003, ut2003Folder);
     }
 
     @FXML
@@ -80,6 +81,7 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectUt3Folder(ActionEvent event) {
+        setUTxFolder(UTGame.UT3, ut3Folder);
     }
 
     @FXML
@@ -89,6 +91,7 @@ public class SettingsSceneController implements Initializable {
 
     @FXML
     private void selectU2Folder(ActionEvent event) {
+        setUTxFolder(UTGame.U2, u2Path);
     }
 
 
@@ -146,12 +149,28 @@ public class SettingsSceneController implements Initializable {
                         ut99Path.setText(game.getPath().getAbsolutePath());
                     } 
                     
-                    else if(game.getId() == UTGames.UTGame.UT4){
-                        ut4EditorFolder.setText(game.getPath().getAbsolutePath());
-                    } 
-                    
                     else if(game.getId() == UTGames.UTGame.U1){
                         u1Path.setText(game.getPath().getAbsolutePath());
+                    }
+                    
+                    else if(game.getId() == UTGames.UTGame.U1){
+                        u2Path.setText(game.getPath().getAbsolutePath());
+                    }
+                    
+                    else if(game.getId() == UTGames.UTGame.UT2003){
+                        ut2003Folder.setText(game.getPath().getAbsolutePath());
+                    }
+                    
+                    else if(game.getId() == UTGames.UTGame.UT2004){
+                        ut2004Path.setText(game.getPath().getAbsolutePath());
+                    }
+                    
+                    else if(game.getId() == UTGames.UTGame.UT3){
+                        ut3Folder.setText(game.getPath().getAbsolutePath());
+                    }
+                    
+                    else if(game.getId() == UTGames.UTGame.UT4){
+                        ut4EditorFolder.setText(game.getPath().getAbsolutePath());
                     }
                 }
             }

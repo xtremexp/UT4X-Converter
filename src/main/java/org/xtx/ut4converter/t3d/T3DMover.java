@@ -24,8 +24,8 @@ public class T3DMover extends T3DBrush {
      *
      * @param mc
      */
-    public T3DMover(MapConverter mc) {
-        super(mc);
+    public T3DMover(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         moverProperties = new MoverProperties(this);
     }
     

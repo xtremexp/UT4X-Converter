@@ -34,8 +34,8 @@
             <Button onAction="#selectUt2004Folder" GridPane.columnIndex="2" GridPane.rowIndex="5">Select</Button>
             
             <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6" ></Label>
-            <TextField fx:id="ut3Folder" disable="true" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="6">Maybe for future releases ...</TextField>
-            <Button disable="true" onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
+            <TextField fx:id="ut3Folder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="6" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 3"></TextField>
+            <Button onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
             
             <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="7" ></Label>
             <TextField fx:id="ut4EditorFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" ></TextField>

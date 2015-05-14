@@ -73,11 +73,12 @@ public class Geometry {
         
         Vector3d r =  getRotationInRadian(normal);
         
-        // 0 -> 65536 range for Unreal Engine 1/2
-        if(engine.version <= 2){
+        // 0 -> 65536 range for Unreal Engine 1/2/3
+        // for UE3, rotation displayed in degrees in editor but always saved with old range
+        if(engine.version <= 3){
             r.scale(65536f / (Math.PI));
         } 
-        // 0 -> 360 range for UE3/4
+        // 0 -> 360 range for UE4
         else {
             r.x = Math.toDegrees(r.x);
             r.y = Math.toDegrees(r.y);

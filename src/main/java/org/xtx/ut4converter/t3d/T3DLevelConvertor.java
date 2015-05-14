@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import static org.xtx.ut4converter.t3d.T3DActor.getActorClass;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament
@@ -177,6 +179,54 @@ public class T3DLevelConvertor  {
     Class utActorClass = null;
     T3DActor uta = null;
     
+    private final int LEVEL_OBJECT_LEVEL = 1;
+    
+    /**
+     * Begin Object Class=Level
+     */
+    private int deepObjectLevel = LEVEL_OBJECT_LEVEL - 1;
+    
+    /**
+     * Says if current line is data for new actor
+     * @param line
+     * @return 
+     */
+    private boolean isBeginActor(String line){
+        
+        if(mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version){
+            return line.contains("Begin Actor");
+        }
+        
+        // Any actor/sub-class begins with "Begin Object"
+        else if (mapConverter.getInputGame().engine.version == UnrealEngine.UE3.version){
+            
+            if(line.trim().startsWith("Begin Object")){
+                
+                deepObjectLevel ++;
+                return (deepObjectLevel == (LEVEL_OBJECT_LEVEL + 1));
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean isEndActor(String line){
+        
+        if(mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version){
+            return line.contains("End Actor");
+        }
+        
+        // Any actor begin with "Begin Object"
+        else if (mapConverter.getInputGame().engine.version == UnrealEngine.UE3.version){
+            
+            if(line.trim().startsWith("End Object")){
+                deepObjectLevel --;
+                return (deepObjectLevel == LEVEL_OBJECT_LEVEL);
+            }
+        }
+        
+        return false;
+    }
     
     /**
      * Analyze T3D line to get and convert UT data
@@ -187,7 +237,7 @@ public class T3DLevelConvertor  {
      */
     private void analyzeLine(String line) throws IOException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
-        if (line.contains("Begin Actor")) {
+        if (isBeginActor(line)) {
             currentClass = getActorClass(line);
             
             if (mapConverter.getSupportedActorClasses().canBeConverted(currentClass)) {
@@ -195,8 +245,8 @@ public class T3DLevelConvertor  {
                 banalyseline = true;
 
                 if (utActorClass != null) {
-                    Constructor cons = utActorClass.getConstructor(MapConverter.class);
-                    uta = (T3DActor) cons.newInstance(mapConverter);
+                    Constructor cons = utActorClass.getConstructor(MapConverter.class, String.class);
+                    uta = (T3DActor) cons.newInstance(mapConverter, getActorClass(line));
                     convertedActors.add(uta);
                     uta.analyseT3DData(line);
                 } 
@@ -221,7 +271,7 @@ public class T3DLevelConvertor  {
         } 
         
         // Actor End - We write converted data to t3d file
-        else if (line.contains("End Actor")) {
+        else if (isEndActor(line)) {
 
             if (banalyseline) {
                 if (uta != null) {
@@ -250,7 +300,7 @@ public class T3DLevelConvertor  {
         else {
             if (banalyseline) {
                 if (uta != null) {
-                    uta.analyseT3DData(line);
+                    uta.analyseT3DData(line.trim());
                 }
             }
         }
@@ -277,7 +327,7 @@ public class T3DLevelConvertor  {
         
         // Auto creates a big additive brush surrounding level
         // to simulate creating a level in subtract mode (not existing in UE4 ...)
-        if(mapConverter.fromUE123ToUE4()){
+        if(mapConverter.isFromUE1UE2ToUE3UE4()){
             
             Double offset = 200d;
             Vector3d boundBox = getLevelDimensions();

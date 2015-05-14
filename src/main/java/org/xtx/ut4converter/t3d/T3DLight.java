@@ -253,8 +253,8 @@ public class T3DLight extends T3DSound {
      *
      * @param mc
      */
-    public T3DLight(MapConverter mc) {
-        super(mc);
+    public T3DLight(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         
         // Default Values when u put some light in UE1/UE2 editor
         this.hue = 0;
@@ -270,35 +270,38 @@ public class T3DLight extends T3DSound {
     @Override
     public boolean analyseT3DData(String line) {
         
-        if(line.contains("LightBrightness")){
+        // TODO skip this if UT3 and class not a light class
+        // unlike in UE1/UE2 all actors do not have lightning properties in UT3
+        
+        if(line.startsWith("LightBrightness")){
             brightness = T3DUtils.getFloat(line);
         }
         
-        else if(line.contains("LightHue")){
+        else if(line.startsWith("LightHue")){
             hue = T3DUtils.getFloat(line);
         }
         
-        else if(line.contains("LightSaturation")){
+        else if(line.startsWith("LightSaturation")){
             saturation = T3DUtils.getFloat(line);
         }
         
-        else if(line.contains("LightRadius")){
+        else if(line.startsWith("LightRadius")){
             radius = T3DUtils.getFloat(line);
         } 
         
-        else if(line.contains("LightEffect")){
+        else if(line.startsWith("LightEffect")){
             lightEffect = UE12_LightEffect.valueOf(line.split("\\=")[1]);
         }
         
-        else if(line.contains("LightType")){
+        else if(line.startsWith("LightType")){
             lightType = UE12_LightType.valueOf(line.split("\\=")[1]);
         }
         
-        else if(line.contains("LightCone")){
+        else if(line.startsWith("LightCone")){
             outerConeAngle = T3DUtils.getDouble(line);
         }
         
-        else if(line.contains("isCorona")){
+        else if(line.startsWith("isCorona")){
             isCorona = Boolean.getBoolean(line.split("\\=")[1]);
         }
         

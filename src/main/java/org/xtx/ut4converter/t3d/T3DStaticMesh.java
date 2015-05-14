@@ -53,8 +53,13 @@ public class T3DStaticMesh extends T3DSound {
      */
     Boolean castShadow;
 
-    public T3DStaticMesh(MapConverter mc) {
-        super(mc);
+    /**
+     * 
+     * @param mc
+     * @param t3dClass 
+     */
+    public T3DStaticMesh(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
     }
     
     @Override
@@ -77,7 +82,7 @@ public class T3DStaticMesh extends T3DSound {
      * @param sheetBrush Sheet Brush (brush with only 2 polygons)
      */
     public T3DStaticMesh(MapConverter mc, T3DBrush sheetBrush){
-        super(mc);
+        super(mc, "StaticMesh");
         // Temp material
         // TODO use original texture from brush
         overiddeMaterials.add(UT4_SHEET_SM_MAT_WATER);

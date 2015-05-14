@@ -177,9 +177,11 @@ public abstract class T3DActor {
     /**
      *
      * @param mc
+     * @param t3dClass
      */
-    public T3DActor(MapConverter mc){
+    public T3DActor(MapConverter mc, String t3dClass){
         this.mapConverter = mc;
+        this.t3dClass = t3dClass;
         sbf = new StringBuilder();
         properties = new HashMap<>();
         logger = mc.getLogger();
@@ -200,7 +202,7 @@ public abstract class T3DActor {
             properties.put(line.substring(0, equalsIdx).trim(), line.substring(equalsIdx+1, line.length()));
         }
         
-        if(line.contains(" Location=")||line.contains("\tLocation=")){
+        if(line.startsWith("Location=")||line.contains("\tLocation=")){
             location = T3DUtils.getVector3d(line, 0D);
             return true;
         }
@@ -216,33 +218,30 @@ public abstract class T3DActor {
             return true;
         }
         
-        else if(line.contains("DrawScale3D")){
+        else if(line.startsWith("DrawScale3D")){
             scale3d = T3DUtils.getVector3d(line, 1D);
             return true;
         }
         
-        else if(line.contains("DrawScale=")){
+        else if(line.startsWith("DrawScale=")){
             drawScale = T3DUtils.getDouble(line);
             return true;
         }
         
-        else if(line.contains("Rotation")){
+        else if(line.startsWith("Rotation")){
             rotation = T3DUtils.getVector3dRot(line);
             return true;
         }
         
-        // Begin Actor Class=Brush Name=Brush2
-        else if(line.contains("Begin Actor")){
-        
-            t3dClass = getActorClass(line);
-            name = T3DUtils.getString(line, "Name");
+        else if(line.startsWith("Name=")){
+            name = line.split("\\=")[1].replaceAll("\"", "");
         }
         
         else if(line.contains(" Group=")||line.contains("\tGroup=")){
             addOtherData(line); 
         } 
         
-        else if(line.contains("Tag=")){
+        else if(line.startsWith("Tag=")){
             tag = line.split("Tag=")[1];
         }
         

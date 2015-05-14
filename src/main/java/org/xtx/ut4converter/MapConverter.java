@@ -242,6 +242,7 @@ public class MapConverter {
                 isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
             }
             
+            getTempExportFolder().mkdirs();
             
             if(outMapName==null){
                 // TODO being able to set it manually (chosen by user)
@@ -654,6 +655,15 @@ public class MapConverter {
             mapPackages.put(packageName, upRessource.getUnrealPackage());
             return upRessource;
         }
+    }
+    
+    /**
+     * Force converter not to convert any binary ressources
+     */
+    public void noConvertRessources(){
+        this.convertSounds = false;
+        this.convertStaticMeshes = false;
+        this.convertTextures = false;
     }
 }
 

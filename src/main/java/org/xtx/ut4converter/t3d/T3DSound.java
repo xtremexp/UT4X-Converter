@@ -175,9 +175,10 @@ public class T3DSound extends T3DActor {
     /**
      *
      * @param mc
+     * @param t3dClass
      */
-    public T3DSound(MapConverter mc) {
-        super(mc);
+    public T3DSound(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
         
         setDefaults();
@@ -195,20 +196,20 @@ public class T3DSound extends T3DActor {
     @Override
     public boolean analyseT3DData(String line) {
         
-        if(line.contains("SoundRadius")){
+        if(line.startsWith("SoundRadius")){
             attenuation.attenuationShapeExtents.x = T3DUtils.getDouble(line);
         }
         
-        else if(line.contains("SoundVolume")){
+        else if(line.startsWith("SoundVolume")){
             soundVolume = T3DUtils.getDouble(line);
         }
         
-        else if(line.contains("SoundPitch")){
+        else if(line.startsWith("SoundPitch")){
             soundPitch = T3DUtils.getDouble(line);
         }
         
         // AmbientSound=Sound'AmbAncient.Looping.Stower51'
-        else if(line.contains("AmbientSound=")){
+        else if(line.startsWith("AmbientSound=")){
             ambientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         } 
         else {

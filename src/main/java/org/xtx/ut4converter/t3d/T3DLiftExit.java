@@ -31,8 +31,8 @@ public class T3DLiftExit extends T3DSound {
      */
     String liftTag;
     
-    public T3DLiftExit(MapConverter mc) {
-        super(mc);
+    public T3DLiftExit(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
     }
     
     @Override

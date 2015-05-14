@@ -17,8 +17,8 @@ public class T3DMoverSM extends T3DStaticMesh  {
 
     MoverProperties moverProperties;
     
-    public T3DMoverSM(MapConverter mc) {
-        super(mc);
+    public T3DMoverSM(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         moverProperties = new MoverProperties(this);
     }
 

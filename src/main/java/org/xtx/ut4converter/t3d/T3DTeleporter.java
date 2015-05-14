@@ -21,8 +21,8 @@ public class T3DTeleporter extends T3DSound {
      */
     String url;
     
-    public T3DTeleporter(MapConverter mc) {
-        super(mc);
+    public T3DTeleporter(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
     }
     
     @Override

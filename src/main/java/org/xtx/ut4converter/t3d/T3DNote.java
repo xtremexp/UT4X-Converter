@@ -30,7 +30,7 @@ public class T3DNote extends T3DActor {
      * @param mc
      */
     public T3DNote(MapConverter mc) {
-        super(mc);
+        super(mc, "Note");
     }
     
     /**
@@ -40,7 +40,7 @@ public class T3DNote extends T3DActor {
      * @param isUnconvertedInfo
      */
     public T3DNote(MapConverter mc, String text, boolean isUnconvertedInfo) {
-        super(mc);
+        super(mc, "Note");
         this.text = text;
         this.isUnconvertedInfo = isUnconvertedInfo;
     }

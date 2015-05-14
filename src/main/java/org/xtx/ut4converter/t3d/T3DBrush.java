@@ -89,9 +89,10 @@ public class T3DBrush extends T3DSound {
     /**
      *
      * @param mapConverter
+     * @param t3dClass
      */
-    public T3DBrush(MapConverter mapConverter) {
-        super(mapConverter);
+    public T3DBrush(MapConverter mapConverter, String t3dClass) {
+        super(mapConverter, t3dClass);
         
         if(mapConverter.fromUE1orUE2OrUE3()){
             brushType = UE123_BrushType.CSG_Add.name();
@@ -439,12 +440,15 @@ public class T3DBrush extends T3DSound {
     /**
      * Creates a brush box.
      * @param mc Map Converter
+     * @param width
+     * @param length
      * @param size Size of box in unreal units
+     * @param height
      * @return 
      */
     public static T3DBrush createBox(MapConverter mc, Double width, Double length, Double height){
         
-        T3DBrush volume = new T3DBrush(mc);
+        T3DBrush volume = new T3DBrush(mc, BrushClass.Brush.name());
         volume.polyList = Geometry.createBox(width, length, height);
                 
         return volume;
@@ -472,7 +476,7 @@ public class T3DBrush extends T3DSound {
      */
     public static T3DBrush createCylinder(MapConverter mc, Double radius, Double height, int sides){
         
-        T3DBrush volume = new T3DBrush(mc);
+        T3DBrush volume = new T3DBrush(mc, BrushClass.Brush.name());
         volume.polyList.clear();
         volume.polyList = Geometry.createCylinder(radius, height, sides);
         

@@ -233,7 +233,7 @@ public class MainSceneController implements Initializable {
             }
             
             if(ugc != null && ugc.getPath() != null){
-                chooser.setInitialDirectory(new File(ugc.getPath().getAbsolutePath() + File.separator + "Maps"));
+                chooser.setInitialDirectory(UTGames.getMapsFolder(ugc.getPath(), inputGame));
                 needSetGamePath = false;
             } else {
                 // TODO redirect to settings panel so user can set game path?
@@ -247,7 +247,7 @@ public class MainSceneController implements Initializable {
             ugc.setId(inputGame);
         }
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", .t3d)", "*."+inputGame.mapExtension, "*.t3d"));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
         
         File unrealMap = chooser.showOpenDialog(new Stage());
         MapConverter mapConverter = null;
@@ -297,6 +297,11 @@ public class MainSceneController implements Initializable {
                 }
                 
                 mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
+                
+                // UT3 in testing, no convert/export textures, ....
+                if(inputGame == UTGames.UTGame.UT3){
+                    mapConverter.noConvertRessources();
+                }
 
                 mapConverter.setConversionViewController(mainApp.showConversionView());
                 // TODO make getter in mc to know where to convert stuff!
@@ -334,6 +339,11 @@ public class MainSceneController implements Initializable {
     @FXML
     private void convertUt2004Map(ActionEvent event) {
         convertUtxMap(UTGame.UT2004);
+    }
+
+    @FXML
+    private void convertUt3Map(ActionEvent event) {
+        convertUtxMap(UTGame.UT3);
     }
 
 }

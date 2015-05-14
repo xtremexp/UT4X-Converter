@@ -57,8 +57,8 @@ public class T3DJumpPad extends T3DSound {
      */
     Double jumpTime = 1.5d;
     
-    public T3DJumpPad(MapConverter mc) {
-        super(mc);
+    public T3DJumpPad(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
         
         if(mc.toUT4()){
             offsetZLocation = -40.5d;

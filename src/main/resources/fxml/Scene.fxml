@@ -20,6 +20,9 @@
                 <Menu text="Unreal Tournament 2004 Map">
                     <MenuItem text="Convert to UT4 ..." onAction="#convertUt2004Map"/>
                 </Menu>
+                <Menu text="Unreal Tournament 3 Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt3Map"/>
+                </Menu>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
             </Menu>
