@@ -103,10 +103,10 @@ public class T3DMatch {
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Bandages"}, null, new String[]{"HealthVial", "Bandages"}, null, new String[]{"MiniHealthPack"}, null, new String[]{"Health_Small_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Health", "UPakHealth", "RespawningHealth", "NaliFruit"}, null, new String[]{"MedBox", "NaliFruit"}, null, null, null, new String[]{"Health_Medium_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Health", "UPakHealth", "RespawningHealth", "NaliFruit"}, null, new String[]{"MedBox", "NaliFruit"}, null, new String[]{"HealthCharger"}, null, new String[]{"Health_Medium_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"SuperHealth"}, null, new String[]{"HealthPack"}, null, null, null, new String[]{"Health_Large_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"SuperHealth"}, null, new String[]{"HealthPack"}, null, new String[]{"SuperHealthCharger"}, null, new String[]{"Health_Large_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
         initialiseWeapons(inputGame);
@@ -145,12 +145,12 @@ public class T3DMatch {
         
         
         // PowerUp - Armor
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, null, new String[]{"ShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Chest.Armor_Chest_C'")
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         // PowerUp - ShieldBelt
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, null, new String[]{"SuperShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ShieldBelt.Armor_ShieldBelt_C'")
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
@@ -160,7 +160,7 @@ public class T3DMatch {
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
         
         // PowerUp - Damage Amplifier
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, null, new String[]{"UDamageCharger"}, null, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'")
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
 
