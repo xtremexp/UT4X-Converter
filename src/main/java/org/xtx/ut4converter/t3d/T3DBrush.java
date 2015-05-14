@@ -36,6 +36,18 @@ public class T3DBrush extends T3DSound {
         BlockingVolume,
         LightmassImportanceVolume,
         NavMeshBoundsVolume;
+        
+        public static BrushClass getBrushClass(String t3dBrushClass){
+            
+            
+            for(BrushClass bc : BrushClass.values()){
+                if(bc.name().equals(t3dBrushClass)){
+                    return bc;
+                }
+            }
+            
+            return BrushClass.Brush;
+        }
     }
     
     /**
@@ -93,6 +105,8 @@ public class T3DBrush extends T3DSound {
      */
     public T3DBrush(MapConverter mapConverter, String t3dClass) {
         super(mapConverter, t3dClass);
+        
+        brushClass = BrushClass.getBrushClass(t3dClass);
         
         if(mapConverter.fromUE1orUE2OrUE3()){
             brushType = UE123_BrushType.CSG_Add.name();

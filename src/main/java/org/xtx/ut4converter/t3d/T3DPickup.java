@@ -5,7 +5,6 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 
 /**
@@ -19,9 +18,10 @@ public class T3DPickup extends T3DSound {
     /**
      *
      * @param mc
+     * @param t3dClass
      */
-    public T3DPickup(MapConverter mc) {
-        super(mc);
+    public T3DPickup(MapConverter mc, String t3dClass) {
+        super(mc, t3dClass);
     }
     
     /**

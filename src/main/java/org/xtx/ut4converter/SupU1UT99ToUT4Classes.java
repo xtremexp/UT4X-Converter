@@ -54,6 +54,12 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
             putUtClass(T3DLight.class, ut99LightActor.name());
         }
         
+        /*
+        for(T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()){
+            putUtClass(T3DLight.class, ue34LightActor.name());
+        }*/
+        // TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
+        
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
         putUtClass(T3DLiftExit.class, "LiftExit");
