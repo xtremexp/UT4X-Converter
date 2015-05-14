@@ -480,7 +480,9 @@ public abstract class T3DActor {
         
         if(mapConverter.toUnrealEngine4()){
             if(drawScale != null){
-                sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");;
+                // limited sprite scale because UT3 uses drawscale as drawscale3d in same time
+                // so some unconverted actors such as SM got huge drawscale
+                sbf.append(IDT).append("\tSpriteScale=").append(Math.min(drawScale, 10d)).append("\n");
             }
             sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
         } 
