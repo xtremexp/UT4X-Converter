@@ -39,7 +39,13 @@ public class T3DLight extends T3DSound {
         LE_Interference,
         LE_Cylinder,
         LE_Rotor,
-        LE_Unused;
+        LE_Unused,
+        // Unreal Engine 2 new light effects
+        LE_SunLight,
+        LE_SpotLight2,
+        LE_SquareSpotLight,
+        LE_QuadraticNonIncidence
+        ;
     }
     
     /**
@@ -341,7 +347,18 @@ public class T3DLight extends T3DSound {
     private boolean isSpotLight(){
         return t3dClass.equals(UE4_LightActor.SpotLight.name()) 
                 || lightEffect == UE12_LightEffect.LE_Spotlight 
-                || lightEffect == UE12_LightEffect.LE_StaticSpot;
+                || lightEffect == UE12_LightEffect.LE_StaticSpot
+                || lightEffect == UE12_LightEffect.LE_SpotLight2
+                || lightEffect == UE12_LightEffect.LE_SquareSpotLight;
+    }
+    
+    /**
+     * Tells if current light is sunlight
+     * TODO convert to SunLight actor for UT4 if true
+     * @return 
+     */
+    private boolean isSunLight(){
+        return lightEffect == UE12_LightEffect.LE_SunLight;
     }
     
     /**
