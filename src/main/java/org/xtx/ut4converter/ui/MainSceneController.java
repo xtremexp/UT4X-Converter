@@ -346,4 +346,9 @@ public class MainSceneController implements Initializable {
         convertUtxMap(UTGame.UT3);
     }
 
+    @FXML
+    private void convertUt2003Map(ActionEvent event) {
+        convertUtxMap(UTGame.UT2003);
+    }
+
 }

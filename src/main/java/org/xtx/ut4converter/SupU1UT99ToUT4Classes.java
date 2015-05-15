@@ -63,7 +63,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
         putUtClass(T3DLiftExit.class, "LiftExit");
-        putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker");
+        putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
         //addPickups();
         
         addMatches(mc);

@@ -26,8 +26,8 @@
             <Button onAction="#selectUt99Folder" GridPane.columnIndex="2" GridPane.rowIndex="3">Select</Button>
 
             <Label text="UT2003 Folder" GridPane.columnIndex="0" GridPane.rowIndex="4" ></Label>
-            <TextField fx:id="ut2003Folder" disable="true" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="4">Maybe for future releases ...</TextField>
-            <Button disable="true" onAction="#selectUt2003Folder" GridPane.columnIndex="2" GridPane.rowIndex="4">Select</Button>
+            <TextField fx:id="ut2003Folder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="4" promptText="e.g: C:\UT2003"></TextField>
+            <Button onAction="#selectUt2003Folder" GridPane.columnIndex="2" GridPane.rowIndex="4">Select</Button>
             
             <Label text="UT2004 Folder" GridPane.columnIndex="0" GridPane.rowIndex="5" ></Label>
             <TextField fx:id="ut2004Path" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="5" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 2004"></TextField>

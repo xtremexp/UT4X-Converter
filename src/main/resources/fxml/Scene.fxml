@@ -17,6 +17,9 @@
                 <Menu text="Unreal Tournament Map">
                     <MenuItem text="Convert to UT4 ..." onAction="#handleConvert"/>
                 </Menu>
+                <Menu text="Unreal Tournament 2003 Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt2003Map"/>
+                </Menu>
                 <Menu text="Unreal Tournament 2004 Map">
                     <MenuItem text="Convert to UT4 ..." onAction="#convertUt2004Map"/>
                 </Menu>
