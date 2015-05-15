@@ -138,36 +138,37 @@ public class T3DMatch {
         final String UT4_PROP_IT = "InventoryType";
         final String UT4_CLS_PWRUP= "PowerupBase_C";
         
-        // Items - ThighPads
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ThighPads.Armor_ThighPads_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        List<GlobalMatch> gmPwrups = new ArrayList<>();
         
+        // Items - ThighPads
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ThighPads.Armor_ThighPads_C'"));
         
         // PowerUp - Armor
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, null, new String[]{"ShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Chest.Armor_Chest_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, null, new String[]{"ShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Chest.Armor_Chest_C'"));
         
         // PowerUp - ShieldBelt
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, null, new String[]{"SuperShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ShieldBelt.Armor_ShieldBelt_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, null, new String[]{"SuperShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ShieldBelt.Armor_ShieldBelt_C'"));
         
         // PowerUp - JumpBoots
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"JumpBoots"}, null, new String[]{"UT_Jumpboots", "JumpBoots"}, null, null, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_JumpBoots.BP_JumpBoots_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"JumpBoots"}, null, new String[]{"UT_Jumpboots", "JumpBoots"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_JumpBoots.BP_JumpBoots_C'"));
         
         // PowerUp - Damage Amplifier
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, null, new String[]{"UDamageCharger"}, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, null, new String[]{"UDamageCharger"}, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'"));
 
         // PowerUp - Invisibility
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Invisibility"}, null, new String[]{"Invisibility", "UT_Invisibility", "UT_Stealth"}, null, null, null, new String[]{UT4_CLS_PWRUP})
-                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Invis.BP_Invis_C'")
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Invisibility"}, null, new String[]{"Invisibility", "UT_Invisibility", "UT_Stealth"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Invis.BP_Invis_C'"));
+        
+        for(GlobalMatch gmPwrup : gmPwrups){
+            gmPwrup.addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d});
+        }
+        
+        list.addAll(gmPwrups);
     }
     
     /**
@@ -176,34 +177,34 @@ public class T3DMatch {
     private void initialiseAmmos(){
         
         // UT2004, no ammo for enforcer
+        List<GlobalMatch> gmAmmos = new ArrayList<>();
         
         // Ammo - BioAmmo
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, null, new String[]{"BioAmmoPickup"}, null, new String[]{"BioAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, null, new String[]{"BioAmmoPickup"}, null, new String[]{"BioAmmoPickup_C"}));
         
         // Ammo - Minigun
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, null, new String[]{"MinigunAmmoPickup"}, null, new String[]{"MinigunAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, null, new String[]{"MinigunAmmoPickup"}, null, new String[]{"MinigunAmmoPickup_C"}));
         
         // Ammo - Flak
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmoPickup"}, null, new String[]{"FlakAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmoPickup"}, null, new String[]{"FlakAmmoPickup_C"}));
         
         // Ammo - Rocket
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, null, new String[]{"RocketAmmoPickup"}, null, new String[]{"RocketAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, null, new String[]{"RocketAmmoPickup"}, null, new String[]{"RocketAmmoPickup_C"}));
         
         // Ammo - Shock
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, null, new String[]{"ShockAmmoPickup"}, null, new String[]{"ShockAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, null, new String[]{"ShockAmmoPickup"}, null, new String[]{"ShockAmmoPickup_C"}));
         
         // Ammo - Sniper
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, null, new String[]{"SniperAmmoPickup"}, null, new String[]{"SniperAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, null, new String[]{"SniperAmmoPickup"}, null, new String[]{"SniperAmmoPickup_C"}));
         
         // Ammo - LinkGun
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, null, new String[]{"LinkAmmoPickup"}, null, new String[]{"LinkAmmoPickup_C"})
-                .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, null, new String[]{"LinkAmmoPickup"}, null, new String[]{"LinkAmmoPickup_C"}));
+        
+        for(GlobalMatch gmAmmo : gmAmmos){
+            gmAmmo.addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d});
+        }
+        
+        list.addAll(gmAmmos);
     }
     
     private void initialiseWeapons(UTGame inputGame){
@@ -312,6 +313,7 @@ public class T3DMatch {
          * @return
          */
         public GlobalMatch withP(UTGames.UTGame game, String property, String value){
+            
             for(Match m : matches){
                 if(m.game == game){
                     m.addP(property, value);
@@ -451,6 +453,7 @@ public class T3DMatch {
     List<GlobalMatch> list;
     
     /**
+     * @param inputGame
      *
      */
     public T3DMatch(UTGame inputGame){
@@ -592,8 +595,6 @@ public class T3DMatch {
                 }
             }
         }
-        
-        
         
         return m;
     }
