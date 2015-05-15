@@ -82,8 +82,9 @@ public class T3DPolygon {
      */
     public T3DPolygon(){
         origin = new Vector3d(0d, 0d, 0d);
-        normal = new Vector3d(0d, 0d, 0d);
+        normal = new Vector3d(0d, 0d, 1d);
     }
+    
     
     /**
      *
@@ -291,5 +292,14 @@ public class T3DPolygon {
             }
         }
     }
+
+    public void setMapConverter(MapConverter mapConverter) {
+        this.mapConverter = mapConverter;
+    }
+
+    public void setTexture(UPackageRessource texture) {
+        this.texture = texture;
+    }
+    
     
 }

@@ -9,13 +9,11 @@ package org.xtx.ut4converter.t3d;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
@@ -643,4 +641,14 @@ public class T3DBrush extends T3DSound {
         
         return min;
     }
+
+    /**
+     * Sets polygons to this brush
+     * @param polyList 
+     */
+    public void setPolyList(LinkedList<T3DPolygon> polyList) {
+        this.polyList = polyList;
+    }
+    
+    
 }

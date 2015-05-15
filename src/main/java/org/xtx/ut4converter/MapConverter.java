@@ -537,6 +537,10 @@ public class MapConverter {
         return outputGame == UTGame.UT4;
     }
     
+    public boolean toUE4(){
+        return UTGames.isUnrealEngine4(this.getOutputGame());
+    }
+    
     /**
      * Tells if converting UT game using Unreal Engine 1 or 2
      * is being converted to some other UT game using Unreal Engine 3 or 4.
