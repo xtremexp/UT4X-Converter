@@ -24,6 +24,7 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import static org.xtx.ut4converter.t3d.T3DActor.getActorClass;
+import org.xtx.ut4converter.t3d.T3DBrush.BrushClass;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament
@@ -360,6 +361,14 @@ public class T3DLevelConvertor  {
             for(T3DActor actor : convertedActors){
                 
                 if(actor instanceof T3DBrush){
+                    
+                    T3DBrush brush = (T3DBrush) actor;
+                    
+                    // only care about visible brushes
+                    if(( brush.brushClass == BrushClass.Brush || brush.brushClass == BrushClass.Mover) ){
+                        continue;
+                    }
+                    
                     Vector3d maxA = ((T3DBrush) actor).getMaxVertexPos();
                     Vector3d minA = ((T3DBrush) actor).getMinVertexPos();
 
