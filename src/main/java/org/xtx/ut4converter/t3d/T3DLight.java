@@ -41,9 +41,9 @@ public class T3DLight extends T3DSound {
         LE_Rotor,
         LE_Unused,
         // Unreal Engine 2 new light effects
-        LE_SunLight,
-        LE_SpotLight2,
-        LE_SquareSpotLight,
+        LE_Sunlight,
+        LE_Spotlight2,
+        LE_SquareSpotlight,
         LE_QuadraticNonIncidence
         ;
     }
@@ -348,8 +348,8 @@ public class T3DLight extends T3DSound {
         return t3dClass.equals(UE4_LightActor.SpotLight.name()) 
                 || lightEffect == UE12_LightEffect.LE_Spotlight 
                 || lightEffect == UE12_LightEffect.LE_StaticSpot
-                || lightEffect == UE12_LightEffect.LE_SpotLight2
-                || lightEffect == UE12_LightEffect.LE_SquareSpotLight;
+                || lightEffect == UE12_LightEffect.LE_Spotlight2
+                || lightEffect == UE12_LightEffect.LE_SquareSpotlight;
     }
     
     /**
@@ -358,7 +358,7 @@ public class T3DLight extends T3DSound {
      * @return 
      */
     private boolean isSunLight(){
-        return lightEffect == UE12_LightEffect.LE_SunLight;
+        return lightEffect == UE12_LightEffect.LE_Sunlight;
     }
     
     /**
