@@ -22,6 +22,7 @@ import org.xtx.ut4converter.t3d.T3DTeleporter;
 /**
  * FXML Controller class
  * @author XtremeXp
+ * TODO merge with supportedclasses
  */
 public class SupU1UT99ToUT4Classes extends SupportedClasses {
     
@@ -35,12 +36,13 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         super();
         this.mapConv = mc;
         
-        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone", "BlockAll");
+        // FIXME block all has wrong volume, totally screwed
+        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");//, "BlockAll");
         
         boolean isUE1 = mc.getInputGame().engine == UnrealEngine.UE1;
         putUtClass(isUE1 ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
         putUtClass(T3DPlayerStart.class, "PlayerStart");
-        
+        //putUtClass(T3DStaticMesh.class, "StaticMeshActor");
         
         for(T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()){
             
