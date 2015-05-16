@@ -403,7 +403,12 @@ public class T3DBrush extends T3DSound {
         int numPoly = 0;
 
         for(T3DPolygon t3dPolygon : polyList){
-            t3dPolygon.toT3D(sbf, df, IDT, numPoly, reverseVertexOrder); numPoly++;
+            
+            if(reverseVertexOrder){
+                t3dPolygon.reverseVertexOrder();
+            }
+            
+            t3dPolygon.toT3D(sbf, df, IDT, numPoly); numPoly++;
         }
         
         sbf.append(IDT).append("\t\tEnd PolyList\n");

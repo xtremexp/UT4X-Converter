@@ -188,10 +188,6 @@ public abstract class T3DActor {
         game = mapConverter.getInputGame();
     }
     
-    public void initialise(){
-        location = new Vector3d(0, 0, 0);
-        rotation = new Vector3d(0, 0, 0);
-    }
     
     /**
      * Get some important info about actors like location,rotation,drawscale,...
@@ -548,5 +544,11 @@ public abstract class T3DActor {
     private boolean needsConverting(){
         return game != mapConverter.getOutputGame();
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
 }
 

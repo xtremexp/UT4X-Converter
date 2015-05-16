@@ -57,12 +57,26 @@ public class T3DPolygon {
      * UE4: Light Map resolution.
      */
     Double lightMapScale;
+    
+    
+    /**
+     * Only in UE1/UE2
+     * Basically changes the origin
+     */
     public double pan_u, 
 
     /**
      *
      */
     pan_v;
+    
+    /**
+     * As seen in Polys.h
+     * "A mask used to determine which smoothing groups this polygon is in"
+     * No idea what it does.
+     */
+    Integer smoothingMask;			
+    
     public Vector3d texture_u, 
 
     /**
@@ -151,19 +165,33 @@ public class T3DPolygon {
         
         Geometry.transformPermanently(origin, mainScale, rotation, postScale, false);
             
-            Geometry.transformPermanently(normal, mainScale, rotation, postScale, false);
-            
-            if(texture_u != null){
-                Geometry.transformPermanently(texture_u, mainScale, rotation, postScale, true);
-            }
-            
-            if(texture_v != null){
-                Geometry.transformPermanently(texture_v, mainScale, rotation, postScale, true);
-            }
-                    
-            for(Vector3d vertex : vertices){
-                Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
-            }
+        Geometry.transformPermanently(normal, mainScale, rotation, postScale, false);
+
+        if(texture_u != null){
+            Geometry.transformPermanently(texture_u, mainScale, rotation, postScale, true);
+        }
+
+        if(texture_v != null){
+            Geometry.transformPermanently(texture_v, mainScale, rotation, postScale, true);
+        }
+
+        for(Vector3d vertex : vertices){
+            Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
+        }
+    }
+    
+    /**
+     * Revert the order of vertices
+     */
+    public void reverseVertexOrder(){
+        
+        LinkedList<Vector3d> verticesReverted = new LinkedList<>();
+        
+        for(Vector3d vertex : vertices){
+            verticesReverted.addFirst(vertex);
+        }
+        
+        vertices = verticesReverted;
     }
     
     
@@ -173,9 +201,8 @@ public class T3DPolygon {
      * @param df Default Decimal format (not creating one each time for perf issues)
      * @param prefix 
      * @param numPoly 
-     * @param reverseVertexOrder
      */
-    public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int numPoly, boolean reverseVertexOrder){
+    public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int numPoly){
         
         prefix += "\t\t\t";
         
@@ -214,14 +241,8 @@ public class T3DPolygon {
         sb.append(prefix).append("\tTextureV ").append(T3DUtils.toPolyStringVector3d(texture_v, df)).append("\n");
         
         
-        if(!reverseVertexOrder){
-            for(Vector3d vertex : vertices){
-                sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex, df)).append("\n");
-            }
-        } else {
-            for(int i=(vertices.size()-1);i>=0;i--){
-                sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertices.get(i), df)).append("\n");
-            }
+        for(Vector3d vertex : vertices){
+            sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex, df)).append("\n");
         }
         
         sb.append(prefix).append("End Polygon\n");
@@ -238,6 +259,33 @@ public class T3DPolygon {
         return this;
     }
     
+    /**
+     * Calculate the normal of this polygon
+     */
+    public void calculateNormal(){
+        
+
+        Vector3d n = new Vector3d(0, 0, 0);
+        
+	for( int i=2; i < vertices.size(); i ++ ) {
+            
+            Vector3d edge1 = new Vector3d(vertices.get(i - 1)); 
+            edge1.sub(vertices.get(0));
+        
+            Vector3d edge2 = new Vector3d(vertices.get(i));
+            edge2.sub(vertices.get(0));
+            
+            Vector3d crsProd = new Vector3d(0, 0, 0);
+            crsProd.cross(edge1, edge2);
+            
+            n.add(crsProd);
+        }
+        
+        n.normalize();
+
+        this.normal = n;
+    }
+    
     public void setNormal(Vector3d v){
         normal = v;
     } 
@@ -246,10 +294,32 @@ public class T3DPolygon {
         normal = new Vector3d(x, y, z);
     } 
     
+    public void setTextureV(Vector3d textureV){
+        this.texture_v = textureV;
+    }
+    
+    public void setTextureU(Vector3d textureU){
+        this.texture_u = textureU;
+    }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param z 
+     * @deprecated Use setTextureU
+     */
     public void setTexU(Double x, Double y, Double z){
         texture_u = new Vector3d(x, y, z);
     } 
     
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param z 
+     * @deprecated Use setTextureV
+     */
     public void setTexV(Double x, Double y, Double z){
         texture_v = new Vector3d(x, y, z);
     }
@@ -300,6 +370,13 @@ public class T3DPolygon {
     public void setTexture(UPackageRessource texture) {
         this.texture = texture;
     }
-    
+
+    /**
+     * Set the smoothing mask (?)
+     * @param smoothingMask 
+     */
+    public void setSmoothingMask(Integer smoothingMask) {
+        this.smoothingMask = smoothingMask;
+    }
     
 }

@@ -11,8 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.t3d.T3DRessource;
@@ -37,7 +39,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * "
  * @author XtremeXp
  */
-public class T3DStaticMeshLoader {
+public class T3DStaticMeshFileLoader {
     
     public static enum ExportFormat {
         ASE, // Ascii Scene (can be imported by UT3 not UT4)
@@ -47,7 +49,7 @@ public class T3DStaticMeshLoader {
     
     File t3dStaticMeshFile;
     MapConverter mapConverter;
-    LinkedList<T3DPolygon> polygons;
+    T3DBrush brush;
     ExportFormat exportFormat;
     
     /**
@@ -55,35 +57,21 @@ public class T3DStaticMeshLoader {
      * @param mapConverter Map converter
      * @param t3dStaticMeshFile T3d static mesh file
      */
-    public T3DStaticMeshLoader(MapConverter mapConverter, File t3dStaticMeshFile){
-        this.t3dStaticMeshFile = t3dStaticMeshFile;
-        this.polygons = new LinkedList<>();
+    public T3DStaticMeshFileLoader(MapConverter mapConverter, File t3dStaticMeshFile){
         
-        if(mapConverter.toUT4()){
+        this.mapConverter = mapConverter;
+        this.t3dStaticMeshFile = t3dStaticMeshFile;
+        
+        if(mapConverter.toUE4()){
             exportFormat = ExportFormat.FBX;
         }
         
         else if(mapConverter.toUE3()){
             exportFormat = ExportFormat.ASE;
         }
+        
     }
     
-    /**
-     * Converts the t3d static mesh file to t3d brush.
-     * This might be usefull to later convert to .fbx (flimbox) files
-     * @return Brush
-     * @throws IOException 
-     */
-    public T3DBrush convertToBrush() throws IOException{
-        
-        T3DBrush brush = new T3DBrush(mapConverter, null);
-        brush.initialise();
-        
-        loadPolygons();
-        brush.setPolyList(polygons);
-        
-        return brush;
-    }
     
     /**
      * Converts .t3d staticmesh file into a t3d brush
@@ -93,7 +81,6 @@ public class T3DStaticMeshLoader {
      */
     public T3DStaticMesh convertToStaticMesh() throws IOException{
         
-        T3DBrush brush = convertToBrush();
         
         // TODO brush to .fbx converter
         if(exportFormat == ExportFormat.FBX){
@@ -112,19 +99,22 @@ public class T3DStaticMeshLoader {
      * Loads polygon data from t3d line
      * @return List of polygons
      */
-    private void loadPolygons() throws FileNotFoundException, IOException {
+    private void loadBrush() throws FileNotFoundException, IOException {
         
+        brush = new T3DBrush(mapConverter, null);
+        LinkedList<T3DPolygon> polygons = new LinkedList<>();
         
         try (FileReader fr = new FileReader(t3dStaticMeshFile); BufferedReader bfr = new BufferedReader(fr)){
             
             String line;
-            
+            T3DPolygon p = null;
+                    
             while( (line = bfr.readLine()) != null){
                 
-                T3DPolygon p = null;
                 line = line.trim();
                 
                 if(line.startsWith("Begin Triangle")){
+                    
                     p = new T3DPolygon();
                     p.setMapConverter(mapConverter);
                 }
@@ -144,10 +134,14 @@ public class T3DStaticMeshLoader {
                 // TODO check what is smoothing mask
                 else if(line.startsWith("SmoothingMask")){
                     
+                    if(p != null){
+                        p.setSmoothingMask(Integer.valueOf(line.split("SmoothingMask ")[1]));
+                    }
                 }
                 
                 // e.g: "Vertex 0 -2.313340 -48.702381 16.483009 -0.004290 0.000590"
                 else if(line.startsWith("Vertex")){
+                    
                     Vector3d v = new Vector3d();
                     String s[] = line.split("\\ ");
                     
@@ -155,19 +149,56 @@ public class T3DStaticMeshLoader {
                     v.y = Float.valueOf(s[3]);
                     v.z = Float.valueOf(s[4]);
                     
+                    
                     // TODO check other values seems related to UV ...
                     
+                    
                     if(p != null){
+                        // Temp texU/texV until figuring out the formula
+                        p.setTextureU(new Vector3d(0, 0, 1));
+                        p.setTextureV(new Vector3d(0, 0, 1));
+                        
                         p.addVertex(v);
                     }
                 }
                 
                 else if(line.startsWith("End Triangle")){
                     
-                    polygons.add(p);
+                    if(p != null){
+                        p.calculateNormal();
+                        p.reverseVertexOrder();
+                        polygons.add(p);
+                    }
+                }
+                
+                else if(line.startsWith("Begin StaticMesh")){
+                    
+                    String name = line.split("\\=")[1];
+                    brush.setName(name + "_SMBrush");
                 }
             }
         }
+        
+        
+        brush.setPolyList(polygons);
+    }
+    
+    public static void test(){
+        
+        
+        File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\DM-Phobos2_Door01.t3d");
+        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), 1d);
+        
+        T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, f);
+
+        try {
+            smLoader.loadBrush();
+            System.out.println(smLoader.brush.toString());
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        
+        System.exit(0);
     }
 
 }
