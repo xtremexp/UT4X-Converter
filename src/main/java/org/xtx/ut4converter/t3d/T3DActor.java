@@ -549,6 +549,15 @@ public abstract class T3DActor {
         this.name = name;
     }
     
+    /**
+     * Replace current actor that won't be converted with another one.
+     * @param actor Actor replacement
+     */
+    protected void replaceWith(T3DActor actor){
+        children.add(actor);
+        validWriting = false;
+    }
+    
     
 }
 

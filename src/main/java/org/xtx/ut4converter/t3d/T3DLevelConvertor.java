@@ -129,6 +129,7 @@ public class T3DLevelConvertor  {
                     logger.log(Level.SEVERE, "Line #" + linenumber + " Current Actor Class: " + uta.t3dClass + " Line:");
                     logger.log(Level.SEVERE, "\"" + line + "\"");
                     logger.log(Level.SEVERE, "ERROR:", e.getMessage());
+                    e.printStackTrace();
                 }
             }
 

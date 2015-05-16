@@ -6,7 +6,9 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.ImageUtils;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * Class for converting lights.
@@ -135,7 +137,7 @@ public class T3DLight extends T3DSound {
     
     // *** Unreal Engine 1 / 2 Properties ***
     // Skin=Texture'GenFX.LensFlar.3'
-    String skin;
+    UPackageRessource skin;
     
 
     boolean isCorona;
@@ -318,8 +320,8 @@ public class T3DLight extends T3DSound {
             outerConeAngle = T3DUtils.getDouble(line);
         }
         
-        else if(line.startsWith("isCorona")){
-            isCorona = Boolean.getBoolean(line.split("\\=")[1]);
+        else if(line.startsWith("bCorona=")){
+            isCorona = "true".equals(line.split("\\=")[1].toLowerCase());
         }
         
         
@@ -331,6 +333,11 @@ public class T3DLight extends T3DSound {
         
         else if(line.startsWith("FalloffExponent=")){
             lightFalloffExponent = T3DUtils.getDouble(line);
+        }
+        
+        // Skin=Texture'GenFX.LensFlar.3'
+        else if(line.startsWith("Skin=")){
+            skin = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
         }
         
         else {
@@ -466,8 +473,11 @@ public class T3DLight extends T3DSound {
     @Override
     public void convert(){
         
-        // Convert HSB to RGB
-        
+        if(isCorona && skin != null){
+            skin.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            replaceWith(T3DEmitter.createLensFlare(mapConverter, this));
+            return;
+        }
             
         // UE1 has brightness range 0-255
         // but UE2 has not limit for brightness
@@ -538,7 +548,7 @@ public class T3DLight extends T3DSound {
     
     @Override
     public boolean isValidWriting(){
-        return brightness > 0;
+        return brightness > 0 && super.isValidWriting();
     }
     
     
