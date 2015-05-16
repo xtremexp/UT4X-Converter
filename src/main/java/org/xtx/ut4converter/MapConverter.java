@@ -377,7 +377,12 @@ public class MapConverter {
                         File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
                         newFile.mkdirs();
                         newFile.createNewFile();
-                        Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        
+                        // sometimes it does not find the exported texture (? ... weird)
+                        if(exportedFile.exists() && exportedFile.isFile()){
+                            Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        
                         exportedFile.delete();
                         exportedFile = newFile;
                         
