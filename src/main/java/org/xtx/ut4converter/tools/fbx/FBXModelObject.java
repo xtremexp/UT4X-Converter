@@ -7,7 +7,7 @@ package org.xtx.ut4converter.tools.fbx;
 
 import java.util.LinkedList;
 import java.util.List;
-import javax.vecmath.Vector3d;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 
 /**
@@ -27,10 +27,10 @@ public class FBXModelObject extends FBXObject {
     private void load(LinkedList<T3DPolygon> polygons){
         
         for(T3DPolygon p : polygons){
-            for(Vector3d v : p.vertices){
-                vertices.add(v.x);
-                vertices.add(v.y);
-                vertices.add(v.z);
+            for(Vertex v : p.vertices){
+                vertices.add(v.getX());
+                vertices.add(v.getY());
+                vertices.add(v.getZ());
             }
         }
     }

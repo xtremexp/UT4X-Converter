@@ -484,7 +484,7 @@ public class Geometry {
                 }
             }
             
-            p.setOrigin(p.vertices.getFirst());
+            p.setOrigin(p.vertices.getFirst().getCoordinates());
             polyList.add(p);
         }
         
@@ -503,7 +503,7 @@ public class Geometry {
             a -= angle;
         }
         
-        p.setOrigin(p.vertices.getFirst());
+        p.setOrigin(p.vertices.getFirst().getCoordinates());
         polyList.add(p);
         
         a = angle / 2d;
@@ -518,7 +518,7 @@ public class Geometry {
             a += angle;
         }
         
-        p.setOrigin(p.vertices.getFirst());
+        p.setOrigin(p.vertices.getFirst().getCoordinates());
         polyList.add(p);
         
         return polyList;

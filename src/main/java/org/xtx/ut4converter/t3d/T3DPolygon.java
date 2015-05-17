@@ -13,6 +13,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.geom.Vertex;
 
 /**
  * 
@@ -87,14 +88,9 @@ public class T3DPolygon {
     /**
      *
      */
-    public LinkedList<Vector3d> vertices = new LinkedList<>();
+    public LinkedList<Vertex> vertices = new LinkedList<>();
     
-    /**
-     * UV values for each values in the "conventional" system.
-     * Might be empty until sorting out the formula TextureU/V <-> U/V
-     */
-    public LinkedList<Float[]> uvVertices = new LinkedList<>();
-    
+
     MapConverter mapConverter;
     
     /**
@@ -130,7 +126,7 @@ public class T3DPolygon {
         
         if(newScale != null){
 
-            for(Vector3d vertex : vertices){
+            for(Vertex vertex : vertices){
                 vertex.scale(newScale);
             }
         }
@@ -181,8 +177,8 @@ public class T3DPolygon {
             Geometry.transformPermanently(texture_v, mainScale, rotation, postScale, true);
         }
 
-        for(Vector3d vertex : vertices){
-            Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
+        for(Vertex vertex : vertices){
+            Geometry.transformPermanently(vertex.getCoordinates(), mainScale, rotation, postScale, false);
         }
     }
     
@@ -191,9 +187,9 @@ public class T3DPolygon {
      */
     public void reverseVertexOrder(){
         
-        LinkedList<Vector3d> verticesReverted = new LinkedList<>();
+        LinkedList<Vertex> verticesReverted = new LinkedList<>();
         
-        for(Vector3d vertex : vertices){
+        for(Vertex vertex : vertices){
             verticesReverted.addFirst(vertex);
         }
         
@@ -247,8 +243,8 @@ public class T3DPolygon {
         sb.append(prefix).append("\tTextureV ").append(T3DUtils.toPolyStringVector3d(texture_v, df)).append("\n");
         
         
-        for(Vector3d vertex : vertices){
-            sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex, df)).append("\n");
+        for(Vertex vertex : vertices){
+            sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex.getCoordinates(), df)).append("\n");
         }
         
         sb.append(prefix).append("End Polygon\n");
@@ -256,23 +252,13 @@ public class T3DPolygon {
     }
     
     
-    public void addVertex(Vector3d vertex){
+    public void addVertex(Vertex vertex){
         vertices.add(vertex);
-    }
-    
-    /**
-     * 
-     * @param vertex Vertex
-     * @param u U value
-     * @param v V value
-     */
-    public void addVertex(Vector3d vertex, Float u, Float v){
-        vertices.add(vertex);
-        uvVertices.add(new Float[]{u, v});
     }
     
     public T3DPolygon addVertex(Double x, Double y, Double z){
-        vertices.add(new Vector3d(x, y, z));
+        
+        vertices.add(new Vertex(new Vector3d(x, y, z), this));
         return this;
     }
     
@@ -286,11 +272,11 @@ public class T3DPolygon {
         
 	for( int i=2; i < vertices.size(); i ++ ) {
             
-            Vector3d edge1 = new Vector3d(vertices.get(i - 1)); 
-            edge1.sub(vertices.get(0));
+            Vector3d edge1 = new Vector3d(vertices.get(i - 1).getCoordinates()); 
+            edge1.sub(vertices.get(0).getCoordinates());
         
-            Vector3d edge2 = new Vector3d(vertices.get(i));
-            edge2.sub(vertices.get(0));
+            Vector3d edge2 = new Vector3d(vertices.get(i).getCoordinates());
+            edge2.sub(vertices.get(0).getCoordinates());
             
             Vector3d crsProd = new Vector3d(0, 0, 0);
             crsProd.cross(edge1, edge2);
@@ -396,7 +382,7 @@ public class T3DPolygon {
         this.smoothingMask = smoothingMask;
     }
 
-    public LinkedList<Vector3d> getVertices() {
+    public LinkedList<Vertex> getVertices() {
         return vertices;
     }
 }

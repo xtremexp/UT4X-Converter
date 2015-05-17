@@ -11,10 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.t3d.T3DRessource;
@@ -143,24 +143,25 @@ public class T3DStaticMeshFileLoader {
                 // e.g: "Vertex 0 -2.313340 -48.702381 16.483009 -0.004290 0.000590"
                 else if(line.startsWith("Vertex")){
                     
-                    Vector3d vertex = new Vector3d();
+                    
                     String s[] = line.split("\\ ");
                     
-                    vertex.x = Float.valueOf(s[2]);
-                    vertex.y = Float.valueOf(s[3]);
-                    vertex.z = Float.valueOf(s[4]);
+
+                    Double x = Double.valueOf(s[2]);
+                    Double y = Double.valueOf(s[3]);
+                    Double z = Double.valueOf(s[4]);
                     
-                    
-                    // TODO check other values seems related to UV ...
                     Float u = Float.valueOf(s[5]);
                     Float v = Float.valueOf(s[6]);
+                    
+                    Vertex vertex = new Vertex(x, y, z, u, v, p);
                     
                     if(p != null){
                         // Temp texU/texV until figuring out the formula
                         p.setTextureU(new Vector3d(0, 1, 0));
                         p.setTextureV(new Vector3d(1, 0, 0));
                         
-                        p.addVertex(vertex, u, v);
+                        p.addVertex(vertex);
                     }
                 }
                 
@@ -169,7 +170,7 @@ public class T3DStaticMeshFileLoader {
                     if(p != null){
                         p.calculateNormal();
                         p.reverseVertexOrder();
-                        p.setOrigin(p.getVertices().getFirst());
+                        p.setOrigin(p.getVertices().getFirst().getCoordinates());
                         polygons.add(p);
                     }
                 }

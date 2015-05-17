@@ -15,6 +15,7 @@ import java.util.Locale;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
@@ -162,40 +163,35 @@ public class T3DBrush extends T3DSound {
         
         // Begin Polygon Item=Rise Texture=r-plates-g Link=0
         else if(line.contains("Begin Polygon")){
-            isAnalysingPolyData = true;
             polyList.add(new T3DPolygon(line, mapConverter));
         }
         
         // Origin   -00128.000000,-00128.000000,-00128.000000
-        else if(line.contains("Origin ") && isAnalysingPolyData){
+        else if(line.contains("Origin ")){
             polyList.getLast().origin = T3DUtils.getPolyVector3d(line, "Origin");
         }
         
-        else if(line.contains("Normal ") && isAnalysingPolyData){
+        else if(line.contains("Normal ")){
             polyList.getLast().normal = T3DUtils.getPolyVector3d(line, "Normal");
         }
         
-        else if(line.contains("TextureU ") && isAnalysingPolyData){
+        else if(line.contains("TextureU ")){
             polyList.getLast().texture_u = T3DUtils.getPolyVector3d(line, "TextureU");
         }
         
-        else if(line.contains("TextureV ") && isAnalysingPolyData){
+        else if(line.contains("TextureV ")){
             polyList.getLast().texture_v = T3DUtils.getPolyVector3d(line, "TextureV");
         }
         
-        else if(line.contains("Vertex ") && isAnalysingPolyData){
-            Vector3d vertex = T3DUtils.getPolyVector3d(line, "Vertex");
-            polyList.getLast().vertices.add(vertex);
+        else if(line.contains("Vertex ")){
+            Vector3d coordinates = T3DUtils.getPolyVector3d(line, "Vertex");
+            polyList.getLast().vertices.add(new Vertex(coordinates, polyList.getLast()));
         }
         
         // Pan      U=381 V=-7
-        else if(line.contains(" Pan ") && isAnalysingPolyData){
+        else if(line.contains(" Pan ")){
             polyList.getLast().pan_u = Double.valueOf(line.split("U=")[1].split("\\ ")[0]);
             polyList.getLast().pan_v = Double.valueOf(line.split("V=")[1].split("\\ ")[0]);
-        }
-        
-        else if(line.contains("End Polygon")){
-            isAnalysingPolyData = false;
         }
         
         // Hack, normally analysed in T3DActor but needed 
@@ -361,9 +357,9 @@ public class T3DBrush extends T3DSound {
         
         for(T3DPolygon poly : polyList){
             
-            for(Vector3d v2 : poly.vertices){
+            for(Vertex v2 : poly.vertices){
                 
-                if(v.x == v2.x && v.y == v2.y && v.z == v2.z){
+                if(v.x == v2.getX() && v.y == v2.getY() && v.z == v2.getZ()){
                     count ++;
                     break;
                 }
@@ -606,10 +602,12 @@ public class T3DBrush extends T3DSound {
         Vector3d max = new Vector3d(0d, 0d, 0d);
         
         for(T3DPolygon p : polyList){
-            for(Vector3d v : p.vertices){
-                max.x = Math.max(max.x, v.x);
-                max.y = Math.max(max.y, v.y);
-                max.z = Math.max(max.z, v.z);
+            for(Vertex v : p.vertices){
+                
+                Vector3d c = v.getCoordinates();
+                max.x = Math.max(max.x, c.x);
+                max.y = Math.max(max.y, c.y);
+                max.z = Math.max(max.z, c.z);
             }
         }
         
@@ -631,10 +629,12 @@ public class T3DBrush extends T3DSound {
         Vector3d min = new Vector3d(0d, 0d, 0d);
         
         for(T3DPolygon p : polyList){
-            for(Vector3d v : p.vertices){
-                min.x = Math.min(min.x, v.x);
-                min.y = Math.min(min.y, v.y);
-                min.z = Math.min(min.z, v.z);
+            for(Vertex v : p.vertices){
+                
+                Vector3d c = v.getCoordinates();
+                min.x = Math.min(min.x, c.x);
+                min.y = Math.min(min.y, c.y);
+                min.z = Math.min(min.z, c.z);
             }
         }
         
