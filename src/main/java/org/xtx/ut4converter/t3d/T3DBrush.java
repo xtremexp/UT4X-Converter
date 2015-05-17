@@ -654,6 +654,11 @@ public class T3DBrush extends T3DSound {
     public void setPolyList(LinkedList<T3DPolygon> polyList) {
         this.polyList = polyList;
     }
+
+    public LinkedList<T3DPolygon> getPolyList() {
+        return polyList;
+    }
+    
     
     
 }

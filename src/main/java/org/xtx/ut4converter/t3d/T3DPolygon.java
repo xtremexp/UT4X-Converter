@@ -89,6 +89,12 @@ public class T3DPolygon {
      */
     public LinkedList<Vector3d> vertices = new LinkedList<>();
     
+    /**
+     * UV values for each values in the "conventional" system.
+     * Might be empty until sorting out the formula TextureU/V <-> U/V
+     */
+    public LinkedList<Float[]> uvVertices = new LinkedList<>();
+    
     MapConverter mapConverter;
     
     /**
@@ -254,6 +260,17 @@ public class T3DPolygon {
         vertices.add(vertex);
     }
     
+    /**
+     * 
+     * @param vertex Vertex
+     * @param u U value
+     * @param v V value
+     */
+    public void addVertex(Vector3d vertex, Float u, Float v){
+        vertices.add(vertex);
+        uvVertices.add(new Float[]{u, v});
+    }
+    
     public T3DPolygon addVertex(Double x, Double y, Double z){
         vertices.add(new Vector3d(x, y, z));
         return this;
@@ -378,5 +395,8 @@ public class T3DPolygon {
     public void setSmoothingMask(Integer smoothingMask) {
         this.smoothingMask = smoothingMask;
     }
-    
+
+    public LinkedList<Vector3d> getVertices() {
+        return vertices;
+    }
 }

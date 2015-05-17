@@ -57,7 +57,7 @@ public class T3DStaticMeshFileLoader {
      * @param mapConverter Map converter
      * @param t3dStaticMeshFile T3d static mesh file
      */
-    public T3DStaticMeshFileLoader(MapConverter mapConverter, File t3dStaticMeshFile){
+    public T3DStaticMeshFileLoader(MapConverter mapConverter, File t3dStaticMeshFile) throws IOException{
         
         this.mapConverter = mapConverter;
         this.t3dStaticMeshFile = t3dStaticMeshFile;
@@ -70,6 +70,7 @@ public class T3DStaticMeshFileLoader {
             exportFormat = ExportFormat.ASE;
         }
         
+        loadBrush();
     }
     
     
@@ -142,23 +143,24 @@ public class T3DStaticMeshFileLoader {
                 // e.g: "Vertex 0 -2.313340 -48.702381 16.483009 -0.004290 0.000590"
                 else if(line.startsWith("Vertex")){
                     
-                    Vector3d v = new Vector3d();
+                    Vector3d vertex = new Vector3d();
                     String s[] = line.split("\\ ");
                     
-                    v.x = Float.valueOf(s[2]);
-                    v.y = Float.valueOf(s[3]);
-                    v.z = Float.valueOf(s[4]);
+                    vertex.x = Float.valueOf(s[2]);
+                    vertex.y = Float.valueOf(s[3]);
+                    vertex.z = Float.valueOf(s[4]);
                     
                     
                     // TODO check other values seems related to UV ...
-                    
+                    Float u = Float.valueOf(s[5]);
+                    Float v = Float.valueOf(s[6]);
                     
                     if(p != null){
                         // Temp texU/texV until figuring out the formula
-                        p.setTextureU(new Vector3d(0, 0, 1));
-                        p.setTextureV(new Vector3d(0, 0, 1));
+                        p.setTextureU(new Vector3d(0, 1, 0));
+                        p.setTextureV(new Vector3d(1, 0, 0));
                         
-                        p.addVertex(v);
+                        p.addVertex(vertex, u, v);
                     }
                 }
                 
@@ -167,6 +169,7 @@ public class T3DStaticMeshFileLoader {
                     if(p != null){
                         p.calculateNormal();
                         p.reverseVertexOrder();
+                        p.setOrigin(p.getVertices().getFirst());
                         polygons.add(p);
                     }
                 }
@@ -186,13 +189,13 @@ public class T3DStaticMeshFileLoader {
     public static void test(){
         
         
-        File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\DM-Phobos2_Door01.t3d");
+        File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar.t3d");
         MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), 1d);
         
-        T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, f);
+        
 
         try {
-            smLoader.loadBrush();
+            T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, f);
             System.out.println(smLoader.brush.toString());
         } catch (IOException e){
             e.printStackTrace();
