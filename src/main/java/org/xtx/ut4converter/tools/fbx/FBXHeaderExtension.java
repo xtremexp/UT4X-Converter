@@ -21,12 +21,14 @@ public class FBXHeaderExtension implements FBXWriter {
 
     short FBXHeaderVersion;
     public short FBXVersion;
-    CreationTimeStamp creationTimeStamp;
+    public CreationTimeStamp creationTimeStamp;
     static String creator;
 
-    static class CreationTimeStamp {
+    public static class CreationTimeStamp {
 
         short version;
+        public long time;
+        
         int year;
         int month;
         int day;
@@ -53,7 +55,8 @@ public class FBXHeaderExtension implements FBXWriter {
         cts.minute = cal.get(Calendar.MINUTE);
         cts.second = cal.get(Calendar.SECOND);
         cts.millisecond = cal.get(Calendar.MILLISECOND);
-
+        cts.time = cal.getTimeInMillis();
+        
         fbxHeader.creationTimeStamp = cts;
 
         return fbxHeader;
@@ -64,7 +67,7 @@ public class FBXHeaderExtension implements FBXWriter {
 
         sb.append("FBXHeaderExtension:  {\n");
         sb.append("\tFBXHeaderVersion: ").append(FBXHeaderVersion).append("\n");
-        sb.append("\tFBXVersion: ").append(FBXVersion).append("\n");
+        sb.append("\tFBXVersion: ").append(DEFAULT_FBX_VERSION).append("\n");
 
         sb.append("\tCreationTimeStamp:  {\n");
         sb.append("\t\tVersion: ").append(creationTimeStamp.version).append("\n");

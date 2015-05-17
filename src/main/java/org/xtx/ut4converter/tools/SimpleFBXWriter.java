@@ -9,14 +9,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.LinkedList;
+import java.util.Optional;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.t3d.T3DPolygon;
+import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.tools.fbx.FBXDefinitions;
 import org.xtx.ut4converter.tools.fbx.FBXHeaderExtension;
+import org.xtx.ut4converter.tools.fbx.FBXModelObject;
 import org.xtx.ut4converter.tools.fbx.FBXObject;
+import org.xtx.ut4converter.tools.fbx.FBXObjectType;
 
 /**
  * Simple utility class to write
@@ -28,30 +32,38 @@ public class SimpleFBXWriter {
     static final String CREATOR = MainApp.PROGRAM_NAME + "-" + MainApp.VERSION;
     
     
+    
     FBXHeaderExtension headerExtension;
     FBXDefinitions definitions;
-    List<FBXObject> objects;
+    LinkedList<FBXObject> objects;
     
     /**
      * Output fbx file
      */
     File fbxFile;
-    List<T3DPolygon> polygons;
+    T3DBrush brush;
     
     /**
      * 
-     * @param polygons 
+     * @param brush
      */
-    public SimpleFBXWriter(List<T3DPolygon> polygons){
-        this.polygons = polygons;
+    public SimpleFBXWriter(T3DBrush brush){
+        this.brush = brush;
         
         initialise();
     }
     
     private void initialise(){
+        
+        brush.calcVerticeIndices(); // need compute vertex index (needed for fbx)
+        
+        objects = new LinkedList<>();
         headerExtension = FBXHeaderExtension.getInstance(CREATOR);
+        objects.add(new FBXModelObject(brush));
         
         definitions = FBXDefinitions.getInstance(objects);
+        
+        // TODO add FBXObjectMaterial
     }
     
 
@@ -72,35 +84,83 @@ public class SimpleFBXWriter {
     
     private void writeHeader(StringBuilder sb){
         
-        sb.append("; FBX ").append(headerExtension.FBXVersion).append(" project file\n");
+        sb.append("; FBX 6.1.0 project file\n");
         sb.append("; Created by ").append(CREATOR).append("\n");
         sb.append("; ----------------------------------------------------\n");
+        sb.append("\n");
         
         headerExtension.writeFBX(sb);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss:SSS");
+        sb.append("CreationTime: \"").append(sdf.format(headerExtension.creationTimeStamp.time)).append("\"\n");
+        sb.append("Creator: \"").append(CREATOR).append("\"\n");
+        sb.append("\n");
         
         sb.append("; Object definitions\n");
         sb.append("; ----------------------------------------------------\n");
         
         definitions.writeFBX(sb);
+        sb.append("\n");
+
+    }
+    
+    private FBXObject getFBXObjectByType(FBXObjectType objectType){
+        
+        Optional<FBXObject> object = objects.stream().filter(w -> w.getObjectType() == objectType).findFirst();
+
+        return object.isPresent()? object.get() : null;
     }
     
     private void writeBody(StringBuilder sb){
         
         sb.append("; Object properties\n");
-        sb.append(";------------------------------------------------------------------\n\n");
+        sb.append(";-----------------------------------------------------\n\n");
         
-        sb.append("Objects:  {\n\n");
-        
-        for(FBXObject object : objects){
-            object.writeFBX(sb);
-            sb.append("\n");
+        if(objects != null && !objects.isEmpty()){
+            sb.append("Objects:  {\n\n");
+
+            for(FBXObject object : objects){
+                object.writeFBX(sb);
+                sb.append("\n");
+            }
+
+            sb.append("} \n");
         }
         
-        sb.append("} \n");
+        sb.append("\n");
     }
     
     private void writeFooter(StringBuilder sb){
         
+        sb.append("; Object relations\n");
+        sb.append(";-----------------------------------------------------\n\n");
+        
+        
+        sb.append("Relations:  {\n");
+	
+        for(FBXObject object : objects){
+            sb.append("\t").append(object.getObjectType().name()).append(" \"").append(object.getObjectType().name()).append("::").append(object.getName()).append("\", \"").append(object.getSubName()).append("\" {\n");
+            sb.append("\t}\n");
+        }
+        
+        sb.append("}\n");
+        sb.append("\n");
+        
+        sb.append("; Object connections\n");
+        sb.append("----------------------------------------------------\n\n");
+
+        FBXObject model = getFBXObjectByType(FBXObjectType.Model);
+        FBXObject material = getFBXObjectByType(FBXObjectType.Material);
+        
+        sb.append("Connections:  {\n");
+        
+        sb.append("\tConnect: \"OO\", \"Model::").append(model.getName()).append("\", \"Model::Scene\"\n");
+        
+        if(material != null){
+            sb.append("\tConnect: \"OO\", \"Material::").append(material).append("\", \"Model::MonCube\"\n");
+        }
+        
+         sb.append("}\n");
     }
     
     public static void test(){
@@ -114,7 +174,7 @@ public class SimpleFBXWriter {
         try {
             // load poly data from .t3d sm file
             T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, t3dSmFile);
-            SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush.getPolyList());
+            SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush);
             fbwWriter.write(fbxSmFile);
         } catch (IOException e){
             e.printStackTrace();

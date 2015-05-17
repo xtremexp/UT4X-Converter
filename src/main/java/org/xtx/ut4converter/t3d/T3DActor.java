@@ -557,6 +557,10 @@ public abstract class T3DActor {
         children.add(actor);
         validWriting = false;
     }
+
+    public String getName() {
+        return name;
+    }
     
     
 }

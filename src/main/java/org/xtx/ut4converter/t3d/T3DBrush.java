@@ -659,6 +659,52 @@ public class T3DBrush extends T3DSound {
         return polyList;
     }
     
+    private int curIdx = 0;
     
+    /**
+     * Give and index for each vertex having same coordinate
+     */
+    public void calcVerticeIndices() {
+    
+
+        for(T3DPolygon polygon : polyList){
+            
+            for(Vertex v : polygon.vertices){
+                
+                if(v.getBrushIdx() == null){
+                    getVerticeWithCoordinate(v.getCoordinates(), SMALL_NUMBER);
+                    curIdx ++;
+                }
+            }
+        }
+    }
+    
+    private final double SMALL_NUMBER = 0.001d;
+    
+    /**
+     * Get the vertices with same coordinates 
+     * @param coordinates
+     * @param delta
+     * @return List of vertices having same coordinates
+     */
+    private List<Vertex> getVerticeWithCoordinate(Vector3d coordinates, double delta){
+        
+        List<Vertex> vertices = new ArrayList<>();
+        
+        for(T3DPolygon polygon : polyList){
+            
+            for(Vertex v : polygon.vertices){
+                
+                Double distance = Geometry.getDistance(v.getCoordinates(), coordinates);
+                
+                if(distance <= delta){
+                    v.setIdx(curIdx);
+                    vertices.add(v);
+                }
+            }
+        }
+        
+        return vertices;
+    }
     
 }

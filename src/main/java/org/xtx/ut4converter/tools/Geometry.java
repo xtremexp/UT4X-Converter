@@ -551,4 +551,19 @@ public class Geometry {
        
        System.exit(0);
     }
+    
+    /**
+     * Gets distance between 2 vectors
+     * @param v
+     * @param w
+     * @return 
+     */
+    public static double getDistance(Vector3d v, Vector3d w) {
+
+        final double dx = v.x - w.x;
+        final double dy = v.y - w.y;
+        final double dz = v.z - w.z;
+        
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
 }

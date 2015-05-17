@@ -13,10 +13,30 @@ public abstract class FBXObject implements FBXWriter {
     
     FBXObjectType objectType;
     String name;
+    
+    /**
+     * Temp thingy
+     */
+    String subName;
     short version;
 
     public FBXObject(FBXObjectType objectType) {
         this.objectType = objectType;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSubName() {
+        return subName;
+    }
+
+    public FBXObjectType getObjectType() {
+        return objectType;
+    }
+
+    
+    
 
 }

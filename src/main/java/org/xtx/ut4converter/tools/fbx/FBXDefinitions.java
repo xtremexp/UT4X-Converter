@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class FBXDefinitions implements FBXWriter {
 
+    static final short DEFAULT_VERSION = 100;
+    
     short version;
     int count;
 
@@ -36,6 +38,7 @@ public class FBXDefinitions implements FBXWriter {
         FBXDefinitions fbxDefinitions = new FBXDefinitions();
         fbxDefinitions.count = objects != null ? objects.size() : 0;
         fbxDefinitions.objectTypeCounts = new ArrayList<>();
+        fbxDefinitions.version = DEFAULT_VERSION;
 
         if (objects != null){
             for (FBXObject fbxObject : objects) {
@@ -73,7 +76,7 @@ public class FBXDefinitions implements FBXWriter {
 
         for (ObjectTypeCount otc : objectTypeCounts) {
             sb.append("\tObjectType: ").append(otc.objectType.name()).append(" {\n");
-            sb.append("\tCount: ").append(otc.count).append("\n");
+            sb.append("\t\tCount: ").append(otc.count).append("\n");
             sb.append("\t}\n");
         }
 
