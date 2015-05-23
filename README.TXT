@@ -111,7 +111,7 @@ and remove them until bsp holes dissapear)
 
 License
 ------------------------------
-License to be determined / set. Just feel free to browse code or/and 
+License to be determined / set. No commercial use allowed. Just feel free to browse code or/and 
 contribute !
 
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
