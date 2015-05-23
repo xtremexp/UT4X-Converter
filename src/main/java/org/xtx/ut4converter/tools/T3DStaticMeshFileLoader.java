@@ -191,7 +191,7 @@ public class T3DStaticMeshFileLoader {
         
         
         File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar.t3d");
-        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), 1d);
+        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
         
         
 

@@ -169,7 +169,7 @@ public class SimpleFBXWriter {
         File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.g");
         fbxSmFile.delete();
         
-        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), 1d);
+        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
 
         try {
             // load poly data from .t3d sm file

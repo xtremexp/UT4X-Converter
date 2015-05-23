@@ -1,7 +1,6 @@
 package org.xtx.ut4converter;
 
 import java.io.BufferedReader;
-import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,6 +15,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
@@ -38,7 +38,7 @@ import org.xtx.ut4converter.ui.ConversionViewController;
  * 
  * @author XtremeXp
  */
-public class MapConverter {
+public class MapConverter extends Task<T3DLevelConvertor> {
     
     /**
      * UT Game the map will be converted from
@@ -127,6 +127,7 @@ public class MapConverter {
      */
     public UTPackageExtractor packageExtractor;
     
+    
 
 
     /**
@@ -190,14 +191,14 @@ public class MapConverter {
      * @param inputGame Input game the map originally comes from
      * @param outputGame Output game the map will be converted to
      * @param inpMap Map to be converted (either a t3d file or map)
-     * @param scale  Scale applied to level when converting( defaut = 1)
+     * @param path Where converted stuff will be saved
      */
-    public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, Double scale) {
+    public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, String path) {
         this.inputGame = inputGame;
         this.outputGame = outputGame;
         this.inMap = inpMap;
-        this.scale = scale;
-        init();
+        this.outPath = Paths.get(path);
+        initialise();
     }
     
     /**
@@ -235,7 +236,9 @@ public class MapConverter {
         return tm.getActorClassMatch(inputGame, outputGame);
     }
     
-    private void init(){
+    private void initialise(){
+        
+        scale = 1d;
         
         try {
             
@@ -318,13 +321,11 @@ public class MapConverter {
     
     /**
      * Converts level
-     * @param path Where all converted stuff is copied to
      * @throws Exception 
      */
-    public void convertTo(String path) throws Exception {
+    public void convert() throws Exception {
         
-        outPath = Paths.get(path);
-        
+
         if(!outPath.toFile().exists()){
             outPath.toFile().mkdirs();
         }
@@ -334,7 +335,7 @@ public class MapConverter {
             inT3d = UCCExporter.exportLevelToT3d(this, inMap);
         }
         
-        outT3d = new File(path + File.separator + outMapName + ".t3d");
+        outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + outMapName + ".t3d");
         
         // t3d ever exported or directly converting from t3d file, then skip export of it 
         // and directly convert it
@@ -343,6 +344,8 @@ public class MapConverter {
         
         
         cleanAndConvertRessources();
+        
+        logger.log(Level.INFO, "Map was succesfully converted to "+getOutT3d().getAbsolutePath());
     }
     
     
@@ -719,5 +722,17 @@ public class MapConverter {
         this.convertTextures = false;
         this.convertMusic = false;
     }
+
+    @Override
+    protected T3DLevelConvertor call() throws Exception {
+        convert();
+        return t3dLvlConvertor;
+    }
+
+    public void setScale(Double scale) {
+        this.scale = scale;
+    }
+    
+    
 }
 

@@ -417,7 +417,7 @@ public final class UCCExporter extends UTPackageExtractor {
         
         File unrealMap = new File("Z:\\TEMP\\UT99Maps\\AS-Mazon.unr");
         
-        MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, Double.NaN);
+        MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, null);
         
         try {
             UCCExporter.exportLevelToT3d(mc, unrealMap);

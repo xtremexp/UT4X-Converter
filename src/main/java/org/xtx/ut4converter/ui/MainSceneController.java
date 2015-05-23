@@ -28,6 +28,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
@@ -296,7 +297,9 @@ public class MainSceneController implements Initializable {
                     return;
                 }
                 
-                mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, scaleFactor);
+                String path = Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name();
+                mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, path);
+                mapConverter.setScale(scaleFactor);
                 
                 // UT3 in testing, no convert/export textures, ....
                 if(inputGame == UTGames.UTGame.UT3){
@@ -304,25 +307,9 @@ public class MainSceneController implements Initializable {
                 }
 
                 mapConverter.setConversionViewController(mainApp.showConversionView());
-                // TODO make getter in mc to know where to convert stuff!
-                mapConverter.convertTo(Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name());
                 
-                String msg = "Map was succesfully converted to "+mapConverter.getOutT3d().getAbsolutePath();
-                mapConverter.getLogger().info(msg);
-
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Confirmation");
-                alert.setHeaderText("Map Converted");
-                alert.setContentText(msg + ".\n Do you want to open folder with converted stuff?");
-
-                Optional<ButtonType> result2 = alert.showAndWait();
-
-                if (result2.get() != ButtonType.OK){
-                    return;
-                }
-                
-                UIUtils.openExplorer(mapConverter.getOutT3d().getParentFile().getParentFile());
-            } catch (Exception ex) {
+                SwingUtilities.invokeLater(mapConverter);
+            } catch (JAXBException | NumberFormatException ex) {
                 
                 if( mapConverter != null ){
                     mapConverter.getLogger().log(Level.SEVERE, null, ex);

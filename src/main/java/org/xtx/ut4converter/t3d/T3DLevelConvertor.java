@@ -23,7 +23,6 @@ import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import static org.xtx.ut4converter.t3d.T3DActor.getActorClass;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament
@@ -456,10 +455,11 @@ public class T3DLevelConvertor  {
         try {
             
             File t3dFile = new File("Z:\\TEMP\\UT99Maps\\Test\\DM-UT99-MoverTest.t3d");
-            MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, 2.5d);
+            MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, "Z:\\Temp");
             
             //((SupU1UT99ToUT4Classes) mc.getSupportedActorClasses()).setConvertOnly("AmbientSound", T3DSound.class);
-            mc.convertTo("Z:\\Temp");
+            mc.setScale(2.5d);
+            mc.convert();
             
             System.out.println("Unconverted classes:");
             

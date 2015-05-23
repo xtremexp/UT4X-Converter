@@ -43,8 +43,9 @@ public class T3DConverterTest {
                         
                     } else {
                         try {
-                            MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, f, 2d);
-                            mc.convertTo("Z:\\TEMP\\MASSTEST");
+                            MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, f, "Z:\\TEMP\\MASSTEST");
+                            mc.setScale(2d);
+                            mc.convert();
                         } catch (Exception e){
                             failedConvMaps.add(f);
                         }
