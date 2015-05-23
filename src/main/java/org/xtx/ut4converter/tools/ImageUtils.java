@@ -7,17 +7,10 @@ package org.xtx.ut4converter.tools;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import jogl.DDSImage;
-import org.xtx.ut4converter.t3d.T3DLight.HSVColor;
-import org.xtx.ut4converter.t3d.T3DLight.RGBColor;
 
 /**
  * Utility class related to image (such as extracting data from textures, ...)
@@ -25,7 +18,7 @@ import org.xtx.ut4converter.t3d.T3DLight.RGBColor;
  * @author XtremeXp
  */
 public class ImageUtils {
-    
+
 
     /**
      * Convert color in HSV (Hue, Saturation, Value) format to RGB (Red, Green, Blue) format

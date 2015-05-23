@@ -8,6 +8,7 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.ImageUtils;
+import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -199,70 +200,7 @@ public class T3DLight extends T3DSound {
      */
     float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
     
-    /**
-    * A color represented by the four components Hue, Saturation, Value, and Alpha.
-    * H must be between 0 and 360 (degrees).
-    * S must be between 0 and 1.
-    * V and A are normally between 0 and 1, but may exceed that range to give bloom.
-    */
-   public static class HSVColor
-   {
-        /**
-         * Hue, Saturatio, Value, Alpha
-         */
-        public float H, S, V, A = 1.f;
-
-        /**
-         *
-         */
-        public HSVColor(){
-            
-        }
-        
-        /**
-         *
-         * @param H
-         * @param S
-         * @param V
-         */
-        public HSVColor(float H, float S, float V) {
-            this.H = H;
-            this.S = S;
-            this.V = V;
-        }
-
-        
-   }
    
-    /**
-     * Defines RGB format
-     */
-    public static class RGBColor
-   {
-        /**
-         * Red, Green, Blue, Alpha
-         */
-        public float R, G, B, A;
-
-        /**
-         *
-         */
-        public RGBColor(){
-            
-        }
-        
-        /**
-         *
-         * @param R Red value (0->1.0f)
-         * @param G Green (0->1.0f)
-         * @param B Blue (0->1.0f)
-         */
-        public RGBColor(float R, float G, float B) {
-            this.R = R;
-            this.G = G;
-            this.B = B;
-        }
-   }
     
     /**
      *
@@ -328,7 +266,11 @@ public class T3DLight extends T3DSound {
         // UT3
         // LightColor=(B=58,G=152,R=197,A=0)
         else if(line.startsWith("LightColor=")){
-            parseRGBA(line);
+            RGBColor rgbColor = T3DUtils.getRGBColor(line);
+            this.green = rgbColor.G;
+            this.blue = rgbColor.B;
+            this.red = rgbColor.R;
+            this.alpha = rgbColor.A;
         }
         
         else if(line.startsWith("FalloffExponent=")){
@@ -550,36 +492,5 @@ public class T3DLight extends T3DSound {
     public boolean isValidWriting(){
         return brightness > 0 && super.isValidWriting();
     }
-    
-    
-    /**
-     * Parse RGBA color property data from t3d line
-     * E.G: "LightColor=(B=58,G=152,R=197,A=0)"
-     */
-    private void parseRGBA(String line){
-        
-        String s = line.split("\\(")[1].split("\\)")[0];
-        
-        String s2[] = s.split("\\,");
-        
-        for(int i = 0; i < s2.length; i++){
-            
-            String s3[] = s2[i].split("\\=");
 
-            switch(s3[0]) {
-                case "A":
-                    this.alpha = Float.valueOf(s3[1]); break;
-                case "R":
-                    this.red = Float.valueOf(s3[1]); break;
-                case "G":
-                    this.green = Float.valueOf(s3[1]); break;
-                case "B":
-                    this.blue = Float.valueOf(s3[1]); break;
-                default:
-                    break;
-            }
-        }
-        
-    }
-    
 }

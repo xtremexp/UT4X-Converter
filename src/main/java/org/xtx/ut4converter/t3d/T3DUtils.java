@@ -9,6 +9,7 @@ package org.xtx.ut4converter.t3d;
 import java.text.DecimalFormat;
 import java.util.Map;
 import javax.vecmath.Vector3d;
+import org.xtx.ut4converter.tools.RGBColor;
 
 /**
  * 
@@ -76,6 +77,10 @@ public class T3DUtils {
      */
     public static Float getFloat(String line){
         return Float.valueOf(line.split("\\=")[1]);
+    }
+    
+    public static String getString(String line){
+        return line.split("\\=")[1];
     }
     
     /**
@@ -314,5 +319,47 @@ public class T3DUtils {
         }
         
         return "(X="+v.x+",Y="+v.y+",Z="+v.z+")";
+    }
+    
+    /**
+     * ¨Get rgb values
+     * @param line t3d line
+     * @return RGB values
+     */
+    public static RGBColor getRGBColor(String line){
+        
+        RGBColor rgbColor = new RGBColor();
+        String s = line.split("\\(")[1].split("\\)")[0];
+        
+        String s2[] = s.split("\\,");
+        
+        for(int i = 0; i < s2.length; i++){
+            
+            String s3[] = s2[i].split("\\=");
+
+            switch(s3[0]) {
+                case "A":
+                    rgbColor.A = Float.valueOf(s3[1]); break;
+                case "R":
+                    rgbColor.R = Float.valueOf(s3[1]); break;
+                case "G":
+                    rgbColor.G = Float.valueOf(s3[1]); break;
+                case "B":
+                    rgbColor.B = Float.valueOf(s3[1]); break;
+                default:
+                    break;
+            }
+        }
+        
+        return rgbColor;
+    }
+    
+    public static Boolean getBoolean(String line){
+        
+        if("true".equals(line.split("\\=")[1].toLowerCase())){
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
     }
 }

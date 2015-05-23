@@ -16,8 +16,10 @@ import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.t3d.T3DMover;
 import org.xtx.ut4converter.t3d.T3DMoverSM;
 import org.xtx.ut4converter.t3d.T3DPlayerStart;
+import org.xtx.ut4converter.t3d.T3DPostProcessVolume;
 import org.xtx.ut4converter.t3d.T3DSound;
 import org.xtx.ut4converter.t3d.T3DTeleporter;
+import org.xtx.ut4converter.t3d.T3DZoneInfo;
         
 /**
  * FXML Controller class
@@ -56,6 +58,10 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
             putUtClass(T3DLight.class, ut99LightActor.name());
         }
         
+        if(mc.isTo(UnrealEngine.UE3, UnrealEngine.UE4)){
+           // disabled until working good
+            // putUtClass(T3DZoneInfo.class, "ZoneInfo");
+        }
         
         for(T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()){
             putUtClass(T3DLight.class, ue34LightActor.name());

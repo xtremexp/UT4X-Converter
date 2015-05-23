@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.TableView;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -113,6 +114,12 @@ public class MapConverter {
      * will be exported and converted
      */
     public boolean convertStaticMeshes = true;
+    
+    /**
+     * If <code>true</code> music of the map
+     * will be exported and converted
+     */
+    public boolean convertMusic = true;
     
     /**
      * Allow to extract packages.
@@ -476,15 +483,47 @@ public class MapConverter {
      * Indicated if converting from UT using Unreal Engine 1 or Unreal Engine 2
      * (basically Unreal1, UT99, Unreal 2, UT2003 and UT2004)
      * @return true if converting from Unreal Engine 1 or 2 UTx game
+     * @deprecated Use isFrom
      */
     public boolean fromUE1OrUE2(){
         return UTGames.isUnrealEngine1(this.getInputGame()) || UTGames.isUnrealEngine2(this.getInputGame());
+    }
+    
+    public boolean isFrom(UnrealEngine... engines){
+        
+        if(engines.length == 0){
+            return false;
+        }
+        
+        for(UnrealEngine engine : engines){
+            if(engine == this.getInputGame().engine){
+                return true;
+            }
+        }
+        
+        return true;
+    }
+    
+    public boolean isTo(UnrealEngine... engines){
+        
+        if(engines.length == 0){
+            return false;
+        }
+        
+        for(UnrealEngine engine : engines){
+            if(engine == this.getOutputGame().engine){
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
      * Indicated if converting to UT using Unreal Engine 1 or Unreal Engine 2
      * (basically Unreal1, UT99, Unreal 2, UT2003 and UT2004)
      * @return true if converting to Unreal Engine 1 or 2 UTx game
+     * @deprecated Use isFrom
      */
     public boolean toUE1OrUE2(){
         return UTGames.isUnrealEngine1(this.getOutputGame()) || UTGames.isUnrealEngine2(this.getOutputGame());
@@ -519,6 +558,7 @@ public class MapConverter {
     /**
      * Indicated game being converted to Unreal Engine 3 game (basically only UT3)
      * @return 
+     * @deprecated Use isTo
      */
     public boolean toUE3(){
         return UTGames.isUnrealEngine3(this.getOutputGame());
@@ -542,6 +582,10 @@ public class MapConverter {
         return outputGame == UTGame.UT4;
     }
     
+    /**
+     * @deprecated Use isTo
+     * @return 
+     */
     public boolean toUE4(){
         return UTGames.isUnrealEngine4(this.getOutputGame());
     }
@@ -673,6 +717,7 @@ public class MapConverter {
         this.convertSounds = false;
         this.convertStaticMeshes = false;
         this.convertTextures = false;
+        this.convertMusic = false;
     }
 }
 
