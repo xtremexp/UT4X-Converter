@@ -671,7 +671,7 @@ public class T3DBrush extends T3DSound {
             
             for(Vertex v : polygon.vertices){
                 
-                if(v.getBrushIdx() == null){
+                if(v.getVertexPolyIdx() == null){
                     getVerticeWithCoordinate(v.getCoordinates(), SMALL_NUMBER);
                     curIdx ++;
                 }
@@ -698,7 +698,7 @@ public class T3DBrush extends T3DSound {
                 Double distance = Geometry.getDistance(v.getCoordinates(), coordinates);
                 
                 if(distance <= delta){
-                    v.setIdx(curIdx);
+                    v.setVertexPolyIdx(curIdx);
                     vertices.add(v);
                 }
             }

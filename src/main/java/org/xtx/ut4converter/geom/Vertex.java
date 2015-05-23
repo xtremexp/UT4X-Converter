@@ -33,12 +33,8 @@ public class Vertex {
     /**
      * Vertex index in polygon this point belongs to
      */
-    Integer polyIdx;
-    
-    /**
-     * Vertex index in brush
-     */
-    Integer brushIdx;
+    Integer vertexPolyIdx;
+
     
     
     /**
@@ -92,7 +88,7 @@ public class Vertex {
     
     private void calcPolyIdx(){
         
-        if(polyIdx != null){
+        if(vertexPolyIdx != null){
             return;
         }
         
@@ -138,13 +134,15 @@ public class Vertex {
         this.v = v;
     }
 
-    public Integer getBrushIdx() {
-        return brushIdx;
+    public Integer getVertexPolyIdx() {
+        return vertexPolyIdx;
     }
 
-    public void setIdx(Integer idx) {
-        this.brushIdx = idx;
+    public void setVertexPolyIdx(Integer vertexPolyIdx) {
+        this.vertexPolyIdx = vertexPolyIdx;
     }
+
+    
     
     /**
      * Scales this vertex

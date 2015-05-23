@@ -163,19 +163,30 @@ public class SimpleFBXWriter {
          sb.append("}\n");
     }
     
-    public static void test(){
+    public static void test(String args[]){
         
-        File t3dSmFile = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar.t3d");
-        File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.fbx");
+        //File t3dSmFile = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar");
+        File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.g");
         fbxSmFile.delete();
         
         MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), 1d);
 
         try {
             // load poly data from .t3d sm file
-            T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, t3dSmFile);
-            SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush);
-            fbwWriter.write(fbxSmFile);
+            for(File t3dSmFile : new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\").listFiles()){
+                
+                if(t3dSmFile.getName().endsWith(".fbx")){
+                    t3dSmFile.delete();
+                    continue;
+                }
+                
+                T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, t3dSmFile);
+                SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush);
+                File fbx = new File(t3dSmFile.getAbsolutePath().split("\\.")[0]+".fbx");
+                fbx.delete();
+                System.out.println("Writting "+fbx);
+                fbwWriter.write(fbx);
+            }
         } catch (IOException e){
             e.printStackTrace();
         }

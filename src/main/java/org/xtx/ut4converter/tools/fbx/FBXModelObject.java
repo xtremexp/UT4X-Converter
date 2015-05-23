@@ -77,9 +77,7 @@ public class FBXModelObject extends FBXObject {
         
         for(T3DPolygon p : polygons){
             
-            for(int idx = 0; idx < p.vertices.size(); idx ++){
-                
-                Vertex v = p.vertices.get(idx);
+            for(Vertex v : p.vertices){
                 
                 vertices.add(v.getX());
                 vertices.add(v.getY());
@@ -88,13 +86,13 @@ public class FBXModelObject extends FBXObject {
                 uvs.add(v.getU());
                 uvs.add(v.getV());
                 
-                // Last one always negates the index
-                if( idx == p.vertices.size() - 1){
-                    polygonVertexIndices.add(v.getBrushIdx() * -1);
+                // Last one always negates the index and adds -1
+                if( v == p.vertices.getLast()){
+                    polygonVertexIndices.add((v.getVertexPolyIdx() * -1) - 1);
                 }
                 
                 else {
-                    polygonVertexIndices.add(v.getBrushIdx());
+                    polygonVertexIndices.add(v.getVertexPolyIdx());
                 }
                 
             }
@@ -112,21 +110,26 @@ public class FBXModelObject extends FBXObject {
         sb.append("\t\tVersion: ").append(version).append("\n");
         sb.append("\t\tVertices: ");
         
+        int idx = 1;
+        
         for(Double v : vertices){
-            sb.append(df.format(v)).append(",");
+
+            if(idx > 1){
+                sb.append(",").append(df.format(v));
+            } else {
+                sb.append(df.format(v));
+            }
+
+            if(idx % 12 == 0 && idx < vertices.size() - 1){
+                sb.append("\n\t\t");
+            }
+            
+            idx ++;
         }
         
-        sb.deleteCharAt(sb.length() - 1);
         sb.append("\n");
         
-        sb.append("\t\tPolygonVertexIndex: ");
-        
-        for(Integer idx : polygonVertexIndices){
-            sb.append(idx).append(",");
-        }
-        
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append("\n");
+        writePolygonVertexIndex(sb);
         
         sb.append("\t\tUV: ");
         
@@ -161,4 +164,31 @@ public class FBXModelObject extends FBXObject {
         sb.append("}\n");
     }
 
+    /**
+     * Adapted to java from export_fbx.py python script for blender
+     * @param sb 
+     */
+    private void writePolygonVertexIndex(StringBuilder sb){
+
+        sb.append("\t\tPolygonVertexIndex: ");
+        
+        int idx = 0;
+        
+        for(Integer polyVertexIdx : polygonVertexIndices){
+            
+            if(idx > 0){
+                sb.append(",").append(polyVertexIdx);
+            } else {
+                sb.append(polyVertexIdx);
+            }
+            
+            if(idx > 0 && idx % 12 == 0 && idx < polygonVertexIndices.size() - 1){
+                sb.append("\n\t\t");
+            }
+            
+            idx ++;
+        }
+
+        sb.append("\n");
+    }
 }
