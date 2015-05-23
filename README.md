@@ -141,6 +141,12 @@ Libraries / Technologies used
 
 History
 ------------------------------
+- 0.4.0 - In Progress:
+  * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
+  * Added conversion for textures
+  * Fixed sounds not being exported from map package
+  * ?
+
 - 0.3.0 - 08/05/2015:
   * Improved lightning (brightness, lightning type, ...)
   * Sound export and conversion
