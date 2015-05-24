@@ -98,7 +98,7 @@ public class ImageUtils {
      */
     public static Dimension getTextureDimensions(File ftex) throws IOException
     {
-        if(ftex == null || ftex.isDirectory() || !ftex.exists() || Files.size(ftex.toPath()) == 0){
+        if(ftex == null || !ftex.exists() || ftex.isDirectory()  || Files.size(ftex.toPath()) == 0){
             return null;
         }
         
