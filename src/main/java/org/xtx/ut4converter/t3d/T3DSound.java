@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -188,8 +189,11 @@ public class T3DSound extends T3DActor {
      * TODO some outside kind of UProperty class with defaults value for each UE version
      */
     private void setDefaults(){
-        if(mapConverter.fromUE1OrUE2()){
+        
+        if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)){
             attenuation.attenuationShapeExtents.x = 64d; // Default Radius in UE1/2
+            soundVolume = 190d; // Default volume in UE1/2
+            soundPitch = 64d; // Default pitch in UE1/2
         }
     }
     
@@ -238,12 +242,14 @@ public class T3DSound extends T3DActor {
     public void convert(){
         
         if(mapConverter.isFromUE1UE2ToUE3UE4()){
+            
             if(soundVolume != null){
-               soundVolume /= 255D; // default volume is 190 in UE1/2, default is 1 in UE3/4
+                
+                soundVolume /= 255D; // default volume is 190 in UE1/2, default is 1 in UE3/4
                
-               // decreasing sound volume from UT2004 because seems "loudy" in UT4 ...
-                if(mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE2){
-                    soundVolume *= 0.3;
+                // decreasing sound volume from UT2004 because seems "loudy" in UT4 ...
+                if(mapConverter.isFrom(UTGames.UnrealEngine.UE2)){
+                    soundVolume *= 0.2;
                 }
             }
             

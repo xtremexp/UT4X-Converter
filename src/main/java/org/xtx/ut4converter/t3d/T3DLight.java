@@ -425,9 +425,9 @@ public class T3DLight extends T3DSound {
         // but UE2 has not limit for brightness
         // so we make sure brightness does not go above 255
         // but give extra intensity "boost"
-        // e.g: brightness of 1000 --> brightness = 255 and intensity = 60 + log(1000) * 10 = 90
+        // e.g: brightness of 1000 --> brightness = 255 and intensity = 60 + log(1000) * 6 = 60 + 3 * 6 = 78
         if(brightness > 255){
-            intensity += Math.log(brightness - 255) * 10; // using log because brightness can be nearly infinite
+            intensity += Math.log(brightness - 255) * 6; // using log because brightness can be nearly infinite
         }
 
         brightness = Math.min(brightness, 255);

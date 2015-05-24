@@ -205,41 +205,34 @@ public abstract class T3DActor {
         
         if(line.startsWith("Location=")||line.contains("\tLocation=")){
             location = T3DUtils.getVector3d(line, 0D);
-            return true;
         }
         
         if(line.contains(" OldLocation=")||line.contains("\tOldLocation=")){
             oldLocation = T3DUtils.getVector3d(line, 0D);
-            return true;
         }
         
         else if(line.contains(" ColLocation=") || line.contains("\tColLocation=")|| line.contains("ColLocation="))
         {
             coLocation = T3DUtils.getVector3d(line, 0D);
-            return true;
         }
         
         else if(line.startsWith("DrawScale3D")){
             scale3d = T3DUtils.getVector3d(line, 1D);
-            return true;
         }
         
         else if(line.startsWith("DrawScale=")){
             drawScale = T3DUtils.getDouble(line);
-            return true;
         }
         
         else if(line.startsWith("Rotation")){
             rotation = T3DUtils.getVector3dRot(line);
-            return true;
         }
         
-        // Begin Actor Class=Brush Name=Brush172
         else if(line.contains("Name=")){
-            name = line.split("\\=")[1].replaceAll("\"", "");
+            name = line.split("Name=")[1].replaceAll("\"", "");
         }
         
-        else if(line.contains(" Group=")||line.contains("\tGroup=")){
+        else if(line.startsWith("Group=")){
             addOtherData(line); 
         } 
         

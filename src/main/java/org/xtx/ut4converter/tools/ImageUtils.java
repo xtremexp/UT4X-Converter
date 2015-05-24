@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import javax.imageio.ImageIO;
 import jogl.DDSImage;
 
@@ -95,15 +96,14 @@ public class ImageUtils {
      * @return Texture dimensions
      * @throws IOException 
      */
-    public static Dimension getTexureDimensions(File ftex) throws IOException
+    public static Dimension getTextureDimensions(File ftex) throws IOException
     {
-        if(ftex == null){
+        if(ftex == null || ftex.isDirectory() || !ftex.exists() || Files.size(ftex.toPath()) == 0){
             return null;
         }
         
         if(ftex.getName().endsWith(".dds")){
             DDSImage ddsImage = DDSImage.read(ftex);
-            ddsImage.write(ftex.getAbsolutePath().split("\\.")[0] + "-TEST.dds");
             return new Dimension(ddsImage.getWidth(), ddsImage.getHeight());
         }
         

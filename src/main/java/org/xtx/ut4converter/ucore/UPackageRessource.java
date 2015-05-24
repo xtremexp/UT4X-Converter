@@ -142,7 +142,7 @@ public class UPackageRessource {
         }
         
         try {
-            this.textureDimensions = ImageUtils.getTexureDimensions(exportedFile);
+            this.textureDimensions = ImageUtils.getTextureDimensions(exportedFile);
         } catch (Exception e){
             Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, e.getMessage());
         }
@@ -192,7 +192,6 @@ public class UPackageRessource {
     public boolean needExport(){
         return !exportFailed && exportedFile == null;
     }
-    
     
     /**
      * Export the ressource from unreal package to file
