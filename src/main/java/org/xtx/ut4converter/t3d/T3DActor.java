@@ -234,7 +234,8 @@ public abstract class T3DActor {
             return true;
         }
         
-        else if(line.startsWith("Name=")){
+        // Begin Actor Class=Brush Name=Brush172
+        else if(line.contains("Name=")){
             name = line.split("\\=")[1].replaceAll("\"", "");
         }
         

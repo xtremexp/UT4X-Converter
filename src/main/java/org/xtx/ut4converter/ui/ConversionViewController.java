@@ -10,6 +10,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,6 +33,18 @@ public class ConversionViewController implements Initializable {
     private TableColumn<TableRowLog, Level> logLevel;
     @FXML
     private TableColumn<TableRowLog, String> logMsg;
+    @FXML
+    private ProgressBar progressBar;
+    @FXML
+    private ProgressBar progressBarDetail;
+    @FXML
+    private ProgressIndicator progressIndicator;
+    @FXML
+    private ProgressIndicator progressIndicatorDetail;
+    @FXML
+    private Label progressMessageDetail;
+    @FXML
+    private Label progressMessage;
 
     /**
      * Initializes the controller class.
@@ -72,5 +87,31 @@ public class ConversionViewController implements Initializable {
     public TableView<TableRowLog> getConvLogTableView() {
         return convLogTableView;
     }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public ProgressBar getProgressBarDetail() {
+        return progressBarDetail;
+    }
+
+    public ProgressIndicator getProgressIndicator() {
+        return progressIndicator;
+    }
+
+    public ProgressIndicator getProgressIndicatorDetail() {
+        return progressIndicatorDetail;
+    }
+
+    public Label getProgressMessageDetail() {
+        return progressMessageDetail;
+    }
+
+    public Label getProgressMessage() {
+        return progressMessage;
+    }
+
+
     
 }

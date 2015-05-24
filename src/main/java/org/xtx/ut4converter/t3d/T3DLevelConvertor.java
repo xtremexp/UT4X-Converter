@@ -19,17 +19,19 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.concurrent.Task;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ui.ConversionViewController;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament
  * to Unreal Tournament "4" t3d file
  * @author XtremeXp
  */
-public class T3DLevelConvertor  {
+public class T3DLevelConvertor extends Task<Object> {
     
     /**
      * Current map converter
@@ -78,6 +80,8 @@ public class T3DLevelConvertor  {
     
     Vector3d boundBoxLocalisation;
     
+    int actorCount;
+    
     /**
      * 
      * @param originalT3d Original t3d ut3 file
@@ -91,6 +95,59 @@ public class T3DLevelConvertor  {
         this.mapConverter = mc;
         this.mapConverter.setT3dLvlConvertor(this);
         this.logger = mc.getLogger();
+        
+        initialise();
+    }
+    
+    /**
+     * 
+     */
+    private void initialise(){
+        
+        ConversionViewController cont = mapConverter.getConversionViewController();
+        
+        if(cont == null){
+            return;
+        }
+        
+        cont.getProgressBarDetail().progressProperty().bind(progressProperty());
+        cont.getProgressIndicatorDetail().progressProperty().bind(progressProperty());
+        cont.getProgressMessageDetail().textProperty().bind(messageProperty());
+        
+        updateProgress(0, 100);
+    }
+    
+    /**
+     * Count the total number of actors.
+     * Used to track progress for conversion
+     */
+    private void countTotalActors() throws Exception {
+        
+        if(inT3dFile == null || !inT3dFile.exists()){
+            throw new Exception("File "+inT3dFile.getAbsolutePath()+" does not exists!");
+        }
+        
+
+        try  {
+            
+            bfr = new BufferedReader(new FileReader(inT3dFile));
+            String line;
+
+            // Read input t3d file and convert actors
+            while((line = bfr.readLine()) != null)
+            {
+                if(isBeginActor(line)){
+                    actorCount ++;
+                } 
+                // for ut3 triggering "End Object" thingy ...
+                else if(isEndActor(line)){
+                    
+                }
+            }
+        } finally {
+            bfr.close();
+        }
+        
     }
     
     /**
@@ -99,13 +156,17 @@ public class T3DLevelConvertor  {
      */
     public void convert() throws Exception
     {
+        try {
+            countTotalActors();
+        } catch (Exception e){}
+        
         if(inT3dFile == null || !inT3dFile.exists()){
             throw new Exception("File "+inT3dFile.getAbsolutePath()+" does not exists!");
         }
 
         logger.info("Converting t3d map "+inT3dFile.getName()+" to "+mapConverter.getOutputGame().name+" t3d level");
         
-        try {
+        try  {
             
             bfr = new BufferedReader(new FileReader(inT3dFile));
             bwr = new BufferedWriter(new FileWriter(outT3dFile));
@@ -138,6 +199,9 @@ public class T3DLevelConvertor  {
             bwr.close();
             bfr.close();
         }
+        
+        updateProgress(100, 100);
+        updateMessage("All done!");
     }
     
     /**
@@ -227,6 +291,8 @@ public class T3DLevelConvertor  {
         return false;
     }
     
+    private int actorsReadCount;
+    
     /**
      * Analyze T3D line to get and convert UT data
      * @param line current T3D line being read
@@ -237,6 +303,7 @@ public class T3DLevelConvertor  {
     private void analyzeLine(String line) throws IOException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
         if (isBeginActor(line)) {
+            actorsReadCount ++;
             currentClass = getActorClass(line);
             
             if (mapConverter.getSupportedActorClasses().canBeConverted(currentClass)) {
@@ -272,12 +339,15 @@ public class T3DLevelConvertor  {
         // Actor End - We write converted data to t3d file
         else if (isEndActor(line)) {
 
+            updateProgress(actorsReadCount, actorCount);
+
             if (banalyseline) {
                 if (uta != null) {
                     
                     if(uta.isValidConverting()){
                         // we might want to only re-scale map
                         if(uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()){
+                            updateMessage("Converting "+uta.name);
                             uta.convert();
                         }
                         // rescale if needed 
@@ -474,4 +544,9 @@ public class T3DLevelConvertor  {
         System.exit(0);
     }
     
+    @Override
+    protected Object call() throws Exception {
+        convert();
+        return null;
+    }
 }

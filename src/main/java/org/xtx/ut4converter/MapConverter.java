@@ -280,21 +280,24 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             }
             
             userConfig = UserConfig.load();
-        } catch (JAXBException ex) {
-            Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (JAXBException | IOException ex) {
             Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     /**
      * All logs redirect to user interface thought table
+     * TODO write log file
      */
     private void addLoggerHandlers(){
         
         if(conversionViewController == null || conversionViewController.getConvLogTableView() == null){
             return;
         }
+        
+        conversionViewController.getProgressBar().progressProperty().bind(progressProperty());
+        conversionViewController.getProgressIndicator().progressProperty().bind(progressProperty());
+        conversionViewController.getProgressMessage().textProperty().bind(messageProperty());
         
         final TableView<TableRowLog> t = conversionViewController.getConvLogTableView();
         t.getItems().clear();
@@ -325,6 +328,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      */
     public void convert() throws Exception {
         
+        updateProgress(0, 100);
 
         if(!outPath.toFile().exists()){
             outPath.toFile().mkdirs();
@@ -332,7 +336,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         
         // Export unreal map to Unreal Text map
         if(inT3d == null){
+            updateProgress(10, 100);
+            updateMessage("Exporting map to unreal text file");
             inT3d = UCCExporter.exportLevelToT3d(this, inMap);
+            updateProgress(20, 100);
         }
         
         outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + outMapName + ".t3d");
@@ -340,11 +347,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         // t3d ever exported or directly converting from t3d file, then skip export of it 
         // and directly convert it
         t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
+        updateMessage("Converting "+inT3d.getName()+" to "+outT3d.getName());
         t3dLvlConvertor.convert();
-        
+        updateProgress(80, 100);
         
         cleanAndConvertRessources();
         
+        updateProgress(100, 100);
+        updateMessage("All done!");
         logger.log(Level.INFO, "Map was succesfully converted to "+getOutT3d().getAbsolutePath());
     }
     
@@ -357,6 +367,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      */
     private void cleanAndConvertRessources() throws IOException {
         
+        updateMessage("Converting ressource files");
         boolean wasConverted;
         
         // remove unecessary exported files
@@ -731,6 +742,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
     public void setScale(Double scale) {
         this.scale = scale;
+    }
+
+    public ConversionViewController getConversionViewController() {
+        return conversionViewController;
     }
     
     

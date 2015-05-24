@@ -452,7 +452,6 @@ public class T3DBrush extends T3DSound {
      * @param mc Map Converter
      * @param width
      * @param length
-     * @param size Size of box in unreal units
      * @param height
      * @return 
      */
