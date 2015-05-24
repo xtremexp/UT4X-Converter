@@ -205,6 +205,7 @@ public class T3DLight extends T3DSound {
     /**
      *
      * @param mc
+     * @param t3dClass
      */
     public T3DLight(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
