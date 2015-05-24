@@ -335,7 +335,7 @@ public class T3DPolygon {
         
         if(mapConverter != null && mapConverter.convertTextures && texture != null){
             
-            texture.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
             
             // For Unreal 3 and 4
             // we need to update the UV scaling which is dependant from texture size

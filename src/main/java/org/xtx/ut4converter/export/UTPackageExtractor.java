@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.Set;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -79,13 +81,19 @@ public abstract class UTPackageExtractor {
      */
     public static UTPackageExtractor getExtractor(MapConverter mapConverter, UPackageRessource ressource){
         
-        if(mapConverter.packageExtractor != null){
-            return mapConverter.packageExtractor;
-        } else {
-            // TODO handle for multiple extractors
-            mapConverter.packageExtractor = UCCExporter.getInstance(mapConverter);
-            return mapConverter.packageExtractor;
+        // Special case UT2004 .ogg files
+        if(ressource.getType() == T3DRessource.Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE2){
+            mapConverter.packageExtractor = new CopyExporter(mapConverter);
+        } 
+
+        else {
+            if(mapConverter.packageExtractor == null 
+                    || (mapConverter.packageExtractor != null && !(mapConverter.packageExtractor instanceof UCCExporter))){
+                mapConverter.packageExtractor = UCCExporter.getInstance(mapConverter);
+            }
         }
+
+        return mapConverter.packageExtractor;
     }
     
 }

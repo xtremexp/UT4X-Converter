@@ -515,7 +515,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             }
         }
         
-        return true;
+        return false;
     }
     
     public boolean isTo(UnrealEngine... engines){
@@ -639,7 +639,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * <UT4ConverterFolder>/Converted/<MapName>
      * @return 
      */
-    private File getMapConvertFolder(){
+    public File getMapConvertFolder(){
         return new File(getBaseConvertFolder()+ File.separator + getInMap().getName().split("\\.")[0]);
     }
     

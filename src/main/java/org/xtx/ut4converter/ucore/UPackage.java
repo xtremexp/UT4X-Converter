@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
@@ -181,28 +182,20 @@ public class UPackage {
      */
     private String getFileFolder(){
         
-        if(type == Type.MUSIC){
-            return "Music";
-        } 
-        
-        else if (type == Type.SOUND){
-            return "Sounds";
-        }
-        
-        else if (type == Type.TEXTURE){
-            return "Textures";
-        }
-        
-        else if (type == Type.STATICMESH){
-            return "StaticMeshes";
-        }
-        
-        else if (type == Type.LEVEL){
-            return "Maps";
-        }
-        
-        else if (type == Type.SCRIPT){
-            return "System";
+        if(null != type) switch (type) {
+            case MUSIC:
+                return "Music";
+            case SOUND:
+                return "Sounds";
+            case TEXTURE:
+                return "Textures";
+            case STATICMESH:
+                return "StaticMeshes";
+            case LEVEL:
+                return "Maps";
+            case SCRIPT:
+                return "System";
+            default:
         }
         
         return null;
@@ -214,28 +207,24 @@ public class UPackage {
      */
     private String getFileExtension(){
         
-        if(type == Type.MUSIC){
-            return ".umx";
-        } 
-        
-        else if (type == Type.SOUND){
-            return ".uax";
-        }
-        
-        else if (type == Type.TEXTURE){
-            return ".utx";
-        }
-        
-        else if (type == Type.STATICMESH){
-            return ".usx";
-        }
-        
-        else if (type == Type.SCRIPT){
-            return ".u";
-        }
-        
-        else if (type == Type.LEVEL){
-            return ".unr";
+        if(null != type) switch (type) {
+            case MUSIC:
+                if(game.engine == UnrealEngine.UE1){
+                    return ".umx";
+                } else if(game.engine == UnrealEngine.UE2){
+                    return ".ogg";
+                }
+            case SOUND:
+                return ".uax";
+            case TEXTURE:
+                return ".utx";
+            case STATICMESH:
+                return ".usx";
+            case SCRIPT:
+                return ".u";
+            case LEVEL:
+                return ".unr";
+            default:
         }
         
         return null;

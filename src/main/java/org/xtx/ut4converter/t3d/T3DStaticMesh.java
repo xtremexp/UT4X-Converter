@@ -167,7 +167,7 @@ public class T3DStaticMesh extends T3DSound {
         
         if(mapConverter.convertStaticMeshes){
             if(staticMesh != null){
-                staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, null));
+                staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
             }
         }
         

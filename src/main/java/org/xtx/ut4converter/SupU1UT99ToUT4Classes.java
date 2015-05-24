@@ -8,23 +8,13 @@ package org.xtx.ut4converter;
 
 import java.util.HashMap;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.t3d.T3DBrush;
-import org.xtx.ut4converter.t3d.T3DJumpPad;
-import org.xtx.ut4converter.t3d.T3DLiftExit;
-import org.xtx.ut4converter.t3d.T3DLight;
+import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
-import org.xtx.ut4converter.t3d.T3DMover;
-import org.xtx.ut4converter.t3d.T3DMoverSM;
-import org.xtx.ut4converter.t3d.T3DPlayerStart;
-import org.xtx.ut4converter.t3d.T3DPostProcessVolume;
-import org.xtx.ut4converter.t3d.T3DSound;
-import org.xtx.ut4converter.t3d.T3DTeleporter;
-import org.xtx.ut4converter.t3d.T3DZoneInfo;
         
 /**
  * FXML Controller class
  * @author XtremeXp
- * TODO merge with supportedclasses
+ * TODO merge with supportedclasses and delete this class
  */
 public class SupU1UT99ToUT4Classes extends SupportedClasses {
     
@@ -39,6 +29,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         this.mapConv = mc;
         
         // FIXME block all has wrong volume, totally screwed
+        // TODO move zones to match with T3DZoneInfo.class
         putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");//, "BlockAll");
         
         boolean isUE1 = mc.getInputGame().engine == UnrealEngine.UE1;
@@ -57,6 +48,8 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         for(T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()){
             putUtClass(T3DLight.class, ut99LightActor.name());
         }
+        
+        putUtClass(T3DLevelInfo.class, "LevelInfo");
         
         if(mc.isTo(UnrealEngine.UE3, UnrealEngine.UE4)){
            // disabled until working good
@@ -80,6 +73,7 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
         uneededActors.add("InventorySpot");
         uneededActors.add("TranslocDest");
         uneededActors.add("AntiPortalActor"); //ut2004
+        uneededActors.add("Adrenaline"); //ut2004
     }
     
     private void addMatches(MapConverter mc){

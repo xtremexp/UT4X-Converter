@@ -184,20 +184,21 @@ public class MoverProperties {
     }
     
     public void convert(){
+        
         if(openingSound != null){
-            openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, null));
+            openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound));
         }
 
         if(openedSound != null){
-            openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, null));
+            openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound));
         }
 
         if(closingSound != null){
-            closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, null));
+            closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound));
         }
 
         if(closedSound != null){
-            closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, null));
+            closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound));
         }
     }
     

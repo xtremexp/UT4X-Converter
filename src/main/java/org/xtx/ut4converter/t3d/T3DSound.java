@@ -259,7 +259,7 @@ public class T3DSound extends T3DActor {
         }
         
         if(mapConverter.convertSounds && ambientSound != null){
-            ambientSound.export(UTPackageExtractor.getExtractor(mapConverter, null));
+            ambientSound.export(UTPackageExtractor.getExtractor(mapConverter, ambientSound));
         }
         
         super.convert();

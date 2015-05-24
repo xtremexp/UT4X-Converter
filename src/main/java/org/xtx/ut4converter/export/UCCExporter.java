@@ -55,7 +55,8 @@ public final class UCCExporter extends UTPackageExtractor {
         return mapConverter.getInputGame() == UTGame.U1;
     }
     
-    private enum Name{
+    private enum Name {
+        
         UCC_EXE("ucc.exe"),
         UCC_BIN("UCCLinux.bin"),
         UT3_COM("ut3.com");
@@ -75,10 +76,12 @@ public final class UCCExporter extends UTPackageExtractor {
      * Exporter options of embedded UT extractor
      * for Unreal Packages
      */
-    private enum UccOptions{
+    private enum UccOptions {
+        
         UNKNOWN("UNKNOWN"), // fake option so will make crash export
         LEVEL_T3D("Level t3d"),
         SOUND_WAV("Sound wav"),
+        MUSIC_S3M("Music s3m"), // todo check might not always be s3m but it or xm
         TEXTURE_DDS("Texture dds"),
         TEXTURE_TGA("Texture tga"), // not working good always 0 bytes created files ... (tested UT2004)
         TEXTURE_PCX("Texture pcx"), // for U1, UT99
@@ -113,16 +116,16 @@ public final class UCCExporter extends UTPackageExtractor {
         } 
         
         else if (type == Type.MUSIC){
-            return UccOptions.UNKNOWN;
+            return UccOptions.MUSIC_S3M;
         }
         
         else if (type == Type.TEXTURE){
             
-            if(engine.version == 2){
+            if(engine == UTGames.UnrealEngine.UE2){
                 return UccOptions.TEXTURE_DDS;
             } 
             
-            else if(engine.version == 1){
+            else if(engine == UTGames.UnrealEngine.UE1){
                 return UccOptions.TEXTURE_PCX;
             }
         }
