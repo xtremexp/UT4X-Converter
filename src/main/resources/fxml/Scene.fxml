@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="600" prefWidth="800" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="600" prefWidth="800" fx:controller="org.xtx.ut4converter.ui.MainSceneController" >
     <!-- MENU BAR -->
     <top>
         <MenuBar>
