@@ -196,15 +196,25 @@ public class UPackageRessource {
     /**
      * Export the ressource from unreal package to file
      * @param packageExtractor
+     * @param forceExport Force export of package even if it has ever been extracted
      */
-    public void export(UTPackageExtractor packageExtractor) {
-        if(needExport() && packageExtractor != null){
+    public void export(UTPackageExtractor packageExtractor, boolean forceExport) {
+        
+        if((needExport() || forceExport) && packageExtractor != null){
             try {
-                packageExtractor.extract(this);
+                packageExtractor.extract(this, forceExport);
             } catch (Exception ex) {
                 packageExtractor.logger.log(Level.SEVERE, null, ex);
             }
         }
+    }
+    
+    /**
+     * Export the ressource from unreal package to file
+     * @param packageExtractor
+     */
+    public void export(UTPackageExtractor packageExtractor) {
+        export(packageExtractor, false);
     }
     
     /**
