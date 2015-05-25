@@ -136,7 +136,6 @@ but it has not been yet tested.
 Libraries / Technologies used
 ------------------------------
 - Java 1.8.0_40 - http://www.java.com
-- Sox by Chris Bagwell - 14.4.2 - http://sox.sourceforge.net/ (sound conversion)
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 
 History

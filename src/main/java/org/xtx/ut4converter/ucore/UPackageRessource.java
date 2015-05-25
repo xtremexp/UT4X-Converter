@@ -15,7 +15,7 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.ImageUtils;
-import org.xtx.ut4converter.tools.SoxSoundConverter;
+import org.xtx.ut4converter.tools.SoundConverter;
 
 /**
  * Some ressource such as texture, sound, ... 
@@ -354,11 +354,11 @@ public class UPackageRessource {
         
        // TODO convert sound ressources to wav 44k  using sox (like the good old UT3 converter)
         if(type == Type.SOUND){
-            SoxSoundConverter scs = new SoxSoundConverter(logger);
+            SoundConverter scs = new SoundConverter(logger);
             
             try {
                 File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
-                scs.convertTo44k(exportedFile, tempFile);
+                scs.convertTo16BitSampleSize(exportedFile, tempFile);
                 return tempFile;
             } catch (IOException ex) {
                 Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);

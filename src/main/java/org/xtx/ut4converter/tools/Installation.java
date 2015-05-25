@@ -138,15 +138,6 @@ public class Installation {
     }
     
     /**
-     * Returns sox executable file to convert sounds
-     * @return 
-     */
-    public static File getSoxSoundConverter(){
-
-        return new File(getProgramFolder().getAbsolutePath() + File.separator + BINARIES_FOLDER + File.separator + SOX_FOLDER + File.separator + "sox.exe");
-    }
-    
-    /**
      * 
      * @param command Command line / path to exec file
      * @param logLines Store program lofs
