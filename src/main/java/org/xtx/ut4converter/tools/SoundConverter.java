@@ -7,6 +7,9 @@ package org.xtx.ut4converter.tools;
 
 import com.sun.media.sound.WaveFileWriter;
 import java.io.File;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioFileFormat.Type;
@@ -58,15 +61,19 @@ public  class SoundConverter {
      */
     public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile){
         
-        AudioInputStream audioInputStream = null;
-        AudioFormat srcAudioFormat = null;
+        AudioInputStream audioInputStream;
+        AudioFormat srcAudioFormat;
         
-        logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
-        
+
         try {
             audioInputStream = AudioSystem.getAudioInputStream(inWaveFile);
             srcAudioFormat = audioInputStream.getFormat();
             
+            // SampleSize ever 16 bits, just do a file copy
+            if(srcAudioFormat.getSampleSizeInBits() == 16){
+                Files.copy(inWaveFile.toPath(), outWaveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                return;
+            }
 
             AudioFormat dstAudioFormat = getAudioFormat16bit(srcAudioFormat);
             
