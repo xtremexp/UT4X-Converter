@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
@@ -41,6 +42,7 @@ public class T3DUE2Terrain extends T3DActor {
      * TerrainMap
      */
     UPackageRessource heightMapTexture;
+    Dimension heightMapTextureDimensions;
     
     List<Integer> heightMap;
     
@@ -168,6 +170,7 @@ public class T3DUE2Terrain extends T3DActor {
             Installation.executeProcess(command, logs);
             
             BufferedImage image = ImageIO.read(tiffHeightMap);
+            heightMapTextureDimensions = new Dimension(image.getWidth(), image.getHeight());
             Raster rs = image.getTile(0, 0);
             
             int a[] = null;

@@ -16,7 +16,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 public class TerrainDecoLayer implements T3D {
 
     List<Decoration> decorations;
-    
+
     
     class Decoration {
         
@@ -78,5 +78,16 @@ public class TerrainDecoLayer implements T3D {
     public boolean analyseT3DData(String line) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public String toT3d(StringBuilder sb) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

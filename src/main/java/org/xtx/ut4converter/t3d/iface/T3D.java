@@ -16,4 +16,8 @@ public interface T3D {
     public abstract void scale(Double newScale);
     
     public boolean analyseT3DData(String line);
+    
+    public abstract String toT3d(StringBuilder sb);
+    
+    public abstract String getName();
 }

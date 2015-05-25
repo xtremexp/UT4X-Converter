@@ -10,10 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.geom.Rotator;
@@ -27,8 +25,13 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  */
 public class TerrainLayer implements T3D {
 
+    @Override
+    public String getName() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
-    
+
     enum TextureMapAxis {
         TEXMAPAXIS_XY,
         TEXMAPAXIS_XS,
@@ -164,6 +167,9 @@ public class TerrainLayer implements T3D {
         
     }
     
-    
+    @Override
+    public String toT3d(StringBuilder sb) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
