@@ -137,7 +137,8 @@ Libraries / Technologies used
 ------------------------------
 - Java 1.8.0_40 - http://www.java.com
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
-- Texture Toolkit for UnrealEd - 1.0 - http://www.foogod.com/UEdTexKit/
+- Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
+- Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
 
 History
 ------------------------------

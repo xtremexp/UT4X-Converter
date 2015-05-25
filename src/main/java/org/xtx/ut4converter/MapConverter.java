@@ -17,6 +17,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
+import javax.imageio.spi.IIORegistry;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
@@ -238,6 +239,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     
     private void initialise(){
         
+        // support for reading targa files
+        IIORegistry registry = IIORegistry.getDefaultInstance();
+        registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+
+
         scale = 1d;
         
         try {

@@ -5,17 +5,20 @@
  */
 package org.xtx.ut4converter.ucore.ue2;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UCCExporter;
-import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.iface.T3D;
-import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -109,14 +112,57 @@ public class TerrainLayer implements T3D {
         return true;
     }
     
-    public void load(){
+    public void load() throws IOException{
         
-        // TODO extract texture
-        if(alphaMap != null){
-            
-            
+        if(alphaMapTexture != null){
+            loadAlphaTextureMap();
         }
         
+    }
+    
+    /**
+     * Extract alpha texture map
+     * and load values.
+     * Code refactored from UT3 converter
+     */
+    private void loadAlphaTextureMap() throws IOException{
+        
+        // Export heightmap texture to .tga
+        UCCExporter uccExporter = new UCCExporter(mapConverter);
+        uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
+        File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "TerrainTga" + alphaMapTexture.getUnrealPackage().getName() + File.separator);
+        uccExporter.setForcedExportFolder(exportFolder);
+        
+        alphaMapTexture.export(uccExporter);
+        
+        Color color;
+        int value;
+        final int DEFAULT_ALPHA = 128;
+        
+        BufferedImage img = ImageIO.read(alphaMapTexture.getExportedFile());
+        
+        for(int y= (img.getWidth()-1); y >= 0; y--)
+        {
+            for(int x=0; x < img.getWidth(); x++)
+            {
+                value = img.getRGB(x, y);
+                color = new Color(value,true);
+                value = color.getAlpha();
+                alphaMap.add(value);
+
+                if(x == (img.getWidth()-1) ){
+                    alphaMap.add(DEFAULT_ALPHA);
+                }
+            }
+        }
+        
+
+        for(int x=0; x < (img.getWidth() + 1); x++)
+        {
+            alphaMap.add(DEFAULT_ALPHA);
+        }
+        
+        System.out.println(alphaMap.size());
     }
     
     
