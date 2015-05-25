@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.t3d.T3DActor;
-import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue2.TerrainDecoLayer;
 import org.xtx.ut4converter.ucore.ue2.TerrainLayer;
@@ -90,6 +87,7 @@ public class T3DUE2Terrain extends T3DActor {
         return true;
     }
     
+    @Override
     public void convert(){
         
         // TODO load heightmap data from terrain heightmap texture
