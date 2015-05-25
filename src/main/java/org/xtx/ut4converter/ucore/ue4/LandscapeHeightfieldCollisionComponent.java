@@ -32,6 +32,7 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
     
     public LandscapeHeightfieldCollisionComponent(int num){
         numComponent = 0;
+        collisionScale = 1f;
     }
 
     @Override
@@ -96,11 +97,25 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
         
         sb.append("\tBegin Object Name=\"").append(getName()).append("\"\n");
         sb.append("\t\tCollisionSizeQuads=").append(collisionSizeQuads).append("\n");
+        sb.append("\t\tCollisionScale=").append(collisionScale).append("\n");
+        
+        sb.append("\t\tRenderComponent=LandscapeComponent'").append(renderComponent.getName()).append("'\n");
         sb.append("\t\tAttachParent=RootComponent0\n");
         sb.append("\t\tCustomProperties CollisionHeightData");
         
+        int idx = 0;
+        
         for(int height : collisionHeightData){
-            sb.append("  ").append(height);
+            
+            if(idx > 0 && idx % 16 == 0){
+                sb.append("\n\t\t\t ");
+            } else {
+                sb.append(" ");
+            }
+            
+            sb.append(height);
+            
+            idx ++;
         }
         
         sb.append("\n\tEnd Object\n");

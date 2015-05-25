@@ -14,6 +14,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.iface.T3D;
@@ -79,39 +80,35 @@ public class TerrainLayer implements T3D {
 
     @Override
     public boolean analyseT3DData(String line) {
-        
+        // all data in same line
         if(line.contains("AlphaMap=")){
             alphaMapTexture = mapConverter.getUPackageRessource(line.split("AlphaMap=")[1].split("\\'")[1], T3DRessource.Type.TEXTURE);
         }
         
-        else if(line.contains("Texture=")){
+        if(line.contains("Texture=")){
             texture = mapConverter.getUPackageRessource(line.split("Texture=")[1].split("\\'")[1], T3DRessource.Type.TEXTURE);
         }
         
-        else if(line.contains("UScale")){
+        if(line.contains("UScale")){
             uScale = Float.valueOf(line.split("UScale=")[1].split("\\,")[0]);
         }
         
-        else if(line.contains("VScale")){
+        if(line.contains("VScale")){
             vScale = Float.valueOf(line.split("VScale=")[1].split("\\,")[0]);
         }
         
-        else if(line.contains("UPan")){
+        if(line.contains("UPan")){
             uPan = Float.valueOf(line.split("UPan=")[1].split("\\,")[0]);
         }
         
-        else if(line.contains("VPan")){
+        if(line.contains("VPan")){
             vPan = Float.valueOf(line.split("VPan=")[1].split("\\,")[0]);
         }
         
-        else if(line.contains("TextureRotation")){
+        if(line.contains("TextureRotation")){
             textureRotation = Float.valueOf(line.split("TextureRotation=")[1].split("\\,")[0]);
         }
-        
-        else {
-            return false;
-        }
-        
+
         return true;
     }
     
@@ -119,6 +116,10 @@ public class TerrainLayer implements T3D {
         
         if(alphaMapTexture != null){
             loadAlphaTextureMap();
+        }
+        
+        if(texture != null){
+            texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
         }
         
     }
@@ -171,5 +172,10 @@ public class TerrainLayer implements T3D {
     public String toT3d(StringBuilder sb) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public UPackageRessource getTexture() {
+        return texture;
+    }
+    
     
 }

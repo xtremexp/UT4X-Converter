@@ -188,8 +188,7 @@ public class T3DLevelConvertor extends Task<Object> {
                     logger.log(Level.SEVERE, "Error while parsing data from T3D Level File " + inT3dFile.getName());
                     logger.log(Level.SEVERE, "Line #" + linenumber + " Current Actor Class: " + uta.t3dClass + " Line:");
                     logger.log(Level.SEVERE, "\"" + line + "\"");
-                    logger.log(Level.SEVERE, "ERROR:", e.getMessage());
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ERROR:", e);
                 }
             }
 
@@ -222,7 +221,9 @@ public class T3DLevelConvertor extends Task<Object> {
             
             // write replacement actors
             for(T3DActor repActor : actor.children){
-                bw.write(repActor.toString());
+                if(repActor.isValidWriting()){
+                    bw.write(repActor.toString());
+                }
             }
         }
 

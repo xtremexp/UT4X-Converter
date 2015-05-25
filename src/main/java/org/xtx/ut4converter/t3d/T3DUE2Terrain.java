@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
@@ -181,7 +180,7 @@ public class T3DUE2Terrain extends T3DActor {
                 {
                     heightMap.add(rs.getPixel(x, y, a)[0]);
                     
-                    //Adds extra terrain point (e.g.: UT2004: 256 width-> UT3: 257 width)
+                    //Adds extra terrain point (e.g.: UT2004: 256 width-> UT3: 257 width)          
                     if(x==(rs.getWidth()-1))
                     {
                         heightMap.add(rs.getPixel(x, y, a)[0]);

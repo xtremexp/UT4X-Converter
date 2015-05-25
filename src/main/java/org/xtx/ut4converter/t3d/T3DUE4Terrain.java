@@ -8,6 +8,7 @@ package org.xtx.ut4converter.t3d;
 import java.util.ArrayList;
 import java.util.List;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeHeightfieldCollisionComponent;
@@ -25,8 +26,8 @@ public class T3DUE4Terrain extends T3DActor {
     int collisionMipLevel;
     int collisionThickness;
     
-    short componentSizeQuads;
-    short subsectionSizeQuads;
+    int componentSizeQuads;
+    int subsectionSizeQuads;
     short numSubsections;
     boolean bUsedForNavigation;
     short maxPaintedLayersPerComponent;
@@ -53,16 +54,24 @@ public class T3DUE4Terrain extends T3DActor {
         this.location = ue2Terrain.location;
         this.scale3d = ue2Terrain.scale3d;
         
+        if(!ue2Terrain.layers.isEmpty()){
+            landscapeMaterial = ue2Terrain.layers.get(0).getTexture();
+        }
+        
         int numComponent = 0;
         
+        this.componentSizeQuads = ue2Terrain.heightMapTextureDimensions.width - 1;
+        this.subsectionSizeQuads = this.componentSizeQuads;
+        
         LandscapeHeightfieldCollisionComponent collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent);
-        collisionComponent.setCollisionSizeQuads(ue2Terrain.heightMapTextureDimensions.width);
+        collisionComponent.setCollisionSizeQuads(componentSizeQuads);
         collisionComponent.setCollisionHeightData(ue2Terrain.heightMap);
         
         collisionComponents.add(collisionComponent);
                 
         LandscapeComponent landscapeComponent = new LandscapeComponent(numComponent);
         landscapeComponent.setComponentSizeQuads(componentSizeQuads);
+        landscapeComponent.setSubsectionSizeQuads(componentSizeQuads);
         
         landscapeComponent.getLandscapeHeightData().addAll(ue2Terrain.heightMap);
         // converting to much more accurate heightmap data (e.g: 32768 -> 80800080x = 2155872384)
@@ -87,14 +96,38 @@ public class T3DUE4Terrain extends T3DActor {
     @Override
     public boolean isValidWriting(){
         
-        return false; // disabled until working (crashing for the moment)
-        //return !landscapeComponents.isEmpty();
+        return !landscapeComponents.isEmpty();
+    }
+    
+    @Override
+    public void convert(){
+        
+        if(landscapeMaterial != null){
+            landscapeMaterial.export(UTPackageExtractor.getExtractor(mapConverter, landscapeMaterial));
+        }
+        
+        if(landscapeHoleMaterial != null){
+            landscapeHoleMaterial.export(UTPackageExtractor.getExtractor(mapConverter, landscapeHoleMaterial));
+        }
     }
     
     @Override
     public String toString(){
         
         sbf.append(IDT).append("Begin Actor Class=Landscape Name=").append(name).append("\n");
+        
+        for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
+            sbf.append(IDT).append("\tBegin Object Class=LandscapeHeightfieldCollisionComponent Name=\"").append(collisionComp.getName()).append("\"\n");
+            sbf.append(IDT).append("\tEnd Object\n");
+        }
+        
+        for(LandscapeComponent landscape : landscapeComponents){
+            sbf.append(IDT).append("\tBegin Object Class=LandscapeComponent Name=\"").append(landscape.getName()).append("\"\n");
+            sbf.append(IDT).append("\tEnd Object\n");
+        }
+
+        sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"RootComponent0\"\n");
+        sbf.append(IDT).append("\tEnd Object\n");
         
         for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
             collisionComp.toT3d(sbf);
@@ -108,20 +141,26 @@ public class T3DUE4Terrain extends T3DActor {
         writeLocRotAndScale();
         sbf.append(IDT).append("\tEnd Object\n");
         
+        // needs a guid or else would crash on import
+        // TODO guid generator
+        sbf.append(IDT).append("\tLandscapeGuid=51DF72704471DE2EA0AA68AE47B62710\n");
+        
         if(landscapeMaterial != null){
-            sbf.append(IDT).append("LandscapeMaterial='").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
+            sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
         }
         
         int idx = 0;
         
         for(LandscapeComponent landscape : landscapeComponents){
             sbf.append(IDT).append("\tLandscapeComponents(").append(idx).append(")=LandscapeComponent'").append(landscape.getName()).append("'\n");
+            idx ++;
         }
         
         idx = 0;
         
         for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
             sbf.append(IDT).append("\tCollisionComponents(").append(idx).append(")=CollisionComponent'").append(collisionComp.getName()).append("'\n");
+            idx ++;
         }
         
         sbf.append(IDT).append("\tComponentSizeQuads=").append(componentSizeQuads).append("\n");

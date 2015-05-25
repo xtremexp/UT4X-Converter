@@ -23,9 +23,9 @@ public class LandscapeComponent implements T3D {
     
     short sectionBaseY;
     
-    short componentSizeQuads;
+    int componentSizeQuads;
     
-    short subsectionSizeQuads;
+    int subsectionSizeQuads;
     
     Vector4d weightmapScaleBias;
     
@@ -71,11 +71,11 @@ public class LandscapeComponent implements T3D {
         this.sectionBaseY = sectionBaseY;
     }
 
-    public void setComponentSizeQuads(short componentSizeQuads) {
+    public void setComponentSizeQuads(int componentSizeQuads) {
         this.componentSizeQuads = componentSizeQuads;
     }
 
-    public void setSubsectionSizeQuads(short subsectionSizeQuads) {
+    public void setSubsectionSizeQuads(int subsectionSizeQuads) {
         this.subsectionSizeQuads = subsectionSizeQuads;
     }
 
@@ -131,15 +131,28 @@ public class LandscapeComponent implements T3D {
         
         String base = "\t\t";
         
-        sb.append(base).append("\tBegin Object Name=\"").append(getName()).append("\"\n");
+        sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
         sb.append(base).append("\tComponentSizeQuads=").append(componentSizeQuads).append("\n");
         sb.append(base).append("\tSubsectionSizeQuads=").append(subsectionSizeQuads).append("\n");
         sb.append(base).append("\tNumSubsections=").append(numSubsections).append("\n");
+        
+        sb.append(base).append("\tCollisionComponent=LandscapeHeightfieldCollisionComponent'").append(colisionComponent.getName()).append("'\n");
         sb.append(base).append("\tAttachParent=RootComponent0\n");
         sb.append(base).append("\tCustomProperties LandscapeHeightData");
         
+        int idx = 0;
+        
         for(int height : landscapeHeightData){
-            sb.append("  ").append(Integer.toHexString(height));
+            
+            if(idx > 0 && idx % 16 == 0){
+                sb.append("\n\t\t\t ");
+            } else {
+                sb.append(" ");
+            }
+            
+            sb.append(Integer.toHexString(height));
+            
+            idx ++;
         }
         
         sb.append(" NumLayer=0\n");
