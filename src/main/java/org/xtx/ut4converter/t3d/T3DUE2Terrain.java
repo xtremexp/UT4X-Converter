@@ -5,10 +5,20 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue2.TerrainDecoLayer;
 import org.xtx.ut4converter.ucore.ue2.TerrainLayer;
@@ -28,14 +38,20 @@ public class T3DUE2Terrain extends T3DActor {
     List<TerrainLayer> layers;
     
     /**
-     * Terrain heightmap
+     * TerrainMap
      */
-    UPackageRessource terrainMap;
+    UPackageRessource heightMapTexture;
+    
+    List<Integer> heightMap;
     
     Vector3d terrainScale;
     short terrainSectorSize;
     
     UPackageRessource vertexLightMap;
+    
+    /**
+     * Invisible pieces of terrain
+     */
     List<Integer> quadVisibilityBitmaps;
     
     
@@ -49,6 +65,7 @@ public class T3DUE2Terrain extends T3DActor {
         decoLayers = new ArrayList<>();
         layers = new ArrayList<>();
         quadVisibilityBitmaps = new ArrayList<>();
+        heightMap = new ArrayList<>();
     }
     
     @Override
@@ -56,15 +73,15 @@ public class T3DUE2Terrain extends T3DActor {
         
         // TerrainMap=Texture'myLevel.Package0.TowerHeightMap'
         if(line.startsWith("TerrainMap=")){
-            terrainMap = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
+            heightMapTexture = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
         } 
         // TerrainScale=(X=15.000000,Y=15.000000,Z=2.000000)
         else if(line.startsWith("TerrainScale")){
             terrainScale = T3DUtils.getVector3d(line, 1d);
         }
         
-        else if(line.startsWith("Layers(")){
-            TerrainLayer terrainLayer = new TerrainLayer();
+        else if(line.startsWith("Layers(") && line.contains("AlphaMap=")){
+            TerrainLayer terrainLayer = new TerrainLayer(mapConverter);
             terrainLayer.analyseT3DData(line);
             
             layers.add(terrainLayer);
@@ -90,9 +107,86 @@ public class T3DUE2Terrain extends T3DActor {
     @Override
     public void convert(){
         
-        // TODO load heightmap data from terrain heightmap texture
+        try {
+            // TODO terrain data from heightmap, layer/decolayer textures
+            loadTerrainData();
+            
+            // TODO convert to UT4
+            if(mapConverter.isTo(UnrealEngine.UE4)){
+                T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
+                replaceWith(ue4Terrain);
+            }
+        } catch (InterruptedException | IOException ex) {
+            mapConverter.getLogger().log(Level.SEVERE, "Could not load terrain data", ex);
+        }
+    }
+    
+    /**
+     * Loads terrain heightmap and layers data from textures
+     */
+    private void loadTerrainData() throws InterruptedException, IOException{
         
-        // TODO convert to UT4
+        for(TerrainLayer layer : layers){
+            layer.load();
+        }
+        
+        for(TerrainDecoLayer decoLayer : decoLayers){
+            decoLayer.load();
+        }
+        
+        loadHeightMap();
+    }
+    
+    /**
+     * Loads heightmap data from heightmap texture.
+     * Code adapted refactored from good old ut3 converter
+     * @throws InterruptedException
+     * @throws IOException 
+     */
+    private void loadHeightMap() throws InterruptedException, IOException{
+        
+        // extract texture
+        if(heightMapTexture != null){
+            
+            // Export heightmap texture to .bmp
+            UCCExporter uccExporter = new UCCExporter(mapConverter);
+            uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_BMP);
+            File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + heightMapTexture.getUnrealPackage().getName() + File.separator);
+            uccExporter.setForcedExportFolder(exportFolder);
+            
+            heightMapTexture.export(uccExporter);
+            
+            // Convert heightmap texture to .tiff
+            List<String> logs = new ArrayList<>();
+            File bmpHeightMap = heightMapTexture.getExportedFile();
+            File tiffHeightMap = new File(exportFolder + bmpHeightMap.getName().split("\\.")[0] + ".tiff");
+            
+            String command = Installation.getG16ConvertFile() + " " + bmpHeightMap + " " + tiffHeightMap;
+            
+            mapConverter.getLogger().log(Level.INFO, "Converting " + bmpHeightMap.getName() + " to " + tiffHeightMap.getName() + " terrain texture");
+            
+            Installation.executeProcess(command, logs);
+            
+            BufferedImage image = ImageIO.read(tiffHeightMap);
+            Raster rs = image.getTile(0, 0);
+            
+            int a[] = null;
+            
+            for(int y=0; y < rs.getWidth(); y++)
+            {
+                for(int x=0;x<rs.getHeight();x++)
+                {
+                    heightMap.add(rs.getPixel(x, y, a)[0]);
+                    
+                    //Adds extra terrain point (e.g.: UT2004: 256 width-> UT3: 257 width)
+                    if(x==(rs.getWidth()-1))
+                    {
+                        heightMap.add(rs.getPixel(x, y, a)[0]);
+                    }
+                }
+            }
+            
+        }
     }
     
 }

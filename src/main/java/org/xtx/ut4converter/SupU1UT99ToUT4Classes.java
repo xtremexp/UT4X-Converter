@@ -56,6 +56,10 @@ public class SupU1UT99ToUT4Classes extends SupportedClasses {
             // putUtClass(T3DZoneInfo.class, "ZoneInfo");
         }
         
+        if(mc.isFrom(UnrealEngine.UE2)){
+            putUtClass(T3DUE2Terrain.class, "TerrainInfo");
+        }
+        
         for(T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()){
             putUtClass(T3DLight.class, ue34LightActor.name());
         }

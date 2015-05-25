@@ -79,6 +79,9 @@ public class TerrainDecoLayer implements T3D {
         this.staticMesh = staticMesh;
     }
     
+    public void load(){
+        // TODO
+    }
     
     
 }

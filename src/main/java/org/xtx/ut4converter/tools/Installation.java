@@ -32,7 +32,6 @@ public class Installation {
      * Where all "external" programs should be for converting/extracting stuff
      */
     private static final String BINARIES_FOLDER = "bin";
-    private static final String SOX_FOLDER = "Sox";
     
   /**
    * Test is the current running program is installed.
@@ -101,6 +100,11 @@ public class Installation {
     public static File getProgramFolder()
     {
         return Installation.getInstallDirectory(MainApp.class);
+    }
+    
+    public static File getG16ConvertFile()
+    {
+        return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
     }
     
     private static final String OS = System.getProperty("os.name").toLowerCase();

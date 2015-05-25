@@ -48,6 +48,8 @@ public final class UCCExporter extends UTPackageExtractor {
      * Depends of user game settings
      */
     File uccExporterPath;
+    
+    UccOptions forcedUccOption;
 
     @Override
     public boolean supportLinux() {
@@ -76,13 +78,14 @@ public final class UCCExporter extends UTPackageExtractor {
      * Exporter options of embedded UT extractor
      * for Unreal Packages
      */
-    private enum UccOptions {
+    public static enum UccOptions {
         
         UNKNOWN("UNKNOWN"), // fake option so will make crash export
         LEVEL_T3D("Level t3d"),
         SOUND_WAV("Sound wav"),
         MUSIC_S3M("Music s3m"), // todo check might not always be s3m but it or xm
         TEXTURE_DDS("Texture dds"),
+        TEXTURE_BMP("Texture bmp"), // mainly for terrain alpha map
         TEXTURE_TGA("Texture tga"), // not working good always 0 bytes created files ... (tested UT2004)
         TEXTURE_PCX("Texture pcx"), // for U1, UT99
         STATICMESH_T3D("StaticMesh t3d"),
@@ -110,6 +113,10 @@ public final class UCCExporter extends UTPackageExtractor {
      * @return ucc command line options
      */
     private UccOptions getUccOptions(Type type, UTGames.UnrealEngine engine){
+        
+        if(forcedUccOption != null){
+            return forcedUccOption;
+        }
         
         if(type == Type.SOUND){
             return UccOptions.SOUND_WAV;
@@ -141,7 +148,7 @@ public final class UCCExporter extends UTPackageExtractor {
         return UccOptions.UNKNOWN;
     }
     
-    private UCCExporter(MapConverter mapConverter) {
+    public UCCExporter(MapConverter mapConverter) {
         super(mapConverter);
         
         userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
@@ -324,7 +331,7 @@ public final class UCCExporter extends UTPackageExtractor {
         boolean noDelete = false;
         
         try {
-            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" "+unrealPackage.type.name()+" package");
+            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" "+unrealPackage.type.name()+" package (mode: " + getUccOptions(unrealPackage.type, mapConverter.getInputGame().engine) + ")");
 
             // Copy of unreal package to folder of ucc.exe (/System) for U1/U2
             unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(gamePath).getName());
@@ -430,4 +437,15 @@ public final class UCCExporter extends UTPackageExtractor {
         
         System.exit(0);
     }
+
+    /**
+     * Force ucc option.
+     * Might be used to force export to .tga (for terrain alpha map for example)
+     * @param forcedUccOption 
+     */
+    public void setForcedUccOption(UccOptions forcedUccOption) {
+        this.forcedUccOption = forcedUccOption;
+    }
+    
+    
 }

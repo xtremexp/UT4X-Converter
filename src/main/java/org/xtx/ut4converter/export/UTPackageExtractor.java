@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.Set;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -33,6 +32,11 @@ public abstract class UTPackageExtractor {
     public Logger logger;
     
     /**
+     * Force export folder
+     */
+    File forcedExportFolder;
+    
+    /**
      * 
      * @param mapConverter Map converter 
      */
@@ -50,6 +54,10 @@ public abstract class UTPackageExtractor {
      * @return 
      */
     protected File getExportFolder(T3DRessource.Type type){
+        
+        if(forcedExportFolder != null){
+            return forcedExportFolder;
+        }
         
         return new File(mapConverter.getTempExportFolder() + File.separator + type.name() + File.separator);
     }
@@ -95,5 +103,16 @@ public abstract class UTPackageExtractor {
 
         return mapConverter.packageExtractor;
     }
+
+    /**
+     * Force ut package to be exported to this folder
+     * rather than the default one /UT4Converter/<mapname>/Temp
+     * @param forcedExportFolder 
+     */
+    public void setForcedExportFolder(File forcedExportFolder) {
+        this.forcedExportFolder = forcedExportFolder;
+    }
+    
+    
     
 }

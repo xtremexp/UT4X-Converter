@@ -137,6 +137,7 @@ Libraries / Technologies used
 ------------------------------
 - Java 1.8.0_40 - http://www.java.com
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
+- Texture Toolkit for UnrealEd - 1.0 - http://www.foogod.com/UEdTexKit/
 
 History
 ------------------------------
