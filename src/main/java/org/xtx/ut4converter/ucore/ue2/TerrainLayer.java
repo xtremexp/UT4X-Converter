@@ -130,10 +130,10 @@ public class TerrainLayer implements T3D {
         // Export heightmap texture to .tga
         UCCExporter uccExporter = new UCCExporter(mapConverter);
         uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
-        File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "TerrainTga" + alphaMapTexture.getUnrealPackage().getName() + File.separator);
+        File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + alphaMapTexture.getUnrealPackage().getName() + File.separator);
         uccExporter.setForcedExportFolder(exportFolder);
         
-        alphaMapTexture.export(uccExporter);
+        alphaMapTexture.export(uccExporter, true);
         
         Color color;
         int value;
@@ -162,7 +162,6 @@ public class TerrainLayer implements T3D {
             alphaMap.add(DEFAULT_ALPHA);
         }
         
-        System.out.println(alphaMap.size());
     }
     
     

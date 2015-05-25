@@ -151,10 +151,10 @@ public class T3DUE2Terrain extends T3DActor {
             // Export heightmap texture to .bmp
             UCCExporter uccExporter = new UCCExporter(mapConverter);
             uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_BMP);
-            File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "TerrainBmp" + heightMapTexture.getUnrealPackage().getName() + File.separator);
+            File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + heightMapTexture.getUnrealPackage().getName() + File.separator);
             uccExporter.setForcedExportFolder(exportFolder);
             
-            heightMapTexture.export(uccExporter);
+            heightMapTexture.export(uccExporter, true);
             
             // Convert heightmap texture to .tiff
             List<String> logs = new ArrayList<>();

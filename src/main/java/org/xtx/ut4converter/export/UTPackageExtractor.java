@@ -66,10 +66,11 @@ public abstract class UTPackageExtractor {
     /**
      * Extract ressource, generally some package that contains multiple files (ressources)
      * @param ressource
+     * @param forceExport
      * @return List of files exported
      * @throws java.lang.Exception If anythings goes wrong when exporting this ressource
      */
-    public abstract Set<File> extract(UPackageRessource ressource) throws Exception;
+    public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception;
     
     public abstract File getExporterPath();
     

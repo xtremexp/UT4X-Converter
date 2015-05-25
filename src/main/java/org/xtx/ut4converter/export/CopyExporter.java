@@ -27,7 +27,7 @@ public class CopyExporter extends UTPackageExtractor {
     }
 
     @Override
-    public Set<File> extract(UPackageRessource ressource) throws Exception {
+    public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
         
         File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath());
         File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
