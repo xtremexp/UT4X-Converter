@@ -10,62 +10,101 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="ConversionSettings" prefHeight="400.0" prefWidth="700.0" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
     
-    <VBox>
-        <TitledPane fx:id="mainSettingsTitle" expanded="true" > 
+    <BorderPane prefHeight="400.0" prefWidth="700.0">
+
+        <center>
             <VBox>
-                <GridPane hgap="10" vgap="10" >
-                    <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Input Game:</Label>  
-                    <Label GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="inputGameLbl">UT3</Label> 
+            <TitledPane fx:id="mainSettingsTitle" expanded="true" > 
+                
+                    <GridPane hgap="10" vgap="10" >
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Input Game:</Label>  
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="inputGameLbl">UT3</Label> 
 
-                    <Label GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.fillWidth="true" >Output Game:</Label>  
-                    <Label GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.columnSpan="2" fx:id="outputGameLbl">UT4</Label> 
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.fillWidth="true" >Output Game:</Label>  
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.columnSpan="2" fx:id="outputGameLbl">UT4</Label> 
 
-                    <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Input Map:</Label> 
-                    <Label GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="inputMapLbl">NOT SET</Label> 
-                    <Button GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#selectInputMap" >Select Map</Button>
+                        <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Input Map:</Label> 
+                        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="inputMapLbl" prefWidth="350.0">Select Map!</Label> 
+                        <Button GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#selectInputMap" >Select Map</Button>
 
-                    <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Output Folder:</Label> 
-                    <Label GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="outputFolderLbl">The folder</Label> 
+                        <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Output Folder:</Label> 
+                        <Label GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="outputFolderLbl">The folder</Label> 
                     
-                    <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Scale Factor:</Label> 
-                    <ListView GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="scaleFactorList">
+                        <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Scale Factor:</Label> 
+                        <ComboBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="scaleFactorList" promptText="how much the map will be scaled" >
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="1"/>
+                                    <String fx:value="1.5"/>
+                                    <String fx:value="1.75"/>
+                                    <String fx:value="2"/>
+                                    <String fx:value="2.2"/>
+                                    <String fx:value="2.5"/>
+                                    <String fx:value="3"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    
+                        <Separator GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="6"></Separator>
+
+                        <Label GridPane.rowIndex="5" GridPane.columnIndex="0">Convert Textures:</Label>
+                        <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="convTexCheckBox" onAction="#toggleTexConversion" ></CheckBox>
+
+                        <Label GridPane.rowIndex="5" GridPane.columnIndex="2">Convert Sounds:</Label>
+                        <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="3" fx:id="convSndCheckBox" onAction="#toggleSndConversion"></CheckBox>
+
+                        <Label GridPane.rowIndex="6" GridPane.columnIndex="0">Convert Music</Label>
+                        <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
+
+                        <Label GridPane.rowIndex="6" GridPane.columnIndex="2">Convert StaticMeshes:</Label>
+                        <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="3" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
+                    </GridPane>
+                
+            </TitledPane>
+            
+        
+            <TitledPane fx:id="advancedSettingsTitle" expanded="false" > 
+                <GridPane hgap="10" vgap="10" >
+                
+                    <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Lightning Brightness Factor:</Label>
+                    <ComboBox GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="0.6"/>
+                                <String fx:value="0.8"/>
                                 <String fx:value="1"/>
+                                <String fx:value="1.2"/>
                                 <String fx:value="1.5"/>
-                                <String fx:value="1.75"/>
                                 <String fx:value="2"/>
-                                <String fx:value="2.2"/>
-                                <String fx:value="2.5"/>
-                                <String fx:value="3"/>
                             </FXCollections>
                         </items>
-                    </ListView>
-                    
-                    <Separator GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="6"></Separator>
-
-                    <Button GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.halignment="CENTER" onAction="#convert">Convert</Button>
-                    <Button GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.halignment="CENTER" onAction="#close">Cancel</Button>
+                    </ComboBox>
+                
+                    <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Sound Volume Factor:</Label>
+                    <ComboBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="soundVolumeFactor"  promptText="changes volume of all sounds of map">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="0.6"/>
+                                <String fx:value="0.8"/>
+                                <String fx:value="1"/>
+                                <String fx:value="1.2"/>
+                                <String fx:value="1.5"/>
+                                <String fx:value="2"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                
                 </GridPane>
+            </TitledPane>
             </VBox>
-        </TitledPane>
         
-        <TitledPane fx:id="advancedSettingsTitle" expanded="false" > 
-            <GridPane hgap="10" vgap="10" >
-                
-                <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Convert Textures:</Label>
-                <CheckBox GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="convTexCheckBox" onAction="#toggleTexConversion" ></CheckBox>
-                
-                <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Convert Sounds:</Label>
-                <CheckBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="convSndCheckBox" onAction="#toggleSndConversion"></CheckBox>
-                
-                <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Convert Music</Label>
-                <CheckBox GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
-                
-                <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Convert StaticMeshes:</Label>
-                <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
-                
-            </GridPane>
-        </TitledPane>
-    </VBox>
+        </center>
+        
+        <bottom>
+            <HBox>
+                <Button onAction="#convert">Convert</Button>
+                <Button onAction="#close">Cancel</Button>
+            </HBox>
+        </bottom>
+    </BorderPane>
 </AnchorPane>

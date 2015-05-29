@@ -249,7 +249,11 @@ public class T3DSound extends T3DActor {
                
                 // decreasing sound volume from UT2004 because seems "loudy" in UT4 ...
                 if(mapConverter.isFrom(UTGames.UnrealEngine.UE2)){
-                    soundVolume *= 0.2;
+                    soundVolume *= 0.15;
+                }
+                
+                if(mapConverter.soundVolumeFactor != null){
+                    soundVolume = Math.min(1, soundVolume * mapConverter.soundVolumeFactor);
                 }
             }
             

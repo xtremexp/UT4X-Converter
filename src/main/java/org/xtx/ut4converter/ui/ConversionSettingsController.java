@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
@@ -74,7 +75,11 @@ public class ConversionSettingsController implements Initializable {
     
     BigDecimal scaleFactor = new BigDecimal("2.2");
     @FXML
-    private ListView<String> scaleFactorList;
+    private ComboBox<String> scaleFactorList;
+    @FXML
+    private ComboBox<String> lightningBrightnessFactor;
+    @FXML
+    private ComboBox<String> soundVolumeFactor;
     
     /**
      * Initializes the controller class.
@@ -84,7 +89,10 @@ public class ConversionSettingsController implements Initializable {
         // TODO
         advancedSettingsTitle.setText("Advanced Settings");
         mainSettingsTitle.setText("Main Settings");
+        
         scaleFactorList.getSelectionModel().select(String.valueOf(scaleFactor));
+        lightningBrightnessFactor.getSelectionModel().select("1");
+        soundVolumeFactor.getSelectionModel().select("1");
     }    
 
     public void setDialogStage(Stage dialogStage) {
@@ -130,7 +138,12 @@ public class ConversionSettingsController implements Initializable {
         
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select "+inputGame.shortName+" map");
-        chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+        
+        File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+        
+        if(mapFolder.exists()){
+            chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+        }
         
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
         File unrealMap = chooser.showOpenDialog(new Stage());
@@ -149,7 +162,11 @@ public class ConversionSettingsController implements Initializable {
         if(checkConversionSettings()){
             
             dialogStage.close();
+            
             mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
+            mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
+            mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
+            
             mapConverter.setConversionViewController(mainApp.showConversionView());
 
             SwingUtilities.invokeLater(mapConverter);

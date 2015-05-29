@@ -442,6 +442,9 @@ public class T3DLight extends T3DSound {
             }
         }
         
+        if(intensity != null && mapConverter.brightnessFactor != null){
+            intensity *= mapConverter.brightnessFactor;
+        }
         
 
         attenuationRadius = radius;
