@@ -102,13 +102,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * If <code>true</code> textures of the map
      * will be exported and converted.
      */
-    public boolean convertTextures = true;
+    private boolean convertTextures = true;
     
     /**
      * If <code>true</code> sounds of the map
      * will be exported and converted
      */
-    public boolean convertSounds = true;
+    private boolean convertSounds = true;
     
     /**
      * Changes sound volume of sound actors.
@@ -126,13 +126,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * If <code>true</code> staticmeshes of the map
      * will be exported and converted
      */
-    public boolean convertStaticMeshes = true;
+    private boolean convertStaticMeshes = true;
     
     /**
      * If <code>true</code> music of the map
      * will be exported and converted
      */
-    public boolean convertMusic = true;
+    private boolean convertMusic = true;
     
     /**
      * Allow to extract packages.
@@ -264,6 +264,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         return tm.getActorClassMatch(inputGame, outputGame);
     }
     
+    private void initOutMapName(){
+        if(outMapName==null){
+            // TODO being able to set it manually (chosen by user)
+            outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
+
+            // Remove bad chars from name (e.g: DM-Cybrosis][ ->  DM-Cybrosis)
+            // else ue4 editor won't be able to set sounds or textures to actors
+            outMapName = T3DUtils.filterName(outMapName);
+        }
+    }
+    
     private void initialise(){
         
         if(this.outPath == null){
@@ -291,14 +302,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             
             getTempExportFolder().mkdirs();
             
-            if(outMapName==null){
-                // TODO being able to set it manually (chosen by user)
-                outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
-                
-                // Remove bad chars from name (e.g: DM-Cybrosis][ ->  DM-Cybrosis)
-                // else ue4 editor won't be able to set sounds or textures to actors
-                outMapName = T3DUtils.filterName(outMapName);
-            }
+            initOutMapName();
             
             supportedActorClasses = new SupU1UT99ToUT4Classes(this);
             
@@ -456,6 +460,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             }
         }
         
+        updateMessage("Deleting temporary files");
         // DELETE ALL IN TEMP FOLDER
         for(File f : getTempExportFolder().listFiles()){
             f.delete();
@@ -797,6 +802,39 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     public Path getOutPath() {
         return outPath;
     }
+
+    public boolean convertTextures() {
+        return convertTextures;
+    }
+
+    public boolean convertSounds() {
+        return convertSounds;
+    }
+
+    public boolean convertStaticMeshes() {
+        return convertStaticMeshes;
+    }
+
+    public boolean convertMusic() {
+        return convertMusic;
+    }
+
+    public void setConvertTextures(boolean convertTextures) {
+        this.convertTextures = convertTextures;
+    }
+
+    public void setConvertSounds(boolean convertSounds) {
+        this.convertSounds = convertSounds;
+    }
+
+    public void setConvertStaticMeshes(boolean convertStaticMeshes) {
+        this.convertStaticMeshes = convertStaticMeshes;
+    }
+
+    public void setConvertMusic(boolean convertMusic) {
+        this.convertMusic = convertMusic;
+    }
+    
     
     
 }

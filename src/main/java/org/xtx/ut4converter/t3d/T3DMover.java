@@ -23,6 +23,7 @@ public class T3DMover extends T3DBrush {
     /**
      *
      * @param mc
+     * @param t3dClass
      */
     public T3DMover(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
@@ -32,7 +33,7 @@ public class T3DMover extends T3DBrush {
     @Override
     public boolean analyseT3DData(String line) {
         
-        if(moverProperties.analyseT3DData(line, mapConverter)) {
+        if(moverProperties.analyseT3DData(line)) {
 
 
         } else {
@@ -83,7 +84,7 @@ public class T3DMover extends T3DBrush {
     @Override
     public void convert(){
         
-        if(mapConverter.convertSounds){
+        if(mapConverter.convertSounds()){
             moverProperties.convert();
         }
         

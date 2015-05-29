@@ -105,7 +105,7 @@ public class T3DLevelInfo extends T3DActor {
         
         children.add(note);
         
-        if(music != null && mapConverter.convertMusic){
+        if(music != null && mapConverter.convertMusic()){
             music.export(UTPackageExtractor.getExtractor(mapConverter, music));
         }
     }

@@ -333,7 +333,7 @@ public class T3DPolygon {
     
     public void convert(){
         
-        if(mapConverter != null && mapConverter.convertTextures && texture != null){
+        if(mapConverter != null && mapConverter.convertTextures() && texture != null){
             
             texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
             

@@ -165,7 +165,7 @@ public class T3DStaticMesh extends T3DSound {
     @Override
     public void convert(){
         
-        if(mapConverter.convertStaticMeshes){
+        if(mapConverter.convertStaticMeshes()){
             if(staticMesh != null){
                 staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
             }

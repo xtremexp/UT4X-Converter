@@ -26,7 +26,7 @@ public class T3DMoverSM extends T3DStaticMesh  {
     @Override
     public boolean analyseT3DData(String line) {
         
-        if(moverProperties.analyseT3DData(line, mapConverter)) {
+        if(moverProperties.analyseT3DData(line)) {
 
 
         } else {
@@ -58,7 +58,7 @@ public class T3DMoverSM extends T3DStaticMesh  {
     @Override
     public void convert(){
         
-        if(mapConverter.convertSounds){
+        if(mapConverter.convertSounds()){
             moverProperties.convert();
         }
         

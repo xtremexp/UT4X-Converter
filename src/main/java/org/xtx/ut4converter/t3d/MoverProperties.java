@@ -8,9 +8,9 @@ package org.xtx.ut4converter.t3d;
 import java.util.ArrayList;
 import java.util.List;
 import javax.vecmath.Vector3d;
-import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import static org.xtx.ut4converter.t3d.T3DActor.IDT;
+import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -20,7 +20,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * for sharing same properties
  * @author XtremeXp
  */
-public class MoverProperties {
+public class MoverProperties implements T3D {
     
     /**
      * Sounds used by movers when it started moving, is moving ...
@@ -69,7 +69,8 @@ public class MoverProperties {
         this.mover = mover;
     }
     
-    public boolean analyseT3DData(String line, MapConverter mapConverter) {
+    @Override
+    public boolean analyseT3DData(String line) {
         // UE1 -> 'Wait at top time' (UE4)
         if(line.contains("StayOpenTime")){
             stayOpenTime = T3DUtils.getDouble(line);
@@ -87,27 +88,27 @@ public class MoverProperties {
         
         // UE1 -> 'CloseStartSound' ? (UE4)
         else if(line.contains("ClosedSound=")){
-            closedSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);;
+            closedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);;
         }
         
         // UE1 -> 'CloseStopSound' ? (UE4)
         else if(line.contains("ClosingSound=")){
-            closingSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            closingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         }
         
         // UE1 -> 'OpenStartSound' ? (UE4)
         else if(line.contains("OpeningSound=")){
-            openingSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            openingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         }
         
         // UE1 -> 'OpenStopSound' ? (UE4)
         else if(line.contains("OpenedSound=")){
-            openedSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            openedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         }
         
         // UE1 -> 'Closed Sound' (UE4)
         else if(line.contains("MoveAmbientSound=")){
-            moveAmbientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+            moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         }
         
         // UE1 -> 'Lift Destination' (UE12)
@@ -183,6 +184,7 @@ public class MoverProperties {
         return sbf.toString();
     }
     
+    @Override
     public void convert(){
         
         if(openingSound != null){
@@ -202,9 +204,21 @@ public class MoverProperties {
         }
     }
     
+    @Override
     public void scale(Double newScale){
+        
         for(Vector3d position : positions){
             position.scale(newScale);
         }
+    }
+
+    @Override
+    public String toT3d(StringBuilder sb) {
+        return toString(sb);
+    }
+
+    @Override
+    public String getName() {
+        return mover.name;
     }
 }

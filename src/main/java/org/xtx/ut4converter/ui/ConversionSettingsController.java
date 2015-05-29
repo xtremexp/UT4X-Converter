@@ -80,6 +80,8 @@ public class ConversionSettingsController implements Initializable {
     private ComboBox<String> lightningBrightnessFactor;
     @FXML
     private ComboBox<String> soundVolumeFactor;
+    @FXML
+    private Label outMapNameLbl;
     
     /**
      * Initializes the controller class.
@@ -127,10 +129,44 @@ public class ConversionSettingsController implements Initializable {
         
         mapConverter = new MapConverter(inputGame, outputGame);
         
-        convSndCheckBox.setSelected(mapConverter.convertSounds);
-        convTexCheckBox.setSelected(mapConverter.convertTextures);
-        convMusicCheckBox.setSelected(mapConverter.convertMusic);
-        convSmCheckBox.setSelected(mapConverter.convertStaticMeshes);
+        disableConversionType();
+        
+        initConvCheckBoxes();
+    }
+    
+    private void initConvCheckBoxes(){
+        convSndCheckBox.setSelected(mapConverter.convertSounds());
+        convTexCheckBox.setSelected(mapConverter.convertTextures());
+        convMusicCheckBox.setSelected(mapConverter.convertMusic());
+        convSmCheckBox.setSelected(mapConverter.convertStaticMeshes());
+    }
+    
+    /**
+     * Temp hack
+     * Disable conversion of some type of ressources depending on game
+     * because all ressource converter not done yet
+     * TODO implement if conversion is possible for some specific type of ressource
+     */
+    private void disableConversionType(){
+        
+        // SM converter not yet operational
+        mapConverter.setConvertStaticMeshes(false);
+        convSmCheckBox.setDisable(true);
+        
+        // need add interface with umodel or my custom tex extractor
+        // until we can re-enable conversion of some ressources
+        if(inputGame == UTGames.UTGame.UT3){
+            mapConverter.noConvertRessources();
+            
+            convSndCheckBox.setDisable(true);
+            convTexCheckBox.setDisable(true);
+            convMusicCheckBox.setDisable(true);
+            convSmCheckBox.setDisable(true);
+        }
+        else if(inputGame == UTGames.UTGame.U2){
+            mapConverter.setConvertTextures(false);
+            convTexCheckBox.setDisable(true);
+        }
     }
 
     @FXML
@@ -149,9 +185,10 @@ public class ConversionSettingsController implements Initializable {
         File unrealMap = chooser.showOpenDialog(new Stage());
         
         if(unrealMap != null){
-            inputMapLbl.setText(unrealMap.getAbsolutePath());
+            inputMapLbl.setText(unrealMap.getName());
             mapConverter.setInMap(unrealMap);
             outputFolderLbl.setText(mapConverter.getOutPath().toString());
+            outMapNameLbl.setText(mapConverter.getOutMapName());
         }
     }
     
@@ -199,22 +236,22 @@ public class ConversionSettingsController implements Initializable {
 
     @FXML
     private void toggleTexConversion(ActionEvent event) {
-        mapConverter.convertTextures = convTexCheckBox.isSelected();
+        mapConverter.setConvertTextures(convTexCheckBox.isSelected());
     }
 
     @FXML
     private void toggleSndConversion(ActionEvent event) {
-        mapConverter.convertSounds = convSndCheckBox.isSelected();
+        mapConverter.setConvertSounds(convSndCheckBox.isSelected());
     }
 
     @FXML
     private void toggleSmConversion(ActionEvent event) {
-        mapConverter.convertStaticMeshes = convSmCheckBox.isSelected();
+        mapConverter.setConvertStaticMeshes(convSmCheckBox.isSelected());
     }
 
     @FXML
     private void toggleMusicConversion(ActionEvent event) {
-        mapConverter.convertMusic = convMusicCheckBox.isSelected();
+        mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
     }
     
     
