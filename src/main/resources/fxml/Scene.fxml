@@ -37,7 +37,6 @@
             </Menu>
             <Menu text="?">
                 <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
-                <MenuItem text="Checkout source code" onAction="#openGitHubUrl" fx:id="menuCheckoutSourceCode"/>
                 <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
             </Menu>
         </MenuBar>

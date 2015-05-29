@@ -3,7 +3,6 @@ package org.xtx.ut4converter;
 
 import java.io.IOException;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -35,6 +34,28 @@ public class MainApp extends Application {
      */
     public static final String AUTHOR = "XtremeXp";
     
+    /**
+     * All scenes should be enumerated here
+     */
+    public static enum FXMLoc {
+        
+        MAIN("/fxml/Scene.fxml"),
+        WELCOME("/fxml/WelcomeView.fxml"),
+        SETTINGS("/fxml/SettingsScene.fxml"),
+        CONVERSION("/fxml/ConversionView.fxml");
+        
+        String path;
+        
+        FXMLoc (String path){
+            this.path = path;
+        }
+        
+        public String getPath(){
+            return path;
+        }
+        
+    }
+    
     Stage primaryStage;
     BorderPane rootLayout;
 
@@ -58,7 +79,7 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("/fxml/Scene.fxml"));
+            loader.setLocation(MainApp.class.getResource(FXMLoc.MAIN.path));
             rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout.
@@ -89,7 +110,7 @@ public class MainApp extends Application {
      * Shows the welcome overview inside the root layout.
      */
     public void showWelcomeView() {
-        showView("/fxml/WelcomeView.fxml");
+        showView(FXMLoc.WELCOME.path);
     }
     
     /**
@@ -117,7 +138,7 @@ public class MainApp extends Application {
      * Shows user settings panel
      */
     public void showUserSettingsView(){
-        showView("/fxml/SettingsScene.fxml");
+        showView(FXMLoc.SETTINGS.path);
     }
     
     /**
@@ -125,7 +146,7 @@ public class MainApp extends Application {
      * @return Controller of view
      */
     public ConversionViewController showConversionView(){
-        return (ConversionViewController) showView("/fxml/ConversionView.fxml");
+        return (ConversionViewController) showView(FXMLoc.CONVERSION.path);
     }
 
     /**

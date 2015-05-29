@@ -51,8 +51,13 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private Label settingsLog;
 
+    
+    private Stage dialogStage;
+    
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -145,32 +150,29 @@ public class SettingsSceneController implements Initializable {
             for(UserGameConfig game : userConfig.getGame()){
                 
                 if(game.getPath() != null){
-                    if(game.getId() == UTGames.UTGame.UT99){
-                        ut99Path.setText(game.getPath().getAbsolutePath());
-                    } 
-                    
-                    else if(game.getId() == UTGames.UTGame.U1){
-                        u1Path.setText(game.getPath().getAbsolutePath());
-                    }
-                    
-                    else if(game.getId() == UTGames.UTGame.U1){
-                        u2Path.setText(game.getPath().getAbsolutePath());
-                    }
-                    
-                    else if(game.getId() == UTGames.UTGame.UT2003){
-                        ut2003Folder.setText(game.getPath().getAbsolutePath());
-                    }
-                    
-                    else if(game.getId() == UTGames.UTGame.UT2004){
-                        ut2004Path.setText(game.getPath().getAbsolutePath());
-                    }
-                    
-                    else if(game.getId() == UTGames.UTGame.UT3){
-                        ut3Folder.setText(game.getPath().getAbsolutePath());
-                    }
-                    
-                    else if(game.getId() == UTGames.UTGame.UT4){
-                        ut4EditorFolder.setText(game.getPath().getAbsolutePath());
+                    if(null != game.getId()) switch (game.getId()) {
+                        case UT99:
+                            ut99Path.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case U1:
+                            u1Path.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case U2:
+                            u2Path.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case UT2003:
+                            ut2003Folder.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case UT2004:
+                            ut2004Path.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case UT3:
+                            ut3Folder.setText(game.getPath().getAbsolutePath());
+                            break;
+                        case UT4:
+                            ut4EditorFolder.setText(game.getPath().getAbsolutePath());
+                            break;
+                        default:
                     }
                 }
             }
@@ -207,5 +209,15 @@ public class SettingsSceneController implements Initializable {
             saveGamePath(utPathTxtField, utGame);
         }
     }
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
+    @FXML
+    private void closeDialog(ActionEvent event) {
+        this.dialogStage.close();
+    }
+    
     
 }

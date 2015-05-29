@@ -42,5 +42,7 @@
             <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
         </GridPane>
         <Label fx:id="settingsLog" alignment="CENTER" ></Label>
+        <Separator></Separator>
+        <Button onAction="#closeDialog" >Close</Button>
     </VBox>
 </AnchorPane>

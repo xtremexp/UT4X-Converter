@@ -19,18 +19,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
@@ -68,8 +73,6 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private MenuItem menuCheckForUpdates;
-    @FXML
-    private MenuItem menuCheckoutSourceCode;
 
     
     public MainApp mainApp;
@@ -130,7 +133,28 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     private void handleSettings(ActionEvent event) {
-        mainApp.showUserSettingsView();
+        
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource(FXMLoc.SETTINGS.getPath()));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Settings");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(mainStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+
+            SettingsSceneController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 
@@ -182,7 +206,6 @@ public class MainSceneController implements Initializable {
         openUrl(URL_UTCONV_FORUM, true);
     }
 
-    @FXML
     private void openGitHubUrl(ActionEvent event) {
         openUrl(URL_UTCONV_GITHUB, true);
     }
