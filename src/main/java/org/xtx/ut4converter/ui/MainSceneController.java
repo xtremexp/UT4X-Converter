@@ -6,13 +6,10 @@
 package org.xtx.ut4converter.ui;
 
 import java.awt.Desktop;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,24 +22,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
-import org.xtx.ut4converter.tools.Installation;
 
 /**
  * FXML Controller class
@@ -134,6 +123,10 @@ public class MainSceneController implements Initializable {
     @FXML
     private void handleSettings(ActionEvent event) {
         
+        showSettings();
+    }
+    
+    private void showSettings(){
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource(FXMLoc.SETTINGS.getPath()));
@@ -215,134 +208,60 @@ public class MainSceneController implements Initializable {
         convertUtxMap(UTGame.U1);
     }
     
-    /**
-     * Display file chooser for map to convert
-     * and launch the conversion
-     * TODO refactor/cleanup
-     * @param inputGame UT game
-     */
     private void convertUtxMap(UTGame inputGame){
         
-        UserConfig uc = null;
+        convertUtxMap(inputGame, UTGame.UT4);
+    }
+    
+    /**
+     * 
+     * @param inputGame Input UT Game
+     * @param outputGame Output UT Game
+     */
+    private void convertUtxMap(UTGame inputGame, UTGame outputGame) {
+
         try {
-            
-            uc = UserConfig.load();
-        } catch (JAXBException ex) {
-            Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-       FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select "+inputGame.shortName+" t3d map");
-        
-        
-        UserGameConfig ugc;
-        UserGameConfig ugcUt4;
-        boolean needSetGamePath = true;
-        
-        if(uc != null){
-            ugc = uc.getGameConfigByGame(inputGame);
-            ugcUt4 = uc.getGameConfigByGame(UTGame.UT4);
-            
-            if(ugcUt4 == null || ugcUt4.getPath() == null || !ugcUt4.getPath().exists()){
-                
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Need to set UT4 editor folder");
-                alert.setHeaderText("Path not set");
-                alert.setContentText("You need to set "+UTGame.UT4.shortName+" editor path (go to \"Options\" -> \"Settings\" in menu, set UT4 Editor path and try again)");
+            if (checkGamePathSet(inputGame, inputGame)) {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
+                AnchorPane page = (AnchorPane) loader.load();
+
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Conversion Settings");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(mainStage);
+                Scene scene = new Scene(page);
+                dialogStage.setScene(scene);
+
+                ConversionSettingsController controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                controller.setInputGame(inputGame);
+                controller.setOutputGame(outputGame);
+                controller.setMainApp(mainApp);
+                controller.load();
+
+                // Show the dialog and wait until the user closes it
+                dialogStage.showAndWait();
+            } else {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Game paths not set");
+                alert.setHeaderText("Need to set game path");
+                alert.setContentText(inputGame.name + " and/or " + outputGame.name + " game path not set.");
 
                 alert.showAndWait();
-
-                return;
+                showSettings();
             }
-            
-            if(ugc != null && ugc.getPath() != null){
-                chooser.setInitialDirectory(UTGames.getMapsFolder(ugc.getPath(), inputGame));
-                needSetGamePath = false;
-            } else {
-                // TODO redirect to settings panel so user can set game path?
-                ugc = new UserGameConfig();
-                ugc.setId(inputGame);
-
-            }
-        } else {
-            uc = new UserConfig();
-            ugc = new UserGameConfig();
-            ugc.setId(inputGame);
+        } catch (IOException | JAXBException e) {
+            e.printStackTrace();
+            // TODO alert
         }
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
+    }
+    
+    private boolean checkGamePathSet(UTGame inputGame, UTGame outputGame) throws JAXBException {
+        UserConfig userConfig = UserConfig.load();
         
-        File unrealMap = chooser.showOpenDialog(new Stage());
-        MapConverter mapConverter = null;
-        
-        if(unrealMap != null){
-            try {
-                // stops if selected file if .unr map file and user did not set game path in settings
-                if(unrealMap.getName().endsWith(".unr") && needSetGamePath){
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Need to set game path");
-                    alert.setHeaderText("UT Game path not set");
-                    alert.setContentText("You need to set "+inputGame.shortName+" game path to convert from .unr binary map file\n You may also convert without game path set from .t3d unreal text map.");
-
-                    alert.showAndWait();
-                    
-                    return;
-                }
-                
-                ugc.setLastConverted(unrealMap);
-                uc.saveFile();
-                
-                List<String> choices = new ArrayList<>();
-                
-                choices.add("1");
-                choices.add("1.5");
-                choices.add("2");
-                choices.add("2.1");
-                choices.add("2.2");
-                choices.add("2.3");
-                choices.add("2.4");
-                choices.add("2.5");
-                choices.add("3");
-
-                ChoiceDialog<String> dialog = new ChoiceDialog<>("2.2", choices);
-                dialog.setTitle("Which map scale factor you want to use?");
-                dialog.setHeaderText("Set map scale factor");
-                dialog.setContentText("Choose the map scale factor (2.2 is default):");
-
-                // Traditional way to get the response value.
-                Optional<String> result = dialog.showAndWait();
-                Double scaleFactor;
-                
-                if (result.isPresent()){
-                    scaleFactor = Double.valueOf(result.get());
-                } else {
-                    return;
-                }
-                
-                String path = Installation.getProgramFolder().getAbsolutePath() + File.separator + "Converted" + File.separator + unrealMap.getName().split("\\.")[0] + File.separator + Type.LEVEL.name();
-                mapConverter = new MapConverter(inputGame, UTGames.UTGame.UT4, unrealMap, path);
-                mapConverter.setScale(scaleFactor);
-                
-                // UT3 in testing, no convert/export textures, ....
-                if(inputGame == UTGames.UTGame.UT3){
-                    mapConverter.noConvertRessources();
-                }
-
-                mapConverter.setConversionViewController(mainApp.showConversionView());
-                
-                SwingUtilities.invokeLater(mapConverter);
-            } catch (JAXBException | NumberFormatException ex) {
-                
-                if( mapConverter != null ){
-                    mapConverter.getLogger().log(Level.SEVERE, null, ex);
-                } 
-                
-                else {
-                    Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-            }
-        }
+        return userConfig != null && userConfig.hasGamePathSet(inputGame) && userConfig.hasGamePathSet(outputGame);
     }
 
     @FXML

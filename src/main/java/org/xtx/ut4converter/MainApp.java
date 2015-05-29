@@ -42,6 +42,7 @@ public class MainApp extends Application {
         MAIN("/fxml/Scene.fxml"),
         WELCOME("/fxml/WelcomeView.fxml"),
         SETTINGS("/fxml/SettingsScene.fxml"),
+        CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
         CONVERSION("/fxml/ConversionView.fxml");
         
         String path;

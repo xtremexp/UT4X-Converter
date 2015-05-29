@@ -186,19 +186,34 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         return scale;
     }
 
+    /**
+     * 
+     * @param inputGame Input UT Game
+     * @param outputGame Output UT Game
+     */
+    public MapConverter(UTGame inputGame, UTGame outputGame){
+        this.inputGame = inputGame;
+        this.outputGame = outputGame;
+    }
     
     /**
      * 
      * @param inputGame Input game the map originally comes from
      * @param outputGame Output game the map will be converted to
      * @param inpMap Map to be converted (either a t3d file or map)
-     * @param path Where converted stuff will be saved
+     * @param path
      */
     public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, String path) {
         this.inputGame = inputGame;
         this.outputGame = outputGame;
         this.inMap = inpMap;
         this.outPath = Paths.get(path);
+        initialise();
+    }
+    
+    public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap) {
+        this.inputGame = inputGame;
+        this.outputGame = outputGame;
         initialise();
     }
     
@@ -238,6 +253,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     }
     
     private void initialise(){
+        
+        if(this.outPath == null){
+            this.outPath = Paths.get(this.getMapConvertFolder().toURI());
+        }
         
         // support for reading targa files
         IIORegistry registry = IIORegistry.getDefaultInstance();
@@ -333,6 +352,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * @throws Exception 
      */
     public void convert() throws Exception {
+        
+        logger.log(Level.INFO, "*****************************************");
+        logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
+        logger.log(Level.INFO, "Scale Factor: " + scale);
         
         updateProgress(0, 100);
 
@@ -752,6 +775,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
     public ConversionViewController getConversionViewController() {
         return conversionViewController;
+    }
+
+    public void setInMap(File inMap) {
+        this.inMap = inMap;
+        initialise();
+    }
+
+    public Path getOutPath() {
+        return outPath;
     }
     
     
