@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -23,7 +25,9 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.export.CopyExporter;
 import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
@@ -138,7 +142,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * Allow to extract packages.
      * There should be always only one instanced
      */
-    public UTPackageExtractor packageExtractor;
+    public List<UTPackageExtractor> packageExtractors;
     
     
 
@@ -264,6 +268,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         return tm.getActorClassMatch(inputGame, outputGame);
     }
     
+    
     private void initOutMapName(){
         if(outMapName==null){
             // TODO being able to set it manually (chosen by user)
@@ -323,6 +328,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             userConfig = UserConfig.load();
         } catch (JAXBException | IOException ex) {
             Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // init available extractors
+        packageExtractors = new ArrayList<>();
+        packageExtractors.add(new UCCExporter(this));
+        packageExtractors.add(new CopyExporter(this));
+        
+        if(userConfig.getUModel() != null && userConfig.getUModel().exists()){
+            packageExtractors.add(new UModelExporter(this));
         }
     }
     
