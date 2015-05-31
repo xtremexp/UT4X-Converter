@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MapConverter;
 
 /**
  * Some core class that allows to know where program is running (path)
@@ -114,6 +115,20 @@ public class Installation {
     public static File getNConvert()
     {
         return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "nconvert" + File.separator + "nconvert.exe");
+    }
+    
+    /**
+     * Return full path of texture converter
+     * @param mapConverter
+     * @return 
+     */
+    public static File getUModel(MapConverter mapConverter)
+    {
+        if(mapConverter.getUserConfig() != null){
+            return mapConverter.getUserConfig().getUModel();
+        }
+        
+        return null;
     }
     
     private static final String OS = System.getProperty("os.name").toLowerCase();

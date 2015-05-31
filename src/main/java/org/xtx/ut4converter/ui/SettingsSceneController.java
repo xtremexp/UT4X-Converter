@@ -16,7 +16,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.UTGames;
@@ -53,6 +55,12 @@ public class SettingsSceneController implements Initializable {
 
     
     private Stage dialogStage;
+    @FXML
+    private TitledPane gamePathsPane;
+    @FXML
+    private TitledPane uModelPane;
+    @FXML
+    private TextField uModelPath;
     
     /**
      * Initializes the controller class.
@@ -62,6 +70,8 @@ public class SettingsSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadSettings();
+        uModelPane.setText("UModel Settings");
+        gamePathsPane.setText("Unreal games paths");
     }    
 
     @FXML
@@ -147,6 +157,10 @@ public class SettingsSceneController implements Initializable {
         try {
             userConfig = UserConfig.load();
             
+            if(userConfig.getUModel() != null){
+                uModelPath.setText(userConfig.getUModel().getAbsolutePath());
+            }
+            
             for(UserGameConfig game : userConfig.getGame()){
                 
                 if(game.getPath() != null){
@@ -217,6 +231,26 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private void closeDialog(ActionEvent event) {
         this.dialogStage.close();
+    }
+
+    @FXML
+    private void uModelPath(ActionEvent event) {
+        
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select umodel.exe file");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe", "*.exe"));
+        
+        File umodelPath = chooser.showOpenDialog(new Stage());
+        
+        if(umodelPath != null){
+            try {
+                userConfig.setUModel(umodelPath);
+                userConfig.saveFile();
+                uModelPath.setText(umodelPath.getAbsolutePath());
+            } catch (JAXBException ex) {
+                Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     

@@ -6,7 +6,10 @@
 package org.xtx.ut4converter.export;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
@@ -74,6 +77,15 @@ public abstract class UTPackageExtractor {
     
     public abstract File getExporterPath();
     
+    public abstract String getName();
+    
+    /**
+     * Supported Unreal Engines for extractor
+     * e.g: ucc extractor only for UE1/UE2
+     * but umodel extractor for all Unreal Engines
+     * @return 
+     */
+    public abstract List<UnrealEngine> getSupportedEngines();
     
     /**
      * Says if this extractor support linux.
@@ -90,19 +102,41 @@ public abstract class UTPackageExtractor {
      */
     public static UTPackageExtractor getExtractor(MapConverter mapConverter, UPackageRessource ressource){
         
-        // Special case UT2004 .ogg files
-        if(ressource.getType() == T3DRessource.Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE2){
-            mapConverter.packageExtractor = new CopyExporter(mapConverter);
-        } 
+        UTPackageExtractor extractor = null;
+        
+        try {
+            // Special case UT2004 .ogg files
+            if(ressource.getType() == T3DRessource.Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE2){
+                extractor = getUtPackageExtractor(mapConverter, CopyExporter.class);
+            } 
 
-        else {
-            if(mapConverter.packageExtractor == null 
-                    || (mapConverter.packageExtractor != null && !(mapConverter.packageExtractor instanceof UCCExporter))){
-                mapConverter.packageExtractor = UCCExporter.getInstance(mapConverter);
+            else {
+                extractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
+                // TODO handle UModelExporter
+            }
+        } catch (Exception e) {
+            mapConverter.getLogger().log(Level.SEVERE, "Error getting the extractor", e);
+        }
+
+        return extractor;
+    }
+    
+    /**
+     * Automatically get package extractor if it does exists or auto create one
+     * @param mapConverter
+     * @param extractorClass
+     * @return
+     * @throws Exception 
+     */
+    private static UTPackageExtractor getUtPackageExtractor(MapConverter mapConverter, Class<? extends UTPackageExtractor> extractorClass) throws Exception {
+        
+        for(UTPackageExtractor extractor : mapConverter.packageExtractors){
+            if(extractor.getClass() == extractorClass){
+                return extractor;
             }
         }
 
-        return mapConverter.packageExtractor;
+        return null;
     }
 
     /**

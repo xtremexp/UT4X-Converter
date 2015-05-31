@@ -29,7 +29,21 @@ public class UserConfig {
     
     public final static String USER_CONFIG_XML_FILE = "UserConfig.xml";
     
+    /**
+     * umodel.exe path set by user in settings
+     */
+    File uModelPath;
+    
     List<UserGameConfig> games = new ArrayList<>();
+    
+    @XmlElement
+    public File getUModel(){
+        return uModelPath;
+    }
+    
+    public void setUModel(File uModelPath){
+        this.uModelPath = uModelPath;
+    }
 
     @XmlElement
     public List<UserGameConfig> getGame() {

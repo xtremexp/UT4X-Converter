@@ -8,10 +8,13 @@ package org.xtx.ut4converter.export;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -54,6 +57,16 @@ public class CopyExporter extends UTPackageExtractor {
     @Override
     protected File getExportFolder(T3DRessource.Type type){
         return new File(mapConverter.getMapConvertFolder() + File.separator + type.name() + File.separator);
+    }
+
+    @Override
+    public String getName() {
+        return "File Copier";
+    }
+
+    @Override
+    public List<UTGames.UnrealEngine> getSupportedEngines() {
+        return Arrays.asList(UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2, UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4);
     }
     
 }

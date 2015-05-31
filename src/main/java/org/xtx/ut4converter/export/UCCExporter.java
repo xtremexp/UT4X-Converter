@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +56,16 @@ public final class UCCExporter extends UTPackageExtractor {
     public boolean supportLinux() {
         // oldunreal.com u1 patch as some UCCLinux.bin file (but is optional during patch install)
         return mapConverter.getInputGame() == UTGame.U1;
+    }
+
+    @Override
+    public String getName() {
+        return "UCC";
+    }
+
+    @Override
+    public List<UTGames.UnrealEngine> getSupportedEngines() {
+        return Arrays.asList(UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2);
     }
     
     private enum Name {
