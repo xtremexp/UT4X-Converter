@@ -8,6 +8,8 @@ package org.xtx.ut4converter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.t3d.*;
 
 /**
  * Tells which UT actor classes will be converted
@@ -15,6 +17,8 @@ import java.util.List;
  */
 public class SupportedClasses {
     
+    
+     MapConverter mapConverter;
     
     /**
      * If in t3d
@@ -33,8 +37,11 @@ public class SupportedClasses {
 
     /**
      *
+     * @param mapConverter
      */
-    public SupportedClasses() {
+    public SupportedClasses(MapConverter mapConverter) {
+        this.mapConverter = mapConverter;
+        initialize();
     }
 
 
@@ -94,4 +101,79 @@ public class SupportedClasses {
         return uneededActors.contains(utClassName);
     }
 
+    private void addMatches(MapConverter mc){
+        HashMap<String, T3DMatch.Match> hm = mc.getActorClassMatch();
+        
+        for(String c : hm.keySet()){
+            putUtClass(hm.get(c).t3dClass, c);
+        }
+    }
+    
+    /**
+     * For testing purposes only.
+     * Converts only one actor so it's easier
+     * to import it in map being converted
+     * @param actor
+     * @param t3dClass 
+     */
+    public void setConvertOnly(String actor, Class t3dClass){
+        classToUtActor.clear();
+        classToUtActor.put(actor.toLowerCase(), t3dClass);
+    }
+    
+    private void initialize(){
+        
+        // FIXME block all has wrong volume, totally screwed
+        // TODO move zones to match with T3DZoneInfo.class
+        putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");//, "BlockAll");
+        
+
+        putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
+        
+        putUtClass(T3DPlayerStart.class, "PlayerStart");
+        //putUtClass(T3DStaticMesh.class, "StaticMeshActor");
+        
+        for(T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()){
+            
+            // mover is special case because is dependant of staticmesh for UE2 not brush (UE1)
+            if(brushClass != T3DBrush.BrushClass.Mover){
+                putUtClass(T3DBrush.class, brushClass.name());
+            }
+        }
+        
+        for(T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()){
+            putUtClass(T3DLight.class, ut99LightActor.name());
+        }
+        
+        putUtClass(T3DLevelInfo.class, "LevelInfo");
+        
+        if(mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4)){
+           // disabled until working good
+            // putUtClass(T3DZoneInfo.class, "ZoneInfo");
+        }
+        
+        // terrain conversion disabled until working good
+        /**
+        if(mapConverter.isFrom(UTGames.UnrealEngine.UE2)){
+            putUtClass(T3DUE2Terrain.class, "TerrainInfo");
+        }*/
+        
+        for(T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()){
+            putUtClass(T3DLight.class, ue34LightActor.name());
+        }
+        
+        // TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
+        putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
+        putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound");
+        putUtClass(T3DLiftExit.class, "LiftExit");
+        putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
+        
+        addMatches(mapConverter);
+        
+        uneededActors.add("PathNode");
+        uneededActors.add("InventorySpot");
+        uneededActors.add("TranslocDest");
+        uneededActors.add("AntiPortalActor"); //ut2004
+        uneededActors.add("Adrenaline"); //ut2004
+    }
 }

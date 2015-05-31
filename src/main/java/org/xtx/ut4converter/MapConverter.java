@@ -91,7 +91,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     /**
      * TODO move this to T3D Level converter
      */
-    SupU1UT99ToUT4Classes supportedActorClasses;
+    SupportedClasses supportedActorClasses;
     
     /**
      * T3d level converter
@@ -304,7 +304,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             
             initOutMapName();
             
-            supportedActorClasses = new SupU1UT99ToUT4Classes(this);
+            supportedActorClasses = new SupportedClasses(this);
             
             // Unreal Text map level files (.t3d)
             // do not export full info about textures on polygon but only name

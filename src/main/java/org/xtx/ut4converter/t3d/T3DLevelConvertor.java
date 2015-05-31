@@ -156,13 +156,14 @@ public class T3DLevelConvertor extends Task<Object> {
      */
     public void convert() throws Exception
     {
-        try {
-            countTotalActors();
-        } catch (Exception e){}
         
         if(inT3dFile == null || !inT3dFile.exists()){
             throw new Exception("File "+inT3dFile.getAbsolutePath()+" does not exists!");
         }
+        
+        try {
+            countTotalActors();
+        } catch (Exception e){}
 
         logger.info("Converting t3d map "+inT3dFile.getName()+" to "+mapConverter.getOutputGame().name+" t3d level");
         
