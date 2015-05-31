@@ -9,6 +9,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -82,9 +83,13 @@ public class ConversionSettingsController implements Initializable {
     private ComboBox<String> soundVolumeFactor;
     @FXML
     private Label outMapNameLbl;
+    @FXML
+    private CheckBox debugLogLevel;
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -252,6 +257,15 @@ public class ConversionSettingsController implements Initializable {
     @FXML
     private void toggleMusicConversion(ActionEvent event) {
         mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
+    }
+
+    /**
+     * Changes the log level
+     * @param event 
+     */
+    @FXML
+    private void toggleDebugLogLevel(ActionEvent event) {
+        mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
     }
     
     

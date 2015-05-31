@@ -96,7 +96,11 @@
                             </FXCollections>
                         </items>
                     </ComboBox>
+                    
+                    <Separator GridPane.rowIndex="2" GridPane.columnIndex="0"/>  
                 
+                    <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Detailled logs</Label>
+                    <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
                 </GridPane>
             </TitledPane>
             </VBox>

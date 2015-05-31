@@ -428,15 +428,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                 if(exportedFile != null){
                     
                     if(!ressource.isUsedInMap()){
-                        exportedFile.delete();
+                        if(exportedFile.delete()){
+                            logger.fine("Deleted unused file "+exportedFile);
+                        }
                     } 
                     
                     // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
                     else  {
 
-                        // Some sounds might need to be converted for correct import in UE4
+                        // Some sounds and/or textures might need to be converted for correct import in UE4
                         if(ressource.needsConversion(this)){
                             exportedFile = ressource.convert(logger);
+                            ressource.setExportedFile(exportedFile);
                             wasConverted = true;
                         }
                         
@@ -449,7 +452,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                             Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         }
                         
-                        exportedFile.delete();
+                        if(exportedFile.delete()){
+                            logger.fine("Deleted "+exportedFile);
+                        }
+                        
                         exportedFile = newFile;
                         
                         if(wasConverted){

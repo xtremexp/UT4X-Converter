@@ -8,14 +8,20 @@ package org.xtx.ut4converter.ucore;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
+import org.xtx.ut4converter.tools.TextureConverter;
+import org.xtx.ut4converter.tools.TextureFormat;
 
 /**
  * Some ressource such as texture, sound, ... 
@@ -35,7 +41,7 @@ public class UPackageRessource {
      * (for textures we might need export as .bmp and .tga as well)
      * If it's null and exportFailed is false the we should try to export it
      */
-    File exportedFile;
+    ExportInfo exportInfo = new ExportInfo();
     
     /**
      * If true means export of this ressource failed
@@ -67,6 +73,38 @@ public class UPackageRessource {
      * Texture dimension if type of ressource is texture
      */
     Dimension textureDimensions;
+    
+    /**
+     * 
+     */
+    class ExportInfo {
+        
+        /**
+         * Exported files, there might be several ones for same ressource
+         * (e.g: terrain textures
+         */
+        File exportedFile;
+        
+        /**
+         * Extractor used to export this package ressource
+         */
+        UTPackageExtractor extractor;
+
+        public ExportInfo(){}
+        
+        public ExportInfo(File exportedFile, UTPackageExtractor extractor) {
+            this.exportedFile = exportedFile;
+            this.extractor = extractor;
+        }
+
+        public File getExportedFile() {
+            return exportedFile;
+        }
+
+        public UTPackageExtractor getExtractor() {
+            return extractor;
+        }
+    }
 
     /**
      * Creates an unreal package ressource information object.
@@ -120,13 +158,15 @@ public class UPackageRessource {
      * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
      * @param uPackage 
      * @param exportedFile 
+     * @param extractor 
      */
-    public UPackageRessource(String fullName, UPackage uPackage, File exportedFile) {
+    public UPackageRessource(String fullName, UPackage uPackage, File exportedFile, UTPackageExtractor extractor) {
 
         parseNameAndGroup(fullName);
         
+        this.exportInfo = new ExportInfo(exportedFile, extractor);
+        
         this.unrealPackage = uPackage;
-        this.exportedFile = exportedFile;
         this.type = uPackage.type;
         uPackage.ressources.add(this);
     }
@@ -137,12 +177,12 @@ public class UPackageRessource {
      */
     public void readTextureDimensions(){
         
-        if(type != Type.TEXTURE || exportedFile == null || this.textureDimensions != null){
+        if(type != Type.TEXTURE || exportInfo.exportedFile == null || this.textureDimensions != null){
             return;
         }
         
         try {
-            this.textureDimensions = ImageUtils.getTextureDimensions(exportedFile);
+            this.textureDimensions = ImageUtils.getTextureDimensions(exportInfo.getExportedFile());
         } catch (Exception e){
             Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, e.getMessage());
         }
@@ -190,7 +230,7 @@ public class UPackageRessource {
      * @return <code>true</code> if the file need to be exported
      */
     public boolean needExport(){
-        return !exportFailed && exportedFile == null;
+        return !exportFailed && exportInfo.exportedFile == null;
     }
     
     /**
@@ -253,7 +293,7 @@ public class UPackageRessource {
      * @return 
      */
     public String getConvertedFileName(){
-        String s[] = exportedFile.getName().split("\\.");
+        String s[] = exportInfo.getExportedFile().getName().split("\\.");
         String currentFileExt = s[s.length -1];
             
         return getFullNameWithoutDots() + "." +currentFileExt;
@@ -313,15 +353,15 @@ public class UPackageRessource {
      * @return true if this ressource has been exported to a file
      */
     public boolean isExported(){
-        return exportedFile != null;
+        return exportInfo != null && exportInfo.exportedFile != null;
     }
 
     public File getExportedFile() {
-        return exportedFile;
+        return exportInfo.getExportedFile();
     }
 
     public void setExportedFile(File exportedFile) {
-        this.exportedFile = exportedFile;
+        this.exportInfo.exportedFile = exportedFile;
     }
 
     /**
@@ -351,7 +391,27 @@ public class UPackageRessource {
      * @return <code>true</code> true if needs conversion
      */
     public boolean needsConversion(MapConverter mc){
-        return mc.isFromUE1UE2ToUE3UE4() && type == Type.SOUND;
+        
+        if(exportInfo.exportedFile == null){
+            return false;
+        }
+        
+        if(mc.isFromUE1UE2ToUE3UE4()){
+            if(type == Type.SOUND){
+                return true;
+            }
+            
+            // ucc exporter exports malformed .dds textures ...
+            // that can't be imported in UE4
+            if(type == Type.TEXTURE 
+                    && exportInfo.extractor != null 
+                        && exportInfo.exportedFile.getName().endsWith(".dds")
+                        && (exportInfo.extractor instanceof UCCExporter)){
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     
@@ -362,13 +422,26 @@ public class UPackageRessource {
      */
     public File convert(Logger logger){
         
-       // TODO convert sound ressources to wav 44k  using sox (like the good old UT3 converter)
         if(type == Type.SOUND){
             SoundConverter scs = new SoundConverter(logger);
             
             try {
                 File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
-                scs.convertTo16BitSampleSize(exportedFile, tempFile);
+                scs.convertTo16BitSampleSize(exportInfo.getExportedFile(), tempFile);
+                return tempFile;
+            } catch (IOException ex) {
+                Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        else if(type == Type.TEXTURE){
+            TextureConverter texConverter = new TextureConverter(logger);
+            
+            try {
+                File tempFile = File.createTempFile(getFullNameWithoutDots(), "."+FileUtils.getExtension(exportInfo.getExportedFile()));
+                Files.copy(exportInfo.getExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                texConverter.convert(tempFile, TextureFormat.tga);
+                tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
                 return tempFile;
             } catch (IOException ex) {
                 Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);

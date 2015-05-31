@@ -107,6 +107,15 @@ public class Installation {
         return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
     }
     
+    /**
+     * Return full path of texture converter
+     * @return 
+     */
+    public static File getNConvert()
+    {
+        return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "nconvert" + File.separator + "nconvert.exe");
+    }
+    
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
     /**

@@ -139,13 +139,17 @@ Libraries / Technologies used
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 - Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
+- Nconvert by Pierre-E Gougelet - 6.70
 
 History
 ------------------------------
 - 0.4.0 - In Progress:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
   * Added conversion for textures
+  * [UI] Added advanced conversion settings
+  * [UI] 
   * Fixed sounds not being exported from map package
+  * Fixed frozen UI on map conversion
   * ?
 
 - 0.3.0 - 08/05/2015:
