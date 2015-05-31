@@ -455,6 +455,12 @@ public class UPackageRessource {
         return type;
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    
+    
     /**
      * Return the dimension of the texture
      * if ressource is a texture.

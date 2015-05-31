@@ -111,8 +111,11 @@ public abstract class UTPackageExtractor {
             } 
 
             else {
-                extractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
-                // TODO handle UModelExporter
+                UTPackageExtractor uccExtractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
+                UTPackageExtractor uModelExtractor = getUtPackageExtractor(mapConverter, UModelExporter.class);
+                
+                return uccExtractor;
+                //return uModelExtractor != null ? uModelExtractor : uccExtractor;
             }
         } catch (Exception e) {
             mapConverter.getLogger().log(Level.SEVERE, "Error getting the extractor", e);
