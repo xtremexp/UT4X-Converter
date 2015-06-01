@@ -125,6 +125,19 @@ public class SettingsSceneController implements Initializable {
         setUTxFolder(UTGame.U2, u2Path);
     }
 
+    @FXML
+    private void gotoNConvertWebsite(ActionEvent event) {
+    	
+    	final String nConvertUrl = "http://www.xnview.com/en/nconvert/";
+        MainSceneController.openUrl(nConvertUrl, false, "Press ok to go to nconvert website for download:\n" + nConvertUrl);
+    }
+    
+    @FXML
+    private void gotoUModelWebsite(ActionEvent event) {
+    	
+    	final String uModelUrl = "http://www.gildor.org/en/projects/umodel";
+        MainSceneController.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
+    }
 
 
     

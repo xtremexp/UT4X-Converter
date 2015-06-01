@@ -82,7 +82,37 @@ public class MainSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
+    	try {
+			UserConfig userConfig = UserConfig.load();
+			
+			if(userConfig.getIsFirstRun() == null || userConfig.getIsFirstRun()){
+				userConfig.setIsFirstRun(Boolean.FALSE);
+				userConfig.saveFile();
+				showAlertFirstTime();
+			}
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }   
+    
+    private void showAlertFirstTime(){
+    	
+    	Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Welcome!");
+        alert.setHeaderText("Welcome to UT4 Converter");
+        
+        String msg = "In order to fully use the converter you need to set: \n";
+        msg += "- the unreal game(s) path(s)\n";
+        msg += "- download and set the umodel file path\n";
+        msg += "- download and set the nvconvert file path\n";
+        msg += "\nPress OK to go to the settings panel";
+        
+        alert.setContentText(msg);
+
+        alert.showAndWait();
+        showSettings();
+    }
 
     /**
      * Exit program
@@ -161,7 +191,7 @@ public class MainSceneController implements Initializable {
      * @param if <code>true</code> then display a confirmation dialog before opening directly web browser.
      * @param url Url to open with web browser 
      */
-    private void openUrl(String url, boolean confirmBeforeOpen) {
+    public static void openUrl(String url, boolean confirmBeforeOpen, String message) {
         
         if(url == null){
             return;
@@ -171,7 +201,24 @@ public class MainSceneController implements Initializable {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Confirmation");
             alert.setHeaderText("Web browser access");
-            alert.setContentText("Do you want to open web browser to this url ?\n"+url);
+            
+            message = message != null ? (message +" \n") : "";
+            message += "Do you want to open web browser to this url ?\n"+url;
+            
+            alert.setContentText(message);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            
+            if (result.get() != ButtonType.OK){
+                return;
+            }
+        } else if (message != null){
+        	
+        	Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText("Message");
+            
+            alert.setContentText(message);
 
             Optional<ButtonType> result = alert.showAndWait();
             
@@ -200,11 +247,11 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private void openUtTopicUrl(ActionEvent event) {
-        openUrl(URL_UTCONV_FORUM, true);
+        openUrl(URL_UTCONV_FORUM, true, null);
     }
 
     private void openGitHubUrl(ActionEvent event) {
-        openUrl(URL_UTCONV_GITHUB, true);
+        openUrl(URL_UTCONV_GITHUB, true, null);
     }
 
     @FXML

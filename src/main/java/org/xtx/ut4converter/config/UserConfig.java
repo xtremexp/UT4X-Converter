@@ -39,6 +39,13 @@ public class UserConfig {
      */
     File nConvertPath;
     
+    /**
+     * true if program running for the first time.
+     * If so should display some pop-up information to
+     * redirect user to settings panel
+     */
+    Boolean isFirstRun;
+    
     List<UserGameConfig> games = new ArrayList<>();
     
     @XmlElement
@@ -48,6 +55,15 @@ public class UserConfig {
     
     public void setUModelPath(File uModelPath){
         this.uModelPath = uModelPath;
+    }
+    
+    @XmlElement
+    public Boolean getIsFirstRun(){
+        return isFirstRun;
+    }
+    
+    public void setIsFirstRun(Boolean isFirstRun){
+        this.isFirstRun = isFirstRun;
     }
     
     @XmlElement
