@@ -303,13 +303,13 @@ public class SettingsSceneController implements Initializable {
         	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("nconvert.exe", "*.exe"));
         }
         
-        File nconvertPath = chooser.showOpenDialog(new Stage());
+        File nconvertPath2 = chooser.showOpenDialog(new Stage());
         
         if(nconvertPath != null){
             try {
-                userConfig.setUModelPath(nconvertPath);
+                userConfig.setNConvertPath(nconvertPath2);
                 userConfig.saveFile();
-                uModelPath.setText(nconvertPath.getAbsolutePath());
+                nconvertPath.setText(nconvertPath2.getAbsolutePath());
             } catch (JAXBException ex) {
                 Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
             }

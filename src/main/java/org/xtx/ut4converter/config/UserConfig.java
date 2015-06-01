@@ -68,7 +68,7 @@ public class UserConfig {
     
     @XmlElement
     public File getNConvertPath(){
-        return uModelPath;
+        return nConvertPath;
     }
     
     public void setNConvertPath(File nConvertPath){
