@@ -120,6 +120,7 @@ CONVERTED MAP.
 
 How to build and run latest version ?
 ------------------------------
+With Netbeans IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
@@ -128,6 +129,15 @@ How to build and run latest version ?
 - Click "Finish" and wait while project is being imported.
 Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
 - Right-Click on project and press "Run". At first time it might take several minutes to download required librairies.
+
+With Eclipse IDE:
+- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+- Download and install "Eclipse for Java Developers": https://eclipse.org/downloads/
+- Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
+- Click "Next"
+- Set "SCM Url" to: "https://github.com/xtremexp/UT4Converter.git"
+- Click "Finish"
+- Right click on "UT4-Converter" project then "Run as" -> "Java application"
 
 Note:
 Since it's a maven project, importing project with Eclipse IDE should work 
