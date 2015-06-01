@@ -47,15 +47,19 @@ Requirements
 * Java > 1.8.0_40 . www.java.com
 * Unreal Tournament 4 (2015) Editor
 * One of the following previous UT games:
-* * Unreal 1
-* * Unreal 2
-* * Unreal Tournament
-* * Unreal Tournament 2003
-* * Unreal Tournament 2004
-* * Unreal Tournament 3
+*  Unreal 1
+*  Unreal 2
+*  Unreal Tournament
+*  Unreal Tournament 2003
+*  Unreal Tournament 2004
+*  Unreal Tournament 3
+* NConvert texture conversion program: http://www.xnview.com/en/nconvert/
+* UModel Unreal ressource program extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
+Install nconvert http://www.xnview.com/en/nconvert/
+Install umodel http://www.gildor.org/en/projects/umodel
 Decompress the ZIP archive to any folder of your choice.
 Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
@@ -64,6 +68,7 @@ and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
 as java program)
+Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 How to convert map?
 ------------------------------
@@ -149,7 +154,10 @@ Libraries / Technologies used
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 - Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
+
+Converter interfaces the external tools:
 - Nconvert by Pierre-E Gougelet - 6.70
+- UModel by Konstantin Nosov
 
 History
 ------------------------------

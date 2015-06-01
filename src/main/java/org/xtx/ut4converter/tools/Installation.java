@@ -122,10 +122,24 @@ public class Installation {
      * @param mapConverter
      * @return 
      */
-    public static File getUModel(MapConverter mapConverter)
+    public static File getUModelPath(MapConverter mapConverter)
     {
         if(mapConverter.getUserConfig() != null){
-            return mapConverter.getUserConfig().getUModel();
+            return mapConverter.getUserConfig().getUModelPath();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Return full path of texture converter
+     * @param mapConverter
+     * @return 
+     */
+    public static File getNConvertPath(MapConverter mapConverter)
+    {
+        if(mapConverter.getUserConfig() != null){
+            return mapConverter.getUserConfig().getNConvertPath();
         }
         
         return null;

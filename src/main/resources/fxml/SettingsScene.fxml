@@ -51,11 +51,18 @@
 
                 </TitledPane>
         
-                <TitledPane fx:id="uModelPane" expanded="true" >
+                <TitledPane fx:id="externalPrograms" expanded="true" >
                     <GridPane hgap="10" vgap="10" alignment="CENTER" >
-                        <Label text="UModel.exe folder" GridPane.rowIndex="0" GridPane.columnIndex="0" ></Label>
+                    
+                    	<!-- UMODEL - Package Extractor -->
+                        <Label text="UModel Path:" GridPane.rowIndex="0" GridPane.columnIndex="0" ></Label>
                         <TextField fx:id="uModelPath" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel\umodel.exe" editable="false"></TextField>
-                        <Button onAction="#uModelPath" GridPane.rowIndex="0" GridPane.columnIndex="2">Select</Button>
+                        <Button onAction="#setUModelPath" GridPane.rowIndex="0" GridPane.columnIndex="2">Select</Button>
+                        
+                        <!-- NCONVERT - Texture Conversion -->
+                        <Label text="NConvert Path:" GridPane.rowIndex="1" GridPane.columnIndex="0" ></Label>
+                        <TextField fx:id="nconvertPath" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\nconvert\nconvert.exe" editable="false"></TextField>
+                        <Button onAction="#setNConvertPath" GridPane.rowIndex="1" GridPane.columnIndex="2">Select</Button>
                     </GridPane>
                 </TitledPane>
             </VBox>

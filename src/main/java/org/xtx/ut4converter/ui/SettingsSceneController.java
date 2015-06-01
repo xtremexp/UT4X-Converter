@@ -28,6 +28,7 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.tools.Installation;
 
 /**
  * FXML Controller class
@@ -62,9 +63,12 @@ public class SettingsSceneController implements Initializable {
     @FXML
     private TitledPane gamePathsPane;
     @FXML
-    private TitledPane uModelPane;
+    private TitledPane externalPrograms;
     @FXML
     private TextField uModelPath;
+    
+    @FXML
+    private TextField nconvertPath;
     
     /**
      * Initializes the controller class.
@@ -73,9 +77,17 @@ public class SettingsSceneController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+    	
         loadSettings();
-        uModelPane.setText("UModel Settings");
+        externalPrograms.setText("External program paths");
         gamePathsPane.setText("Unreal games paths");
+        
+        if(Installation.isLinux()){
+        	String homeDir = System.getProperty( "user.home" );
+        	
+        	uModelPath.setPromptText("e.g: "+homeDir+"/Downloads/umodel/umodel");
+        	nconvertPath.setPromptText("e.g: "+homeDir+"/Downloads/nconvert/nconvert");
+        }
     }    
 
     @FXML
@@ -161,8 +173,12 @@ public class SettingsSceneController implements Initializable {
         try {
             userConfig = UserConfig.load();
             
-            if(userConfig.getUModel() != null){
-                uModelPath.setText(userConfig.getUModel().getAbsolutePath());
+            if(userConfig.getUModelPath() != null){
+                uModelPath.setText(userConfig.getUModelPath().getAbsolutePath());
+            }
+            
+            if(userConfig.getNConvertPath() != null){
+                nconvertPath.setText(userConfig.getNConvertPath().getAbsolutePath());
             }
             
             for(UserGameConfig game : userConfig.getGame()){
@@ -238,17 +254,21 @@ public class SettingsSceneController implements Initializable {
     }
 
     @FXML
-    private void uModelPath(ActionEvent event) {
+    private void setUModelPath(ActionEvent event) {
         
         FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select umodel.exe file");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe", "*.exe"));
+        chooser.setTitle("Select umodel file");
+        
+        // TODO strict filter on filename
+        if(Installation.isWindows()){
+        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe", "*.exe"));
+        }
         
         File umodelPath = chooser.showOpenDialog(new Stage());
         
         if(umodelPath != null){
             try {
-                userConfig.setUModel(umodelPath);
+                userConfig.setUModelPath(umodelPath);
                 userConfig.saveFile();
                 uModelPath.setText(umodelPath.getAbsolutePath());
             } catch (JAXBException ex) {
@@ -257,5 +277,28 @@ public class SettingsSceneController implements Initializable {
         }
     }
     
+    @FXML
+    private void setNConvertPath(ActionEvent event) {
+        
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select nconvert file");
+        
+        // TODO strict filter on filename
+        if(Installation.isWindows()){
+        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("nconvert.exe", "*.exe"));
+        }
+        
+        File nconvertPath = chooser.showOpenDialog(new Stage());
+        
+        if(nconvertPath != null){
+            try {
+                userConfig.setUModelPath(nconvertPath);
+                userConfig.saveFile();
+                uModelPath.setText(nconvertPath.getAbsolutePath());
+            } catch (JAXBException ex) {
+                Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
 }

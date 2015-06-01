@@ -335,7 +335,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         packageExtractors.add(new UCCExporter(this));
         packageExtractors.add(new CopyExporter(this));
         
-        if(userConfig.getUModel() != null && userConfig.getUModel().exists()){
+        if(userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()){
             packageExtractors.add(new UModelExporter(this));
         }
     }

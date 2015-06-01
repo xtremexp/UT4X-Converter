@@ -34,15 +34,29 @@ public class UserConfig {
      */
     File uModelPath;
     
+    /**
+     * Nconvert path
+     */
+    File nConvertPath;
+    
     List<UserGameConfig> games = new ArrayList<>();
     
     @XmlElement
-    public File getUModel(){
+    public File getUModelPath(){
         return uModelPath;
     }
     
-    public void setUModel(File uModelPath){
+    public void setUModelPath(File uModelPath){
         this.uModelPath = uModelPath;
+    }
+    
+    @XmlElement
+    public File getNConvertPath(){
+        return uModelPath;
+    }
+    
+    public void setNConvertPath(File nConvertPath){
+        this.nConvertPath = nConvertPath;
     }
 
     @XmlElement
