@@ -849,8 +849,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     		return true;
     	}
     	
+    	// todo handle/test ucc_bin for Unreal 1 for linux with www.oldunreal.com patch
     	if(inputGame.engine.version <= UnrealEngine.UE2.version && inputGame != UTGame.U2){
-    		return userConfig.hasGamePathSet(inputGame);
+    		return userConfig.hasGamePathSet(inputGame) && Installation.isWindows();
     	}
     	
     	return false;
@@ -867,7 +868,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     	}
     	
     	if(inputGame.engine.version <= UnrealEngine.UE2.version){
-    		return userConfig.hasGamePathSet(inputGame);
+    		// todo handle/test ucc_bin for Unreal 1 for linux with www.oldunreal.com patch
+    		return userConfig.hasGamePathSet(inputGame) && Installation.isWindows();
     	}
     	
     	return false;
