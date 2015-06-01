@@ -12,8 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -420,7 +422,7 @@ public class UPackageRessource {
      * @param logger 
      * @return  
      */
-    public File convert(Logger logger){
+    public File convert(Logger logger, UserConfig userConfig){
         
         if(type == Type.SOUND){
             SoundConverter scs = new SoundConverter(logger);
@@ -435,7 +437,12 @@ public class UPackageRessource {
         }
         
         else if(type == Type.TEXTURE){
-            TextureConverter texConverter = new TextureConverter(logger);
+            TextureConverter texConverter = new TextureConverter(logger, userConfig);
+            
+            if(!texConverter.isNConvertAvailable()){
+            	logger.log(Level.WARNING, "Impossible to convert "+name+" texture: nconvert path not set in settings");
+            	return exportInfo.getExportedFile();
+            }
             
             try {
                 File tempFile = File.createTempFile(getFullNameWithoutDots(), "."+FileUtils.getExtension(exportInfo.getExportedFile()));

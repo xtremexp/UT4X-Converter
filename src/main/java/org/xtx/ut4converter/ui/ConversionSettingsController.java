@@ -89,6 +89,9 @@ public class ConversionSettingsController implements Initializable {
     @FXML
     private CheckBox debugLogLevel;
     
+    @FXML
+    private Label warningMessage;
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -135,6 +138,11 @@ public class ConversionSettingsController implements Initializable {
             userOutputGameConfig = userConfig.getGameConfigByGame(outputGame);
         }
         
+        if(userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()){
+        	warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
+    		warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+        }
+        
         mapConverter = new MapConverter(inputGame, outputGame);
         
         disableConversionType();
@@ -150,10 +158,8 @@ public class ConversionSettingsController implements Initializable {
     }
     
     /**
-     * Temp hack
      * Disable conversion of some type of ressources depending on game
      * because all ressource converter not done yet
-     * TODO implement if conversion is possible for some specific type of ressource
      */
     private void disableConversionType(){
         
@@ -161,8 +167,8 @@ public class ConversionSettingsController implements Initializable {
         mapConverter.setConvertStaticMeshes(false);
         convSmCheckBox.setDisable(true);
         
-        // need add interface with umodel or my custom tex extractor
-        // until we can re-enable conversion of some ressources
+        // force disabled for UT3 since 
+        // it has very light support (hardly tested things)
         if(inputGame == UTGames.UTGame.UT3){
             mapConverter.noConvertRessources();
             
@@ -171,9 +177,22 @@ public class ConversionSettingsController implements Initializable {
             convMusicCheckBox.setDisable(true);
             convSmCheckBox.setDisable(true);
         }
-        else if(inputGame == UTGames.UTGame.U2){
-            mapConverter.setConvertTextures(false);
-            convTexCheckBox.setDisable(true);
+        else {
+        	boolean canConvertTextures = mapConverter.canConvertTextures();
+            mapConverter.setConvertTextures(canConvertTextures);
+            convTexCheckBox.setDisable(!canConvertTextures);
+            
+            boolean canConvertSounds = mapConverter.canConvertSounds();
+            mapConverter.setConvertSounds(canConvertSounds);
+            convSndCheckBox.setDisable(!canConvertSounds);
+            
+            boolean canConvertMusic = mapConverter.canConvertMusic();
+            mapConverter.setConvertMusic(canConvertMusic);
+            convMusicCheckBox.setDisable(!canConvertMusic);
+            
+            boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
+            mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
+            convSmCheckBox.setDisable(!canConvertStaticMeshes);
         }
     }
 

@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.ui;
 
+import java.awt.Color;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -186,6 +187,7 @@ public class SettingsSceneController implements Initializable {
         try {
             userConfig = UserConfig.load();
             
+
             if(userConfig.getUModelPath() != null){
                 uModelPath.setText(userConfig.getUModelPath().getAbsolutePath());
             }

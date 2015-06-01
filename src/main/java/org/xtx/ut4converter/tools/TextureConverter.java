@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.xtx.ut4converter.config.UserConfig;
+
 /**
  * Interface to use nconvert.exe external program
  * to convert textures
@@ -20,11 +22,16 @@ import java.util.logging.Logger;
 public class TextureConverter {
     
     Logger logger;
+    File nConvertBin;
 
-    public TextureConverter(Logger logger) {
+    public TextureConverter(Logger logger, UserConfig userConfig) {
         this.logger = logger;
+        this.nConvertBin = userConfig.getNConvertPath();
     }
     
+    public boolean isNConvertAvailable(){
+    	return nConvertBin != null && nConvertBin.exists();
+    }
     
     /**
      * Convert image file to another format
@@ -37,9 +44,7 @@ public class TextureConverter {
             return null;
         }
         
-        File nconvertBin = Installation.getNConvert();
-        
-        String command = nconvertBin.getAbsolutePath() + " -32bits -out "+textureFormat.name() + " \"" + inputTexture.getAbsolutePath() + "\"";
+        String command = nConvertBin.getAbsolutePath() + " -32bits -out "+textureFormat.name() + " \"" + inputTexture.getAbsolutePath() + "\"";
         
         List<String> logLines = new ArrayList<>();
         

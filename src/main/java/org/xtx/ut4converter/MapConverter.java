@@ -214,6 +214,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     public MapConverter(UTGame inputGame, UTGame outputGame){
         this.inputGame = inputGame;
         this.outputGame = outputGame;
+        initialise();
     }
     
     /**
@@ -286,7 +287,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     
     private void initialise(){
         
-        if(this.outPath == null){
+        if(this.outPath == null && inMap != null){
             this.outPath = Paths.get(this.getMapConvertFolder().toURI());
         }
         
@@ -301,17 +302,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             
             tm = new T3DMatch(inputGame);
                       
-            if(inMap.getName().endsWith(".t3d")){
-                inT3d = inMap;
+            if(inMap != null ){
+            	if(inMap.getName().endsWith(".t3d")){
+            		inT3d = inMap;
+            	}
+            	
+            	if(isTeamGameType == null){
+                    isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
+                }
+            	
+            	getTempExportFolder().mkdirs();
+            	
+            	initOutMapName();
             }
             
-            if(isTeamGameType == null){
-                isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
-            }
-            
-            getTempExportFolder().mkdirs();
-            
-            initOutMapName();
             
             supportedActorClasses = new SupportedClasses(this);
             
@@ -456,7 +460,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
                         // Some sounds and/or textures might need to be converted for correct import in UE4
                         if(ressource.needsConversion(this)){
-                            exportedFile = ressource.convert(logger);
+                            exportedFile = ressource.convert(logger, userConfig);
                             ressource.setExportedFile(exportedFile);
                             wasConverted = true;
                         }
@@ -830,6 +834,53 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     public boolean convertTextures() {
         return convertTextures;
     }
+    
+
+    /**
+     * Says if program can convert/export textures.
+     * For unreal engine <= 2 we can still user the stock "ucc.exe" one
+     * except for Unreal 2 which always produces "0" bytes file size
+     * but for UUE3/4 need umodel program
+     * @return <code>true</code> if it's possible to convert texture otherwise false
+     */
+    public boolean canConvertTextures(){
+    	
+    	if(userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()){
+    		return true;
+    	}
+    	
+    	if(inputGame.engine.version <= UnrealEngine.UE2.version && inputGame != UTGame.U2){
+    		return userConfig.hasGamePathSet(inputGame);
+    	}
+    	
+    	return false;
+    }
+    
+    /**
+     * Says if program can convert/export sounds.
+     * @return
+     */
+    public boolean canConvertSounds(){
+    	
+    	if(userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()){
+    		return true;
+    	}
+    	
+    	if(inputGame.engine.version <= UnrealEngine.UE2.version){
+    		return userConfig.hasGamePathSet(inputGame);
+    	}
+    	
+    	return false;
+    }
+    
+    public boolean canConvertMusic(){
+    	// just a file copy for UT2004 (.ogg files ...)
+    	if(inputGame.engine == UnrealEngine.UE2){
+    		return true;
+    	} else {
+    		return canConvertSounds();
+    	}
+    }
 
     public boolean convertSounds() {
         return convertSounds;
@@ -837,6 +888,25 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
     public boolean convertStaticMeshes() {
         return convertStaticMeshes;
+    }
+    
+    /**
+     * Says if program can export staticmeshes
+     * @return
+     */
+    public boolean canConvertStaticMeshes(){
+    	
+    	// no staticmeshes for UE1 (UT99 + Unreal 1)
+    	if(inputGame.engine == UnrealEngine.UE1){
+    		return false;
+    	}
+    	
+    	// note: can export with ucc for UT2003/UT2004 but .t3d mesh format
+    	// not working for import with UE4
+    	// conversion only partial for umodel
+    	// since pskx cannot be used by UE4 but can be imported with blender
+    	// and exported to fbx or obj format file allowed by UE4
+    	return userConfig.getUModelPath() != null && userConfig.getUModelPath().exists();
     }
 
     public boolean convertMusic() {
