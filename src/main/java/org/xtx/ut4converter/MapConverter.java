@@ -17,10 +17,13 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
+
 import javax.imageio.spi.IIORegistry;
 import javax.xml.bind.JAXBException;
+
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
@@ -34,15 +37,16 @@ import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.ui.TableRowLog;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
+import org.xtx.ut4converter.ui.TableRowLog;
 
 /**
  * 
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class MapConverter extends Task<T3DLevelConvertor> {
     
     /**
