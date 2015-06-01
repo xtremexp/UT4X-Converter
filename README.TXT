@@ -43,16 +43,17 @@ What is NOT converted
 
 Requirements
 ------------------------------
+* Windows 7 / Vista / 8 - 64 Bit Operating System
+* Java > 1.8.0_40 . www.java.com
+* Unreal Tournament 4 (2015) Editor
+* One of the following previous UT games:
+* * Unreal 1
+* * Unreal 2
+* * Unreal Tournament
+* * Unreal Tournament 2003
+* * Unreal Tournament 2004
+* * Unreal Tournament 3
 
-Operating System:
-Windows 7 / Vista / 8 - 64 Bit
-
-Unreal Tournament (1999) or Unreal 1 game
-
-Java:
-- Minimum Version required: 1.8.0_40
-- Installation: www.java.com 
-	
 Installation and first start
 ------------------------------
 Decompress the ZIP archive to any folder of your choice.
@@ -60,7 +61,7 @@ Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java tecknology version at www.java.com
 and create some "run.bat" batch file with notepad that you will save in the 
-program folder with this commande line:
+program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
 as java program)
 
@@ -68,28 +69,30 @@ How to convert map?
 ------------------------------
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
-In Unreal Editor:
-- Open the Unreal Tournament (1999) or Unreal 1 Editor
-- Open the map you want to convert 
-(note if it does not seems to load (on Windows Vista/7/8/+), copy map to some folder without spaces and re-open)
-- Export and save map to Unreal Text map using menu "File -> Export"
-
 In UT4 Converter:
 - Launch UT4 Converter
-- Go to "Convert -> <Unreal Tournament/Unreal 1> Map"
-- Select the .t3d map file you have just saved before and press OK.
+- Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
+- In the conversion settings, press "Select" and choose the map
+- Press ok and wait while the conversion is running (it might takes several minutes)
 
 In UT4 Editor:
 - Open the UT4 Editor
 - Create new level ("File -> New level ...") and select "Empty level"
+
 - Import sounds
 -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
 -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
 -- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
 (e.g:  "AmbOutside_Looping_waves4")
+
+- Import Textures
+-- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+-- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Textures
+-- After import, right click on all texture in editor and choose "create material"
+
 - Import converted map
--- "File -> Import ..."
--- Select the file <UT4ConverterPath>/Converted/<MapName>/Level/<MapName>-UT99/U1.t3d
+-- In menu, go to "File -> Import ..."
+-- Select the file <UT4ConverterPath>/Converted/<MapName>/Level/<MapName>-<X>/U1.t3d
 -- click on OK to import the map
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
@@ -133,15 +136,12 @@ Project will be saved by default in C:\Documents and Settings\<username>\My Docu
 With Eclipse IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Download and install "Eclipse for Java Developers": https://eclipse.org/downloads/
-- Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
+- Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4Converter.git"
 - Click "Finish"
 - Right click on "UT4-Converter" project then "Run as" -> "Java application"
 
-Note:
-Since it's a maven project, importing project with Eclipse IDE should work 
-but it has not been yet tested.
 
 Libraries / Technologies used
 ------------------------------
