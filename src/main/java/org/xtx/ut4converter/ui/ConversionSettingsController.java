@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,13 +18,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import javax.swing.SwingUtilities;
 import javax.xml.bind.JAXBException;
+
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -35,6 +37,7 @@ import org.xtx.ut4converter.config.UserGameConfig;
  *
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class ConversionSettingsController implements Initializable {
     @FXML
     private AnchorPane ConversionSettings;

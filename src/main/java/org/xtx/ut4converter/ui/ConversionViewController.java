@@ -8,6 +8,7 @@ package org.xtx.ut4converter.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -23,6 +24,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
  *
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class ConversionViewController implements Initializable {
     
     @FXML

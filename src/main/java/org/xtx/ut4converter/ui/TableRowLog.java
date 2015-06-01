@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
 import javafx.beans.property.SimpleStringProperty;
 
 /**
@@ -16,6 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
  * that will be redirected to table log in user interface
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class TableRowLog {
  
     /**
@@ -26,7 +28,7 @@ public class TableRowLog {
     /**
      * Log message
      */
-    private final SimpleStringProperty message;
+	private final SimpleStringProperty message;
     
     /**
      * Time of log in mm:ss:SSS format

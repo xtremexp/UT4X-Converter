@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,9 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import javax.xml.bind.JAXBException;
+
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserGameConfig;
@@ -30,6 +33,7 @@ import org.xtx.ut4converter.config.UserConfig;
  * FXML Controller class
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class SettingsSceneController implements Initializable {
     @FXML
     private TextField ut99Path;

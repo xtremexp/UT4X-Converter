@@ -112,7 +112,7 @@ public class UModelExporter extends UTPackageExtractor {
             type = Type.STATICMESH;
         }
         
-        else if(typeStr.toLowerCase().contains("staticmesh")){
+        else if(typeStr.toLowerCase().contains("sound")){
             type = Type.SOUND;
         }
 

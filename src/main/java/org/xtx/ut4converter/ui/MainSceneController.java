@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +28,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import javax.xml.bind.JAXBException;
+
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames.UTGame;
@@ -38,6 +41,7 @@ import org.xtx.ut4converter.config.UserConfig;
  * TODO i18n
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class MainSceneController implements Initializable {
     
     /**
