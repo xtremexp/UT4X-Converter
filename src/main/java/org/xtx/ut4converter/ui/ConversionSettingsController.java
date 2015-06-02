@@ -164,10 +164,7 @@ public class ConversionSettingsController implements Initializable {
      */
     private void disableConversionType(){
         
-        // SM converter not yet operational
-        mapConverter.setConvertStaticMeshes(false);
-        convSmCheckBox.setDisable(true);
-        
+
         // force disabled for UT3 since 
         // it has very light support (hardly tested things)
         if(inputGame == UTGames.UTGame.UT3){
@@ -195,6 +192,11 @@ public class ConversionSettingsController implements Initializable {
             mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
             convSmCheckBox.setDisable(!canConvertStaticMeshes);
         }
+        
+        // SM converter not yet operational
+        // delete once operational
+        mapConverter.setConvertStaticMeshes(false);
+		convSmCheckBox.setDisable(true);
     }
 
     @FXML

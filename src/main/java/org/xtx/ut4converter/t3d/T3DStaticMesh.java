@@ -125,7 +125,7 @@ public class T3DStaticMesh extends T3DSound {
         if(forcedStaticMesh != null){
             sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
         } else {
-            sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh).append("'\n");
+            sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName(mapConverter)).append("'\n");
         }
         
         
