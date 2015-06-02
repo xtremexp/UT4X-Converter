@@ -450,14 +450,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                 
                 if(exportedFile != null){
                     
-                    if(!ressource.isUsedInMap()){
-                        if(exportedFile.delete()){
-                            logger.fine("Deleted unused file "+exportedFile);
-                        }
-                    } 
-                    
                     // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
-                    else  {
+                	// move them to non temporary folder
+                    if(ressource.isUsedInMap())  {
 
                         // Some sounds and/or textures might need to be converted for correct import in UE4
                         if(ressource.needsConversion(this)){
