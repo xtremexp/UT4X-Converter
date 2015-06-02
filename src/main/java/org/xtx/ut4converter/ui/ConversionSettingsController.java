@@ -211,7 +211,7 @@ public class ConversionSettingsController implements Initializable {
         
         // TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal text files with linux
         if(Installation.isLinux()){
-        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*.t3d"));
+        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*.t3d)", "*.t3d"));
         } else {
         	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
         }
