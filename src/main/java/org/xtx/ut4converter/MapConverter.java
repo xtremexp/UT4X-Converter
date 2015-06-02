@@ -489,13 +489,28 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         }
         
         updateMessage("Deleting temporary files");
+        
         // DELETE ALL IN TEMP FOLDER
-        for(File f : getTempExportFolder().listFiles()){
-            f.delete();
-            f.deleteOnExit();
+        int i = 1;
+        
+        File[] files = getTempExportFolder().listFiles();
+        
+        for(File f : files){
+        	
+        	
+            if(f.delete()){
+            	logger.log(Level.FINE, i + "/" + files.length +" - Deleted " + f);
+            } else {
+            	f.deleteOnExit();
+            	logger.log(Level.FINE, i + "/" + files.length + " - Could not delete " + f);
+            }
+            
+            i ++;
         }
         
+        logger.log(Level.FINE, "Deleting folder"+getTempExportFolder());
         getTempExportFolder().delete();
+        
         
         // Create a folder for this map in UE4Editor
         // and copy a simple existing .uasset file so we can see the folder created in UT4 editor ...
@@ -506,11 +521,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             File wipConvertedMapFolder = new File(wipFolder + File.separator + getOutMapName());
             wipConvertedMapFolder.mkdirs();
             
+            logger.log(Level.FINE, "Creating "+wipConvertedMapFolder);
+            
             // copy small .uasset file so the folder will appear in UT4 editor ....
             File uassetFile = new File(restrictedAssetsFolder + File.separator + "Blueprints" + File.separator + "Lift" + File.separator + "Curves" + File.separator + "EaseIn-Out.uasset");
             File uassetCopy = new File(wipConvertedMapFolder + File.separator + "dummyfile.uasset");
             
-            Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            if(!uassetCopy.exists()){
+            	Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
         }
     }
 
