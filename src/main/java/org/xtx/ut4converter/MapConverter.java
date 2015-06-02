@@ -36,6 +36,7 @@ import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -489,28 +490,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         }
         
         updateMessage("Deleting temporary files");
-        
-        // DELETE ALL IN TEMP FOLDER
-        int i = 1;
-        
-        File[] files = getTempExportFolder().listFiles();
-        
-        for(File f : files){
-        	
-        	
-            if(f.delete()){
-            	logger.log(Level.FINE, i + "/" + files.length +" - Deleted " + f);
-            } else {
-            	f.deleteOnExit();
-            	logger.log(Level.FINE, i + "/" + files.length + " - Could not delete " + f);
-            }
-            
-            i ++;
-        }
-        
-        logger.log(Level.FINE, "Deleting folder"+getTempExportFolder());
-        getTempExportFolder().delete();
-        
+        org.apache.commons.io.FileUtils.deleteDirectory(getTempExportFolder());
         
         // Create a folder for this map in UE4Editor
         // and copy a simple existing .uasset file so we can see the folder created in UT4 editor ...
