@@ -6,12 +6,15 @@
 package org.xtx.ut4converter.tools;
 
 import com.sun.media.sound.WaveFileWriter;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.sound.sampled.AudioFileFormat.Type;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioFormat.Encoding;
@@ -61,7 +64,9 @@ public  class SoundConverter {
      */
     public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile){
         
-        AudioInputStream audioInputStream;
+        AudioInputStream audioInputStream = null;
+        AudioInputStream convertedIn = null;
+        
         AudioFormat srcAudioFormat;
         
 
@@ -82,7 +87,7 @@ public  class SoundConverter {
                 return;
             }
             
-            AudioInputStream convertedIn = AudioSystem.getAudioInputStream(dstAudioFormat, audioInputStream);
+            convertedIn = AudioSystem.getAudioInputStream(dstAudioFormat, audioInputStream);
             
             logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
             
@@ -90,8 +95,26 @@ public  class SoundConverter {
             writer.write(convertedIn, Type.WAVE, outWaveFile);
 
         } catch (Exception e){
-            e.printStackTrace();
-            logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName());
+            logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
+        } 
+        
+        finally {
+        	
+        	if(audioInputStream != null){
+        		try {
+					audioInputStream.close();
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
+				}
+        	}
+        	
+        	if(convertedIn != null){
+        		try {
+        			convertedIn.close();
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
+				}
+        	}
         }
             
     }
