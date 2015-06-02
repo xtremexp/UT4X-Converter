@@ -161,7 +161,7 @@ public class SettingsSceneController implements Initializable {
             
             try {
                 userConfig.saveFile();
-                settingsLog.setText(utGame.name+" folder was successfully saved to "+UserConfig.getUserConfigFile().getAbsolutePath());
+                settingsLog.setText(utGame.name+" folder saved to "+UserConfig.getUserConfigFile().getName());
             } catch (JAXBException ex) {
                 Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
                 settingsLog.setText("An error occured while saving "+UserConfig.USER_CONFIG_XML_FILE+" : "+ex.getMessage());

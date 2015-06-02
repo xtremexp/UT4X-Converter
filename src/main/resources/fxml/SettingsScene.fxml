@@ -46,7 +46,7 @@
                         <TextField fx:id="ut4EditorFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" ></TextField>
                         <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
                         
-                        <Label fx:id="settingsLog" GridPane.columnIndex="0" GridPane.rowIndex="8"  alignment="CENTER" ></Label>
+                        <Label fx:id="settingsLog" GridPane.columnIndex="0" GridPane.rowIndex="8"  alignment="CENTER" GridPane.columnSpan="3" ></Label>
                     </GridPane>
 
                 </TitledPane>
