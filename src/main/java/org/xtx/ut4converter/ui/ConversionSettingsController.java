@@ -31,6 +31,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.tools.Installation;
 
 /**
  * FXML Controller class
@@ -208,7 +209,13 @@ public class ConversionSettingsController implements Initializable {
             chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
         }
         
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
+        // TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal text files with linux
+        if(Installation.isLinux()){
+        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*.t3d"));
+        } else {
+        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
+        }
+        
         File unrealMap = chooser.showOpenDialog(new Stage());
         
         if(unrealMap != null){
