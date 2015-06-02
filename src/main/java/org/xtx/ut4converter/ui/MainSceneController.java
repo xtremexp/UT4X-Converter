@@ -272,7 +272,7 @@ public class MainSceneController implements Initializable {
     private void convertUtxMap(UTGame inputGame, UTGame outputGame) {
 
         try {
-            if (checkGamePathSet(inputGame, inputGame)) {
+            if (checkGamePathSet(inputGame, outputGame)) {
                 FXMLLoader loader = new FXMLLoader();
                 loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
                 AnchorPane page = (AnchorPane) loader.load();

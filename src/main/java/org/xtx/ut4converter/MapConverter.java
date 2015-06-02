@@ -516,6 +516,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         // and copy a simple existing .uasset file so we can see the folder created in UT4 editor ...
         if(toUT4()){
             UserGameConfig userGameConfig = userConfig.getGameConfigByGame(UTGame.UT4);
+            
+            if(userGameConfig.getPath() == null || !userGameConfig.getPath().exists()){
+            	logger.log(Level.WARNING, "UT4 Editor path not set in settings!");
+            	return;
+            }
+            
             File restrictedAssetsFolder = new File(userGameConfig.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
             File wipFolder = new File(restrictedAssetsFolder + File.separator + "Maps" + File.separator + "WIP");
             File wipConvertedMapFolder = new File(wipFolder + File.separator + getOutMapName());
