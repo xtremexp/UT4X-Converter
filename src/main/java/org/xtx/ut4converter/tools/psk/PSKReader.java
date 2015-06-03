@@ -15,9 +15,7 @@ import javax.vecmath.Vector4d;
 /**
  * PSK staticmesh file reader.
  * 
- * Code ported to java from actorx importer source code
- * 
- * All credits goes to original author Gildor
+ * Code partially ported to java from actorx importer source code
  * - http://www.gildor.org/projects/unactorx
  * 
  */
@@ -228,7 +226,6 @@ public class PSKReader {
             while(buffer.hasRemaining()){
             	
 	            ChunkHeader ch2 = new ChunkHeader(buffer);
-	            System.out.println(ch2.chunkID);
 	            
 		            if("PNTS0000".equals(ch2.chunkID.trim())){
 		            	long numVertex = ch2.dataCount;
@@ -242,7 +239,6 @@ public class PSKReader {
 		            	long numWedges = ch2.dataCount;
 		            	
 		            	boolean x = numWedges <= 65536;
-		            	System.out.println(numWedges);
 		            	
 	            		for(int i = 0; i < numWedges; i++){
 	            			wedges.add(new Vertex(buffer, x));
@@ -306,15 +302,55 @@ public class PSKReader {
 			}
         }
 		
-		System.exit(0);
 	}
 	
+	
+	
+
+	public File getPskFile() {
+		return pskFile;
+	}
+
+	public List<Vector3d> getVertices() {
+		return vertices;
+	}
+
+	public List<Vertex> getWedges() {
+		return wedges;
+	}
+
+	public List<Triangle> getTriangles() {
+		return triangles;
+	}
+
+	public List<Material> getMaterials() {
+		return materials;
+	}
+
+	public List<Bone> getBones() {
+		return bones;
+	}
+
+	public List<RawWeight> getRawWeights() {
+		return rawWeights;
+	}
 
 	public static void main (String args[]){
 		
 		File file = new File("Z:\\BarrenHardware_Lights_ELight01BA.psk");
 		PSKReader psk = new PSKReader(file);
-
 		
+		System.out.println(file);
+		
+		System.out.println("Num Vertices: "+psk.getVertices().size());
+		System.out.println("Num Wedges: "+psk.getWedges().size());
+		System.out.println("Num Triangles: "+psk.getTriangles().size());
+		System.out.println("Num Materials: "+psk.getMaterials().size());
+		
+		for(Material mat : psk.getMaterials()){
+			System.out.println("Material: "+mat.materialName);
+		}
+		
+		System.out.println("Num Bones: "+psk.getBones().size());
 	}
 }
