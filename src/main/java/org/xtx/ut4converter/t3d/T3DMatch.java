@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 
@@ -20,6 +22,8 @@ import org.xtx.ut4converter.UTGames.UTGame;
  * @author XtremeXp
  */
 public class T3DMatch {
+	
+	MapConverter mapConverter;
     
     /**
      * Conversion property.
@@ -81,11 +85,21 @@ public class T3DMatch {
     }
     
     /**
+     * @param inputGame
+     *
+     */
+    public T3DMatch(MapConverter mapConverter){
+        list = new ArrayList<>();
+        this.mapConverter = mapConverter;
+        initialise();
+    }
+    
+    /**
      * 
      * 
      * @param inputGame Input game for converting
      */
-    private void initialise(UTGame inputGame){
+    private void initialise(){
         list = new ArrayList<>();
         
         // TODO use some proper xml file to set actor 'matches'
@@ -100,27 +114,27 @@ public class T3DMatch {
 
         
         // U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Bandages"}, null, new String[]{"HealthVial", "Bandages"}, new String[]{"MiniHealthPack"}, new String[]{"MiniHealthPack"}, null, new String[]{"Health_Small_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Bandages"}, null, new String[]{"HealthVial", "Bandages"}, new String[]{"MiniHealthPack"}, new String[]{"MiniHealthPack"}, new String[]{"UTPickupFactory_HealthVial"}, new String[]{"Health_Small_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Health", "UPakHealth", "RespawningHealth", "NaliFruit"}, null, new String[]{"MedBox", "NaliFruit"}, new String[]{"HealthCharger"}, new String[]{"HealthCharger"}, null, new String[]{"Health_Medium_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Health", "UPakHealth", "RespawningHealth", "NaliFruit"}, null, new String[]{"MedBox", "NaliFruit"}, new String[]{"HealthCharger"}, new String[]{"HealthCharger"}, new String[]{"UTPickupFactory_MediumHealth"}, new String[]{"Health_Medium_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
-        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"SuperHealth"}, null, new String[]{"HealthPack"}, new String[]{"SuperHealthCharger"}, new String[]{"SuperHealthCharger"}, null, new String[]{"Health_Large_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"SuperHealth"}, null, new String[]{"HealthPack"}, new String[]{"SuperHealthCharger"}, new String[]{"SuperHealthCharger"}, new String[]{"UTPickupFactory_SuperHealth"}, new String[]{"Health_Large_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
-        initialiseWeapons(inputGame);
+        initialiseWeapons(mapConverter.getInputGame());
         
         initialiseAmmos();
         
         initialisePowerUps();
         
-        // FIXME / NOT WORKING     
-        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, new String[]{"xRedFlagBase"}, new String[]{"xRedFlagBase"}, null, new String[]{"UTRedFlagBase_C"})
+  
+        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, new String[]{"xRedFlagBase"}, new String[]{"xRedFlagBase"}, new String[]{"UTCTFRedFlagBase"}, new String[]{"UTRedFlagBase_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, -64d}));
         
         // UT99 Actor with class 'FlagBase' and property "Team" equals 1 = UTBlueFlagBase for UT4
-        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, new String[]{"xBlueFlagBase"}, new String[]{"xBlueFlagBase"}, null, new String[]{"UTBlueFlagBase_C"})
+        list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[]{"FlagBase"}, new String[]{"xBlueFlagBase"}, new String[]{"xBlueFlagBase"}, new String[]{"UTCTFBlueFlagBase"}, new String[]{"UTBlueFlagBase_C"})
                 .withP(UTGame.UT99, "Team", "1")
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, -64d}));
         
@@ -141,28 +155,36 @@ public class T3DMatch {
         List<GlobalMatch> gmPwrups = new ArrayList<>();
         
         // Items - ThighPads
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"ThighPads"}, null, null, new String[]{"UTArmorPickup_ThighPads"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ThighPads.Armor_ThighPads_C'"));
         
+        // Items - Helmet
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, null, null, null, new String[]{"UTArmorPickup_Helmet"}, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Helmet.Armor_Helmet_C'"));
+        
         // PowerUp - Armor
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, new String[]{"ShieldCharger"}, new String[]{"ShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Armor"}, null, new String[]{"Armor", "Armor2"}, new String[]{"ShieldCharger"}, new String[]{"ShieldCharger"}, new String[]{"UTArmorPickup_Vest"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_Chest.Armor_Chest_C'"));
         
         // PowerUp - ShieldBelt
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, new String[]{"SuperShieldCharger"}, new String[]{"SuperShieldCharger"}, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ShielBelt", "PowerShield"}, null, new String[]{"UT_ShieldBelt", "ShielBelt", "PowerBelt"}, new String[]{"SuperShieldCharger"}, new String[]{"SuperShieldCharger"}, new String[]{"UTArmorPickup_ShieldBelt"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Armor/Armor_ShieldBelt.Armor_ShieldBelt_C'"));
         
         // PowerUp - JumpBoots
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"JumpBoots"}, null, new String[]{"UT_Jumpboots", "JumpBoots"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"JumpBoots"}, null, new String[]{"UT_Jumpboots", "JumpBoots"}, null, null, new String[]{"UTPickupFactory_JumpBoots"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_JumpBoots.BP_JumpBoots_C'"));
         
         // PowerUp - Damage Amplifier
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, new String[]{"UDamageCharger"}, new String[]{"UDamageCharger"}, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Amplifier"}, null, new String[]{"UDamage", "Amplifier"}, new String[]{"UDamageCharger"}, new String[]{"UDamageCharger"}, new String[]{"UTPickupFactory_UDamage"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'"));
 
         // PowerUp - Invisibility
-        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Invisibility"}, null, new String[]{"Invisibility", "UT_Invisibility", "UT_Stealth"}, null, null, null, new String[]{UT4_CLS_PWRUP})
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Invisibility"}, null, new String[]{"Invisibility", "UT_Invisibility", "UT_Stealth"}, null, null, new String[]{"UTPickupFactory_Invisibility"}, new String[]{UT4_CLS_PWRUP})
                 .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Invis.BP_Invis_C'"));
+        
+        // PowerUp - Berserk
+        gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, null, null, null, new String[]{"UTPickupFactory_Berserk"}, new String[]{UT4_CLS_PWRUP})
+                .withP(UTGame.UT4, UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Berserk.BP_Berserk_C'"));
         
         for(GlobalMatch gmPwrup : gmPwrups){
             gmPwrup.addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d});
@@ -177,28 +199,29 @@ public class T3DMatch {
     private void initialiseAmmos(){
         
         // UT2004, no ammo for enforcer
+    	// UT3: UTAmmo_EnforcerRifle
         List<GlobalMatch> gmAmmos = new ArrayList<>();
         
         // Ammo - BioAmmo
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, new String[]{"BioAmmoPickup"}, new String[]{"BioAmmoPickup"}, null, new String[]{"BioAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Sludge"}, null, new String[]{"BioAmmo", "Sludge"}, new String[]{"BioAmmoPickup"}, new String[]{"BioAmmoPickup"}, new String[]{"UTAmmo_BioRifle_Content", "UTAmmo_BioRifle"}, new String[]{"BioAmmoPickup_C"}));
         
         // Ammo - Minigun
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, new String[]{"MinigunAmmoPickup"}, new String[]{"MinigunAmmoPickup"}, null, new String[]{"MinigunAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Clip"}, null, new String[]{"Miniammo", "EClip"}, new String[]{"MinigunAmmoPickup"}, new String[]{"MinigunAmmoPickup"}, new String[]{"UTAmmo_Stinger"}, new String[]{"MinigunAmmoPickup_C"}));
         
         // Ammo - Flak
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, new String[]{"FlakAmmoPickup"}, new String[]{"FlakAmmoPickup"}, null, new String[]{"FlakAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"FlakBox", "FlakShellAmmo"}, null, new String[]{"FlakAmmo", "FlakBox", "FlakShellAmmo"}, new String[]{"FlakAmmoPickup"}, new String[]{"FlakAmmoPickup"}, new String[]{"UTAmmo_FlakCannon"}, new String[]{"FlakAmmoPickup_C"}));
         
         // Ammo - Rocket
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, new String[]{"RocketAmmoPickup"}, new String[]{"RocketAmmoPickup"}, null, new String[]{"RocketAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RocketCan", "RLAmmo"}, null, new String[]{"RocketPack", "RocketCan"}, new String[]{"RocketAmmoPickup"}, new String[]{"RocketAmmoPickup"}, new String[]{"UTAmmo_RocketLauncher"}, new String[]{"RocketAmmoPickup_C"}));
         
         // Ammo - Shock
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, new String[]{"ShockAmmoPickup"}, new String[]{"ShockAmmoPickup"}, null, new String[]{"ShockAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"ASMDAmmo"}, null, new String[]{"ShockCore", "ASMDAmmo"}, new String[]{"ShockAmmoPickup"}, new String[]{"ShockAmmoPickup"}, new String[]{"UTAmmo_ShockRifle"}, new String[]{"ShockAmmoPickup_C"}));
         
         // Ammo - Sniper
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, new String[]{"SniperAmmoPickup"}, new String[]{"SniperAmmoPickup"}, null, new String[]{"SniperAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"RifleAmmo", "RifleRound"}, null, new String[]{"BulletBox", "RifleAmmo", "RifleRound", "RifleShell"}, new String[]{"SniperAmmoPickup"}, new String[]{"SniperAmmoPickup"}, new String[]{"UTAmmo_SniperRifle"}, new String[]{"SniperAmmoPickup_C"}));
         
         // Ammo - LinkGun
-        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, new String[]{"LinkAmmoPickup"}, new String[]{"LinkAmmoPickup"}, null, new String[]{"LinkAmmoPickup_C"}));
+        gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, new String[]{"PAmmo"}, new String[]{"LinkAmmoPickup"}, new String[]{"LinkAmmoPickup"}, new String[]{"UTAmmo_LinkGun"}, new String[]{"LinkAmmoPickup_C"}));
         
         for(GlobalMatch gmAmmo : gmAmmos){
             gmAmmo.addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 8d});
@@ -207,6 +230,10 @@ public class T3DMatch {
         list.addAll(gmAmmos);
     }
     
+    /**
+     * TODO handle UT3 WeaponLocker and WeaponPickupFactory
+     * @param inputGame
+     */
     private void initialiseWeapons(UTGame inputGame){
         
         final String UT4_CLS_WPT = "WeaponBase_C";
@@ -467,43 +494,43 @@ public class T3DMatch {
     List<GlobalMatch> list;
     
     /**
-     * @param inputGame
-     *
+     * 
+     * @param game
+     * @return
      */
-    public T3DMatch(UTGame inputGame){
-        list = new ArrayList<>();
-        initialise(inputGame);
+    private boolean isFromOrTo(UTGame game){
+    	return mapConverter.getInputGame() == game || mapConverter.getOutputGame() == game;
     }
     
     private GlobalMatch iByGame(Class<? extends T3DActor> t3dClass, String convertProp, String[] u1Class, String[] u2Class, String[] ut99Class, String[] ut2003Class, String[] ut2004Class, String[] ut3Class, String[] ut4Class){
         
         List<Match> matches = new ArrayList<>();
         
-        if(u1Class != null){
+        if(u1Class != null && isFromOrTo(UTGames.UTGame.U1)){
             matches.add(new Match(u1Class, UTGames.UTGame.U1, t3dClass, convertProp));
         }
         
-        if(u2Class != null){
+        if(u2Class != null && isFromOrTo(UTGames.UTGame.U2)){
             matches.add(new Match(u2Class, UTGames.UTGame.U2, t3dClass, convertProp));
         }
         
-        if(ut99Class != null){
+        if(ut99Class != null && isFromOrTo(UTGames.UTGame.UT99)){
             matches.add(new Match(ut99Class, UTGames.UTGame.UT99, t3dClass, convertProp));
         }
         
-        if(ut2003Class != null){
+        if(ut2003Class != null && isFromOrTo(UTGames.UTGame.UT2003)){
             matches.add(new Match(ut2003Class, UTGames.UTGame.UT2003, t3dClass, convertProp));
         }
         
-        if(ut2004Class != null){
+        if(ut2004Class != null && isFromOrTo(UTGames.UTGame.UT2004)){
             matches.add(new Match(ut2004Class, UTGames.UTGame.UT2004, t3dClass, convertProp));
         }
         
-        if(ut3Class != null){
+        if(ut3Class != null && isFromOrTo(UTGames.UTGame.UT3)){
             matches.add(new Match(ut3Class, UTGames.UTGame.UT3, t3dClass, convertProp));
         }
         
-        if(ut4Class != null){
+        if(ut4Class != null && isFromOrTo(UTGames.UTGame.UT4)){
             matches.add(new Match(ut4Class, UTGames.UTGame.UT4, t3dClass, convertProp));
         }
         

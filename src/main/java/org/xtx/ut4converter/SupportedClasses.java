@@ -128,7 +128,7 @@ public class SupportedClasses {
         putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");//, "BlockAll");
         
 
-        putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover");
+        putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover", "LoopMover", "InterpActor");
         
         putUtClass(T3DPlayerStart.class, "PlayerStart");
         //putUtClass(T3DStaticMesh.class, "StaticMeshActor");
@@ -163,9 +163,9 @@ public class SupportedClasses {
         }
         
         // TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
-        putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter");
+        putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
         putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
-        putUtClass(T3DLiftExit.class, "LiftExit");
+        putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
         putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
         
         addMatches(mapConverter);
@@ -175,5 +175,6 @@ public class SupportedClasses {
         uneededActors.add("TranslocDest");
         uneededActors.add("AntiPortalActor"); //ut2004
         uneededActors.add("Adrenaline"); //ut2004
+        uneededActors.add("ReachSpec"); //ut2004
     }
 }

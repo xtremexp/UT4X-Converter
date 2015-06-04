@@ -301,7 +301,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         
         try {
             
-            tm = new T3DMatch(inputGame);
+            tm = new T3DMatch(this);
                       
             if(inMap != null ){
             	if(inMap.getName().endsWith(".t3d")){
