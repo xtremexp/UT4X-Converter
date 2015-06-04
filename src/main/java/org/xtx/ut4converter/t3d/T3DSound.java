@@ -5,9 +5,13 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
@@ -61,7 +65,24 @@ public class T3DSound extends T3DActor {
         Sphere, Capsule, Box, Cone
     }
     
+
     /**
+     * UE3
+     * @author XtremeXp
+     *
+     */
+    enum DistributionType {
+    	DistributionDelayTime,
+    	DistributionMinRadius,
+    	DistributionMaxRadius,
+    	DistributionLPFMinRadius,
+    	DistributionLPFMaxRadius,
+    	DistributionVolume,
+    	DistributionPitch
+    }
+    
+    /**
+     * UE4:
      * TODO move out to ucore package ?
      */
     class AttenuationSettings {
@@ -182,13 +203,13 @@ public class T3DSound extends T3DActor {
         super(mc, t3dClass);
         ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
         
-        setDefaults();
+        initialise();
     }
     
     /**
      * TODO some outside kind of UProperty class with defaults value for each UE version
      */
-    private void setDefaults(){
+    private void initialise(){
         
         if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)){
             attenuation.attenuationShapeExtents.x = 64d; // Default Radius in UE1/2
@@ -212,8 +233,59 @@ public class T3DSound extends T3DActor {
             soundPitch = T3DUtils.getDouble(line);
         }
         
-        // AmbientSound=Sound'AmbAncient.Looping.Stower51'
-        else if(line.startsWith("AmbientSound=")){
+        // UE3
+        else if(line.startsWith("Min=")){
+        	
+        	Double min = T3DUtils.getDouble(line);
+        	
+        	if(DistributionType.DistributionPitch.name().equals(currentSubObjectName)){
+        		soundPitch = min;
+        	} 
+        	else if(DistributionType.DistributionVolume.name().equals(currentSubObjectName)){
+        		soundVolume = min;
+        	}
+        	else if(DistributionType.DistributionLPFMinRadius.name().equals(currentSubObjectName)){
+        		attenuation.LPFRadiusMin = min;
+        	}
+        	else if(DistributionType.DistributionLPFMaxRadius.name().equals(currentSubObjectName)){
+        		attenuation.LPFRadiusMax = min;
+        	}
+        	else if(DistributionType.DistributionMaxRadius.name().equals(currentSubObjectName)){
+        		attenuation.omniRadius = min;
+        	}
+        	else if(DistributionType.DistributionMinRadius.name().equals(currentSubObjectName)){
+        		attenuation.omniRadius = min;
+        	}
+        }
+        
+        // UE3
+        else if(line.startsWith("Max=")){
+        	
+        	Double max = T3DUtils.getDouble(line);
+        	
+        	if(DistributionType.DistributionPitch.name().equals(currentSubObjectName)){
+        		soundPitch = Math.max(soundPitch, max);
+        	} 
+        	else if(DistributionType.DistributionVolume.name().equals(currentSubObjectName)){
+        		soundVolume = Math.max(soundVolume, max);
+        	}
+        	else if(DistributionType.DistributionLPFMinRadius.name().equals(currentSubObjectName)){
+        		attenuation.LPFRadiusMin = Math.max(attenuation.LPFRadiusMin, max);
+        	}
+        	else if(DistributionType.DistributionLPFMaxRadius.name().equals(currentSubObjectName)){
+        		attenuation.LPFRadiusMax = Math.max(attenuation.LPFRadiusMax, max);
+        	}
+        	else if(DistributionType.DistributionMaxRadius.name().equals(currentSubObjectName)){
+        		attenuation.omniRadius = Math.max(attenuation.omniRadius, max);
+        	}
+        	else if(DistributionType.DistributionMinRadius.name().equals(currentSubObjectName)){
+        		attenuation.omniRadius = Math.max(attenuation.omniRadius, max);
+        	}
+        }
+        
+        // UE1/2: AmbientSound=Sound'AmbAncient.Looping.Stower51'
+        // UE3: Wave=SoundNodeWave'A_Ambient_Loops.Water.water_drain01'
+        else if(line.startsWith("AmbientSound=") || line.startsWith("Wave=")){
             ambientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
         } 
         else {
@@ -266,6 +338,8 @@ public class T3DSound extends T3DActor {
             // tested DM-ArcaneTemple (UT99)
             attenuation.fallOffDistance = attenuation.attenuationShapeExtents.x * 24;
 
+        } else if(mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)){
+        	// TODO
         }
         
         if(mapConverter.convertSounds() && ambientSound != null){

@@ -165,6 +165,29 @@ public abstract class T3DActor {
     protected List<T3DActor> children = new ArrayList<>();
     
     
+    String currentSubObjectClass;
+    String currentSubObjectName;
+    
+    /**
+     * Begin Object Class=DistributionFloatUniform Name=DistributionDelayTime
+     * For UE3 only used to get subobject definitions
+     * @param line
+     */
+    public void preAnalyse(String line){
+    	
+    	if(!UTGames.isUnrealEngine3(mapConverter.getInputGame())){
+    		return;
+    	}
+    	// Class=DistributionFloatUniform Name=DistributionPitch ObjName=DistributionFloatUniform
+    	if(line.startsWith("Begin Object")){
+    		currentSubObjectClass = line.split("Class=")[1].split(" Name=")[0];
+    		currentSubObjectName = line.split("Name=")[1].split("\\ ")[0];
+    	} 
+    	else if(line.startsWith("End Object")){
+    		currentSubObjectClass = null;
+    		currentSubObjectName = null;
+    	}
+    }
 
     /**
      * Read line of t3d file to parse data about current t3d actor being read

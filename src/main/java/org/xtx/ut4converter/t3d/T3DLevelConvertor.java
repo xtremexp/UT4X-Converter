@@ -304,6 +304,8 @@ public class T3DLevelConvertor extends Task<Object> {
      */
     private void analyzeLine(String line) throws IOException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
 
+    	line = line.trim();
+    	
         if (isBeginActor(line)) {
             actorsReadCount ++;
             currentClass = getActorClass(line);
@@ -328,7 +330,7 @@ public class T3DLevelConvertor extends Task<Object> {
                         banalyseline = true;
                         utActorClass = T3DNote.class;
                         uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
-                        uta.analyseT3DData(line);
+                        uta.preAnalyse(line);
                         convertedActors.add(uta);
                     } else {
                         logger.warning("Unconverted "+currentClass);
@@ -371,7 +373,8 @@ public class T3DLevelConvertor extends Task<Object> {
         else {
             if (banalyseline) {
                 if (uta != null) {
-                    uta.analyseT3DData(line.trim());
+                	uta.preAnalyse(line);
+                    uta.analyseT3DData(line);
                 }
             }
         }
