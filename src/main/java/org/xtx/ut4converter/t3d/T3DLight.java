@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
@@ -184,7 +185,7 @@ public class T3DLight extends T3DSound {
      * How much attenuation radius will be multiplied
      * Attenuation Radius = Radius(UE123) * Factor
      */
-    private static final int UE123_UE4_ATTENUATION_RADIUS_FACTOR = 20;
+    private static final int UE12_UE4_ATTENUATION_RADIUS_FACTOR = 20;
 
     Double intensity;
     
@@ -211,11 +212,22 @@ public class T3DLight extends T3DSound {
         super(mc, t3dClass);
         
         // Default Values when u put some light in UE1/UE2 editor
-        this.hue = 0;
-        this.saturation = 255f;
-        this.brightness = 64f;
-        this.radius = 64f;
-        
+        if(mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)){
+	        this.hue = 0;
+	        this.saturation = 255f;
+	        this.brightness = 64f;
+	        this.radius = 64f;
+        } 
+        // Default Values when u put some light in UE4 editor
+        else if(mc.isFrom(UnrealEngine.UE3)){
+        	this.radius = 1024f;
+        	this.brightness = 1f;
+        	
+        	this.red = 255;
+        	this.blue = 255;
+        	this.green = 255;
+        	this.alpha = 0;
+        }
         
         this.intensity = 60d;
         this.lightFalloffExponent = 2.5d;
@@ -442,6 +454,7 @@ public class T3DLight extends T3DSound {
             }
         }
         
+        // TODO handle UT3 brightness correctly
         if(intensity != null && mapConverter.brightnessFactor != null){
             intensity *= mapConverter.brightnessFactor;
         }
@@ -449,11 +462,13 @@ public class T3DLight extends T3DSound {
 
         attenuationRadius = radius;
 
-        attenuationRadius *= UE123_UE4_ATTENUATION_RADIUS_FACTOR;
-
-        if(outerConeAngle != null){
-            // 0 -> 255 range to 0 -> 180 range
-            outerConeAngle *= (255d/360d)/2;
+        if(mapConverter.isFromUE1UE2ToUE3UE4()){
+        	attenuationRadius *= UE12_UE4_ATTENUATION_RADIUS_FACTOR;
+        	
+        	if(outerConeAngle != null){
+                // 0 -> 255 range to 0 -> 180 range
+                outerConeAngle *= (255d/360d)/2;
+            }
         }
         
         
