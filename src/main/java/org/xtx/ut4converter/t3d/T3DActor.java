@@ -514,7 +514,7 @@ public abstract class T3DActor {
         if(mapConverter.toUnrealEngine4()){
             if(drawScale != null){
                 // limited sprite scale for staticmeshes because UT3 uses drawscale as drawscale3d in same time
-            	if("StaticMeshActor".equals(t3dOriginClass)){
+            	if(!"StaticMeshActor".equals(t3dOriginClass)){
             		sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
             	}
             }
