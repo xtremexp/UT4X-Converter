@@ -219,6 +219,7 @@ public class T3DLight extends T3DSound {
 	        this.radius = 64f;
 	        
 	        this.lightFalloffExponent = 2.5d;
+	        this.intensity = 60d;
         } 
         // Default Values when u put some light in UE4 editor
         else if(mc.isFrom(UnrealEngine.UE3)){
@@ -230,9 +231,10 @@ public class T3DLight extends T3DSound {
         	this.green = 255;
         	this.alpha = 0;
         	this.lightFalloffExponent = 2d;
+        	this.intensity = 10d;
         }
         
-        this.intensity = 60d;
+        
     }
     
     @Override
