@@ -6,9 +6,13 @@
 package org.xtx.ut4converter.ucore;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
@@ -71,10 +75,13 @@ public class UPackage {
     /**
      * Gets the associated file with this package.
      * @param gamePath Base path of the ut game this unreal package comes from
+     * @param inputEngine
      * @return 
      */
-    public File getFileContainer(File gamePath){
+    public File getFileContainer(MapConverter mapConverter){
         
+    	File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
+    	
         if(this.file != null){
             return this.file;
         }
@@ -84,20 +91,44 @@ public class UPackage {
             this.file = new File(name);
         }
         else {
-            this.file = new File(gamePath.getAbsolutePath() + File.separator + getFileFolder() + File.separator + getName() + getFileExtension());
-            
-            // Temp hack sometimes textures are embedded not only in .utx files but .u files
-            if(!this.file.exists()){
-                this.file = new File(gamePath.getAbsolutePath() + File.separator + "System" + File.separator + getName() + ".u");
-            }
-            
-            // might be map itself
-            if(!this.file.exists()){
-                this.file = new File(gamePath.getAbsolutePath() + File.separator + "Maps" + File.separator + getName() + "." + game.mapExtension);
-            }
+        	
+        	if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)){
+	            this.file = new File(gamePath.getAbsolutePath() + File.separator + getFileFolder() + File.separator + getName() + getFileExtension());
+	            
+	            // Temp hack sometimes textures are embedded not only in .utx files but .u files
+	            if(!this.file.exists()){
+	                this.file = new File(gamePath.getAbsolutePath() + File.separator + "System" + File.separator + getName() + ".u");
+	            }
+	            
+	            // might be map itself
+	            if(!this.file.exists()){
+	                this.file = new File(gamePath.getAbsolutePath() + File.separator + "Maps" + File.separator + getName() + "." + game.mapExtension);
+	            }
+        	} 
+        	else if(mapConverter.getInputGame() == UTGame.UT3){
+        		return getUT3FileContainer(gamePath);
+        	}
         }
         
         return this.file;
+    }
+    
+    private File getUT3FileContainer(File gamePath){
+    	
+    	File utGameFolder = new File(gamePath.getAbsolutePath() + File.separator + "UTGame");
+		final String UPK = "upk";
+		
+
+		Collection<File> files = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
+		
+		for(File upk : files){
+			
+			if(upk.getName().toLowerCase().equals(getName().toLowerCase() + "." + UPK)){
+				return upk;
+			}
+		}
+		
+		return null;
     }
     
     public void setFile(File file) {

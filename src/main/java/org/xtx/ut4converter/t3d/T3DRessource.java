@@ -8,7 +8,6 @@ package org.xtx.ut4converter.t3d;
 /**
  * 
  * @author XtremeXp
- * @deprecated  Delete after move enum "Type"
  */
 public class T3DRessource {
     

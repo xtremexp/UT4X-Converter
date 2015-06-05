@@ -32,7 +32,7 @@ public class CopyExporter extends UTPackageExtractor {
     @Override
     public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
         
-        File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath());
+        File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
         File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
         outputFile.mkdirs();
         

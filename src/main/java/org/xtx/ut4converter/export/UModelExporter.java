@@ -44,13 +44,13 @@ public class UModelExporter extends UTPackageExtractor {
         
         File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
         
-        String command = getExporterPath() + " -export -sounds -groups \"" + ressource.getUnrealPackage().getFileContainer(gamePath) + "\"";
+        String command = getExporterPath() + " -export -sounds -groups \"" + ressource.getUnrealPackage().getFileContainer(mapConverter) + "\"";
         command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
         command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
         
         List<String> logLines = new ArrayList<>();
         
-        logger.log(Level.INFO, "Exporting " + ressource.getUnrealPackage().getFileContainer(gamePath).getName() + " with "+getName());
+        logger.log(Level.INFO, "Exporting " + ressource.getUnrealPackage().getFileContainer(mapConverter).getName() + " with "+getName());
         logger.log(Level.FINE, command);
         
         Installation.executeProcess(command, logLines);
@@ -125,7 +125,14 @@ public class UModelExporter extends UTPackageExtractor {
             exportedFile = new File(exportFolder + File.separator + name + ".tga");
         }
         else if(type == Type.SOUND){
-            exportedFile = new File(exportFolder + File.separator + name + ".wav");
+        	
+        	if(mapConverter.getInputGame().engine.version <= 2){
+        		exportedFile = new File(exportFolder + File.separator + name + ".wav");
+        	} 
+        	
+        	else if(mapConverter.getInputGame().engine.version == 3){
+        		exportedFile = new File(exportFolder + File.separator + name + ".ogg");
+        	}
         }
 
         

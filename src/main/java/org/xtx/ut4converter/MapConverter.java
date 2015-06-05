@@ -448,7 +448,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                 wasConverted = false;
                 File exportedFile = ressource.getExportedFile();
                 
-                if(exportedFile != null){
+                if(exportedFile != null && exportedFile.length() > 0){
                     
                     // Renaming exported files (e.g: Stream2.wav -> AmbOutside_Looping_Stream2.wav)
                 	// move them to non temporary folder
@@ -462,7 +462,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                         }
                         
                         File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
-                        newFile.mkdirs();
+                        newFile.getParentFile().mkdirs();
                         newFile.createNewFile();
                         
                         // sometimes it does not find the exported texture (? ... weird)

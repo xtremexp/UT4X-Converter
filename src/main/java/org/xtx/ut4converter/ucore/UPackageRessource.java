@@ -399,7 +399,8 @@ public class UPackageRessource {
         }
         
         if(mc.isFromUE1UE2ToUE3UE4()){
-            if(type == Type.SOUND){
+        	
+            if(type == Type.SOUND && mc.getInputGame().engine.version <= 2){
                 return true;
             }
             

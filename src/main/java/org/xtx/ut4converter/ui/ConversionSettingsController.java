@@ -170,10 +170,13 @@ public class ConversionSettingsController implements Initializable {
         if(inputGame == UTGames.UTGame.UT3){
             mapConverter.noConvertRessources();
             
-            convSndCheckBox.setDisable(true);
+            
             convTexCheckBox.setDisable(true);
             convMusicCheckBox.setDisable(true);
             convSmCheckBox.setDisable(true);
+            
+            convSndCheckBox.setDisable(false);
+            mapConverter.setConvertSounds(true);
         }
         else {
         	boolean canConvertTextures = mapConverter.canConvertTextures();

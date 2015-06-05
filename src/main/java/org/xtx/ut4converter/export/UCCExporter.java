@@ -342,10 +342,10 @@ public final class UCCExporter extends UTPackageExtractor {
         boolean noDelete = false;
         
         try {
-            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(gamePath).getName()+" "+unrealPackage.type.name()+" package (mode: " + getUccOptions(unrealPackage.type, mapConverter.getInputGame().engine) + ")");
+            logger.log(Level.INFO, "Exporting "+unrealPackage.getFileContainer(mapConverter).getName()+" "+unrealPackage.type.name()+" package (mode: " + getUccOptions(unrealPackage.type, mapConverter.getInputGame().engine) + ")");
 
             // Copy of unreal package to folder of ucc.exe (/System) for U1/U2
-            unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(gamePath).getName());
+            unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(mapConverter).getName());
             
             // we might be exporting a .u file
             if(unrealMapCopy.exists()){
@@ -353,7 +353,7 @@ public final class UCCExporter extends UTPackageExtractor {
             } else {
                 logger.log(Level.FINE, "Creating " + unrealMapCopy.getAbsolutePath());
                 unrealMapCopy.createNewFile();
-                Files.copy(unrealPackage.getFileContainer(gamePath).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(unrealPackage.getFileContainer(mapConverter).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
             
             List<String> logLines = new ArrayList<>();
@@ -376,7 +376,7 @@ public final class UCCExporter extends UTPackageExtractor {
             // Program did not work as expected
             // some ressources may have been partially extracted
             if(exitValue != 0){
-                logger.log(Level.SEVERE, "Full export for "+unrealPackage.getFileContainer(gamePath).getName()+" failed with ucc.exe batchexport");
+                logger.log(Level.SEVERE, "Full export for "+unrealPackage.getFileContainer(mapConverter).getName()+" failed with ucc.exe batchexport");
             }
             
             unrealPackage.setExported(true);
