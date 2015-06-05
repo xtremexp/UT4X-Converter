@@ -317,6 +317,7 @@ public class T3DLevelConvertor extends Task<Object> {
                 if (utActorClass != null) {
                     Constructor cons = utActorClass.getConstructor(MapConverter.class, String.class);
                     uta = (T3DActor) cons.newInstance(mapConverter, getActorClass(line));
+                    uta.setT3dOriginClass(currentClass);
                     convertedActors.add(uta);
                     uta.analyseT3DData(line);
                 } 
@@ -330,6 +331,7 @@ public class T3DLevelConvertor extends Task<Object> {
                         banalyseline = true;
                         utActorClass = T3DNote.class;
                         uta = new T3DNote(mapConverter, "Unconverted: "+currentClass, true);
+                        uta.setT3dOriginClass(currentClass);
                         uta.preAnalyse(line);
                         convertedActors.add(uta);
                     } else {

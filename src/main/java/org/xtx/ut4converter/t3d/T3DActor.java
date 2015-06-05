@@ -54,8 +54,16 @@ public abstract class T3DActor {
      */
     protected T3DMatch.UE4_RCType ue4RootCompType = T3DMatch.UE4_RCType.UNKNOWN;
     
+    
     /**
      * Original actor class
+     */
+    protected String t3dOriginClass;
+    
+    /**
+     * Actor class
+     * (may differ from origin class if actor could not be converted (e.g: note class)
+     * or replaced with another one)
      */
     protected String t3dClass;
     
@@ -213,7 +221,13 @@ public abstract class T3DActor {
     }
     
     
-    /**
+    
+    
+    public void setT3dOriginClass(String t3dOriginClass) {
+		this.t3dOriginClass = t3dOriginClass;
+	}
+
+	/**
      * Get some important info about actors like location,rotation,drawscale,...
      * @param line T3D level line being analyzed
      * @return true if some Data has been parsed.
@@ -499,9 +513,10 @@ public abstract class T3DActor {
         
         if(mapConverter.toUnrealEngine4()){
             if(drawScale != null){
-                // limited sprite scale because UT3 uses drawscale as drawscale3d in same time
-                // so some unconverted actors such as SM got huge drawscale
-                sbf.append(IDT).append("\tSpriteScale=").append(Math.min(drawScale, 10d)).append("\n");
+                // limited sprite scale for staticmeshes because UT3 uses drawscale as drawscale3d in same time
+            	if("StaticMeshActor".equals(t3dOriginClass)){
+            		sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
+            	}
             }
             sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
         } 
