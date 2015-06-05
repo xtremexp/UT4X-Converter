@@ -217,6 +217,8 @@ public class T3DLight extends T3DSound {
 	        this.saturation = 255f;
 	        this.brightness = 64f;
 	        this.radius = 64f;
+	        
+	        this.lightFalloffExponent = 2.5d;
         } 
         // Default Values when u put some light in UE4 editor
         else if(mc.isFrom(UnrealEngine.UE3)){
@@ -227,10 +229,10 @@ public class T3DLight extends T3DSound {
         	this.blue = 255;
         	this.green = 255;
         	this.alpha = 0;
+        	this.lightFalloffExponent = 2d;
         }
         
         this.intensity = 60d;
-        this.lightFalloffExponent = 2.5d;
     }
     
     @Override
@@ -239,7 +241,8 @@ public class T3DLight extends T3DSound {
         // TODO skip this if UT3 and class not a light class
         // unlike in UE1/UE2 all actors do not have lightning properties in UT3
         
-        if(line.startsWith("LightBrightness")){
+    	// UE1/2, UE3
+        if(line.startsWith("LightBrightness") || line.startsWith("Brightness")){
             brightness = T3DUtils.getFloat(line);
         }
         
@@ -251,7 +254,8 @@ public class T3DLight extends T3DSound {
             saturation = T3DUtils.getFloat(line);
         }
         
-        else if(line.startsWith("LightRadius")){
+        // UE1/2, UE3
+        else if(line.startsWith("LightRadius") || line.startsWith("Radius")){
             radius = T3DUtils.getFloat(line);
         } 
         
@@ -279,6 +283,7 @@ public class T3DLight extends T3DSound {
         // UT3
         // LightColor=(B=58,G=152,R=197,A=0)
         else if(line.startsWith("LightColor=")){
+        	
             RGBColor rgbColor = T3DUtils.getRGBColor(line);
             this.green = rgbColor.G;
             this.blue = rgbColor.B;
