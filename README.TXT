@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.4-DEV
+- Version: 0.4
 - Author: XtremeXp
-- Release Date: 08/05/2015 (0.3.0)
+- Release Date: 06/06/2015
 - Download latest released version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -45,7 +45,7 @@ Here is the conversion table for all ut games about what the program can convert
 
 Note:
 UT99/U1 Lightning: For Unreal Tournament (99) and Unreal 1, zoneinfo actor does not exist in UT4, since then
-StaticMesh conversion is not yet operational. Since UT3 is nearly full of statismeshes, conversion
+StaticMesh conversion is not yet operational. Since UT3 is nearly full of staticmeshes, conversion
 is pretty bad. (same note for some ut2004 maps)
 
 What is NOT converted
@@ -179,8 +179,10 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
-- 0.4.0 - In Progress:
+- 0.4.0 - 06/06/2015:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
+  (note Unreal 2/UT2003/UT2004/UT3 conversion is pretty bad for some maps
+  since staticmesh conversion is not yet available)
   * Added conversion for textures (note: material textures are not yet converted)
   * Automatically extract music now
   * [UI] Added advanced conversion settings

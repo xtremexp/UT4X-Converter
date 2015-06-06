@@ -102,10 +102,13 @@ public class MainSceneController implements Initializable {
         alert.setTitle("Welcome!");
         alert.setHeaderText("Welcome to UT4 Converter");
         
-        String msg = "In order to fully use the converter you need to set: \n";
+        String msg = "Note that since staticmesh and terrain conversion is not yet supported \n";
+        msg += "conversion of some maps from Unreal 2/UT2003/UT2004/UT3 might be pretty bad\n\n";
+        
+        msg += "In order to fully use the converter you need to set: \n";
         msg += "- the unreal game(s) path(s)\n";
-        msg += "- download and set the umodel file path\n";
-        msg += "- download and set the nvconvert file path\n";
+        msg += "- download and set the umodel program file path (download at: http://www.gildor.org/en/projects/umodel ) \n";
+        msg += "- download and set the nconvert program file path (download at: http://www.xnview.com/en/nconvert/ ) \n";
         msg += "\nPress OK to go to the settings panel";
         
         alert.setContentText(msg);
