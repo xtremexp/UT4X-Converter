@@ -19,8 +19,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.concurrent.Task;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
@@ -31,6 +34,7 @@ import org.xtx.ut4converter.ui.ConversionViewController;
  * to Unreal Tournament "4" t3d file
  * @author XtremeXp
  */
+@SuppressWarnings("restriction")
 public class T3DLevelConvertor extends Task<Object> {
     
     /**
@@ -241,7 +245,7 @@ public class T3DLevelConvertor extends Task<Object> {
     /**
      * Current actor class
      */
-    Class utActorClass = null;
+    Class<? extends T3DActor> utActorClass = null;
     T3DActor uta = null;
     
     private final int LEVEL_OBJECT_LEVEL = 1;
@@ -315,7 +319,7 @@ public class T3DLevelConvertor extends Task<Object> {
                 banalyseline = true;
 
                 if (utActorClass != null) {
-                    Constructor cons = utActorClass.getConstructor(MapConverter.class, String.class);
+                    Constructor<? extends T3DActor> cons = utActorClass.getConstructor(MapConverter.class, String.class);
                     uta = (T3DActor) cons.newInstance(mapConverter, getActorClass(line));
                     uta.setT3dOriginClass(currentClass);
                     convertedActors.add(uta);
@@ -452,8 +456,7 @@ public class T3DLevelConvertor extends Task<Object> {
                 }
             }
             
-            Double offset = 100d;
-            
+
             // box dimensions that would fit perfectly the level in
             levelDimension = new Vector3d();
             levelDimension.x = Math.abs(max.x) + Math.abs(min.x);

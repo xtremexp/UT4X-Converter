@@ -23,7 +23,7 @@ public class SupportedClasses {
     /**
      * If in t3d
      */
-    protected HashMap<String, Class> classToUtActor = new HashMap();
+    protected HashMap<String, Class<? extends T3DActor>> classToUtActor = new HashMap<>();
 
 
     /**
@@ -60,7 +60,7 @@ public class SupportedClasses {
      * @param classNames
      * @param utActorClass
      */
-    public void putUtClass(Class utActorClass, String... classNames){
+    public void putUtClass(Class<? extends T3DActor> utActorClass, String... classNames){
         if(classNames == null){
             return;
         }
@@ -88,7 +88,7 @@ public class SupportedClasses {
      * @param utClassName
      * @return 
      */
-    public Class getConvertActorClass(String utClassName){
+    public Class<? extends T3DActor> getConvertActorClass(String utClassName){
         return classToUtActor.get(utClassName.toLowerCase());
     }
     
@@ -116,7 +116,7 @@ public class SupportedClasses {
      * @param actor
      * @param t3dClass 
      */
-    public void setConvertOnly(String actor, Class t3dClass){
+    public void setConvertOnly(String actor, Class<? extends T3DActor> t3dClass){
         classToUtActor.clear();
         classToUtActor.put(actor.toLowerCase(), t3dClass);
     }
