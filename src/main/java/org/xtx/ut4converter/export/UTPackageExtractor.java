@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -112,6 +114,12 @@ public abstract class UTPackageExtractor {
 
             else {
                 UTPackageExtractor uccExtractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
+                
+                // UMODEL does not support extract music from .umx files
+                if(ressource.getType() == Type.MUSIC && mapConverter.getInputGame().engine.version == 1){
+                	return uccExtractor;
+                }
+                
                 UTPackageExtractor uModelExtractor = getUtPackageExtractor(mapConverter, UModelExporter.class);
                 
                 //return uccExtractor;
