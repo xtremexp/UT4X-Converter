@@ -6,13 +6,12 @@
 package org.xtx.ut4converter.export;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -87,7 +86,7 @@ public abstract class UTPackageExtractor {
      * but umodel extractor for all Unreal Engines
      * @return 
      */
-    public abstract List<UnrealEngine> getSupportedEngines();
+    public abstract UnrealEngine[] getSupportedEngines();
     
     /**
      * Says if this extractor support linux.
@@ -116,8 +115,14 @@ public abstract class UTPackageExtractor {
                 UTPackageExtractor uccExtractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
                 
                 // UMODEL does not support extract music from .umx files
-                if(ressource.getType() == Type.MUSIC && mapConverter.getInputGame().engine.version == 1){
+                if(ressource.getType() == Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE1){
                 	return uccExtractor;
+                }
+                
+                // UMODEL does not support extraction of textures from unreal 2 packages
+                // UCC always produces 0 bytes textures sizes on export
+                if(ressource.getType() == Type.TEXTURE && mapConverter.getInputGame() == UTGame.U2){
+                	return getUtPackageExtractor(mapConverter, SimpleTextureExtractor.class);
                 }
                 
                 UTPackageExtractor uModelExtractor = getUtPackageExtractor(mapConverter, UModelExporter.class);

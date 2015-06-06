@@ -29,6 +29,7 @@ import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.export.CopyExporter;
+import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -343,6 +344,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         packageExtractors = new ArrayList<>();
         packageExtractors.add(new UCCExporter(this));
         packageExtractors.add(new CopyExporter(this));
+        packageExtractors.add(new SimpleTextureExtractor(this));
         
         if(userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()){
             packageExtractors.add(new UModelExporter(this));

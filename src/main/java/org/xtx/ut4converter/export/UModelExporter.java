@@ -7,12 +7,11 @@ package org.xtx.ut4converter.export;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
@@ -42,8 +41,7 @@ public class UModelExporter extends UTPackageExtractor {
             return null;
         }
         
-        File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
-        
+
         String command = getExporterPath() + " -export -sounds -groups \"" + ressource.getUnrealPackage().getFileContainer(mapConverter) + "\"";
         command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
         command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
@@ -80,7 +78,6 @@ public class UModelExporter extends UTPackageExtractor {
         
         // Exporting Texture bdr02BA to Z:\\TEMP\\umodel_win32/UmodelExport/BarrensArchitecture/Borders
         // Exporting StaticMesh trophy1 to Z:\\TEMP\\umodel_win32/UmodelExport/2k4Trophies/AllTrophies
-        // TODO handle UT3 which has different log export data
         
         String split[] = logLine.split(" to ");
         String split2[] = split[0].split("\\ "); // Exporting Texture bdr02BA
@@ -151,7 +148,7 @@ public class UModelExporter extends UTPackageExtractor {
             uRessource.parseNameAndGroup(ressourceName); // for texture db that don't have group we retrieve the group ...
         }
         else {
-            UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
+            new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
         }
     }
 
@@ -172,8 +169,8 @@ public class UModelExporter extends UTPackageExtractor {
     }
 
     @Override
-    public List<UTGames.UnrealEngine> getSupportedEngines() {
-        return Arrays.asList(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3, UnrealEngine.UE4);
+    public UnrealEngine[] getSupportedEngines() {
+        return new UnrealEngine[] { UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3, UnrealEngine.UE4 };
     }
     
 }

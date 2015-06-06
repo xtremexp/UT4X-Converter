@@ -108,14 +108,6 @@ public class Installation {
         return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
     }
     
-    /**
-     * Return full path of texture converter
-     * @return 
-     */
-    public static File getNConvert()
-    {
-        return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "nconvert" + File.separator + "nconvert.exe");
-    }
     
     /**
      * Return full path of texture converter
@@ -143,6 +135,18 @@ public class Installation {
         }
         
         return null;
+    }
+    
+    /**
+     * Return full path of texture extractor
+     * (basic extractor once done for UT3 converter).
+     * The only one working for Unreal 2!
+     * @param mapConverter
+     * @return 
+     */
+    public static File getExtractTextures(MapConverter mapConverter)
+    {
+        return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
     }
     
     private static final String OS = System.getProperty("os.name").toLowerCase();

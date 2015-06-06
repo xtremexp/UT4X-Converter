@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.export;
 
 import com.sun.istack.internal.logging.Logger;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -18,9 +19,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
@@ -64,8 +67,8 @@ public final class UCCExporter extends UTPackageExtractor {
     }
 
     @Override
-    public List<UTGames.UnrealEngine> getSupportedEngines() {
-        return Arrays.asList(UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2);
+    public UnrealEngine[] getSupportedEngines() {
+        return new UnrealEngine[] { UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2 };
     }
     
     private enum Name {
