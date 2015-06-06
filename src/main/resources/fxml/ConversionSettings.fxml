@@ -30,9 +30,10 @@
                         <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Output Folder:</Label> 
                         <Label GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="outputFolderLbl"></Label> 
                         
-                        <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Map filename:</Label> 
+                        <Label GridPane.rowIndex="3" GridPane.columnIndex="0">UT4 Map Name:</Label> 
                         <Label GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="outMapNameLbl"></Label> 
-                    
+                    	<Button GridPane.rowIndex="3" GridPane.columnIndex="2" onAction="#changeMapName" fx:id="changeMapNameBtn" disable="true">Change</Button>
+                    	
                         <Label GridPane.rowIndex="4" GridPane.columnIndex="0">Scale Factor:</Label> 
                         <ComboBox GridPane.rowIndex="4" GridPane.columnIndex="1" fx:id="scaleFactorList" promptText="how much the map will be scaled" >
                             <items>

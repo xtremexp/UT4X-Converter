@@ -8,6 +8,7 @@ package org.xtx.ut4converter.ui;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
@@ -15,9 +16,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -31,6 +34,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 
 /**
@@ -89,6 +93,8 @@ public class ConversionSettingsController implements Initializable {
     private Label outMapNameLbl;
     @FXML
     private CheckBox debugLogLevel;
+    @FXML
+    private Button changeMapNameBtn;
     
     @FXML
     private Label warningMessage;
@@ -201,6 +207,35 @@ public class ConversionSettingsController implements Initializable {
         mapConverter.setConvertStaticMeshes(false);
 		convSmCheckBox.setDisable(true);
     }
+    
+    /**
+     * Allow changing the default ut4 map name
+     * suggested by ut4 converter
+     * @param event
+     */
+    @FXML
+    private void changeMapName(ActionEvent event){
+    	
+    	TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
+
+    	dialog.setTitle("Text Input Dialog");
+    	dialog.setHeaderText("Map Name Change");
+    	dialog.setContentText("Enter UT4 map name:");
+
+    	// Traditional way to get the response value.
+    	Optional<String> result = dialog.showAndWait();
+    	
+    	if (result.isPresent()){
+    	    String newMapName = result.get();
+    	    newMapName = T3DUtils.filterName(newMapName);
+    	    
+    	    if(newMapName.length() > 3){
+    	    	mapConverter.setOutMapName(newMapName);
+    	    	outMapNameLbl.setText(mapConverter.getOutMapName());
+    	    }
+    	}
+
+    }
 
     @FXML
     private void selectInputMap(ActionEvent event) {
@@ -224,6 +259,7 @@ public class ConversionSettingsController implements Initializable {
         File unrealMap = chooser.showOpenDialog(new Stage());
         
         if(unrealMap != null){
+        	changeMapNameBtn.setDisable(false);
             inputMapLbl.setText(unrealMap.getName());
             mapConverter.setInMap(unrealMap);
             outputFolderLbl.setText(mapConverter.getOutPath().toString());

@@ -933,6 +933,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     public void setConvertMusic(boolean convertMusic) {
         this.convertMusic = convertMusic;
     }
+
+	public void setOutMapName(String outMapName) {
+		this.outMapName = outMapName;
+	}
+    
     
     
     
