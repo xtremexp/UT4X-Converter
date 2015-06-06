@@ -18,28 +18,43 @@ to Unreal Tournament 4.
 UT games supported
 ------------------------------
 - Unreal 1
+- Unreal 2
 - Unreal Tournament (1999)
+- Unreal Tournament 2003/2004
+- Unreal Tournament 3
 
-Some other games might be supported in the future.
+Event if all unreal games are supported, since program is in early stages,
+conversion quality for unreal tournament 2003/2004 and unreal tournament 3
+might be pretty bad.
 
 If you want to convert UT games to Unreal Tournament 3,
 download and use UT3 Converter program instead of UT4 Converter.
 
 What is converted
 ------------------------------
-- Brushes (mostly good but textures alignement may not be correct sometimes)
-- Movers (working good except for doors (the current ut4 lift actor does not handle good door right now))
-- Pick-ups (most of them)
-- Lightning (color good but brightness a bit 'high', also note that "ZoneInfo" actors from UT99
-are not converted)
+Here is the conversion table for all ut games about what the program can convert.
+
+|                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
+|----------------|---------|-----------|--------|----------|--------|--------------|------------|:------------:|:-------:|
+| Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
+| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |  No Support  | No Support |       -      |  MEDIUM |
+| UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
+| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |   NoSupport  | No Support |       +      |  MEDIUM |
+| UT3            |    ++   |     +     |    +   |    No    |   N/A  |   NoSupport  | No Support |       +      |   BAD   |
+
+
+Note:
+UT99/U1 Lightning: For Unreal Tournament (99) and Unreal 1, zoneinfo actor does not exist in UT4, since then
+StaticMesh conversion is not yet operational. Since UT3 is nearly full of statismeshes, conversion
+is pretty bad. (same note for some ut2004 maps)
 
 What is NOT converted
 ------------------------------
 - Models
-- Textures
-- Music
-- All custom scripts
-- Some special actors such as TriggerEvent, ...
+- StaticMeshes
+- Terrain
+- Music (Unreal Tournament 3 only)
+- All custom things (scripts and pickups)
 
 Requirements
 ------------------------------
@@ -47,12 +62,12 @@ Requirements
 * Java > 1.8.0_40 . www.java.com
 * Unreal Tournament 4 (2015) Editor
 * One of the following previous UT games:
-*  Unreal 1
-*  Unreal 2
-*  Unreal Tournament
-*  Unreal Tournament 2003
-*  Unreal Tournament 2004
-*  Unreal Tournament 3
+  * Unreal 1
+  * Unreal 2
+  * Unreal Tournament
+  * Unreal Tournament 2003
+  * Unreal Tournament 2004
+  * Unreal Tournament 3
 * NConvert texture conversion program: http://www.xnview.com/en/nconvert/
 * UModel Unreal ressource program extractor: http://www.gildor.org/en/projects/umodel
 
@@ -87,6 +102,7 @@ In UT4 Editor:
 - Import sounds
 -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
 -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
+-- Delete the .
 -- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
 (e.g:  "AmbOutside_Looping_waves4")
 
@@ -119,8 +135,10 @@ and remove them until bsp holes dissapear)
 
 License
 ------------------------------
-License to be determined / set. No commercial use allowed. Just feel free to browse code or/and 
-contribute !
+- No commercial use allowed
+- You can edit/share source code as well as binaries
+always keeping original author credits
+
 
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
 YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
@@ -155,7 +173,7 @@ Libraries / Technologies used
 - Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
 
-Converter interfaces the external tools:
+Converter interfaces with these external tools:
 - Nconvert by Pierre-E Gougelet - 6.70
 - UModel by Konstantin Nosov
 
@@ -163,12 +181,12 @@ History
 ------------------------------
 - 0.4.0 - In Progress:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
-  * Added conversion for textures
+  * Added conversion for textures (note: material textures are not yet converted)
+  * Automatically extract music now
   * [UI] Added advanced conversion settings
-  * [UI] 
   * Fixed sounds not being exported from map package
   * Fixed frozen UI on map conversion
-  * ?
+  * Some other fixes but can't remember
 
 - 0.3.0 - 08/05/2015:
   * Improved lightning (brightness, lightning type, ...)
