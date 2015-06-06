@@ -485,11 +485,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         }
         
         updateMessage("Deleting temporary files");
-        try {
-        	org.apache.commons.io.FileUtils.deleteDirectory(getTempExportFolder());
-        } catch (IOException e){
-        	logger.warning(e.getLocalizedMessage());
-        }
+        
+        org.apache.commons.io.FileUtils.deleteQuietly(getTempExportFolder());
         
         // Create a folder for this map in UE4Editor
         // and copy a simple existing .uasset file so we can see the folder created in UT4 editor ...
