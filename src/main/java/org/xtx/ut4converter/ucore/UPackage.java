@@ -106,30 +106,13 @@ public class UPackage {
 	            }
         	} 
         	else if(mapConverter.getInputGame() == UTGame.UT3){
-        		return getUT3FileContainer(gamePath);
+        		return mapConverter.getUt3PackageFileFromName(getName());
         	}
         }
         
         return this.file;
     }
     
-    private File getUT3FileContainer(File gamePath){
-    	
-    	File utGameFolder = new File(gamePath.getAbsolutePath() + File.separator + "UTGame");
-		final String UPK = "upk";
-		
-
-		Collection<File> files = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
-		
-		for(File upk : files){
-			
-			if(upk.getName().toLowerCase().equals(getName().toLowerCase() + "." + UPK)){
-				return upk;
-			}
-		}
-		
-		return null;
-    }
     
     public void setFile(File file) {
         this.file = file;
@@ -158,6 +141,44 @@ public class UPackage {
     }
     
     /**
+     * Returns ressource package by name without package info
+     * @param fullName Ressource name (e.g: "Looping.Stower51")
+     * @return ressource with same full name
+     */
+    public UPackageRessource findRessourceByName(String name){
+        
+        String s[] = name.split("\\.");
+        String fullNameWithoutGroup = null;
+        String group = null;
+        
+        if(s.length == 3){
+            fullNameWithoutGroup = s[0] + "." + s[2];
+            group = s[1];
+        }
+        
+        for(UPackageRessource packageRessource : ressources){
+
+            if(name.equals(packageRessource.getFullName()) 
+                    || name.equals(packageRessource.getFullNameWithoutGroup())){
+                return packageRessource;
+            } 
+            
+            // Package ressource was created without group info
+            // since we have this info now, update the ressource and return it
+            else if(packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)){
+                
+                if(group != null){
+                    packageRessource.group = s[2];
+                }
+                
+                return packageRessource;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * Returns ressource package by full name
      * @param fullName Full ressource name (e.g: "AmbAncient.Looping.Stower51")
      * @return ressource with same full name
@@ -174,14 +195,26 @@ public class UPackage {
         }
         
         for(UPackageRessource packageRessource : ressources){
-
+        	
+        	// matching "pakname.groupname.name"
             if(fullName.equals(packageRessource.getFullName()) 
                     || fullName.equals(packageRessource.getFullNameWithoutGroup())){
                 return packageRessource;
             } 
             
+            // matching "pakname_groupname_name"
+            else if(fullName.equals(packageRessource.getFullNameWithoutDots())){
+            	return packageRessource;
+            }
+            
+            // matching "groupname_name"
+            else if(fullName.equals(packageRessource.getGroupAndNameWithoutDots())){
+            	return packageRessource;
+            }
+            
             // Package ressource was created without group info
             // since we have this info now, update the ressource and return it
+            // matching "pakname.name"
             else if(packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)){
                 
                 if(group != null){

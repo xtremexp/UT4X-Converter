@@ -5,7 +5,10 @@
  */
 package org.xtx.ut4converter.export;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +18,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ucore.MaterialInfo;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -114,6 +118,7 @@ public class UModelExporter extends UTPackageExtractor {
         }
 
         File exportedFile = null;
+        boolean isMaterial = false;
 
         if(type == Type.STATICMESH){
             exportedFile = new File(exportFolder + File.separator + name + ".pskx");
@@ -126,6 +131,7 @@ public class UModelExporter extends UTPackageExtractor {
         // either replace with Diffuse Texture or find out some library that can do the merging "diffuse + normal" stuff
         else if(typeStr.toLowerCase().contains("material")){
         	exportedFile = new File(exportFolder + File.separator + name + ".mat");
+        	isMaterial = true;
         }
         else if(type == Type.SOUND){
         	
@@ -150,12 +156,119 @@ public class UModelExporter extends UTPackageExtractor {
         UPackageRessource uRessource = unrealPackage.findRessource(ressourceName);
                     
         if(uRessource != null){
+        	if(isMaterial && uRessource.getMaterialInfo() == null){
+        		uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
+        	}
             uRessource.setExportedFile(exportedFile);
             uRessource.parseNameAndGroup(ressourceName); // for texture db that don't have group we retrieve the group ...
         }
         else {
-            new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
+        	uRessource = new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
+        	
+        	if(isMaterial){
+        		uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
+        	}
         }
+    }
+    
+    /**
+     * Get material info from .mat file created by umodel program
+     * @param matFile .mat file containing info about material texture (normal, diffuse, ...)
+     * @return Material info
+     */
+    private MaterialInfo getMatInfo(UPackageRessource parentRessource, File matFile){
+    	
+    	MaterialInfo mi = new MaterialInfo();
+    	/**
+    	 *  Diffuse=T_HU_Deco_SM_Machinery04Alt_D
+			Normal=T_HU_Deco_SM_Machinery04Alt_N
+			Specular=T_HU_Deco_SM_Machinery04Alt_S
+			Emissive=T_HU_Deco_SM_Machinery04Alt_E
+    	 */
+    	
+    	try (FileReader fr = new FileReader(matFile); BufferedReader bfr = new BufferedReader(fr)){
+    		
+    		String line = null;
+    		
+    		while( (line = bfr.readLine()) != null){
+    			
+    			String spl[] = line.split("\\=");
+    			
+    			// Diffuse
+    			String type = spl[0];
+    			
+    			// T_HU_Deco_SM_Machinery04Alt_D
+    			String matName = spl[1];
+    			
+    			// Umodel auto adds prefix "T_" but not for all 
+    			// HU_Deco_SM_Machinery04Alt_D
+    			// Normal=UN_DetailTex_Crackle7_N
+    			if(matName.startsWith("T_")){
+    				matName = matName.substring(matName.indexOf("_") + 1);
+    			}
+    			
+    			String spl2[] = matName.split("\\_");
+    			
+    			// e.g: "Emissive=T_Emissive"
+    			if(spl2.length == 1){
+    				continue;
+    			}
+    			
+    			// guessing package name the material comes from
+    			String pakName = spl2[0] + "_" + spl2[1];
+    			
+    			if(mapConverter.getUt3PackageFileFromName(pakName) == null){
+    				
+    				if(spl2.length <= 2){
+    					continue;
+    				}
+    				
+    				pakName = spl2[0] + "_" + spl2[1] + "_" + spl2[2];
+    			}
+    			
+    			if(mapConverter.getUt3PackageFileFromName(pakName) == null){
+    				continue;
+    			}
+    			
+    			UPackageRessource uRessource = mapConverter.getUPackageRessource(matName, pakName, Type.TEXTURE);
+    			
+    			if(uRessource != null){
+    				
+    				uRessource.setIsUsedInMap(parentRessource.isUsedInMap());
+    				
+    				switch(type){
+    				
+	    				case "Diffuse":
+	    					mi.setDiffuse(uRessource);
+	    					break;
+	    				case "Normal":
+	    					mi.setNormal(uRessource);
+	    					break;
+	    				case "Specular":
+	    					mi.setSpecular(uRessource);
+	    					break;
+	    				case "Emissive":
+	    					mi.setEmissive(uRessource);
+	    					break;
+	    				case "SpecPower":
+	    					mi.setSpecPower(uRessource);
+	    					break;
+	    				case "Opacity":
+	    					mi.setOpacity(uRessource);
+	    					break;
+	    				default:
+							logger.warning("Unhandled type "+type+" Value:"+ matName);
+							break;
+    				}
+    				
+    			}
+    		}
+    		
+    	} catch(IOException exception){
+    		logger.log(Level.WARNING, "Could not get material info from "+ parentRessource.getFullName());
+    	}
+    	
+    	return mi;
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +153,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     
     
 
+    public Collection<File> packageFilesCache = new ArrayList<>();
 
     /**
      * Unreal packages used in map
@@ -388,6 +390,38 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         });
     }
     
+    
+    final String UPK = "upk";
+    
+    /**
+     * Caches all .upk files in UTGame folder of UT3 for performance
+     */
+    private void initUt3PackageFilesCache(){
+    	
+    	File utGameFolder = new File(userConfig.getGameConfigByGame(inputGame).getPath().getAbsolutePath() + File.separator + "UTGame");
+		packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
+		
+		logger.info("Scanned "+packageFilesCache.size()+" .upk files in UT3 folder");
+    }
+    
+    
+    /**
+     * Gets file container from .upk file
+     * @param packageName Package Name (HU_Deco)
+     * @return File container of package (e.g: HU_Deco.upk)
+     */
+    public File getUt3PackageFileFromName(String packageName){
+    	
+    	for(File upk : packageFilesCache){
+			
+			if(upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + UPK)){
+				return upk;
+			}
+		}
+    	
+    	return null;
+    }
+    
     /**
      * Converts level
      * @throws Exception 
@@ -399,6 +433,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         logger.log(Level.INFO, "Scale Factor: " + scale);
         
         updateProgress(0, 100);
+        
+        if(inputGame == UTGame.UT3){
+    		initUt3PackageFilesCache();
+    	}
 
         if(!outPath.toFile().exists()){
             outPath.toFile().mkdirs();
@@ -746,34 +784,50 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         }
     }
     
+    
+    public UPackageRessource getUPackageRessource(String fullRessourceName, T3DRessource.Type type){
+        return getUPackageRessource(fullRessourceName, null, type);
+    }
+    
      /**
      * T3D actor properties which are ressources (basically sounds, music, textures, ...)
      * 
      * @param fullRessourceName Full name of ressource (e.g: AmbModern.Looping.comp1 )
      * @param type Type of ressource (sound, staticmesh, texture, ...)
+     * @param packageName Package Name (e.g: "AmbModern"). Null if don't have this info yet
      * @return 
      */
-    public UPackageRessource getUPackageRessource(String fullRessourceName, T3DRessource.Type type){
+    public UPackageRessource getUPackageRessource(String fullRessourceName, String packageName, T3DRessource.Type type){
         
-        if(fullRessourceName == null){
+    	if(fullRessourceName == null){
             return null;
         }
+    	
+    	String[] split = fullRessourceName.split("\\.");
         
-        String[] split = fullRessourceName.split("\\.");
-        
-        String packageName;
-        
-        // having only name of ressource not which package it belongs to
-        // happens for UE1/2 where polygon t3d data only store name
-        // so we using the old "ut3 converter" name to package db until finding a better way ...
-        if(split.length <= 1 && type == T3DRessource.Type.TEXTURE){
-            String name = split[0];
-            packageName = nameToPackage.get(name.toLowerCase());
-            fullRessourceName = packageName + "." + name;
+  
+        if(packageName == null){
+	        // having only name of ressource not which package it belongs to
+	        // happens for UE1/2 where polygon t3d data only store name
+	        // so we using the old "ut3 converter" name to package db until finding a better way ...
+	        if(split.length <= 1 && type == T3DRessource.Type.TEXTURE){
+	            String name = split[0];
+	            packageName = nameToPackage.get(name.toLowerCase());
+	            fullRessourceName = packageName + "." + name;
+	        } else {
+	            packageName = fullRessourceName.split("\\.")[0];
+	        }
         } else {
-            packageName = fullRessourceName.split("\\.")[0];
+        	if(!fullRessourceName.contains(".")){
+        		
+        		try {
+        			fullRessourceName = packageName + "." + fullRessourceName.substring(packageName.length() + 1);
+        		} catch (Exception e){
+        			throw e;
+        		}
+        	}
         }
-
+        
         
         // Ressource ever created while parsing previous t3d lines
         // we return it

@@ -71,10 +71,17 @@ public class UPackageRessource {
      */
     Type type;
     
+    
     /**
      * Texture dimension if type of ressource is texture
      */
     Dimension textureDimensions;
+    
+    
+    /**
+     * Only for material package ressources
+     */
+    MaterialInfo materialInfo;
     
     /**
      * 
@@ -246,7 +253,7 @@ public class UPackageRessource {
             try {
                 packageExtractor.extract(this, forceExport);
             } catch (Exception ex) {
-                packageExtractor.logger.log(Level.SEVERE, null, ex);
+                packageExtractor.logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         }
     }
@@ -340,6 +347,15 @@ public class UPackageRessource {
      */
     public String getFullNameWithoutDots(){
         return getFullName().replaceAll("\\.", "_");
+    }
+    
+    public String getGroupAndNameWithoutDots(){
+
+    	if(group != null){
+    		return group + "_" + name;
+    	} else {
+    		return name;
+    	}
     }
 
     /**
@@ -459,6 +475,10 @@ public class UPackageRessource {
         return null;
     }
 
+    /**
+     * Get the type of this ressource (texture, sound, music, ...)
+     * @return Type of ressource
+     */
     public Type getType() {
         return type;
     }
@@ -478,6 +498,21 @@ public class UPackageRessource {
     public Dimension getTextureDimensions() {
         return textureDimensions;
     }
+    
+	/**
+     * Return material info
+     * Only for textures type
+     * @return
+     */
+	public MaterialInfo getMaterialInfo() {
+		return materialInfo;
+	}
 
+	public void setMaterialInfo(MaterialInfo materialInfo) {
+		this.materialInfo = materialInfo;
+	}
+
+    
+    
     
 }
