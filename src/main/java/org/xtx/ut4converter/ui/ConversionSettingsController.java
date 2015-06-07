@@ -181,6 +181,9 @@ public class ConversionSettingsController implements Initializable {
             convMusicCheckBox.setDisable(true);
             convSmCheckBox.setDisable(true);
             
+            convTexCheckBox.setDisable(false);
+            mapConverter.setConvertTextures(true);
+            
             convSndCheckBox.setDisable(false);
             mapConverter.setConvertSounds(true);
         }

@@ -121,6 +121,12 @@ public class UModelExporter extends UTPackageExtractor {
         else if(type == Type.TEXTURE){
             exportedFile = new File(exportFolder + File.separator + name + ".tga");
         }
+        // UMODEL does produce .mat files
+        // TODO handle .mat files for conversion
+        // either replace with Diffuse Texture or find out some library that can do the merging "diffuse + normal" stuff
+        else if(typeStr.toLowerCase().contains("material")){
+        	exportedFile = new File(exportFolder + File.separator + name + ".mat");
+        }
         else if(type == Type.SOUND){
         	
         	if(mapConverter.getInputGame().engine.version <= 2){
