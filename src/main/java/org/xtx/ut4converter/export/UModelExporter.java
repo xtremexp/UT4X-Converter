@@ -93,7 +93,7 @@ public class UModelExporter extends UTPackageExtractor {
         // Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh
         String exportFolder = split[1];
         
-        int startIdx = exportFolder.indexOf(unrealPackage.getName()) + unrealPackage.getName().length() + 1;
+        int startIdx = exportFolder.lastIndexOf(unrealPackage.getName()) + unrealPackage.getName().length() + 1;
         
         String group = null;
         // Some ressources does not have group info
