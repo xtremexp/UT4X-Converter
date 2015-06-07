@@ -827,6 +827,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
     public void setInMap(File inMap) {
         this.inMap = inMap;
+        this.outPath = null;
+    	packageExtractors.clear();
+    	this.outMapName = null;
         initialise();
     }
 
