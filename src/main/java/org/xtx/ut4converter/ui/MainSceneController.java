@@ -45,10 +45,14 @@ import org.xtx.ut4converter.config.UserConfig;
 public class MainSceneController implements Initializable {
     
     /**
-     * Link to UT3 Converter topic 
-     * Until we create topic for UT4 converter
+     * Link to UT3 Converter topic (at old ut forums)
      */
-    final String URL_UTCONV_FORUM = "http://utforums.epicgames.com/showthread.php?p=25131566";
+    final String URL_UT3CONV_FORUM = "http://utforums.epicgames.com/showthread.php?p=25131566";
+    
+    /**
+     * Link to UT4 Converter topic
+     */
+    final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
     
     /**
      * Url to git hub for source code
@@ -248,9 +252,13 @@ public class MainSceneController implements Initializable {
         }
     }
 
+    /**
+     * OPen web browser to ut4 converter topic at ut forums
+     * @param event
+     */
     @FXML
     private void openUtTopicUrl(ActionEvent event) {
-        openUrl(URL_UTCONV_FORUM, true, null);
+        openUrl(URL_UT4CONV_FORUM, true, null);
     }
 
     private void openGitHubUrl(ActionEvent event) {
