@@ -200,36 +200,17 @@ public class UModelExporter extends UTPackageExtractor {
     			// T_HU_Deco_SM_Machinery04Alt_D
     			String matName = spl[1];
     			
-    			// Umodel auto adds prefix "T_" but not for all 
-    			// HU_Deco_SM_Machinery04Alt_D
-    			// Normal=UN_DetailTex_Crackle7_N
-    			if(matName.startsWith("T_")){
-    				matName = matName.substring(matName.indexOf("_") + 1);
-    			}
-    			
-    			String spl2[] = matName.split("\\_");
-    			
-    			// e.g: "Emissive=T_Emissive"
-    			if(spl2.length == 1){
-    				continue;
-    			}
-    			
+
     			// guessing package name the material comes from
-    			String pakName = spl2[0] + "_" + spl2[1];
+    			String pakName = parentRessource.getUnrealPackage().getName();
     			
-    			if(mapConverter.getUt3PackageFileFromName(pakName) == null){
-    				
-    				if(spl2.length <= 2){
-    					continue;
-    				}
-    				
-    				pakName = spl2[0] + "_" + spl2[1] + "_" + spl2[2];
-    			}
-    			
+    			// .mat file does not only give ressource name not where it belong to
+    			// we assume it belong to parent ressource which should work for 75%+ of cases ...
     			if(mapConverter.getUt3PackageFileFromName(pakName) == null){
     				continue;
     			}
     			
+
     			UPackageRessource uRessource = mapConverter.getUPackageRessource(matName, pakName, Type.TEXTURE);
     			
     			if(uRessource != null){

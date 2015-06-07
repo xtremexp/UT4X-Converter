@@ -389,7 +389,12 @@ public class UPackageRessource {
      * @param isUsedInMap true if this ressource is used in map
      */
     public void setIsUsedInMap(boolean isUsedInMap){
-        this.isUsedInMap = isUsedInMap;
+    	
+        this.isUsedInMap |= isUsedInMap;
+        
+        if(materialInfo != null && isUsedInMap){
+        	materialInfo.setIsUsedInMap(true);
+        }
     }
     
     /**
@@ -512,7 +517,10 @@ public class UPackageRessource {
 		this.materialInfo = materialInfo;
 	}
 
-    
+	@Override
+    public String toString(){
+    	return getFullName();
+    }
     
     
 }

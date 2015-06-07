@@ -821,7 +821,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         	if(!fullRessourceName.contains(".")){
         		
         		try {
-        			fullRessourceName = packageName + "." + fullRessourceName.substring(packageName.length() + 1);
+        			fullRessourceName = packageName + "." + fullRessourceName;
         		} catch (Exception e){
         			throw e;
         		}
