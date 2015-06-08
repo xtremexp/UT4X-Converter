@@ -101,8 +101,8 @@ public class UPackage {
 	            }
 	            
 	            // might be map itself
-	            if(!this.file.exists()){
-	                this.file = new File(gamePath.getAbsolutePath() + File.separator + "Maps" + File.separator + getName() + "." + game.mapExtension);
+	            if(!this.file.exists() && !mapConverter.getInMap().getName().endsWith(".t3d")){
+	            	this.file = mapConverter.getInMap();
 	            }
         	} 
         	else if(mapConverter.getInputGame() == UTGame.UT3){
