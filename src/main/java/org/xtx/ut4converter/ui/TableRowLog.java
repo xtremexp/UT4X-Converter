@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.ui;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -44,9 +45,9 @@ public class TableRowLog {
         this.level = logRecord.getLevel();
 
         if(logRecord.getThrown() != null){
-            this.message =new SimpleStringProperty(logRecord.getMessage() + " " + logRecord.getThrown().getMessage());
+            this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
         } else {
-            this.message = new SimpleStringProperty(logRecord.getMessage());
+            this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
         }
         
         this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
