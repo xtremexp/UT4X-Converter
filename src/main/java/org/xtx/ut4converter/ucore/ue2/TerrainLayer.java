@@ -134,7 +134,7 @@ public class TerrainLayer implements T3D {
         // Export heightmap texture to .tga
         UCCExporter uccExporter = new UCCExporter(mapConverter);
         uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
-        File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + alphaMapTexture.getUnrealPackage().getName() + File.separator);
+        File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator );
         uccExporter.setForcedExportFolder(exportFolder);
         
         alphaMapTexture.export(uccExporter, true);

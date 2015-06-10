@@ -5,24 +5,20 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
+
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
  *
  * @author XtremeXp
  */
-public class LandscapeComponent implements T3D {
+public class LandscapeComponent extends TerrainComponent implements T3D {
     
     LandscapeHeightfieldCollisionComponent colisionComponent;
     
-    short sectionBaseX;
-    
-    short sectionBaseY;
-    
+
     int componentSizeQuads;
     
     int subsectionSizeQuads;
@@ -44,32 +40,37 @@ public class LandscapeComponent implements T3D {
      * Much more accurate than collision height map
      * 32768 -> 80800080x = 2155872384 = 256 + (32768 * 65536)
      */
-    List<Integer> landscapeHeightData;
     
-    int num;
-    
+
+
     public LandscapeComponent(int numComponent) {
-        this.num = numComponent;
+        this.numComponent = numComponent;
         initialise();
+    }
+    
+    public LandscapeComponent(LandscapeHeightfieldCollisionComponent colComp, boolean isNotUe4Scale) {
+    	
+        this.heightData = colComp.getHeightData();
+        this.sectionBaseX = colComp.getSectionBaseX();
+        this.sectionBaseY = colComp.getSectionBaseY();
+        this.numComponent = colComp.numComponent;
+        
+        initialise();
+        
+        if(isNotUe4Scale){
+        	convertUe2ToUe4HeightMap();
+        }
     }
     
     private void initialise(){
         numSubsections = 1;
         weightmapSubsectionOffset = 1;
-        landscapeHeightData = new ArrayList<>();
     }
 
     public void setColisionComponent(LandscapeHeightfieldCollisionComponent colisionComponent) {
         this.colisionComponent = colisionComponent;
     }
     
-    public void setSectionBaseX(short sectionBaseX) {
-        this.sectionBaseX = sectionBaseX;
-    }
-
-    public void setSectionBaseY(short sectionBaseY) {
-        this.sectionBaseY = sectionBaseY;
-    }
 
     public void setComponentSizeQuads(int componentSizeQuads) {
         this.componentSizeQuads = componentSizeQuads;
@@ -99,19 +100,8 @@ public class LandscapeComponent implements T3D {
         this.relativeLocation = relativeLocation;
     }
 
-    public void setLandscapeHeightData(List<Integer> landscapeHeightData) {
-        this.landscapeHeightData = landscapeHeightData;
-    }
 
-    public List<Integer> getLandscapeHeightData() {
-        return landscapeHeightData;
-    }
-
-    
-    
-    
-
-    @Override
+	@Override
     public void convert() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -131,7 +121,18 @@ public class LandscapeComponent implements T3D {
         
         String base = "\t\t";
         
+        // TODO COMP IDX
+        
         sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
+        
+        if(sectionBaseX > 0){
+        	sb.append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+        }
+        
+        if(sectionBaseY > 0){
+        	sb.append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+        }
+        
         sb.append(base).append("\tComponentSizeQuads=").append(componentSizeQuads).append("\n");
         sb.append(base).append("\tSubsectionSizeQuads=").append(subsectionSizeQuads).append("\n");
         sb.append(base).append("\tNumSubsections=").append(numSubsections).append("\n");
@@ -140,20 +141,14 @@ public class LandscapeComponent implements T3D {
         sb.append(base).append("\tAttachParent=RootComponent0\n");
         sb.append(base).append("\tCustomProperties LandscapeHeightData");
         
-        int idx = 0;
-        
-        for(int height : landscapeHeightData){
+
+        for(int x = 0; x < heightData.length; x ++){
             
-            if(idx > 0 && idx % 16 == 0){
-                sb.append("\n\t\t\t ");
-            } else {
-                sb.append(" ");
-            }
-            
-            sb.append(Integer.toHexString(height));
-            
-            idx ++;
+        	for(int y = 0; y < heightData[0].length; y ++){
+        		sb.append(" "+ Integer.toHexString(heightData[x][y]));
+        	}
         }
+        
         
         sb.append(" NumLayer=0\n");
         sb.append("\tEnd Object\n");
@@ -163,7 +158,11 @@ public class LandscapeComponent implements T3D {
 
     @Override
     public String getName() {
-        return "LandscapeComponent_" + num;
+        return "LandscapeComponent_" + numComponent;
+    }
+    
+    public static int convertToUe4Height(int height){
+    	return 256 + height * 65536;
     }
     
     /**
@@ -172,10 +171,11 @@ public class LandscapeComponent implements T3D {
     public void convertUe2ToUe4HeightMap(){
         
         //for(Integer height : landscapeHeightData){
-        for(int idx = 0; idx < landscapeHeightData.size(); idx ++){
+        for(int x = 0; x < heightData.length; x ++){
             
-            int newHeight = 256 + (landscapeHeightData.get(idx) * 65536);
-            landscapeHeightData.set(idx, newHeight);
+        	for(int y = 0; y < heightData[0].length ; y++){
+        		heightData[x][y] = convertToUe4Height(heightData[x][y]);
+        	}
         }
         
     }

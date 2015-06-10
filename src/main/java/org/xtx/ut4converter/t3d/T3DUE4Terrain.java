@@ -26,15 +26,20 @@ public class T3DUE4Terrain extends T3DActor {
     int collisionMipLevel;
     int collisionThickness;
     
+    /**
+     * Max component size
+     */
+    final int maxComponentSize = 255;
+    
     int componentSizeQuads;
     int subsectionSizeQuads;
     short numSubsections;
     boolean bUsedForNavigation;
     short maxPaintedLayersPerComponent;
     
-    List<LandscapeHeightfieldCollisionComponent> collisionComponents;
+    LandscapeHeightfieldCollisionComponent collisionComponents[][];
     
-    List<LandscapeComponent> landscapeComponents;
+    LandscapeComponent landscapeComponents[][];
     
     public T3DUE4Terrain(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
@@ -60,27 +65,102 @@ public class T3DUE4Terrain extends T3DActor {
         
         int numComponent = 0;
         
-        this.componentSizeQuads = ue2Terrain.heightMapTextureDimensions.width - 1;
+        this.componentSizeQuads = Math.min(Math.min(ue2Terrain.heightMapTextureDimensions.width, ue2Terrain.heightMapTextureDimensions.height - 1), maxComponentSize);
         this.subsectionSizeQuads = this.componentSizeQuads;
         
-        LandscapeHeightfieldCollisionComponent collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent);
-        collisionComponent.setCollisionSizeQuads(componentSizeQuads);
-        collisionComponent.setCollisionHeightData(ue2Terrain.heightMap);
+        int nbCompX = ue2Terrain.heightMapTextureDimensions.width / (componentSizeQuads + 1);
+        int nbCompY = ue2Terrain.heightMapTextureDimensions.height / (componentSizeQuads + 1);
         
-        collisionComponents.add(collisionComponent);
-                
-        LandscapeComponent landscapeComponent = new LandscapeComponent(numComponent);
-        landscapeComponent.setComponentSizeQuads(componentSizeQuads);
-        landscapeComponent.setSubsectionSizeQuads(componentSizeQuads);
+        LandscapeHeightfieldCollisionComponent collisionComponent = null;
+        collisionComponents = new LandscapeHeightfieldCollisionComponent [nbCompX][nbCompY];
+        landscapeComponents = new LandscapeComponent [nbCompX][nbCompY];
         
-        landscapeComponent.getLandscapeHeightData().addAll(ue2Terrain.heightMap);
-        // converting to much more accurate heightmap data (e.g: 32768 -> 80800080x = 2155872384)
-        landscapeComponent.convertUe2ToUe4HeightMap();
+        int localHeightCollisionData[][];
         
-        landscapeComponent.setColisionComponent(collisionComponent);
-        collisionComponent.setRenderComponent(landscapeComponent);
         
-        landscapeComponents.add(landscapeComponent);
+        // Local HeightMap idx in component
+        int localHmXIdx = 0;
+        int localHmYIdx = 0;
+        
+        // Index of component
+        int compIdxX = 0;
+        int compIdxY = 0;
+        
+
+        for(int hmXIdx = 0; hmXIdx < ue2Terrain.getHeightMap().length; hmXIdx ++){
+        	
+        	compIdxY = 0;
+        	
+        	for(int hmYIdx = 0; hmYIdx < ue2Terrain.getHeightMap()[0].length; hmYIdx ++){
+        		
+
+        		if(hmXIdx % componentSizeQuads == 0 && hmYIdx % componentSizeQuads == 0 
+        				&& hmXIdx < componentSizeQuads 
+        					&& hmYIdx < componentSizeQuads){
+        			
+        			localHmXIdx = 0;
+        			localHmYIdx = 0;	
+        			
+        			collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent);
+        			localHeightCollisionData = new int[componentSizeQuads + 1][componentSizeQuads + 1];
+        			
+        			collisionComponent.setSectionBaseX(compIdxX);
+        			collisionComponent.setSectionBaseY(compIdxY);
+        			
+        			collisionComponent.setHeightData(localHeightCollisionData);
+        			collisionComponents[compIdxX][compIdxY] = collisionComponent;
+        		} 
+        		
+        		collisionComponent = collisionComponents[compIdxX][compIdxY];
+        		
+        		
+        		if(hmXIdx % (componentSizeQuads + 1) == 0 && hmXIdx > 0){
+        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx - 1][hmYIdx];
+        		}
+        		else if(hmYIdx % (componentSizeQuads + 1) == 0 && hmYIdx > 0){
+        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx - 1];
+        		}
+        		else {
+        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
+        		}
+        			
+        		
+        		
+        		if(hmYIdx % componentSizeQuads == 0){
+        			if(hmYIdx > 0){
+        				compIdxY ++;
+        			}
+        			localHmYIdx = 0;
+        		}
+        		
+    			localHmYIdx ++;
+        		
+        	}
+        	
+        	if(hmXIdx % componentSizeQuads == 0){
+        		if(hmXIdx > 0){
+        			compIdxX ++;
+        		}
+    			localHmXIdx = 0;
+    		}
+        	
+        	localHmXIdx ++;
+        }
+
+        // create default landscape components from heightmap components
+        for(int x = 0; x < collisionComponents.length; x ++){
+        	
+        	for(int y = 0; y < collisionComponents[0].length ; y ++){
+        		LandscapeHeightfieldCollisionComponent colComponent = collisionComponents[x][y];
+        		landscapeComponents[x][y] = new LandscapeComponent(colComponent, true);
+        		
+        		colComponent.setRenderComponent(landscapeComponents[x][y]);
+        		landscapeComponents[x][y].setColisionComponent(colComponent);
+        	}
+        }
+        
+        System.out.println("Done !");
+        
     }
     
 
@@ -88,15 +168,13 @@ public class T3DUE4Terrain extends T3DActor {
         collisionThickness = 16;
         numSubsections = 1;
         bUsedForNavigation = true;
-        collisionComponents = new ArrayList<>();
-        landscapeComponents = new ArrayList<>();
     }
     
     
     @Override
     public boolean isValidWriting(){
         
-        return !landscapeComponents.isEmpty();
+        return landscapeComponents.length > 0;
     }
     
     @Override
@@ -114,27 +192,37 @@ public class T3DUE4Terrain extends T3DActor {
     @Override
     public String toString(){
         
+    	
+    	
         sbf.append(IDT).append("Begin Actor Class=Landscape Name=").append(name).append("\n");
         
-        for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
-            sbf.append(IDT).append("\tBegin Object Class=LandscapeHeightfieldCollisionComponent Name=\"").append(collisionComp.getName()).append("\"\n");
-            sbf.append(IDT).append("\tEnd Object\n");
+        for(int x = 0; x < collisionComponents.length; x ++){
+        	for(int y = 0; y < collisionComponents[0].length ; y ++){
+	            sbf.append(IDT).append("\tBegin Object Class=LandscapeHeightfieldCollisionComponent Name=\"").append(collisionComponents[x][y].getName()).append("\"\n");
+	            sbf.append(IDT).append("\tEnd Object\n");
+        	}
         }
         
-        for(LandscapeComponent landscape : landscapeComponents){
-            sbf.append(IDT).append("\tBegin Object Class=LandscapeComponent Name=\"").append(landscape.getName()).append("\"\n");
-            sbf.append(IDT).append("\tEnd Object\n");
+        for(int x = 0; x < landscapeComponents.length; x ++){
+        	for(int y = 0; y < landscapeComponents[0].length ; y ++){
+	            sbf.append(IDT).append("\tBegin Object Class=LandscapeComponent Name=\"").append(landscapeComponents[x][y].getName()).append("\"\n");
+	            sbf.append(IDT).append("\tEnd Object\n");
+        	}
         }
 
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"RootComponent0\"\n");
         sbf.append(IDT).append("\tEnd Object\n");
         
-        for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
-            collisionComp.toT3d(sbf);
+        for(int x = 0; x < collisionComponents.length; x ++){
+        	for(int y = 0; y < collisionComponents[0].length ; y ++){
+        		collisionComponents[x][y].toT3d(sbf);
+        	}
         }
         
-        for(LandscapeComponent landscape : landscapeComponents){
-            landscape.toT3d(sbf);
+        for(int x = 0; x < landscapeComponents.length; x ++){
+        	for(int y = 0; y < landscapeComponents[0].length ; y ++){
+        		landscapeComponents[x][y].toT3d(sbf);
+        	}
         }
         
         sbf.append(IDT).append("\tBegin Object Name=\"RootComponent0\"\n");
@@ -151,16 +239,20 @@ public class T3DUE4Terrain extends T3DActor {
         
         int idx = 0;
         
-        for(LandscapeComponent landscape : landscapeComponents){
-            sbf.append(IDT).append("\tLandscapeComponents(").append(idx).append(")=LandscapeComponent'").append(landscape.getName()).append("'\n");
-            idx ++;
+        for(int x = 0; x < landscapeComponents.length; x ++){
+        	for(int y = 0; y < landscapeComponents[0].length ; y ++){
+	            sbf.append(IDT).append("\tLandscapeComponents(").append(idx).append(")=LandscapeComponent'").append(landscapeComponents[x][y].getName()).append("'\n");
+	            idx ++;
+        	}
         }
         
         idx = 0;
         
-        for(LandscapeHeightfieldCollisionComponent collisionComp : collisionComponents){
-            sbf.append(IDT).append("\tCollisionComponents(").append(idx).append(")=CollisionComponent'").append(collisionComp.getName()).append("'\n");
-            idx ++;
+        for(int x = 0; x < collisionComponents.length; x ++){
+        	for(int y = 0; y < collisionComponents[0].length ; y ++){
+	            sbf.append(IDT).append("\tCollisionComponents(").append(idx).append(")=CollisionComponent'").append(collisionComponents[x][y].getName()).append("'\n");
+	            idx ++;
+        	}
         }
         
         sbf.append(IDT).append("\tComponentSizeQuads=").append(componentSizeQuads).append("\n");

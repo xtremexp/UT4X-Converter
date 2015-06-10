@@ -5,33 +5,32 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
-import java.util.List;
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
  *
  * @author XtremeXp
  */
-public class LandscapeHeightfieldCollisionComponent implements T3D {
+public class LandscapeHeightfieldCollisionComponent extends TerrainComponent implements T3D {
     
     final String BASE_NAME = "LandscapeHeightfieldCollisionComponent";
     
     LandscapeComponent renderComponent;
     
-    short sectionBaseX;
-    short sectionBaseY;
+
+    int sectionBaseX;
+    int sectionBaseY;
     
     int collisionSizeQuads;
     float collisionScale;
     
-    List<Integer> collisionHeightData;
     Vector3d relativeLocation;
     
-    int numComponent;
     
     public LandscapeHeightfieldCollisionComponent(int num){
-        numComponent = 0;
+        this.numComponent = 0;
         collisionScale = 1f;
     }
 
@@ -50,13 +49,6 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void setSectionBaseX(short sectionBaseX) {
-        this.sectionBaseX = sectionBaseX;
-    }
-
-    public void setSectionBaseY(short sectionBaseY) {
-        this.sectionBaseY = sectionBaseY;
-    }
 
     public void setCollisionSizeQuads(int collisionSizeQuads) {
         this.collisionSizeQuads = collisionSizeQuads;
@@ -66,11 +58,7 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
         this.collisionScale = collisionScale;
     }
 
-    public void setCollisionHeightData(List<Integer> collisionHeightData) {
-        this.collisionHeightData = collisionHeightData;
-    }
-
-    public void setRelativeLocation(Vector3d relativeLocation) {
+	public void setRelativeLocation(Vector3d relativeLocation) {
         this.relativeLocation = relativeLocation;
     }
 
@@ -82,20 +70,21 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
         this.renderComponent = renderComponent;
     }
 
-    public int getNumComponent() {
-        return numComponent;
-    }
 
-    public void setNumComponent(int numComponent) {
-        this.numComponent = numComponent;
-    }
-    
-    
 
     @Override
     public String toT3d(StringBuilder sb) {
         
         sb.append("\tBegin Object Name=\"").append(getName()).append("\"\n");
+        
+        if(sectionBaseX > 0){
+        	sb.append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+        }
+        
+        if(sectionBaseY > 0){
+        	sb.append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+        }
+        
         sb.append("\t\tCollisionSizeQuads=").append(collisionSizeQuads).append("\n");
         sb.append("\t\tCollisionScale=").append(collisionScale).append("\n");
         
@@ -103,19 +92,11 @@ public class LandscapeHeightfieldCollisionComponent implements T3D {
         sb.append("\t\tAttachParent=RootComponent0\n");
         sb.append("\t\tCustomProperties CollisionHeightData");
         
-        int idx = 0;
-        
-        for(int height : collisionHeightData){
+        for(int x = 0; x < heightData.length; x ++){
             
-            if(idx > 0 && idx % 16 == 0){
-                sb.append("\n\t\t\t ");
-            } else {
-                sb.append(" ");
-            }
-            
-            sb.append(height);
-            
-            idx ++;
+        	for(int y = 0; y < heightData[0].length; y ++){
+        		sb.append(" "+ heightData[x][y]);
+        	}
         }
         
         sb.append("\n\tEnd Object\n");

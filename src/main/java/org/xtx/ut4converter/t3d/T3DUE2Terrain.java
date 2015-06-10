@@ -43,7 +43,7 @@ public class T3DUE2Terrain extends T3DActor {
     UPackageRessource heightMapTexture;
     Dimension heightMapTextureDimensions;
     
-    List<Integer> heightMap;
+    Integer[][] heightMap;
     
     Vector3d terrainScale;
     short terrainSectorSize;
@@ -66,7 +66,6 @@ public class T3DUE2Terrain extends T3DActor {
         decoLayers = new ArrayList<>();
         layers = new ArrayList<>();
         quadVisibilityBitmaps = new ArrayList<>();
-        heightMap = new ArrayList<>();
     }
     
     @Override
@@ -122,7 +121,13 @@ public class T3DUE2Terrain extends T3DActor {
         }
     }
     
-    /**
+    
+    
+    public Integer[][] getHeightMap() {
+		return heightMap;
+	}
+
+	/**
      * Loads terrain heightmap and layers data from textures
      */
     private void loadTerrainData() throws InterruptedException, IOException{
@@ -173,18 +178,13 @@ public class T3DUE2Terrain extends T3DActor {
             Raster rs = image.getTile(0, 0);
             
             int a[] = null;
+            heightMap = new Integer[image.getWidth()][image.getHeight()];
             
             for(int y=0; y < rs.getWidth(); y++)
             {
-                for(int x=0;x<rs.getHeight();x++)
+                for(int x=0; x < rs.getHeight();x++)
                 {
-                    heightMap.add(rs.getPixel(x, y, a)[0]);
-                    
-                    //Adds extra terrain point (e.g.: UT2004: 256 width-> UT3: 257 width)          
-                    if(x==(rs.getWidth()-1))
-                    {
-                        heightMap.add(rs.getPixel(x, y, a)[0]);
-                    }
+                	heightMap[x][y] = rs.getPixel(x, y, a)[0];
                 }
             }
             
