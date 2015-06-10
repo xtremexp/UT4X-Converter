@@ -101,7 +101,7 @@ public class T3DUE4Terrain extends T3DActor {
         			localHmXIdx = 0;
         			localHmYIdx = 0;	
         			
-        			collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent);
+        			collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent, componentSizeQuads);
         			localHeightCollisionData = new int[componentSizeQuads + 1][componentSizeQuads + 1];
         			
         			collisionComponent.setSectionBaseX(compIdxX);

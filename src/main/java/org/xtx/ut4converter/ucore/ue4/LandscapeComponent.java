@@ -19,8 +19,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
     LandscapeHeightfieldCollisionComponent colisionComponent;
     
 
-    int componentSizeQuads;
-    
     int subsectionSizeQuads;
     
     Vector4d weightmapScaleBias;
@@ -43,18 +41,29 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
     
 
 
-    public LandscapeComponent(int numComponent) {
-        this.numComponent = numComponent;
+    public LandscapeComponent(int numComponent, int sizeQuads) {
+        super(numComponent, sizeQuads);
         initialise();
     }
     
     public LandscapeComponent(LandscapeHeightfieldCollisionComponent colComp, boolean isNotUe4Scale) {
     	
-        this.heightData = colComp.getHeightData();
+    	super(colComp.numComponent, colComp.getSizeQuads());
+    	
+    	this.subsectionSizeQuads = colComp.getSizeQuads();
+    	this.heightData = new int[colComp.getHeightData().length][colComp.getHeightData()[0].length];
+    	
+    	for(int x = 0; x < heightData.length; x ++ ){
+    		
+    		for(int y = 0; y < heightData[0].length; y ++){
+    			this.heightData[x][y] = new Integer(colComp.getHeightData()[x][y]);
+    		}
+    	}
+    	
+        //this.heightData = colComp.getHeightData();
         this.sectionBaseX = colComp.getSectionBaseX();
         this.sectionBaseY = colComp.getSectionBaseY();
-        this.numComponent = colComp.numComponent;
-        
+
         initialise();
         
         if(isNotUe4Scale){
@@ -72,9 +81,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
     }
     
 
-    public void setComponentSizeQuads(int componentSizeQuads) {
-        this.componentSizeQuads = componentSizeQuads;
-    }
 
     public void setSubsectionSizeQuads(int subsectionSizeQuads) {
         this.subsectionSizeQuads = subsectionSizeQuads;
@@ -121,24 +127,23 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
         
         String base = "\t\t";
         
-        // TODO COMP IDX
-        
         sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
         
         if(sectionBaseX > 0){
-        	sb.append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+        	sb.append(base).append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
         }
         
         if(sectionBaseY > 0){
-        	sb.append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+        	sb.append(base).append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
         }
         
-        sb.append(base).append("\tComponentSizeQuads=").append(componentSizeQuads).append("\n");
+        sb.append(base).append("\tComponentSizeQuads=").append(sizeQuads).append("\n");
         sb.append(base).append("\tSubsectionSizeQuads=").append(subsectionSizeQuads).append("\n");
         sb.append(base).append("\tNumSubsections=").append(numSubsections).append("\n");
         
         sb.append(base).append("\tCollisionComponent=LandscapeHeightfieldCollisionComponent'").append(colisionComponent.getName()).append("'\n");
         sb.append(base).append("\tAttachParent=RootComponent0\n");
+        sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
         sb.append(base).append("\tCustomProperties LandscapeHeightData");
         
 
@@ -150,8 +155,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
         }
         
         
-        sb.append(" NumLayer=0\n");
-        sb.append("\tEnd Object\n");
+        sb.append(" LayerNum=0\n");
+        sb.append(base).append("End Object\n");
         
         return sb.toString();
     }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Optional;
+
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -21,6 +22,7 @@ import org.xtx.ut4converter.tools.fbx.FBXHeaderExtension;
 import org.xtx.ut4converter.tools.fbx.FBXModelObject;
 import org.xtx.ut4converter.tools.fbx.FBXObject;
 import org.xtx.ut4converter.tools.fbx.FBXObjectType;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 
 /**
  * Simple utility class to write
@@ -41,19 +43,31 @@ public class SimpleFBXWriter {
      * Output fbx file
      */
     File fbxFile;
-    T3DBrush brush;
     
     /**
      * 
      * @param brush
      */
     public SimpleFBXWriter(T3DBrush brush){
-        this.brush = brush;
-        
-        initialise();
+        initialise(brush);
     }
     
-    private void initialise(){
+    /**
+     * 
+     * @param brush
+     */
+    public SimpleFBXWriter(PSKStaticMesh pskMesh){
+        initialise(pskMesh);
+    }
+    
+    private void initialise(PSKStaticMesh brush){
+    	objects = new LinkedList<>();
+    	headerExtension = FBXHeaderExtension.getInstance(CREATOR);
+    	objects.add(new FBXModelObject(brush));
+        definitions = FBXDefinitions.getInstance(objects);
+    }
+    
+    private void initialise(T3DBrush brush){
         
         brush.calcVerticeIndices(); // need compute vertex index (needed for fbx)
         

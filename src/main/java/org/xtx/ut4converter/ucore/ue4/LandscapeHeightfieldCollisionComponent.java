@@ -23,14 +23,14 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
     int sectionBaseX;
     int sectionBaseY;
     
-    int collisionSizeQuads;
     float collisionScale;
     
     Vector3d relativeLocation;
     
     
-    public LandscapeHeightfieldCollisionComponent(int num){
-        this.numComponent = 0;
+    public LandscapeHeightfieldCollisionComponent(int numComponent, int sizeQuads){
+    	
+    	super(numComponent, sizeQuads);
         collisionScale = 1f;
     }
 
@@ -47,11 +47,6 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
     @Override
     public boolean analyseT3DData(String line) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    public void setCollisionSizeQuads(int collisionSizeQuads) {
-        this.collisionSizeQuads = collisionSizeQuads;
     }
 
     public void setCollisionScale(float collisionScale) {
@@ -75,22 +70,25 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
     @Override
     public String toT3d(StringBuilder sb) {
         
-        sb.append("\tBegin Object Name=\"").append(getName()).append("\"\n");
+    	String base = "\t\t";
+    	
+    	sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
         
         if(sectionBaseX > 0){
-        	sb.append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+        	sb.append(base).append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
         }
         
         if(sectionBaseY > 0){
-        	sb.append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+        	sb.append(base).append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
         }
         
-        sb.append("\t\tCollisionSizeQuads=").append(collisionSizeQuads).append("\n");
-        sb.append("\t\tCollisionScale=").append(collisionScale).append("\n");
+        sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
+        sb.append(base).append("\tCollisionScale=").append(collisionScale).append("\n");
         
-        sb.append("\t\tRenderComponent=LandscapeComponent'").append(renderComponent.getName()).append("'\n");
-        sb.append("\t\tAttachParent=RootComponent0\n");
-        sb.append("\t\tCustomProperties CollisionHeightData");
+        sb.append(base).append("\tRenderComponent=LandscapeComponent'").append(renderComponent.getName()).append("'\n");
+        sb.append(base).append("\tAttachParent=RootComponent0\n");
+        sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
+        sb.append(base).append("\tCustomProperties CollisionHeightData");
         
         for(int x = 0; x < heightData.length; x ++){
             
@@ -99,7 +97,7 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
         	}
         }
         
-        sb.append("\n\tEnd Object\n");
+        sb.append("\n").append(base).append("End Object\n");
         
         return sb.toString();
     }
