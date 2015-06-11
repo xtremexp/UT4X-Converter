@@ -187,10 +187,6 @@ public class T3DUE2Terrain extends T3DActor {
                 for(int x=0; x < rs.getHeight();x++)
                 {
                 	heightMap[x][y] = rs.getPixel(x, y, a)[0];
-                	
-                	if(heightMap[x][y] == 0){
-                		System.out.println("X:"+x +"Y:"+y);
-                	}
                 }
             }
             
