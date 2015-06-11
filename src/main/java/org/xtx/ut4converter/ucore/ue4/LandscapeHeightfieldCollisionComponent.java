@@ -85,9 +85,16 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
         sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
         sb.append(base).append("\tCollisionScale=").append(collisionScale).append("\n");
         
+        // needed for not crashing TODO GUID generator
+        sb.append(base).append("\tHeightfieldGuid=EC3963244F511FA86677C79295D9B2F3\n");
+        
         sb.append(base).append("\tRenderComponent=LandscapeComponent'").append(renderComponent.getName()).append("'\n");
         sb.append(base).append("\tAttachParent=RootComponent0\n");
-        sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
+        
+        if(getSectionBaseX() > 0 || getSectionBaseY() > 0){
+        	sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
+        }
+        
         sb.append(base).append("\tCustomProperties CollisionHeightData");
         
         for(int x = 0; x < heightData.length; x ++){

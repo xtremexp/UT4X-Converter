@@ -143,7 +143,11 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
         
         sb.append(base).append("\tCollisionComponent=LandscapeHeightfieldCollisionComponent'").append(colisionComponent.getName()).append("'\n");
         sb.append(base).append("\tAttachParent=RootComponent0\n");
-        sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
+        
+        if(getSectionBaseX() > 0 || getSectionBaseY() > 0){
+        	sb.append(base).append("\t").append(getT3dRelativeLocation()).append("\n");
+        }
+        
         sb.append(base).append("\tCustomProperties LandscapeHeightData");
         
 

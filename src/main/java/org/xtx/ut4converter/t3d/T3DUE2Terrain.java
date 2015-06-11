@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
 import javax.imageio.ImageIO;
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -43,7 +45,7 @@ public class T3DUE2Terrain extends T3DActor {
     UPackageRessource heightMapTexture;
     Dimension heightMapTextureDimensions;
     
-    Integer[][] heightMap;
+    int[][] heightMap;
     
     Vector3d terrainScale;
     short terrainSectorSize;
@@ -123,7 +125,7 @@ public class T3DUE2Terrain extends T3DActor {
     
     
     
-    public Integer[][] getHeightMap() {
+    public int[][] getHeightMap() {
 		return heightMap;
 	}
 
@@ -157,7 +159,7 @@ public class T3DUE2Terrain extends T3DActor {
             // Export heightmap texture to .bmp
             UCCExporter uccExporter = new UCCExporter(mapConverter);
             uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_BMP);
-            File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + heightMapTexture.getUnrealPackage().getName() + File.separator);
+            File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator + heightMapTexture.getUnrealPackage().getName() + File.separator);
             uccExporter.setForcedExportFolder(exportFolder);
             
             heightMapTexture.export(uccExporter, true);
@@ -178,17 +180,35 @@ public class T3DUE2Terrain extends T3DActor {
             Raster rs = image.getTile(0, 0);
             
             int a[] = null;
-            heightMap = new Integer[image.getWidth()][image.getHeight()];
+            heightMap = new int[image.getWidth()][image.getHeight()];
             
             for(int y=0; y < rs.getWidth(); y++)
             {
                 for(int x=0; x < rs.getHeight();x++)
                 {
                 	heightMap[x][y] = rs.getPixel(x, y, a)[0];
+                	
+                	if(heightMap[x][y] == 0){
+                		System.out.println("X:"+x +"Y:"+y);
+                	}
                 }
             }
             
         }
     }
+    
+    /**
+     * 
+     */
+    public void scale(Double newScale){
+    	if(this.terrainScale != null){
+    		this.terrainScale.scale(newScale);
+    	}
+    }
+
+	public void setHeightMap(int[][] heightMap) {
+		this.heightMap = heightMap;
+	}
+    
     
 }

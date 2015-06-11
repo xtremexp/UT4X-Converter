@@ -276,6 +276,11 @@ public class T3DBrush extends T3DSound {
         
         boolean valid = true;
         
+        // is first "red" brush in previous UE editors
+        if("Brush".equals(name)){
+        	return false;
+        }
+        
         if(mapConverter.fromUE123ToUE4()){
             
             if("BlockAll".equals(t3dClass)){
@@ -497,6 +502,7 @@ public class T3DBrush extends T3DSound {
      */
     @Override
     public void convert(){
+    	
         
         if("BlockAll".equals(t3dClass)){
             brushClass = BrushClass.BlockingVolume;

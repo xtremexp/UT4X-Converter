@@ -5,8 +5,10 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -57,7 +59,7 @@ public class T3DUE4Terrain extends T3DActor {
         
         this.name = ue2Terrain.name;
         this.location = ue2Terrain.location;
-        this.scale3d = ue2Terrain.scale3d;
+        this.scale3d = ue2Terrain.terrainScale;
         
         if(!ue2Terrain.layers.isEmpty()){
             landscapeMaterial = ue2Terrain.layers.get(0).getTexture();
@@ -86,6 +88,18 @@ public class T3DUE4Terrain extends T3DActor {
         int compIdxX = 0;
         int compIdxY = 0;
         
+        int heightMap[][] = new int[ue2Terrain.getHeightMap().length][ue2Terrain.getHeightMap()[0].length];
+        
+        // flip x/y
+        // all these loops quite crappy but don't want rework the big loop yet
+        for(int hmXIdx = 0; hmXIdx < ue2Terrain.getHeightMap().length; hmXIdx ++){
+        	
+        	for(int hmYIdx = 0; hmYIdx < ue2Terrain.getHeightMap()[0].length; hmYIdx ++){
+        		heightMap[hmXIdx][hmYIdx] = ue2Terrain.getHeightMap()[hmYIdx][hmXIdx];
+        	}
+        }
+        
+        ue2Terrain.setHeightMap(heightMap);
 
         for(int hmXIdx = 0; hmXIdx < ue2Terrain.getHeightMap().length; hmXIdx ++){
         	
@@ -113,17 +127,19 @@ public class T3DUE4Terrain extends T3DActor {
         		
         		collisionComponent = collisionComponents[compIdxX][compIdxY];
         		
+        		int heightMapVal = 0;
         		
         		if(hmXIdx % (componentSizeQuads + 1) == 0 && hmXIdx > 0){
-        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx - 1][hmYIdx];
+        			heightMapVal = ue2Terrain.getHeightMap()[hmXIdx - 1][hmYIdx];
         		}
         		else if(hmYIdx % (componentSizeQuads + 1) == 0 && hmYIdx > 0){
-        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx - 1];
+        			heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx - 1];
         		}
         		else {
-        			collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
+        			heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
         		}
         			
+        		collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 512;
         		
         		
         		if(hmYIdx % componentSizeQuads == 0){
@@ -158,9 +174,8 @@ public class T3DUE4Terrain extends T3DActor {
         		landscapeComponents[x][y].setColisionComponent(colComponent);
         	}
         }
-        
-        System.out.println("Done !");
-        
+                
+        // TODO translate location of terrain
     }
     
 
@@ -226,6 +241,7 @@ public class T3DUE4Terrain extends T3DActor {
         }
         
         sbf.append(IDT).append("\tBegin Object Name=\"RootComponent0\"\n");
+        
         writeLocRotAndScale();
         sbf.append(IDT).append("\tEnd Object\n");
         
