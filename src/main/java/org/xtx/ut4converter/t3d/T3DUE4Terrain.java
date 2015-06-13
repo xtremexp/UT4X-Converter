@@ -175,7 +175,21 @@ public class T3DUE4Terrain extends T3DActor {
         	}
         }
                 
-        // TODO translate location of terrain
+        // In Unreal Engine 2, terrain pivot is "centered"
+        // unlike UE3/4, so need update location
+        if(this.location != null && this.scale3d != null){
+        	
+        	double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;
+        	double offsetY = (nbCompY * this.scale3d.y * this.componentSizeQuads) / 2;
+        	
+        	if(mapConverter.getScale() != null){
+        		offsetX *= mapConverter.getScale();
+        		offsetY *= mapConverter.getScale();
+        	}
+        	
+        	this.location.x -= offsetX;
+        	this.location.y -= offsetY;
+        }
     }
     
 
