@@ -56,12 +56,12 @@
                     
                     	<!-- UMODEL - Package Extractor -->
                         <Hyperlink onAction="#gotoUModelWebsite" text="UModel Path:" GridPane.rowIndex="0" GridPane.columnIndex="0" ></Hyperlink>
-                        <TextField fx:id="uModelPath" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel\umodel.exe" editable="false"></TextField>
+                        <TextField fx:id="uModelPath" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel_win32\umodel.exe" editable="false"></TextField>
                         <Button onAction="#setUModelPath" GridPane.rowIndex="0" GridPane.columnIndex="2">Select</Button>
                         
                         <!-- NCONVERT - Texture Conversion -->
                         <Hyperlink onAction="#gotoNConvertWebsite" text="NConvert Path:" GridPane.rowIndex="1" GridPane.columnIndex="0" ></Hyperlink>
-                        <TextField fx:id="nconvertPath" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\nconvert\nconvert.exe" editable="false"></TextField>
+                        <TextField fx:id="nconvertPath" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\XnView\nconvert.exe" editable="false"></TextField>
                         <Button onAction="#setNConvertPath" GridPane.rowIndex="1" GridPane.columnIndex="2">Select</Button>
                     </GridPane>
                 </TitledPane>
