@@ -171,7 +171,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
     }
     
     public static int convertToUe4Height(int height){
-    	return 256 + height * 65536;
+    	return height * 256;
     }
     
     /**

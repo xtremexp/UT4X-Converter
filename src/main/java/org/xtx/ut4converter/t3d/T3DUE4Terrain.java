@@ -139,7 +139,7 @@ public class T3DUE4Terrain extends T3DActor {
         			heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
         		}
         			
-        		collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 512;
+        		collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 2;
         		
         		
         		if(hmYIdx % componentSizeQuads == 0){
@@ -187,8 +187,8 @@ public class T3DUE4Terrain extends T3DActor {
         		offsetY *= mapConverter.getScale();
         	}
         	
-        	this.location.x -= offsetX;
-        	this.location.y -= offsetY;
+        	this.location.x -= (offsetX + 100);
+        	this.location.y -= (offsetY + 100);
         }
     }
     
