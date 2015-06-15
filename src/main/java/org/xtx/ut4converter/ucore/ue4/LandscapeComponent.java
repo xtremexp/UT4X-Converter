@@ -16,7 +16,7 @@ import org.xtx.ut4converter.t3d.iface.T3D;
  */
 public class LandscapeComponent extends TerrainComponent implements T3D {
     
-    LandscapeHeightfieldCollisionComponent colisionComponent;
+    LandscapeCollisionComponent colisionComponent;
     
 
     int subsectionSizeQuads;
@@ -46,7 +46,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
         initialise();
     }
     
-    public LandscapeComponent(LandscapeHeightfieldCollisionComponent colComp, boolean isNotUe4Scale) {
+    public LandscapeComponent(LandscapeCollisionComponent colComp, boolean isNotUe4Scale) {
     	
     	super(colComp.numComponent, colComp.getSizeQuads());
     	
@@ -76,7 +76,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
         weightmapSubsectionOffset = 1;
     }
 
-    public void setColisionComponent(LandscapeHeightfieldCollisionComponent colisionComponent) {
+    public void setColisionComponent(LandscapeCollisionComponent colisionComponent) {
         this.colisionComponent = colisionComponent;
     }
     

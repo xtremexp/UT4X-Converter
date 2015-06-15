@@ -13,7 +13,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
-import org.xtx.ut4converter.ucore.ue4.LandscapeHeightfieldCollisionComponent;
+import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
 
 /**
  * Very basic implementation of Unreal Engine 4 terrain
@@ -39,7 +39,7 @@ public class T3DUE4Terrain extends T3DActor {
     boolean bUsedForNavigation;
     short maxPaintedLayersPerComponent;
     
-    LandscapeHeightfieldCollisionComponent collisionComponents[][];
+    LandscapeCollisionComponent collisionComponents[][];
     
     LandscapeComponent landscapeComponents[][];
     
@@ -73,8 +73,8 @@ public class T3DUE4Terrain extends T3DActor {
         int nbCompX = ue2Terrain.heightMapTextureDimensions.width / (componentSizeQuads + 1);
         int nbCompY = ue2Terrain.heightMapTextureDimensions.height / (componentSizeQuads + 1);
         
-        LandscapeHeightfieldCollisionComponent collisionComponent = null;
-        collisionComponents = new LandscapeHeightfieldCollisionComponent [nbCompX][nbCompY];
+        LandscapeCollisionComponent collisionComponent = null;
+        collisionComponents = new LandscapeCollisionComponent [nbCompX][nbCompY];
         landscapeComponents = new LandscapeComponent [nbCompX][nbCompY];
         
         int localHeightCollisionData[][];
@@ -115,7 +115,7 @@ public class T3DUE4Terrain extends T3DActor {
         			localHmXIdx = 0;
         			localHmYIdx = 0;	
         			
-        			collisionComponent = new LandscapeHeightfieldCollisionComponent(numComponent, componentSizeQuads);
+        			collisionComponent = new LandscapeCollisionComponent(numComponent, componentSizeQuads);
         			localHeightCollisionData = new int[componentSizeQuads + 1][componentSizeQuads + 1];
         			
         			collisionComponent.setSectionBaseX(compIdxX);
@@ -167,7 +167,7 @@ public class T3DUE4Terrain extends T3DActor {
         for(int x = 0; x < collisionComponents.length; x ++){
         	
         	for(int y = 0; y < collisionComponents[0].length ; y ++){
-        		LandscapeHeightfieldCollisionComponent colComponent = collisionComponents[x][y];
+        		LandscapeCollisionComponent colComponent = collisionComponents[x][y];
         		landscapeComponents[x][y] = new LandscapeComponent(colComponent, true);
         		
         		colComponent.setRenderComponent(landscapeComponents[x][y]);
@@ -293,6 +293,14 @@ public class T3DUE4Terrain extends T3DActor {
         writeEndActor();
         
         return sbf.toString();
+    }
+    
+    public static void main(String args[]){
+    	
+    	Long x = -65540L;
+    	x ++;
+    	
+    	System.out.println(Long.toString(x, 2));
     }
     
 }

@@ -13,7 +13,7 @@ import org.xtx.ut4converter.t3d.iface.T3D;
  *
  * @author XtremeXp
  */
-public class LandscapeHeightfieldCollisionComponent extends TerrainComponent implements T3D {
+public class LandscapeCollisionComponent extends TerrainComponent implements T3D {
     
     final String BASE_NAME = "LandscapeHeightfieldCollisionComponent";
     
@@ -28,7 +28,7 @@ public class LandscapeHeightfieldCollisionComponent extends TerrainComponent imp
     Vector3d relativeLocation;
     
     
-    public LandscapeHeightfieldCollisionComponent(int numComponent, int sizeQuads){
+    public LandscapeCollisionComponent(int numComponent, int sizeQuads){
     	
     	super(numComponent, sizeQuads);
         collisionScale = 1f;
