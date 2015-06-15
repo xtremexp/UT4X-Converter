@@ -11,7 +11,9 @@ import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
@@ -55,7 +57,7 @@ public class T3DUE2Terrain extends T3DActor {
     /**
      * Invisible pieces of terrain
      */
-    List<Integer> quadVisibilityBitmaps;
+    Map<Integer, Long> quadVisibilityBitmaps;
     
     
     public T3DUE2Terrain(MapConverter mc, String t3dClass) {
@@ -67,7 +69,7 @@ public class T3DUE2Terrain extends T3DActor {
     private void initialise(){
         decoLayers = new ArrayList<>();
         layers = new ArrayList<>();
-        quadVisibilityBitmaps = new ArrayList<>();
+        quadVisibilityBitmaps = new HashMap<>();
     }
     
     @Override
@@ -96,8 +98,12 @@ public class T3DUE2Terrain extends T3DActor {
             decoLayers.add(decoLayer);
         }
         
+        // QuadVisibilityBitmap(0)=-65540
         else if(line.startsWith("QuadVisibilityBitmap")){
-            quadVisibilityBitmaps.add(Integer.valueOf(line.split("\\=")[1]));
+        	Long val = Long.valueOf(line.split("\\=")[1]);
+        	int key = Integer.valueOf(line.split("\\(")[1].split("\\)")[0]);
+        	
+            quadVisibilityBitmaps.put(key, val);
         }
         else {
             return super.analyseT3DData(line);
@@ -205,6 +211,19 @@ public class T3DUE2Terrain extends T3DActor {
 	public void setHeightMap(int[][] heightMap) {
 		this.heightMap = heightMap;
 	}
+
+	public Map<Integer, Long> getQuadVisibilityBitmaps() {
+		return quadVisibilityBitmaps;
+	}
+
+	/**
+	 * Returns the total number of squares this terrain has
+	 * @return Number of squares
+	 */
+	public int getTotalSquares(){
+		return heightMapTextureDimensions.height * heightMapTextureDimensions.width;
+	}
+	
     
     
 }

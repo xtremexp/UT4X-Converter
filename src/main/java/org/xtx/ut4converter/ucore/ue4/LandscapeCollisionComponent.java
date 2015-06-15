@@ -5,6 +5,8 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
+import java.util.List;
+
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.t3d.iface.T3D;
@@ -19,7 +21,12 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
     
     LandscapeComponent renderComponent;
     
-
+    /**
+     * List of boolean for each square of the section
+     * saying if it's rendered or not
+     */
+    List<Boolean> visibilityData;
+    
     int sectionBaseX;
     int sectionBaseY;
     
@@ -104,7 +111,20 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
         	}
         }
         
-        sb.append("\n").append(base).append("End Object\n");
+        sb.append("\n");
+        
+        if(visibilityData != null && !visibilityData.isEmpty()){
+        	
+        	sb.append(base).append("\tCustomProperties DominantLayerData ");
+        	
+        	for(Boolean isVisible : visibilityData){
+        		sb.append(isVisible?"ff":"00");
+        	}
+        	
+        	sb.append("\n");
+        }
+        
+        sb.append(base).append("End Object\n");
         
         return sb.toString();
     }
@@ -113,7 +133,15 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
     public String getName() {
         return BASE_NAME + "_" + numComponent;
     }
-    
-    
+
+	public void setVisibilityData(List<Boolean> visibilityData) {
+		this.visibilityData = visibilityData;
+	}
+
+	public List<Boolean> getVisibilityData() {
+		return visibilityData;
+	}
+	
+	
     
 }

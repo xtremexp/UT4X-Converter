@@ -5,15 +5,15 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
+import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 
 /**
  * Very basic implementation of Unreal Engine 4 terrain
@@ -162,6 +162,12 @@ public class T3DUE4Terrain extends T3DActor {
         	
         	localHmXIdx ++;
         }
+        
+        // convert visibility data
+        List<Boolean> visibilityData = convertUe2Visibility(ue2Terrain);
+        
+        // TODO put visibility data to right component if multiple ones
+        collisionComponents[0][0].setVisibilityData(visibilityData);
 
         // create default landscape components from heightmap components
         for(int x = 0; x < collisionComponents.length; x ++){
@@ -190,6 +196,70 @@ public class T3DUE4Terrain extends T3DActor {
         	this.location.x -= (offsetX + 100);
         	this.location.y -= (offsetY + 100);
         }
+    }
+    
+    /**
+     * Convert visibility data from unreal engine 2 terrain.
+     * Adapted code from UT3 converter
+     * 
+     * e.g (UE2): "QuadVisibilityBitmap(0)=-65540, QuadVisibilityBitmap(0)=-1, ..."
+     * e.g: (UE4): "CustomProperties DominantLayerData fffffffffff...."
+     * @param ue2Terrain Terrain from unreal engine 2 ut game (ut2003, ut2004 or unreal 2)
+     */
+    private List<Boolean> convertUe2Visibility(T3DUE2Terrain ue2Terrain){
+    	
+    	List<Boolean> globalVisibility = new ArrayList<>();
+    	
+    	if(ue2Terrain.getQuadVisibilityBitmaps() == null || !ue2Terrain.getQuadVisibilityBitmaps().isEmpty()){
+    		
+    		String tmpRadix;
+    		Map<Integer, Long> visMap = ue2Terrain.getQuadVisibilityBitmaps();
+    		
+    		for(int i = 0; i < ue2Terrain.getTotalSquares()/32; i++) {
+    			
+    			if(visMap.containsKey(i)){
+    				
+    				Long visibility = visMap.get(i);
+    				
+		    			
+	    			tmpRadix = "";
+	    			
+	    			// -1  means 32 squares are rendered
+	    			if(visibility == -1){
+	    				for(int j = 0; j < 32; j ++){
+	    					globalVisibility.add(Boolean.TRUE);
+	    				}
+	    			}
+	    			else {
+	    				// e.g: 
+	    				// "-134217728"
+	    				visibility ++;
+	    				
+	    				// "-134217727" -> --111111111111111111111111111 (rendered squares in "reverse" order)
+	    				String radix = Long.toString(visibility, 2);
+	    				radix = radix.replaceAll("-","");
+	    				
+	    				for(int k=0; k < (32 - radix.length()); k ++)
+	                    {
+	                        tmpRadix +="0";
+	                    }
+	    				
+	    				radix = tmpRadix + radix;
+	    				
+	    				for(int j = 31; j >= 0; j --){
+	    					globalVisibility.add(radix.charAt(j) == '1');
+	    				}
+	    			}
+		    		
+    			} else {
+    				for(int j = 0; j < 32; j ++){
+    					globalVisibility.add(Boolean.TRUE);
+    				}
+    			}
+    		}
+    	}
+    	
+    	return globalVisibility;
     }
     
 
@@ -265,6 +335,13 @@ public class T3DUE4Terrain extends T3DActor {
         
         if(landscapeMaterial != null){
             sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
+        }
+        
+        // TODO test for all col components at least one with vis data
+        if(collisionComponents[0][0].getVisibilityData() != null){
+        	//sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
+        	// TEMP thingy
+        	sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'/Game/RestrictedAssets/Maps/WIP/CTF-Maul-UT2004/Terrain_Vis_Mat.Terrain_Vis_Mat'\n");
         }
         
         int idx = 0;
