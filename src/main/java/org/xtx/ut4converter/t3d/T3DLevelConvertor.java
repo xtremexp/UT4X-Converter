@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +26,8 @@ import javafx.concurrent.Task;
 
 import javax.vecmath.Vector3d;
 
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
 
@@ -76,6 +78,13 @@ public class T3DLevelConvertor extends Task<Object> {
     
     LinkedList<T3DActor> convertedActors = new LinkedList<>();
     
+    /**
+     * Assault objectives.
+     * Declared here so we can set out the good "order" prop.
+     * TODO move out to proper class
+     */
+    SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
+    
     boolean createNoteWhenUnconverted = true;
     
     Logger logger;
@@ -85,6 +94,16 @@ public class T3DLevelConvertor extends Task<Object> {
     Vector3d boundBoxLocalisation;
     
     int actorCount;
+    
+    private void setAsOrder(){
+    	
+    	int order = objectives.size() - 1;
+    	
+    	for(T3DASObjective obj : objectives.values()){
+    		obj.order = order;
+    		order --;
+    	}
+    }
     
     /**
      * 
@@ -215,6 +234,10 @@ public class T3DLevelConvertor extends Task<Object> {
      */
     private void write(BufferedWriter bw) throws IOException {
         
+    	// fast 'code' for setting assault good order for objectives
+    	// TODO move out in near future ...
+    	setAsOrder();
+    	
         writeHeader();
             
         for(T3DActor actor : convertedActors){

@@ -1,6 +1,5 @@
 package org.xtx.ut4converter.t3d;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,24 +14,29 @@ import org.xtx.ut4converter.MapConverter;
 public class T3DASObjective extends T3DSound {
 
 	/**
-	 * Tells this objective
+	 * If critical means this objective has to be completed to finish the map
+	 * else this is a secondary/optional objective
 	 */
 	boolean isCritical = true;
 	
 	/**
 	 * Means this objective is completed by touching it
+	 * UT99: Default is false
+	 * UT4 MOD: default is true
 	 */
-	boolean byTouch = true;
+	boolean byTouch;
 	
 	/**
 	 * Means this objective is completed by destroying it
+	 * UT99: Default is true
+	 * UT4 MOD: default is false
 	 */
-	boolean byDamage = false;
+	boolean byDamage = true;
 	
 	/**
 	 * Objective health
 	 */
-	BigDecimal objectiveHealth = BigDecimal.ZERO;
+	Double objectiveHealth = 100d;
 	
 	
 	/**
@@ -46,12 +50,18 @@ public class T3DASObjective extends T3DSound {
 	String completedText;
 	
 	/**
-	 * Objective order
+	 * UT4 AS Mod - Objective order
+	 * Linked with defense priority
 	 */
 	int order = 0;
 	
 	/**
-	 * UT4 AsMod - Objective text displayed in hud (i guess ...)
+	 * UT99 - The lower the value is the further the objective is (generally 0 means last objective)
+	 */
+	int defensePriority;
+	
+	/**
+	 * UT4 AS Mod - Objective text displayed in hud (i guess ...)
 	 */
 	String objectiveListText;
 	
@@ -89,6 +99,7 @@ public class T3DASObjective extends T3DSound {
 		// FortName="The front doors"
 		if(line.startsWith("FortName")){
 			objectiveDesc = T3DUtils.getString(line);
+			objectiveListText = objectiveDesc;
 		}
 		
 		// CompletedText="Test"
@@ -96,9 +107,9 @@ public class T3DASObjective extends T3DSound {
 			completedText = T3DUtils.getString(line);
 		}
 		
-		// DefensePriority=0 (0 = latest objective)
+		// DefensePriority=0 (0 = latest objective
 		else if(line.startsWith("DefensePriority")){
-			order = 10000 - T3DUtils.getInteger(line);
+			defensePriority = T3DUtils.getInteger(line);
 		}
 		
 		else if(line.startsWith("DestroyedMessage")){
@@ -143,12 +154,28 @@ public class T3DASObjective extends T3DSound {
 			
 		}
 		
+		// Pawn Property - Default is 100 (UT99)
+		else if(line.startsWith("Health=")){
+			objectiveHealth = T3DUtils.getDouble(line);
+		}
+		
 		else {
             return super.analyseT3DData(line);
         }
         
         return true;
 	}
+	
+	/**
+	 * Default pawn health.
+	 * Used for objectives that can be damaged
+	 */
+	final double DEFAULT_PAWN_HEALTH = 100;
+	
+	/**
+	 * Default message for objective completed in UT99
+	 */
+	final String DEFAULT_COMPLETED_OBJ_UT99 = "was destroyed!";
 	
 	public String toString(){
 		
@@ -167,10 +194,17 @@ public class T3DASObjective extends T3DSound {
         
         if(completedText != null){
         	sbf.append(IDT).append("\tCompletedText=").append(completedText).append("\n");
+        } else {
+        	sbf.append(IDT).append("\tCompletedText=").append(DEFAULT_COMPLETED_OBJ_UT99).append("\n");
         }
         
-        if(objectiveHealth != null){
-        	sbf.append(IDT).append("\tObjectiveHealth=").append(objectiveHealth).append("\n");
+        if(byDamage){
+	        if(objectiveHealth != null){
+	        	sbf.append(IDT).append("\tObjectiveHealth=").append(objectiveHealth).append("\n");
+	        } 
+	        else {
+	        	sbf.append(IDT).append("\tObjectiveHealth=").append(DEFAULT_PAWN_HEALTH).append("\n");
+	        }
         }
         
         sbf.append(IDT).append("\tbyTouch=").append(byTouch).append("\n");
@@ -188,4 +222,14 @@ public class T3DASObjective extends T3DSound {
         
         return sbf.toString();
 	}
+	
+	@Override
+    public void convert(){
+        
+		// TODO move out ('quick code')
+        mapConverter.getT3dLvlConvertor().objectives.put(Integer.valueOf(this.defensePriority), this);
+        
+        super.convert();
+    }
+	
 }
