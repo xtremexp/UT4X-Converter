@@ -6,6 +6,9 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGameTypes;
+import org.xtx.ut4converter.UTGameTypes.GameType;
+import org.xtx.ut4converter.UTGames.UTGame;
 
 /**
  * 
@@ -23,6 +26,8 @@ public class T3DPlayerStart extends T3DSound {
     
     boolean isTeamPlayerStart;
     
+    String teamPlayerStartClass = "UTTeamPlayerStart";
+    
     /**
      * Indicate this player start is team player start
      * @param mc 
@@ -32,6 +37,10 @@ public class T3DPlayerStart extends T3DSound {
         
         if(mc.isTeamGameType()){
             isTeamPlayerStart = true;
+        }
+        
+        if(isUt99Assault()){
+        	teamPlayerStartClass = "UTASTeamStart_C";
         }
     }
     
@@ -53,6 +62,10 @@ public class T3DPlayerStart extends T3DSound {
         return true;
     }
     
+    private boolean isUt99Assault(){
+    	return mapConverter.getInputGame() == UTGame.UT99 && UTGameTypes.getGameType(mapConverter.getInMap().getName().split("\\-")[0]) == GameType.ASSAULT;
+    }
+    
     /**
      *
      * @return
@@ -60,7 +73,7 @@ public class T3DPlayerStart extends T3DSound {
     @Override
     public String toString(){
         
-        sbf.append(IDT).append("Begin Actor Class=").append(isTeamPlayerStart?"UTTeamPlayerStart":"PlayerStart").append(" Name=").append(name).append("\n");
+        sbf.append(IDT).append("Begin Actor Class=").append(isTeamPlayerStart?teamPlayerStartClass:"PlayerStart").append(" Name=").append(name).append("\n");
         
         if(mapConverter.toUnrealEngine4()){
             sbf.append(IDT).append("\tBegin Object Name=\"CollisionCapsule\"\n");

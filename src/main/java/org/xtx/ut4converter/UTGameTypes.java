@@ -99,7 +99,7 @@ public class UTGameTypes {
         return false;
     }
     
-    private static GameType getGameType(String prefix){
+    public static GameType getGameType(String prefix){
         
         if(prefix == null){
             return null;

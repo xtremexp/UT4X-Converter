@@ -153,14 +153,17 @@ public class SupportedClasses {
         }
         
         // terrain conversion disabled until working good
-        /**
         if(mapConverter.isFrom(UTGames.UnrealEngine.UE2)){
-            putUtClass(T3DUE2Terrain.class, "TerrainInfo");
-        }*/
+            //putUtClass(T3DUE2Terrain.class, "TerrainInfo");
+        }
         
         for(T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()){
             putUtClass(T3DLight.class, ue34LightActor.name());
         }
+        
+        // UT99 Assault
+        putUtClass(T3DASObjective.class, "FortStandard");
+        putUtClass(T3DASCinematicCamera.class, "SpectatorCam");
         
         // TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");

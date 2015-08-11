@@ -123,6 +123,7 @@ public class T3DMatch {
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"SuperHealth"}, null, new String[]{"HealthPack"}, new String[]{"SuperHealthCharger"}, new String[]{"SuperHealthCharger"}, new String[]{"UTPickupFactory_SuperHealth"}, new String[]{"Health_Large_C"})
                 .addConvP(UTGame.UT4, new Object[]{Z_OFFSET, 24d}));
         
+        
         initialiseWeapons(mapConverter.getInputGame());
         
         initialiseAmmos();
