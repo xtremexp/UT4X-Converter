@@ -164,6 +164,7 @@ public class SupportedClasses {
         // UT99 Assault
         putUtClass(T3DASObjective.class, "FortStandard");
         putUtClass(T3DASCinematicCamera.class, "SpectatorCam");
+        putUtClass(T3DASInfo.class, "AssaultInfo");
         
         // TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
         putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");

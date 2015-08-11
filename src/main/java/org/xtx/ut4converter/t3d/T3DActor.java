@@ -112,6 +112,16 @@ public abstract class T3DActor {
      */
     protected Double drawScale;
     
+    /**
+     * UT99
+     */
+    protected Double collisionRadius;
+    
+    /**
+     * UT99
+     */
+    protected Double collisionHeight;
+    
     
     String otherdata="";
     
@@ -270,6 +280,14 @@ public abstract class T3DActor {
             name = line.split("Name=")[1].replaceAll("\"", "");
         }
         
+        else if(line.contains("CollisionRadius=")){
+        	collisionRadius = T3DUtils.getDouble(line);
+        }
+        
+        else if(line.contains("CollisionHeight=")){
+        	collisionHeight = T3DUtils.getDouble(line);
+        }
+        
         else if(line.startsWith("Group=")){
             addOtherData(line); 
         } 
@@ -349,6 +367,8 @@ public abstract class T3DActor {
             if(location != null) location.scale(newScale);
             if(coLocation != null) coLocation.scale(newScale);
             if(drawScale != null ) drawScale *= newScale;
+            if(collisionHeight != null ) collisionHeight *= newScale;
+            if(collisionRadius != null ) collisionRadius *= newScale;
             if(scale3d != null) scale3d.scale(newScale);
         }
     }
@@ -501,6 +521,9 @@ public abstract class T3DActor {
         return true;
     }
     
+    protected void writeEndObject(){
+    	sbf.append(IDT).append("\tEnd Object\n");
+    }
     /**
      *
      */

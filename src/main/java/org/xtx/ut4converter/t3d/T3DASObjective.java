@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.ucore.ue4.BodyInstance;
+import org.xtx.ut4converter.ucore.ue4.BodyInstance.ECollisionResponse;
 
 /**
  * Based on properties of UT4 Assault mod v1.6.1
@@ -181,21 +183,43 @@ public class T3DASObjective extends T3DSound {
 		
 		sbf.append(IDT).append("Begin Actor Class=UTASObjective_C Name=").append(name).append("\n");
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
-        sbf.append(IDT).append("\tEnd Object\n");
+        writeEndObject();
         
-
+        // Need to add collision component else objective would not trigger at all
+        // TODO check if needed if byDamage = false
+        sbf.append(IDT).append("\tBegin Object Class=CapsuleComponent Name=\"Capsule\"\n");
+        sbf.append(IDT).append("\t\tBegin Object Class=BodySetup Name=\"BodySetup_4546\"\n");
+        sbf.append(IDT).append("\t\tEnd Object\n");
+        writeEndObject();
+        
         sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
         writeLocRotAndScale();
-        sbf.append(IDT).append("\tEnd Object\n");
+        writeEndObject();
+
+        sbf.append(IDT).append("\tBegin Object Name=\"Capsule\"\n");
+        
+        sbf.append(IDT).append("\tBegin Object Name=\"BodySetup_4546\"\n");
+        sbf.append(IDT).append("\t\tCollisionTraceFlag=CTF_UseSimpleAsComplex\n");
+        writeEndObject();
+        
+        sbf.append(IDT).append("\t\tCapsuleHalfHeight=").append(collisionHeight).append("\n");
+        sbf.append(IDT).append("\t\tCapsuleRadius=").append(collisionRadius).append("\n");
+        BodyInstance bi = new BodyInstance();
+        bi.setCollisionResponse(ECollisionResponse.ECR_Block);
+        sbf.append(IDT).append("\t");
+        bi.toT3d(sbf);
+        sbf.append("\n");
+        
+        sbf.append(IDT).append("\t\tAttachParent=DefaultSceneRoot\n");
+        sbf.append(IDT).append("\t\tCreationMethod=Instance\n");
+        writeEndObject();
         
         if(objectiveDesc != null){
-        	sbf.append(IDT).append("\tObjectiveDesc=").append(objectiveDesc).append("\n");
+        	sbf.append(IDT).append("\tObjectiveDesc=\"").append(objectiveDesc).append("\"\n");
         }
         
         if(completedText != null){
-        	sbf.append(IDT).append("\tCompletedText=").append(completedText).append("\n");
-        } else {
-        	sbf.append(IDT).append("\tCompletedText=").append(DEFAULT_COMPLETED_OBJ_UT99).append("\n");
+        	sbf.append(IDT).append("\tCompletedText=\"").append(completedText).append("\"\n");
         }
         
         if(byDamage){
@@ -207,6 +231,7 @@ public class T3DASObjective extends T3DSound {
 	        }
         }
         
+
         sbf.append(IDT).append("\tbyTouch=").append(byTouch).append("\n");
         sbf.append(IDT).append("\tbyDamage=").append(byDamage).append("\n");
         sbf.append(IDT).append("\tisCritical=").append(isCritical).append("\n");
@@ -215,8 +240,10 @@ public class T3DASObjective extends T3DSound {
         sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
         
         if(objectiveListText != null){
-        	sbf.append(IDT).append("\tObjectiveListText=").append(objectiveListText).append("\n");
+        	sbf.append(IDT).append("\tObjectiveListText=\"").append(objectiveListText).append("\"\n");
         }
+        
+        sbf.append(IDT).append("\tInstanceComponents(0)=CapsuleComponent'Capsule'\n");
         
         writeEndActor();
         
@@ -226,6 +253,21 @@ public class T3DASObjective extends T3DSound {
 	@Override
     public void convert(){
         
+		if(completedText == null){
+			completedText = DEFAULT_COMPLETED_OBJ_UT99;
+		}
+		
+		completedText = objectiveDesc + " " + completedText;
+		
+		// TODO get default values for UT99 fortstandards ...
+		if(collisionRadius == null){
+			collisionRadius = 48d;
+		}
+		
+		if(collisionHeight == null){
+			collisionHeight = 64d;
+		}
+		
 		// TODO move out ('quick code')
         mapConverter.getT3dLvlConvertor().objectives.put(Integer.valueOf(this.defensePriority), this);
         

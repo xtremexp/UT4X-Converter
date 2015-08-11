@@ -39,7 +39,7 @@ public class T3DPlayerStart extends T3DSound {
             isTeamPlayerStart = true;
         }
         
-        if(isUt99Assault()){
+        if(UTGameTypes.isUt99Assault(mc)){
         	teamPlayerStartClass = "UTASTeamStart_C";
         }
     }
@@ -62,9 +62,7 @@ public class T3DPlayerStart extends T3DSound {
         return true;
     }
     
-    private boolean isUt99Assault(){
-    	return mapConverter.getInputGame() == UTGame.UT99 && UTGameTypes.getGameType(mapConverter.getInMap().getName().split("\\-")[0]) == GameType.ASSAULT;
-    }
+
     
     /**
      *

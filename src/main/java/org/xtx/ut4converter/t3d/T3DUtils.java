@@ -80,7 +80,7 @@ public class T3DUtils {
     }
     
     public static String getString(String line){
-        return line.split("\\=")[1];
+        return line.split("\\=")[1].replaceAll("\"", "");
     }
     
     /**

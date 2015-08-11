@@ -27,6 +27,7 @@ import javafx.concurrent.Task;
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -95,7 +96,11 @@ public class T3DLevelConvertor extends Task<Object> {
     
     int actorCount;
     
-    private void setAsOrder(){
+    /**
+     * Set objective order from DefaultPriority UT99 prop
+     * from FortStandard actors
+     */
+    private void setAssaultObjectiveOrder(){
     	
     	int order = objectives.size() - 1;
     	
@@ -236,7 +241,7 @@ public class T3DLevelConvertor extends Task<Object> {
         
     	// fast 'code' for setting assault good order for objectives
     	// TODO move out in near future ...
-    	setAsOrder();
+    	setAssaultObjectiveOrder();
     	
         writeHeader();
             
