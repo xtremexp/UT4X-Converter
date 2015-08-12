@@ -143,6 +143,8 @@ public class T3DMatch {
         // TODO handle radius and height
         list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[]{"Trigger"}, null, new String[]{"Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger"}, null, null, null, new String[]{"TriggerCapsule"}));
 
+        // Blueprint_Effect_Smoke_C
+        list.add(iByGame(T3DPickup.class, "P_Smoke", null, null, new String[]{"SmokeGenerator"}, null, null, null, new String[]{"Blueprint_Effect_Smoke_C"}));
     }
     
     /**
