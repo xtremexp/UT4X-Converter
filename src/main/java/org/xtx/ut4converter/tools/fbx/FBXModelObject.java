@@ -5,13 +5,18 @@
  */
 package org.xtx.ut4converter.tools.fbx;
 
-import java.util.LinkedList;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.LinkedList;
 import java.util.Locale;
+
+import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh.Triangle;
 
 /**
  *
@@ -40,19 +45,39 @@ public class FBXModelObject extends FBXObject {
     /**
      * Reference to brush
      */
-    T3DBrush brush;
+    Object source;
     
     public FBXModelObject(T3DBrush brush) {
         super(FBXObjectType.Model);
         
         version = MODEL_VERSION;
         geometryVersion = GEOMETRY_VERSION;
-        this.brush = brush;
+        this.source = brush;
         this.subName = "Mesh";
-        initialise();
+        initialise(brush);
     }
     
-    private void initialise(){
+	public FBXModelObject(PSKStaticMesh pskMesh) {
+		super(FBXObjectType.Model);
+
+		version = MODEL_VERSION;
+        geometryVersion = GEOMETRY_VERSION;
+		layerElements = new LinkedList<>();
+
+		this.name = pskMesh.getPskFile().getName();
+		
+		vertices = new LinkedList<>();
+        normals = new LinkedList<>();
+        polygonVertexIndices = new LinkedList<>();
+        uvs = new LinkedList<>();
+        
+        loadPsk(pskMesh);
+        FBXLayerElementNormal layerNormal = new FBXLayerElementNormal(normals, FBXLayerElementNormal.MappingInformationType.ByPolygon);
+        layerElements.add(layerNormal);
+        layerElements.add(new FBXLayerElementMaterial());
+	}
+
+	private void initialise(T3DBrush brush){
         
         layerElements = new LinkedList<>();
         
@@ -72,6 +97,24 @@ public class FBXModelObject extends FBXObject {
         layerElements.add(layerNormal);
         layerElements.add(new FBXLayerElementMaterial());
     }
+	
+	private void loadPsk(PSKStaticMesh pskMesh){
+		
+		
+		for(Vector3d v : pskMesh.getVertices()){
+
+			vertices.add(v.x);
+            vertices.add(v.y);
+            vertices.add(v.z);
+		}
+		
+		for(org.xtx.ut4converter.tools.psk.PSKStaticMesh.Vertex v : pskMesh.getWedges()){
+			uvs.add(v.u);
+			uvs.add(v.v);
+
+		}
+
+	}
 
     private void load(LinkedList<T3DPolygon> polygons){
         
