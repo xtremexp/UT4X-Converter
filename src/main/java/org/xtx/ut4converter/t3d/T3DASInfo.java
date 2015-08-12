@@ -23,10 +23,9 @@ public class T3DASInfo extends T3DActor {
 	}
 	
 	private void initialise(){
-		mapDescription = "Assault Map";
 		mapTimeLimit = 600;
-		name = "Asssault Info";
-		tag = "Assault Info";
+		name = "AsssaultInfo";
+		tag = "AssaultInfo";
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class T3DASInfo extends T3DActor {
         sbf.append(IDT).append("\tEnd Object\n");
         sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
         sbf.append(IDT).append("\tMapDesc=\"").append(mapDescription).append("\"\n");
-        sbf.append(IDT).append("\tMapTimeLimit=\"").append(mapTimeLimit).append("\"\n");
+        sbf.append(IDT).append("\tMapTimeLimit=").append(mapTimeLimit).append("\n");
         sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
         
         writeEndActor();
