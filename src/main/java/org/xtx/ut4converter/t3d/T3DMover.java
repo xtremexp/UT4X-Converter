@@ -64,10 +64,10 @@ public class T3DMover extends T3DBrush {
             
             // TODO for UT4 make converter from brush to .fbx Autodesk file and transform into StaticMesh
             // TODO for UT3 make converter from brush to .ase file and transform into StaticMesh
-            // Write the mover as brush as well so we can convert it in staticmesh in UE4 Editor ...
             
-            // TODO refactor this
+            // Write the mover as brush as well so we can convert it in staticmesh in UE4 Editor ...
             String originalName = this.name;
+            this.brushClass = BrushClass.Brush;
             this.name += "Brush";
             String x = super.toString();
             // put back original name (might be used later for linked actors . e.g: liftexit)
