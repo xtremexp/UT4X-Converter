@@ -204,11 +204,17 @@ public class T3DASObjective extends T3DSound {
         
         sbf.append(IDT).append("\t\tCapsuleHalfHeight=").append(collisionHeight).append("\n");
         sbf.append(IDT).append("\t\tCapsuleRadius=").append(collisionRadius).append("\n");
-        BodyInstance bi = new BodyInstance();
-        bi.setCollisionResponse(ECollisionResponse.ECR_Block);
-        sbf.append(IDT).append("\t");
-        bi.toT3d(sbf);
-        sbf.append("\n");
+        
+        if(byTouch){
+        	// TODO modify BodyInstance class to set profile trigger quickly
+        	sbf.append(IDT).append("\t\tBodyInstance=(ResponseToChannels=(WorldStatic=ECR_Block,WorldDynamic=ECR_Block,Pawn=ECR_Block,Visibility=ECR_Block,Camera=ECR_Block,PhysicsBody=ECR_Block,Vehicle=ECR_Block,Destructible=ECR_Block,GameTraceChannel1=ECR_Block,GameTraceChannel2=ECR_Block,GameTraceChannel3=ECR_Block,GameTraceChannel4=ECR_Block,GameTraceChannel5=ECR_Block,GameTraceChannel6=ECR_Block,GameTraceChannel7=ECR_Block),CollisionProfileName=\"Trigger\",CollisionResponses=(ResponseArray=((Channel=\"WorldStatic\",Response=ECR_Overlap),(Channel=\"WorldDynamic\",Response=ECR_Overlap),(Channel=\"Pawn\",Response=ECR_Overlap),(Channel=\"Visibility\",Response=ECR_Ignore),(Channel=\"Camera\",Response=ECR_Overlap),(Channel=\"PhysicsBody\",Response=ECR_Overlap),(Channel=\"Vehicle\",Response=ECR_Overlap),(Channel=\"Destructible\",Response=ECR_Overlap),(Channel=\"Projectile\",Response=ECR_Ignore),(Channel=\"Weapon\",Response=ECR_Ignore),(Channel=\"ProjectileShootable\",Response=ECR_Ignore),(Channel=\"WeaponNoCharacter\",Response=ECR_Ignore),(Channel=\"TransDisk\",Response=ECR_Ignore))),MassInKg=131.720444)\n");
+        } else {
+        	BodyInstance bi = new BodyInstance();
+	        bi.setCollisionResponse(ECollisionResponse.ECR_Block);
+	        sbf.append(IDT).append("\t");
+	        bi.toT3d(sbf);
+	        sbf.append("\n");
+        }
         
         sbf.append(IDT).append("\t\tAttachParent=DefaultSceneRoot\n");
         sbf.append(IDT).append("\t\tCreationMethod=Instance\n");
