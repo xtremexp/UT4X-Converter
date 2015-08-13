@@ -13,6 +13,8 @@ import org.xtx.ut4converter.UTGames.UTGame;
  */
 public class UTGameTypes {
     
+	public static final String UT4_ASSAULT_CLASS = "BlueprintGeneratedClass'/Game/Blueprints/UTASGameMode.UTASGameMode_C'";
+	
     /**
      *
      */

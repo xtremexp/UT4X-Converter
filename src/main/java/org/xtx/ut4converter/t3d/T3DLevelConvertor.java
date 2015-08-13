@@ -536,6 +536,15 @@ public class T3DLevelConvertor extends Task<Object> {
             navMeshBoundsVolume.brushClass = T3DBrush.BrushClass.NavMeshBoundsVolume;
             bwr.write(navMeshBoundsVolume.toString());
             */
+            
+            // warn designer to do these steps
+            // to be able to convert correctly objectives
+            // since WorldInfo actor not imported by UE4 (which contained gametype)
+            if(UTGameTypes.isUt99Assault(mapConverter)){
+            	logger.log(Level.WARNING, "After .t3d file import, set gametype to assault mode in world settings");
+            	logger.log(Level.WARNING, "delete all actors in map. Save and re-import the .t3d file");
+            	logger.log(Level.WARNING, "You should now see properly assault objectives !");
+            }
         }
         
         

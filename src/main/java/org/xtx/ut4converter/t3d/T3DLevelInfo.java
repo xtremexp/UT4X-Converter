@@ -6,7 +6,9 @@
 package org.xtx.ut4converter.t3d;
 
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -34,6 +36,12 @@ public class T3DLevelInfo extends T3DActor {
      * UE3: ?
      */
     String idealPlayerCount;
+    
+    /**
+     * Default game mode.
+     * Overrides the one
+     */
+    String defaultGameMode;
     
     /**
      * UE1: "Song=Music'Foregone.Foregone'"
@@ -101,6 +109,10 @@ public class T3DLevelInfo extends T3DActor {
             text += "IdealPlayerCount: "+idealPlayerCount;
         }
         
+        if(UTGameTypes.isUt99Assault(mapConverter)){
+        	defaultGameMode = UTGameTypes.UT4_ASSAULT_CLASS;
+        }
+        
         note.text = text;
         
         children.add(note);
@@ -123,13 +135,18 @@ public class T3DLevelInfo extends T3DActor {
     @Override
     public String toString(){
         
-        return ""; // disabled because crashing for the moment
+        return ""; // disabled because UE4 not handling WorldInfo on import ...
         
-        /*
+        /**
         sbf.append(IDT).append("Begin Actor Class=UTWorldSettings Name=UTWorldSettings\n");
         
         if(killZ != null){
-            sbf.append(IDT).append("\nKillZ=").append(killZ).append("\n");
+            sbf.append(IDT).append("\tKillZ=").append(killZ).append("\n");
+        }
+        
+        if(defaultGameMode != null){
+        	// =BlueprintGeneratedClass'/Game/Blueprints/UTASGameMode.UTASGameMode_C'
+        	sbf.append(IDT).append("\tDefaultGameMode=").append(defaultGameMode).append("\n");
         }
 
         writeEndActor();
