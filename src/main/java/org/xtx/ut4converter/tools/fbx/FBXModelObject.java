@@ -16,7 +16,6 @@ import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh.Triangle;
 
 /**
  *

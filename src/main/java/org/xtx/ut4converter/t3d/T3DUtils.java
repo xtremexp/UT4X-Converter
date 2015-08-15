@@ -225,7 +225,7 @@ public class T3DUtils {
 
 		for (char x : mapName.toCharArray()) {
 
-			int val = (int) x;
+			int val = x;
 
 			if ((val == 45) // "-"
 					|| (48 <= val && val <= 57) // 0 -> 9

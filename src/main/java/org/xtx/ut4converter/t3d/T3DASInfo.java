@@ -46,6 +46,7 @@ public class T3DASInfo extends T3DActor {
 		return true;
 	}
 
+	@Override
 	public String toString() {
 
 		sbf.append(IDT).append("Begin Actor Class=UTASInfo_C \n");

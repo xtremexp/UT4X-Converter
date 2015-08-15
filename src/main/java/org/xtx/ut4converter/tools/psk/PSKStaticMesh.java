@@ -12,9 +12,6 @@ import java.util.List;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.t3d.T3DBrush;
-
 /**
  * PSK staticmesh file reader.
  * 

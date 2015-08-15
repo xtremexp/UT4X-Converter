@@ -7,8 +7,6 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGameTypes;
-import org.xtx.ut4converter.UTGameTypes.GameType;
-import org.xtx.ut4converter.UTGames.UTGame;
 
 /**
  * 

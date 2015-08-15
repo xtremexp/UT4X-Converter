@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,6 +78,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			this.programName = programName;
 		}
 
+		@Override
 		public String toString() {
 			return this.programName;
 		}
@@ -119,6 +119,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			return option;
 		}
 
+		@Override
 		public String toString() {
 			return this.option;
 		}

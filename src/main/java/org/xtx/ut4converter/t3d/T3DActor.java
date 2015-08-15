@@ -19,7 +19,6 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
-import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
  * 
@@ -563,6 +562,7 @@ public abstract class T3DActor {
 		this.validWriting = validWriting;
 	}
 
+	@Override
 	public String toString() {
 		return sbf.toString();
 	}

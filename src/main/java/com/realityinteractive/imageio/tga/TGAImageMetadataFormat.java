@@ -71,6 +71,7 @@ public class TGAImageMetadataFormat extends IIOMetadataFormatImpl {
 	 * @see javax.imageio.metadata.IIOMetadataFormat#canNodeAppear(java.lang.String,
 	 *      javax.imageio.ImageTypeSpecifier)
 	 */
+	@Override
 	public boolean canNodeAppear(final String elementName, final ImageTypeSpecifier imageType) {
 		// NOTE: since there are no elements, none are allowed
 		return false;

@@ -175,6 +175,7 @@ public class T3DASObjective extends T3DSound {
 	 */
 	final String DEFAULT_COMPLETED_OBJ_UT99 = "was destroyed!";
 
+	@Override
 	public String toString() {
 
 		sbf.append(IDT).append("Begin Actor Class=UTASObjective_C Name=").append(name).append("\n");

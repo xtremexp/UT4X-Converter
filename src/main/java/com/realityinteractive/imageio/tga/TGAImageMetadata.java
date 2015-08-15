@@ -60,6 +60,7 @@ public class TGAImageMetadata extends IIOMetadata {
 	/**
 	 * @see javax.imageio.metadata.IIOMetadata#getAsTree(java.lang.String)
 	 */
+	@Override
 	public Node getAsTree(final String formatName) {
 		// validate the format name (this will throw if invalid)
 		checkFormatName(formatName);
@@ -74,6 +75,7 @@ public class TGAImageMetadata extends IIOMetadata {
 	/**
 	 * @see javax.imageio.metadata.IIOMetadata#getMetadataFormat(java.lang.String)
 	 */
+	@Override
 	public IIOMetadataFormat getMetadataFormat(final String formatName) {
 		// validate the format name (this will throw if invalid)
 		checkFormatName(formatName);
@@ -89,6 +91,7 @@ public class TGAImageMetadata extends IIOMetadata {
 	 * 
 	 * @see javax.imageio.metadata.IIOMetadata#isReadOnly()
 	 */
+	@Override
 	public boolean isReadOnly() {
 		// see javadoc
 		return true;
@@ -98,6 +101,7 @@ public class TGAImageMetadata extends IIOMetadata {
 	 * @see javax.imageio.metadata.IIOMetadata#mergeTree(java.lang.String,
 	 *      org.w3c.dom.Node)
 	 */
+	@Override
 	public void mergeTree(final String formatName, final Node root) throws IIOInvalidTreeException {
 		// validate the format name (this will throw if invalid)
 		checkFormatName(formatName);
@@ -108,6 +112,7 @@ public class TGAImageMetadata extends IIOMetadata {
 	/**
 	 * @see javax.imageio.metadata.IIOMetadata#reset()
 	 */
+	@Override
 	public void reset() {
 		// NOTE: nothing to do since there are no elements
 	}

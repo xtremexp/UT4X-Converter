@@ -304,6 +304,7 @@ public class T3DPolygon {
 	 * @param z
 	 * @deprecated Use setTextureU
 	 */
+	@Deprecated
 	public void setTexU(Double x, Double y, Double z) {
 		texture_u = new Vector3d(x, y, z);
 	}
@@ -315,6 +316,7 @@ public class T3DPolygon {
 	 * @param z
 	 * @deprecated Use setTextureV
 	 */
+	@Deprecated
 	public void setTexV(Double x, Double y, Double z) {
 		texture_v = new Vector3d(x, y, z);
 	}

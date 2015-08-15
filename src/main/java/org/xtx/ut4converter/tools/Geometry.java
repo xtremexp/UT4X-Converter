@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 
 /**

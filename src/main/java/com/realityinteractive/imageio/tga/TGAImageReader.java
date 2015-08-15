@@ -94,6 +94,7 @@ public class TGAImageReader extends ImageReader {
 	 */
 	// NOTE: can't read the header in here as there would be no place for
 	// exceptions to go. It must be read lazily.
+	@Override
 	public void setInput(final Object input, final boolean seekForwardOnly, final boolean ignoreMetadata) {
 		// delegate to the partent
 		super.setInput(input, seekForwardOnly, ignoreMetadata);
@@ -176,6 +177,7 @@ public class TGAImageReader extends ImageReader {
 	/**
 	 * @see javax.imageio.ImageReader#getImageTypes(int)
 	 */
+	@Override
 	public Iterator/* <ImageTypeSpecifier> */getImageTypes(final int imageIndex) throws IOException {
 		// validate the imageIndex (this will throw if invalid)
 		checkImageIndex(imageIndex);
@@ -245,6 +247,7 @@ public class TGAImageReader extends ImageReader {
 	 * 
 	 * @see javax.imageio.ImageReader#getNumImages(boolean)
 	 */
+	@Override
 	public int getNumImages(final boolean allowSearch) throws IOException {
 		// see javadoc
 		// NOTE: 1 is returned regardless if a search is allowed or not
@@ -258,6 +261,7 @@ public class TGAImageReader extends ImageReader {
 	 * 
 	 * @see javax.imageio.ImageReader#getStreamMetadata()
 	 */
+	@Override
 	public IIOMetadata getStreamMetadata() throws IOException {
 		// see javadoc
 		return null;
@@ -270,6 +274,7 @@ public class TGAImageReader extends ImageReader {
 	 * 
 	 * @see javax.imageio.ImageReader#getImageMetadata(int)
 	 */
+	@Override
 	public IIOMetadata getImageMetadata(final int imageIndex) throws IOException {
 		// see javadoc
 		return null;
@@ -278,6 +283,7 @@ public class TGAImageReader extends ImageReader {
 	/**
 	 * @see javax.imageio.ImageReader#getHeight(int)
 	 */
+	@Override
 	public int getHeight(final int imageIndex) throws IOException {
 		// validate the imageIndex (this will throw if invalid)
 		checkImageIndex(imageIndex);
@@ -289,6 +295,7 @@ public class TGAImageReader extends ImageReader {
 	/**
 	 * @see javax.imageio.ImageReader#getWidth(int)
 	 */
+	@Override
 	public int getWidth(final int imageIndex) throws IOException {
 		// validate the imageIndex (this will throw if invalid)
 		checkImageIndex(imageIndex);
@@ -300,6 +307,7 @@ public class TGAImageReader extends ImageReader {
 	/**
 	 * @see javax.imageio.ImageReader#read(int, javax.imageio.ImageReadParam)
 	 */
+	@Override
 	public BufferedImage read(final int imageIndex, final ImageReadParam param) throws IOException {
 		// ensure that the image is of a supported type
 		// NOTE: this will implicitly ensure that the imageIndex is valid

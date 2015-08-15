@@ -633,6 +633,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return true if converting from Unreal Engine 1 or 2 UTx game
 	 * @deprecated Use isFrom
 	 */
+	@Deprecated
 	public boolean fromUE1OrUE2() {
 		return UTGames.isUnrealEngine1(this.getInputGame()) || UTGames.isUnrealEngine2(this.getInputGame());
 	}
@@ -674,6 +675,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return true if converting to Unreal Engine 1 or 2 UTx game
 	 * @deprecated Use isFrom
 	 */
+	@Deprecated
 	public boolean toUE1OrUE2() {
 		return UTGames.isUnrealEngine1(this.getOutputGame()) || UTGames.isUnrealEngine2(this.getOutputGame());
 	}
@@ -712,6 +714,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return
 	 * @deprecated Use isTo
 	 */
+	@Deprecated
 	public boolean toUE3() {
 		return UTGames.isUnrealEngine3(this.getOutputGame());
 	}
@@ -739,6 +742,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @deprecated Use isTo
 	 * @return
 	 */
+	@Deprecated
 	public boolean toUE4() {
 		return UTGames.isUnrealEngine4(this.getOutputGame());
 	}

@@ -44,302 +44,329 @@ import org.xtx.ut4converter.tools.Installation;
  */
 @SuppressWarnings("restriction")
 public class ConversionSettingsController implements Initializable {
-    @FXML
-    private AnchorPane ConversionSettings;
+	@FXML
+	private AnchorPane ConversionSettings;
 
-    Stage dialogStage;
-    
-    
-    @FXML
-    private Label inputGameLbl;
-    @FXML
-    private Label outputGameLbl;
-    @FXML
-    private Label inputMapLbl;
-    @FXML
-    private Label outputFolderLbl;
-    
-    MainApp mainApp;
-    
-    MapConverter mapConverter;
-    
-    UTGames.UTGame inputGame;
-    UTGames.UTGame outputGame;
-    
-    UserConfig userConfig;
-    UserGameConfig userInputGameConfig;
-    UserGameConfig userOutputGameConfig;
-    @FXML
-    private TitledPane advancedSettingsTitle;
-    @FXML
-    private TitledPane mainSettingsTitle;
-    @FXML
-    private CheckBox convTexCheckBox;
-    @FXML
-    private CheckBox convSndCheckBox;
-    @FXML
-    private CheckBox convSmCheckBox;
-    @FXML
-    private CheckBox convMusicCheckBox;
-    
-    BigDecimal scaleFactor = new BigDecimal("2.2");
-    @FXML
-    private ComboBox<String> scaleFactorList;
-    @FXML
-    private ComboBox<String> lightningBrightnessFactor;
-    @FXML
-    private ComboBox<String> soundVolumeFactor;
-    @FXML
-    private Label outMapNameLbl;
-    @FXML
-    private CheckBox debugLogLevel;
-    @FXML
-    private Button changeMapNameBtn;
-    
-    @FXML
-    private Label warningMessage;
-    
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        advancedSettingsTitle.setText("Advanced Settings");
-        mainSettingsTitle.setText("Main Settings");
-        
-        scaleFactorList.getSelectionModel().select(String.valueOf(scaleFactor));
-        lightningBrightnessFactor.getSelectionModel().select("1");
-        soundVolumeFactor.getSelectionModel().select("1");
-    }    
+	Stage dialogStage;
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
+	@FXML
+	private Label inputGameLbl;
+	@FXML
+	private Label outputGameLbl;
+	@FXML
+	private Label inputMapLbl;
+	@FXML
+	private Label outputFolderLbl;
 
-    public void setInputGame(UTGames.UTGame inputGame) {
-        this.inputGame = inputGame;
-    }
+	MainApp mainApp;
 
-    public void setOutputGame(UTGames.UTGame outputGame) {
-        this.outputGame = outputGame;
-    }
+	MapConverter mapConverter;
 
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-    }
-    
-    
-    
-    public void load() throws JAXBException {
-        
-        inputGameLbl.setText(inputGame.name);
-        outputGameLbl.setText(outputGame.name);
-        
-        userConfig = UserConfig.load();
-        
-        if(userConfig != null){
-            userInputGameConfig = userConfig.getGameConfigByGame(inputGame);
-            userOutputGameConfig = userConfig.getGameConfigByGame(outputGame);
-        }
-        
-        if(userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()){
-        	warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
-    		warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
-        }
-        
-        mapConverter = new MapConverter(inputGame, outputGame);
-        
-        disableConversionType();
-        
-        initConvCheckBoxes();
-    }
-    
-    private void initConvCheckBoxes(){
-        convSndCheckBox.setSelected(mapConverter.convertSounds());
-        convTexCheckBox.setSelected(mapConverter.convertTextures());
-        convMusicCheckBox.setSelected(mapConverter.convertMusic());
-        convSmCheckBox.setSelected(mapConverter.convertStaticMeshes());
-    }
-    
-    /**
-     * Disable conversion of some type of ressources depending on game
-     * because all ressource converter not done yet
-     */
-    private void disableConversionType(){
-        
+	UTGames.UTGame inputGame;
+	UTGames.UTGame outputGame;
 
-        // force disabled for UT3 since 
-        // it has very light support (hardly tested things)
-        if(inputGame == UTGames.UTGame.UT3){
-            mapConverter.noConvertRessources();
-            
-            
-            convTexCheckBox.setDisable(true);
-            convMusicCheckBox.setDisable(true);
-            convSmCheckBox.setDisable(true);
-            
-            convTexCheckBox.setDisable(false);
-            mapConverter.setConvertTextures(true);
-            
-            convSndCheckBox.setDisable(false);
-            mapConverter.setConvertSounds(true);
-        }
-        else {
-        	boolean canConvertTextures = mapConverter.canConvertTextures();
-            mapConverter.setConvertTextures(canConvertTextures);
-            convTexCheckBox.setDisable(!canConvertTextures);
-            
-            boolean canConvertSounds = mapConverter.canConvertSounds();
-            mapConverter.setConvertSounds(canConvertSounds);
-            convSndCheckBox.setDisable(!canConvertSounds);
-            
-            boolean canConvertMusic = mapConverter.canConvertMusic();
-            mapConverter.setConvertMusic(canConvertMusic);
-            convMusicCheckBox.setDisable(!canConvertMusic);
-            
-            boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
-            mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
-            convSmCheckBox.setDisable(!canConvertStaticMeshes);
-        }
-        
-        // SM converter not yet operational
-        // delete once operational
-        mapConverter.setConvertStaticMeshes(false);
+	UserConfig userConfig;
+	UserGameConfig userInputGameConfig;
+	UserGameConfig userOutputGameConfig;
+	@FXML
+	private TitledPane advancedSettingsTitle;
+	@FXML
+	private TitledPane mainSettingsTitle;
+	@FXML
+	private CheckBox convTexCheckBox;
+	@FXML
+	private CheckBox convSndCheckBox;
+	@FXML
+	private CheckBox convSmCheckBox;
+	@FXML
+	private CheckBox convMusicCheckBox;
+
+	BigDecimal scaleFactor = new BigDecimal("2.2");
+	@FXML
+	private ComboBox<String> scaleFactorList;
+	@FXML
+	private ComboBox<String> lightningBrightnessFactor;
+	@FXML
+	private ComboBox<String> soundVolumeFactor;
+	@FXML
+	private Label outMapNameLbl;
+	@FXML
+	private Label relativeUtMapPathLbl;
+	@FXML
+	private CheckBox debugLogLevel;
+	@FXML
+	private Button changeMapNameBtn;
+
+	@FXML
+	private Button changeRelativeUtMapPathBtn;
+
+	@FXML
+	private Label warningMessage;
+
+	/**
+	 * Initializes the controller class.
+	 * 
+	 * @param url
+	 * @param rb
+	 */
+	@Override
+	public void initialize(URL url, ResourceBundle rb) {
+		// TODO
+		advancedSettingsTitle.setText("Advanced Settings");
+		mainSettingsTitle.setText("Main Settings");
+
+		scaleFactorList.getSelectionModel().select(String.valueOf(scaleFactor));
+		lightningBrightnessFactor.getSelectionModel().select("1");
+		soundVolumeFactor.getSelectionModel().select("1");
+	}
+
+	public void setDialogStage(Stage dialogStage) {
+		this.dialogStage = dialogStage;
+	}
+
+	public void setInputGame(UTGames.UTGame inputGame) {
+		this.inputGame = inputGame;
+	}
+
+	public void setOutputGame(UTGames.UTGame outputGame) {
+		this.outputGame = outputGame;
+	}
+
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+	}
+
+	public void load() throws JAXBException {
+
+		inputGameLbl.setText(inputGame.name);
+		outputGameLbl.setText(outputGame.name);
+
+		userConfig = UserConfig.load();
+
+		if (userConfig != null) {
+			userInputGameConfig = userConfig.getGameConfigByGame(inputGame);
+			userOutputGameConfig = userConfig.getGameConfigByGame(outputGame);
+		}
+
+		if (userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()) {
+			warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
+			warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+		}
+
+		mapConverter = new MapConverter(inputGame, outputGame);
+
+		relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
+		disableConversionType();
+
+		initConvCheckBoxes();
+	}
+
+	private void initConvCheckBoxes() {
+		convSndCheckBox.setSelected(mapConverter.convertSounds());
+		convTexCheckBox.setSelected(mapConverter.convertTextures());
+		convMusicCheckBox.setSelected(mapConverter.convertMusic());
+		convSmCheckBox.setSelected(mapConverter.convertStaticMeshes());
+	}
+
+	/**
+	 * Disable conversion of some type of ressources depending on game because
+	 * all ressource converter not done yet
+	 */
+	private void disableConversionType() {
+
+		// force disabled for UT3 since
+		// it has very light support (hardly tested things)
+		if (inputGame == UTGames.UTGame.UT3) {
+			mapConverter.noConvertRessources();
+
+			convTexCheckBox.setDisable(true);
+			convMusicCheckBox.setDisable(true);
+			convSmCheckBox.setDisable(true);
+
+			convTexCheckBox.setDisable(false);
+			mapConverter.setConvertTextures(true);
+
+			convSndCheckBox.setDisable(false);
+			mapConverter.setConvertSounds(true);
+		} else {
+			boolean canConvertTextures = mapConverter.canConvertTextures();
+			mapConverter.setConvertTextures(canConvertTextures);
+			convTexCheckBox.setDisable(!canConvertTextures);
+
+			boolean canConvertSounds = mapConverter.canConvertSounds();
+			mapConverter.setConvertSounds(canConvertSounds);
+			convSndCheckBox.setDisable(!canConvertSounds);
+
+			boolean canConvertMusic = mapConverter.canConvertMusic();
+			mapConverter.setConvertMusic(canConvertMusic);
+			convMusicCheckBox.setDisable(!canConvertMusic);
+
+			boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
+			mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
+			convSmCheckBox.setDisable(!canConvertStaticMeshes);
+		}
+
+		// SM converter not yet operational
+		// delete once operational
+		mapConverter.setConvertStaticMeshes(false);
 		convSmCheckBox.setDisable(true);
-    }
-    
-    /**
-     * Allow changing the default ut4 map name
-     * suggested by ut4 converter
-     * @param event
-     */
-    @FXML
-    private void changeMapName(ActionEvent event){
-    	
-    	TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
+	}
 
-    	dialog.setTitle("Text Input Dialog");
-    	dialog.setHeaderText("Map Name Change");
-    	dialog.setContentText("Enter UT4 map name:");
+	/**
+	 * Allow changing the default ut4 map name suggested by ut4 converter
+	 * 
+	 * @param event
+	 */
+	@FXML
+	private void changeMapName(ActionEvent event) {
 
-    	// Traditional way to get the response value.
-    	Optional<String> result = dialog.showAndWait();
-    	
-    	if (result.isPresent()){
-    	    String newMapName = result.get();
-    	    newMapName = T3DUtils.filterName(newMapName);
-    	    
-    	    if(newMapName.length() > 3){
-    	    	mapConverter.setOutMapName(newMapName);
-    	    	outMapNameLbl.setText(mapConverter.getOutMapName());
-    	    }
-    	}
+		TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
 
-    }
+		dialog.setTitle("Text Input Dialog");
+		dialog.setHeaderText("Map Name Change");
+		dialog.setContentText("Enter UT4 map name:");
 
-    @FXML
-    private void selectInputMap(ActionEvent event) {
-        
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Select "+inputGame.shortName+" map");
-        
-        File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
-        
-        if(mapFolder.exists()){
-            chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
-        }
-        
-        // TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal text files with linux
-        if(Installation.isLinux()){
-        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*.t3d)", "*.t3d"));
-        } else {
-        	chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName+" Map (*."+inputGame.mapExtension+", *.t3d)", "*."+inputGame.mapExtension, "*.t3d"));
-        }
-        
-        File unrealMap = chooser.showOpenDialog(new Stage());
-        
-        if(unrealMap != null){
-        	changeMapNameBtn.setDisable(false);
-            inputMapLbl.setText(unrealMap.getName());
-            mapConverter.setInMap(unrealMap);
-            outputFolderLbl.setText(mapConverter.getOutPath().toString());
-            outMapNameLbl.setText(mapConverter.getOutMapName());
-        }
-    }
-    
-    
-    @FXML
-    private void convert(ActionEvent event) {
-        
-        if(checkConversionSettings()){
-            
-            dialogStage.close();
-            
-            mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
-            mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
-            mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
-            
-            mapConverter.setConversionViewController(mainApp.showConversionView());
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
 
-            SwingUtilities.invokeLater(mapConverter);
-        }
-    }
-    
-    /**
-     * All settings good
-     * @return 
-     */
-    private boolean checkConversionSettings(){
-        
-        if(mapConverter.getInMap() == null){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Input map not set");
-            alert.setHeaderText("Input map not set");
-            alert.setContentText("Select your "+inputGame.name + " input map");
+		if (result.isPresent()) {
+			String newMapName = result.get();
+			newMapName = T3DUtils.filterName(newMapName);
 
-            alert.showAndWait();
-            return false;
-        }
-        
-        return true;
-    }
+			if (newMapName.length() > 3) {
+				mapConverter.setOutMapName(newMapName);
+				outMapNameLbl.setText(mapConverter.getOutMapName());
+			}
+		}
 
-    @FXML
-    private void close(ActionEvent event) {
-        dialogStage.close();
-    }
+	}
 
-    @FXML
-    private void toggleTexConversion(ActionEvent event) {
-        mapConverter.setConvertTextures(convTexCheckBox.isSelected());
-    }
+	@FXML
+	private void changeRelativeUtMapPath(ActionEvent event) {
 
-    @FXML
-    private void toggleSndConversion(ActionEvent event) {
-        mapConverter.setConvertSounds(convSndCheckBox.isSelected());
-    }
+		// TODO
+		TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
 
-    @FXML
-    private void toggleSmConversion(ActionEvent event) {
-        mapConverter.setConvertStaticMeshes(convSmCheckBox.isSelected());
-    }
+		dialog.setTitle("Text Input Dialog");
+		dialog.setHeaderText("Map Name Change");
+		dialog.setContentText("Enter UT4 map name:");
 
-    @FXML
-    private void toggleMusicConversion(ActionEvent event) {
-        mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
-    }
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
 
-    /**
-     * Changes the log level
-     * @param event 
-     */
-    @FXML
-    private void toggleDebugLogLevel(ActionEvent event) {
-        mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
-    }
-    
-    
+		if (result.isPresent()) {
+			String newMapName = result.get();
+			newMapName = T3DUtils.filterName(newMapName);
+
+			if (newMapName.length() > 3) {
+				mapConverter.setOutMapName(newMapName);
+				outMapNameLbl.setText(mapConverter.getOutMapName());
+			}
+		}
+
+	}
+
+	@FXML
+	private void selectInputMap(ActionEvent event) {
+
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Select " + inputGame.shortName + " map");
+
+		File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+
+		if (mapFolder.exists()) {
+			chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+		}
+
+		// TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal
+		// text files with linux
+		if (Installation.isLinux()) {
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Map (*.t3d)", "*.t3d"));
+		} else {
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Map (*." + inputGame.mapExtension + ", *.t3d)", "*." + inputGame.mapExtension, "*.t3d"));
+		}
+
+		File unrealMap = chooser.showOpenDialog(new Stage());
+
+		if (unrealMap != null) {
+			changeMapNameBtn.setDisable(false);
+			inputMapLbl.setText(unrealMap.getName());
+			mapConverter.setInMap(unrealMap);
+			outputFolderLbl.setText(mapConverter.getOutPath().toString());
+			outMapNameLbl.setText(mapConverter.getOutMapName());
+		}
+	}
+
+	@FXML
+	private void convert(ActionEvent event) {
+
+		if (checkConversionSettings()) {
+
+			dialogStage.close();
+
+			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
+			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
+			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
+
+			mapConverter.setConversionViewController(mainApp.showConversionView());
+
+			SwingUtilities.invokeLater(mapConverter);
+		}
+	}
+
+	/**
+	 * All settings good
+	 * 
+	 * @return
+	 */
+	private boolean checkConversionSettings() {
+
+		if (mapConverter.getInMap() == null) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Input map not set");
+			alert.setHeaderText("Input map not set");
+			alert.setContentText("Select your " + inputGame.name + " input map");
+
+			alert.showAndWait();
+			return false;
+		}
+
+		return true;
+	}
+
+	@FXML
+	private void close(ActionEvent event) {
+		dialogStage.close();
+	}
+
+	@FXML
+	private void toggleTexConversion(ActionEvent event) {
+		mapConverter.setConvertTextures(convTexCheckBox.isSelected());
+	}
+
+	@FXML
+	private void toggleSndConversion(ActionEvent event) {
+		mapConverter.setConvertSounds(convSndCheckBox.isSelected());
+	}
+
+	@FXML
+	private void toggleSmConversion(ActionEvent event) {
+		mapConverter.setConvertStaticMeshes(convSmCheckBox.isSelected());
+	}
+
+	@FXML
+	private void toggleMusicConversion(ActionEvent event) {
+		mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
+	}
+
+	/**
+	 * Changes the log level
+	 * 
+	 * @param event
+	 */
+	@FXML
+	private void toggleDebugLogLevel(ActionEvent event) {
+		mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
+	}
+
 }

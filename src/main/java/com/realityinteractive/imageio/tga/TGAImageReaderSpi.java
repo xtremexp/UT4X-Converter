@@ -170,6 +170,7 @@ public class TGAImageReaderSpi extends ImageReaderSpi {
 	/**
 	 * @see javax.imageio.spi.ImageReaderSpi#canDecodeInput(java.lang.Object)
 	 */
+	@Override
 	public boolean canDecodeInput(final Object source) throws IOException {
 		// NOTE: the input source must be left in the same state as it started
 		// at (mark() and reset() should be used on ImageInputStream)
@@ -231,6 +232,7 @@ public class TGAImageReaderSpi extends ImageReaderSpi {
 	/**
 	 * @see javax.imageio.spi.ImageReaderSpi#createReaderInstance(java.lang.Object)
 	 */
+	@Override
 	public ImageReader createReaderInstance(final Object extension) throws IOException {
 		// construct and return an ImageReader using this SPI
 		return new TGAImageReader(this);
@@ -239,6 +241,7 @@ public class TGAImageReaderSpi extends ImageReaderSpi {
 	/**
 	 * @see javax.imageio.spi.IIOServiceProvider#getDescription(java.util.Locale)
 	 */
+	@Override
 	public String getDescription(final Locale locale) {
 		return "TGA"; // FIXME: localize
 	}
