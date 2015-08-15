@@ -38,7 +38,6 @@ import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DUtils;
-import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -62,6 +61,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      */
     UTGame outputGame;
     
+    /**
+     * Default sub-folder of UT4 Converter
+     * where converted maps will be saved
+     */
     public static final String CONV_PATH = File.separator + "Converted";
     
     /**
@@ -73,7 +76,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
      * Final map name, might differ from original one.
      * E.G: AS-Mazon (UT99) -> AS-Mazon-Original (for UT4 for exemple)
      */
-    String outMapName;
+    String mapName;
+    
+    /**
+     * Relative subfolder from:
+     * <UT4Folder>/UnrealTournament/Content path
+     * 
+     * E.g:
+     * "MyMaps" would give /UnrealTournament/Content/MyMaps path
+     * 
+     * but /Game/MyMaps for .t3d actor path
+     * 
+     */
+    String relativeUtMapPath;
     
     File inT3d, outT3d;
     
@@ -279,13 +294,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     
     
     private void initOutMapName(){
-        if(outMapName==null){
+        if(mapName==null){
             // TODO being able to set it manually (chosen by user)
-            outMapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
+            mapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
 
             // Remove bad chars from name (e.g: DM-Cybrosis][ ->  DM-Cybrosis)
             // else ue4 editor won't be able to set sounds or textures to actors
-            outMapName = T3DUtils.filterName(outMapName);
+            mapName = T3DUtils.filterName(mapName);
         }
     }
     
@@ -450,7 +465,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             updateProgress(20, 100);
         }
         
-        outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + outMapName + ".t3d");
+        outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + mapName + ".t3d");
         
         // t3d ever exported or directly converting from t3d file, then skip export of it 
         // and directly convert it
@@ -539,8 +554,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
             }
             
             File restrictedAssetsFolder = new File(userGameConfig.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
-            File wipFolder = new File(restrictedAssetsFolder + File.separator + "Maps" + File.separator + "WIP");
-            File wipConvertedMapFolder = new File(wipFolder + File.separator + getOutMapName());
+            // TEMP thingy use custom one if user changed it
+            File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
             wipConvertedMapFolder.mkdirs();
             
             logger.log(Level.FINE, "Creating "+wipConvertedMapFolder);
@@ -580,7 +595,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     }
 
     public String getOutMapName() {
-        return outMapName;
+        return mapName;
     }
 
     
@@ -883,7 +898,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         this.inMap = inMap;
         this.outPath = null;
     	packageExtractors.clear();
-    	this.outMapName = null;
+    	this.mapName = null;
         initialise();
     }
 
@@ -992,7 +1007,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
     }
 
 	public void setOutMapName(String outMapName) {
-		this.outMapName = outMapName;
+		this.mapName = outMapName;
+	}
+
+	public String getRelativeUtMapPath() {
+		return relativeUtMapPath;
 	}
     
     

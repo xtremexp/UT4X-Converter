@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -275,13 +277,10 @@ public class UPackageRessource {
      */
     public String getConvertedName(MapConverter mapConverter){
         
-        // TODO move out this param to some core/config class
-        final String UE4_BASEPATH = "/Game/RestrictedAssets/Maps/WIP";
-        
         String suffix = "";
             
         if(type == Type.SOUND){
-            if(mapConverter.toUE3()){
+            if(mapConverter.isTo(UnrealEngine.UE3)){
                 // beware UT3 needs cue for AmbientSound but not for AmbientSoundSimple actor
                suffix = "_Cue";
             }
@@ -292,8 +291,8 @@ public class UPackageRessource {
             suffix = "_Mat";
         }
         
-        // /Game/RestrictedAssets/Maps/WIP/<convertedmapname>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
-        return UE4_BASEPATH + "/" + mapConverter.getOutMapName() + "/"  + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
+        // /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
+        return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/"  + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
     }
     
     /**

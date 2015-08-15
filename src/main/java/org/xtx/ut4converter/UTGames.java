@@ -16,6 +16,12 @@ public class UTGames {
     public static final String T3D_LEVEL_NAME_UE12 = "myLevel.t3d";
     
     public static final String T3D_LEVEL_NAME_UE3 = "PersistentLevel.t3d";
+    
+    /**
+     * Default internal UT4 Editor folder where converted map stuff
+     * should by copied to
+     */
+    public static final String UE4_FOLDER_MAP = "/Game/Maps";
 
     /**
      * List all unreal engines
@@ -210,6 +216,10 @@ public class UTGames {
         // not really a specific "Maps" folder but most of them are in parent folder cookedpc
         else if(utgame == UTGame.UT3){
             return new File(basePath + File.separator + "UTGame" + File.separator + "CookedPC");
+        }
+        
+        else if(utgame == UTGame.UT4){
+        	return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "Maps");
         }
         
         else {

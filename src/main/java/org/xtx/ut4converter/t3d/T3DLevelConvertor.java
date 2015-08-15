@@ -430,8 +430,9 @@ public class T3DLevelConvertor extends Task<Object> {
      * @throws IOException 
      */
     private void writeHeader() throws IOException{
+    	
         bwr.write("Begin Map\n");
-        bwr.write("\tBegin Level Name=/Game/RestrictedAssets/Maps/WIP/"+mapConverter.getOutMapName()+"\n");
+        bwr.write("\tBegin Level Name=" + UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName()+"\n");
         
         // Auto creates a big additive brush surrounding level
         // to simulate creating a level in subtract mode (not existing in UE4 ...)
