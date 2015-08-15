@@ -25,97 +25,103 @@ import javax.sound.sampled.AudioSystem;
  * 
  * @author XtremeXp
  */
-public  class SoundConverter {
-    
-    final Logger logger;
-    
-    /**
-     * 
-     * @param logger Logger used in map converter
-     */
-    public SoundConverter(Logger logger){
-        this.logger = logger;
-    }
-    
-    /**
-     * Get possible format allowed to convert to 16 bits
-     * @param srcAudioFormat Audio format of source wave file that need to be converted to 16 bits
-     * @return 
-     */
-    private synchronized AudioFormat getAudioFormat16bit(AudioFormat srcAudioFormat){
-        
-        for(Encoding encoding : AudioSystem.getTargetEncodings(srcAudioFormat.getEncoding())){
-                
-            for(AudioFormat audioFormat : AudioSystem.getTargetFormats(encoding, srcAudioFormat)){
-                if(audioFormat.getSampleSizeInBits() == 16){
-                    return audioFormat;
-                } 
-            }
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Converts .wav file to 16 bit sample size file.
-     * UE4 editor does not support 8 bit sample size sounds unlike UE1, UE2, UE3 (?)
-     * @param inWaveFile Sound file to be converted
-     * @param outWaveFile Converted sound file
-     */
-    public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile){
-        
-        AudioInputStream audioInputStream = null;
-        AudioInputStream convertedIn = null;
-        
-        AudioFormat srcAudioFormat;
-        
+public class SoundConverter {
 
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(inWaveFile);
-            srcAudioFormat = audioInputStream.getFormat();
-            
-            // SampleSize ever 16 bits, just do a file copy
-            if(srcAudioFormat.getSampleSizeInBits() == 16){
-                Files.copy(inWaveFile.toPath(), outWaveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                return;
-            }
+	final Logger logger;
 
-            AudioFormat dstAudioFormat = getAudioFormat16bit(srcAudioFormat);
-            
-            if(dstAudioFormat == null){
-                logger.log(Level.WARNING, "No sound conversion available for "+inWaveFile.getName());
-                return;
-            }
-            
-            convertedIn = AudioSystem.getAudioInputStream(dstAudioFormat, audioInputStream);
-            
-            logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
-            
-            WaveFileWriter writer = new WaveFileWriter();
-            writer.write(convertedIn, Type.WAVE, outWaveFile);
+	/**
+	 * 
+	 * @param logger
+	 *            Logger used in map converter
+	 */
+	public SoundConverter(Logger logger) {
+		this.logger = logger;
+	}
 
-        } catch (Exception e){
-            logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
-        } 
-        
-        finally {
-        	
-        	if(audioInputStream != null){
-        		try {
+	/**
+	 * Get possible format allowed to convert to 16 bits
+	 * 
+	 * @param srcAudioFormat
+	 *            Audio format of source wave file that need to be converted to
+	 *            16 bits
+	 * @return
+	 */
+	private synchronized AudioFormat getAudioFormat16bit(AudioFormat srcAudioFormat) {
+
+		for (Encoding encoding : AudioSystem.getTargetEncodings(srcAudioFormat.getEncoding())) {
+
+			for (AudioFormat audioFormat : AudioSystem.getTargetFormats(encoding, srcAudioFormat)) {
+				if (audioFormat.getSampleSizeInBits() == 16) {
+					return audioFormat;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Converts .wav file to 16 bit sample size file. UE4 editor does not
+	 * support 8 bit sample size sounds unlike UE1, UE2, UE3 (?)
+	 * 
+	 * @param inWaveFile
+	 *            Sound file to be converted
+	 * @param outWaveFile
+	 *            Converted sound file
+	 */
+	public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile) {
+
+		AudioInputStream audioInputStream = null;
+		AudioInputStream convertedIn = null;
+
+		AudioFormat srcAudioFormat;
+
+		try {
+			audioInputStream = AudioSystem.getAudioInputStream(inWaveFile);
+			srcAudioFormat = audioInputStream.getFormat();
+
+			// SampleSize ever 16 bits, just do a file copy
+			if (srcAudioFormat.getSampleSizeInBits() == 16) {
+				Files.copy(inWaveFile.toPath(), outWaveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				return;
+			}
+
+			AudioFormat dstAudioFormat = getAudioFormat16bit(srcAudioFormat);
+
+			if (dstAudioFormat == null) {
+				logger.log(Level.WARNING, "No sound conversion available for " + inWaveFile.getName());
+				return;
+			}
+
+			convertedIn = AudioSystem.getAudioInputStream(dstAudioFormat, audioInputStream);
+
+			logger.info("Converting " + inWaveFile.getName() + " sound to 44.1 Khz / 16 bit");
+
+			WaveFileWriter writer = new WaveFileWriter();
+			writer.write(convertedIn, Type.WAVE, outWaveFile);
+
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
+		}
+
+		finally {
+
+			if (audioInputStream != null) {
+				try {
 					audioInputStream.close();
 				} catch (IOException e) {
-					logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
+					logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
 				}
-        	}
-        	
-        	if(convertedIn != null){
-        		try {
-        			convertedIn.close();
+			}
+
+			if (convertedIn != null) {
+				try {
+					convertedIn.close();
 				} catch (IOException e) {
-					logger.log(Level.SEVERE, "Error while converting sound file "+inWaveFile.getName(), e);
+					logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
 				}
-        	}
-        }
-            
-    }
+			}
+		}
+
+	}
 }

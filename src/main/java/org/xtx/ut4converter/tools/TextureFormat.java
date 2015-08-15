@@ -10,9 +10,5 @@ package org.xtx.ut4converter.tools;
  * @author XtremeXp
  */
 public enum TextureFormat {
-    pcx,
-    dds,
-    tga,
-    bmp,
-    psd
+	pcx, dds, tga, bmp, psd
 }

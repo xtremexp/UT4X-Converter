@@ -98,8 +98,7 @@ public class PSKStaticMesh {
 				reserved = bf.get();
 				pad = bf.getShort();
 
-				System.out.println("pointIndex:" + pointIndex + " u:" + u
-						+ " v:" + v + " reserved:" + reserved + " pad:" + pad);
+				System.out.println("pointIndex:" + pointIndex + " u:" + u + " v:" + v + " reserved:" + reserved + " pad:" + pad);
 			} else {
 				pointIndex = bf.getInt();
 				u = bf.getFloat();
@@ -124,8 +123,7 @@ public class PSKStaticMesh {
 			matIndex = bf.get();
 			auxMatIndex = bf.get();
 			smoothingGroups = bf.getInt();
-			System.out.println("W0:" + wedge0 + " W1:" + wedge1 + " W2:"
-					+ wedge2 + " smoothingGroups:" + smoothingGroups);
+			System.out.println("W0:" + wedge0 + " W1:" + wedge1 + " W2:" + wedge2 + " smoothingGroups:" + smoothingGroups);
 		}
 	}
 
@@ -148,9 +146,7 @@ public class PSKStaticMesh {
 			lodBias = bf.getInt();
 			lodStyle = bf.getInt();
 
-			System.out.println("materialName:" + materialName
-					+ " textureIndex:" + textureIndex + " polyFlags:"
-					+ polyFlags + " auxMaterial:" + auxMaterial);
+			System.out.println("materialName:" + materialName + " textureIndex:" + textureIndex + " polyFlags:" + polyFlags + " auxMaterial:" + auxMaterial);
 		}
 	}
 
@@ -219,8 +215,7 @@ public class PSKStaticMesh {
 		try (FileInputStream fis = new FileInputStream(pskFile)) {
 
 			inChannel = fis.getChannel();
-			ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0,
-					(int) pskFile.length());
+			ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) pskFile.length());
 			buffer.order(ByteOrder.LITTLE_ENDIAN);
 
 			ChunkHeader header = new ChunkHeader(buffer);

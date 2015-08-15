@@ -11,29 +11,29 @@ package org.xtx.ut4converter.tools.fbx;
  */
 public class FBXLayerElementMaterial extends FBXLayerElement {
 
-    /**
-     * ?
-     */
-    int materials;
+	/**
+	 * ?
+	 */
+	int materials;
 
-    public FBXLayerElementMaterial() {
-        super(Type.LayerElementMaterial);
-    }
-    
-    private enum MappingInformationType {
-        AllSame
-    }
-    
-    @Override
-    public void writeFBX(StringBuilder sb) {
-        sb.append("\t\tLayerElementMaterial: ").append(index).append(" {\n");
-        
-        sb.append("\t\t\tVersion: ").append(version).append("\n");
-        sb.append("\t\t\tName: \"").append(name).append("\"\n");
-        sb.append("\t\t\tMappingInformationType: \"").append(MappingInformationType.AllSame.name()).append("\"\n");
-        sb.append("\t\t\tMaterials: \t").append(materials).append("\t\n");
-        
-        sb.append("\t\t}\n");
-    }
+	public FBXLayerElementMaterial() {
+		super(Type.LayerElementMaterial);
+	}
+
+	private enum MappingInformationType {
+		AllSame
+	}
+
+	@Override
+	public void writeFBX(StringBuilder sb) {
+		sb.append("\t\tLayerElementMaterial: ").append(index).append(" {\n");
+
+		sb.append("\t\t\tVersion: ").append(version).append("\n");
+		sb.append("\t\t\tName: \"").append(name).append("\"\n");
+		sb.append("\t\t\tMappingInformationType: \"").append(MappingInformationType.AllSame.name()).append("\"\n");
+		sb.append("\t\t\tMaterials: \t").append(materials).append("\t\n");
+
+		sb.append("\t\t}\n");
+	}
 
 }

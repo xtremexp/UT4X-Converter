@@ -18,61 +18,59 @@ import org.xtx.ut4converter.UTGames;
 @XmlRootElement
 public class UserGameConfig {
 
-    
-    public UserGameConfig() {
-        
-    }
-    
-    public UserGameConfig(UTGames.UTGame id, File path) {
-        this.id = id;
-        this.path = path;
-    }
-    
-    
+	public UserGameConfig() {
 
-    UTGames.UTGame id;
-    File path;
-    File lastConverted;
- 
-    /**
-     * Short name of UT game
-     * @return 
-     */
-    public UTGames.UTGame getId() {
-        return id;
-    }
+	}
 
-    @XmlAttribute(required = true)
-    public void setId(UTGames.UTGame id) {
-        this.id = id;
-    }
+	public UserGameConfig(UTGames.UTGame id, File path) {
+		this.id = id;
+		this.path = path;
+	}
 
-    /**
-     * Where this game is installed
-     * @return 
-     */
-    public File getPath() {
-            return path;
-    }
+	UTGames.UTGame id;
+	File path;
+	File lastConverted;
 
-    @XmlElement
-    public void setPath(File path) {
-        this.path = path;
-    }
+	/**
+	 * Short name of UT game
+	 * 
+	 * @return
+	 */
+	public UTGames.UTGame getId() {
+		return id;
+	}
 
-    /**
-     * Last converted map
-     * @return 
-     */
-    @XmlElement
-    public File getLastConverted() {
-        return lastConverted;
-    }
+	@XmlAttribute(required = true)
+	public void setId(UTGames.UTGame id) {
+		this.id = id;
+	}
 
-    public void setLastConverted(File lastConverted) {
-        this.lastConverted = lastConverted;
-    }
-    
-    
-    
+	/**
+	 * Where this game is installed
+	 * 
+	 * @return
+	 */
+	public File getPath() {
+		return path;
+	}
+
+	@XmlElement
+	public void setPath(File path) {
+		this.path = path;
+	}
+
+	/**
+	 * Last converted map
+	 * 
+	 * @return
+	 */
+	@XmlElement
+	public File getLastConverted() {
+		return lastConverted;
+	}
+
+	public void setLastConverted(File lastConverted) {
+		this.lastConverted = lastConverted;
+	}
+
 }

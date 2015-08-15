@@ -1,4 +1,3 @@
-
 package org.xtx.ut4converter;
 
 import java.io.IOException;
@@ -22,157 +21,154 @@ import org.xtx.ut4converter.ui.MainSceneController;
 @SuppressWarnings("restriction")
 public class MainApp extends Application {
 
-    /**
-     * Program Name
-     */
-    public static final String PROGRAM_NAME = "UT4 Converter";
-    
-    /**
-     * Version of UT4 Converter
-     */
-    public static final String VERSION = "0.5-DEV";
-    
-    /**
-     * Author
-     */
-    public static final String AUTHOR = "XtremeXp";
-    
-    /**
-     * All scenes should be enumerated here
-     */
-    public static enum FXMLoc {
-        
-        MAIN("/fxml/Scene.fxml"),
-        WELCOME("/fxml/WelcomeView.fxml"),
-        SETTINGS("/fxml/SettingsScene.fxml"),
-        CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
-        CONVERSION("/fxml/ConversionView.fxml");
-        
-        String path;
-        
-        FXMLoc (String path){
-            this.path = path;
-        }
-        
-        public String getPath(){
-            return path;
-        }
-        
-    }
-    
-    Stage primaryStage;
-    BorderPane rootLayout;
+	/**
+	 * Program Name
+	 */
+	public static final String PROGRAM_NAME = "UT4 Converter";
 
-    
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle(PROGRAM_NAME+" - "+VERSION);
+	/**
+	 * Version of UT4 Converter
+	 */
+	public static final String VERSION = "0.5-DEV";
 
-        // main scene with only menu
-        initRootLayout();
+	/**
+	 * Author
+	 */
+	public static final String AUTHOR = "XtremeXp";
 
-        showWelcomeView();
-    }
-    
-    /**
-     * Initializes the root layout.
-     */
-    public void initRootLayout() {
-        try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(FXMLoc.MAIN.path));
-            rootLayout = (BorderPane) loader.load();
+	/**
+	 * All scenes should be enumerated here
+	 */
+	public static enum FXMLoc {
 
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            
-            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent t) {
-                    try {
-                        stop();
-                    } catch (Exception e){};
-                    System.exit(0);
-                }
-            });
-            
-            MainSceneController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
+		MAIN("/fxml/Scene.fxml"), WELCOME("/fxml/WelcomeView.fxml"), SETTINGS("/fxml/SettingsScene.fxml"), CONV_SETTINGS("/fxml/ConversionSettings.fxml"), CONVERSION("/fxml/ConversionView.fxml");
 
-    /**
-     * Shows the welcome overview inside the root layout.
-     */
-    public void showWelcomeView() {
-        showView(FXMLoc.WELCOME.path);
-    }
-    
-    /**
-     * 
-     * @param name fxml view file relative path
-     * @return Controller of view
-     */
-    private Object showView(String name){
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource(name));
-            Pane view = (Pane) loader.load();
+		String path;
 
-            rootLayout.setCenter(view);
-            
-            return loader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Shows user settings panel
-     */
-    public void showUserSettingsView(){
-        showView(FXMLoc.SETTINGS.path);
-    }
-    
-    /**
-     * Show conversion view (log table, ...)
-     * @return Controller of view
-     */
-    public ConversionViewController showConversionView(){
-        return (ConversionViewController) showView(FXMLoc.CONVERSION.path);
-    }
+		FXMLoc(String path) {
+			this.path = path;
+		}
 
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
+		public String getPath() {
+			return path;
+		}
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
+	}
 
-    public BorderPane getRootLayout() {
-        return rootLayout;
-    }
-    
-    
+	Stage primaryStage;
+	BorderPane rootLayout;
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+
+		this.primaryStage = primaryStage;
+		this.primaryStage.setTitle(PROGRAM_NAME + " - " + VERSION);
+
+		// main scene with only menu
+		initRootLayout();
+
+		showWelcomeView();
+	}
+
+	/**
+	 * Initializes the root layout.
+	 */
+	public void initRootLayout() {
+		try {
+			// Load root layout from fxml file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource(FXMLoc.MAIN.path));
+			rootLayout = (BorderPane) loader.load();
+
+			// Show the scene containing the root layout.
+			Scene scene = new Scene(rootLayout);
+
+			primaryStage.setScene(scene);
+			primaryStage.show();
+
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent t) {
+					try {
+						stop();
+					} catch (Exception e) {
+					}
+					;
+					System.exit(0);
+				}
+			});
+
+			MainSceneController controller = loader.getController();
+			controller.setMainApp(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Shows the welcome overview inside the root layout.
+	 */
+	public void showWelcomeView() {
+		showView(FXMLoc.WELCOME.path);
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            fxml view file relative path
+	 * @return Controller of view
+	 */
+	private Object showView(String name) {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource(name));
+			Pane view = (Pane) loader.load();
+
+			rootLayout.setCenter(view);
+
+			return loader.getController();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Shows user settings panel
+	 */
+	public void showUserSettingsView() {
+		showView(FXMLoc.SETTINGS.path);
+	}
+
+	/**
+	 * Show conversion view (log table, ...)
+	 * 
+	 * @return Controller of view
+	 */
+	public ConversionViewController showConversionView() {
+		return (ConversionViewController) showView(FXMLoc.CONVERSION.path);
+	}
+
+	/**
+	 * The main() method is ignored in correctly deployed JavaFX application.
+	 * main() serves only as fallback in case the application can not be
+	 * launched through deployment artifacts, e.g., in IDEs with limited FX
+	 * support. NetBeans ignores main().
+	 *
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+
+	public BorderPane getRootLayout() {
+		return rootLayout;
+	}
 
 }

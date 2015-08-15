@@ -15,8 +15,8 @@ import javax.vecmath.Vector4d;
 /**
  * PSK staticmesh file reader.
  * 
- * Code partially ported to java from actorx importer source code
- * - http://www.gildor.org/projects/unactorx
+ * Code partially ported to java from actorx importer source code -
+ * http://www.gildor.org/projects/unactorx
  * 
  */
 public class PSKReader {
@@ -25,17 +25,15 @@ public class PSKReader {
 	 * Reference to .psk file
 	 */
 	File pskFile;
-	
-	
-	
+
 	public PSKReader(File pskFile) {
 		super();
 		this.pskFile = pskFile;
 		initialise();
 		load();
 	}
-	
-	private void initialise(){
+
+	private void initialise() {
 		vertices = new ArrayList<>();
 		wedges = new ArrayList<>();
 		triangles = new ArrayList<>();
@@ -43,7 +41,7 @@ public class PSKReader {
 		bones = new ArrayList<>();
 		rawWeights = new ArrayList<>();
 	}
-	
+
 	List<Vector3d> vertices;
 	List<Vertex> wedges;
 	List<Triangle> triangles;
@@ -51,45 +49,44 @@ public class PSKReader {
 	List<Bone> bones;
 	List<RawWeight> rawWeights;
 
-
 	class ChunkHeader {
-		
+
 		public String chunkID;
-		public long  typeFlag;
+		public long typeFlag;
 		public long dataSize;
 		public long dataCount;
-		
-		public ChunkHeader(ByteBuffer bf){
-			
+
+		public ChunkHeader(ByteBuffer bf) {
+
 			chunkID = readString(bf, 20);
 			typeFlag = bf.getInt();
 			dataSize = bf.getInt();
 			dataCount = bf.getInt();
 		}
 	}
-	
-	private String readString(ByteBuffer bf, int length){
-		
+
+	private String readString(ByteBuffer bf, int length) {
+
 		String s = "";
-		
-		for(int i=0; i< length ;i ++){
+
+		for (int i = 0; i < length; i++) {
 			s += (char) bf.get();
 		}
-		
+
 		return s;
 	}
-	
+
 	class Vertex {
-		
+
 		long pointIndex;
 		float u, v;
 		byte matIndex;
 		byte reserved;
 		short pad;
-		
-		public Vertex(ByteBuffer bf, boolean x){
-			
-			if(x){
+
+		public Vertex(ByteBuffer bf, boolean x) {
+
+			if (x) {
 				pointIndex = bf.getShort();
 				bf.getShort();
 				u = bf.getFloat();
@@ -107,14 +104,14 @@ public class PSKReader {
 			}
 		}
 	}
-	
+
 	class Triangle {
-		
+
 		long wedge0, wedge1, wedge2;
 		byte matIndex, auxMatIndex;
 		long smoothingGroups;
-		
-		public Triangle(ByteBuffer bf){
+
+		public Triangle(ByteBuffer bf) {
 			wedge0 = bf.getShort();
 			wedge1 = bf.getShort();
 			wedge2 = bf.getShort();
@@ -123,7 +120,7 @@ public class PSKReader {
 			smoothingGroups = bf.getInt();
 		}
 	}
-	
+
 	class Material {
 
 		String materialName;
@@ -133,8 +130,8 @@ public class PSKReader {
 		long auxFlags;
 		long lodBias;
 		long lodStyle;
-		
-		public Material (ByteBuffer bf){
+
+		public Material(ByteBuffer bf) {
 			materialName = readString(bf, 64).trim();
 			textureIndex = bf.getInt();
 			polyFlags = bf.getInt();
@@ -144,7 +141,7 @@ public class PSKReader {
 			lodStyle = bf.getInt();
 		}
 	}
-	
+
 	class Bone {
 
 		String name;
@@ -155,8 +152,8 @@ public class PSKReader {
 		Vector3d position;
 		float lenght;
 		Vector3d size;
-		
-		public Bone(ByteBuffer bf){
+
+		public Bone(ByteBuffer bf) {
 			name = readString(bf, 64);
 			flags = bf.getInt();
 			numChildren = bf.getInt();
@@ -167,145 +164,134 @@ public class PSKReader {
 			size = readVector3d(bf);
 		}
 	}
-	
+
 	class RawWeight {
 
 		float weight;
 		long pointIndex;
 		long boneIndex;
-		
-		public RawWeight(ByteBuffer bf){
+
+		public RawWeight(ByteBuffer bf) {
 			weight = bf.getFloat();
 			pointIndex = bf.getInt();
 			boneIndex = bf.getInt();
 		}
 	}
-	
-	private Vector3d readVector3d(ByteBuffer bf){
-		
+
+	private Vector3d readVector3d(ByteBuffer bf) {
+
 		Vector3d v = new Vector3d();
-    	v.x = bf.getFloat();
-    	v.y = bf.getFloat();
-    	v.z = bf.getFloat();
-    	
-    	return v;
+		v.x = bf.getFloat();
+		v.y = bf.getFloat();
+		v.z = bf.getFloat();
+
+		return v;
 	}
-	
-	private Vector4d readVector4d(ByteBuffer bf){
-		
+
+	private Vector4d readVector4d(ByteBuffer bf) {
+
 		Vector4d v = new Vector4d();
-    	v.x = bf.getFloat();
-    	v.y = bf.getFloat();
-    	v.z = bf.getFloat();
-    	v.w = bf.getFloat();
-    	
-    	return v;
+		v.x = bf.getFloat();
+		v.y = bf.getFloat();
+		v.z = bf.getFloat();
+		v.w = bf.getFloat();
+
+		return v;
 	}
-	
-	
-	
-	public void load(){
-		
+
+	public void load() {
+
 		FileChannel inChannel = null;
-		
-		try (FileInputStream fis = new FileInputStream(pskFile))
-        {
+
+		try (FileInputStream fis = new FileInputStream(pskFile)) {
 
 			inChannel = fis.getChannel();
-            ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY,
-    				0, (int) pskFile.length());
-            buffer.order(ByteOrder.LITTLE_ENDIAN);
-            
-            ChunkHeader header = new ChunkHeader(buffer);
-            
-            if(!"ACTRHEAD".equals(header.chunkID.trim())){
-            	throw new Exception("Not a psk file");
-            }
-            
-            
-            while(buffer.hasRemaining()){
-            	
-	            ChunkHeader ch2 = new ChunkHeader(buffer);
-	            
-		            if("PNTS0000".equals(ch2.chunkID.trim())){
-		            	long numVertex = ch2.dataCount;
-		            	
-		            	
-		            	for(int i = 0; i < numVertex; i++){
-			            	vertices.add(readVector3d(buffer));
-		            	}
-		            	
-		            } else if("VTXW0000".equals(ch2.chunkID.trim())){
-		            	long numWedges = ch2.dataCount;
-		            	
-		            	boolean x = numWedges <= 65536;
-		            	
-	            		for(int i = 0; i < numWedges; i++){
-	            			wedges.add(new Vertex(buffer, x));
-	            		}
+			ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) pskFile.length());
+			buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		            } else if("FACE0000".equals(ch2.chunkID.trim())){
-		            	
-		            	long numTriangles = ch2.dataCount;
-		            	
-	            		for(int i = 0; i < numTriangles; i++){
-	            			triangles.add(new Triangle(buffer));
-	            		}
+			ChunkHeader header = new ChunkHeader(buffer);
 
-		            } else if("FACE3200".equals(ch2.chunkID.trim())){
-		            	
-		            	long numTriangles = ch2.dataCount;
-		            	System.out.println("TODO");
+			if (!"ACTRHEAD".equals(header.chunkID.trim())) {
+				throw new Exception("Not a psk file");
+			}
 
-		            } 
-		            
-		            else if("MATT0000".equals(ch2.chunkID.trim())){
-		            	
-		            	long numMat = ch2.dataCount;
-		            	
-		            	for(int i = 0; i < numMat; i++){
-	            			materials.add(new Material(buffer));
-	            		}
-		            } 
-		            
-		            else if("REFSKELT".equals(ch2.chunkID.trim())){
-		            	
-		            	long numRefSklt = ch2.dataCount;
-		            	
-		            	for(int i = 0; i < numRefSklt; i++){
-		            		bones.add(new Bone(buffer));
-	            		}
-		            } 
-		            
-		            else if("RAWWEIGHTS".equals(ch2.chunkID.trim())){
-		            	
-		            	long numRawWeights = ch2.dataCount;
-		            	
-		            	for(int i = 0; i < numRawWeights; i++){
-		            		rawWeights.add(new RawWeight(buffer));
-	            		}
-		            }
-		            // TODO EXTRAUV0
-		            // TODO FACE3200
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.exit(1);
-        } finally {
-        	try {
+			while (buffer.hasRemaining()) {
+
+				ChunkHeader ch2 = new ChunkHeader(buffer);
+
+				if ("PNTS0000".equals(ch2.chunkID.trim())) {
+					long numVertex = ch2.dataCount;
+
+					for (int i = 0; i < numVertex; i++) {
+						vertices.add(readVector3d(buffer));
+					}
+
+				} else if ("VTXW0000".equals(ch2.chunkID.trim())) {
+					long numWedges = ch2.dataCount;
+
+					boolean x = numWedges <= 65536;
+
+					for (int i = 0; i < numWedges; i++) {
+						wedges.add(new Vertex(buffer, x));
+					}
+
+				} else if ("FACE0000".equals(ch2.chunkID.trim())) {
+
+					long numTriangles = ch2.dataCount;
+
+					for (int i = 0; i < numTriangles; i++) {
+						triangles.add(new Triangle(buffer));
+					}
+
+				} else if ("FACE3200".equals(ch2.chunkID.trim())) {
+
+					long numTriangles = ch2.dataCount;
+					System.out.println("TODO");
+
+				}
+
+				else if ("MATT0000".equals(ch2.chunkID.trim())) {
+
+					long numMat = ch2.dataCount;
+
+					for (int i = 0; i < numMat; i++) {
+						materials.add(new Material(buffer));
+					}
+				}
+
+				else if ("REFSKELT".equals(ch2.chunkID.trim())) {
+
+					long numRefSklt = ch2.dataCount;
+
+					for (int i = 0; i < numRefSklt; i++) {
+						bones.add(new Bone(buffer));
+					}
+				}
+
+				else if ("RAWWEIGHTS".equals(ch2.chunkID.trim())) {
+
+					long numRawWeights = ch2.dataCount;
+
+					for (int i = 0; i < numRawWeights; i++) {
+						rawWeights.add(new RawWeight(buffer));
+					}
+				}
+				// TODO EXTRAUV0
+				// TODO FACE3200
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		} finally {
+			try {
 				inChannel.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        }
-		
+		}
+
 	}
-	
-	
-	
 
 	public File getPskFile() {
 		return pskFile;
@@ -335,22 +321,22 @@ public class PSKReader {
 		return rawWeights;
 	}
 
-	public static void main (String args[]){
-		
+	public static void main(String args[]) {
+
 		File file = new File("Z:\\BarrenHardware_Lights_ELight01BA.psk");
 		PSKReader psk = new PSKReader(file);
-		
+
 		System.out.println(file);
-		
-		System.out.println("Num Vertices: "+psk.getVertices().size());
-		System.out.println("Num Wedges: "+psk.getWedges().size());
-		System.out.println("Num Triangles: "+psk.getTriangles().size());
-		System.out.println("Num Materials: "+psk.getMaterials().size());
-		
-		for(Material mat : psk.getMaterials()){
-			System.out.println("Material: "+mat.materialName);
+
+		System.out.println("Num Vertices: " + psk.getVertices().size());
+		System.out.println("Num Wedges: " + psk.getWedges().size());
+		System.out.println("Num Triangles: " + psk.getTriangles().size());
+		System.out.println("Num Materials: " + psk.getMaterials().size());
+
+		for (Material mat : psk.getMaterials()) {
+			System.out.println("Material: " + mat.materialName);
 		}
-		
-		System.out.println("Num Bones: "+psk.getBones().size());
+
+		System.out.println("Num Bones: " + psk.getBones().size());
 	}
 }

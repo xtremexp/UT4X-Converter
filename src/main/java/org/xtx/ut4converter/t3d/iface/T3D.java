@@ -10,14 +10,14 @@ package org.xtx.ut4converter.t3d.iface;
  * @author XtremeXp
  */
 public interface T3D {
-    
-    public abstract void convert();
-    
-    public abstract void scale(Double newScale);
-    
-    public boolean analyseT3DData(String line);
-    
-    public abstract String toT3d(StringBuilder sb);
-    
-    public abstract String getName();
+
+	public abstract void convert();
+
+	public abstract void scale(Double newScale);
+
+	public boolean analyseT3DData(String line);
+
+	public abstract String toT3d(StringBuilder sb);
+
+	public abstract String getName();
 }

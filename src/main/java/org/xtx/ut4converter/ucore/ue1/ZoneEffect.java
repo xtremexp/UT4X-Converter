@@ -10,6 +10,6 @@ package org.xtx.ut4converter.ucore.ue1;
  * @author XtremeXp
  */
 public enum ZoneEffect {
-    EFFECT_Alley
-    // TODO
+	EFFECT_Alley
+	// TODO
 }

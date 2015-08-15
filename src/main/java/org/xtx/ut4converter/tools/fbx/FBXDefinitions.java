@@ -14,72 +14,72 @@ import java.util.List;
  */
 public class FBXDefinitions implements FBXWriter {
 
-    static final short DEFAULT_VERSION = 100;
-    
-    short version;
-    int count;
+	static final short DEFAULT_VERSION = 100;
 
-    static class ObjectTypeCount {
+	short version;
+	int count;
 
-        FBXObjectType objectType;
-        int count;
+	static class ObjectTypeCount {
 
-        public ObjectTypeCount(FBXObjectType objectType, int count) {
-            this.objectType = objectType;
-            this.count = count;
-        }
+		FBXObjectType objectType;
+		int count;
 
-    }
+		public ObjectTypeCount(FBXObjectType objectType, int count) {
+			this.objectType = objectType;
+			this.count = count;
+		}
 
-    List<ObjectTypeCount> objectTypeCounts;
+	}
 
-    public static FBXDefinitions getInstance(List<FBXObject> objects) {
+	List<ObjectTypeCount> objectTypeCounts;
 
-        FBXDefinitions fbxDefinitions = new FBXDefinitions();
-        fbxDefinitions.count = objects != null ? objects.size() : 0;
-        fbxDefinitions.objectTypeCounts = new ArrayList<>();
-        fbxDefinitions.version = DEFAULT_VERSION;
+	public static FBXDefinitions getInstance(List<FBXObject> objects) {
 
-        if (objects != null){
-            for (FBXObject fbxObject : objects) {
+		FBXDefinitions fbxDefinitions = new FBXDefinitions();
+		fbxDefinitions.count = objects != null ? objects.size() : 0;
+		fbxDefinitions.objectTypeCounts = new ArrayList<>();
+		fbxDefinitions.version = DEFAULT_VERSION;
 
-                ObjectTypeCount otc = fbxDefinitions.getObjectTypeCountByObjectType(FBXObjectType.Geometry);
+		if (objects != null) {
+			for (FBXObject fbxObject : objects) {
 
-                if (otc == null) {
-                    fbxDefinitions.objectTypeCounts.add(new ObjectTypeCount(fbxObject.objectType, 0));
-                } else {
-                    otc.count++;
-                }
-            }
-        }
+				ObjectTypeCount otc = fbxDefinitions.getObjectTypeCountByObjectType(FBXObjectType.Geometry);
 
-        return fbxDefinitions;
-    }
+				if (otc == null) {
+					fbxDefinitions.objectTypeCounts.add(new ObjectTypeCount(fbxObject.objectType, 0));
+				} else {
+					otc.count++;
+				}
+			}
+		}
 
-    private ObjectTypeCount getObjectTypeCountByObjectType(FBXObjectType objectType) {
+		return fbxDefinitions;
+	}
 
-        for (ObjectTypeCount otc : objectTypeCounts) {
-            if (otc.objectType == objectType) {
-                return otc;
-            }
-        }
+	private ObjectTypeCount getObjectTypeCountByObjectType(FBXObjectType objectType) {
 
-        return null;
-    }
+		for (ObjectTypeCount otc : objectTypeCounts) {
+			if (otc.objectType == objectType) {
+				return otc;
+			}
+		}
 
-    @Override
-    public void writeFBX(StringBuilder sb) {
+		return null;
+	}
 
-        sb.append("Definitions:  {\n");
-        sb.append("\tVersion: ").append(version).append("\n");
-        sb.append("\tCount: ").append(count).append("\n");
+	@Override
+	public void writeFBX(StringBuilder sb) {
 
-        for (ObjectTypeCount otc : objectTypeCounts) {
-            sb.append("\tObjectType: ").append(otc.objectType.name()).append(" {\n");
-            sb.append("\t\tCount: ").append(otc.count).append("\n");
-            sb.append("\t}\n");
-        }
+		sb.append("Definitions:  {\n");
+		sb.append("\tVersion: ").append(version).append("\n");
+		sb.append("\tCount: ").append(count).append("\n");
 
-        sb.append("}\n");
-    }
+		for (ObjectTypeCount otc : objectTypeCounts) {
+			sb.append("\tObjectType: ").append(otc.objectType.name()).append(" {\n");
+			sb.append("\t\tCount: ").append(otc.count).append("\n");
+			sb.append("\t}\n");
+		}
+
+		sb.append("}\n");
+	}
 }

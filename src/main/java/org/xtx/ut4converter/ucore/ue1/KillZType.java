@@ -10,7 +10,5 @@ package org.xtx.ut4converter.ucore.ue1;
  * @author XtremeXp
  */
 public enum KillZType {
-    KILLZ_None,
-    KILLZ_Lava,
-    KILLZ_Suicide
+	KILLZ_None, KILLZ_Lava, KILLZ_Suicide
 }

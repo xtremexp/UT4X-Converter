@@ -10,6 +10,6 @@ package org.xtx.ut4converter.tools.fbx;
  * @author XtremeXp
  */
 public interface FBXWriter {
-    
-    public abstract void writeFBX(StringBuilder sb);
+
+	public abstract void writeFBX(StringBuilder sb);
 }

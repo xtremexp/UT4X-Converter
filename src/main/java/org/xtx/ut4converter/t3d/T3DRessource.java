@@ -10,26 +10,19 @@ package org.xtx.ut4converter.t3d;
  * @author XtremeXp
  */
 public class T3DRessource {
-    
-    public static enum Type{
-        UNKNOWN("Unknown"),
-        LEVEL("Level"),
-        TEXTURE("Texture"),
-        MESH("Mesh"),
-        STATICMESH("StaticMesh"),
-        MUSIC("Music"),
-        SCRIPT("Script"),
-        SOUND("Sound");
-        
-        String name;
-        
-        Type(String name){
-            this.name = name;
-        }
 
-        public String getName() {
-            return name;
-        }
-    }
-    
+	public static enum Type {
+		UNKNOWN("Unknown"), LEVEL("Level"), TEXTURE("Texture"), MESH("Mesh"), STATICMESH("StaticMesh"), MUSIC("Music"), SCRIPT("Script"), SOUND("Sound");
+
+		String name;
+
+		Type(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
 }

@@ -11,24 +11,24 @@ package org.xtx.ut4converter.tools.fbx;
  */
 public class FBXObjectMaterial extends FBXObject {
 
-    enum ShadingModel {
-        lambert
-    }
-    
-    public FBXObjectMaterial(String materialName) {
-        super(FBXObjectType.Material);
-        this.name = materialName;
-    }
+	enum ShadingModel {
+		lambert
+	}
 
-    @Override
-    public void writeFBX(StringBuilder sb) {
-        sb.append("\tMaterial: \"Material::").append(name).append("\", \"\" {\n");
-        
-        sb.append("\t\tVersion: 102\n");
-        sb.append("\t\tShadingModel: ").append(ShadingModel.lambert.name()).append("\n");
-        sb.append("\t\tMultiLayer: 0\n");
-        
-        sb.append("}\n");
-    }
+	public FBXObjectMaterial(String materialName) {
+		super(FBXObjectType.Material);
+		this.name = materialName;
+	}
+
+	@Override
+	public void writeFBX(StringBuilder sb) {
+		sb.append("\tMaterial: \"Material::").append(name).append("\", \"\" {\n");
+
+		sb.append("\t\tVersion: 102\n");
+		sb.append("\t\tShadingModel: ").append(ShadingModel.lambert.name()).append("\n");
+		sb.append("\t\tMultiLayer: 0\n");
+
+		sb.append("}\n");
+	}
 
 }

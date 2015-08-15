@@ -6,64 +6,66 @@ public abstract class TerrainComponent implements T3D {
 
 	int sectionBaseX;
 	int sectionBaseY;
-	
+
 	int sizeQuads;
-	
+
 	int[][] heightData;
-	
+
 	int numComponent;
-	
-	public TerrainComponent(int numComponent, int sizeQuads){
+
+	public TerrainComponent(int numComponent, int sizeQuads) {
 		this.numComponent = numComponent;
 		this.sizeQuads = sizeQuads;
 	}
-	
+
 	public int getSectionBaseX() {
 		return sectionBaseX;
 	}
-	
+
 	public void setSectionBaseX(int sectionBaseX) {
 		this.sectionBaseX = sectionBaseX;
 	}
-	
+
 	public int getSectionBaseY() {
 		return sectionBaseY;
 	}
-	
+
 	public void setSectionBaseY(int sectionBaseY) {
 		this.sectionBaseY = sectionBaseY;
 	}
-	
-	
-	
-	
+
 	public int[][] getHeightData() {
 		return heightData;
 	}
+
 	public void setHeightData(int[][] heightData) {
 		this.heightData = heightData;
 	}
-	
+
 	@Override
 	public void convert() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	@Override
 	public void scale(Double newScale) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
 	@Override
 	public boolean analyseT3DData(String line) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
 	@Override
 	public String toT3d(StringBuilder sb) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
@@ -85,13 +87,10 @@ public abstract class TerrainComponent implements T3D {
 	public void setSizeQuads(int sizeQuads) {
 		this.sizeQuads = sizeQuads;
 	}
-	
-	protected String getT3dRelativeLocation(){
-		
-		return "RelativeLocation=(X=" + getSectionBaseX() * sizeQuads + ",Y="+getSectionBaseY() * sizeQuads + ",Z=0.000000)";
+
+	protected String getT3dRelativeLocation() {
+
+		return "RelativeLocation=(X=" + getSectionBaseX() * sizeQuads + ",Y=" + getSectionBaseY() * sizeQuads + ",Z=0.000000)";
 	}
-	
-	
-	
-	
+
 }

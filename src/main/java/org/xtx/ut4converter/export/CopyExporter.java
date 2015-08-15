@@ -19,54 +19,54 @@ import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
- * A simple "copy" of file
- * Used for copying music .ogg files
+ * A simple "copy" of file Used for copying music .ogg files
+ * 
  * @author XtremeXp
  */
 public class CopyExporter extends UTPackageExtractor {
 
-    public CopyExporter(MapConverter mapConverter) {
-        super(mapConverter);
-    }
+	public CopyExporter(MapConverter mapConverter) {
+		super(mapConverter);
+	}
 
-    @Override
-    public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
-        
-        File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
-        File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
-        outputFile.mkdirs();
-        
-        logger.log(Level.INFO, "Copying "+inputFile.getName() + " " + ressource.getType() + " package");
-        Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        
-        Set<File> files = new HashSet<>();
-        files.add(outputFile);
-        return files;
-    }
+	@Override
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
 
-    @Override
-    public File getExporterPath() {
-        return null;
-    }
+		File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
+		File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
+		outputFile.mkdirs();
 
-    @Override
-    public boolean supportLinux() {
-        return true;
-    }
-    
-    @Override
-    protected File getExportFolder(T3DRessource.Type type){
-        return new File(mapConverter.getMapConvertFolder() + File.separator + type.name() + File.separator);
-    }
+		logger.log(Level.INFO, "Copying " + inputFile.getName() + " " + ressource.getType() + " package");
+		Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-    @Override
-    public String getName() {
-        return "File Copier";
-    }
+		Set<File> files = new HashSet<>();
+		files.add(outputFile);
+		return files;
+	}
 
-    @Override
-    public UnrealEngine[] getSupportedEngines() {
-        return new UnrealEngine[]{ UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2, UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4 };
-    }
-    
+	@Override
+	public File getExporterPath() {
+		return null;
+	}
+
+	@Override
+	public boolean supportLinux() {
+		return true;
+	}
+
+	@Override
+	protected File getExportFolder(T3DRessource.Type type) {
+		return new File(mapConverter.getMapConvertFolder() + File.separator + type.name() + File.separator);
+	}
+
+	@Override
+	public String getName() {
+		return "File Copier";
+	}
+
+	@Override
+	public UnrealEngine[] getSupportedEngines() {
+		return new UnrealEngine[] { UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2, UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4 };
+	}
+
 }

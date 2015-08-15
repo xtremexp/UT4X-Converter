@@ -13,54 +13,45 @@ import java.util.LinkedList;
  */
 public class FBXLayerElementNormal extends FBXLayerElement {
 
-    final short DEFAULT_VERSION = 101;
-    
-    MappingInformationType mappingInformationType;
-    ReferenceInformationType referenceInformationType;
-    LinkedList<Double> normals;
-    
-    public static enum MappingInformationType {
-        ByPolygon,
-        ByPolygonVertex,
-        ByVertex,
-        ByEdge,
-        AllSame
-    }
-    
+	final short DEFAULT_VERSION = 101;
 
-    public FBXLayerElementNormal(LinkedList<Double> normals, MappingInformationType mappingInformationType) {
-        
-        super(Type.LayerElementNormal);
-        
-        this.version = DEFAULT_VERSION;
-        this.normals = normals;
-        this.mappingInformationType = mappingInformationType;
-        referenceInformationType = ReferenceInformationType.Direct;
-    }
-    
-    
-    
+	MappingInformationType mappingInformationType;
+	ReferenceInformationType referenceInformationType;
+	LinkedList<Double> normals;
 
-    @Override
-    public void writeFBX(StringBuilder sb) {
-        
-        sb.append("\t\tLayerElementNormal: ").append(index).append(" {\n");
-        
-        sb.append("\t\t\tVersion: ").append(version).append("\n");
-        sb.append("\t\t\tName: \"").append(name).append("\"\n");
-        sb.append("\t\t\tMappingInformationType: \"").append(mappingInformationType.name()).append("\"\n");
-        sb.append("\t\t\tReferenceInformationType: \"").append(referenceInformationType.name()).append("\"\n");
-        
-        sb.append("\t\t\tNormals: ");
-        
+	public static enum MappingInformationType {
+		ByPolygon, ByPolygonVertex, ByVertex, ByEdge, AllSame
+	}
 
-        for(Double normal : normals){
-            sb.append(df.format(normal)).append(",");
-        }
-        
-        sb.deleteCharAt(sb.length() - 1);
-        sb.append("\n");
-        
-        sb.append("\t\t}");
-    }
+	public FBXLayerElementNormal(LinkedList<Double> normals, MappingInformationType mappingInformationType) {
+
+		super(Type.LayerElementNormal);
+
+		this.version = DEFAULT_VERSION;
+		this.normals = normals;
+		this.mappingInformationType = mappingInformationType;
+		referenceInformationType = ReferenceInformationType.Direct;
+	}
+
+	@Override
+	public void writeFBX(StringBuilder sb) {
+
+		sb.append("\t\tLayerElementNormal: ").append(index).append(" {\n");
+
+		sb.append("\t\t\tVersion: ").append(version).append("\n");
+		sb.append("\t\t\tName: \"").append(name).append("\"\n");
+		sb.append("\t\t\tMappingInformationType: \"").append(mappingInformationType.name()).append("\"\n");
+		sb.append("\t\t\tReferenceInformationType: \"").append(referenceInformationType.name()).append("\"\n");
+
+		sb.append("\t\t\tNormals: ");
+
+		for (Double normal : normals) {
+			sb.append(df.format(normal)).append(",");
+		}
+
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append("\n");
+
+		sb.append("\t\t}");
+	}
 }

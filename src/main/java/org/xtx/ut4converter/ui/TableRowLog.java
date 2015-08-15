@@ -14,66 +14,67 @@ import java.util.logging.LogRecord;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
- * Class for handling logs
- * that will be redirected to table log in user interface
+ * Class for handling logs that will be redirected to table log in user
+ * interface
+ * 
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
 public class TableRowLog {
- 
-    /**
-     * Log level
-     */
-    private Level level;
-    
-    /**
-     * Log message
-     */
+
+	/**
+	 * Log level
+	 */
+	private Level level;
+
+	/**
+	 * Log message
+	 */
 	private final SimpleStringProperty message;
-    
-    /**
-     * Time of log in mm:ss:SSS format
-     */
-    private final SimpleStringProperty time;
-    
-    /**
-     * Date formatter
-     */
-    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
 
-    public TableRowLog(LogRecord logRecord) {
-        this.level = logRecord.getLevel();
+	/**
+	 * Time of log in mm:ss:SSS format
+	 */
+	private final SimpleStringProperty time;
 
-        if(logRecord.getThrown() != null){
-            this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
-        } else {
-            this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
-        }
-        
-        this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
-    }
+	/**
+	 * Date formatter
+	 */
+	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
 
-    public Level getLevel() {
-        return level;
-    }
+	public TableRowLog(LogRecord logRecord) {
+		this.level = logRecord.getLevel();
 
-    public void setLevel(Level logLevel) {
-        level = logLevel;
-    }
+		if (logRecord.getThrown() != null) {
+			this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
+		} else {
+			this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
+		}
 
-    public String getMessage() {
-        return message.get();
-    }
+		this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
+	}
 
-    public void setMessage(String fName) {
-        message.set(fName);
-    }
+	public Level getLevel() {
+		return level;
+	}
 
-    public String getTime() {
-        return time.get();
-    }
+	public void setLevel(Level logLevel) {
+		level = logLevel;
+	}
 
-    public void setTime(String fName) {
-        time.set(fName);
-    }
+	public String getMessage() {
+		return message.get();
+	}
+
+	public void setMessage(String fName) {
+		message.set(fName);
+	}
+
+	public String getTime() {
+		return time.get();
+	}
+
+	public void setTime(String fName) {
+		time.set(fName);
+	}
 }

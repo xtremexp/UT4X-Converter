@@ -25,186 +25,183 @@ import org.xtx.ut4converter.tools.fbx.FBXObjectType;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 
 /**
- * Simple utility class to write
- * brushes from UT to ASCII .fbx staticmesh files
+ * Simple utility class to write brushes from UT to ASCII .fbx staticmesh files
+ * 
  * @author XtremeXp
  */
 public class SimpleFBXWriter {
-    
-    static final String CREATOR = MainApp.PROGRAM_NAME + "-" + MainApp.VERSION;
-    
-    
-    
-    FBXHeaderExtension headerExtension;
-    FBXDefinitions definitions;
-    LinkedList<FBXObject> objects;
-    
-    /**
-     * Output fbx file
-     */
-    File fbxFile;
-    
-    /**
-     * 
-     * @param brush
-     */
-    public SimpleFBXWriter(T3DBrush brush){
-        initialise(brush);
-    }
-    
-    /**
-     * 
-     * @param brush
-     */
-    public SimpleFBXWriter(PSKStaticMesh pskMesh){
-        initialise(pskMesh);
-    }
-    
-    private void initialise(PSKStaticMesh brush){
-    	objects = new LinkedList<>();
-    	headerExtension = FBXHeaderExtension.getInstance(CREATOR);
-    	objects.add(new FBXModelObject(brush));
-        definitions = FBXDefinitions.getInstance(objects);
-    }
-    
-    private void initialise(T3DBrush brush){
-        
-        brush.calcVerticeIndices(); // need compute vertex index (needed for fbx)
-        
-        objects = new LinkedList<>();
-        headerExtension = FBXHeaderExtension.getInstance(CREATOR);
-        objects.add(new FBXModelObject(brush));
-        
-        definitions = FBXDefinitions.getInstance(objects);
-        
-        // TODO add FBXObjectMaterial
-    }
-    
 
-    
-    public void write(File fbxFile) throws IOException{
-        
-        StringBuilder sb = new StringBuilder("");
-        
-        writeHeader(sb);
-        writeBody(sb);
-        writeFooter(sb);
-        
-        try (FileWriter fw = new FileWriter(fbxFile); BufferedWriter bwr = new BufferedWriter(fw);){
-            bwr.write(sb.toString());
-        }
-    }
-    
-    
-    private void writeHeader(StringBuilder sb){
-        
-        sb.append("; FBX 6.1.0 project file\n");
-        sb.append("; Created by ").append(CREATOR).append("\n");
-        sb.append("; ----------------------------------------------------\n");
-        sb.append("\n");
-        
-        headerExtension.writeFBX(sb);
+	static final String CREATOR = MainApp.PROGRAM_NAME + "-" + MainApp.VERSION;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss:SSS");
-        sb.append("CreationTime: \"").append(sdf.format(headerExtension.creationTimeStamp.time)).append("\"\n");
-        sb.append("Creator: \"").append(CREATOR).append("\"\n");
-        sb.append("\n");
-        
-        sb.append("; Object definitions\n");
-        sb.append("; ----------------------------------------------------\n");
-        
-        definitions.writeFBX(sb);
-        sb.append("\n");
+	FBXHeaderExtension headerExtension;
+	FBXDefinitions definitions;
+	LinkedList<FBXObject> objects;
 
-    }
-    
-    private FBXObject getFBXObjectByType(FBXObjectType objectType){
-        
-        Optional<FBXObject> object = objects.stream().filter(w -> w.getObjectType() == objectType).findFirst();
+	/**
+	 * Output fbx file
+	 */
+	File fbxFile;
 
-        return object.isPresent()? object.get() : null;
-    }
-    
-    private void writeBody(StringBuilder sb){
-        
-        sb.append("; Object properties\n");
-        sb.append(";-----------------------------------------------------\n\n");
-        
-        if(objects != null && !objects.isEmpty()){
-            sb.append("Objects:  {\n\n");
+	/**
+	 * 
+	 * @param brush
+	 */
+	public SimpleFBXWriter(T3DBrush brush) {
+		initialise(brush);
+	}
 
-            for(FBXObject object : objects){
-                object.writeFBX(sb);
-                sb.append("\n");
-            }
+	/**
+	 * 
+	 * @param brush
+	 */
+	public SimpleFBXWriter(PSKStaticMesh pskMesh) {
+		initialise(pskMesh);
+	}
 
-            sb.append("} \n");
-        }
-        
-        sb.append("\n");
-    }
-    
-    private void writeFooter(StringBuilder sb){
-        
-        sb.append("; Object relations\n");
-        sb.append(";-----------------------------------------------------\n\n");
-        
-        
-        sb.append("Relations:  {\n");
-	
-        for(FBXObject object : objects){
-            sb.append("\t").append(object.getObjectType().name()).append(" \"").append(object.getObjectType().name()).append("::").append(object.getName()).append("\", \"").append(object.getSubName()).append("\" {\n");
-            sb.append("\t}\n");
-        }
-        
-        sb.append("}\n");
-        sb.append("\n");
-        
-        sb.append("; Object connections\n");
-        sb.append("----------------------------------------------------\n\n");
+	private void initialise(PSKStaticMesh brush) {
+		objects = new LinkedList<>();
+		headerExtension = FBXHeaderExtension.getInstance(CREATOR);
+		objects.add(new FBXModelObject(brush));
+		definitions = FBXDefinitions.getInstance(objects);
+	}
 
-        FBXObject model = getFBXObjectByType(FBXObjectType.Model);
-        FBXObject material = getFBXObjectByType(FBXObjectType.Material);
-        
-        sb.append("Connections:  {\n");
-        
-        sb.append("\tConnect: \"OO\", \"Model::").append(model.getName()).append("\", \"Model::Scene\"\n");
-        
-        if(material != null){
-            sb.append("\tConnect: \"OO\", \"Material::").append(material).append("\", \"Model::MonCube\"\n");
-        }
-        
-         sb.append("}\n");
-    }
-    
-    public static void test(String args[]){
-        
-        //File t3dSmFile = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar");
-        File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.g");
-        fbxSmFile.delete();
-        
-        MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
+	private void initialise(T3DBrush brush) {
 
-        try {
-            // load poly data from .t3d sm file
-            for(File t3dSmFile : new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\").listFiles()){
-                
-                if(t3dSmFile.getName().endsWith(".fbx")){
-                    t3dSmFile.delete();
-                    continue;
-                }
-                
-                T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, t3dSmFile);
-                SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush);
-                File fbx = new File(t3dSmFile.getAbsolutePath().split("\\.")[0]+".fbx");
-                fbx.delete();
-                System.out.println("Writting "+fbx);
-                fbwWriter.write(fbx);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        
-        System.exit(0);
-    }
+		brush.calcVerticeIndices(); // need compute vertex index (needed for
+									// fbx)
+
+		objects = new LinkedList<>();
+		headerExtension = FBXHeaderExtension.getInstance(CREATOR);
+		objects.add(new FBXModelObject(brush));
+
+		definitions = FBXDefinitions.getInstance(objects);
+
+		// TODO add FBXObjectMaterial
+	}
+
+	public void write(File fbxFile) throws IOException {
+
+		StringBuilder sb = new StringBuilder("");
+
+		writeHeader(sb);
+		writeBody(sb);
+		writeFooter(sb);
+
+		try (FileWriter fw = new FileWriter(fbxFile); BufferedWriter bwr = new BufferedWriter(fw);) {
+			bwr.write(sb.toString());
+		}
+	}
+
+	private void writeHeader(StringBuilder sb) {
+
+		sb.append("; FBX 6.1.0 project file\n");
+		sb.append("; Created by ").append(CREATOR).append("\n");
+		sb.append("; ----------------------------------------------------\n");
+		sb.append("\n");
+
+		headerExtension.writeFBX(sb);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss:SSS");
+		sb.append("CreationTime: \"").append(sdf.format(headerExtension.creationTimeStamp.time)).append("\"\n");
+		sb.append("Creator: \"").append(CREATOR).append("\"\n");
+		sb.append("\n");
+
+		sb.append("; Object definitions\n");
+		sb.append("; ----------------------------------------------------\n");
+
+		definitions.writeFBX(sb);
+		sb.append("\n");
+
+	}
+
+	private FBXObject getFBXObjectByType(FBXObjectType objectType) {
+
+		Optional<FBXObject> object = objects.stream().filter(w -> w.getObjectType() == objectType).findFirst();
+
+		return object.isPresent() ? object.get() : null;
+	}
+
+	private void writeBody(StringBuilder sb) {
+
+		sb.append("; Object properties\n");
+		sb.append(";-----------------------------------------------------\n\n");
+
+		if (objects != null && !objects.isEmpty()) {
+			sb.append("Objects:  {\n\n");
+
+			for (FBXObject object : objects) {
+				object.writeFBX(sb);
+				sb.append("\n");
+			}
+
+			sb.append("} \n");
+		}
+
+		sb.append("\n");
+	}
+
+	private void writeFooter(StringBuilder sb) {
+
+		sb.append("; Object relations\n");
+		sb.append(";-----------------------------------------------------\n\n");
+
+		sb.append("Relations:  {\n");
+
+		for (FBXObject object : objects) {
+			sb.append("\t").append(object.getObjectType().name()).append(" \"").append(object.getObjectType().name()).append("::").append(object.getName()).append("\", \"")
+					.append(object.getSubName()).append("\" {\n");
+			sb.append("\t}\n");
+		}
+
+		sb.append("}\n");
+		sb.append("\n");
+
+		sb.append("; Object connections\n");
+		sb.append("----------------------------------------------------\n\n");
+
+		FBXObject model = getFBXObjectByType(FBXObjectType.Model);
+		FBXObject material = getFBXObjectByType(FBXObjectType.Material);
+
+		sb.append("Connections:  {\n");
+
+		sb.append("\tConnect: \"OO\", \"Model::").append(model.getName()).append("\", \"Model::Scene\"\n");
+
+		if (material != null) {
+			sb.append("\tConnect: \"OO\", \"Material::").append(material).append("\", \"Model::MonCube\"\n");
+		}
+
+		sb.append("}\n");
+	}
+
+	public static void test(String args[]) {
+
+		// File t3dSmFile = new
+		// File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar");
+		File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.g");
+		fbxSmFile.delete();
+
+		MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
+
+		try {
+			// load poly data from .t3d sm file
+			for (File t3dSmFile : new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\").listFiles()) {
+
+				if (t3dSmFile.getName().endsWith(".fbx")) {
+					t3dSmFile.delete();
+					continue;
+				}
+
+				T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, t3dSmFile);
+				SimpleFBXWriter fbwWriter = new SimpleFBXWriter(smLoader.brush);
+				File fbx = new File(t3dSmFile.getAbsolutePath().split("\\.")[0] + ".fbx");
+				fbx.delete();
+				System.out.println("Writting " + fbx);
+				fbwWriter.write(fbx);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.exit(0);
+	}
 }
