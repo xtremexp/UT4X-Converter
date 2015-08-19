@@ -1,0 +1,65 @@
+package org.xtx.ut4converter.ucore.ue4.matinee;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DObject;
+import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.t3d.iface.T3D;
+
+public class InterpData extends T3DObject implements T3D {
+
+	public InterpData(MapConverter mc) {
+		super(mc);
+	}
+
+	InterpCurveEdSetup interpCurveEdSetup;
+	List<InterpGroup> interpGroups;
+
+	@Override
+	public void convert() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean analyseT3DData(String line) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String toT3d(StringBuilder sb) {
+
+		if(interpCurveEdSetup != null){
+			interpCurveEdSetup.toT3d(sb);
+		}
+		
+		if(interpGroups != null && !interpGroups.isEmpty()){
+			for(InterpGroup group : interpGroups){
+				group.toT3d(sb);
+			}
+		}
+		
+		T3DUtils.writeClassRef(sb, "CurveEdSetup", interpCurveEdSetup, "\t");
+		T3DUtils.writeClassRef(sb, "InterpGroups", interpGroups, "\t");
+		T3DUtils.writeLine(sb, "SelectedFilter", "InterpFilter'FilterAll'", "\t");
+
+		return sb.toString();
+	}
+
+	@Override
+	public void scale(Double newScale) {
+		// TODO Auto-generated method stub
+	}
+
+	public void addGroup(InterpGroup group) {
+		
+		if (interpGroups == null) {
+			interpGroups = new ArrayList<>();
+		}
+
+		interpGroups.add(group);
+	}
+}

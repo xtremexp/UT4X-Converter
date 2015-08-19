@@ -7,8 +7,12 @@
 package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
+
 import javax.vecmath.Vector3d;
+
+import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.tools.RGBColor;
 
 /**
@@ -361,5 +365,117 @@ public class T3DUtils {
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	final static String EQUAL = "=";
+
+	public static boolean write(StringBuilder sb, String propName, Object propValue) {
+		return write(sb, propName, propValue, null);
+	}
+
+	/**
+	 * 
+	 * @param sb
+	 * @param bool
+	 * @param prefix
+	 */
+	public static boolean write(StringBuilder sb, String propName, Object propValue, String prefix) {
+
+		if (propValue == null) {
+			return false;
+		}
+
+		if (prefix != null) {
+			sb.append(prefix);
+		}
+
+		if (propValue instanceof T3D) {
+			sb.append(propName).append(EQUAL).append(((T3D) propValue).toT3d(sb));
+		} else if (propValue instanceof List) {
+
+			sb.append("(");
+
+			for (Object item : (List<Object>) propValue) {
+				write(sb, propName, item, prefix);
+				sb.append(",");
+			}
+
+			sb.append(")");
+		} else {
+			sb.append(propName).append(EQUAL).append(propValue.toString());
+		}
+
+		return true;
+	}
+
+	public static void writeLine(StringBuilder sb, String propName, Object propValue, String prefix) {
+
+		if (write(sb, propName, propValue, prefix)) {
+			sb.append("\n");
+		}
+	}
+
+	public static void writeBeginObj(StringBuilder sb, String name, String prefix) {
+
+		if (prefix != null) {
+			sb.append(prefix);
+		}
+
+		sb.append("Begin Object Name=\"").append(name).append("\"\n");
+	}
+
+	public static void writeEndObj(StringBuilder sb, String prefix) {
+
+		if (prefix != null) {
+			sb.append(prefix);
+		}
+
+		sb.append("End Object\n");
+	}
+
+	/**
+	 * E.G: 
+	 * InterpGroups(0)=InterpGroup'InterpGroup_2'
+	 * InterpGroups(1)=InterpGroup'InterpGroup_3'
+	 * 
+	 * @param sb
+	 * @param propName
+	 * @param t3dObjs
+	 * @param prefix
+	 */
+	public static void writeClassRef(StringBuilder sb, String propName, List<? extends T3DObject> t3dObjs, String prefix) {
+
+		if (t3dObjs == null || t3dObjs.isEmpty()) {
+			return;
+		}
+
+		int objIdx = 0;
+
+		for (T3DObject object : t3dObjs) {
+
+			writeClassRef(sb, propName + "(" + objIdx + ")=", object, prefix);
+			objIdx++;
+		}
+	}
+
+	/**
+	 * E.G: CurveEdSetup=InterpCurveEdSetup'InterpCurveEdSetup_0'
+	 * 
+	 * @param sb
+	 * @param propName
+	 * @param t3dObj
+	 * @param prefix
+	 */
+	public static void writeClassRef(StringBuilder sb, String propName, T3DObject t3dObj, String prefix) {
+
+		if (t3dObj == null) {
+			return;
+		}
+
+		if (prefix != null) {
+			sb.append(prefix);
+		}
+
+		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getName()).append("'").append(t3dObj.getName()).append("'\n");
 	}
 }

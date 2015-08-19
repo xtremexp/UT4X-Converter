@@ -309,6 +309,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			this.outPath = Paths.get(this.getMapConvertFolder().toURI());
 		}
 
+		this.relativeUtMapPath = UTGames.UE4_FOLDER_MAP + "/" + getOutMapName() + "/" + getOutMapName();
+		
 		// support for reading targa files
 		IIORegistry registry = IIORegistry.getDefaultInstance();
 		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
@@ -1033,6 +1035,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.mapName = outMapName;
 	}
 
+	/**
+	 * relativeUtMapPath
+	 * @return /Game/Maps/<mapname>/<mapname>
+	 */
 	public String getRelativeUtMapPath() {
 		return relativeUtMapPath;
 	}

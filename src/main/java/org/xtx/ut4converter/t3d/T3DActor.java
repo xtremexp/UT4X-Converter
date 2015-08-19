@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
+
 import javax.vecmath.Vector3d;
-import org.xtx.ut4converter.UTGames;
+
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 
@@ -24,13 +24,7 @@ import org.xtx.ut4converter.t3d.T3DMatch.Match;
  * 
  * @author XtremeXp
  */
-public abstract class T3DActor {
-
-	/**
-	 * Current game compatibility state for actor. Should automatically change
-	 * after convert
-	 */
-	UTGame game = UTGame.NONE;
+public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * All original properties stored for this actor. Basically is a map of
@@ -56,20 +50,9 @@ public abstract class T3DActor {
 	protected String t3dOriginClass;
 
 	/**
-	 * Actor class (may differ from origin class if actor could not be converted
-	 * (e.g: note class) or replaced with another one)
-	 */
-	protected String t3dClass;
-
-	/**
 	 * UE1/2/3? property in Events->Tag
 	 */
 	protected String tag;
-
-	/**
-	 * Name or label of actor
-	 */
-	protected String name;
 
 	/**
 	 * Location of actor (if null means 0 location)
@@ -117,21 +100,10 @@ public abstract class T3DActor {
 	boolean usecolocation = false;
 
 	/**
-	 * Reference to map converter
-	 */
-	protected MapConverter mapConverter;
-
-	/**
 	 * Used to add extra Z location (for converting pickup for exemple not
 	 * having same 'origin')solar
 	 */
 	Double offsetZLocation = 0D;
-
-	/**
-	 * TODO make global StringBuilder that we would 'reset' after write of each
-	 * actor (avoiding creating one for each single actor / perf issues)
-	 */
-	protected StringBuilder sbf;
 
 	/**
 	 * Minimal indentation when writing t3d converted actor
@@ -148,8 +120,6 @@ public abstract class T3DActor {
 	 * class)
 	 */
 	protected List<String> forcedWrittenLines = new ArrayList<>();
-
-	protected Logger logger;
 
 	/**
 	 * Linked actors to this one. (e.g: teleporters)
@@ -210,12 +180,10 @@ public abstract class T3DActor {
 	 * @param t3dClass
 	 */
 	public T3DActor(MapConverter mc, String t3dClass) {
-		this.mapConverter = mc;
-		this.t3dClass = t3dClass;
-		sbf = new StringBuilder();
+
+		super(mc, t3dClass);
+
 		properties = new HashMap<>();
-		logger = mc.getLogger();
-		game = mapConverter.getInputGame();
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {
@@ -585,7 +553,7 @@ public abstract class T3DActor {
 	/**
 	 * Indicates if this actor needs to be converted
 	 * 
-	 * @return <ocde>true</code>> If actor needs to be converted
+	 * @return <code>true</code>> If actor needs to be converted
 	 */
 	private boolean needsConverting() {
 		return game != mapConverter.getOutputGame();
@@ -606,8 +574,29 @@ public abstract class T3DActor {
 		validWriting = false;
 	}
 
+	/**
+	 * Return the name of the actor
+	 */
 	public String getName() {
 		return name;
+	}
+	
+	
+	/**
+	 * Returns the reference of this actor in level
+	 * E.G:
+	 * Generic_Lift_C'/Game/Maps/AS-Mazon/AS-Mazon-V01.AS-Mazon-V01:PersistentLevel.Mover4'
+	 * @return
+	 */
+	public String getLevelReference(){
+		
+		if(t3dClass == null){
+			return null;
+		}
+		
+		// UE4
+		// TODO check <=UE3 getLevelReference
+		return t3dClass + "'" + mapConverter.getRelativeUtMapPath() + "." + mapConverter.getOutMapName() + ":PersistentLevel." + name;
 	}
 
 }
