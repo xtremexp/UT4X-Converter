@@ -14,7 +14,7 @@ public class InterpGroup extends T3DObject implements T3D {
 	/**
 	 * Ref to interp data
 	 */
-	private InterpData interpData;
+	InterpData interpData;
 
 	/**
 	 * Group Name
@@ -24,7 +24,7 @@ public class InterpGroup extends T3DObject implements T3D {
 	/**
 	 * List of tracks this group have
 	 */
-	List<InterpTrack> interpTracks;
+	public List<InterpTrack> interpTracks;
 
 	/**
 	 * Group color (how it's the track bar is rendered in matinee scene)
@@ -95,6 +95,7 @@ public class InterpGroup extends T3DObject implements T3D {
 			interpTracks = new ArrayList<>();
 		}
 
+		//track.setName(track.getName() + "_" + interpTracks.size());
 		interpTracks.add(track);
 	}
 

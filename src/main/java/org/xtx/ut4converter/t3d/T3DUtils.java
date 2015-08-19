@@ -434,8 +434,7 @@ public class T3DUtils {
 	}
 
 	/**
-	 * E.G: 
-	 * InterpGroups(0)=InterpGroup'InterpGroup_2'
+	 * E.G: InterpGroups(0)=InterpGroup'InterpGroup_2'
 	 * InterpGroups(1)=InterpGroup'InterpGroup_3'
 	 * 
 	 * @param sb
@@ -478,4 +477,5 @@ public class T3DUtils {
 
 		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getName()).append("'").append(t3dObj.getName()).append("'\n");
 	}
+
 }

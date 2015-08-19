@@ -19,6 +19,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
+import org.xtx.ut4converter.ucore.ue4.SceneComponent;
 
 /**
  * 
@@ -106,14 +107,15 @@ public abstract class T3DActor extends T3DObject {
 	Double offsetZLocation = 0D;
 
 	/**
-	 * Minimal indentation when writing t3d converted actor
-	 */
-	public final static String IDT = "\t";
-
-	/**
      *
      */
 	protected boolean validWriting = true;
+
+	/**
+	 * Only used bu UE4 (and UE3?)
+	 * Contains location and rotation data of actor
+	 */
+	SceneComponent sceneComponent;
 
 	/**
 	 * Force these lines to be written (not used yet for each subclass of this
@@ -183,6 +185,7 @@ public abstract class T3DActor extends T3DObject {
 
 		super(mc, t3dClass);
 
+		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
 	}
 
@@ -207,6 +210,7 @@ public abstract class T3DActor extends T3DObject {
 
 		if (line.startsWith("Location=") || line.contains("\tLocation=")) {
 			location = T3DUtils.getVector3d(line, 0D);
+			sceneComponent.setRelativeLocation(location);
 		}
 
 		if (line.contains(" OldLocation=") || line.contains("\tOldLocation=")) {
@@ -219,6 +223,7 @@ public abstract class T3DActor extends T3DObject {
 
 		else if (line.startsWith("DrawScale3D")) {
 			scale3d = T3DUtils.getVector3d(line, 1D);
+			sceneComponent.setRelativeScale3D(scale3d);
 		}
 
 		else if (line.startsWith("DrawScale=")) {
@@ -227,6 +232,7 @@ public abstract class T3DActor extends T3DObject {
 
 		else if (line.startsWith("Rotation")) {
 			rotation = T3DUtils.getVector3dRot(line);
+			sceneComponent.setRelativeRotation(rotation);
 		}
 
 		else if (line.contains("Name=")) {
@@ -481,6 +487,10 @@ public abstract class T3DActor extends T3DObject {
 		sbf.append(IDT).append("\tEnd Object\n");
 	}
 
+	protected void writeBeginActor() {
+		sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+	}
+
 	/**
      *
      */
@@ -580,23 +590,27 @@ public abstract class T3DActor extends T3DObject {
 	public String getName() {
 		return name;
 	}
-	
-	
+
 	/**
-	 * Returns the reference of this actor in level
-	 * E.G:
-	 * Generic_Lift_C'/Game/Maps/AS-Mazon/AS-Mazon-V01.AS-Mazon-V01:PersistentLevel.Mover4'
+	 * Returns the reference of this actor in level E.G: Generic_Lift_C
+	 * '/Game/Maps/AS-Mazon/AS-Mazon-V01.AS-Mazon-V01:PersistentLevel.Mover4'
+	 * 
 	 * @return
 	 */
-	public String getLevelReference(){
-		
-		if(t3dClass == null){
+	public String getLevelReference() {
+
+		if (t3dClass == null) {
 			return null;
 		}
-		
+
 		// UE4
 		// TODO check <=UE3 getLevelReference
 		return t3dClass + "'" + mapConverter.getRelativeUtMapPath() + "." + mapConverter.getOutMapName() + ":PersistentLevel." + name;
 	}
 
+	public SceneComponent getSceneComponent() {
+		return sceneComponent;
+	}
+
+	
 }

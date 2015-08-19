@@ -220,4 +220,54 @@ public class MoverProperties implements T3D {
 	public String getName() {
 		return mover.name;
 	}
+
+	public UPackageRessource getClosedSound() {
+		return closedSound;
+	}
+
+	public UPackageRessource getClosingSound() {
+		return closingSound;
+	}
+
+	public UPackageRessource getOpenedSound() {
+		return openedSound;
+	}
+
+	public UPackageRessource getOpeningSound() {
+		return openingSound;
+	}
+
+	public UPackageRessource getMoveAmbientSound() {
+		return moveAmbientSound;
+	}
+
+	public List<Vector3d> getSavedPositions() {
+		return savedPositions;
+	}
+
+	public List<Vector3d> getPositions() {
+		return positions;
+	}
+
+	public List<Vector3d> getSavedRotations() {
+		return savedRotations;
+	}
+
+	public Double getMoveTime() {
+		return moveTime;
+	}
+
+	public Double getStayOpenTime() {
+		return stayOpenTime;
+	}
+
+	public Double getDelayTime() {
+		return delayTime;
+	}
+
+	public T3DActor getMover() {
+		return mover;
+	}
+	
+	
 }

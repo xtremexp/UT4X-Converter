@@ -14,8 +14,8 @@ public class InterpData extends T3DObject implements T3D {
 		super(mc);
 	}
 
-	InterpCurveEdSetup interpCurveEdSetup;
-	List<InterpGroup> interpGroups;
+	public InterpCurveEdSetup interpCurveEdSetup;
+	public List<InterpGroup> interpGroups;
 
 	@Override
 	public void convert() {
@@ -60,6 +60,17 @@ public class InterpData extends T3DObject implements T3D {
 			interpGroups = new ArrayList<>();
 		}
 
+		group.setName(group.getName() + "_" + interpGroups.size());
 		interpGroups.add(group);
 	}
+
+	public InterpCurveEdSetup getInterpCurveEdSetup() {
+		return interpCurveEdSetup;
+	}
+
+	public List<InterpGroup> getInterpGroups() {
+		return interpGroups;
+	}
+	
+	
 }

@@ -94,4 +94,9 @@ public class T3DMover extends T3DBrush {
 		super.convert();
 	}
 
+	public MoverProperties getMoverProperties() {
+		return moverProperties;
+	}
+
+	
 }
