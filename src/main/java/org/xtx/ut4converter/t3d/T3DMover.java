@@ -70,7 +70,7 @@ public class T3DMover extends T3DBrush {
 			// staticmesh in UE4 Editor ...
 			String originalName = this.name;
 			this.brushClass = BrushClass.Brush;
-			this.name += "Brush";
+			this.name += "_Brush";
 			String x = super.toString();
 			// put back original name (might be used later for linked actors .
 			// e.g: liftexit)
