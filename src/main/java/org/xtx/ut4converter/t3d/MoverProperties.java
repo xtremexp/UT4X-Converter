@@ -133,7 +133,9 @@ public class MoverProperties implements T3D {
 
 	public String toString(StringBuilder sbf) {
 		// Write the mover as Destination Lift
-		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("\n");
+		// TODO write as well matinee actor (once implementation done)
+		// because it's impossible to know ("guess") if a mover is a lift or another kind of mover (button, door, ...)
+		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("_Lift\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");

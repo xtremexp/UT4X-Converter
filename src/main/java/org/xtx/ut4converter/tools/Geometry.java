@@ -6,9 +6,14 @@
 package org.xtx.ut4converter.tools;
 
 import java.util.LinkedList;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
+
+import org.apache.commons.math3.geometry.euclidean.threed.Line;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 
 /**
@@ -585,5 +590,64 @@ public class Geometry {
 		final double dz = v.z - w.z;
 
 		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+
+	/**
+	 * Converts a "stadard" java vector to apache one
+	 * @param v
+	 * @return
+	 */
+	public static Vector3D getApacheVector3D(Vector3d v) {
+		return new Vector3D(new double[] { v.x, v.y, v.z });
+	}
+
+	public static boolean vertexInOtherPoly(LinkedList<T3DPolygon> polygons, T3DPolygon polyVertex, Vertex v) {
+
+		for (T3DPolygon p : polygons) {
+
+			if (p == polyVertex) {
+				continue;
+			}
+
+			if (vertexInOtherPolyEdge(p, v)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Guess if this vertex is belonging to one of the edges of a polygon
+	 * 
+	 * @param polygon
+	 *            Polygon
+	 * @param v
+	 *            Vertex
+	 * @return
+	 */
+	public static boolean vertexInOtherPolyEdge(T3DPolygon polygon, Vertex v) {
+
+		if (polygon == null || v == null) {
+			return false;
+		}
+
+		for (int i = 0; i < (polygon.vertices.size() - 1); i++) {
+
+			Vector3d v1 = polygon.vertices.get(i).getCoordinates();
+			Vector3d v2 = polygon.vertices.get(i + 1).getCoordinates();
+
+			Line line = new Line(getApacheVector3D(v1), getApacheVector3D(v2), 0.001d);
+
+			if (line.distance(getApacheVector3D(v.getCoordinates())) < 0.001d) {
+				return true;
+			}
+			/*
+			 * if (line.contains(getApacheVector3D(v.getCoordinates()))) {
+			 * return true; }
+			 */
+		}
+
+		return false;
 	}
 }

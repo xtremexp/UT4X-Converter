@@ -84,7 +84,15 @@ public class T3DBrush extends T3DSound {
 	 */
 	Vector3d prePivot;
 
+	/**
+	 * Polygons of the brush
+	 */
 	LinkedList<T3DPolygon> polyList = new LinkedList<>();
+	
+	/**
+	 * E.G: "Begin Brush Name=TestLev_S787"
+	 */
+	String modelName;
 
 	/**
 	 *
@@ -101,6 +109,9 @@ public class T3DBrush extends T3DSound {
 		} else {
 			brushType = UE4_BrushType.Brush_Add.name();
 		}
+		
+		// just need one
+		modelName = "Model_6";
 	}
 
 	private boolean isAnalysingPolyData = false;
@@ -110,6 +121,13 @@ public class T3DBrush extends T3DSound {
 	 * is due to MainScale factor. Depending on it it.
 	 */
 	boolean reverseVertexOrder = false;
+	
+	/**
+	 * If true this brush might
+	 * create bsp holes
+	 * and should not be written
+	 */
+	boolean bspHoleCausing;
 
 	@Override
 	public boolean analyseT3DData(String line) {
@@ -189,6 +207,10 @@ public class T3DBrush extends T3DSound {
 
 			// need force trigger function else name is null
 			return super.analyseT3DData(line);
+		}
+		
+		else if(line.startsWith("Begin Brush") && line.contains("Name=")){
+			modelName = line.split("Name=")[1].replaceAll("\"", "");
 		}
 
 		else {
@@ -282,6 +304,12 @@ public class T3DBrush extends T3DSound {
 					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
 				}
 			}
+			/*
+			else if (willCauseBspHoles()) {
+				bspHoleCausing = true;
+				brushClass = BrushClass.BlockingVolume;
+				logger.warning("Replaced potential bsphole with " + name + " to blockingvolume");
+			}*/
 
 			if (!valid) {
 				return valid;
@@ -326,13 +354,48 @@ public class T3DBrush extends T3DSound {
 	}
 
 	/**
+	 * Compute if this brush will cause bsp holes:
+	 * - only 4 or less polygon
+	 * - OR some vertex not bound with at least 3 polygons
+	 * not enough accurate at this stage
+	 * @return <code>true</code> if this brush will cause bsp holes on import
+	 */
+	private boolean willCauseBspHoles() {
+
+		// sheet brush (total nb polygons <= 4)
+		if(polyList.size() <= 4){
+			return true;
+		}
+		
+		for (T3DPolygon poly : polyList) {
+			for (Vertex v : poly.vertices) {
+				// vertex only linked with 2 or less other vertices
+				// might be candidate for bsp hole
+				// however need to do some extra checks
+				if (getPolyCountWithVertexCoordinate(v) < 3) {
+					
+					// if this vertex is belonging to edge
+					// of another polygon
+					if(!Geometry.vertexInOtherPoly(polyList, poly, v)){
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	final double VERY_TINY_NUM = 0.001d;
+
+	/**
 	 * Return how many polygons are attached to this vertex.
 	 * 
 	 * @param v
 	 *            Brush vertex
 	 * @return Number of polygons attached to this vertex.
 	 */
-	private int getPolyCountWithVertexCoordinate(Vector3d v) {
+	private int getPolyCountWithVertexCoordinate(Vertex v) {
 
 		int count = 0;
 
@@ -340,7 +403,7 @@ public class T3DBrush extends T3DSound {
 
 			for (Vertex v2 : poly.vertices) {
 
-				if (v.x == v2.getX() && v.y == v2.getY() && v.z == v2.getZ()) {
+				if (Math.abs(v.getX() - v2.getX()) < VERY_TINY_NUM && Math.abs(v.getY() - v2.getY()) < VERY_TINY_NUM && Math.abs(v.getZ() - v2.getZ()) < VERY_TINY_NUM) {
 					count++;
 					break;
 				}
@@ -371,7 +434,7 @@ public class T3DBrush extends T3DSound {
 
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
 
-		sbf.append(IDT).append("\tBegin Brush Name=Model_6\n");
+		sbf.append(IDT).append("\tBegin Brush Name=").append(modelName).append("\n");
 		sbf.append(IDT).append("\t\tBegin PolyList\n");
 
 		int numPoly = 0;
@@ -389,7 +452,7 @@ public class T3DBrush extends T3DSound {
 		sbf.append(IDT).append("\t\tEnd PolyList\n");
 		sbf.append(IDT).append("\tEnd Brush\n");
 
-		sbf.append(IDT).append("\tBrush=Model'Model_6'\n");
+		sbf.append(IDT).append("\tBrush=Model'").append(modelName).append("'\n");
 		sbf.append(IDT).append("\tBrushComponent=BrushComponent0\n");
 
 		for (String line : forcedWrittenLines) {

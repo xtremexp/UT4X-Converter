@@ -12,6 +12,8 @@ public class InterpData extends T3DObject implements T3D {
 
 	public InterpData(MapConverter mc) {
 		super(mc);
+		
+		interpCurveEdSetup = new InterpCurveEdSetup(mc);
 	}
 
 	public InterpCurveEdSetup interpCurveEdSetup;

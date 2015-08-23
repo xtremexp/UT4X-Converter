@@ -46,14 +46,18 @@ public abstract class T3DObject {
 	public final static String IDT = "\t";
 
 	public T3DObject(MapConverter mc) {
+		initialise(mc);
 		this.t3dClass = this.getClass().getSimpleName();
 		this.name = this.t3dClass;
 	}
 
 	public T3DObject(MapConverter mc, String t3dClass) {
-
-		this.mapConverter = mc;
+		initialise(mc);
 		this.t3dClass = t3dClass;
+	}
+
+	private void initialise(MapConverter mc) {
+		this.mapConverter = mc;
 		this.sbf = new StringBuilder();
 		this.logger = mc.getLogger();
 		this.game = mapConverter.getInputGame();
@@ -71,13 +75,13 @@ public abstract class T3DObject {
 		return t3dClass;
 	}
 
-	public void writeBeginObj(StringBuilder sb, String prefix) {
+	public void writeBeginObj(String prefix) {
 
 		if (prefix != null) {
-			sb.append(prefix);
+			sbf.append(prefix);
 		}
 
-		sb.append("Begin Object Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
+		sbf.append("Begin Object Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
 	}
 
 	public void setSbf(StringBuilder sbf) {
@@ -89,14 +93,13 @@ public abstract class T3DObject {
 	}
 
 	/**
-	 * Write sub-objects of this object if not-null and
-	 * of class T3DObject (unreal objects)
+	 * Write sub-objects of this object if not-null and of class T3DObject
+	 * (unreal objects)
+	 * 
 	 * @param sb
 	 * @param prefix
 	 */
-	public void writeObjDefinition(StringBuilder sb, String prefix) {
-
-		
+	public void writeObjDefinition(String prefix) {
 
 		for (Field f : getClass().getFields()) {
 
@@ -107,7 +110,7 @@ public abstract class T3DObject {
 				if (obj == null) {
 					continue;
 				}
-				
+
 				T3DObject t3dObj = null;
 
 				if (T3DObject.class.isAssignableFrom(obj.getClass())) {
@@ -121,11 +124,11 @@ public abstract class T3DObject {
 						}
 					}
 				}
-				
-				if(t3dObj != null){
-					t3dObj.writeBeginObj(sb, prefix);
-					t3dObj.writeObjDefinition(sb, prefix + "\t");
-					T3DUtils.writeEndObj(sb, prefix);
+
+				if (t3dObj != null) {
+					t3dObj.writeBeginObj(prefix);
+					t3dObj.writeObjDefinition(prefix + "\t");
+					T3DUtils.writeEndObj(sbf, prefix);
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e1) {
 				// TODO Auto-generated catch block
@@ -133,7 +136,6 @@ public abstract class T3DObject {
 			}
 		}
 
-		
 	}
 
 }

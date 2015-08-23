@@ -14,6 +14,7 @@ public class InterpCurveEdSetup extends T3DObject implements T3D {
 
 	public InterpCurveEdSetup(MapConverter mc) {
 		super(mc);
+		viewEndInput = 10d;
 	}
 
 	/**

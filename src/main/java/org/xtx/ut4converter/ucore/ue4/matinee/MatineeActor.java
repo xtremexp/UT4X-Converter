@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.xtx.ut4converter.MapConverter;
@@ -9,7 +10,7 @@ import org.xtx.ut4converter.t3d.T3DActor;
 import org.xtx.ut4converter.t3d.T3DMover;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-public class MatineeActor extends T3DActor implements T3D {
+public class MatineeActor extends T3DActor {
 
 	public MatineeActor(MapConverter mc, String t3dClass) {
 		super(mc, "MatineeActor");
@@ -23,7 +24,7 @@ public class MatineeActor extends T3DActor implements T3D {
 	 * @param t3dClass
 	 * @param mover
 	 */
-	public MatineeActor(MapConverter mc, String t3dClass, T3DMover mover) {
+	public MatineeActor(MapConverter mc, T3DMover mover) {
 		super(mc, "MatineeActor");
 		
 		MoverProperties movProp = mover.getMoverProperties();
@@ -39,7 +40,10 @@ public class MatineeActor extends T3DActor implements T3D {
 	 */
 	boolean bRewindOnPlay;
 
-	List<InterpGroup> groupActorInfos;
+	public List<InterpGroup> groupActorInfos;
+	
+	
+	public List<InterpGroupInst> interpGroupInsts;
 
 	/**
 	 * ?
@@ -65,14 +69,14 @@ public class MatineeActor extends T3DActor implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toString() {
 		
 		final String prefix = "\t\t";
 		
 		writeBeginActor();
 		
 		// definitions
-		writeObjDefinition(sb, prefix);
+		writeObjDefinition(prefix);
 		
 		// obj detail values
 
@@ -80,7 +84,7 @@ public class MatineeActor extends T3DActor implements T3D {
 		
 		writeEndActor();
 
-		return sb.toString();
+		return sbf.toString();
 	}
 
 	@Override
@@ -93,15 +97,17 @@ public class MatineeActor extends T3DActor implements T3D {
 	public static void main(String ... args){
 		MapConverter mc = new MapConverter(UTGame.UT99, UTGame.UT4);
 		MatineeActor ma = new MatineeActor(mc, "MatineeActor");
+		ma.interpGroupInsts = new ArrayList<>();
+		
 
 		InterpData id = new InterpData(mc);
 		InterpGroup ig = new InterpGroup(mc, id, "TEST");
 		ig.addTrack(new InterpTrackMove(mc));
 		id.addGroup(ig);
+		ma.interpGroupInsts.add(new InterpGroupInst(mc, ig, null));
 		ma.matineeData = id;
-		StringBuilder sb = new StringBuilder();
-		ma.writeObjDefinition(sb, "\t");
+		ma.writeObjDefinition("\t");
 		
-		System.out.println(sb.toString());
+		System.out.println(ma);
 	}
 }
