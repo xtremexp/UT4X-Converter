@@ -220,6 +220,9 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			// Write T3D converted file
 			write(bwr);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error while writting T3D converted level file " + inT3dFile.getName());
+			logger.log(Level.SEVERE, "ERROR:", e);
 		} finally {
 			bwr.close();
 			bfr.close();
@@ -242,11 +245,23 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		writeHeader();
 
+		String buffer = null;
+
 		for (T3DActor actor : convertedActors) {
+
+			if (actor == null) {
+				continue;
+			}
 
 			// write parent actor
 			if (actor.isValidWriting()) {
-				bw.write(actor.toString());
+				buffer = actor.toString();
+
+				if (buffer != null) {
+					bw.write(actor.toString());
+				} else {
+					continue;
+				}
 			}
 
 			// write replacement actors

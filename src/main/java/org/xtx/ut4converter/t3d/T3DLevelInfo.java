@@ -128,9 +128,9 @@ public class T3DLevelInfo extends T3DActor {
 	@Override
 	public String toString() {
 
-		return ""; // disabled because UE4 not handling WorldInfo on import ...
-
-		/**
+		/*
+		 * writeBeginActor();
+		 * 
 		 * sbf.append(IDT).append(
 		 * "Begin Actor Class=UTWorldSettings Name=UTWorldSettings\n");
 		 * 
@@ -143,8 +143,8 @@ public class T3DLevelInfo extends T3DActor {
 		 * "\tDefaultGameMode=").append(defaultGameMode).append("\n"); }
 		 * 
 		 * writeEndActor();
-		 * 
-		 * return sbf.toString();
 		 */
+
+		return "";
 	}
 }
