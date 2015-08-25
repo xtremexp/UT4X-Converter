@@ -258,7 +258,7 @@ public class T3DLevelConvertor extends Task<Object> {
 				buffer = actor.toString();
 
 				if (buffer != null) {
-					bw.write(actor.toString());
+					bw.write(buffer);
 				} else {
 					continue;
 				}
