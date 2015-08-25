@@ -168,7 +168,7 @@ public class UModelExporter extends UTPackageExtractor {
 															// we retrieve the
 															// group ...
 		} else {
-			uRessource = new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
+			uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFile, this);
 
 			if (isMaterial) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));

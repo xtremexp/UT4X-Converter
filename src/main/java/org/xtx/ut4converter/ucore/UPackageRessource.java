@@ -185,10 +185,11 @@ public class UPackageRessource {
 	 * @param exportedFile
 	 * @param extractor
 	 */
-	public UPackageRessource(String fullName, UPackage uPackage, File exportedFile, UTPackageExtractor extractor) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, UPackage uPackage, File exportedFile, UTPackageExtractor extractor) {
 
 		parseNameAndGroup(fullName);
 
+		this.mapConverter = mapConverter;
 		this.exportInfo = new ExportInfo(exportedFile, extractor);
 
 		this.unrealPackage = uPackage;

@@ -83,7 +83,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 			// uRessource.parseNameAndGroup(ressourceName); // for texture db
 			// that don't have group we retrieve the group ...
 		} else {
-			new UPackageRessource(name, unrealPackage, exportedFile, this);
+			new UPackageRessource(mapConverter, name, unrealPackage, exportedFile, this);
 		}
 	}
 

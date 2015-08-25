@@ -441,7 +441,7 @@ public final class UCCExporter extends UTPackageExtractor {
 																		// group
 																		// ...
 					} else {
-						UPackageRessource r = new UPackageRessource(ressourceName, unrealPackage, exportedFile, this);
+						UPackageRessource r = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFile, this);
 					}
 				}
 			}
