@@ -33,10 +33,10 @@ import org.xtx.ut4converter.tools.TextureFormat;
  * @author XtremeXp
  */
 public class UPackageRessource {
-	
+
 	/**
-	 * Reference to map converter 
-	 * to know if this ressource should be converted or not ...
+	 * Reference to map converter to know if this ressource should be converted
+	 * or not ...
 	 */
 	MapConverter mapConverter;
 
@@ -170,6 +170,7 @@ public class UPackageRessource {
 
 		parseNameAndGroup(fullName);
 
+		this.mapConverter = mapConverter;
 		this.type = ressourceType;
 		unrealPackage = uPackage;
 		unrealPackage.addRessource(this);
@@ -206,10 +207,11 @@ public class UPackageRessource {
 		}
 
 		try {
-			//FIXME this part is sloooow specially if large textures (about 1s/tex which may take a while for a whole map!)
+			// FIXME this part is sloooow specially if large textures (about
+			// 1s/tex which may take a while for a whole map!)
 			this.textureDimensions = ImageUtils.getTextureDimensions(exportInfo.getExportedFile());
-			
-			if(exportInfo.getExportedFile() != null && this.textureDimensions != null){
+
+			if (exportInfo.getExportedFile() != null && this.textureDimensions != null) {
 				mapConverter.getLogger().log(Level.FINE, exportInfo.getExportedFile().getName() + " dimension read: " + this.textureDimensions.toString());
 			}
 		} catch (Exception e) {
