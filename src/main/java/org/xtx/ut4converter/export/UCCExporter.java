@@ -236,7 +236,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		UPackageRessource t3dRessource = new UPackageRessource(unrealMap.getAbsolutePath(), Type.LEVEL, mapConverter.getInputGame(), true);
+		UPackageRessource t3dRessource = new UPackageRessource(mapConverter, unrealMap.getAbsolutePath(), Type.LEVEL, mapConverter.getInputGame(), true);
 		UCCExporter ucE = new UCCExporter(mapConverter);
 
 		Set<File> files = ucE.extract(t3dRessource, false);

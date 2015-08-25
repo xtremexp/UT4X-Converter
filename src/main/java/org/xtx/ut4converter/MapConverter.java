@@ -877,14 +877,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 			// Need to create one
 			else {
-				return new UPackageRessource(fullRessourceName, type, getInputGame(), unrealPackage, true);
+				return new UPackageRessource(this, fullRessourceName, type, getInputGame(), unrealPackage, true);
 			}
 		}
 
 		else {
 
 			// need to create one (unreal package info is auto-created)
-			UPackageRessource upRessource = new UPackageRessource(fullRessourceName, type, getInputGame(), true);
+			UPackageRessource upRessource = new UPackageRessource(this, fullRessourceName, type, getInputGame(), true);
 			mapPackages.put(packageName, upRessource.getUnrealPackage());
 			return upRessource;
 		}

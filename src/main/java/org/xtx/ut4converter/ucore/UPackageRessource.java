@@ -33,6 +33,12 @@ import org.xtx.ut4converter.tools.TextureFormat;
  * @author XtremeXp
  */
 public class UPackageRessource {
+	
+	/**
+	 * Reference to map converter 
+	 * to know if this ressource should be converted or not ...
+	 */
+	MapConverter mapConverter;
 
 	/**
 	 * Unreal Package this ressource belongs to
@@ -125,8 +131,9 @@ public class UPackageRessource {
 	 * @param isUsedInMap
 	 *            if <code>true</code> means ressource is being used
 	 */
-	public UPackageRessource(String fullName, Type type, UTGame game, boolean isUsedInMap) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, Type type, UTGame game, boolean isUsedInMap) {
 
+		this.mapConverter = mapConverter;
 		String s[] = fullName.split("\\.");
 
 		// TODO handle brush polygon texture info
@@ -159,7 +166,7 @@ public class UPackageRessource {
 	 * @param isUsedInMap
 	 *            <code>true<code> if this ressource is used in map that is being converted
 	 */
-	public UPackageRessource(String fullName, Type ressourceType, UTGame game, UPackage uPackage, boolean isUsedInMap) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, Type ressourceType, UTGame game, UPackage uPackage, boolean isUsedInMap) {
 
 		parseNameAndGroup(fullName);
 
@@ -199,9 +206,14 @@ public class UPackageRessource {
 		}
 
 		try {
+			//FIXME this part is sloooow specially if large textures (about 1s/tex which may take a while for a whole map!)
 			this.textureDimensions = ImageUtils.getTextureDimensions(exportInfo.getExportedFile());
+			
+			if(exportInfo.getExportedFile() != null && this.textureDimensions != null){
+				mapConverter.getLogger().log(Level.FINE, exportInfo.getExportedFile().getName() + " dimension read: " + this.textureDimensions.toString());
+			}
 		} catch (Exception e) {
-			Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, e.getMessage());
+			mapConverter.getLogger().log(Level.SEVERE, e.getMessage());
 		}
 	}
 
@@ -464,7 +476,7 @@ public class UPackageRessource {
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFile(), tempFile);
 				return tempFile;
 			} catch (IOException ex) {
-				Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);
+				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
 
@@ -483,7 +495,7 @@ public class UPackageRessource {
 				tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
 				return tempFile;
 			} catch (IOException ex) {
-				Logger.getLogger(UPackageRessource.class.getName()).log(Level.SEVERE, null, ex);
+				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
 
