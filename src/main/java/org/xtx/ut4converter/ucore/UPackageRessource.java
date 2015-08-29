@@ -304,12 +304,14 @@ public class UPackageRessource {
 		String suffix = "";
 
 		if (type == Type.SOUND) {
-			if (mapConverter.isTo(UnrealEngine.UE3)) {
+			// UE4 can handle both cue or normal sounds
+			// but better use cue since lift sounds need volume attenuation
+			// depending on player distance ("AttenuationSettings=Attenuation_Lifts")
+			if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 				// beware UT3 needs cue for AmbientSound but not for
 				// AmbientSoundSimple actor
 				suffix = "_Cue";
 			}
-			// UE4 handles both wave and cue sounds for AmbientSound actor
 		}
 
 		else if (type == Type.TEXTURE) {
