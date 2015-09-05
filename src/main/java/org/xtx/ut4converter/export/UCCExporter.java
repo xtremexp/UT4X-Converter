@@ -90,17 +90,17 @@ public final class UCCExporter extends UTPackageExtractor {
 	public static enum UccOptions {
 
 		UNKNOWN("UNKNOWN"), // fake option so will make crash export
-		LEVEL_T3D("Level t3d"), SOUND_WAV("Sound wav"), MUSIC_S3M("Music s3m"), // todo
-																				// check
-																				// might
-																				// not
-																				// always
-																				// be
-																				// s3m
-																				// but
-																				// it
-																				// or
-																				// xm
+		LEVEL_T3D("Level t3d"), SOUND_WAV("Sound wav"), MUSIC_XM("Music xm"), MUSIC_S3M("Music s3m"), // todo
+		// check
+		// might
+		// not
+		// always
+		// be
+		// s3m
+		// but
+		// it
+		// or
+		// xm
 		TEXTURE_DDS("Texture dds"), TEXTURE_BMP("Texture bmp"), // mainly for
 																// terrain alpha
 																// map

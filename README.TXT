@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.5-DEV
+- Version: 0.5
 - Author: XtremeXp
-- Release Date: 06/06/2015 (0.4)
+- Release Date: 05/09/2015 (0.5)
 - Download latest released version at: http://utforums.epicgames.com/showthread.php?t=588848
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -39,8 +39,8 @@ Here is the conversion table for all ut games about what the program can convert
 | Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
 | Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |  No Support  | No Support |       -      |  MEDIUM |
 | UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |   NoSupport  | No Support |       +      |  MEDIUM |
-| UT3            |    ++   |     +     |    +   |    No    |   N/A  |   NoSupport  | No Support |       +      |   BAD   |
+| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |  No Support  | No Support |       +      |  MEDIUM |
+| UT3            |    ++   |     +     |    +   |    No    |   N/A  |  No Support  | No Support |       +      |   BAD   |
 
 
 Note:
@@ -102,7 +102,7 @@ In UT4 Editor:
 - Import sounds
 -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
 -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
--- Delete the .
+-- After import, right click on all sounds imported in editor and choose "create cue"
 -- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
 (e.g:  "AmbOutside_Looping_waves4")
 
@@ -127,11 +127,12 @@ Note:
 
 Limitations / Issues
 ------------------------------
+- [UT99] Some textures may not be correctly aligned
 - Extraction of sound ressources only works with Windows
 - Movers are replaced with lift actor which won't work correctly for doors
 - Since Unreal Engine 4 does not support sheet brushes (e.g: flat lava/water surface, ...) , and as the converter
 does not remove all of them, some "bsp holes" may appear (in that case try to find out all these brushes
-and remove them until bsp holes dissapear)
+and remove them until bsp holes disapear)
 
 License
 ------------------------------
@@ -174,11 +175,24 @@ Libraries / Technologies used
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
 
 Converter interfaces with these external tools:
-- Nconvert by Pierre-E Gougelet - 6.70
-- UModel by Konstantin Nosov
+- Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
+- UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
 
 History
 ------------------------------
+- 0.5 - 05/09/2015:
+* [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
+(https://trello.com/b/Jtvc23S1/uta-resurgence)
+* [UT99] Replaced SmokeGenerator with Blueprint_Effect_Smoke_C blueprint actor
+* Fixed never-ending (stuck) conversion in some rare-cases
+* Fixed brush of movers no longer being converted (<actorname>_brush actors)
+* Fixed duplicated mover actors
+* Now need to create Cue assets for sounds to be working
+(after sound files import select them in UE4 Editor asset browser then "Create CUE").
+
+- 0.4.1 - 07/06/2015:
+* Fixed untextured surfaces if texture coming from level package
+
 - 0.4.0 - 06/06/2015:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
   (note Unreal 2/UT2003/UT2004/UT3 conversion is pretty bad for some maps
