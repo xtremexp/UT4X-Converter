@@ -44,7 +44,11 @@ public class Installation {
 	public static boolean isInstalled(Class clazz) {
 		try {
 			URL classUrl = getClassURL(clazz);
-
+			
+			if(classUrl == null){
+				return false;
+			}
+			
 			return "jar".equals(classUrl.getProtocol());
 		} catch (Exception ex) {
 			// fall through
