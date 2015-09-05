@@ -163,7 +163,7 @@ public class SupportedClasses {
 		putUtClass(T3DASInfo.class, "AssaultInfo");
 
 		// TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
-		putUtClass(T3DTeleporter.class, "Teleporter", "VisibleTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
+		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
 		putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
 		putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");

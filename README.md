@@ -78,7 +78,7 @@ Install umodel http://www.gildor.org/en/projects/umodel
 Decompress the ZIP archive to any folder of your choice.
 Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
-If not, make sure you have installed latest Java tecknology version at www.java.com
+If not, make sure you have installed latest Java technology version at www.java.com
 and create some "run.bat" batch file with notepad that you will save in the 
 program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
@@ -125,11 +125,16 @@ Note:
  The converter does remove most of them, but not all of them yet.
 
 
-Limitations / Issues
+Limitations / Issues / Troubleshooting
 ------------------------------
 - [UT99] Some textures may not be correctly aligned
-- Extraction of sound ressources only works with Windows
-- Movers are replaced with lift actor which won't work correctly for doors
+- Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
+containing these actors (UE4-side bug)
+- Level may appear too dark sometimes. In this case add a "PostProcessVolume", "Unbound" it
+and set a cube ambient map texture.
+- Extraction of sound resources only works with Windows
+- Movers are replaced with lift actor which may not suit for all kind of movers (such as doors, switches, ...)
+You may use the "Door" actor or "Matinee" actor (not auto-converted yet)
 - Since Unreal Engine 4 does not support sheet brushes (e.g: flat lava/water surface, ...) , and as the converter
 does not remove all of them, some "bsp holes" may appear (in that case try to find out all these brushes
 and remove them until bsp holes disapear)
@@ -155,7 +160,7 @@ With Netbeans IDE:
 - Click "Next" and select "Master" to get latest code (you may select other branches if you want to)
 - Click "Finish" and wait while project is being imported.
 Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
-- Right-Click on project and press "Run". At first time it might take several minutes to download required librairies.
+- Right-Click on project and press "Run". At first time it might take several minutes to download required libraries.
 
 With Eclipse IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -184,6 +189,7 @@ History
 * [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
 (https://trello.com/b/Jtvc23S1/uta-resurgence)
 * [UT99] Replaced SmokeGenerator with Blueprint_Effect_Smoke_C blueprint actor
+* Added 2.1875 scale factor in conversion settings
 * Fixed never-ending (stuck) conversion in some rare-cases
 * Fixed brush of movers no longer being converted (<actorname>_brush actors)
 * Fixed duplicated mover actors
