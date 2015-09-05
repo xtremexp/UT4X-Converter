@@ -1,5 +1,7 @@
 package org.xtx.ut4converter.ucore.ue4;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.T3DUE2Terrain;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
@@ -9,10 +11,10 @@ import org.xtx.ut4converter.t3d.iface.T3D;
  * @author XtremeXp
  *
  */
-public class VisibilityComponent implements T3D {
+public class VisibilityComponent extends T3DObject implements T3D {
 
-	public VisibilityComponent(T3DUE2Terrain ue2Terrain) {
-
+	public VisibilityComponent(MapConverter mc, T3DUE2Terrain ue2Terrain) {
+		super(mc);
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class VisibilityComponent implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 		// TODO Auto-generated method stub
 		return null;
 	}

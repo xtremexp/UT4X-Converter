@@ -65,7 +65,7 @@ public class T3DNote extends T3DActor {
 		sbf.append(IDT).append("\tRootComponent=SceneComp\n");
 
 		writeEndActor();
-
+		
 		return sbf.toString();
 	}
 

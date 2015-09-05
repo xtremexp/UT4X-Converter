@@ -11,7 +11,7 @@ import org.xtx.ut4converter.t3d.T3DUtils;
 public class InterpTrackMove extends InterpTrack {
 
 	public InterpTrackMove(MapConverter mc) {
-		super(mc);
+		super(mc, "InterpTrackMove");
 		// TODO Auto-generated constructor stub
 	}
 
@@ -99,17 +99,17 @@ public class InterpTrackMove extends InterpTrack {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
-		T3DUtils.writeBeginObj(sb, name, "\t");
+		T3DUtils.writeBeginObj(sb, name, prefix + "\t\t");
 
-		T3DUtils.writeLine(sb, "PosTrack", posTrack, "\t");
-		T3DUtils.writeLine(sb, "EulerTrack", eulerTrack, "\t");
-		T3DUtils.writeLine(sb, "LookupTrack", lookupTrack, "\t");
+		T3DUtils.writeLine(sb, "PosTrack", posTrack, prefix + "\t");
+		T3DUtils.writeLine(sb, "EulerTrack", eulerTrack, prefix + "\t");
+		T3DUtils.writeLine(sb, "LookupTrack", lookupTrack, prefix + "\t");
 
-		T3DUtils.writeEndObj(sb, "\t");
+		T3DUtils.writeEndObj(sb, prefix + "\t\t");
 
-		return sb.toString();
+		return "";
 	}
 
 	@Override
@@ -117,4 +117,19 @@ public class InterpTrackMove extends InterpTrack {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void setPosTrack(InterpCurve posTrack) {
+		this.posTrack = posTrack;
+	}
+
+	public void setEulerTrack(InterpCurve eulerTrack) {
+		this.eulerTrack = eulerTrack;
+	}
+
+	public void setLookupTrack(InterpCurve lookupTrack) {
+		this.lookupTrack = lookupTrack;
+	}
+	
+	
+	
 }

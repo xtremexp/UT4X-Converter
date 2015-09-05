@@ -37,7 +37,7 @@ public class InterpGroupInst extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 		// Group=InterpGroup'InterpData_0.InterpGroup_2'
 		T3DUtils.writeLine(sb, "Group", group.getInterpData().getName() + "." + group.getName(), "\t");
 		T3DUtils.writeLine(sb, "GroupActor", groupActor.getLevelReference(), "\t");

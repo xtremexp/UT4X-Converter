@@ -7,7 +7,7 @@ import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
  * 
- *  'very light' java port of InterpCurvePoint.h
+ * 'very light' java port of InterpCurvePoint.h
  *
  */
 public class InterpCurvePoint implements T3D {
@@ -74,21 +74,37 @@ public class InterpCurvePoint implements T3D {
 	/**
 	 * How the actor should move between previous and this point
 	 */
-	EInterpCurveMode interpMode;
+	EInterpCurveMode interpMode = EInterpCurveMode.CIM_CurveAutoClamped;
+
+	public InterpCurvePoint() {
+
+	}
+
+	/**
+	 * 
+	 * @param time
+	 *            Time the actor should be at position
+	 * @param positionAtTime
+	 *            Position of actor at time set
+	 */
+	public InterpCurvePoint(Double time, Vector3d positionAtTime) {
+		this.inVal = time;
+		this.outVal = positionAtTime;
+	}
 
 	@Override
 	public void convert() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void scale(Double newScale) {
-		
-		if(outVal != null){
+
+		if (outVal != null) {
 			outVal.scale(newScale);
 		}
-		
+
 	}
 
 	@Override
@@ -98,12 +114,12 @@ public class InterpCurvePoint implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
-		T3DUtils.write(sb, "InVal", inVal);
+		T3DUtils.write(sb, "InVal", inVal, prefix);
 		T3DUtils.write(sb, "OutVal", outVal, ",");
 		T3DUtils.write(sb, "InterpMode", interpMode, ",");
-		
+
 		return sb.toString();
 	}
 

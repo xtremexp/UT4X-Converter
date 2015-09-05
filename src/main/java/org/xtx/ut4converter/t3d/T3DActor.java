@@ -115,7 +115,7 @@ public abstract class T3DActor extends T3DObject {
 	 * Only used bu UE4 (and UE3?)
 	 * Contains location and rotation data of actor
 	 */
-	SceneComponent sceneComponent;
+	public SceneComponent sceneComponent;
 
 	/**
 	 * Force these lines to be written (not used yet for each subclass of this
@@ -139,6 +139,13 @@ public abstract class T3DActor extends T3DObject {
 	 * t3d converted stuff.
 	 */
 	protected List<T3DActor> children = new ArrayList<>();
+	
+	/**
+	 * Used to write actor TODO make global StringBuilder that we would 'reset'
+	 * after write of each actor (avoiding creating one for each single actor /
+	 * perf issues)
+	 */
+	protected StringBuilder sbf;
 
 	String currentSubObjectClass;
 	String currentSubObjectName;
@@ -187,6 +194,7 @@ public abstract class T3DActor extends T3DObject {
 
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
+		this.sbf = new StringBuilder();
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {
@@ -266,6 +274,12 @@ public abstract class T3DActor extends T3DObject {
 		writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
 	}
 
+	public void writeLocRotSceneComponent(String prefix){
+		sceneComponent.writeBeginObj(sbf, prefix);
+		writeLocRotAndScale();
+		sceneComponent.writeEndObj(sbf, prefix);
+	}
+	
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 * 
@@ -612,5 +626,4 @@ public abstract class T3DActor extends T3DObject {
 		return sceneComponent;
 	}
 
-	
 }

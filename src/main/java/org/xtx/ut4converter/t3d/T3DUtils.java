@@ -390,7 +390,7 @@ public class T3DUtils {
 		}
 
 		if (propValue instanceof T3D) {
-			sb.append(propName).append(EQUAL).append(((T3D) propValue).toT3d(sb));
+			sb.append(propName).append(EQUAL).append(((T3D) propValue).toT3d(sb, null));
 		} else if (propValue instanceof List) {
 
 			sb.append("(");
@@ -475,7 +475,7 @@ public class T3DUtils {
 			sb.append(prefix);
 		}
 
-		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getName()).append("'").append(t3dObj.getName()).append("'\n");
+		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getSimpleName()).append("'").append(t3dObj.getName()).append("'\n");
 	}
 
 }

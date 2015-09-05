@@ -27,6 +27,7 @@ public class SceneComponent extends T3DObject {
 
 	public SceneComponent(MapConverter mc) {
 		super(mc);
+		this.name = "SceneComp";
 	}
 
 	public Vector3d getRelativeLocation() {

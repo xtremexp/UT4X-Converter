@@ -12,7 +12,7 @@ public class InterpData extends T3DObject implements T3D {
 
 	public InterpData(MapConverter mc) {
 		super(mc);
-		
+
 		interpCurveEdSetup = new InterpCurveEdSetup(mc);
 	}
 
@@ -32,32 +32,12 @@ public class InterpData extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
-
-		if(interpCurveEdSetup != null){
-			interpCurveEdSetup.toT3d(sb);
-		}
-		
-		if(interpGroups != null && !interpGroups.isEmpty()){
-			for(InterpGroup group : interpGroups){
-				group.toT3d(sb);
-			}
-		}
-		
-		T3DUtils.writeClassRef(sb, "CurveEdSetup", interpCurveEdSetup, "\t");
-		T3DUtils.writeClassRef(sb, "InterpGroups", interpGroups, "\t");
-		T3DUtils.writeLine(sb, "SelectedFilter", "InterpFilter'FilterAll'", "\t");
-
-		return sb.toString();
-	}
-
-	@Override
 	public void scale(Double newScale) {
 		// TODO Auto-generated method stub
 	}
 
 	public void addGroup(InterpGroup group) {
-		
+
 		if (interpGroups == null) {
 			interpGroups = new ArrayList<>();
 		}
@@ -73,6 +53,25 @@ public class InterpData extends T3DObject implements T3D {
 	public List<InterpGroup> getInterpGroups() {
 		return interpGroups;
 	}
-	
-	
+
+	@Override
+	public String toT3d(StringBuilder sb, String prefix) {
+
+		if (interpCurveEdSetup != null) {
+			interpCurveEdSetup.toT3d(sb, prefix);
+		}
+
+		if (interpGroups != null && !interpGroups.isEmpty()) {
+			for (InterpGroup group : interpGroups) {
+				group.toT3d(sb, prefix);
+			}
+		}
+
+		T3DUtils.writeClassRef(sb, "CurveEdSetup", interpCurveEdSetup, prefix + "\t");
+		T3DUtils.writeClassRef(sb, "InterpGroups", interpGroups, prefix + "\t");
+		T3DUtils.writeLine(sb, "SelectedFilter", "InterpFilter'FilterAll'", prefix + "\t");
+
+		return sb.toString();
+	}
+
 }

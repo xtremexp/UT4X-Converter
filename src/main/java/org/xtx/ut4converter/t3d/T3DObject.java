@@ -31,13 +31,6 @@ public abstract class T3DObject {
 	 */
 	UTGame game = UTGame.NONE;
 
-	/**
-	 * Used to write actor TODO make global StringBuilder that we would 'reset'
-	 * after write of each actor (avoiding creating one for each single actor /
-	 * perf issues)
-	 */
-	protected StringBuilder sbf;
-
 	protected Logger logger;
 
 	/**
@@ -54,11 +47,11 @@ public abstract class T3DObject {
 	public T3DObject(MapConverter mc, String t3dClass) {
 		initialise(mc);
 		this.t3dClass = t3dClass;
+		this.name = this.t3dClass + "_0";
 	}
 
 	private void initialise(MapConverter mc) {
 		this.mapConverter = mc;
-		this.sbf = new StringBuilder();
 		this.logger = mc.getLogger();
 		this.game = mapConverter.getInputGame();
 	}
@@ -75,31 +68,41 @@ public abstract class T3DObject {
 		return t3dClass;
 	}
 
-	public void writeBeginObj(String prefix) {
+
+	public void writeBeginObj(StringBuilder sbf, String prefix) {
 
 		if (prefix != null) {
 			sbf.append(prefix);
 		}
 
-		sbf.append("Begin Object Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
+		if (this instanceof T3DActor) {
+			sbf.append("Begin Actor Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
+		} else {
+			sbf.append("Begin Object Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
+		}
 	}
 
-	public void setSbf(StringBuilder sbf) {
-		this.sbf = sbf;
-	}
+	public void writeEndObj(StringBuilder sbf, String prefix) {
 
-	public StringBuilder getWriter() {
-		return sbf;
+		if (prefix != null) {
+			sbf.append(prefix);
+		}
+
+		if (this instanceof T3DActor) {
+			sbf.append("End Actor\n");
+		} else {
+			sbf.append("End Object\n");
+		}
 	}
 
 	/**
 	 * Write sub-objects of this object if not-null and of class T3DObject
-	 * (unreal objects)
+	 * (unreal objects). Only write "public" fields in class not null
 	 * 
 	 * @param sb
 	 * @param prefix
 	 */
-	public void writeObjDefinition(String prefix) {
+	public void writeObjDefinition(StringBuilder sbf, String prefix) {
 
 		for (Field f : getClass().getFields()) {
 
@@ -126,8 +129,8 @@ public abstract class T3DObject {
 				}
 
 				if (t3dObj != null) {
-					t3dObj.writeBeginObj(prefix);
-					t3dObj.writeObjDefinition(prefix + "\t");
+					t3dObj.writeBeginObj(sbf, prefix);
+					t3dObj.writeObjDefinition(sbf, prefix + "\t");
 					T3DUtils.writeEndObj(sbf, prefix);
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e1) {

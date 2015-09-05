@@ -61,26 +61,25 @@ public class InterpGroup extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
 		if (interpTracks != null && !interpTracks.isEmpty()) {
 			for (InterpTrack track : interpTracks) {
-				track.toT3d(sb);
+				track.toT3d(sb, prefix);
 			}
 
 			int idx = 0;
 
 			for (InterpTrack track : interpTracks) {
 				// InterpTracks(0)=InterpTrackToggle'InterpTrackToggle_0'
-				sb.append("\tInterpTracks(").append(idx).append(")=").append(track.getClass().getName()).append("'").append(track.getName()).append("'\n");
+				sb.append(prefix + IDT + "InterpTracks(").append(idx).append(")=").append(track.getClass().getSimpleName()).append("'").append(track.getName()).append("'\n");
 			}
 
-			T3DUtils.writeLine(sb, "GroupName", groupName, "\t");
-			T3DUtils.writeLine(sb, "GroupColor", groupColor, "\t");
+			T3DUtils.writeLine(sb, "GroupName", groupName, prefix + IDT);
+			T3DUtils.writeLine(sb, "GroupColor", groupColor, prefix + IDT);
 		}
 
-		// TODO Auto-generated method stub
-		return null;
+		return sb.toString();
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class InterpGroup extends T3DObject implements T3D {
 			interpTracks = new ArrayList<>();
 		}
 
-		//track.setName(track.getName() + "_" + interpTracks.size());
+		// track.setName(track.getName() + "_" + interpTracks.size());
 		interpTracks.add(track);
 	}
 

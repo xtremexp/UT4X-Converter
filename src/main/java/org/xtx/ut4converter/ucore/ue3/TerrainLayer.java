@@ -5,13 +5,19 @@
  */
 package org.xtx.ut4converter.ucore.ue3;
 
-import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DObject;
 
 /**
  *
  * @author XtremeXp
  */
-public class TerrainLayer implements T3D {
+public class TerrainLayer extends T3DObject {
+
+	public TerrainLayer(MapConverter mc) {
+		super(mc);
+		// TODO Auto-generated constructor stub
+	}
 
 	String name;
 
@@ -21,75 +27,5 @@ public class TerrainLayer implements T3D {
 	String terrainLayerSetup;
 	boolean highlighted;
 	boolean wireframeHighlighted;
-
-	@Override
-	public void convert() {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
-
-	@Override
-	public void scale(Double newScale) {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
-
-	@Override
-	public boolean analyseT3DData(String line) {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
-
-	@Override
-	public String toT3d(StringBuilder sb) {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
-
-	@Override
-	public String getName() {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
-	}
 
 }

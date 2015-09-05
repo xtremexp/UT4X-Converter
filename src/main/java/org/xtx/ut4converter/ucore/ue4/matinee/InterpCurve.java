@@ -1,11 +1,21 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Vector3d;
+
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-public class InterpCurve implements T3D {
+public class InterpCurve extends T3DObject implements T3D {
+
+	public InterpCurve(MapConverter mc) {
+		super(mc);
+		// TODO Auto-generated constructor stub
+	}
 
 	List<InterpCurvePoint> points;
 
@@ -33,11 +43,11 @@ public class InterpCurve implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
-		T3DUtils.write(sb, "Points", points);
+		T3DUtils.write(sb, "Points", points, prefix);
 
-		return sb.toString();
+		return "";
 	}
 
 	@Override
@@ -45,4 +55,23 @@ public class InterpCurve implements T3D {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void addPoint(Double time, Vector3d location) {
+
+		if (points == null) {
+			points = new ArrayList<>();
+		}
+
+		points.add(new InterpCurvePoint(time, location));
+	}
+
+	public void addPoint(InterpCurvePoint point) {
+
+		if (points == null) {
+			points = new ArrayList<>();
+		}
+
+		points.add(point);
+	}
+
 }

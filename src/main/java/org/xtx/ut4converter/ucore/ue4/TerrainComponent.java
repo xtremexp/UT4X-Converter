@@ -1,8 +1,10 @@
 package org.xtx.ut4converter.ucore.ue4;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-public abstract class TerrainComponent implements T3D {
+public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	int sectionBaseX;
 	int sectionBaseY;
@@ -13,7 +15,9 @@ public abstract class TerrainComponent implements T3D {
 
 	int numComponent;
 
-	public TerrainComponent(int numComponent, int sizeQuads) {
+	public TerrainComponent(MapConverter mc, int numComponent, int sizeQuads) {
+		super(mc);
+
 		this.numComponent = numComponent;
 		this.sizeQuads = sizeQuads;
 	}
@@ -61,7 +65,7 @@ public abstract class TerrainComponent implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 		// TODO Auto-generated method stub
 		return null;
 	}

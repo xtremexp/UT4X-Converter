@@ -187,7 +187,7 @@ public class TerrainLayer implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 		throw new UnsupportedOperationException("Not supported yet."); // To
 																		// change
 																		// body

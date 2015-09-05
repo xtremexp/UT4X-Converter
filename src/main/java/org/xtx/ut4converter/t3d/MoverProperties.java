@@ -7,9 +7,13 @@ package org.xtx.ut4converter.t3d;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.export.UTPackageExtractor;
+
 import static org.xtx.ut4converter.t3d.T3DActor.IDT;
+
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -214,11 +218,6 @@ public class MoverProperties implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
-		return toString(sb);
-	}
-
-	@Override
 	public String getName() {
 		return mover.name;
 	}
@@ -270,6 +269,9 @@ public class MoverProperties implements T3D {
 	public T3DActor getMover() {
 		return mover;
 	}
-	
-	
+
+	@Override
+	public String toT3d(StringBuilder sb, String prefix) {
+		return toString(sb);
+	}
 }

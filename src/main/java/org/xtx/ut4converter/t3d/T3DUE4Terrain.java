@@ -113,7 +113,7 @@ public class T3DUE4Terrain extends T3DActor {
 					localHmXIdx = 0;
 					localHmYIdx = 0;
 
-					collisionComponent = new LandscapeCollisionComponent(numComponent, componentSizeQuads);
+					collisionComponent = new LandscapeCollisionComponent(mapConverter, numComponent, componentSizeQuads);
 					localHeightCollisionData = new int[componentSizeQuads + 1][componentSizeQuads + 1];
 
 					collisionComponent.setSectionBaseX(compIdxX);
@@ -169,7 +169,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 			for (int y = 0; y < collisionComponents[0].length; y++) {
 				LandscapeCollisionComponent colComponent = collisionComponents[x][y];
-				landscapeComponents[x][y] = new LandscapeComponent(colComponent, true);
+				landscapeComponents[x][y] = new LandscapeComponent(mapConverter, colComponent, true);
 
 				colComponent.setRenderComponent(landscapeComponents[x][y]);
 				landscapeComponents[x][y].setColisionComponent(colComponent);
@@ -307,13 +307,13 @@ public class T3DUE4Terrain extends T3DActor {
 
 		for (int x = 0; x < collisionComponents.length; x++) {
 			for (int y = 0; y < collisionComponents[0].length; y++) {
-				collisionComponents[x][y].toT3d(sbf);
+				collisionComponents[x][y].toT3d(sbf, null);
 			}
 		}
 
 		for (int x = 0; x < landscapeComponents.length; x++) {
 			for (int y = 0; y < landscapeComponents[0].length; y++) {
-				landscapeComponents[x][y].toT3d(sbf);
+				landscapeComponents[x][y].toT3d(sbf, null);
 			}
 		}
 

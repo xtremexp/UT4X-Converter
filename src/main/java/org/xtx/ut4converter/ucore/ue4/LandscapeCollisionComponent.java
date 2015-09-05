@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.vecmath.Vector3d;
 
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
@@ -34,9 +35,9 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 	Vector3d relativeLocation;
 
-	public LandscapeCollisionComponent(int numComponent, int sizeQuads) {
+	public LandscapeCollisionComponent(MapConverter mc, int numComponent, int sizeQuads) {
 
-		super(numComponent, sizeQuads);
+		super(mc, numComponent, sizeQuads);
 		collisionScale = 1f;
 	}
 
@@ -99,7 +100,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
 		String base = "\t\t";
 

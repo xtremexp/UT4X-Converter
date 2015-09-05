@@ -8,6 +8,7 @@ package org.xtx.ut4converter.ucore.ue4;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
 
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 /**
@@ -37,14 +38,14 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	 * 80800080x = 2155872384 = 256 + (32768 * 65536)
 	 */
 
-	public LandscapeComponent(int numComponent, int sizeQuads) {
-		super(numComponent, sizeQuads);
+	public LandscapeComponent(MapConverter mc, int numComponent, int sizeQuads) {
+		super(mc, numComponent, sizeQuads);
 		initialise();
 	}
 
-	public LandscapeComponent(LandscapeCollisionComponent colComp, boolean isNotUe4Scale) {
+	public LandscapeComponent(MapConverter mc, LandscapeCollisionComponent colComp, boolean isNotUe4Scale) {
 
-		super(colComp.numComponent, colComp.getSizeQuads());
+		super(mc, colComp.numComponent, colComp.getSizeQuads());
 
 		this.subsectionSizeQuads = colComp.getSizeQuads();
 		this.heightData = new int[colComp.getHeightData().length][colComp.getHeightData()[0].length];
@@ -143,7 +144,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb) {
+	public String toT3d(StringBuilder sb, String prefix) {
 
 		String base = "\t\t";
 

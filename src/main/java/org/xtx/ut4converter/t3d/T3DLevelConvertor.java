@@ -259,8 +259,6 @@ public class T3DLevelConvertor extends Task<Object> {
 
 				if (buffer != null) {
 					bw.write(buffer);
-				} else {
-					continue;
 				}
 			}
 

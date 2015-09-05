@@ -210,7 +210,7 @@ public class T3DBrush extends T3DSound {
 		}
 		
 		else if(line.startsWith("Begin Brush") && line.contains("Name=")){
-			modelName = line.split("Name=")[1].replaceAll("\"", "");
+			//modelName = line.split("Name=")[1].replaceAll("\"", "");
 		}
 
 		else {

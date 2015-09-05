@@ -61,7 +61,8 @@ public class T3DASInfo extends T3DActor {
 		sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
 
 		writeEndActor();
-
+		
 		return sbf.toString();
 	}
+
 }
