@@ -90,8 +90,8 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<String> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
-	@FXML
-	private Label relativeUtMapPathLbl;
+	//@FXML
+	//private Label relativeUtMapPathLbl;
 	@FXML
 	private CheckBox debugLogLevel;
 	@FXML
@@ -155,7 +155,7 @@ public class ConversionSettingsController implements Initializable {
 
 		mapConverter = new MapConverter(inputGame, outputGame);
 
-		relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
+		//relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
 		disableConversionType();
 
 		initConvCheckBoxes();
