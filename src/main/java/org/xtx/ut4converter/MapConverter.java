@@ -14,13 +14,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 
 import javax.imageio.spi.IIORegistry;
 import javax.xml.bind.JAXBException;
@@ -480,6 +484,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		updateProgress(100, 100);
 		updateMessage("All done!");
 		logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
+		
+		UIUtils.openExplorer(getOutPath().toFile());
 		
 		showInstructions();
 	}
