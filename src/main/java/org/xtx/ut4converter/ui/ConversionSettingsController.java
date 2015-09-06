@@ -208,8 +208,8 @@ public class ConversionSettingsController implements Initializable {
 
 		// SM converter not yet operational
 		// delete once operational
-		mapConverter.setConvertStaticMeshes(false);
-		convSmCheckBox.setDisable(true);
+		//mapConverter.setConvertStaticMeshes(false);
+		//convSmCheckBox.setDisable(true);
 	}
 
 	/**

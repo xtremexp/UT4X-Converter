@@ -126,7 +126,7 @@ public class SupportedClasses {
 				"LoopMover", "InterpActor");
 
 		putUtClass(T3DPlayerStart.class, "PlayerStart");
-		// putUtClass(T3DStaticMesh.class, "StaticMeshActor");
+		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
 
 		for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
 
