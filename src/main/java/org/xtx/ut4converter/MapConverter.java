@@ -39,6 +39,7 @@ import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.UIUtils;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -556,6 +557,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 		}
 
+		// always keep original .t3d file
+		Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
+				
 		updateMessage("Deleting temporary files");
 
 		org.apache.commons.io.FileUtils.deleteQuietly(getTempExportFolder());
