@@ -7,7 +7,9 @@ package org.xtx.ut4converter.t3d;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
@@ -59,8 +61,17 @@ public class T3DStaticMesh extends T3DSound {
 	 */
 	public T3DStaticMesh(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
+		initialize();
 	}
 
+	/**
+	 * Set scale to 1 so will be correctly scaled up
+	 * after conversion
+	 */
+	private void initialize(){
+		scale3d = new Vector3d(new double[]{1d, 1d, 1d});
+	}
+	
 	@Override
 	public boolean analyseT3DData(String line) {
 
