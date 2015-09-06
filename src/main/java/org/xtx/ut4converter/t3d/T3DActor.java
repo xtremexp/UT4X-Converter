@@ -465,15 +465,18 @@ public abstract class T3DActor extends T3DObject {
 			// for brushes no need that since they have been transformed
 			// permanently
 			// Vertice data updated with rotation and rotation reset
+			
+			double rotFac = 1d;
+			
 			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-				rotation.x /= 360d;
-				rotation.y /= 360d;
-				rotation.z /= 360d;
+				rotFac = 360d / 65536d;
 			} else if (mapConverter.isFromUE3UE4ToUE1UE2()) {
-				rotation.x *= 360d;
-				rotation.y *= 360d;
-				rotation.z *= 360d;
+				rotFac = 65536d / 360d;
 			}
+			
+			rotation.x *= rotFac;
+			rotation.y *= rotFac;
+			rotation.z *= rotFac;
 		}
 
 		// Notify actor was converted
