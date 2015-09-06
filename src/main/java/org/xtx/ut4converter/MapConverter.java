@@ -479,6 +479,21 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		updateProgress(100, 100);
 		updateMessage("All done!");
 		logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
+		
+		showInstructions();
+	}
+	
+	/**
+	 * Add log info message to guide user
+	 * converting the map propertly
+	 */
+	private void showInstructions(){
+		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
+		logger.log(Level.INFO, "Open Unreal Editor for UT4");
+		logger.log(Level.INFO, "File -> New level -> Empty Level");
+		logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> Maps -> "+getOutMapName());
+		logger.log(Level.INFO, "Click on 'Import' button");
+		// TODO
 	}
 
 	/**
