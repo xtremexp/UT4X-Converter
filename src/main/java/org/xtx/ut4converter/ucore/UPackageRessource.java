@@ -331,6 +331,12 @@ public class UPackageRessource {
 	public String getConvertedFileName() {
 		String s[] = exportInfo.getExportedFile().getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
+		
+		// umodel does export staticmeshes as .pskx
+		// but we want rename as .psk so we can import in blender
+		if(getType() == Type.STATICMESH && "pskx".equals(currentFileExt)){
+			currentFileExt = "psk";
+		}
 
 		return getFullNameWithoutDots() + "." + currentFileExt;
 	}
