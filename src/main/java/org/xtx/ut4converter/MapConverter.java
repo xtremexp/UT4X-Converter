@@ -14,17 +14,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Alert.AlertType;
 
 import javax.imageio.spi.IIORegistry;
 import javax.xml.bind.JAXBException;
@@ -484,21 +480,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		updateProgress(100, 100);
 		updateMessage("All done!");
 		logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
-		
+
 		UIUtils.openExplorer(getOutPath().toFile());
-		
+
 		showInstructions();
 	}
-	
+
 	/**
-	 * Add log info message to guide user
-	 * converting the map propertly
+	 * Add log info message to guide user converting the map propertly
 	 */
-	private void showInstructions(){
+	private void showInstructions() {
 		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
 		logger.log(Level.INFO, "Open Unreal Editor for UT4");
 		logger.log(Level.INFO, "File -> New level -> Empty Level");
-		logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> Maps -> "+getOutMapName());
+		logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> Maps -> " + getOutMapName());
 		logger.log(Level.INFO, "Click on 'Import' button");
 		// TODO
 	}
@@ -565,7 +560,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		// always keep original .t3d file
 		Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
-				
+
 		updateMessage("Deleting temporary files");
 
 		org.apache.commons.io.FileUtils.deleteQuietly(getTempExportFolder());
@@ -902,14 +897,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 			// Need to create one
 			else {
-				return new UPackageRessource(this, fullRessourceName, type, getInputGame(), unrealPackage, true);
+				return new UPackageRessource(this, fullRessourceName, type, unrealPackage, true);
 			}
 		}
 
 		else {
 
 			// need to create one (unreal package info is auto-created)
-			UPackageRessource upRessource = new UPackageRessource(this, fullRessourceName, type, getInputGame(), true);
+			UPackageRessource upRessource = new UPackageRessource(this, fullRessourceName, type, true);
 			mapPackages.put(packageName, upRessource.getUnrealPackage());
 			return upRessource;
 		}
@@ -1061,6 +1056,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * relativeUtMapPath
+	 * 
 	 * @return /Game/Maps/<mapname>/<mapname>
 	 */
 	public String getRelativeUtMapPath() {

@@ -131,7 +131,7 @@ public class UPackageRessource {
 	 * @param isUsedInMap
 	 *            if <code>true</code> means ressource is being used
 	 */
-	public UPackageRessource(MapConverter mapConverter, String fullName, Type type, UTGame game, boolean isUsedInMap) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, Type type, boolean isUsedInMap) {
 
 		this.mapConverter = mapConverter;
 		String s[] = fullName.split("\\.");
@@ -145,7 +145,7 @@ public class UPackageRessource {
 		parseNameAndGroup(fullName);
 
 		this.type = type;
-		unrealPackage = new UPackage(packageName, type, game, this);
+		unrealPackage = new UPackage(packageName, type, mapConverter.getInputGame(), this);
 		this.isUsedInMap = isUsedInMap;
 	}
 
@@ -166,7 +166,7 @@ public class UPackageRessource {
 	 * @param isUsedInMap
 	 *            <code>true<code> if this ressource is used in map that is being converted
 	 */
-	public UPackageRessource(MapConverter mapConverter, String fullName, Type ressourceType, UTGame game, UPackage uPackage, boolean isUsedInMap) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, Type ressourceType, UPackage uPackage, boolean isUsedInMap) {
 
 		parseNameAndGroup(fullName);
 

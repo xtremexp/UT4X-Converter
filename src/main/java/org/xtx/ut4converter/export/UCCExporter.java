@@ -5,8 +5,6 @@
  */
 package org.xtx.ut4converter.export;
 
-import com.sun.istack.internal.logging.Logger;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -28,6 +26,8 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import com.sun.istack.internal.logging.Logger;
 
 /**
  * Export ressources from map such as sounds to .wav, textures to .bmp and so on
@@ -236,7 +236,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		UPackageRessource t3dRessource = new UPackageRessource(mapConverter, unrealMap.getAbsolutePath(), Type.LEVEL, mapConverter.getInputGame(), true);
+		UPackageRessource t3dRessource = new UPackageRessource(mapConverter, unrealMap.getAbsolutePath(), Type.LEVEL, true);
 		UCCExporter ucE = new UCCExporter(mapConverter);
 
 		Set<File> files = ucE.extract(t3dRessource, false);
