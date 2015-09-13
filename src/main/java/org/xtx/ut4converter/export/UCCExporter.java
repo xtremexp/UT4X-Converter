@@ -404,7 +404,7 @@ public final class UCCExporter extends UTPackageExtractor {
 
 				logger.log(Level.FINE, logLine);
 
-				if (logLine.contains("Failed")) {
+				if (logLine.contains("Failed") && !logLine.contains("Warning")) {
 					String missingpackage = logLine.split("\\'")[2];
 					logger.log(Level.SEVERE, "Impossible to export. Unreal Package " + missingpackage + " missing");
 					return exportedFiles;
