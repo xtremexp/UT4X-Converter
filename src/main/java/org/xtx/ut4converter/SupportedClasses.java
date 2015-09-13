@@ -176,5 +176,7 @@ public class SupportedClasses {
 		uneededActors.add("AntiPortalActor"); // ut2004
 		uneededActors.add("Adrenaline"); // ut2004
 		uneededActors.add("ReachSpec"); // ut2004
+		uneededActors.add("ModelComponent"); // ut3
+		uneededActors.add("ForcedReachSpec"); // ut3
 	}
 }
