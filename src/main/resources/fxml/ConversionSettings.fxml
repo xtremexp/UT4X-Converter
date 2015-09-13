@@ -64,7 +64,7 @@
                         <Label GridPane.rowIndex="7" GridPane.columnIndex="0">Convert Music</Label>
                         <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
 
-                        <Label GridPane.rowIndex="7" GridPane.columnIndex="2">Convert StaticMeshes:</Label>
+                        <Label GridPane.rowIndex="7" GridPane.columnIndex="2">Export StaticMeshes:</Label>
                         <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="3" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
                         
                         <Label fx:id="warningMessage" GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="6"></Label>
