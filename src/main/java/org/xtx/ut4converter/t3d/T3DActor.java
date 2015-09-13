@@ -234,7 +234,19 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("DrawScale=")) {
-			drawScale = T3DUtils.getDouble(line);
+			
+			double scale = T3DUtils.getDouble(line);
+			
+			// Scale and Scale3d can both be used to scale up/down staticmeshes in UT3
+			if(mapConverter.isFrom(UnrealEngine.UE3) && this instanceof T3DStaticMesh){
+				if(scale3d == null){
+					scale3d = new Vector3d(scale, scale, scale);
+				} else {
+					scale3d.scale(scale);
+				}
+			} else {
+				drawScale = T3DUtils.getDouble(line);
+			}
 		}
 
 		else if (line.startsWith("Rotation")) {
@@ -519,11 +531,7 @@ public abstract class T3DActor extends T3DObject {
 
 		if (mapConverter.toUnrealEngine4()) {
 			if (drawScale != null) {
-				// limited sprite scale for staticmeshes because UT3 uses
-				// drawscale as drawscale3d in same time
-				if (!"StaticMeshActor".equals(t3dOriginClass)) {
-					sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
-				}
+				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}
 			sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
 		}
