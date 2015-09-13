@@ -461,16 +461,16 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		if (rotation != null) {
-			// Rotation range changed between UE2 and UE3
+			// Rotation range changed from UE4
 			// for brushes no need that since they have been transformed
 			// permanently
 			// Vertice data updated with rotation and rotation reset
 			
 			double rotFac = 1d;
 			
-			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 				rotFac = 360d / 65536d;
-			} else if (mapConverter.isFromUE3UE4ToUE1UE2()) {
+			} else if (mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isFrom(UnrealEngine.UE4)) {
 				rotFac = 65536d / 360d;
 			}
 			
