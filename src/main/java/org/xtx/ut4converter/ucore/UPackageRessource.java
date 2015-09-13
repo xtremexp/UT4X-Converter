@@ -8,6 +8,7 @@ package org.xtx.ut4converter.ucore;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
@@ -84,6 +85,13 @@ public class UPackageRessource {
 	 * Only for material package ressources
 	 */
 	MaterialInfo materialInfo;
+	
+	/**
+	 * Use this ressource as replacement.
+	 * Might be used for material ressources
+	 * which are replaced with diffuse texture (until we can manage properly materials)
+	 */
+	UPackageRessource replacement;
 
 	/**
      * 
@@ -197,23 +205,30 @@ public class UPackageRessource {
 		uPackage.ressources.add(this);
 	}
 
+	public void readTextureDimensions() {
+		if(replacement != null){
+			readTextureDimensions(mapConverter, replacement);
+		} else {
+			readTextureDimensions(mapConverter, this);
+		}
+	}
 	/**
 	 * From exported texture file get the dimension of the texture Should be
 	 * only called when converting polygon with the texture associated
 	 */
-	public void readTextureDimensions() {
+	public static void readTextureDimensions(MapConverter mapConverter, UPackageRessource texRessource) {
 
-		if (type != Type.TEXTURE || exportInfo.exportedFile == null || this.textureDimensions != null) {
+		if (texRessource.type != Type.TEXTURE || texRessource.exportInfo.exportedFile == null || texRessource.textureDimensions != null) {
 			return;
 		}
 
 		try {
 			// FIXME this part is sloooow specially if large textures (about
 			// 1s/tex which may take a while for a whole map!)
-			this.textureDimensions = ImageUtils.getTextureDimensions(exportInfo.getExportedFile());
+			texRessource.textureDimensions = ImageUtils.getTextureDimensions(texRessource.exportInfo.getExportedFile());
 
-			if (exportInfo.getExportedFile() != null && this.textureDimensions != null) {
-				mapConverter.getLogger().log(Level.FINE, exportInfo.getExportedFile().getName() + " dimension read: " + this.textureDimensions.toString());
+			if (texRessource.exportInfo.getExportedFile() != null && texRessource.textureDimensions != null) {
+				mapConverter.getLogger().log(Level.FINE, texRessource.exportInfo.getExportedFile().getName() + " dimension read: " + texRessource.textureDimensions.toString());
 			}
 		} catch (Exception e) {
 			mapConverter.getLogger().log(Level.SEVERE, e.getMessage());
@@ -301,6 +316,10 @@ public class UPackageRessource {
 	 */
 	public String getConvertedName(MapConverter mapConverter) {
 
+		if(replacement != null){
+			return replacement.getConvertedName(mapConverter);
+		}
+		
 		String suffix = "";
 
 		if (type == Type.SOUND) {
@@ -554,4 +573,11 @@ public class UPackageRessource {
 		return getFullName();
 	}
 
+	/**
+	 * Replaces current resources with new one
+	 * @param ressource
+	 */
+	public void replaceWith(UPackageRessource ressource){
+		this.replacement = ressource;
+	}
 }

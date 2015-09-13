@@ -172,6 +172,14 @@ public class UModelExporter extends UTPackageExtractor {
 
 			if (isMaterial) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
+				
+				// replace material with diffuse texture if possible
+				if(uRessource.getMaterialInfo() != null && uRessource.getMaterialInfo().getDiffuse() != null){
+					// export diffuse texture if not ever done
+					uRessource.export(UTPackageExtractor.getExtractor(mapConverter, uRessource));
+					
+					uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse());
+				}
 			}
 		}
 	}

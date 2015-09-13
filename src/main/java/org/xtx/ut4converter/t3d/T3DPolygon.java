@@ -71,12 +71,9 @@ public class T3DPolygon {
 	 */
 	Integer smoothingMask;
 
-	public Vector3d texture_u,
-
-	/**
-     *
-     */
-	texture_v;
+	Vector3d original_tex_u, original_tex_v;
+	
+	Vector3d texture_u, texture_v;
 
 	/**
      *
