@@ -5,6 +5,8 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -399,6 +401,35 @@ public class T3DLight extends T3DSound {
 			if (outerConeAngle != null) {
 				// 0 -> 255 range to 0 -> 180 range
 				outerConeAngle *= (255d / 360d) / 2;
+			}
+		}
+		
+		// UE4 does not care about negative scale for lights
+		// so need to change rotation (for directional lights)
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
+			if (scale3d != null) {
+
+				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
+					rotation = new Vector3d();
+				}
+
+				if (scale3d.x < 0) {
+					rotation.x += 180;
+					rotation.z += 180;
+					scale3d.x = Math.abs(scale3d.x);
+				}
+
+				if (scale3d.y < 0) {
+					rotation.y += 180;
+					rotation.z += 180;
+					scale3d.y = Math.abs(scale3d.y);
+				}
+
+				if (scale3d.z < 0) {
+					rotation.x += 180;
+					rotation.y += 180;
+					scale3d.z = Math.abs(scale3d.z);
+				}
 			}
 		}
 

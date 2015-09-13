@@ -478,35 +478,6 @@ public abstract class T3DActor extends T3DObject {
 			rotation.z *= rotFac;
 		}
 
-		// UE4 does not care about negative scale for some actors
-		// so need to change rotation
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && this instanceof T3DLight) {
-			if (scale3d != null) {
-
-				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
-					rotation = new Vector3d();
-				}
-
-				if (scale3d.x < 0) {
-					rotation.x += 180;
-					rotation.z += 180;
-					scale3d.x = Math.abs(scale3d.x);
-				}
-
-				if (scale3d.y < 0) {
-					rotation.y += 180;
-					rotation.z += 180;
-					scale3d.y = Math.abs(scale3d.y);
-				}
-
-				if (scale3d.z < 0) {
-					rotation.x += 180;
-					rotation.y += 180;
-					scale3d.z = Math.abs(scale3d.z);
-				}
-			}
-		}
-
 		// Notify actor was converted
 		game = mapConverter.getOutputGame();
 
