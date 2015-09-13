@@ -42,7 +42,6 @@ import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.UIUtils;
 import org.xtx.ut4converter.tools.psk.PSKReader;
-import org.xtx.ut4converter.tools.psk.PSKReader.Material;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -490,36 +489,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		showInstructions();
 	}
 
-	/**
-	 * Display material info of staticmesh resource (is needed to set the right
-	 * material in UE4Editor)
-	 * 
-	 * @param smResource
-	 */
-	private void showStaticMeshMatInfo(UPackageRessource smResource) {
 
-		try {
-
-			PSKReader pskR = new PSKReader(smResource.getExportedFile());
-			pskR.setLogger(logger);
-
-			List<Material> smMats = pskR.getMaterials();
-
-			if (smMats != null) {
-
-				logger.log(Level.INFO, smResource.getFullName() + " materials:");
-
-				for (Material smMat : smMats) {
-					// TODO improve
-					// .psk only extract name not even package or group
-					// tricky get the right texture!
-					logger.log(Level.INFO, smMat.getMaterialName());
-				}
-			}
-		} catch (Exception e) {
-			logger.warning("Error reading staticmesh " + smResource.getExportedFile().getName());
-		}
-	}
 
 	/**
 	 * Add log info message to guide user converting the map propertly
@@ -585,10 +555,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 						exportedFile = newFile;
 						ressource.setExportedFile(exportedFile);
-
-						if (ressource.getType() == Type.STATICMESH) {
-							showStaticMeshMatInfo(ressource);
-						}
 
 						if (wasConverted) {
 							logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
