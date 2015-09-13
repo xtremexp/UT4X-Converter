@@ -238,15 +238,15 @@ public class T3DSound extends T3DActor {
 			if (DistributionType.DistributionPitch.name().equals(currentSubObjectName)) {
 				soundPitch = Math.max(soundPitch, max);
 			} else if (DistributionType.DistributionVolume.name().equals(currentSubObjectName)) {
-				soundVolume = Math.max(soundVolume, max);
+				soundVolume = getMax(soundVolume, max);
 			} else if (DistributionType.DistributionLPFMinRadius.name().equals(currentSubObjectName)) {
-				attenuation.LPFRadiusMin = Math.max(attenuation.LPFRadiusMin, max);
+				attenuation.LPFRadiusMin = getMax(attenuation.LPFRadiusMin, max);
 			} else if (DistributionType.DistributionLPFMaxRadius.name().equals(currentSubObjectName)) {
-				attenuation.LPFRadiusMax = Math.max(attenuation.LPFRadiusMax, max);
+				attenuation.LPFRadiusMax = getMax(attenuation.LPFRadiusMax, max);
 			} else if (DistributionType.DistributionMaxRadius.name().equals(currentSubObjectName)) {
-				attenuation.omniRadius = Math.max(attenuation.omniRadius, max);
+				attenuation.omniRadius = getMax(attenuation.omniRadius, max);
 			} else if (DistributionType.DistributionMinRadius.name().equals(currentSubObjectName)) {
-				attenuation.omniRadius = Math.max(attenuation.omniRadius, max);
+				attenuation.omniRadius = getMax(attenuation.omniRadius, max);
 			}
 		}
 
@@ -261,6 +261,14 @@ public class T3DSound extends T3DActor {
 		return true;
 	}
 
+	private Double getMax(Double currentMax, Double newMax){
+		if(currentMax == null){
+			return newMax;
+		} else {
+			return Math.max(currentMax, newMax);
+		}
+	}
+	
 	@Override
 	public void scale(Double newScale) {
 
