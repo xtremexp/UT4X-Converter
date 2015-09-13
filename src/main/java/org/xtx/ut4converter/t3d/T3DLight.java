@@ -10,6 +10,7 @@ import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -412,22 +413,25 @@ public class T3DLight extends T3DSound {
 				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
 					rotation = new Vector3d();
 				}
+				
+				final double DEFAULT_PI_UE = Rotator.getDefaultTwoPi(mapConverter.getInputGame().engine);
+				final double DEFAULT_PI_UE_HALF = DEFAULT_PI_UE / 2d;
 
 				if (scale3d.x < 0) {
-					rotation.x += 180;
-					rotation.z += 180;
+					rotation.x += DEFAULT_PI_UE_HALF;
+					rotation.z += DEFAULT_PI_UE_HALF;
 					scale3d.x = Math.abs(scale3d.x);
 				}
 
 				if (scale3d.y < 0) {
-					rotation.y += 180;
-					rotation.z += 180;
+					rotation.y += DEFAULT_PI_UE_HALF;
+					rotation.z += DEFAULT_PI_UE_HALF;
 					scale3d.y = Math.abs(scale3d.y);
 				}
 
 				if (scale3d.z < 0) {
-					rotation.x += 180;
-					rotation.y += 180;
+					rotation.x += DEFAULT_PI_UE_HALF;
+					rotation.y += DEFAULT_PI_UE_HALF;
 					scale3d.z = Math.abs(scale3d.z);
 				}
 			}

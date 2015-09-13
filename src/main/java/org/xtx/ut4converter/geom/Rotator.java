@@ -7,14 +7,25 @@ package org.xtx.ut4converter.geom;
 
 import javax.vecmath.Vector3d;
 
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+
 /**
  *
  * @author XtremeXp
  */
 public class Rotator {
 
+	/**
+	 * Rotate using X axis
+	 */
 	double pitch;
+	/**
+	 * Rotate using Z axis
+	 */
 	double yaw;
+	/**
+	 * Rotate using Y axis
+	 */
 	double roll;
 
 	public Rotator(double pitch, double yaw, double roll) {
@@ -27,5 +38,13 @@ public class Rotator {
 		this.pitch = rotator.y;
 		this.yaw = rotator.z;
 		this.roll = rotator.x;
+	}
+	
+	public static double getDefaultTwoPi(UnrealEngine engine){
+		if(engine == UnrealEngine.UE4){
+			return 360d;
+		} else {
+			return 65536d;
+		}
 	}
 }
