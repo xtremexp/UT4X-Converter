@@ -112,8 +112,7 @@ public abstract class T3DActor extends T3DObject {
 	protected boolean validWriting = true;
 
 	/**
-	 * Only used bu UE4 (and UE3?)
-	 * Contains location and rotation data of actor
+	 * Only used bu UE4 (and UE3?) Contains location and rotation data of actor
 	 */
 	public SceneComponent sceneComponent;
 
@@ -139,7 +138,7 @@ public abstract class T3DActor extends T3DObject {
 	 * t3d converted stuff.
 	 */
 	protected List<T3DActor> children = new ArrayList<>();
-	
+
 	/**
 	 * Used to write actor TODO make global StringBuilder that we would 'reset'
 	 * after write of each actor (avoiding creating one for each single actor /
@@ -274,12 +273,12 @@ public abstract class T3DActor extends T3DObject {
 		writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
 	}
 
-	public void writeLocRotSceneComponent(String prefix){
+	public void writeLocRotSceneComponent(String prefix) {
 		sceneComponent.writeBeginObj(sbf, prefix);
 		writeLocRotAndScale();
 		sceneComponent.writeEndObj(sbf, prefix);
 	}
-	
+
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 * 
@@ -465,18 +464,47 @@ public abstract class T3DActor extends T3DObject {
 			// for brushes no need that since they have been transformed
 			// permanently
 			// Vertice data updated with rotation and rotation reset
-			
+
 			double rotFac = 1d;
-			
+
 			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 				rotFac = 360d / 65536d;
 			} else if (mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isFrom(UnrealEngine.UE4)) {
 				rotFac = 65536d / 360d;
 			}
-			
+
 			rotation.x *= rotFac;
 			rotation.y *= rotFac;
 			rotation.z *= rotFac;
+		}
+
+		// UE4 does not care about negative scale for some actors
+		// so need to change rotation
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && this instanceof T3DLight) {
+			if (scale3d != null) {
+
+				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
+					rotation = new Vector3d();
+				}
+
+				if (scale3d.x < 0) {
+					rotation.x += 180;
+					rotation.z += 180;
+					scale3d.x = Math.abs(scale3d.x);
+				}
+
+				if (scale3d.y < 0) {
+					rotation.y += 180;
+					rotation.z += 180;
+					scale3d.y = Math.abs(scale3d.y);
+				}
+
+				if (scale3d.z < 0) {
+					rotation.x += 180;
+					rotation.y += 180;
+					scale3d.z = Math.abs(scale3d.z);
+				}
+			}
 		}
 
 		// Notify actor was converted
