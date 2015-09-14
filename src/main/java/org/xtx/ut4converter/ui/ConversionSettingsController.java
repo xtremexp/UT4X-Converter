@@ -90,8 +90,8 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<String> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
-	//@FXML
-	//private Label relativeUtMapPathLbl;
+	// @FXML
+	// private Label relativeUtMapPathLbl;
 	@FXML
 	private CheckBox debugLogLevel;
 	@FXML
@@ -155,7 +155,7 @@ public class ConversionSettingsController implements Initializable {
 
 		mapConverter = new MapConverter(inputGame, outputGame);
 
-		//relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
+		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
 		disableConversionType();
 
 		initConvCheckBoxes();
@@ -174,42 +174,21 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	private void disableConversionType() {
 
-		// force disabled for UT3 since
-		// it has very light support (hardly tested things)
-		if (inputGame == UTGames.UTGame.UT3) {
-			mapConverter.noConvertRessources();
+		boolean canConvertTextures = mapConverter.canConvertTextures();
+		mapConverter.setConvertTextures(canConvertTextures);
+		convTexCheckBox.setDisable(!canConvertTextures);
 
-			convTexCheckBox.setDisable(true);
-			convMusicCheckBox.setDisable(true);
-			convSmCheckBox.setDisable(true);
+		boolean canConvertSounds = mapConverter.canConvertSounds();
+		mapConverter.setConvertSounds(canConvertSounds);
+		convSndCheckBox.setDisable(!canConvertSounds);
 
-			convTexCheckBox.setDisable(false);
-			mapConverter.setConvertTextures(true);
+		boolean canConvertMusic = mapConverter.canConvertMusic();
+		mapConverter.setConvertMusic(canConvertMusic);
+		convMusicCheckBox.setDisable(!canConvertMusic);
 
-			convSndCheckBox.setDisable(false);
-			mapConverter.setConvertSounds(true);
-		} else {
-			boolean canConvertTextures = mapConverter.canConvertTextures();
-			mapConverter.setConvertTextures(canConvertTextures);
-			convTexCheckBox.setDisable(!canConvertTextures);
-
-			boolean canConvertSounds = mapConverter.canConvertSounds();
-			mapConverter.setConvertSounds(canConvertSounds);
-			convSndCheckBox.setDisable(!canConvertSounds);
-
-			boolean canConvertMusic = mapConverter.canConvertMusic();
-			mapConverter.setConvertMusic(canConvertMusic);
-			convMusicCheckBox.setDisable(!canConvertMusic);
-
-			boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
-			mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
-			convSmCheckBox.setDisable(!canConvertStaticMeshes);
-		}
-
-		// SM converter not yet operational
-		// delete once operational
-		//mapConverter.setConvertStaticMeshes(false);
-		//convSmCheckBox.setDisable(true);
+		boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
+		mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
+		convSmCheckBox.setDisable(!canConvertStaticMeshes);
 	}
 
 	/**
