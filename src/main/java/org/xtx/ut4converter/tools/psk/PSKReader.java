@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
@@ -20,6 +23,8 @@ import javax.vecmath.Vector4d;
  * 
  */
 public class PSKReader {
+
+	Logger logger = Logger.getLogger(PSKReader.class.getName());
 
 	/**
 	 * Reference to .psk file
@@ -56,8 +61,17 @@ public class PSKReader {
 		public long dataSize;
 		public long dataCount;
 
-		public ChunkHeader(ByteBuffer bf) {
+		public ChunkHeader(ByteBuffer bf) throws Exception {
 
+			try {
+				read(bf);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.severe("Error reading header of staticmesh " + getPskFile().getName());
+			}
+		}
+
+		private void read(ByteBuffer bf) {
 			chunkID = readString(bf, 20);
 			typeFlag = bf.getInt();
 			dataSize = bf.getInt();
@@ -70,7 +84,11 @@ public class PSKReader {
 		String s = "";
 
 		for (int i = 0; i < length; i++) {
-			s += (char) bf.get();
+			if (bf.hasRemaining()) {
+				s += (char) bf.get();
+			} else {
+				s += "";
+			}
 		}
 
 		return s;
@@ -121,7 +139,7 @@ public class PSKReader {
 		}
 	}
 
-	class Material {
+	public class Material {
 
 		String materialName;
 		long textureIndex;
@@ -140,6 +158,11 @@ public class PSKReader {
 			lodBias = bf.getInt();
 			lodStyle = bf.getInt();
 		}
+
+		public String getMaterialName() {
+			return materialName;
+		}
+
 	}
 
 	class Bone {
@@ -172,6 +195,14 @@ public class PSKReader {
 		long boneIndex;
 
 		public RawWeight(ByteBuffer bf) {
+			try {
+				read(bf);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		private void read(ByteBuffer bf) {
 			weight = bf.getFloat();
 			pointIndex = bf.getInt();
 			boneIndex = bf.getInt();
@@ -200,6 +231,10 @@ public class PSKReader {
 	}
 
 	public void load() {
+
+		if (pskFile == null || !pskFile.exists()) {
+			return;
+		}
 
 		FileChannel inChannel = null;
 
@@ -246,7 +281,6 @@ public class PSKReader {
 				} else if ("FACE3200".equals(ch2.chunkID.trim())) {
 
 					long numTriangles = ch2.dataCount;
-					System.out.println("TODO");
 
 				}
 
@@ -321,9 +355,29 @@ public class PSKReader {
 		return rawWeights;
 	}
 
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
 	public static void main(String args[]) {
 
-		File file = new File("Z:\\BarrenHardware_Lights_ELight01BA.psk");
+		
+		File f = new File("C:\\Users\\XXX\\workspace\\UT4 Converter\\Converted\\DM-1on1-Roughinery\\Texture");
+		
+		for(File ff : f.listFiles()){
+			
+			if(!ff.getName().endsWith(".pskx")){
+				continue;
+			}
+			try {
+				Files.move(ff.toPath(), new File(ff.getAbsolutePath().split("\\.")[0] + ".psk").toPath(), StandardCopyOption.ATOMIC_MOVE);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		File file = new File("C:\\Users\\XXX\\workspace\\UT4 Converter\\Converted\\DM-1on1-Serpentine\\StaticMesh\\AnubisStatic_All_pharoh.psk");
 		PSKReader psk = new PSKReader(file);
 
 		System.out.println(file);
