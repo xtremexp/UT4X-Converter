@@ -962,7 +962,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	@Override
 	protected T3DLevelConvertor call() throws Exception {
-		convert();
+		try {
+			convert();
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+		}
 		return t3dLvlConvertor;
 	}
 
