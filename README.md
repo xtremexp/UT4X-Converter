@@ -166,6 +166,9 @@ With Eclipse IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Download and install "Eclipse for Java Developers": https://eclipse.org/downloads/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
+- Click on "m2e marketplace" link
+- Install "m2e-git" connect and click on finish. 
+- Restart again Eclipse for changes to apply and go back to "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4Converter.git"
 - Click "Finish"
