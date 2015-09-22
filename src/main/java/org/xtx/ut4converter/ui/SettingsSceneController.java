@@ -280,13 +280,13 @@ public class SettingsSceneController implements Initializable {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe", "*.exe"));
 		}
 
-		File umodelPath = chooser.showOpenDialog(new Stage());
+		File umodelPathFile = chooser.showOpenDialog(new Stage());
 
-		if (umodelPath != null) {
+		if (umodelPathFile != null) {
 			try {
-				userConfig.setUModelPath(umodelPath);
+				userConfig.setUModelPath(umodelPathFile);
 				userConfig.saveFile();
-				uModelPath.setText(umodelPath.getAbsolutePath());
+				uModelPath.setText(umodelPathFile.getAbsolutePath());
 			} catch (JAXBException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
@@ -304,13 +304,13 @@ public class SettingsSceneController implements Initializable {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("nconvert.exe", "*.exe"));
 		}
 
-		File nconvertPath2 = chooser.showOpenDialog(new Stage());
+		File nConvertPathFile = chooser.showOpenDialog(new Stage());
 
-		if (nconvertPath != null) {
+		if (nConvertPathFile != null) {
 			try {
-				userConfig.setNConvertPath(nconvertPath2);
+				userConfig.setNConvertPath(nConvertPathFile);
 				userConfig.saveFile();
-				nconvertPath.setText(nconvertPath2.getAbsolutePath());
+				nconvertPath.setText(nConvertPathFile.getAbsolutePath());
 			} catch (JAXBException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
