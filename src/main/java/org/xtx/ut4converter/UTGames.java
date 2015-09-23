@@ -225,7 +225,7 @@ public class UTGames {
 		}
 
 		else if (utgame == UTGame.UT4) {
-			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "Maps");
+			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets" + File.separator + "Maps" + File.separator + "WIP");
 		}
 
 		else {
