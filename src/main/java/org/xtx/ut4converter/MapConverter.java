@@ -528,9 +528,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
 		logger.log(Level.INFO, "Open Unreal Editor for UT4");
 		logger.log(Level.INFO, "File -> New level -> Empty Level");
-		logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> Maps -> " + getOutMapName());
-		logger.log(Level.INFO, "Click on 'Import' button");
-		// TODO
+		
+		if(hasConvertedRessources()){
+			logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> RestrictedAssets -> WIP -> " + getOutMapName());
+			logger.log(Level.INFO, "Click on 'Import' button");
+			// TODO
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private boolean hasConvertedRessources(){
+		return convertMusic || convertSounds || convertStaticMeshes || convertTextures;
 	}
 
 	/**
