@@ -125,7 +125,13 @@ public class T3DLight extends T3DSound {
 	 * How much attenuation radius will be multiplied Attenuation Radius =
 	 * Radius(UE123) * Factor
 	 */
-	private static final int UE12_UE4_ATTENUATION_RADIUS_FACTOR = 20;
+	private static final int UE1_UE4_ATTENUATION_RADIUS_FACTOR = 20;
+
+	/**
+	 * How much attenuation radius will be multiplied Attenuation Radius =
+	 * Radius(UE123) * Factor
+	 */
+	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 23;
 
 	Double intensity;
 
@@ -154,8 +160,13 @@ public class T3DLight extends T3DSound {
 			this.brightness = 64f;
 			this.radius = 64f;
 
-			this.lightFalloffExponent = 2.5d;
-			this.intensity = 60d;
+			if (mc.isFrom(UnrealEngine.UE1)) {
+				this.lightFalloffExponent = 2.5d;
+				this.intensity = 60d;
+			} else if (mc.isFrom(UnrealEngine.UE2)) {
+				this.lightFalloffExponent = 1.9d;
+				this.intensity = 90d;
+			}
 		}
 		// Default Values when u put some light in UE4 editor
 		else if (mc.isFrom(UnrealEngine.UE3)) {
@@ -397,14 +408,18 @@ public class T3DLight extends T3DSound {
 		attenuationRadius = radius;
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-			attenuationRadius *= UE12_UE4_ATTENUATION_RADIUS_FACTOR;
+			if (mapConverter.isFrom(UnrealEngine.UE1)) {
+				attenuationRadius *= UE1_UE4_ATTENUATION_RADIUS_FACTOR;
+			} else {
+				attenuationRadius *= UE2_UE4_ATTENUATION_RADIUS_FACTOR;
+			}
 
 			if (outerConeAngle != null) {
 				// 0 -> 255 range to 0 -> 180 range
 				outerConeAngle *= (255d / 360d) / 2;
 			}
 		}
-		
+
 		// UE4 does not care about negative scale for lights
 		// so need to change rotation (for directional lights)
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
@@ -413,7 +428,7 @@ public class T3DLight extends T3DSound {
 				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
 					rotation = new Vector3d();
 				}
-				
+
 				final double DEFAULT_PI_UE = Rotator.getDefaultTwoPi(mapConverter.getInputGame().engine);
 				final double DEFAULT_PI_UE_HALF = DEFAULT_PI_UE / 2d;
 
