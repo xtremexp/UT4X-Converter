@@ -31,7 +31,7 @@ public class PSKReader {
 	 */
 	File pskFile;
 
-	public PSKReader(File pskFile) {
+	public PSKReader(File pskFile) throws Exception {
 		super();
 		this.pskFile = pskFile;
 		initialise();
@@ -230,7 +230,7 @@ public class PSKReader {
 		return v;
 	}
 
-	public void load() {
+	private void load() throws Exception {
 
 		if (pskFile == null || !pskFile.exists()) {
 			return;
@@ -313,9 +313,6 @@ public class PSKReader {
 				// TODO EXTRAUV0
 				// TODO FACE3200
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
 		} finally {
 			try {
 				inChannel.close();
@@ -378,7 +375,13 @@ public class PSKReader {
 		}
 		
 		File file = new File("C:\\Users\\XXX\\workspace\\UT4 Converter\\Converted\\DM-1on1-Serpentine\\StaticMesh\\AnubisStatic_All_pharoh.psk");
-		PSKReader psk = new PSKReader(file);
+		PSKReader psk = null;
+		try {
+			psk = new PSKReader(file);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.out.println(file);
 

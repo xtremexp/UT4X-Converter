@@ -498,6 +498,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void showStaticMeshMatInfo(UPackageRessource smResource) {
 
+		// FIXME sometimes a few packages are tagged as staticmeshes (e.g: DM-1on1spirit DM-1on1-Spirit_fagface.tga(?))
+		if(smResource.getExportedFile() == null || !smResource.getExportedFile().getName().endsWith(".psk")){
+			return;
+		}
+		
 		try {
 
 			PSKReader pskR = new PSKReader(smResource.getExportedFile());
@@ -507,14 +512,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			if (smMats != null) {
 
-				logger.log(Level.INFO, smResource.getFullName() + " materials:");
+				logger.log(Level.INFO, smResource.getFullName() + " SM materials used:");
 
+				String mats = "";
+				
 				for (Material smMat : smMats) {
 					// TODO improve
 					// .psk only extract name not even package or group
 					// tricky get the right texture!
-					logger.log(Level.INFO, smMat.getMaterialName());
+					mats += smMat.getMaterialName() + " | ";
 				}
+				
+				logger.log(Level.INFO, mats);
 			}
 		} catch (Exception e) {
 			logger.warning("Error reading staticmesh " + smResource.getExportedFile().getName());
