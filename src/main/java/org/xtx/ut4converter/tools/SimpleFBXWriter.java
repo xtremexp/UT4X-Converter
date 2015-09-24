@@ -173,14 +173,14 @@ public class SimpleFBXWriter {
 		sb.append("}\n");
 	}
 
-	public static void test(String args[]) {
+	public static void main(String args[]) {
 
 		// File t3dSmFile = new
 		// File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar");
 		File fbxSmFile = new File("C:\\Temp\\epic_phobos_Meshes_phobosradar.g");
 		fbxSmFile.delete();
 
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
+		MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), "Z:");
 
 		try {
 			// load poly data from .t3d sm file
