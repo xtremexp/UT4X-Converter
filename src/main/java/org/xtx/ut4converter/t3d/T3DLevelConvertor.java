@@ -300,12 +300,12 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private boolean isBeginActor(String line) {
 
-		if (mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			return line.contains("Begin Actor");
 		}
 
 		// Any actor/sub-class begins with "Begin Object"
-		else if (mapConverter.getInputGame().engine.version == UnrealEngine.UE3.version) {
+		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 			if (line.trim().startsWith("Begin Object")) {
 
@@ -319,12 +319,12 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	private boolean isEndActor(String line) {
 
-		if (mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			return line.contains("End Actor");
 		}
 
 		// Any actor begin with "Begin Object"
-		else if (mapConverter.getInputGame().engine.version == UnrealEngine.UE3.version) {
+		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 			if (line.trim().startsWith("End Object")) {
 				deepObjectLevel--;

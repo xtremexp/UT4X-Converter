@@ -157,7 +157,7 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public void preAnalyse(String line) {
 
-		if (!UTGames.isUnrealEngine3(mapConverter.getInputGame())) {
+		if (!mapConverter.isFrom(UnrealEngine.UE3)) {
 			return;
 		}
 		// Class=DistributionFloatUniform Name=DistributionPitch
@@ -255,6 +255,11 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.contains("Name=")) {
+			// "Begin Object Class=Action_PLAYSOUND Name=Action_PLAYSOUND3" for UT2004 scripted trigger
+			// TODO better handle that
+			if(mapConverter.isFrom(UnrealEngine.UE2) && line.contains("Begin Object")){
+				return false;
+			}
 			name = line.split("Name=")[1].replaceAll("\"", "");
 		}
 
