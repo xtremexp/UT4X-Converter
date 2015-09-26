@@ -138,7 +138,8 @@ public class MoverProperties implements T3D {
 	public String toString(StringBuilder sbf) {
 		// Write the mover as Destination Lift
 		// TODO write as well matinee actor (once implementation done)
-		// because it's impossible to know ("guess") if a mover is a lift or another kind of mover (button, door, ...)
+		// because it's impossible to know ("guess") if a mover is a lift or
+		// another kind of mover (button, door, ...)
 		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("_Lift\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
@@ -212,9 +213,12 @@ public class MoverProperties implements T3D {
 	@Override
 	public void scale(Double newScale) {
 
-		for (Vector3d position : positions) {
-			position.scale(newScale);
-		}
+		// update 26092015
+		// no need scale positions from now
+		// since they are auto-scaled with 3d scale of mesh
+		/*
+		 * for (Vector3d position : positions) { position.scale(newScale); }
+		 */
 	}
 
 	@Override
