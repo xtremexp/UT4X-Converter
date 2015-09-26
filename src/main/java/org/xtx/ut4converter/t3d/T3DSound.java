@@ -29,6 +29,8 @@ public class T3DSound extends T3DActor {
 	 * UE1, UE4
 	 */
 	UPackageRessource ambientSound;
+	
+	private String soundClass = "AmbientSound";
 
 	AttenuationSettings attenuation = new AttenuationSettings();
 
@@ -64,6 +66,14 @@ public class T3DSound extends T3DActor {
 	 */
 	enum DistributionType {
 		DistributionDelayTime, DistributionMinRadius, DistributionMaxRadius, DistributionLPFMinRadius, DistributionLPFMaxRadius, DistributionVolume, DistributionPitch
+	}
+	
+	/**
+	 * 
+	 * Ambient sound actors for UT3/UE3
+	 */
+	public static enum UE3_AmbientSoundActor {
+		AmbientSound, AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
 	}
 
 	/**
@@ -340,7 +350,7 @@ public class T3DSound extends T3DActor {
 				name += "Sound";
 			}
 
-			sbf.append(IDT).append("Begin Actor Class=AmbientSound Name=").append(name).append("\n");
+			sbf.append(IDT).append("Begin Actor Class=").append(soundClass).append(" Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"AudioComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");

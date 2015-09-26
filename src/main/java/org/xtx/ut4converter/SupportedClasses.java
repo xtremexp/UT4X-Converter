@@ -142,6 +142,11 @@ public class SupportedClasses {
 				putUtClass(T3DLight.class, ut99LightActor.name());
 			}
 		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+
+			for (T3DSound.UE3_AmbientSoundActor ue3SoundActor : T3DSound.UE3_AmbientSoundActor.values()) {
+				putUtClass(T3DSound.class, ue3SoundActor.name());
+			}
+
 			for (T3DLight.UE3_LightActor ue4LightActor : T3DLight.UE3_LightActor.values()) {
 				putUtClass(T3DLight.class, ue4LightActor.name());
 			}
