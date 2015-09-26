@@ -58,6 +58,26 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
+	 *
+	 */
+	public static enum UE3_LightActor {
+
+		DirectionalLight, DirectionalLightToggleable,
+		/**
+		 * 
+		 */
+		PointLight,
+		/**
+		 * For UE4: PointLight with mobility Movable
+		 */
+		PointLightMovable,
+		/**
+		 * is PointLight
+		 */
+		PointLightToggleable, SkyLight, SkyLightToggleable, SpotLight, SpotLightToggleable, SpotLightMovable
+	}
+
+	/**
 	 * Unreal Engine 4 light actors TODO check UE3 (might be same)
 	 */
 	public static enum UE4_LightActor {
@@ -281,18 +301,34 @@ public class T3DLight extends T3DSound {
 	 */
 	private String getConvertedLightClass() {
 
-		if (isSpotLight()) {
-			return UE4_LightActor.SpotLight.name();
+		// TODO set mobility depending on toggleable/movable, ...
+		if (mapConverter.isFrom(UnrealEngine.UE3)) {
+
+			if (t3dClass.equals(UE3_LightActor.DirectionalLight) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable)) {
+				return UE4_LightActor.DirectionalLight.name();
+
+			} else if (t3dClass.equals(UE3_LightActor.PointLight) || t3dClass.equals(UE3_LightActor.PointLightMovable) || t3dClass.equals(UE3_LightActor.PointLightMovable)) {
+				return UE4_LightActor.PointLight.name();
+
+			} else if (t3dClass.equals(UE3_LightActor.SkyLight) || t3dClass.equals(UE3_LightActor.SkyLightToggleable)) {
+				return UE4_LightActor.SkyLight.name();
+
+			} else if (t3dClass.equals(UE3_LightActor.SpotLight) || t3dClass.equals(UE3_LightActor.SpotLightMovable) || t3dClass.equals(UE3_LightActor.SpotLightToggleable)) {
+				return UE4_LightActor.SpotLight.name();
+			}
+
+		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+
+			if (isSpotLight()) {
+				return UE4_LightActor.SpotLight.name();
+			}
+
+			else if (isSunLight()) {
+				return UE4_LightActor.DirectionalLight.name();
+			}
 		}
 
-		else if (isSunLight()) {
-			return UE4_LightActor.DirectionalLight.name();
-		}
-
-		else {
-			return UE4_LightActor.PointLight.name();
-		}
-
+		return UE4_LightActor.PointLight.name();
 	}
 
 	private UE4_Mobility getMobility() {
@@ -455,6 +491,10 @@ public class T3DLight extends T3DSound {
 					scale3d.z = Math.abs(scale3d.z);
 				}
 			}
+		}
+
+		if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
+
 		}
 
 		super.convert();

@@ -137,8 +137,14 @@ public class SupportedClasses {
 			}
 		}
 
-		for (T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()) {
-			putUtClass(T3DLight.class, ut99LightActor.name());
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+			for (T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()) {
+				putUtClass(T3DLight.class, ut99LightActor.name());
+			}
+		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+			for (T3DLight.UE3_LightActor ue4LightActor : T3DLight.UE3_LightActor.values()) {
+				putUtClass(T3DLight.class, ue4LightActor.name());
+			}
 		}
 
 		putUtClass(T3DLevelInfo.class, "LevelInfo");
@@ -150,7 +156,7 @@ public class SupportedClasses {
 
 		// terrain conversion disabled until working good
 		if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
-			//putUtClass(T3DUE2Terrain.class, "TerrainInfo");
+			// putUtClass(T3DUE2Terrain.class, "TerrainInfo");
 		}
 
 		for (T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()) {
