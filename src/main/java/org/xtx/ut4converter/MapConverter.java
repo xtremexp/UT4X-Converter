@@ -498,11 +498,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void showStaticMeshMatInfo(UPackageRessource smResource) {
 
-		// FIXME sometimes a few packages are tagged as staticmeshes (e.g: DM-1on1spirit DM-1on1-Spirit_fagface.tga(?))
-		if(smResource.getExportedFile() == null || !smResource.getExportedFile().getName().endsWith(".psk")){
+		// FIXME sometimes a few packages are tagged as staticmeshes (e.g:
+		// DM-1on1spirit DM-1on1-Spirit_fagface.tga(?))
+		if (smResource.getExportedFile() == null || !smResource.getExportedFile().getName().endsWith(".psk")) {
 			return;
 		}
-		
+
 		try {
 
 			PSKReader pskR = new PSKReader(smResource.getExportedFile());
@@ -515,14 +516,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, smResource.getFullName() + " SM materials used:");
 
 				String mats = "";
-				
+
 				for (Material smMat : smMats) {
 					// TODO improve
 					// .psk only extract name not even package or group
 					// tricky get the right texture!
 					mats += smMat.getMaterialName() + " | ";
 				}
-				
+
 				logger.log(Level.INFO, mats);
 			}
 		} catch (Exception e) {
@@ -531,25 +532,83 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * Add log info message to guide user converting the map propertly
+	 * Add log info message to guide user converting the map properly TODO add
+	 * some pics like in UT3 converter
 	 */
 	private void showInstructions() {
 		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
+		logger.log(Level.INFO, "Note: these instructions are always under work and might not be 100% accurate");
 		logger.log(Level.INFO, "Open Unreal Editor for UT4");
 		logger.log(Level.INFO, "File -> New level -> Empty Level");
-		
-		if(hasConvertedRessources()){
-			logger.log(Level.INFO, "In 'Content Browser' panel go to folder: Content -> RestrictedAssets -> WIP -> " + getOutMapName());
+
+		final String UE4_MAP_FOLDER = "Content -> RestrictedAssets -> WIP -> " + getOutMapName();
+
+		if (hasConvertedRessources()) {
+			logger.log(Level.INFO, "Converted Map Ressources Import");
+			logger.log(Level.INFO, "In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
 			logger.log(Level.INFO, "Click on 'Import' button");
-			// TODO
+
+			// TODO beware of terrain textures
+			if (convertTextures) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "Textures Import:");
+				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.TEXTURE.getName());
+				logger.log(Level.INFO, "Select all texture files and press 'Open'");
+				logger.log(Level.INFO, "After import, on selected textures right click -> 'Create Material'");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
+			}
+
+			if (convertSounds) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "Sounds Import:");
+				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.SOUND.getName());
+				logger.log(Level.INFO, "Select all sound files and press 'Open'");
+				logger.log(Level.INFO, "After import, on selected sounds right click -> 'Create Cue'");
+				logger.log(Level.INFO, "Optional: for sound waves make them loop 'Sound wave' -> 'Looping' depending on sound usage (music, ambient sound ..)");
+				logger.log(Level.INFO, "Optional: for sound cue used in lifts, add attenuation node with attenuation pattern 'Attenuation_Lifts' ");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
+			}
+
+			if (convertStaticMeshes) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "StaticMeshes Import: (note: program does not convert them yet properly)");
+				logger.log(Level.INFO, "Process is pretty loooong for the moment ... ");
+				logger.log(Level.INFO, "Install Blender software and open program");
+				logger.log(Level.INFO, "--");
+				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
+				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
+				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera'");
+				logger.log(Level.INFO, "Blender | 'File' -> 'Import' -> 'Skeleton Mesh (.psk)'");
+				logger.log(Level.INFO, "Blender | Browse for a .psk staticmesh then 'Import PSK' ");
+				logger.log(Level.INFO, "Blender | 'File' -> 'Export' -> 'FBX (.fbx)' ");
+				logger.log(Level.INFO, "Go back to Unreal Editor");
+				logger.log(Level.INFO, "UE4 | In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
+				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your .fbx staticmesh");
+				logger.log(Level.INFO, "UE4 | Leave default options and click on 'Import'");
+
+			}
+
+			logger.log(Level.INFO, "* * * * ");
 		}
+
+		logger.log(Level.INFO, "Converted Map Import");
+		logger.log(Level.INFO, "File -> Import... -> Empty Level");
+		logger.log(Level.INFO, "Select .t3d file " + getOutT3d());
+		logger.log(Level.INFO, "Click on 'Open' to import map");
+		logger.log(Level.INFO, "'Save' the map");
+
+		if (isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+			logger.log(Level.INFO, "Optional: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.LIGHTMASS_IMP_VOL_NAME + " to fit with level");
+			logger.log(Level.INFO, "Optional: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.THE_BIG_BRUSH_NAME + " to fit with level");
+		}
+		logger.log(Level.INFO, "Build map");
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	private boolean hasConvertedRessources(){
+	private boolean hasConvertedRessources() {
 		return convertMusic || convertSounds || convertStaticMeshes || convertTextures;
 	}
 

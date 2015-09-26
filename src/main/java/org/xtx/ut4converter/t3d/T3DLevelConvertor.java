@@ -438,6 +438,11 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
+	 * Name of the big additive brush automatically added by converter
+	 */
+	public static final String THE_BIG_BRUSH_NAME = "BigAdditiveBrush";
+
+	/**
 	 * Write header of T3D file TODO check for UE1/UE2
 	 * 
 	 * @throws IOException
@@ -457,7 +462,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			T3DBrush additiveBrush = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
 			additiveBrush.location = boundBoxLocalisation;
-			additiveBrush.name = "BigAdditiveBrush";
+			additiveBrush.name = THE_BIG_BRUSH_NAME;
 			additiveBrush.brushClass = T3DBrush.BrushClass.Brush;
 
 			// no need accurate light map resolution on this brush since it will
@@ -518,6 +523,11 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
+	 * Default actor name of light mass importance volume
+	 */
+	public static final String LIGHTMASS_IMP_VOL_NAME = "LightMassImpVolume";
+
+	/**
 	 * Write footer of converted t3d file // Begin Map
 	 * Name=/Game/RestrictedAssets/Maps/WIP/DM-SolarTest // Begin Level
 	 * NAME=PersistentLevel TODO check for UE1/UE2
@@ -534,7 +544,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			// Automatically add a lightMassVolume around the whole level
 			T3DBrush lightMassVolume = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
 			lightMassVolume.location = boundBoxLocalisation;
-			lightMassVolume.name = "LightMassImpVolume";
+			lightMassVolume.name = LIGHTMASS_IMP_VOL_NAME;
 			lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
 			bwr.write(lightMassVolume.toString());
 
