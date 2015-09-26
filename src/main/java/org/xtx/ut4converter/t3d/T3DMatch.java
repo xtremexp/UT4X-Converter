@@ -137,8 +137,17 @@ public class T3DMatch {
 
 		// TODO improve t3d matcher to sync / convert properties "on the fly"
 		// TODO handle radius and height
-		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Trigger" }, null, new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger" }, null, null, null,
-				new String[] { "TriggerCapsule" }));
+		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name,
+		// U1
+				new String[] { "Trigger" }, null,
+				// UT99
+				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger" },
+				// UT2003
+				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger" },
+				// UT2004
+				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "Trigger_ASTeam" },
+				// UT3
+				new String[] { "Trigger" }, new String[] { "TriggerCapsule" }));
 
 		// Blueprint_Effect_Smoke_C
 		list.add(iByGame(T3DPickup.class, "P_Smoke", null, null, new String[] { "SmokeGenerator" }, null, null, null, new String[] { "Blueprint_Effect_Smoke_C" }));
