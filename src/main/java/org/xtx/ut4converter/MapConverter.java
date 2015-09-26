@@ -571,8 +571,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			if (convertStaticMeshes) {
 				logger.log(Level.INFO, "");
-				logger.log(Level.INFO, "StaticMeshes Import: (note: program does not convert them yet properly)");
-				logger.log(Level.INFO, "Process is pretty loooong for the moment ... ");
+				logger.log(Level.INFO, "StaticMeshes Import:");
+				logger.log(Level.INFO, "Note: program does not convert them yet properly as well as materials");
+				logger.log(Level.INFO, "Manual process is pretty loooong for the moment ... ");
 				logger.log(Level.INFO, "Install Blender software and open program");
 				logger.log(Level.INFO, "--");
 				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
@@ -581,9 +582,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Blender | 'File' -> 'Import' -> 'Skeleton Mesh (.psk)'");
 				logger.log(Level.INFO, "Blender | Browse for a .psk staticmesh then 'Import PSK' ");
 				logger.log(Level.INFO, "Blender | 'File' -> 'Export' -> 'FBX (.fbx)' ");
-				logger.log(Level.INFO, "Go back to Unreal Editor");
+				logger.log(Level.INFO, "Blender | Important: keep the same filename with .fbx extension as the original .psk file! ");
+				logger.log(Level.INFO, "--");
+				logger.log(Level.INFO, "When all staticmeshes have been converted to .fbx format, go back to Unreal Editor");
 				logger.log(Level.INFO, "UE4 | In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
-				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your .fbx staticmesh");
+				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your all .fbx staticmesh");
+				logger.log(Level.INFO, "UE4 | In 'FBX Import Options' set Transform -> Import uniform scale to 0.01 ");
 				logger.log(Level.INFO, "UE4 | Leave default options and click on 'Import'");
 
 			}
