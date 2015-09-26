@@ -125,26 +125,28 @@ public class UModelExporter extends UTPackageExtractor {
 		File exportedFile = null;
 		boolean isMaterial = false;
 
+		final String BASE_EXPORT_FILE = exportFolder + File.separator + name;
+
 		if (type == Type.STATICMESH) {
-			exportedFile = new File(exportFolder + File.separator + name + ".pskx");
+			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
-			exportedFile = new File(exportFolder + File.separator + name + ".tga");
+			exportedFile = new File(BASE_EXPORT_FILE + ".tga");
 		}
 		// UMODEL does produce .mat files
 		// TODO handle .mat files for conversion
 		// either replace with Diffuse Texture or find out some library that can
 		// do the merging "diffuse + normal" stuff
 		else if (typeStr.toLowerCase().contains("material")) {
-			exportedFile = new File(exportFolder + File.separator + name + ".mat");
+			exportedFile = new File(BASE_EXPORT_FILE + ".mat");
 			isMaterial = true;
 		} else if (type == Type.SOUND) {
 
 			if (mapConverter.getInputGame().engine.version <= 2) {
-				exportedFile = new File(exportFolder + File.separator + name + ".wav");
+				exportedFile = new File(BASE_EXPORT_FILE + ".wav");
 			}
 
 			else if (mapConverter.getInputGame().engine.version == 3) {
-				exportedFile = new File(exportFolder + File.separator + name + ".ogg");
+				exportedFile = new File(BASE_EXPORT_FILE + ".ogg");
 			}
 		}
 
@@ -167,17 +169,22 @@ public class UModelExporter extends UTPackageExtractor {
 															// don't have group
 															// we retrieve the
 															// group ...
+			if(unrealPackage.isMapPackage(mapConverter.getMapPackageName())){
+				uRessource.setIsUsedInMap(true);
+			}
+			uRessource.setType(type);
 		} else {
 			uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFile, this);
-
+			uRessource.setType(type);
+			
 			if (isMaterial) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
-				
+
 				// replace material with diffuse texture if possible
-				if(uRessource.getMaterialInfo() != null && uRessource.getMaterialInfo().getDiffuse() != null){
+				if (uRessource.getMaterialInfo() != null && uRessource.getMaterialInfo().getDiffuse() != null) {
 					// export diffuse texture if not ever done
 					uRessource.export(UTPackageExtractor.getExtractor(mapConverter, uRessource));
-					
+
 					uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse());
 				}
 			}

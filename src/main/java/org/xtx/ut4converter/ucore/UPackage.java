@@ -306,5 +306,9 @@ public class UPackage {
 	public void setExported(boolean exported) {
 		this.exported = exported;
 	}
+	
+	public boolean isMapPackage(String mapName){
+		return name != null && name.equals(mapName);
+	}
 
 }

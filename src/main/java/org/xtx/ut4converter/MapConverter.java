@@ -1190,4 +1190,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return relativeUtMapPath;
 	}
 
+	/**
+	 * From map file return map package name
+	 * E.g: DM-Ranking.ut2 -> DM-Ranking
+	 * @return
+	 */
+	public String getMapPackageName(){
+		return getInMap().getName().split("\\.")[0];
+	}
 }

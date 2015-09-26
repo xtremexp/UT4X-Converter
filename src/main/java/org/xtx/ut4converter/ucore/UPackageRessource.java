@@ -202,6 +202,12 @@ public class UPackageRessource {
 
 		this.unrealPackage = uPackage;
 		this.type = uPackage.type;
+		
+		// if ressource in map package
+		// means is always used
+		if(uPackage.isMapPackage(mapConverter.getMapPackageName())){
+			setIsUsedInMap(true);
+		}
 		uPackage.ressources.add(this);
 	}
 
@@ -579,5 +585,6 @@ public class UPackageRessource {
 	 */
 	public void replaceWith(UPackageRessource ressource){
 		this.replacement = ressource;
+		ressource.setIsUsedInMap(true);
 	}
 }
