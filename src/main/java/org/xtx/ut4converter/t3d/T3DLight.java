@@ -131,7 +131,7 @@ public class T3DLight extends T3DSound {
 	 * How much attenuation radius will be multiplied Attenuation Radius =
 	 * Radius(UE123) * Factor
 	 */
-	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 23;
+	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 22;
 
 	Double intensity;
 
@@ -165,7 +165,7 @@ public class T3DLight extends T3DSound {
 				this.intensity = 60d;
 			} else if (mc.isFrom(UnrealEngine.UE2)) {
 				this.lightFalloffExponent = 1.9d;
-				this.intensity = 90d;
+				this.intensity = 80d;
 			}
 		}
 		// Default Values when u put some light in UE4 editor
