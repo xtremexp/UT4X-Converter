@@ -178,5 +178,6 @@ public class SupportedClasses {
 		uneededActors.add("ReachSpec"); // ut2004
 		uneededActors.add("ModelComponent"); // ut3
 		uneededActors.add("ForcedReachSpec"); // ut3
+		uneededActors.add("AdvancedReachSpec"); // ut3
 	}
 }
