@@ -52,7 +52,9 @@ public class T3DLight extends T3DSound {
 	 * or special light effect + type TODO move out this to some "core class"
 	 */
 	public static enum UE12_LightActors {
-		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, SpotLight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight;
+		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, SpotLight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight,
+		// Unreal Engine 2 new light actors
+		Sunlight;
 	}
 
 	/**
@@ -265,13 +267,12 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
-	 * Tells if current light is sunlight TODO convert to SunLight actor for UT4
-	 * if true
+	 * Tells if current light is sunlight if true
 	 * 
 	 * @return
 	 */
 	private boolean isSunLight() {
-		return lightEffect == UE12_LightEffect.LE_Sunlight;
+		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equals(UE12_LightActors.Sunlight.name());
 	}
 
 	/**
@@ -282,6 +283,10 @@ public class T3DLight extends T3DSound {
 
 		if (isSpotLight()) {
 			return UE4_LightActor.SpotLight.name();
+		}
+
+		else if (isSunLight()) {
+			return UE4_LightActor.DirectionalLight.name();
 		}
 
 		else {
