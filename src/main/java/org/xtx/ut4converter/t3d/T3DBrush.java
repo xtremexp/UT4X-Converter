@@ -26,10 +26,26 @@ import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
  */
 public class T3DBrush extends T3DSound {
 
-	BrushClass brushClass = BrushClass.Brush;
+	protected BrushClass brushClass = BrushClass.Brush;
 
 	public static enum BrushClass {
-		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, PostProcessVolume, BlockingVolume, LightmassImportanceVolume, NavMeshBoundsVolume;
+
+		// UE1, UE2 Volume
+		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
+		// UE3 and UE4 Volumes
+		PostProcessVolume,
+		/**
+		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
+		 */
+		PhysicsVolume,
+		// Specific UE3 Volumes
+
+		/**
+		 * Has been replaced by AudioVolume in UE4
+		 */
+		ReverbVolume,
+		// Specific UE4 Volume
+		AudioVolume, PainCausingVolume, LightmassImportanceVolume, NavMeshBoundsVolume;
 
 		public static BrushClass getBrushClass(String t3dBrushClass) {
 
@@ -88,7 +104,7 @@ public class T3DBrush extends T3DSound {
 	 * Polygons of the brush
 	 */
 	LinkedList<T3DPolygon> polyList = new LinkedList<>();
-	
+
 	/**
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
@@ -109,7 +125,7 @@ public class T3DBrush extends T3DSound {
 		} else {
 			brushType = UE4_BrushType.Brush_Add.name();
 		}
-		
+
 		// just need one
 		modelName = "Model_6";
 	}
@@ -121,11 +137,9 @@ public class T3DBrush extends T3DSound {
 	 * is due to MainScale factor. Depending on it it.
 	 */
 	boolean reverseVertexOrder = false;
-	
+
 	/**
-	 * If true this brush might
-	 * create bsp holes
-	 * and should not be written
+	 * If true this brush might create bsp holes and should not be written
 	 */
 	boolean bspHoleCausing;
 
@@ -208,9 +222,9 @@ public class T3DBrush extends T3DSound {
 			// need force trigger function else name is null
 			return super.analyseT3DData(line);
 		}
-		
-		else if(line.startsWith("Begin Brush") && line.contains("Name=")){
-			//modelName = line.split("Name=")[1].replaceAll("\"", "");
+
+		else if (line.startsWith("Begin Brush") && line.contains("Name=")) {
+			// modelName = line.split("Name=")[1].replaceAll("\"", "");
 		}
 
 		else {
@@ -305,11 +319,11 @@ public class T3DBrush extends T3DSound {
 				}
 			}
 			/*
-			else if (willCauseBspHoles()) {
-				bspHoleCausing = true;
-				brushClass = BrushClass.BlockingVolume;
-				logger.warning("Replaced potential bsphole with " + name + " to blockingvolume");
-			}*/
+			 * else if (willCauseBspHoles()) { bspHoleCausing = true; brushClass
+			 * = BrushClass.BlockingVolume;
+			 * logger.warning("Replaced potential bsphole with " + name +
+			 * " to blockingvolume"); }
+			 */
 
 			if (!valid) {
 				return valid;
@@ -354,29 +368,29 @@ public class T3DBrush extends T3DSound {
 	}
 
 	/**
-	 * Compute if this brush will cause bsp holes:
-	 * - only 4 or less polygon
-	 * - OR some vertex not bound with at least 3 polygons
-	 * not enough accurate at this stage
+	 * Compute if this brush will cause bsp holes: - only 4 or less polygon - OR
+	 * some vertex not bound with at least 3 polygons not enough accurate at
+	 * this stage
+	 * 
 	 * @return <code>true</code> if this brush will cause bsp holes on import
 	 */
 	private boolean willCauseBspHoles() {
 
 		// sheet brush (total nb polygons <= 4)
-		if(polyList.size() <= 4){
+		if (polyList.size() <= 4) {
 			return true;
 		}
-		
+
 		for (T3DPolygon poly : polyList) {
 			for (Vertex v : poly.vertices) {
 				// vertex only linked with 2 or less other vertices
 				// might be candidate for bsp hole
 				// however need to do some extra checks
 				if (getPolyCountWithVertexCoordinate(v) < 3) {
-					
+
 					// if this vertex is belonging to edge
 					// of another polygon
-					if(!Geometry.vertexInOtherPoly(polyList, poly, v)){
+					if (!Geometry.vertexInOtherPoly(polyList, poly, v)) {
 						return true;
 					}
 				}
@@ -597,6 +611,14 @@ public class T3DBrush extends T3DSound {
 		if (isSheetBrush()) {
 			T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
 			children.add(sheetStaticMesh);
+		}
+
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
+			// ReverbVolume replaced with audio volume from ut3 to ut4
+			// TODO convert specific properties of these volume
+			if (brushClass == BrushClass.ReverbVolume) {
+				brushClass = BrushClass.AudioVolume;
+			}
 		}
 
 		super.convert();
