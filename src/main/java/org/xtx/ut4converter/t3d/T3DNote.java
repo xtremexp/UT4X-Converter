@@ -30,6 +30,10 @@ public class T3DNote extends T3DActor {
 	public T3DNote(MapConverter mc) {
 		super(mc, "Note");
 	}
+	
+	public T3DNote(MapConverter mc, String t3dClass) {
+		super(mc, t3dClass);
+	}
 
 	/**
 	 *
@@ -46,7 +50,7 @@ public class T3DNote extends T3DActor {
 	@Override
 	public boolean analyseT3DData(String line) {
 
-		if (line.startsWith("Text")) {
+		if (line.startsWith("Text=")) {
 			text = T3DUtils.getString(line);
 		} else {
 			return super.analyseT3DData(line);
