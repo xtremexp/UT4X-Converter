@@ -167,6 +167,8 @@ public class T3DLight extends T3DSound {
 	 */
 	float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
 
+	UE4_Mobility mobility = UE4_Mobility.Static;
+
 	/**
 	 *
 	 * @param mc
@@ -299,51 +301,63 @@ public class T3DLight extends T3DSound {
 	 * 
 	 * @return
 	 */
-	private String getConvertedLightClass() {
+	private void convertClassAndMobility() {
 
-		// TODO set mobility depending on toggleable/movable, ...
 		if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 			if (t3dClass.equals(UE3_LightActor.DirectionalLight) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable)) {
-				return UE4_LightActor.DirectionalLight.name();
 
-			} else if (t3dClass.equals(UE3_LightActor.PointLight) || t3dClass.equals(UE3_LightActor.PointLightMovable) || t3dClass.equals(UE3_LightActor.PointLightMovable)) {
-				return UE4_LightActor.PointLight.name();
+				if (t3dClass.equals(UE3_LightActor.DirectionalLightToggleable)) {
+					mobility = UE4_Mobility.Stationary;
+				}
+
+				t3dClass = UE4_LightActor.DirectionalLight.name();
+
+			} else if (t3dClass.equals(UE3_LightActor.PointLight) || t3dClass.equals(UE3_LightActor.PointLightToggleable) || t3dClass.equals(UE3_LightActor.PointLightMovable)) {
+
+				if (t3dClass.equals(UE3_LightActor.PointLightMovable)) {
+					mobility = UE4_Mobility.Movable;
+				} else if (t3dClass.equals(UE3_LightActor.PointLightToggleable)) {
+					mobility = UE4_Mobility.Stationary;
+				}
+
+				t3dClass = UE4_LightActor.PointLight.name();
 
 			} else if (t3dClass.equals(UE3_LightActor.SkyLight) || t3dClass.equals(UE3_LightActor.SkyLightToggleable)) {
-				return UE4_LightActor.SkyLight.name();
+				t3dClass = UE4_LightActor.SkyLight.name();
 
 			} else if (t3dClass.equals(UE3_LightActor.SpotLight) || t3dClass.equals(UE3_LightActor.SpotLightMovable) || t3dClass.equals(UE3_LightActor.SpotLightToggleable)) {
-				return UE4_LightActor.SpotLight.name();
+
+				if (t3dClass.equals(UE3_LightActor.SpotLightMovable)) {
+					mobility = UE4_Mobility.Movable;
+				} else if (t3dClass.equals(UE3_LightActor.SpotLightToggleable)) {
+					mobility = UE4_Mobility.Stationary;
+				}
+
+				t3dClass = UE4_LightActor.SpotLight.name();
 			}
 
 		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
 			if (isSpotLight()) {
-				return UE4_LightActor.SpotLight.name();
+				t3dClass = UE4_LightActor.SpotLight.name();
 			}
 
 			else if (isSunLight()) {
-				return UE4_LightActor.DirectionalLight.name();
+				t3dClass = UE4_LightActor.DirectionalLight.name();
 			}
+
+			// disabled for the moment for perf issues
+			/**
+			 * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
+			 * UE12_LightEffect.LE_StaticSpot || lightEffect ==
+			 * UE12_LightEffect.LE_Unused || lightEffect ==
+			 * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; }
+			 * else { t3dClass = UE4_Mobility.Stationary; }
+			 */
 		}
 
-		return UE4_LightActor.PointLight.name();
-	}
-
-	private UE4_Mobility getMobility() {
-
-		// force to stationary until we fix
-		// perf issues with stationary mobility
-		/**
-		 * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
-		 * UE12_LightEffect.LE_StaticSpot || lightEffect ==
-		 * UE12_LightEffect.LE_Unused || lightEffect ==
-		 * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; } else {
-		 * return UE4_Mobility.Stationary; }
-		 */
-
-		return UE4_Mobility.Static;
+		t3dClass = UE4_LightActor.PointLight.name();
 	}
 
 	/**
@@ -360,7 +374,7 @@ public class T3DLight extends T3DSound {
 	public String toString() {
 
 		if (mapConverter.toUnrealEngine4()) {
-			sbf.append(IDT).append("Begin Actor Class=").append(getConvertedLightClass()).append(" Name=").append(name).append("\n");
+			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
 
 			sbf.append(IDT).append("\tBegin Object Class=").append(isSpotLight() ? "SpotLightComponent" : "PointLightComponent").append(" Name=\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
@@ -392,7 +406,7 @@ public class T3DLight extends T3DSound {
 				sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
 			}
 
-			sbf.append(IDT).append("\t\tMobility=").append(getMobility().name()).append("\n");
+			sbf.append(IDT).append("\t\tMobility=").append(mobility.name()).append("\n");
 
 			writeLocRotAndScale();
 			sbf.append(IDT).append("\tEnd Object\n");
@@ -493,9 +507,7 @@ public class T3DLight extends T3DSound {
 			}
 		}
 
-		if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-
-		}
+		convertClassAndMobility();
 
 		super.convert();
 	}
