@@ -246,7 +246,7 @@ public class T3DSound extends T3DActor {
 			Double max = T3DUtils.getDouble(line);
 
 			if (DistributionType.DistributionPitch.name().equals(currentSubObjectName)) {
-				soundPitch = Math.max(soundPitch, max);
+				soundPitch = getMax(soundPitch, max);
 			} else if (DistributionType.DistributionVolume.name().equals(currentSubObjectName)) {
 				soundVolume = getMax(soundVolume, max);
 			} else if (DistributionType.DistributionLPFMinRadius.name().equals(currentSubObjectName)) {
