@@ -65,13 +65,12 @@ public class T3DStaticMesh extends T3DSound {
 	}
 
 	/**
-	 * Set scale to 1 so will be correctly scaled up
-	 * after conversion
+	 * Set scale to 1 so will be correctly scaled up after conversion
 	 */
-	private void initialize(){
-		scale3d = new Vector3d(new double[]{1d, 1d, 1d});
+	private void initialize() {
+		scale3d = new Vector3d(new double[] { 1d, 1d, 1d });
 	}
-	
+
 	@Override
 	public boolean analyseT3DData(String line) {
 
@@ -137,7 +136,7 @@ public class T3DStaticMesh extends T3DSound {
 		// backward compatibility for created sheet SM from brushes
 		if (forcedStaticMesh != null) {
 			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
-		} else {
+		} else if (staticMesh != null) {
 			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName(mapConverter)).append("'\n");
 		}
 
@@ -176,12 +175,15 @@ public class T3DStaticMesh extends T3DSound {
 	@Override
 	public void convert() {
 
-		if (mapConverter.convertStaticMeshes()) {
-			if (staticMesh != null) {
-				staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
-			}
+		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
+			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
 		}
 
 		super.convert();
+	}
+
+	@Override
+	public boolean isValidWriting() {
+		return staticMesh != null && forcedStaticMesh == null;
 	}
 }

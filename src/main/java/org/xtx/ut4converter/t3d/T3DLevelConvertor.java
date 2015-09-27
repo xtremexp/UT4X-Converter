@@ -193,6 +193,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
+		String line = null;
 
 		try {
 
@@ -203,7 +204,6 @@ public class T3DLevelConvertor extends Task<Object> {
 			 * Current line of T3D File being analyzed
 			 */
 			int linenumber = 1;
-			String line;
 
 			// Read input t3d file and convert actors
 			while ((line = bfr.readLine()) != null) {
@@ -211,8 +211,10 @@ public class T3DLevelConvertor extends Task<Object> {
 					analyzeLine(line);
 					linenumber++;
 				} catch (Exception e) {
-					logger.log(Level.SEVERE, "Error while parsing data from T3D Level File " + inT3dFile.getName());
-					logger.log(Level.SEVERE, "Line #" + linenumber + " Current Actor Class: " + uta.t3dClass + " Line:");
+					logger.log(Level.SEVERE, "Error parsing Line #" + linenumber + " for " + inT3dFile.getName());
+					if (uta != null) {
+						logger.log(Level.SEVERE, "Current Actor Class: " + uta.t3dClass + " Line:");
+					}
 					logger.log(Level.SEVERE, "\"" + line + "\"");
 					logger.log(Level.SEVERE, "ERROR:", e);
 				}
@@ -222,6 +224,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			write(bwr);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Error while writting T3D converted level file " + inT3dFile.getName());
+			logger.log(Level.SEVERE, "Line: " + line);
 			logger.log(Level.SEVERE, "ERROR:", e);
 		} finally {
 			bwr.close();
@@ -237,7 +240,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @param bw
 	 * @throws IOException
 	 */
-	private void write(BufferedWriter bw) throws IOException {
+	private void write(BufferedWriter bw) throws Exception {
 
 		// fast 'code' for setting assault good order for objectives
 		// TODO move out in near future ...
