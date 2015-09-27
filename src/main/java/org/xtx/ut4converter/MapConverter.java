@@ -989,10 +989,25 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// happens for UE1/2 where polygon t3d data only store name
 			// so we using the old "ut3 converter" name to package db until
 			// finding a better way ...
-			if (split.length <= 1 && type == T3DRessource.Type.TEXTURE) {
-				String name = split[0];
-				packageName = nameToPackage.get(name.toLowerCase());
-				fullRessourceName = packageName + "." + name;
+			if (split.length <= 1) {
+				
+				// for ut99 polygon data does not give package info
+				if(type == T3DRessource.Type.TEXTURE && inputGame == UTGame.UT99){
+					String name = split[0];
+					packageName = nameToPackage.get(name.toLowerCase());
+					fullRessourceName = packageName + "." + name;
+				
+				} 
+				// assuming it's from map
+				// as seen in CTF-Turbo for staticmeshes from map package
+				// does not give full ressource name
+				// e.g: StaticMesh=StaticMesh'sm_Lamp_02'
+				// but ressource in "CTF-Turbo.StaticMeshes_Lamps.sm_Lamp_02" ...
+				// FIXME on exporting ressource get the right group
+				else if(isFrom(UnrealEngine.UE3)){
+					packageName = getMapPackageName();
+					fullRessourceName = packageName + "." + split[0];
+				}
 			} else {
 				packageName = fullRessourceName.split("\\.")[0];
 			}
