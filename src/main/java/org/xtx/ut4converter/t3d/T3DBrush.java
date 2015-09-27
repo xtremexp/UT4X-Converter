@@ -33,7 +33,7 @@ public class T3DBrush extends T3DSound {
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
 		// UE3 and UE4 Volumes
-		PostProcessVolume,
+		PostProcessVolume, TriggerVolume,
 		/**
 		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
 		 */
@@ -43,7 +43,7 @@ public class T3DBrush extends T3DSound {
 		/**
 		 * Has been replaced by AudioVolume in UE4
 		 */
-		ReverbVolume,
+		ReverbVolume, DynamicTriggerVolume,
 		// Specific UE4 Volume
 		AudioVolume, PainCausingVolume, LightmassImportanceVolume, NavMeshBoundsVolume;
 
@@ -618,6 +618,9 @@ public class T3DBrush extends T3DSound {
 			// TODO convert specific properties of these volume
 			if (brushClass == BrushClass.ReverbVolume) {
 				brushClass = BrushClass.AudioVolume;
+			}
+			if (brushClass == BrushClass.DynamicTriggerVolume) {
+				brushClass = BrushClass.TriggerVolume;
 			}
 		}
 
