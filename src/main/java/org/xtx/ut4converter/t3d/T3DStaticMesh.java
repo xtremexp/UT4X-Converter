@@ -184,6 +184,6 @@ public class T3DStaticMesh extends T3DSound {
 
 	@Override
 	public boolean isValidWriting() {
-		return staticMesh != null && forcedStaticMesh == null;
+		return staticMesh != null || forcedStaticMesh != null;
 	}
 }
