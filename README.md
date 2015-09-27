@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.6-DEV
+- Version: 0.6
 - Author: XtremeXp
-- Release Date: TBA
+- Release Date: 27/09/2015
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -188,6 +188,26 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.6 - 27/09/2015:
+  * u2, ut2003, ut2004, ut3: added option to export staticmeshes used in map
+  (partial conversion, need to convert .psk file format to.fbx using 3d modeler (like Blender))
+  * UI: added information about how to convert map after conversion
+  * ut3: added TriggerVolume, DynamicTriggerVolume, Note, UTTeamPlayerStart, UTTeamWarfarePlayerStart,
+  PointLightMovable, PointLightToggleable, SkyLightToggleable, SpotLightMovable, SpotLightToggleable,
+  AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
+  actors for conversion
+  * u2, ut2003, ut2004, ut3: fixed crash when staticmesh actor has no staticmesh set
+  * ut3: added partial conversion of ReverbVolume, PhysicsVolume
+  * ut3: fixed sometimes a crash when exporting level to t3d file
+  * ut3: fixed AmbientSound conversion error
+  * ut3: fixed SpotLight bad rotation if 3d scale is negative
+  * ut3: fixed ressources from map package never exported
+  * ut2003, ut2004, ut3: now Trigger actor are replaced with CapsuleTrigger
+  * ut2003, ut2004: SunLight converted to DirectionalLight 
+  * ut2003, ut2004, ut3: fixed lift destination (since new UT4 version automatically scales it with 3d scale of lift mesh)
+  * ut2004: increased light brightness and radius
+  * ut3: removed useless warnings for actors ModelComponent, ForcedReachSpec
+  
 - 0.5 - 05/09/2015:
 * [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
 (https://trello.com/b/Jtvc23S1/uta-resurgence)
