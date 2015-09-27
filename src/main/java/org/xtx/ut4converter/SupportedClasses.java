@@ -125,7 +125,7 @@ public class SupportedClasses {
 		putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
 				"LoopMover", "InterpActor");
 
-		putUtClass(T3DPlayerStart.class, "PlayerStart");
+		putUtClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
 
 		for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
