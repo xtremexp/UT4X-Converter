@@ -43,6 +43,18 @@ public class T3DNote extends T3DActor {
 		this.isUnconvertedInfo = isUnconvertedInfo;
 	}
 
+	@Override
+	public boolean analyseT3DData(String line) {
+
+		if (line.startsWith("Text")) {
+			text = T3DUtils.getString(line);
+		} else {
+			return super.analyseT3DData(line);
+		}
+
+		return true;
+	}
+
 	/**
 	 *
 	 * @return
@@ -65,7 +77,7 @@ public class T3DNote extends T3DActor {
 		sbf.append(IDT).append("\tRootComponent=SceneComp\n");
 
 		writeEndActor();
-		
+
 		return sbf.toString();
 	}
 

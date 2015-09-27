@@ -115,6 +115,9 @@ public class SupportedClasses {
 		classToUtActor.put(actor.toLowerCase(), t3dClass);
 	}
 
+	/**
+	 * TODO split depending on UE12/UE3 input engine
+	 */
 	private void initialize() {
 
 		// FIXME block all has wrong volume, totally screwed
@@ -142,6 +145,8 @@ public class SupportedClasses {
 				putUtClass(T3DLight.class, ut99LightActor.name());
 			}
 		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+
+			putUtClass(T3DNote.class, "Note");
 
 			for (T3DSound.UE3_AmbientSoundActor ue3SoundActor : T3DSound.UE3_AmbientSoundActor.values()) {
 				putUtClass(T3DSound.class, ue3SoundActor.name());
@@ -173,7 +178,6 @@ public class SupportedClasses {
 		putUtClass(T3DASCinematicCamera.class, "SpectatorCam");
 		putUtClass(T3DASInfo.class, "AssaultInfo");
 
-		// TODO specific other UE3 light SpotLightMovable, SpotLightToggable ...
 		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
 		putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
