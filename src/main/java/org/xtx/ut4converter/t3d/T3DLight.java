@@ -305,36 +305,38 @@ public class T3DLight extends T3DSound {
 
 		if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
-			if (t3dClass.equals(UE3_LightActor.DirectionalLight) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable)) {
+			if (t3dClass.equals(UE3_LightActor.DirectionalLight.name()) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
 
-				if (t3dClass.equals(UE3_LightActor.DirectionalLightToggleable)) {
+				if (t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
 					mobility = UE4_Mobility.Stationary;
 				}
 
 				t3dClass = UE4_LightActor.DirectionalLight.name();
 
-			} else if (t3dClass.equals(UE3_LightActor.PointLight) || t3dClass.equals(UE3_LightActor.PointLightToggleable) || t3dClass.equals(UE3_LightActor.PointLightMovable)) {
+			} else if (t3dClass.equals(UE3_LightActor.PointLight.name()) || t3dClass.equals(UE3_LightActor.PointLightToggleable.name()) || t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
 
-				if (t3dClass.equals(UE3_LightActor.PointLightMovable)) {
+				if (t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
 					mobility = UE4_Mobility.Movable;
-				} else if (t3dClass.equals(UE3_LightActor.PointLightToggleable)) {
+				} else if (t3dClass.equals(UE3_LightActor.PointLightToggleable.name())) {
 					mobility = UE4_Mobility.Stationary;
 				}
 
 				t3dClass = UE4_LightActor.PointLight.name();
 
-			} else if (t3dClass.equals(UE3_LightActor.SkyLight) || t3dClass.equals(UE3_LightActor.SkyLightToggleable)) {
+			} else if (t3dClass.equals(UE3_LightActor.SkyLight.name()) || t3dClass.equals(UE3_LightActor.SkyLightToggleable.name())) {
 				t3dClass = UE4_LightActor.SkyLight.name();
 
-			} else if (t3dClass.equals(UE3_LightActor.SpotLight) || t3dClass.equals(UE3_LightActor.SpotLightMovable) || t3dClass.equals(UE3_LightActor.SpotLightToggleable)) {
+			} else if (t3dClass.equals(UE3_LightActor.SpotLight.name()) || t3dClass.equals(UE3_LightActor.SpotLightMovable.name()) || t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
 
-				if (t3dClass.equals(UE3_LightActor.SpotLightMovable)) {
+				if (t3dClass.equals(UE3_LightActor.SpotLightMovable.name())) {
 					mobility = UE4_Mobility.Movable;
-				} else if (t3dClass.equals(UE3_LightActor.SpotLightToggleable)) {
+				} else if (t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
 					mobility = UE4_Mobility.Stationary;
 				}
 
 				t3dClass = UE4_LightActor.SpotLight.name();
+			} else {
+				t3dClass = UE4_LightActor.PointLight.name();
 			}
 
 		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
@@ -347,6 +349,10 @@ public class T3DLight extends T3DSound {
 				t3dClass = UE4_LightActor.DirectionalLight.name();
 			}
 
+			else {
+				t3dClass = UE4_LightActor.PointLight.name();
+			}
+
 			// disabled for the moment for perf issues
 			/**
 			 * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
@@ -355,9 +361,9 @@ public class T3DLight extends T3DSound {
 			 * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; }
 			 * else { t3dClass = UE4_Mobility.Stationary; }
 			 */
+		} else {
+			t3dClass = UE4_LightActor.PointLight.name();
 		}
-
-		t3dClass = UE4_LightActor.PointLight.name();
 	}
 
 	/**
