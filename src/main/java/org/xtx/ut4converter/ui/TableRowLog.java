@@ -45,10 +45,15 @@ public class TableRowLog {
 	public TableRowLog(LogRecord logRecord) {
 		this.level = logRecord.getLevel();
 
-		if (logRecord.getThrown() != null) {
-			this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
+		if(logRecord.getMessage() != null){
+			if (logRecord.getThrown() != null) {
+				this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
+			} else {
+				this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
+			}
 		} else {
-			this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
+			// weird sometimes message is null ... (?)
+			this.message = new SimpleStringProperty("");
 		}
 
 		this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));

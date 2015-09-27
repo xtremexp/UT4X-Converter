@@ -104,7 +104,7 @@ public class UModelExporter extends UTPackageExtractor {
 		// Some ressources does not have group info
 		if (exportFolder.length() >= startIdx) {
 			// <xxx>CTF-Strident\Temp/LT_Deco/BSP/Materials -> BSP/Materials
-			group = exportFolder.substring(exportFolder.indexOf(unrealPackage.getName()) + unrealPackage.getName().length() + 1, exportFolder.length());
+			group = exportFolder.substring(exportFolder.indexOf(unrealPackage.getName(), mapConverter.getTempExportFolder().getAbsolutePath().length()) + unrealPackage.getName().length() + 1, exportFolder.length());
 			
 			// BSP/Materials -> BSP.Materials
 			group = group.replaceAll("\\/", ".");
