@@ -5,6 +5,8 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import java.util.logging.Level;
+
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.MapConverter;
@@ -556,7 +558,17 @@ public class T3DLight extends T3DSound {
 
 	@Override
 	public boolean isValidWriting() {
-		return brightness > 0 && super.isValidWriting();
+
+		if (brightness == 0) {
+			return false;
+		}
+		// FIXME directional light makes crash on play (tested map CTF-Turbo)
+		else if (t3dClass == UE4_LightActor.DirectionalLight.name()) {
+			logger.log(Level.WARNING, getName() + " disabled conversion.");
+			return false;
+		} else {
+			return super.isValidWriting();
+		}
 	}
 
 }
