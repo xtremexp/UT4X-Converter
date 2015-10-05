@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
@@ -21,16 +24,17 @@ import javax.vecmath.Vector4d;
  */
 public class PSKStaticMesh {
 
+	Logger logger = Logger.getLogger(PSKStaticMesh.class.getName());
+
 	/**
 	 * Reference to .psk file
 	 */
 	File pskFile;
 
-	public PSKStaticMesh(File pskFile) {
-		super();
+	public PSKStaticMesh(File pskFile) throws Exception {
 		this.pskFile = pskFile;
 		initialise();
-		load();
+		read();
 	}
 
 	private void initialise() {
@@ -56,8 +60,17 @@ public class PSKStaticMesh {
 		public long dataSize;
 		public long dataCount;
 
-		public ChunkHeader(ByteBuffer bf) {
+		public ChunkHeader(ByteBuffer bf) throws Exception {
 
+			try {
+				read(bf);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.severe("Error reading header of staticmesh " + getPskFile().getName());
+			}
+		}
+
+		private void read(ByteBuffer bf) {
 			chunkID = readString(bf, 20);
 			typeFlag = bf.getInt();
 			dataSize = bf.getInt();
@@ -70,7 +83,11 @@ public class PSKStaticMesh {
 		String s = "";
 
 		for (int i = 0; i < length; i++) {
-			s += (char) bf.get();
+			if (bf.hasRemaining()) {
+				s += (char) bf.get();
+			} else {
+				s += "";
+			}
 		}
 
 		return s;
@@ -78,8 +95,9 @@ public class PSKStaticMesh {
 
 	public class Vertex {
 
-		public long pointIndex;
-		public float u, v;
+		long pointIndex;
+		public float u;
+		public float v;
 		byte matIndex;
 		byte reserved;
 		short pad;
@@ -94,8 +112,6 @@ public class PSKStaticMesh {
 				matIndex = bf.get();
 				reserved = bf.get();
 				pad = bf.getShort();
-
-				System.out.println("pointIndex:" + pointIndex + " u:" + u + " v:" + v + " reserved:" + reserved + " pad:" + pad);
 			} else {
 				pointIndex = bf.getInt();
 				u = bf.getFloat();
@@ -107,7 +123,7 @@ public class PSKStaticMesh {
 		}
 	}
 
-	public class Triangle {
+	class Triangle {
 
 		long wedge0, wedge1, wedge2;
 		byte matIndex, auxMatIndex;
@@ -120,7 +136,6 @@ public class PSKStaticMesh {
 			matIndex = bf.get();
 			auxMatIndex = bf.get();
 			smoothingGroups = bf.getInt();
-			System.out.println("W0:" + wedge0 + " W1:" + wedge1 + " W2:" + wedge2 + " smoothingGroups:" + smoothingGroups);
 		}
 	}
 
@@ -142,12 +157,15 @@ public class PSKStaticMesh {
 			auxFlags = bf.getInt();
 			lodBias = bf.getInt();
 			lodStyle = bf.getInt();
-
-			System.out.println("materialName:" + materialName + " textureIndex:" + textureIndex + " polyFlags:" + polyFlags + " auxMaterial:" + auxMaterial);
 		}
+
+		public String getMaterialName() {
+			return materialName;
+		}
+
 	}
 
-	public class Bone {
+	class Bone {
 
 		String name;
 		long flags;
@@ -170,13 +188,24 @@ public class PSKStaticMesh {
 		}
 	}
 
-	public class RawWeight {
+	public PSKStaticMesh() {
+	}
+
+	class RawWeight {
 
 		float weight;
 		long pointIndex;
 		long boneIndex;
 
 		public RawWeight(ByteBuffer bf) {
+			try {
+				read(bf);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		private void read(ByteBuffer bf) {
 			weight = bf.getFloat();
 			pointIndex = bf.getInt();
 			boneIndex = bf.getInt();
@@ -190,7 +219,6 @@ public class PSKStaticMesh {
 		v.y = bf.getFloat();
 		v.z = bf.getFloat();
 
-		System.out.println(v);
 		return v;
 	}
 
@@ -205,7 +233,11 @@ public class PSKStaticMesh {
 		return v;
 	}
 
-	public void load() {
+	private void read() throws Exception {
+
+		if (pskFile == null || !pskFile.exists()) {
+			return;
+		}
 
 		FileChannel inChannel = null;
 
@@ -252,7 +284,6 @@ public class PSKStaticMesh {
 				} else if ("FACE3200".equals(ch2.chunkID.trim())) {
 
 					long numTriangles = ch2.dataCount;
-					System.out.println("TODO");
 
 				}
 
@@ -285,9 +316,6 @@ public class PSKStaticMesh {
 				// TODO EXTRAUV0
 				// TODO FACE3200
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
 		} finally {
 			try {
 				inChannel.close();
@@ -327,18 +355,42 @@ public class PSKStaticMesh {
 		return rawWeights;
 	}
 
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
+
 	public static void main(String args[]) {
 
-		File file = new File("Z:\\BarrenHardware_Lights_ELight01BA.psk");
-		PSKStaticMesh psk = new PSKStaticMesh(file);
+		File f = new File("C:\\Users\\XXX\\workspace\\UT4 Converter\\Converted\\DM-1on1-Roughinery\\Texture");
+
+		for (File ff : f.listFiles()) {
+
+			if (!ff.getName().endsWith(".pskx")) {
+				continue;
+			}
+			try {
+				Files.move(ff.toPath(), new File(ff.getAbsolutePath().split("\\.")[0] + ".psk").toPath(), StandardCopyOption.ATOMIC_MOVE);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		File file = new File("C:\\Users\\XXX\\workspace\\UT4 Converter\\Converted\\DM-1on1-Serpentine\\StaticMesh\\AnubisStatic_All_pharoh.psk");
+		PSKStaticMesh psk = null;
+		try {
+			psk = new PSKStaticMesh(file);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.out.println(file);
 
-		System.out.println("Num Points: " + psk.getVertices().size());
+		System.out.println("Num Vertices: " + psk.getVertices().size());
 		System.out.println("Num Wedges: " + psk.getWedges().size());
 		System.out.println("Num Triangles: " + psk.getTriangles().size());
 		System.out.println("Num Materials: " + psk.getMaterials().size());
-		System.out.println("Num RawWeights: " + psk.getRawWeights().size());
 
 		for (Material mat : psk.getMaterials()) {
 			System.out.println("Material: " + mat.materialName);

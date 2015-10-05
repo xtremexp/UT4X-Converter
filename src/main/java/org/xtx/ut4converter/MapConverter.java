@@ -41,8 +41,8 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.UIUtils;
-import org.xtx.ut4converter.tools.psk.PSKReader;
-import org.xtx.ut4converter.tools.psk.PSKReader.Material;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh.Material;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -587,7 +587,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void findTexturesUsedInStaticMeshes() {
 
-		PSKReader pskReader = null;
+		PSKStaticMesh pskReader = null;
 
 		for (UPackage unrealPackage : mapPackages.values()) {
 
@@ -602,7 +602,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 				if (exportedFile != null && exportedFile.length() > 0) {
 					try {
-						pskReader = new PSKReader(exportedFile);
+						pskReader = new PSKStaticMesh(exportedFile);
 						String mats = "";
 
 						for (Material mat : pskReader.getMaterials()) {
