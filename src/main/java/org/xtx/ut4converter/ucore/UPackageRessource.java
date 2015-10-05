@@ -8,7 +8,6 @@ package org.xtx.ut4converter.ucore;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
@@ -16,7 +15,6 @@ import java.util.logging.Logger;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -27,6 +25,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.TextureConverter;
 import org.xtx.ut4converter.tools.TextureFormat;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 
 /**
  * Some ressource such as texture, sound, ... embedded into some unreal package
@@ -59,7 +58,16 @@ public class UPackageRessource {
 	 */
 	boolean exportFailed;
 
+	/**
+	 * Means this ressource is used in map being converted. If used the exported
+	 * file should not be deleted otherwise should be
+	 */
 	boolean isUsedInMap;
+	
+	/**
+	 * Means this
+	 */
+	boolean isUsedInStaticMesh;
 
 	/**
 	 * Group of ressource (optional)
@@ -85,11 +93,10 @@ public class UPackageRessource {
 	 * Only for material package ressources
 	 */
 	MaterialInfo materialInfo;
-	
 	/**
-	 * Use this ressource as replacement.
-	 * Might be used for material ressources
-	 * which are replaced with diffuse texture (until we can manage properly materials)
+	 * Use this ressource as replacement. Might be used for material ressources
+	 * which are replaced with diffuse texture (until we can manage properly
+	 * materials)
 	 */
 	UPackageRessource replacement;
 
@@ -202,22 +209,23 @@ public class UPackageRessource {
 
 		this.unrealPackage = uPackage;
 		this.type = uPackage.type;
-		
+
 		// if ressource in map package
 		// means is always used
-		if(uPackage.isMapPackage(mapConverter.getMapPackageName())){
+		if (uPackage.isMapPackage(mapConverter.getMapPackageName())) {
 			setIsUsedInMap(true);
 		}
 		uPackage.ressources.add(this);
 	}
 
 	public void readTextureDimensions() {
-		if(replacement != null){
+		if (replacement != null) {
 			readTextureDimensions(mapConverter, replacement);
 		} else {
 			readTextureDimensions(mapConverter, this);
 		}
 	}
+
 	/**
 	 * From exported texture file get the dimension of the texture Should be
 	 * only called when converting polygon with the texture associated
@@ -274,6 +282,9 @@ public class UPackageRessource {
 				}
 			}
 		}
+
+		int x = 0;
+		x++;
 	}
 
 	/**
@@ -322,16 +333,17 @@ public class UPackageRessource {
 	 */
 	public String getConvertedName(MapConverter mapConverter) {
 
-		if(replacement != null){
+		if (replacement != null) {
 			return replacement.getConvertedName(mapConverter);
 		}
-		
+
 		String suffix = "";
 
 		if (type == Type.SOUND) {
 			// UE4 can handle both cue or normal sounds
 			// but better use cue since lift sounds need volume attenuation
-			// depending on player distance ("AttenuationSettings=Attenuation_Lifts")
+			// depending on player distance
+			// ("AttenuationSettings=Attenuation_Lifts")
 			if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 				// beware UT3 needs cue for AmbientSound but not for
 				// AmbientSoundSimple actor
@@ -356,10 +368,10 @@ public class UPackageRessource {
 	public String getConvertedFileName() {
 		String s[] = exportInfo.getExportedFile().getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
-		
+
 		// umodel does export staticmeshes as .pskx
 		// but we want rename as .psk so we can import in blender
-		if(getType() == Type.STATICMESH && "pskx".equals(currentFileExt)){
+		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
 			currentFileExt = "psk";
 		}
 
@@ -581,10 +593,25 @@ public class UPackageRessource {
 
 	/**
 	 * Replaces current resources with new one
+	 * 
 	 * @param ressource
 	 */
-	public void replaceWith(UPackageRessource ressource){
+	public void replaceWith(UPackageRessource ressource) {
 		this.replacement = ressource;
 		ressource.setIsUsedInMap(true);
+	}
+
+	public UPackageRessource getReplacement() {
+		return replacement;
+	}
+
+	/**
+	 * Return the simple name of the ressource E.G:
+	 * Texture'HumanoidArchitecture.Bases.bas05bHA' -> bas05bHA
+	 * 
+	 * @return Simple name of texture
+	 */
+	public String getName() {
+		return name;
 	}
 }

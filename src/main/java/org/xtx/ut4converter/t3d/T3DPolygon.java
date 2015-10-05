@@ -8,8 +8,11 @@ package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
 import java.util.LinkedList;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -72,7 +75,7 @@ public class T3DPolygon {
 	Integer smoothingMask;
 
 	Vector3d original_tex_u, original_tex_v;
-	
+
 	Vector3d texture_u, texture_v;
 
 	/**
@@ -328,10 +331,14 @@ public class T3DPolygon {
 
 			texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
 
+			if (texture.getReplacement() != null) {
+				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));
+			}
+
 			// For Unreal 3 and 4
 			// we need to update the UV scaling which is dependant from texture
 			// size
-			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
 
 				texture.readTextureDimensions();
 
@@ -340,13 +347,13 @@ public class T3DPolygon {
 				if (texture.getTextureDimensions() != null) {
 
 					if (texture_u != null) {
-						texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
+						texture_u.scale(1 / (texture.getTextureDimensions().width / 91.43d));
 					}
 
 					if (texture_v != null) {
-						texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
+						// 91.43
+						texture_v.scale(1 / (texture.getTextureDimensions().height / 91.43d));
 					}
-
 				}
 
 				if (origin != null) {

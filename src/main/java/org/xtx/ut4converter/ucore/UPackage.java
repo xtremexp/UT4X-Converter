@@ -64,7 +64,10 @@ public class UPackage {
 		this.name = name;
 		this.type = type;
 		this.game = game;
-		ressources.add(uRessource);
+
+		if (uRessource != null) {
+			ressources.add(uRessource);
+		}
 	}
 
 	public String getName() {
@@ -306,9 +309,14 @@ public class UPackage {
 	public void setExported(boolean exported) {
 		this.exported = exported;
 	}
-	
-	public boolean isMapPackage(String mapName){
+
+	public boolean isMapPackage(String mapName) {
 		return name != null && name.equals(mapName);
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }

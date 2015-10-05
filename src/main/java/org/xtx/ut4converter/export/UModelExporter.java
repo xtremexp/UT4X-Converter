@@ -64,7 +64,12 @@ public class UModelExporter extends UTPackageExtractor {
 			logger.log(Level.FINE, logLine);
 
 			if (logLine.startsWith("Exporting") && !logLine.startsWith("Exporting objects")) {
-				parseRessourceExported(logLine, ressource.getUnrealPackage());
+				try {
+					parseRessourceExported(logLine, ressource.getUnrealPackage());
+				} catch (Exception e) {
+					logger.log(Level.WARNING, "Error umodel batch line", e);
+					System.out.println("Export Line: " + logLine);
+				}
 			}
 
 		}
@@ -91,6 +96,11 @@ public class UModelExporter extends UTPackageExtractor {
 		String split[] = logLine.split(" to ");
 		String split2[] = split[0].split("\\ "); // Exporting Texture bdr02BA
 
+		// for resources that have been exported by umodel
+		// with package != original package (staticmesh package -> texture (in
+		// another package) ..)
+		boolean forceIsUsedInMap = false;
+
 		// S_ASC_Arch2_SM_StonePillar_02
 		// bdr02BA
 		String name = split2[2];
@@ -98,14 +108,19 @@ public class UModelExporter extends UTPackageExtractor {
 		// Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh
 		String exportFolder = split[1];
 
-		int startIdx = exportFolder.lastIndexOf(unrealPackage.getName()) + unrealPackage.getName().length() + 1;
+		String packageName = split[1].substring(mapConverter.getTempExportFolder().getAbsolutePath().length() + 1).split("/")[0];
 
 		String group = null;
+		int startIdxGroup = exportFolder.indexOf(packageName, mapConverter.getTempExportFolder().getAbsolutePath().length()) + packageName.length() + 1;
+
 		// Some ressources does not have group info
-		if (exportFolder.length() >= startIdx) {
+		if (startIdxGroup < exportFolder.length()) {
 			// <xxx>CTF-Strident\Temp/LT_Deco/BSP/Materials -> BSP/Materials
-			group = exportFolder.substring(exportFolder.indexOf(unrealPackage.getName(), mapConverter.getTempExportFolder().getAbsolutePath().length()) + unrealPackage.getName().length() + 1, exportFolder.length());
-			
+			// sometimes umodel export other files then in original package
+			// Exporting Texture detail40 to C:/Users/XXX/workspace/UT4
+			// Converter/Converted/DM-Rankin/Temp/UCGeneric/DetailTextures
+			group = exportFolder.substring(startIdxGroup, exportFolder.length());
+
 			// BSP/Materials -> BSP.Materials
 			group = group.replaceAll("\\/", ".");
 		}
@@ -124,6 +139,23 @@ public class UModelExporter extends UTPackageExtractor {
 
 		else if (typeStr.toLowerCase().contains("sound")) {
 			type = Type.SOUND;
+		}
+
+		// sometimes umodel exports other files from other package (e.g:
+		// HumanoidArchitecture.utx from ut2004)
+		// "Exporting Texture detail40 to C:/Users/XXX/workspace/UT4 Converter/Converted/DM-Rankin/Temp/UCGeneric/DetailTextures"
+		if (!packageName.toLowerCase().equals(unrealPackage.getName().toLowerCase())) {
+			unrealPackage = mapConverter.findPackageByName(packageName);
+
+			if (unrealPackage == null) {
+				unrealPackage = new UPackage(packageName, type, mapConverter.getInputGame(), null);
+				// don't flag package as exported because umodel do a partial
+				// export in that case
+				// for some specific resource(s)
+				// unrealPackage.setExported(true);
+				mapConverter.getMapPackages().put(packageName, unrealPackage);
+				forceIsUsedInMap = true;
+			}
 		}
 
 		File exportedFile = null;
@@ -157,9 +189,9 @@ public class UModelExporter extends UTPackageExtractor {
 		String ressourceName;
 
 		if (group != null) {
-			ressourceName = unrealPackage.getName() + "." + group + "." + name;
+			ressourceName = packageName + "." + group + "." + name;
 		} else {
-			ressourceName = unrealPackage.getName() + "." + name;
+			ressourceName = packageName + "." + name;
 		}
 
 		UPackageRessource uRessource = unrealPackage.findRessource(ressourceName);
@@ -173,14 +205,14 @@ public class UModelExporter extends UTPackageExtractor {
 															// don't have group
 															// we retrieve the
 															// group ...
-			if(unrealPackage.isMapPackage(mapConverter.getMapPackageName())){
+			if (unrealPackage.isMapPackage(mapConverter.getMapPackageName())) {
 				uRessource.setIsUsedInMap(true);
 			}
 			uRessource.setType(type);
 		} else {
 			uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFile, this);
 			uRessource.setType(type);
-			
+
 			if (isMaterial) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
 
@@ -192,6 +224,10 @@ public class UModelExporter extends UTPackageExtractor {
 					uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse());
 				}
 			}
+		}
+
+		if (uRessource != null && forceIsUsedInMap) {
+			uRessource.setIsUsedInMap(true);
 		}
 	}
 

@@ -479,6 +479,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		t3dLvlConvertor.convert();
 		updateProgress(80, 100);
 
+		// find used textures in staticmeshes
+		findTexturesUsedInStaticMeshes();
+
 		cleanAndConvertRessources();
 
 		updateProgress(100, 100);
@@ -488,47 +491,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		UIUtils.openExplorer(getOutPath().toFile());
 
 		showInstructions();
-	}
-
-	/**
-	 * Display material info of staticmesh resource (is needed to set the right
-	 * material in UE4Editor)
-	 * 
-	 * @param smResource
-	 */
-	private void showStaticMeshMatInfo(UPackageRessource smResource) {
-
-		// FIXME sometimes a few packages are tagged as staticmeshes (e.g:
-		// DM-1on1spirit DM-1on1-Spirit_fagface.tga(?))
-		if (smResource.getExportedFile() == null || !smResource.getExportedFile().getName().endsWith(".psk")) {
-			return;
-		}
-
-		try {
-
-			PSKReader pskR = new PSKReader(smResource.getExportedFile());
-			pskR.setLogger(logger);
-
-			List<Material> smMats = pskR.getMaterials();
-
-			if (smMats != null) {
-
-				logger.log(Level.INFO, smResource.getFullName() + " SM materials used:");
-
-				String mats = "";
-
-				for (Material smMat : smMats) {
-					// TODO improve
-					// .psk only extract name not even package or group
-					// tricky get the right texture!
-					mats += smMat.getMaterialName() + " | ";
-				}
-
-				logger.log(Level.INFO, mats);
-			}
-		} catch (Exception e) {
-			logger.warning("Error reading staticmesh " + smResource.getExportedFile().getName());
-		}
 	}
 
 	/**
@@ -617,6 +579,61 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
+	 * Flag textures in staticmeshes used in map as used Display material info
+	 * in logs as well
+	 * 
+	 * TODO re-write generated psk files to change material name to fit with
+	 * packname_group_name convention (with max length = 64)
+	 */
+	private void findTexturesUsedInStaticMeshes() {
+
+		PSKReader pskReader = null;
+
+		for (UPackage unrealPackage : mapPackages.values()) {
+
+			for (UPackageRessource ressource : unrealPackage.getRessources()) {
+
+				if (!ressource.isUsedInMap() || ressource.getType() != Type.STATICMESH) {
+					continue;
+				}
+
+				// .psk file
+				File exportedFile = ressource.getExportedFile();
+
+				if (exportedFile != null && exportedFile.length() > 0) {
+					try {
+						pskReader = new PSKReader(exportedFile);
+						String mats = "";
+
+						for (Material mat : pskReader.getMaterials()) {
+
+							String matName = mat.getMaterialName();
+
+							if (matName != null) {
+								UPackageRessource matR = findRessourceByNameOnly(matName, Type.TEXTURE);
+
+								if (matR != null) {
+									matR.setIsUsedInMap(true);
+									mats += matR.getFullName();
+								} else {
+									mats += matName;
+								}
+
+								mats += " | ";
+							}
+						}
+
+						logger.log(Level.INFO, "Material used for " + ressource);
+						logger.log(Level.INFO, mats);
+					} catch (Exception e) {
+						logger.log(Level.SEVERE, e.getMessage(), e);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Delete unused files and convert them to good format if needed. (e.g:
 	 * convert staticmeshes to .ase or .fbx format for import in UE4)
 	 * 
@@ -668,10 +685,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 						exportedFile = newFile;
 						ressource.setExportedFile(exportedFile);
-
-						if (ressource.getType() == Type.STATICMESH) {
-							showStaticMeshMatInfo(ressource);
-						}
 
 						if (wasConverted) {
 							logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
@@ -959,6 +972,33 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 	}
 
+	/**
+	 * Find package ressource by simple name
+	 * 
+	 * @param name
+	 *            Simple name (e.g: 'bas05bHA')
+	 * @param resType
+	 *            Ressource type
+	 * @return Ressource using that name
+	 */
+	public UPackageRessource findRessourceByNameOnly(String name, Type resType) {
+
+		UPackageRessource ressource = null;
+		name = name.toLowerCase();
+
+		for (UPackage pack : mapPackages.values()) {
+
+			for (UPackageRessource pakRes : pack.getRessources()) {
+				if (pakRes.getType() == resType && pakRes.getName().toLowerCase().equals(name)) {
+					ressource = pakRes;
+					break;
+				}
+			}
+		}
+
+		return ressource;
+	}
+
 	public UPackageRessource getUPackageRessource(String fullRessourceName, T3DRessource.Type type) {
 		return getUPackageRessource(fullRessourceName, null, type);
 	}
@@ -984,27 +1024,30 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		String[] split = fullRessourceName.split("\\.");
 
+		// no package info
 		if (packageName == null) {
+
 			// having only name of ressource not which package it belongs to
 			// happens for UE1/2 where polygon t3d data only store name
 			// so we using the old "ut3 converter" name to package db until
 			// finding a better way ...
 			if (split.length <= 1) {
-				
+
 				// for ut99 polygon data does not give package info
-				if(type == T3DRessource.Type.TEXTURE && inputGame == UTGame.UT99){
+				if (type == T3DRessource.Type.TEXTURE && inputGame == UTGame.UT99) {
 					String name = split[0];
 					packageName = nameToPackage.get(name.toLowerCase());
 					fullRessourceName = packageName + "." + name;
-				
-				} 
+
+				}
 				// assuming it's from map
 				// as seen in CTF-Turbo for staticmeshes from map package
 				// does not give full ressource name
 				// e.g: StaticMesh=StaticMesh'sm_Lamp_02'
-				// but ressource in "CTF-Turbo.StaticMeshes_Lamps.sm_Lamp_02" ...
+				// but ressource in "CTF-Turbo.StaticMeshes_Lamps.sm_Lamp_02"
+				// ...
 				// FIXME on exporting ressource get the right group
-				else if(isFrom(UnrealEngine.UE3)){
+				else if (isFrom(UnrealEngine.UE3)) {
 					packageName = getMapPackageName();
 					fullRessourceName = packageName + "." + split[0];
 				}
@@ -1206,11 +1249,34 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * From map file return map package name
-	 * E.g: DM-Ranking.ut2 -> DM-Ranking
+	 * From map file return map package name E.g: DM-Ranking.ut2 -> DM-Ranking
+	 * 
 	 * @return
 	 */
-	public String getMapPackageName(){
+	public String getMapPackageName() {
 		return getInMap().getName().split("\\.")[0];
 	}
+
+	/**
+	 * Find package used in map by name
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public UPackage findPackageByName(String name) {
+
+		UPackage pack = null;
+		name = name.toLowerCase();
+
+		if (name != null && mapPackages.containsKey(name)) {
+			pack = mapPackages.get(name);
+		}
+
+		return pack;
+	}
+
+	public Map<String, UPackage> getMapPackages() {
+		return mapPackages;
+	}
+
 }

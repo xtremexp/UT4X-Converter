@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+$ * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -211,6 +211,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					analyzeLine(line);
 					linenumber++;
 				} catch (Exception e) {
+					e.printStackTrace();
 					logger.log(Level.SEVERE, "Error parsing Line #" + linenumber + " for " + inT3dFile.getName());
 					if (uta != null) {
 						logger.log(Level.SEVERE, "Current Actor Class: " + uta.t3dClass + " Line:");
