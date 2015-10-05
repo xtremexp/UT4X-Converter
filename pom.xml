@@ -5,7 +5,7 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT4-Converter</artifactId>
-	<version>0.6</version>
+	<version>0.7-DEV</version>
 	<packaging>jar</packaging>
 
 	<name>UT4 Converter</name>

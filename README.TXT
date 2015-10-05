@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.6
+- Version: 0.7-DEV
 - Author: XtremeXp
 - Release Date: 27/09/2015
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
