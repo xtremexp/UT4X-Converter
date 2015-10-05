@@ -338,7 +338,7 @@ public class T3DPolygon {
 			// For Unreal 3 and 4
 			// we need to update the UV scaling which is dependant from texture
 			// size
-			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
+			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
 
 				texture.readTextureDimensions();
 
@@ -347,12 +347,12 @@ public class T3DPolygon {
 				if (texture.getTextureDimensions() != null) {
 
 					if (texture_u != null) {
-						texture_u.scale(1 / (texture.getTextureDimensions().width / 91.43d));
+						texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
 					}
 
 					if (texture_v != null) {
 						// 91.43
-						texture_v.scale(1 / (texture.getTextureDimensions().height / 91.43d));
+						texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
 					}
 				}
 
