@@ -293,18 +293,22 @@ def pskimport(infile,importmesh,importbone,bDebugLogPSK,importmultiuvtextures):
     #================================================================================================== 
     ##
     #read the MATT0000 header
+    matnames = []
+    
     indata = unpack('20s3i', pskfile.read(32))
     recCount = indata[3]
     printlog("Nbr of MATT0000 records: " +  str(recCount) + "\n" )
     printlog(" - Not importing any material data now. PSKs are texture wrapped! \n")
     counter = 0
     materialcount = 0
+    
     while counter < recCount:
         counter = counter + 1
         indata = unpack('64s6i', pskfile.read(88))
         materialcount += 1
         print("Material", counter)
         print("Mat name %s", indata[0])
+        matnames.append(indata[0].decode("utf-8"))
 
     ##
     #================================================================================================== 
@@ -595,7 +599,8 @@ def pskimport(infile,importmesh,importbone,bDebugLogPSK,importmultiuvtextures):
 
     for matcount in range(materialcount):
         #if texturedata != None:
-        matdata = bpy.data.materials.new(materialname + str(matcount))
+        matdata = bpy.data.materials.new(matnames[matcount])
+        #matdata = bpy.data.materials.new(materialname + str(matcount))
         #mtex = matdata.texture_slots.new()
         #mtex.texture = texture[matcount].data
         #print(type(texture[matcount].data))
