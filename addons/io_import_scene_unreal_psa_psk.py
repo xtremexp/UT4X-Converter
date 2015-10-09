@@ -17,11 +17,11 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-    "name": "Import Unreal Skeleton Mesh (.psk)/Animation Set (psa)",
-    "author": "Darknet, flufy3d, camg188",
-    "version": (2, 2),
+    "name": "Import Unreal Skeleton Mesh (.psk)/Animation Set (.psa)",
+    "author": "Darknet, flufy3d, camg188, befzz",
+    "version": (2, 6, 2),
     "blender": (2, 64, 0),
-    "location": "File > Import > Skeleton Mesh (.psk)/Animation Set (psa)",
+    "location": "File > Import > Skeleton Mesh (.psk)/Animation Set (.psa)",
     "description": "Import Skeleleton Mesh/Animation Data",
     "warning": "",
     "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.5/Py/"
@@ -43,509 +43,520 @@ Imports a *psk file to a new mesh
 -Export Text Log From Current Location File (Bool )
 """
 
+"""
+Version': '2.6.*' edited by befzz
+Github: https://github.com/Befzz/blender3d_import_psk_psa
+- No Scale support.
+"""
+
 import bpy
-import mathutils
 import math
-# XXX Yuck! 'from foo import *' is really bad!
-from mathutils import *
-from math import *
-from bpy.props import *
-from string import *
-from struct import *
-from math import *
-from bpy.props import *
-
-bpy.types.Scene.unrealbonesize = FloatProperty(
-    name="Bone Length",
-    description="Bone Length from head to tail distance",
-    default=1, min=0.001, max=1000
-)
-
-#output log in to txt file
-DEBUGLOG = False
-
-scale = 1.0
-bonesize = 1.0
+import re
+from mathutils import Vector, Matrix, Quaternion
+from bpy.props import (FloatProperty,
+                        StringProperty,
+                        BoolProperty,
+                        CollectionProperty,
+                        IntProperty,
+                        EnumProperty,
+                        PointerProperty )
+from bpy.types import UIList
+from struct import unpack, unpack_from
 from bpy_extras.io_utils import unpack_list, unpack_face_list
 
-class md5_bone:
+def utils_set_mode(mode):
+    if bpy.ops.object.mode_set.poll():
+            bpy.ops.object.mode_set(mode=mode, toggle = False)
+
+# since names have type ANSICHAR(signed char) - using cp1251(or 'ASCII'?)
+def util_bytes_to_str(in_bytes):
+    return in_bytes.rstrip(b'\x00').decode(encoding='cp1252', errors='replace')
+
+class class_md5_bone:
     bone_index = 0
     name = ""
-    bindpos = []
-    bindmat = []
+    # bindpos = []
+    #bindmat = []
     origmat = []
-    head = []
-    tail = []
     scale = []
-    parent = ""
+    parent = None
+    parent_name = ""
     parent_index = 0
-    blenderbone = None
-    roll = 0
-
-    def __init__(self):
-        self.bone_index = 0
-        self.name = ""
-        self.bindpos = [0.0] * 3
-        self.scale = [0.0] * 3
-        self.head = [0.0] * 3
-        self.tail = [0.0] * 3
-        self.bindmat = [None] * 3  # is this how you initilize a 2d-array
-        for i in range(3):
-            self.bindmat[i] = [0.0] * 3
-        self.origmat = [None] * 3  #is this how you initilize a 2d-array
-        for i in range(3):
-            self.origmat[i] = [0.0] * 3
-        self.parent = ""
-        self.parent_index = 0
-        self.blenderbone = None
+    __matrix_local_rot = None
+    __matrix_global_rot = None
+    __matrix_local = None
+    __matrix_global = None
 
     def dump(self):
         print ("bone index: ", self.bone_index)
         print ("name: ", self.name)
-        print ("bind position: ", self.bindpos)
-        print ("bind translation matrix: ", self.bindmat)
+        # print ("bind position: ", self.bindpos)
         print ("parent: ", self.parent)
         print ("parent index: ", self.parent_index)
-        print ("blenderbone: ", self.blenderbone)
-
-def getheadpos(pbone,bones):
-    pos_head = [0.0] * 3
-
-    #pos = mathutils.Vector((x,y,z)) * pbone.origmat
-    pos = pbone.bindmat.to_translation()
-
-    """
-    tmp_bone = pbone
-    while tmp_bone.name != tmp_bone.parent.name:
-        pos = pos * tmp_bone.parent.bindmat
-        tmp_bone = tmp_bone.parent
-    """
-
-    pos_head[0] = pos.x
-    pos_head[1] = pos.y
-    pos_head[2] = pos.z
-
-    return pos_head
-
-def gettailpos(pbone,bones):
-    pos_tail = [0.0] * 3
-    ischildfound = False
-    childbone = None
-    childbonelist = []
-    for bone in bones:
-        if bone.parent.name == pbone.name:
-            ischildfound = True
-            childbone = bone
-            childbonelist.append(bone)
-            
-    if ischildfound:
-        tmp_head = [0.0] * 3
-        for bone in childbonelist:
-            tmp_head[0] += bone.head[0]
-            tmp_head[1] += bone.head[1]
-            tmp_head[2] += bone.head[2]
-        tmp_head[0] /= len(childbonelist)
-        tmp_head[1] /= len(childbonelist)
-        tmp_head[2] /= len(childbonelist)
-        return tmp_head
+        # print ("blenderbone: ", self.blenderbone)
+        
+def select_all(select):
+    if select:
+        actionString = 'SELECT'
     else:
-        tmp_len = 0.0
-        tmp_len += (pbone.head[0] - pbone.parent.head[0]) ** 2
-        tmp_len += (pbone.head[1] - pbone.parent.head[1]) ** 2
-        tmp_len += (pbone.head[2] - pbone.parent.head[2]) ** 2
-        tmp_len = tmp_len ** 0.5 * 0.5
-        pos_tail[0] = pbone.head[0] + tmp_len * pbone.bindmat[0][0]
-        pos_tail[1] = pbone.head[1] + tmp_len * pbone.bindmat[1][0]
-        pos_tail[2] = pbone.head[2] + tmp_len * pbone.bindmat[2][0]
+        actionString = 'DESELECT'
 
-    return pos_tail
+    if bpy.ops.object.select_all.poll():
+        bpy.ops.object.select_all(action=actionString)
 
-def pskimport(infile,importmesh,importbone,bDebugLogPSK,importmultiuvtextures):
-    global DEBUGLOG
-    DEBUGLOG = bDebugLogPSK
+    if bpy.ops.mesh.select_all.poll():
+        bpy.ops.mesh.select_all(action=actionString)
+
+    if bpy.ops.pose.select_all.poll():
+        bpy.ops.pose.select_all(action=actionString)
+
+def util_ui_show_msg(msg):
+    bpy.ops.error.message_popup('INVOKE_DEFAULT', message = msg)
+        
+PSKPSA_FILE_HEADER = {
+    'psk':{'chunk_id':b'ACTRHEAD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'},
+    'psa':{'chunk_id':b'ANIMHEAD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'}
+}
+#TODO check chunk flag?
+def util_is_header_valid(filename, ftype, chunk_id, chunk_flag):
+    if chunk_id != PSKPSA_FILE_HEADER[ftype]['chunk_id']:
+        util_ui_show_msg(
+            "The selected input file is not a " + ftype +
+                        " file (header mismach)"
+            "\nExpected: "+str(PSKPSA_FILE_HEADER[ftype]['chunk_id'])+
+            "\nPresent: "+str(chunk_id)
+        )    
+        return False
+    return True
+    
+def util_gen_name_part(filepath):
+    '''strip path and extension from path'''
+    return re.match(r'.*[/\\]([^/\\]+?)(\..{2,5})?$', filepath).group(1)
+    
+def pskimport(filepath, bImportmesh, bImportbone, bDebugLogPSK, bImportsingleuv):
+    if not bImportbone and not bImportmesh:
+        util_ui_show_msg("Nothing to do.\nSet something for import.")
+        return False
+    file_ext = 'psk'
+    
     print ("--------------------------------------------------")
     print ("---------SCRIPT EXECUTING PYTHON IMPORTER---------")
     print ("--------------------------------------------------")
-    print (" DEBUG Log:",bDebugLogPSK)
-    print ("Importing file: ", infile)
+    print (" Debug Enabled:", bDebugLogPSK)
+    print (" Importing file:", filepath)
 
-    pskfile = open(infile,'rb')
-    if (DEBUGLOG):
-        logpath = infile.replace(".psk", ".txt")
+    #file may not exist
+    try:
+        pskfile = open(filepath,'rb')
+    except IOError:
+        util_ui_show_msg('Error while opening file for reading:\n  "'+filepath+'"')
+        return False
+    
+    if bDebugLogPSK:
+        #logpath = filepath.lower().replace("."+file_ext, ".txt")
+        logpath = filepath+".txt"
         print("logpath:",logpath)
         logf = open(logpath,'w')
 
     def printlog(strdata):
-        if (DEBUGLOG):
+        if bDebugLogPSK:
             logf.write(strdata)
+            
+    def printlog_line(*args):
+        if not bDebugLogPSK:
+            return
+        logf.write('\t'.join(list(map(str,args)))+"\n")
+        
+    def printlog_header():
+        if not bDebugLogPSK:
+            return
+        logf.write('ChunkID: {0}\nTypeFlag: {1}\nDataSize: {2}\nDataCount: {3}\n'.format(
+                    util_bytes_to_str(chunk_header_id),  chunk_header_type,
+                    chunk_header_datasize, chunk_header_datacount))
 
-    objName = infile.split('\\')[-1].split('.')[0]
+    # using this instead of class to avoid "object.prop" lookup. 3x faster.
+    chunk_header_id = None
+    chunk_header_type = None
+    chunk_header_datasize = None
+    chunk_header_datacount = None
+    #all binary Data of chunk for unpack (bytearray)
+    chunk_data = None
+    
+    #=================================================
+    #         VChunkHeader Struct
+    # ChunkID|TypeFlag|DataSize|DataCount
+    # 0      |1       |2       |3
+    #=================================================
+    # read("map"/"assign") a header and chunk data to local variables
+    def read_chunk():
+        nonlocal chunk_header_id,\
+                 chunk_header_type,\
+                 chunk_header_datasize,\
+                 chunk_header_datacount,\
+                 chunk_data
+        #read header
+        (chunk_header_id,
+         chunk_header_type,
+         chunk_header_datasize,
+         chunk_header_datacount) = unpack('20s3i', pskfile.read(32))
+        
+        # print('HEADER',chunk_header_id, chunk_header_type, chunk_header_datasize, chunk_header_datacount)
+        
+        # read all chunk data
+        chunk_data = pskfile.read(chunk_header_datacount * chunk_header_datasize)
+        
+        printlog_header()
 
-    me_ob = bpy.data.meshes.new(objName)
-    print("objName:",objName)
-    printlog(("New Mesh = " + me_ob.name + "\n"))
-    #read general header
-    indata = unpack('20s3i', pskfile.read(32))
-    #not using the general header at this time
+
+    # file name w/out extension
+    gen_name_part = util_gen_name_part(filepath)
+    gen_names = {
+        'armature_object':  gen_name_part + '.ao',
+        'armature_data':    gen_name_part + '.ad',
+            'mesh_object':  gen_name_part + '.mo',
+            'mesh_data':    gen_name_part + '.md'
+    }
+    if bImportmesh:
+        mesh_data = bpy.data.meshes.new(gen_names['mesh_data'])
+        printlog("New Mesh Data = " + mesh_data.name + "\n")
     #================================================================================================== 
-    # vertex point
+    # General
     #================================================================================================== 
-    #read the PNTS0000 header
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog(("Nbr of PNTS0000 records: " + str(recCount) + "\n"))
-    counter = 0
-    verts = []
-    verts2 = []
-    while counter < recCount:
-        counter = counter + 1
-        indata = unpack('3f', pskfile.read(12))
-        #print(indata[0], indata[1], indata[2])
-        verts.extend([(indata[0], indata[1], indata[2])])
-        verts2.extend([(indata[0], indata[1], indata[2])])
-        #print([(indata[0], indata[1], indata[2])])
-        printlog(str(indata[0]) + "|" + str(indata[1]) + "|" + str(indata[2]) + "\n")
-        #Tmsh.vertices.append(NMesh.Vert(indata[0], indata[1], indata[2]))
+    read_chunk()
+    
+    # check file header
+    if not util_is_header_valid(filepath, file_ext, chunk_header_id, chunk_header_type):
+        return False
 
     #================================================================================================== 
-    # UV
+    # Points (Vertices)
     #================================================================================================== 
-    #read the VTXW0000 header
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog("Nbr of VTXW0000 records: " + str(recCount)+ "\n")
-    counter = 0
-    UVCoords = []
-    #UVCoords record format = [index to PNTS, U coord, v coord]
-    printlog("[index to PNTS, U coord, v coord]\n");
-    while counter < recCount:
-        counter = counter + 1
-        indata = unpack('hhffhh', pskfile.read(16))
-        UVCoords.append([indata[0], indata[2], indata[3]])
-        printlog(str(indata[0]) + "|" + str(indata[2]) + "|" + str(indata[3]) + "\n")
-        #print('mat index %i', indata(4))
-        #print([indata[0], indata[2], indata[3]])
-        #print([indata[1], indata[2], indata[3]])
-
+    #read the PNTS0000 header ( VPoint )
+    read_chunk()
+    if bImportmesh:
+        verts  = [None] * chunk_header_datacount
+        
+        for counter in range( chunk_header_datacount ):
+            (vec_x, vec_y, vec_z) = unpack_from('3f', chunk_data, counter * chunk_header_datasize)
+            # verts[counter]  = (vec_y, vec_x, vec_z)
+            #FFIX
+            verts[counter]  = (vec_x, vec_y, vec_z)
+            #EFFIX
+            printlog_line(vec_x, vec_y, vec_z)
+            
     #================================================================================================== 
-    # Face
+    # Wedges (UV)
+    #================================================================================================== 
+    # https://github.com/gildor2/UModel/blob/master/Exporters/Psk.h
+    # for struct of VVertex
+    #
+    #read the VTXW0000 header ( VVertex )
+    read_chunk()
+    
+    if bImportmesh:
+        uv_material_indexes = []
+        UVCoords = [None] * chunk_header_datacount
+        #UVCoords record format = [pntIndx, U coord, v coord]
+        printlog("[pntIndx, U coord, v coord]\n");
+        for counter in range( chunk_header_datacount ):
+            (point_index,
+             u, v,
+             material_index) = unpack_from('=IffBxxx', chunk_data, counter * chunk_header_datasize )
+             
+            # print(point_index, u, v, material_index)
+            UVCoords[counter] = (point_index, u, v)
+            
+            printlog_line(point_index,u,v)
+            if not material_index in uv_material_indexes:
+                uv_material_indexes.append(material_index)
+           
+    #================================================================================================== 
+    # Faces
     #================================================================================================== 
     #read the FACE0000 header
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog("Nbr of FACE0000 records: " + str(recCount) + "\n")
-    #PSK FACE0000 fields: WdgIdx1|WdgIdx2|WdgIdx3|MatIdx|AuxMatIdx|SmthGrp
-    #associate MatIdx to an image, associate SmthGrp to a material
-    SGlist = []
-    counter = 0
-    faces = []
-    faceuv = []
-    facesmooth = []
-    #the psk values are: nWdgIdx1|WdgIdx2|WdgIdx3|MatIdx|AuxMatIdx|SmthGrp
-    printlog("nWdgIdx1|WdgIdx2|WdgIdx3|MatIdx|AuxMatIdx|SmthGrp \n")
-    while counter < recCount:
-        counter = counter + 1
-        indata = unpack('hhhbbi', pskfile.read(12))
-        printlog(str(indata[0]) + "|" + str(indata[1]) + "|" + str(indata[2]) + "|" + str(indata[3]) + "|" +
-                 str(indata[4]) + "|" + str(indata[5]) + "\n")
-        #indata[0] = index of UVCoords
-        #UVCoords[indata[0]]=[index to PNTS, U coord, v coord]
-        #UVCoords[indata[0]][0] = index to PNTS
-        PNTSA = UVCoords[indata[2]][0]
-        PNTSB = UVCoords[indata[1]][0]
-        PNTSC = UVCoords[indata[0]][0]
-        #print(PNTSA, PNTSB, PNTSC) #face id vertex
-        #faces.extend([0, 1, 2, 0])
-        faces.extend([(PNTSA, PNTSB, PNTSC, 0)])
-        uv = []
-        u0 = UVCoords[indata[2]][1]
-        v0 = UVCoords[indata[2]][2]
-        uv.append([u0, 1.0 - v0])
-        u1 = UVCoords[indata[1]][1]
-        v1 = UVCoords[indata[1]][2]
-        uv.append([u1, 1.0 - v1])
-        u2 = UVCoords[indata[0]][1]
-        v2 = UVCoords[indata[0]][2]
-        uv.append([u2, 1.0 - v2])
-        faceuv.append([uv, indata[3], indata[4], indata[5]])
+    read_chunk()
+    if bImportmesh:
+        #PSK FACE0000 fields: WdgIdx1|WdgIdx2|WdgIdx3|MatIdx|AuxMatIdx|SmthGrp
+        #associate MatIdx to an image, associate SmthGrp to a material
+        SGlist = []
 
-        #print("material:", indata[3])
-        #print("UV: ", u0, v0)
-        #update the uv var of the last item in the Tmsh.faces list
-        # which is the face just added above
-        ##Tmsh.faces[-1].uv = [(u0, v0), (u1, v1), (u2, v2)]
-        #print("smooth:",indata[5])
-        #collect a list of the smoothing groups
-        facesmooth.append(indata[5])
-        #print(indata[5])
-        if SGlist.count(indata[5]) == 0:
-            SGlist.append(indata[5])
-            print("smooth:", indata[5])
-        #assign a material index to the face
-        #Tmsh.faces[-1].materialIndex = SGlist.index(indata[5])
-    printlog("Using Materials to represent PSK Smoothing Groups...\n")
-    #==========
-    # skip something...
-    #==========
+        faces = [None] * chunk_header_datacount
+        faceuv = [None] * chunk_header_datacount
+        facesmooth = []
+        printlog("nWdgIdx1\tWdgIdx2\tWdgIdx3\tMatIdx\tAuxMatIdx\tSmthGrp \n")
+        
+        # smlist = []
+        mat_groups = {}
+        
+        for counter in range(chunk_header_datacount):
+            (pntIndxA, pntIndxB, pntIndxC,
+             MatIndex, AuxMatIndex, SmoothingGroup
+             ) = unpack_from('hhhbbi', chunk_data, counter * chunk_header_datasize)
+             
+            printlog_line(pntIndxA, pntIndxB, pntIndxC, MatIndex, AuxMatIndex, SmoothingGroup)
 
+            # UVCoords is(point_index, u, v)
+            #             0            1  2
+            PNTSA = UVCoords[pntIndxC][0]
+            PNTSB = UVCoords[pntIndxB][0]
+            PNTSC = UVCoords[pntIndxA][0]
+            #print(PNTSA, PNTSB, PNTSC) #face id vertex
+ 
+            faces[counter] = (PNTSA, PNTSB, PNTSC, 0)
+
+            uv = (
+                ( UVCoords[pntIndxC][1], 1.0 - UVCoords[pntIndxC][2] ),
+                ( UVCoords[pntIndxB][1], 1.0 - UVCoords[pntIndxB][2] ),
+                ( UVCoords[pntIndxA][1], 1.0 - UVCoords[pntIndxA][2] )
+            )
+            
+            faceuv[counter] = (uv, MatIndex, AuxMatIndex, SmoothingGroup)
+
+            if not MatIndex in mat_groups:
+                # print('mat:', MatIndex)
+                mat_groups[MatIndex] = []
+            mat_groups[MatIndex].append( uv )
+
+            #collect a list of the smoothing groups
+            facesmooth.append(SmoothingGroup)
+
+            # if not indata[5] in smlist:
+                # print('SM:',indata[5])
+                # smlist.append(indata[5])
+                
+            if SGlist.count(SmoothingGroup) == 0:
+                SGlist.append(SmoothingGroup)
+                # print("smooth:", SmoothingGroup)
+            #assign a material index to the face
+            #Tmsh.faces[-1].materialIndex = SGlist.index(indata[5])
+        printlog("Using Materials to represent PSK Smoothing Groups...\n")
+        
+        # for mg in mat_groups:
+            # print('mat_group,len:',mg,len(mat_groups[mg]))
+    
     #================================================================================================== 
-    # Material
+    # Materials
     #================================================================================================== 
-    ##
     #read the MATT0000 header
-    matnames = []
+    read_chunk()
     
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog("Nbr of MATT0000 records: " +  str(recCount) + "\n" )
-    printlog(" - Not importing any material data now. PSKs are texture wrapped! \n")
-    counter = 0
-    materialcount = 0
-    
-    while counter < recCount:
-        counter = counter + 1
-        indata = unpack('64s6i', pskfile.read(88))
-        materialcount += 1
-        print("Material", counter)
-        print("Mat name %s", indata[0])
-        matnames.append(indata[0].decode("utf-8"))
+    if bImportmesh:
+        print("-- Materials -- (index, name, faces)")
+        # printlog(" - Not importing any material data now. PSKs are texture wrapped! \n")
+        materials = []
+        
+        for counter in range(chunk_header_datacount):
 
-    ##
+            (MaterialNameRaw,
+             TextureIndex,
+             PolyFlags,
+             AuxMaterial,
+             AuxFlags,
+             LodBias,
+             LodStyle ) = unpack_from('64s6i', chunk_data, chunk_header_datasize * counter)
+            
+            materialname = util_bytes_to_str( MaterialNameRaw )
+            matdata = bpy.data.materials.get(materialname)
+            if matdata is None:
+                matdata = bpy.data.materials.new( materialname )
+            materials.append( matdata)
+            mesh_data.materials.append( matdata )
+            if mat_groups.get(counter) is not None:
+                print("%i: %s" % (counter, materialname), len(mat_groups[counter]))
+
     #================================================================================================== 
-    # Bones (Armature)
+    # Bones (VBone .. VJointPos )
     #================================================================================================== 
     #read the REFSKEL0 header
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog( "Nbr of REFSKEL0 records: " + str(recCount) + "\n")
-    #REFSKEL0 fields - Name|Flgs|NumChld|PrntIdx|Qw|Qx|Qy|Qz|LocX|LocY|LocZ|Lngth|XSize|YSize|ZSize
-
-    Bns = []
-    bone = []
+    #REFSKEL0 - Name|Flgs|NumChld|PrntIdx|Qw|Qx|Qy|Qz|LocX|LocY|LocZ|Lngth|XSize|YSize|ZSize
+    read_chunk()
 
     md5_bones = []
     bni_dict = {}
-    #================================================================================================== 
-    # Bone Data 
-    #==================================================================================================
-    counter = 0
-    print ("---PRASE--BONES---")
-    printlog("Name|Flgs|NumChld|PrntIdx|Qx|Qy|Qz|Qw|LocX|LocY|LocZ|Lngth|XSize|YSize|ZSize\n")
-    while counter < recCount:
-        indata = unpack('64s3i11f', pskfile.read(120))
-        #print( "DATA",str(indata))
 
-        bone.append(indata)
+    printlog("Name\tFlgs\tNumChld\tPrntIdx\tQx\tQy\tQz\tQw\tLocX\tLocY\tLocZ\tLngth\tXSize\tYSize\tZSize\n")
 
-        createbone = md5_bone()
-        #temp_name = indata[0][:30]
-        temp_name = indata[0]
-        temp_name = bytes.decode(temp_name)
-        temp_name = temp_name.lstrip(" ")
-        temp_name = temp_name.rstrip(" ")
-        temp_name = temp_name.strip()
-        temp_name = temp_name.strip( bytes.decode(b'\x00'))
-        printlog(temp_name + "|" + str(indata[1]) + "|" + str(indata[2]) + "|" + str(indata[3]) + "|" +
-                 str(indata[4]) + "|" + str(indata[5]) + "|" + str(indata[6]) + "|" + str(indata[7]) + "|" +
-                 str(indata[8]) + "|" + str(indata[9]) + "|" + str(indata[10]) + "|" + str(indata[11]) + "|" +
-                 str(indata[12]) + "|" + str(indata[13]) + "|" + str(indata[14]) + "\n")
-        createbone.name = temp_name
-        createbone.bone_index = counter
-        createbone.parent_index = indata[3]
-        createbone.bindpos[0] = indata[8]
-        createbone.bindpos[1] = indata[9]
-        createbone.bindpos[2] = indata[10]
-        createbone.scale[0] = indata[12]
-        createbone.scale[1] = indata[13]
-        createbone.scale[2] = indata[14]
-
-        bni_dict[createbone.name] = createbone.bone_index
-
-        #w,x,y,z
-        if (counter == 0):#main parent
-             createbone.bindmat = mathutils.Quaternion((indata[7], -indata[4], -indata[5], -indata[6])).to_matrix()
-             createbone.origmat = mathutils.Quaternion((indata[7], -indata[4], -indata[5], -indata[6])).to_matrix()
-        else:
-             createbone.bindmat = mathutils.Quaternion((indata[7], -indata[4], -indata[5], -indata[6])).to_matrix()
-             createbone.origmat = mathutils.Quaternion((indata[7], -indata[4], -indata[5], -indata[6])).to_matrix()
+    for counter in range( chunk_header_datacount ):
         
-        createbone.bindmat = mathutils.Matrix.Translation(mathutils.Vector((indata[8], indata[9], indata[10]))) * \
-                             createbone.bindmat.to_4x4()
-
-        md5_bones.append(createbone)
-        counter = counter + 1
-        bnstr = (str(indata[0]))
-        Bns.append(bnstr)
-
-    for pbone in md5_bones:
-        pbone.parent = md5_bones[pbone.parent_index]
-
-    for pbone in md5_bones:
-        if pbone.name != pbone.parent.name:
-            pbone.bindmat = pbone.parent.bindmat * pbone.bindmat 
-            #print(pbone.name)
-            #print(pbone.bindmat)
-            #print("end")
-        else:
-            pbone.bindmat = pbone.bindmat
+        (name_raw, flags, NumChildren, ParentIndex, #0 1 2 3
+         quat_x, quat_y, quat_z, quat_w,            #4 5 6 7
+         vec_x, vec_y, vec_z,                       #8 9 10
+         joint_length,                              #11
+         scale_x, scale_y, scale_z) = unpack_from('64s3i11f', chunk_data, chunk_header_datasize * counter)
     
-    for pbone in md5_bones:
-        pbone.head = getheadpos(pbone, md5_bones)
+        md5_bone = class_md5_bone()
+      
+        bone_name = util_bytes_to_str(name_raw)
 
-    for pbone in md5_bones:
-        pbone.tail = gettailpos(pbone, md5_bones)
+        printlog_line(util_bytes_to_str(name_raw), flags, NumChildren, ParentIndex, quat_x, quat_y, quat_z, quat_w,            
+                      vec_x, vec_y, vec_z, joint_length, scale_x, scale_y, scale_z )
+                      
+        md5_bone.name = bone_name
+        md5_bone.bone_index = counter
+        md5_bone.parent_index = ParentIndex
+        md5_bone.scale = (scale_x, scale_y, scale_z)
 
-    for pbone in md5_bones:
-        pbone.parent =  md5_bones[pbone.parent_index].name
+        bni_dict[md5_bone.name] = md5_bone.bone_index
 
-    bonecount = 0
-    for armbone in bone:
-        temp_name = armbone[0][:30]
-        #print ("BONE NAME: ", len(temp_name))
-        temp_name=str((temp_name))
-        #temp_name = temp_name[1]
-        #print ("BONE NAME: ", temp_name)
-        bonecount += 1
-    print ("-------------------------")
-    print ("----Creating--Armature---")
-    print ("-------------------------")
+        quat_mat = Quaternion((quat_w, quat_x, quat_y, quat_z)).to_matrix().to_4x4()
+        pos_vec = Vector((vec_x, vec_y, vec_z))
+        
+        #dev
+        # if bone_name[:5] == 'Dummy':
+            # print(bone_name, Quaternion((quat_w, quat_x, quat_y, quat_z)).to_euler())
+        
+        #root bone not conjugated.
+        if md5_bone.parent_index == 0 and md5_bone.bone_index == md5_bone.parent_index:
+            matrix_local_rot = quat_mat
+            matrix_local = Matrix.Translation( pos_vec ) *  matrix_local_rot
+        else:
+            matrix_local_rot = quat_mat
+            matrix_local = Matrix.Translation( pos_vec ) *  matrix_local_rot.inverted()
+                                   
+        md5_bone.__matrix_local_rot = matrix_local_rot
+        md5_bone.__matrix_global_rot = matrix_local_rot  
+        md5_bone.__matrix_local = matrix_local                                  
+        md5_bone.__matrix_global = matrix_local                                     
 
+        md5_bones.append(md5_bone)
+        #print(md5_bone.name, md5_bone.quater.to_quaternion())
+        #print(counter, bone_name, ParentIndex)
+        
+    
+    # root bone must have parent_index = 0 and selfindex = 0
+    # sounds like this code little useless, bcs only first bone can be root(in this conditions)
+    for md5_bone in md5_bones:
+       
+        if md5_bone.parent_index == 0:
+            if md5_bone.bone_index == 0:
+                md5_bone.parent = None
+                continue
+        
+        md5_bone.parent =  md5_bones[md5_bone.parent_index]
+        md5_bone.parent_name = md5_bone.parent.name
+        
+        matrix_global = md5_bone.parent.__matrix_global * md5_bone.__matrix_local
+        md5_bone.__matrix_global = matrix_global
+        
+        # matrix_global_rot = md5_bone.parent.__matrix_global_rot * md5_bone.__matrix_local_rot
+        matrix_global_rot = md5_bone.parent.__matrix_global_rot * md5_bone.__matrix_local_rot.inverted()
+        md5_bone.__matrix_global_rot = matrix_global_rot
+   
+    #md5_bones.sort( key=lambda bone: bone.parent_index)
+    print('-- Bones --')
+    print('Count: %i' % len(md5_bones))
     #================================================================================================
-    #Check armature if exist if so create or update or remove all and addnew bone
+    # Blender armature
     #================================================================================================
-    #bpy.ops.object.mode_set(mode='OBJECT')
-    meshname ="ArmObject"
-    objectname = "armaturedata"
-    # arm = None  # UNUSED
-    if importbone:
-        obj = bpy.data.objects.get(meshname)
-        # arm = obj  # UNUSED
+    
+    # obj = None
+    # for obj in bpy.context.scene.objects:
+        # if type(obj.data) is bpy.types.Armature:
+            # armObj = obj
+            # break
+    
+    # force create new armature if need
+    if bImportbone:
+        armature_data = bpy.data.armatures.new(gen_names['armature_data'])
+        armature_obj = bpy.data.objects.new(gen_names['armature_object'], armature_data)
 
-        if not obj:
-            armdata = bpy.data.armatures.new(objectname)
-            ob_new = bpy.data.objects.new(meshname, armdata)
-            #ob_new = bpy.data.objects.new(meshname, 'ARMATURE')
-            #ob_new.data = armdata
-            bpy.context.scene.objects.link(ob_new)
-            #bpy.ops.object.mode_set(mode='OBJECT')
-            for i in bpy.context.scene.objects:
-                i.select = False #deselect all objects
-            ob_new.select = True
-            #set current armature to edit the bone
-            bpy.context.scene.objects.active = ob_new
-            #set mode to able to edit the bone
-            if bpy.ops.object.mode_set.poll():
-                bpy.ops.object.mode_set(mode='EDIT')
+        bpy.context.scene.objects.link(armature_obj)
+        #bpy.ops.object.mode_set(mode='OBJECT')
 
-            #newbone = ob_new.data.edit_bones.new('test')
-            #newbone.tail.y = 1
-            print("creating bone(s)")
-            bpy.ops.object.mode_set(mode='OBJECT')
-            for bone in md5_bones:
-                #print(dir(bone))
-                bpy.ops.object.mode_set(mode='EDIT')#Go to edit mode for the bones
-                newbone = ob_new.data.edit_bones.new(bone.name)
-                #parent the bone
-                #print("DRI:", dir(newbone))
-                parentbone = None
-                #note bone location is set in the real space or global not local
-                bonesize = bpy.types.Scene.unrealbonesize
-                if bone.name != bone.parent:
-                    pos_x = bone.bindpos[0]
-                    pos_y = bone.bindpos[1]
-                    pos_z = bone.bindpos[2]
-                    #print("LINKING:" , bone.parent ,"j")
-                    parentbone = ob_new.data.edit_bones[bone.parent]
-                    newbone.parent = parentbone
-                    rotmatrix = bone.bindmat
-                    newbone.head.x = bone.head[0]
-                    newbone.head.y = bone.head[1]
-                    newbone.head.z = bone.head[2]
-                    newbone.tail.x = bone.tail[0]
-                    newbone.tail.y = bone.tail[1]
-                    newbone.tail.z = bone.tail[2]
+        select_all(False)
+        armature_obj.select = True
+        
+        #set current armature to edit the bone
+        bpy.context.scene.objects.active = armature_obj
+        
+        # TODO: options for axes and x_ray?
+        armature_data.show_axes = True
+        armature_obj.show_x_ray = True
 
-                    vecp = parentbone.tail - parentbone.head
-                    vecc = newbone.tail - newbone.head
-                    vecc.normalize()
-                    vecp.normalize()
-                    if vecp.dot(vecc) > -0.8:
-                        newbone.roll = parentbone.roll
-                    else:
-                        newbone.roll = - parentbone.roll
-                else:
-                    rotmatrix = bone.bindmat
-                    newbone.head.x = bone.head[0]
-                    newbone.head.y = bone.head[1]
-                    newbone.head.z = bone.head[2]
-                    newbone.tail.x = bone.tail[0]
-                    newbone.tail.y = bone.tail[1]
-                    newbone.tail.z = bone.tail[2]
-                    newbone.roll = math.radians(90.0)
-                """
-                vec = newbone.tail - newbone.head 
-                if vec.z > 0.0:
-                    newbone.roll = math.radians(90.0)
-                else:
-                    newbone.roll = math.radians(-90.0)
-                """
-    bpy.context.scene.update()
+        # print("creating bone(s)")
+        
+        #Go to edit mode for the bones
+        utils_set_mode('EDIT')
+        
+        for md5_bone in md5_bones:
+            edit_bone = armature_obj.data.edit_bones.new(md5_bone.name)
+            edit_bone.use_connect = False
+            edit_bone.use_inherit_rotation = True
+            edit_bone.use_inherit_scale = True
+            edit_bone.use_local_location = True
+            armature_obj.data.edit_bones.active = edit_bone
 
+            ##########################################################
+            joint_vector = md5_bone.__matrix_global * Vector()
+            edit_bone.head = joint_vector
+            
+            vector_tail_end_up = md5_bone.__matrix_global_rot * Vector((0,1,0))
+            vector_tail_end_dir = md5_bone.__matrix_global_rot * Vector((1,0,0))
+            vector_tail_end_up.normalize()
+            vector_tail_end_dir.normalize()
+            edit_bone.tail = edit_bone.head \
+                             + vector_tail_end_dir * bpy.context.scene.psk_import.bonesize
+            edit_bone.align_roll(vector_tail_end_up)
+            ###########################################################
+            
+            if md5_bone.parent is not None:
+                edit_bone.parent = armature_obj.data.edit_bones[md5_bone.parent_name]
+            
+    #bpy.context.scene.update()
     #==================================================================================================
     #END BONE DATA BUILD
     #==================================================================================================
-    VtxCol = []
-    for x in range(len(Bns)):
-        #change the overall darkness of each material in a range between 0.1 and 0.9
-        tmpVal = ((float(x) + 1.0) / (len(Bns)) * 0.7) + 0.1
-        tmpVal = int(tmpVal * 256)
-        tmpCol = [tmpVal, tmpVal, tmpVal, 0]
-        #Change the color of each material slightly
-        if x % 3 == 0:
-            if tmpCol[0] < 128:
-                tmpCol[0] += 60
-            else:
-                tmpCol[0] -= 60
-        if x % 3 == 1:
-            if tmpCol[1] < 128:
-                tmpCol[1] += 60
-            else:
-                tmpCol[1] -= 60
-        if x % 3 == 2:
-            if tmpCol[2] < 128:
-                tmpCol[2] += 60
-            else:
-                tmpCol[2] -= 60
-        #Add the material to the mesh
-        VtxCol.append(tmpCol)
+    '''
+    if bImportmesh:
+        VtxCol = []
+        bones_count = len(md5_bones)
+        for x in range(bones_count):
+            #change the overall darkness of each material in a range between 0.1 and 0.9
+            tmpVal = ((float(x) + 1.0) / bones_count * 0.7) + 0.1
+            tmpVal = int(tmpVal * 256)
+            tmpCol = [tmpVal, tmpVal, tmpVal, 0]
+            #Change the color of each material slightly
+            if x % 3 == 0:
+                if tmpCol[0] < 128:
+                    tmpCol[0] += 60
+                else:
+                    tmpCol[0] -= 60
+            if x % 3 == 1:
+                if tmpCol[1] < 128:
+                    tmpCol[1] += 60
+                else:
+                    tmpCol[1] -= 60
+            if x % 3 == 2:
+                if tmpCol[2] < 128:
+                    tmpCol[2] += 60
+                else:
+                    tmpCol[2] -= 60
+            #Add the material to the mesh
+            VtxCol.append(tmpCol)
+    '''
+    #================================================================================================== 
+    # Influences (Bone Weight)
+    #================================================================================================== 
+    #read the RAWW0000 header (VRawBoneInfluence)(Weight|PntIdx|BoneIdx)
+    read_chunk()
 
-    #================================================================================================== 
-    # Bone Weight
-    #================================================================================================== 
-    #read the RAWW0000 header
-    indata = unpack('20s3i', pskfile.read(32))
-    recCount = indata[3]
-    printlog("Nbr of RAWW0000 records: " + str(recCount) +"\n")
-    #RAWW0000 fields: Weight|PntIdx|BoneIdx
-    RWghts = []
-    counter = 0
-    while counter < recCount:
-        counter = counter + 1
-        indata = unpack('fii', pskfile.read(12))
-        RWghts.append([indata[1], indata[2], indata[0]])
-        #print("weight:", [indata[1], indata[2], indata[0]])
-    #RWghts fields = PntIdx|BoneIdx|Weight
-    RWghts.sort()
-    printlog("Vertex point and groups count =" + str(len(RWghts)) + "\n")
-    printlog("PntIdx|BoneIdx|Weight")
+    RWghts = [None] * chunk_header_datacount
+
+    for counter in range(chunk_header_datacount):
+        (Weight,
+         PointIndex,
+         BoneIndex ) = unpack_from('fii', chunk_data, chunk_header_datasize * counter)
+         
+        RWghts[counter] = (PointIndex, BoneIndex, Weight)
+        
+        #print("weight:", PointIndex, BoneIndex, Weight)
+
+    RWghts.sort( key=lambda wgh: wgh[0])
+    printlog("Vertex point and groups count = " + str(len(RWghts)) + "\n")
+    printlog("PntIdx\tBoneIdx\tWeight")
     for vg in RWghts:
         printlog(str(vg[0]) + "|" + str(vg[1]) + "|" + str(vg[2]) + "\n")
 
-    #Tmsh.update_tag()
-
-    #set the Vertex Colors of the faces
-    #face.v[n] = RWghts[0]
-    #RWghts[1] = index of VtxCol
     """
     for x in range(len(Tmsh.faces)):
         for y in range(len(Tmsh.faces[x].v)):
@@ -564,224 +575,708 @@ def pskimport(infile,importmesh,importbone,bDebugLogPSK,importmultiuvtextures):
                         TmpCol = VtxCol[RWghts[n + 1][1]]
         Tmsh.faces[x].col.append(NMesh.Col(TmpCol[0], TmpCol[1], TmpCol[2], 0))
     """
-    if (DEBUGLOG):
+    if (bDebugLogPSK):
         logf.close()
     #================================================================================================== 
-    #Building Mesh
+    # Building Mesh
     #================================================================================================== 
-    print("vertex:", len(verts), "faces:", len(faces))
-    print("vertex2:", len(verts2))
-    me_ob.vertices.add(len(verts2))
-    me_ob.tessfaces.add(len(faces))
-    me_ob.vertices.foreach_set("co", unpack_list(verts2))
-    me_ob.tessfaces.foreach_set("vertices_raw", unpack_list( faces))
+    if bImportmesh:
+        mesh_data.vertices.add(len(verts))
+        mesh_data.tessfaces.add(len(faces))
+        mesh_data.vertices.foreach_set("co", unpack_list( verts ))
+        mesh_data.tessfaces.foreach_set("vertices_raw", unpack_list( faces ))
 
-    for face in me_ob.tessfaces:
-        face.use_smooth = facesmooth[face.index]
+        # for face in mesh_data.tessfaces:
+            # .use_smooth is True or False - but facesmooth contains an int
+            # TODO FIXME still incorrect
+            # if facesmooth[face.index] > 0:
+                # face.use_smooth = True
 
-    """
-    Material setup coding.
-    First the mesh has to be create first to get the uv texture setup working.
-    -Create material(s) list in the psk pack data from the list.(to do list)
-    -Append the material to the from create the mesh object.
-    -Create Texture(s)
-    -face loop for uv assign and assign material index
-    """
-    bpy.ops.object.mode_set(mode='OBJECT')
-    #===================================================================================================
-    #Material Setup
-    #===================================================================================================
-    print ("-------------------------")
-    print ("----Creating--Materials--")
-    print ("-------------------------")
-    materialname = "pskmat"
-    materials = []
-
-    for matcount in range(materialcount):
-        #if texturedata != None:
-        matdata = bpy.data.materials.new(matnames[matcount])
-        #matdata = bpy.data.materials.new(materialname + str(matcount))
-        #mtex = matdata.texture_slots.new()
-        #mtex.texture = texture[matcount].data
-        #print(type(texture[matcount].data))
-        #print(dir(mtex))
-        #print(dir(matdata))
-        #for texno in range(len( bpy.data.textures)):
-            #print((bpy.data.textures[texno].name))
-            #print(dir(bpy.data.textures[texno]))
-        #matdata.active_texture = bpy.data.textures[matcount - 1]
-        #matdata.texture_coords = 'UV'
-        #matdata.active_texture = texturedata
-        materials.append(matdata)
-
-    for material in materials:
-        #add material to the mesh list of materials
-        me_ob.materials.append(material)
-    #===================================================================================================
-    #UV Setup
-    #===================================================================================================
-    print ("-------------------------")
-    print ("-- Creating UV Texture --")
-    print ("-------------------------") 
-    texture = []
-    # texturename = "text1"  # UNUSED
-    countm = 0
-    for countm in range(materialcount):
-        psktexname = "psk" + str(countm)
-        me_ob.uv_textures.new(name=psktexname)
-        countm += 1
-    print("INIT UV TEXTURE...")
-    _matcount = 0
-    #for mattexcount in materials:
-        #print("MATERAIL ID:", _matcount)
-    _textcount = 0
-    for uv in me_ob.tessface_uv_textures: # uv texture
-        print("UV TEXTURE ID:",_textcount)
-        print(dir(uv))
-        for face in me_ob.tessfaces:# face, uv
-            #print(dir(face))
-            if faceuv[face.index][1] == _textcount: #if face index and texture index matches assign it
-                mfaceuv = faceuv[face.index] #face index
-                _uv1 = mfaceuv[0][0] #(0,0)
-                uv.data[face.index].uv1 = mathutils.Vector((_uv1[0], _uv1[1])) #set them
-                _uv2 = mfaceuv[0][1] #(0,0)
-                uv.data[face.index].uv2 = mathutils.Vector((_uv2[0], _uv2[1])) #set them
-                _uv3 = mfaceuv[0][2] #(0,0)
-                uv.data[face.index].uv3 = mathutils.Vector((_uv3[0], _uv3[1])) #set them
-            else: #if not match zero them
-                uv.data[face.index].uv1 = mathutils.Vector((0, 0)) #zero them 
-                uv.data[face.index].uv2 = mathutils.Vector((0, 0)) #zero them 
-                uv.data[face.index].uv3 = mathutils.Vector((0, 0)) #zero them 
-        _textcount += 1
-        #_matcount += 1
-        #print(matcount)
-    print("END UV TEXTURE...")
-
-    print("UV TEXTURE LEN:", len(texture))
-        #for tex in me_ob.uv_textures:
-            #print("mesh tex:", dir(tex))
-            #print((tex.name))
-
-    #for face in me_ob.faces:
-        #print(dir(face))
+        utils_set_mode('OBJECT')
 
     #===================================================================================================
-    #
+    # UV Setup
     #===================================================================================================
-    obmesh = bpy.data.objects.new(objName,me_ob)
+    if bImportmesh:
+        if bImportsingleuv:
+            mesh_data.uv_textures.new(name = "psk_uv_map_single")
+            uvmap =  mesh_data.tessface_uv_textures[-1]
+            print("-- UV Single --\n" + uvmap.name)
+            for face in mesh_data.tessfaces:
+                face.material_index = faceuv[face.index][1]
+                face_uv = faceuv[face.index][0]
+                uvmap.data[face.index].uv1 = Vector((face_uv[0][0], face_uv[0][1]))
+                uvmap.data[face.index].uv2 = Vector((face_uv[1][0], face_uv[1][1]))
+                uvmap.data[face.index].uv3 = Vector((face_uv[2][0], face_uv[2][1]))
+        else: #or make single UV map
+            print("-- UV Multi --")
+            use_material_name = False
+            if len(uv_material_indexes) == len(materials):
+                use_material_name = True
+            for i in range(len(uv_material_indexes)):
+                
+                if use_material_name:
+                    uv_name = materials[i].name + ".uv"
+                else:
+                    uv_name = "psk_uv_multi_" + str(i)
+                uv = mesh_data.uv_textures.new(name=uv_name)
+                print("%i: %s" % (i, uv.name))
+                
+            # creating different uv maps, if imported uv data have different uv_texture_id 
+            _textcount = 0
+            for uv in mesh_data.tessface_uv_textures:
+                
+                for face in mesh_data.tessfaces:
+                    # faceuv is [] of (f_uv, MatIndex, AuxMatIndex, SmoothingGroup)
+                    #                  0     1         2            3
+                    # where f_uv is   ((u,v), (u,v), (u,v))
+                    # if face index and texture index matches assign it
+                    if faceuv[face.index][1] == _textcount:
+                        mfaceuv = faceuv[face.index]
+                        #assign material to face
+                        face.material_index = faceuv[face.index][1]
+                        
+                        _uv1 = mfaceuv[0][0] #(0,0)
+                        _uv2 = mfaceuv[0][1] #(0,0)
+                        _uv3 = mfaceuv[0][2] #(0,0)
+                        uv.data[face.index].uv1 = Vector((_uv1[0], _uv1[1])) #set them
+                        uv.data[face.index].uv2 = Vector((_uv2[0], _uv2[1])) #set them
+                        uv.data[face.index].uv3 = Vector((_uv3[0], _uv3[1])) #set them
+                    else: #if not match zero them
+                        uv.data[face.index].uv1 = Vector((0, 0)) #zero them 
+                        uv.data[face.index].uv2 = Vector((0, 0)) #zero them 
+                        uv.data[face.index].uv3 = Vector((0, 0)) #zero them 
+                
+                _textcount += 1
+        #end if bImportsingleuv
+        mesh_obj = bpy.data.objects.new(gen_names['mesh_object'], mesh_data)
     #===================================================================================================
-    #Mesh Vertex Group bone weight
+    # Mesh Vertex Group bone weight
     #===================================================================================================
-    print("---- building bone weight mesh ----")
-    #print(dir(ob_new.data.bones))
-    #create bone vertex group #deal with bone id for index number
-    for bone in ob_new.data.bones:
-        #print("names:", bone.name, ":", dir(bone))
-        #print("names:", bone.name)
-        group = obmesh.vertex_groups.new(bone.name)
+    if bImportmesh:
+        #create bone vertex group #deal with bone id for index number
+        for md5_bone in md5_bones:
+            # group = mesh_obj.vertex_groups.new(bone.name)
+            mesh_obj.vertex_groups.new(md5_bone.name)  
+     
+        for vgroup in mesh_obj.vertex_groups:
+            # print(vgroup.name, ":", vgroup.index) 
+            bone_index = bni_dict[vgroup.name]
+            for vgp in RWghts:
+                # vgp: 0, 1, 2 (vertexId, bone_index, weight)
+                if vgp[1] == bone_index:
+                    vgroup.add((vgp[0],), vgp[2], 'ADD')
 
-    for vgroup in obmesh.vertex_groups:
-        #print(vgroup.name, ":", vgroup.index)
-        for vgp in RWghts:
-            #bone index
-            if vgp[1] == bni_dict[vgroup.name]:
-                #print(vgp)
-                #[vertex id],weight
-                vgroup.add([vgp[0]], vgp[2], 'ADD')
+        mesh_data.update()
+        
+        bpy.context.scene.objects.link(mesh_obj)   
+        bpy.context.scene.update()
 
-    #check if there is a material to set to
-    if len(materials) > 0:
-        obmesh.active_material = materials[0] #material setup tmp
-    print("---- adding mesh to the scene ----")
-
-    bpy.ops.object.mode_set(mode='OBJECT')
-    #bpy.ops.object.select_pattern(extend=True, pattern=obmesh.name, case_sensitive=True)
-    #bpy.ops.object.select_pattern(extend=True, pattern=ob_new.name, case_sensitive=True)
-
-    #bpy.ops.object.select_name(name=str(obmesh.name))
-    #bpy.ops.object.select_name(name=str(ob_new.name))
-    #bpy.context.scene.objects.active = ob_new
-    me_ob.update()
-    bpy.context.scene.objects.link(obmesh)   
-    bpy.context.scene.update()
-    obmesh.select = False
-    ob_new.select = False
-    obmesh.select = True
-    ob_new.select = True
-    bpy.ops.object.parent_set(type="ARMATURE")
-
-    print ("PSK2Blender completed")
+        select_all(False)
+        #mesh_obj.select = True
+        bpy.context.scene.objects.active = mesh_obj
+    
+        if bImportbone:
+            armature_obj.select = True
+            # parenting mesh to armature object
+            mesh_obj.parent = armature_obj
+            mesh_obj.parent_type = 'OBJECT'
+            # add armature modifier
+            blender_modifier = mesh_obj.modifiers.new( armature_obj.data.name, type='ARMATURE')
+            blender_modifier.show_expanded = False
+            blender_modifier.use_vertex_groups = True
+            blender_modifier.use_bone_envelopes = False
+            blender_modifier.object = armature_obj
+        
+    utils_set_mode('OBJECT')
+    return True
 #End of def pskimport#########################
 
-def getInputFilenamepsk(self, filename, importmesh, importbone, bDebugLogPSK, importmultiuvtextures):
-    checktype = filename.split('\\')[-1].split('.')[1]
-    print ("------------",filename)
-    if checktype.lower() != 'psk':
-        print ("  Selected file = ", filename)
-        raise (IOError, "The selected input file is not a *.psk file")
-        #self.report({'INFO'}, ("Selected file:"+ filename))
-    else:
-        pskimport(filename, importmesh, importbone, bDebugLogPSK, importmultiuvtextures)
+class class_psa_bone:
+    name = ""
+    Transform = None
+    parent = None
+    fcurve_loc_x = None
+    fcurve_loc_y = None
+    fcurve_loc_z = None
+    fcurve_quat_x = None
+    fcurve_quat_y = None
+    fcurve_quat_z = None
+    fcurve_quat_w = None
+    prev_quat = None
 
-def getInputFilenamepsa(self, filename, context):
-    checktype = filename.split('\\')[-1].split('.')[1]
-    if checktype.lower() != 'psa':
-        print ("  Selected file = ", filename)
-        raise (IOError, "The selected input file is not a *.psa file")
-        #self.report({'INFO'}, ("Selected file:" + filename))
-    else:
-        psaimport(filename,context)
+def psaimport(filepath, context, bFilenameAsPrefix = False, bActionsToTrack = False):
+    print ("--------------------------------------------------")
+    print ("---------SCRIPT EXECUTING PYTHON IMPORTER---------")
+    print ("--------------------------------------------------")
+    print ("Importing file: ", filepath)
+    file_ext = 'psa'
+    try:
+        psafile = open(filepath, 'rb')
+    except IOError:
+        util_ui_show_msg('Error while opening file for reading:\n  "'+filepath+'"')
+        return False
+    
+    debug = True
+    if (debug):
+        # logpath = filepath.lower().replace("."+file_ext, ".txt")
+        logpath = filepath+".txt"
+        print("logpath:", logpath)
+        logf = open(logpath, 'w')
+        
+    def printlog(strdata):
+        if not debug:
+            return
+        logf.write(strdata)
+        
+    def printlogplus(name, data):
+        if not debug:
+            return
 
-class IMPORT_OT_psk(bpy.types.Operator):
-    '''Load a skeleton mesh psk File'''
+        logf.write(str(name) + '\n')
+        if isinstance(data, bytes):
+            # logf.write(str(bytes.decode(data).strip(bytes.decode(b'\x00'))))
+            logf.write( util_bytes_to_str(data) )
+        else:
+            logf.write(str(data))
+        logf.write('\n')
+
+    def write_log_plus(*args):
+        if not debug:
+            return
+        for arg in args:
+            if isinstance(arg, bytes):
+                logf.write( util_bytes_to_str(arg) + '\t')
+            else:
+                logf.write( str(arg) + '\t' )
+        logf.write('\n')
+
+    def write_log_plus_headers():
+        write_log_plus(
+            'ChunkID ',  chunk_header_id,
+            'TypeFlag ', chunk_header_type,
+            'DataSize ', chunk_header_datasize,
+            'DataCount ',chunk_header_datacount)
+    
+    armature_obj = None
+    
+    opts = context.scene.psk_import
+    if opts.armature_selected:
+        #use selected armature
+        if opts.armature_list:
+            armature_name = opts.armature_list[opts.armature_list_idx].name
+            armature_obj = bpy.data.objects.get(armature_name)
+            if armature_obj is None:
+                util_ui_show_msg("Selected armature not found: "+armature_name)
+                return False
+    else:
+        #use first armature
+        for obj in bpy.data.objects:
+            if obj.type == 'ARMATURE':
+                armature_obj = obj
+                break
+
+    if armature_obj is None:
+        util_ui_show_msg("No armatures found.\nImport armature from psk file first.")
+        if(debug):
+            logf.close()
+        return False
+
+    chunk_header_id = None
+    chunk_header_type = None
+    chunk_header_datasize = None
+    chunk_header_datacount = None
+    chunk_data = None
+
+    def read_chunk():
+        nonlocal chunk_header_id, chunk_header_type,\
+                 chunk_header_datasize, chunk_header_datacount,\
+                 chunk_data
+
+        (chunk_header_id, chunk_header_type,
+         chunk_header_datasize, chunk_header_datacount) = unpack('20s3i', psafile.read(32))
+        
+        chunk_data = psafile.read(chunk_header_datacount * chunk_header_datasize)
+        write_log_plus_headers()
+    #==============================================================================================
+    # General Header
+    #==============================================================================================
+    read_chunk()
+    
+    if not util_is_header_valid(filepath, file_ext, chunk_header_id, chunk_header_type):
+        if(debug):
+            logf.close()
+        return False
+    
+    #==============================================================================================
+    # Bones (FNamedBoneBinary)
+    #==============================================================================================
+    read_chunk()
+    
+    #Bones Data
+    BoneIndex2NamePairMap = [None] * chunk_header_datacount
+    BoneNotFoundList = []
+    BonesWithoutAnimation = []
+
+    printlog("Name\tFlgs\tNumChld\tPrntIdx\tQx\tQy\tQz\tQw\tLocX\tLocY\tLocZ\tLength\tXSize\tYSize\tZSize\n")
+
+    nobonematch = True
+    
+    for counter in range(chunk_header_datacount):
+        indata = unpack_from('64s3i11f', chunk_data, chunk_header_datasize * counter)
+
+        bonename = util_bytes_to_str(indata[0])
+        if bonename in armature_obj.data.bones.keys():
+            BoneIndex2NamePairMap[counter] = bonename
+            #print('find bone', bonename)
+            nobonematch = False
+        else:
+            print('Can not find the bone:', bonename)
+            BoneNotFoundList.append(counter)
+
+    if nobonematch:
+        util_ui_show_msg('No bone was match!\nSkip import!')
+        if(debug):
+            logf.close()
+        return False
+        
+    for blender_bone_name in armature_obj.data.bones.keys():
+        if BoneIndex2NamePairMap.count(blender_bone_name) == 0:
+            BonesWithoutAnimation.append(blender_bone_name)
+            print('Bone without animation frames:',blender_bone_name)
+    
+    #==============================================================================================
+    # Animations (AniminfoBinary)
+    #==============================================================================================
+    read_chunk()
+
+    Raw_Key_Nums = 0
+    Action_List = [None] * chunk_header_datacount
+    
+    for counter in range(chunk_header_datacount):
+        (action_name_raw,        #0
+         group_name_raw,         #1
+         Totalbones,             #2
+         RootInclude,            #3
+         KeyCompressionStyle,    #4
+         KeyQuotum,              #5
+         KeyReduction,           #6
+         TrackTime,              #7
+         AnimRate,               #8
+         StartBone,              #9
+         FirstRawFrame,          #10
+         NumRawFrames            #11
+        ) = unpack_from('64s64s4i3f3i', chunk_data, chunk_header_datasize * counter)
+        
+        write_log_plus( 'Name',        action_name_raw,
+                        'Group',       group_name_raw,
+                        'totalbones',  Totalbones,
+                        'NumRawFrames',NumRawFrames
+                       )
+                       
+        action_name = util_bytes_to_str( action_name_raw )
+        group_name = util_bytes_to_str( group_name_raw  )
+
+        Raw_Key_Nums += Totalbones * NumRawFrames
+        Action_List[counter] = ( action_name, group_name, Totalbones, NumRawFrames)
+
+    #==============================================================================================
+    # Raw keys (VQuatAnimKey)
+    #==============================================================================================
+    read_chunk()
+    
+    if(Raw_Key_Nums != chunk_header_datacount):
+        util_ui_show_msg(
+                'Raw_Key_Nums Inconsistent.'
+                '\nData count found: '+chunk_header_datacount+
+                '\nRaw_Key_Nums:' + Raw_Key_Nums
+                )
+        if(debug):
+            logf.close()
+        return False
+
+    Raw_Key_List = [None] * chunk_header_datacount
+    
+    for counter in range(chunk_header_datacount):
+        ( vec_x,  vec_y,  vec_z,
+         quat_x, quat_y, quat_z, quat_w,
+         time_until_next
+        ) = unpack_from('3f4f1f', chunk_data, chunk_header_datasize * counter)
+        
+        pos = Vector((vec_x, vec_y, vec_z))
+        quat = Quaternion((quat_w, quat_x, quat_y, quat_z))
+
+        Raw_Key_List[counter] = (pos, quat, time_until_next)
+
+    utils_set_mode('OBJECT')
+
+    #build tmp pose bone tree
+    psa_bones = {}
+    for bone in armature_obj.pose.bones:
+        psa_bone = class_psa_bone()
+        psa_bone.name = bone.name
+        psa_bone.Transform = bone.matrix
+        if bone.parent != None:
+            psa_bone.parent = psa_bones[bone.parent.name]
+        else:
+            psa_bone.parent = None
+        psa_bones[bone.name] = psa_bone
+
+    print('Calculating animation:')
+   
+    # index of current frame in raw input data
+    raw_key_index = 0
+    
+    ###dev
+    def scene_update():
+        bpy.context.scene.update()
+    
+    # unbind meshes, that uses this armature
+    # because scene.update() calculating its positions
+    # but we don't need it - its a big waste of time(CPU)
+    
+    armature_modifiers = []
+    for obj in bpy.data.objects:
+        if obj.type != 'MESH':
+            continue
+        
+        for modifier in obj.modifiers:
+            if modifier.type != 'ARMATURE':
+                continue
+            if modifier.object == armature_obj:
+                armature_modifiers.append(modifier)
+                modifier.object = None
+    
+    armature_children = []
+    #unbind children (same purpose)
+    for child in armature_obj.children:
+        armature_children.append((child, child.parent_type, child.parent_bone))
+        child.parent = None
+    
+    #dev
+    # for pose_bone in armature_obj.pose.bones:
+        # pose_bone.bone.use_inherit_rotation = False
+        # pose_bone.bone.use_inherit_scale = False
+    
+    bpy.context.scene.objects.active = armature_obj
+    # armature_obj.hide = True
+    # scene_update()
+
+    ##########################################################
+    mat_pose_rot_fix = Matrix.Rotation(-math.pi/2, 4, 'Z') * Matrix.Rotation(-math.pi/2,4,'Y')
+    ##########################################################
+    
+    counter = 0
+    gen_name_part = util_gen_name_part(filepath)
+    
+    armature_obj.animation_data_create()
+    
+    
+    if bActionsToTrack:
+        nla_track = armature_obj.animation_data.nla_tracks.new()
+        nla_track.name = gen_name_part
+        nla_stripes = nla_track.strips
+        nla_track_last_frame = 0
+    else:
+        is_first_action = True
+        first_action = None
+        
+    for raw_action in Action_List:
+        Name = raw_action[0]
+        Group = raw_action[1]
+
+        if Group != 'None':
+            Name = "(%s) %s" % (Group,Name)
+        if bFilenameAsPrefix:
+            Name = "(%s) %s" % (gen_name_part, Name)
+        Totalbones = raw_action[2]
+        NumRawFrames = raw_action[3]
+        action = bpy.data.actions.new(name = Name)
+
+        # force print usefull information to console(due to possible long execution)
+        counter += 1
+        print("Action {0:>3d}/{1:<3d} frames: {2:>4d} {3}".format(
+                counter, len(Action_List), NumRawFrames, Name)
+              )
+        
+        #create all fcurves(for all bones) for frame
+        for pose_bone in armature_obj.pose.bones:
+            if pose_bone.name in BonesWithoutAnimation:
+                continue
+            psa_bone = psa_bones[pose_bone.name]
+            
+            data_path = pose_bone.path_from_id("rotation_quaternion")
+            psa_bone.fcurve_quat_w = action.fcurves.new(data_path, index=0)
+            psa_bone.fcurve_quat_x = action.fcurves.new(data_path, index=1)
+            psa_bone.fcurve_quat_y = action.fcurves.new(data_path, index=2)
+            psa_bone.fcurve_quat_z = action.fcurves.new(data_path, index=3)
+        
+            data_path = pose_bone.path_from_id("location")
+            psa_bone.fcurve_loc_x = action.fcurves.new(data_path, index=0)
+            psa_bone.fcurve_loc_y = action.fcurves.new(data_path, index=1)
+            psa_bone.fcurve_loc_z = action.fcurves.new(data_path, index=2)
+            
+        pose_bones = armature_obj.pose.bones
+        
+        for i in range(NumRawFrames):
+        # for i in range(0,5):
+            for j in range(Totalbones):
+                if j not in BoneNotFoundList:
+                    bName = BoneIndex2NamePairMap[j]
+                    pbone = psa_bones[bName]
+                    pose_bone = pose_bones[bName]
+                    
+                    pos = Raw_Key_List[raw_key_index][0]
+                    quat = Raw_Key_List[raw_key_index][1]
+                    
+                    # mat = Matrix()
+                    quat_c = quat.conjugated()
+                    armature_obj.data.bones.active = pose_bone.bone
+                    
+                    if pbone.parent != None:
+                        
+                        # matrix for calc's // calc from parent
+                        mat = Matrix.Translation(pos) * quat_c.to_matrix().to_4x4() 
+                        mat = pbone.parent.Transform * mat 
+
+                        # matrix for posing
+                        mat_view = pbone.parent.Transform * Matrix.Translation(pos) 
+                        
+                        rot = pbone.parent.Transform.to_quaternion() * quat_c
+                        rot = rot.to_matrix().to_4x4()
+                        
+                        pose_bone.matrix = Matrix.Translation(mat_view.translation) \
+                                            * rot * mat_pose_rot_fix
+
+                        # save mat for children calc's
+                        pbone.Transform = mat
+                    else:
+                        #TODO fix needed?
+                        mat = Matrix.Translation(pos) * quat.to_matrix().to_4x4()
+                        pose_bone.matrix = mat * mat_pose_rot_fix
+                        pbone.Transform = mat
+
+                    loc = pose_bone.location
+                    quat = pose_bone.rotation_quaternion
+                    
+                    # update(calc) data (relative coordinates /location & rotation_quaternion/)
+                    scene_update()
+                    
+                    #possible fix for correct animation data(for interpolation)
+                    if i != 0:
+                        if pbone.prev_quat.dot(quat) < 0.0:
+                            quat = -quat
+                    pbone.prev_quat = quat.copy()
+                    
+                    pbone.fcurve_quat_w.keyframe_points.insert(i,quat.w)
+                    pbone.fcurve_quat_x.keyframe_points.insert(i,quat.x)
+                    pbone.fcurve_quat_y.keyframe_points.insert(i,quat.y)
+                    pbone.fcurve_quat_z.keyframe_points.insert(i,quat.z)
+  
+                    pbone.fcurve_loc_x.keyframe_points.insert(i,loc.x)
+                    pbone.fcurve_loc_y.keyframe_points.insert(i,loc.y)
+                    pbone.fcurve_loc_z.keyframe_points.insert(i,loc.z)
+
+                raw_key_index += 1
+        
+        if bActionsToTrack:
+            if nla_track_last_frame == 0:
+                nla_stripes.new(Name, 0, action)
+            else:
+                nla_stripes.new(Name, nla_stripes[-1].frame_end, action)
+            nla_track_last_frame += NumRawFrames
+        elif is_first_action:
+            first_action = action
+            is_first_action = False
+            
+        #break on first animation set
+        # break
+    
+    # set to rest position or set to first imported action
+    if not bActionsToTrack:
+        # for pose_bone in armature_obj.pose.bones:
+            # pose_bone.rotation_quaternion = (1,0,0,0)
+            # pose_bone.location = (0,0,0)
+        if not bpy.context.scene.is_nla_tweakmode:
+            armature_obj.animation_data.action = first_action
+    context.scene.frame_set(0)
+    ##scene_update()
+    
+
+    # bind meshes again (setup modifier)
+    for modifier in armature_modifiers:
+        modifier.object = armature_obj
+        
+    # add children 
+    for child in armature_children:
+        (obj, p_type, p_bone) = child
+        obj.parent = armature_obj
+        obj.parent_type = p_type
+        obj.parent_bone = p_bone
+        
+    select_all(False)
+    armature_obj.select = True
+    bpy.context.scene.objects.active = armature_obj
+    
+    if(debug):
+        logf.close()
+        
+    print('Done.')
+ 
+class MessageOperator(bpy.types.Operator):
+    bl_idname = "error.message_popup"
+    bl_label = ""
+
+    message = StringProperty(default='Message')
+    lines = []
+    def execute(self, context):
+        self.lines = self.message.split("\n")
+        maxlen = 0
+        for line in self.lines:
+            if len(line) > maxlen:
+                maxlen = len(line)
+            print(line)
+        # self.lines.append("")
+        wm = context.window_manager
+        return wm.invoke_popup(self, width=30 + 6*maxlen, height=400)
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label("[PSA/PSK Importer]", icon='ANIM')
+
+        for line in self.lines:
+            # row = self.layout.row(align=True)
+            # row.alignment = 'LEFT'
+            layout.label(line)
+
+def getInputFilenamepsk(self, filename, bImportmesh, bImportbone, bDebugLogPSK, bImportsingleuv):
+    return pskimport(         filename, bImportmesh, bImportbone, bDebugLogPSK, bImportsingleuv)
+
+def getInputFilenamepsa(self, filename, context, _bFilenameAsPrefix, _bActionsToTrack):
+    return psaimport(         filename, context, bFilenameAsPrefix=_bFilenameAsPrefix, bActionsToTrack=_bActionsToTrack)
+    
+class UDKImportArmaturePG(bpy.types.PropertyGroup):
+    string = StringProperty()
+    bones = StringProperty()
+    have_animation = BoolProperty(default=False)
+ 
+#properties for panels, and Operator.
+class PskImportSharedOptions():
+    bl_options = {}
+    debug_log = BoolProperty(
+            name="Debug log",
+            description="Write debug information and raw data to <filename>.txt (for test purposes)",
+            default=False,
+            )
+    bonesize = FloatProperty(
+            name="Bone length",
+            description="Constant length for all bones. From head to tail distance",
+            default=0.5, min=0.01, max=10, step=0.1, precision=2,
+            )
+    single_uvtexture = BoolProperty(
+            name="Single UV texture",
+            description="If checked, MatIndex from vertex UV data will be ignored.",
+            default=True,
+            )
+    import_mode = EnumProperty(
+            name="Import mode.",
+            items=(('All','All','Import mesh and skeleton'),
+                    ('Mesh','Mesh','Import only mesh'),
+                    ('Skel','Skel','Import only skeleton'))
+            )
+   
+class PskImportOptions(bpy.types.PropertyGroup, PskImportSharedOptions):
+    armature_list = CollectionProperty(type=UDKImportArmaturePG)
+    armature_list_idx = IntProperty()
+    armature_selected = BoolProperty(
+        name = "Armature Selected",
+        description = "Choose Armature to Import psa animation data",
+        default = False)
+
+class IMPORT_OT_psk(bpy.types.Operator, PskImportSharedOptions):
+    """Import skeleton and/or mesh."""
     bl_idname = "import_scene.psk"
     bl_label = "Import PSK"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_options = {'UNDO'}
 
-    # List of operator properties, the attributes will be assigned
-    # to the class instance from the operator settings before calling.
     filepath = StringProperty(
             subtype='FILE_PATH',
             )
     filter_glob = StringProperty(
-            default="*.psk",
+            default="*.psk;*.pskx",
             options={'HIDDEN'},
             )
-    importmesh = BoolProperty(
-            name="Mesh",
-            description="Import mesh only. (not yet build.)",
-            default=True,
+            
+    def draw(self, context):
+        opts = bpy.context.scene.psk_import
+        layout = self.layout
+        #layout.label("PSK Import", icon='ANIM')
+
+        layout.prop(opts, 'import_mode', expand=True)
+        sub = layout.row()
+        sub.active = opts.import_mode != 'Skel'
+        sub.prop(opts, 'single_uvtexture')
+        sub = layout.row()
+        sub.active = opts.import_mode != 'Mesh'
+        sub.prop(opts, 'bonesize')
+        layout.prop(opts, 'debug_log')
+        
+
+    def execute(self, context):
+        opts = bpy.context.scene.psk_import
+        bImportbone = False
+        bImportmesh = False
+        if opts.import_mode == 'Mesh':
+            bImportmesh = True
+        elif opts.import_mode == 'Skel':
+            bImportbone = True
+        else:
+            bImportbone = True
+            bImportmesh = True
+        
+        no_errors = getInputFilenamepsk(self, 
+                        self.filepath,
+                        bImportmesh, bImportbone, opts.debug_log,
+                        opts.single_uvtexture
+                        )
+        if not no_errors:
+            return {'CANCELLED'}
+        else:
+            return {'FINISHED'}
+    
+    def invoke(self, context, event):
+        wm = context.window_manager
+        wm.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+
+class IMPORT_OT_psa(bpy.types.Operator):
+    '''Load a skeleton anim psa File'''
+    bl_idname = "import_scene.psa"
+    bl_label = "Import PSA"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+
+    filepath = StringProperty(
+            subtype='FILE_PATH',
             )
-    importbone = BoolProperty(
-            name="Bones",
-            description="Import bones only. Current not working yet",
-            default=True,
+    filter_glob = StringProperty(
+            default="*.psa",
+            options={'HIDDEN'},
             )
-    importmultiuvtextures = BoolProperty(
-            name="Single UV Texture(s)",
-            description="Single or Multi uv textures",
-            default=True,
-            )
-    bDebugLogPSK = BoolProperty(
-            name="Debug Log.txt",
-            description="Log the output of raw format. It will save in "
-                        "current file dir. Note this just for testing",
+    bFilenameAsPrefix = BoolProperty(
+            name="Prefix action names",
+            description="Use filename as prefix for action names.",
             default=False,
             )
-    unrealbonesize = FloatProperty(
-            name="Bone Length",
-            description="Bone Length from head to tail distance",
-            default=1,
-            min=0.001,
-            max=1000,
+    bActionsToTrack = BoolProperty(
+            name="All actions to NLA track",
+            description="Add all imported action to new NLAtrack. One by one.",
+            default=False,
             )
-
     def execute(self, context):
-        bpy.types.Scene.unrealbonesize = self.unrealbonesize
-        getInputFilenamepsk(self, self.filepath, self.importmesh, self.importbone, self.bDebugLogPSK,
-                            self.importmultiuvtextures)
+        getInputFilenamepsa(self, self.filepath, context, self.bFilenameAsPrefix, self.bActionsToTrack)
         return {'FINISHED'}
 
     def invoke(self, context, event):
@@ -789,426 +1284,74 @@ class IMPORT_OT_psk(bpy.types.Operator):
         wm.fileselect_add(self)
         return {'RUNNING_MODAL'}
 
-class psa_bone:
-    name=""
-    Transform=None
-    parent=None
-    def __init__(self):
-        self.name=""
-        self.Transform=None
-        self.parent=None
-
-def psaimport(filename,context):
-    print ("--------------------------------------------------")
-    print ("---------SCRIPT EXECUTING PYTHON IMPORTER---------")
-    print ("--------------------------------------------------")
-    print ("Importing file: ", filename)
-    psafile = open(filename,'rb')
-    debug = True
-    if (debug):
-        logpath = filename.replace(".psa", ".txt")
-        print("logpath:", logpath)
-        logf = open(logpath, 'w')
-    def printlog(strdata):
-        if (debug):
-            logf.write(strdata)
-    def printlogplus(name, data):
-        if (debug):
-            logf.write(str(name) + '\n')
-            if isinstance(data, bytes):
-                logf.write(str(bytes.decode(data).strip(bytes.decode(b'\x00'))))
-            else:
-                logf.write(str(data))
-            logf.write('\n')
-
-    printlog('-----------Log File------------\n')
-    #General Header
-    indata = unpack('20s3i', psafile.read(32))
-    printlogplus('ChunkID', indata[0])
-    printlogplus('TypeFlag', indata[1])
-    printlogplus('DataSize', indata[2])
-    printlogplus('DataCount', indata[3])
-    #Bones Header
-    indata = unpack('20s3i', psafile.read(32))
-    printlogplus('ChunkID', indata[0])
-    printlogplus('TypeFlag', indata[1])
-    printlogplus('DataSize', indata[2])
-    printlogplus('DataCount', indata[3])
-    #Bones Data
-    BoneIndex2NamePairMap = {}
-    BoneNotFoundList = []
-    printlog("Name|Flgs|NumChld|PrntIdx|Qx|Qy|Qz|Qw|LocX|LocY|LocZ|Length|XSize|YSize|ZSize\n")
-    recCount = indata[3]
-    counter = 0
-    nobonematch = True
-    while counter < recCount:
-        indata = unpack('64s3i11f', psafile.read(120))
-        #printlogplus('bone', indata[0])
-        bonename = str(bytes.decode(indata[0]).strip(bytes.decode(b'\x00')))
-        if bonename in bpy.data.armatures['armaturedata'].bones.keys():
-            BoneIndex2NamePairMap[counter] = bonename
-            print('find bone', bonename)
-            nobonematch = False
-        else:
-            print('can not find the bone:', bonename)
-            BoneNotFoundList.append(counter)
-        counter += 1
-
-    if nobonematch:
-        print('no bone was match so skip import!')
-        return
-
-    #Animations Header
-    indata = unpack('20s3i', psafile.read(32))
-    printlogplus('ChunkID', indata[0])
-    printlogplus('TypeFlag', indata[1])
-    printlogplus('DataSize', indata[2])
-    printlogplus('DataCount', indata[3])
-    #Animations Data
-    recCount = indata[3]
-    counter = 0
-    Raw_Key_Nums = 0
-    Action_List = []
-    while counter < recCount:
-        indata = unpack('64s64s4i3f3i', psafile.read(64 + 64 + 4 * 4 + 3 * 4 + 3 * 4))
-        printlogplus('Name', indata[0])
-        printlogplus('Group', indata[1])
-        printlogplus('totalbones', indata[2])
-        printlogplus('NumRawFrames', indata[-1])
-        Name = str(bytes.decode(indata[0]).strip(bytes.decode(b'\x00')))
-        Group = str(bytes.decode(indata[1]).strip(bytes.decode(b'\x00')))
-        totalbones = indata[2]
-        NumRawFrames = indata[-1]
-
-        Raw_Key_Nums += indata[2] * indata[-1]
-        Action_List.append((Name,Group,totalbones,NumRawFrames))
-
-        counter += 1
-
-    #Raw keys Header
-    Raw_Key_List = []
-    indata = unpack('20s3i', psafile.read(32))
-    printlogplus('ChunkID', indata[0])
-    printlogplus('TypeFlag', indata[1])
-    printlogplus('DataSize', indata[2])
-    printlogplus('DataCount', indata[3])
-    if(Raw_Key_Nums != indata[3]):
-        print('error! Raw_Key_Nums Inconsistent')
-        return
-    #Raw keys Data
-    recCount = Raw_Key_Nums
-    counter = 0
-    while counter < recCount:
-        indata = unpack('3f4f1f', psafile.read(3 * 4 + 4 * 4 + 4))
-        pos = mathutils.Vector((indata[0], indata[1], indata[2]))
-        quat = mathutils.Quaternion((indata[6], indata[3], indata[4], indata[5]))
-        time = indata[7]
-        Raw_Key_List.append((pos, quat, time))
-        counter += 1
-    #Scale keys Header,Scale keys Data,Curve keys Header,Curve keys Data
-    curFilePos = psafile.tell()
-    psafile.seek(0, 2)
-    endFilePos = psafile.tell()
-    if curFilePos == endFilePos:
-        print('no Scale keys,Curve keys')
-
-    #build the animation line
-    if bpy.ops.object.mode_set.poll():
-        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
-
-    NeededBoneMatrix = {}
-    ARMATURE_OBJ = 'ArmObject'
-    ARMATURE_DATA = 'armaturedata'
-    if bpy.context.scene.udk_importarmatureselect:
-        if len(bpy.context.scene.udkas_list) > 0:
-            print("CHECKING ARMATURE...")
-            #for bone in bpy.data.objects[ARMATURE_OBJ].pose.bones:
-            #for objd in bpy.data.objects:
-                #print("NAME:", objd.name, " TYPE:", objd.type)
-                #if objd.type == 'ARMARURE':
-                    #print(dir(objd))
-            armature_list = bpy.context.scene.udkas_list #armature list array
-            armature_idx = bpy.context.scene.udkimportarmature_list_idx #armature index selected
-            ARMATURE_OBJ = bpy.data.objects[armature_list[armature_idx]].name #object armature
-            ARMATURE_DATA = bpy.data.objects[armature_list[armature_idx]].data.name #object data
-
-    for bone in bpy.data.armatures[ARMATURE_DATA].bones:
-        name = bone.name
-        ori_matrix = bone.matrix
-        matrix = bone.matrix_local.to_3x3()
-        bone_rest_matrix = Matrix(matrix)
-        #bone_rest_matrix = bone.matrix_local.to_3x3()
-        #bone_rest_matrix = bone.matrix_local.to_quaternion().conjugated().to_matrix()
-        bone_rest_matrix_inv = Matrix(bone_rest_matrix)
-        bone_rest_matrix_inv.invert()
-        bone_rest_matrix_inv.resize_4x4()
-        bone_rest_matrix.resize_4x4()
-        NeededBoneMatrix[name] = (bone_rest_matrix,bone_rest_matrix_inv,ori_matrix)
-
-    #build tmp pose bone tree
-    psa_bones = {}
-    for bone in bpy.data.objects[ARMATURE_OBJ].pose.bones:
-        _psa_bone = psa_bone()
-        _psa_bone.name = bone.name
-        _psa_bone.Transform = bone.matrix
-        if bone.parent != None:
-            _psa_bone.parent = psa_bones[bone.parent.name]
-        else:
-            _psa_bone.parent = None
-        psa_bones[bone.name] = _psa_bone
-
-    raw_key_index = 0
-
-    for raw_action in Action_List:
-        Name = raw_action[0]
-        Group = raw_action[1]
-        Totalbones = raw_action[2]
-        NumRawFrames = raw_action[3]
-        context.scene.update()
-        object = bpy.data.objects['ArmObject']
-        object.animation_data_create()
-        action = bpy.data.actions.new(name=Name)
-        object.animation_data.action = action
-        for i in range(NumRawFrames):
-            context.scene.frame_set(i + 1)
-            pose_bones = object.pose.bones
-            for j in range(Totalbones):
-                if j not in BoneNotFoundList:
-                    bName = BoneIndex2NamePairMap[j]
-                    pbone = psa_bones[bName]
-                    pos = Raw_Key_List[raw_key_index][0]
-                    quat = Raw_Key_List[raw_key_index][1]
-
-                    mat = Matrix()
-                    if pbone.parent != None:
-                        quat = quat.conjugated()
-                        mat = Matrix.Translation(pos) * quat.to_matrix().to_4x4()
-                        mat = pose_bones[bName].parent.matrix * mat 
-                        #mat = pbone.parent.Transform * mat
-                    else:
-                        mat = pbone.Transform * Matrix.Translation(pos) * quat.to_matrix().to_4x4()
-
-                    pose_bones[bName].matrix = mat
-                    pbone.Transform = mat
-
-                raw_key_index += 1
-
-            #bpy.data.meshes[1]
-            for bone in pose_bones:
-                bone.matrix = psa_bones[bone.name].Transform
-                bone.keyframe_insert("rotation_quaternion")
-                bone.keyframe_insert("location")
-
-            def whirlSingleBone(pose_bone,quat):
-                bpy.context.scene.update()
-                #record child's matrix and origin rotate
-                hymat = Quaternion((0.707, -0.707, 0, 0)).inverted().to_matrix().to_4x4()
-                children_infos = {}
-                childrens = pose_bone.children
-                for child in childrens:
-                    armmat = bpy.data.armatures['armaturedata'].bones[child.name].matrix.copy().to_4x4()
-                    cmat = child.matrix.copy() * armmat.inverted() * hymat.inverted()
-                    pos = cmat.to_translation()
-                    rotmat = cmat.to_3x3()
-                    children_infos[child] = (armmat, pos, rotmat)
-
-                #whirl this bone by quat
-                pose_bone.matrix *= quat.to_matrix().to_4x4()
-                pose_bone.keyframe_insert("location")
-                pose_bone.keyframe_insert("rotation_quaternion")
-                bpy.context.scene.update()
-                #set back children bon to original position 
-                #reverse whirl child bone by quat.inverse()
-
-                for child in childrens:
-                    armmat = children_infos[child][0]
-                    pos = children_infos[child][1]
-                    rotmat = children_infos[child][2] 
-
-                    child.matrix = Matrix.Translation(pos) * rotmat.to_4x4() * hymat * armmat 
-                    child.keyframe_insert("location") 
-                    child.keyframe_insert("rotation_quaternion")
-
-            for bone in pose_bones:
-                if bone.parent != None:
-                    whirlSingleBone(bone,Quaternion((0.707, 0, 0, -0.707)))
-                else:
-                    bone.rotation_quaternion *= Quaternion((0.707, -0.707, 0, 0)) * Quaternion((0.707, 0, 0, -0.707))
-                    bone.keyframe_insert("rotation_quaternion")
-
-        break
-
-    context.scene.frame_set(0)
-    if(debug):
-        logf.close()
-
-class IMPORT_OT_psa(bpy.types.Operator):
-    '''Load a skeleton anim psa File'''
-    bl_idname = "import_scene.psa"
-    bl_label = "Import PSA"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-
-    filepath = StringProperty(
-            subtype='FILE_PATH',
-            )
-    filter_glob = StringProperty(
-            default="*.psa",
-            options={'HIDDEN'},
-            )
-
-    def execute(self, context):
-        getInputFilenamepsa(self,self.filepath,context)
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        wm.fileselect_add(self)
-        return {'RUNNING_MODAL'}
-
-class IMPORT_OT_psa(bpy.types.Operator):
-    '''Load a skeleton anim psa File'''
-    bl_idname = "import_scene.psa"
-    bl_label = "Import PSA"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-
-    filepath = StringProperty(
-            subtype='FILE_PATH',
-            )
-    filter_glob = StringProperty(
-            default="*.psa",
-            options={'HIDDEN'},
-            )
-
-    def execute(self, context):
-        getInputFilenamepsa(self,self.filepath,context)
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        wm = context.window_manager
-        wm.fileselect_add(self)
-        return {'RUNNING_MODAL'}
-
-bpy.types.Scene.udk_importpsk = StringProperty(
-        name = "Import .psk",
-        description = "Skeleton mesh file path for psk",
-        default = "")
-bpy.types.Scene.udk_importpsa = StringProperty(
-        name = "Import .psa",
-        description = "Animation Data to Action Set(s) file path for psa",
-        default = "")
-bpy.types.Scene.udk_importarmatureselect = BoolProperty(
-        name = "Armature Selected",
-        description = "Select Armature to Import psa animation data",
-        default = False)
-
+        
 class Panel_UDKImport(bpy.types.Panel):
-    bl_label = "UDK Import"
+    bl_label = "PSK/PSA Import"
     bl_idname = "OBJECT_PT_udk_import"
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
-
-    filepath = StringProperty(
-            subtype='FILE_PATH',
-            )
-
-    #@classmethod
-    #def poll(cls, context):
-    #   return context.active_object
-
+    #bl_options = {'HIDE_HEADER'}
+    # filepath = StringProperty(
+            # subtype='FILE_PATH',
+            # )
+            
+    # @classmethod
+    # def poll(cls, context):
+        # return context.scene.get('psk_import') is not None
+ 
     def draw(self, context):
+        opts = bpy.context.scene.psk_import
         layout = self.layout
-        layout.operator(OBJECT_OT_PSKPath.bl_idname)
+       
+        layout.label("Mesh and skeleton:")
+        layout.operator(IMPORT_OT_psk.bl_idname, icon='MESH_DATA')
+        layout.prop(opts, 'import_mode',expand=True)
+        
+        layout.separator()
+        layout.label("Animation:")
+        layout.operator(IMPORT_OT_psa.bl_idname, icon='ANIM')
+        
+        if opts.armature_selected:
+            split = layout.split(.75)
+            split.prop(opts, "armature_selected")
+            split.operator(OBJECT_OT_UDKImportArmature.bl_idname, text="", icon='FILE_REFRESH')
+            layout.template_list("OBJECT_UL_armatures", "", opts, "armature_list",
+                                 opts, "armature_list_idx", rows=5)
+        else:
+            layout.prop(opts, "armature_selected")
+        
+class OBJECT_UL_armatures(UIList):
+    def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+        split = layout.split(0.75)
+        if item.have_animation:
+            split.label(str(item.name),icon='ANIM')
+        else:
+            split.label("     "+str(item.name))
+        #split.prop(item, "bones", text="", emboss=False, translate=False, icon='BONE_DATA')
+        split.label(str(item.bones),icon='BONE_DATA')
 
-        layout.prop(context.scene, "udk_importarmatureselect")
-        if bpy.context.scene.udk_importarmatureselect:
-            layout.operator(OBJECT_OT_UDKImportArmature.bl_idname)
-            layout.template_list("UI_UL_list", "udkimportarmature_list", context.scene, "udkimportarmature_list",
-                                 context.scene, "udkimportarmature_list_idx", rows=5)
-        layout.operator(OBJECT_OT_PSAPath.bl_idname)
-
-class OBJECT_OT_PSKPath(bpy.types.Operator):
-    """Select .psk file path to import for skeleton mesh"""
-    bl_idname = "object.pskpath"
-    bl_label = "Import PSK Path"
-
-    filepath = StringProperty(
-            subtype='FILE_PATH',
-            )
-    filter_glob = StringProperty(
-            default="*.psk",
-            options={'HIDDEN'},
-            )
-    importmesh = BoolProperty(
-            name="Mesh",
-            description="Import mesh only. (not yet build.)",
-            default=True,
-            )
-    importbone = BoolProperty(
-            name="Bones",
-            description="Import bones only. Current not working yet",
-            default=True,
-            )
-    importmultiuvtextures = BoolProperty(
-            name="Single UV Texture(s)",
-            description="Single or Multi uv textures",
-            default=True,
-            )
-    bDebugLogPSK = BoolProperty(
-            name="Debug Log.txt",
-            description="Log the output of raw format. It will save in " \
-                        "current file dir. Note this just for testing",
-            default=False,
-            )
-    unrealbonesize = FloatProperty(
-            name="Bone Length",
-            description="Bone Length from head to tail distance",
-            default=1,
-            min=0.001,
-            max=1000,
-            )
-
-    def execute(self, context):
-        #context.scene.importpskpath = self.properties.filepath
-        bpy.types.Scene.unrealbonesize = self.unrealbonesize
-        getInputFilenamepsk(self, self.filepath, self.importmesh, self.importbone, self.bDebugLogPSK,
-                            self.importmultiuvtextures)
-        return {'FINISHED'}
-
-    def invoke(self, context, event):
-        #bpy.context.window_manager.fileselect_add(self)
-        wm = context.window_manager
-        wm.fileselect_add(self)
-        return {'RUNNING_MODAL'}
-
-class UDKImportArmaturePG(bpy.types.PropertyGroup):
-    #boolean = BoolProperty(default=False)
-    string = StringProperty()
-    bexport = BoolProperty(default=False, name="Export", options={"HIDDEN"},
-                           description = "This will be ignore when exported")
-    bselect = BoolProperty(default=False, name="Select", options={"HIDDEN"},
-                           description = "This will be ignore when exported")
-    otype = StringProperty(name="Type",description = "This will be ignore when exported")
-
-bpy.utils.register_class(UDKImportArmaturePG)
-bpy.types.Scene.udkimportarmature_list = CollectionProperty(type=UDKImportArmaturePG)
-bpy.types.Scene.udkimportarmature_list_idx = IntProperty()
-
+        
 class OBJECT_OT_PSAPath(bpy.types.Operator):
     """Select .psa file path to import for animation data"""
     bl_idname = "object.psapath"
     bl_label = "Import PSA Path"
 
-    filepath = StringProperty(name="PSA File Path", description="Filepath used for importing the PSA file",
-                              maxlen=1024, default="")
+    filepath = StringProperty(
+            name="PSA File Path",
+            description="Filepath used for importing the PSA file",
+            maxlen=1024,
+            default=""
+            )
     filter_glob = StringProperty(
             default="*.psa",
             options={'HIDDEN'},
             )
-
+    bFilenameAsPrefix = BoolProperty(
+            name="Prefix action names",
+            description="Use filename as prefix for action names.",
+            default=False
+            )
     def execute(self, context):
-        #context.scene.importpsapath = self.properties.filepath
         getInputFilenamepsa(self,self.filepath,context)
         return {'FINISHED'}
 
@@ -1217,76 +1360,48 @@ class OBJECT_OT_PSAPath(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 class OBJECT_OT_UDKImportArmature(bpy.types.Operator):
-    """This will update the filter of the mesh and armature"""
+    """Update armature list"""
     bl_idname = "object.udkimportarmature"
-    bl_label = "Update Armature"
-
+    bl_label = "" #not visible in "<space>"
     def execute(self, context):
-        my_objlist = bpy.context.scene.udkimportarmature_list
+        my_objlist = bpy.context.scene.psk_import.armature_list
         objectl = []
-        for objarm in bpy.context.scene.objects:#list and filter only mesh and armature
-            if objarm.type == 'ARMATURE':
-                objectl.append(objarm)
-        for _objd in objectl:#check if list has in udk list
-            bfound_obj = False
-            for _obj in my_objlist:
-                if _obj.name == _objd.name and _obj.otype == _objd.type:
-                    _obj.bselect = _objd.select
-                    bfound_obj = True
-                    break
-            if bfound_obj == False:
-                #print("ADD ARMATURE...")
-                my_item = my_objlist.add()
-                my_item.name = _objd.name
-                my_item.bselect = _objd.select
-                my_item.otype = _objd.type
-        removeobject = []
-        for _udkobj in my_objlist:
-            bfound_objv = False
-            for _objd in bpy.context.scene.objects: #check if there no existing object from sense to remove it
-                if _udkobj.name == _objd.name and _udkobj.otype == _objd.type:
-                    bfound_objv = True
-                    break
-            if bfound_objv == False:
-                removeobject.append(_udkobj)
-        #print("remove check...")
-        for _item in removeobject: #loop remove object from udk list object
-            count = 0
-            for _obj in my_objlist:
-                if _obj.name == _item.name and _obj.otype == _item.otype:
-                    my_objlist.remove(count)
-                    break
-                count += 1
+        
+        #clear list
+        for _obj in my_objlist:
+            my_objlist.remove(0)
+            
+        #fill list
+        for obj in bpy.context.scene.objects:
+            if obj.type == 'ARMATURE':
+                list_item = my_objlist.add()
+                list_item.name = obj.name
+                list_item.bones = str(len(obj.data.bones))
+                
+                # if obj have assigned action or any NLA tracks, mark it
+                if obj.animation_data\
+                        and (obj.animation_data.action 
+                             or obj.animation_data.nla_tracks):
+                    list_item.have_animation = True
+                else:
+                    list_item.have_animation = False
+                
         return{'FINISHED'}
-
-class OBJECT_OT_UDKImportA(bpy.types.Operator):
-    """This will update the filter of the mesh and armature"""
-    bl_idname = "object.udkimporta"
-    bl_label = "Update Armature"
-
-    def execute(self, context):
-        for objd in bpy.data.objects:
-            print("NAME:",objd.name," TYPE:",objd.type)
-            if objd.type == "ARMATURE":
-                print(dir(objd))
-                print((objd.data.name))
-        return{'FINISHED'}
-
+    
 def menu_func(self, context):
     self.layout.operator(IMPORT_OT_psk.bl_idname, text="Skeleton Mesh (.psk)")
     self.layout.operator(IMPORT_OT_psa.bl_idname, text="Skeleton Anim (.psa)")
-
+    
 def register():
     bpy.utils.register_module(__name__)
     bpy.types.INFO_MT_file_import.append(menu_func)
+    bpy.types.Scene.psk_import = PointerProperty(type=PskImportOptions)
+
 
 def unregister():
     bpy.utils.unregister_module(__name__)
     bpy.types.INFO_MT_file_import.remove(menu_func)
-
+    del bpy.types.Scene.psk_import
+    
 if __name__ == "__main__":
     register()
-
-#note this only read the data and will not be place in the scene    
-#getInputFilename('C:\\blenderfiles\\BotA.psk') 
-#getInputFilename('C:\\blenderfiles\\AA.PSK')
