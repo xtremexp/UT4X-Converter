@@ -16,6 +16,7 @@ import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
+import org.xtx.ut4converter.tools.psk.Wedge;
 
 /**
  *
@@ -99,16 +100,16 @@ public class FBXModelObject extends FBXObject {
 
 	private void loadPsk(PSKStaticMesh pskMesh) {
 
-		for (Vector3d v : pskMesh.getVertices()) {
+		for (Vector3d v : pskMesh.getPoints()) {
 
 			vertices.add(v.x);
 			vertices.add(v.y);
 			vertices.add(v.z);
 		}
 
-		for (org.xtx.ut4converter.tools.psk.PSKStaticMesh.Vertex v : pskMesh.getWedges()) {
-			uvs.add(v.u);
-			uvs.add(v.v);
+		for (Wedge v : pskMesh.getWedges()) {
+			uvs.add(v.getU());
+			uvs.add(v.getV());
 
 		}
 
