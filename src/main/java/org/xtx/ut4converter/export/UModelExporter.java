@@ -172,9 +172,12 @@ public class UModelExporter extends UTPackageExtractor {
 		// TODO handle .mat files for conversion
 		// either replace with Diffuse Texture or find out some library that can
 		// do the merging "diffuse + normal" stuff
-		else if (typeStr.toLowerCase().contains("material")) {
+		else if (typeStr.toLowerCase().contains("material") ||  typeStr.toLowerCase().contains("shader")) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".mat");
 			isMaterial = true;
+			
+			// should we split texture/material/shader types ?
+			type = Type.TEXTURE;
 		} else if (type == Type.SOUND) {
 
 			if (mapConverter.getInputGame().engine.version <= 2) {
@@ -270,7 +273,7 @@ public class UModelExporter extends UTPackageExtractor {
 				// belong to
 				// we assume it belong to parent ressource which should work for
 				// 75%+ of cases ...
-				if (mapConverter.getUt3PackageFileFromName(pakName) == null) {
+				if (mapConverter.isTo(UnrealEngine.UE3) && mapConverter.getUt3PackageFileFromName(pakName) == null) {
 					continue;
 				}
 
