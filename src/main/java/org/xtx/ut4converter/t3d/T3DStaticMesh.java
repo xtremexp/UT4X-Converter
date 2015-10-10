@@ -166,7 +166,7 @@ public class T3DStaticMesh extends T3DSound {
 			}
 		}
 
-		if (!skins.isEmpty()) {
+		if (skins != null && !skins.isEmpty()) {
 			int idx = 0;
 
 			for (UPackageRessource skin : skins) {
