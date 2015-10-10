@@ -25,7 +25,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.TextureConverter;
 import org.xtx.ut4converter.tools.TextureFormat;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
+import org.xtx.ut4converter.tools.psk.Material;
 
 /**
  * Some ressource such as texture, sound, ... embedded into some unreal package
@@ -63,7 +63,7 @@ public class UPackageRessource {
 	 * file should not be deleted otherwise should be
 	 */
 	boolean isUsedInMap;
-	
+
 	/**
 	 * Means this
 	 */
@@ -283,8 +283,6 @@ public class UPackageRessource {
 			}
 		}
 
-		int x = 0;
-		x++;
 	}
 
 	/**
@@ -325,16 +323,19 @@ public class UPackageRessource {
 	}
 
 	/**
-	 * Guess the converted name used in converted t3d unreal map E.G: UT99:
+	 * returns
+	 * <pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
+	 * 
+	 * with suffix depending on type of ressource (_Mat for texture, _Cue for
+	 * sound, ...)
 	 * 
 	 * @param mapConverter
-	 *            Map Converter
 	 * @return
 	 */
-	public String getConvertedName(MapConverter mapConverter) {
+	public String getConvertedBaseName(MapConverter mapConverter) {
 
 		if (replacement != null) {
-			return replacement.getConvertedName(mapConverter);
+			return replacement.getConvertedBaseName(mapConverter);
 		}
 
 		String suffix = "";
@@ -355,8 +356,46 @@ public class UPackageRessource {
 			suffix = "_Mat";
 		}
 
-		// /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
-		return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
+		String baseName = getFullNameWithoutDots() + suffix;
+
+		// have to fit base material name with max size of material names in
+		// .psk
+		// staticmesh files
+		if (isTextureUsedInStaticMesh()) {
+
+			// try <packagename>_<name>
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				String fullNameWithoutGroup = getFullNameWithoutGroup().replaceAll("\\.", "\\_");
+				baseName = fullNameWithoutGroup + suffix + "." + fullNameWithoutGroup + suffix;
+			}
+
+			// <name>
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				baseName = this.name + suffix + "." + this.name + suffix;
+			}
+		}
+
+		return baseName;
+	}
+
+	/**
+	 * Guess the converted name used in converted t3d unreal map E.G: UT99:
+	 * Returns: //
+	 * /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix
+	 * >.<pkgName>_<group>_<name>_<suffix>
+	 * 
+	 * @param mapConverter
+	 *            Map Converter
+	 * @return
+	 */
+	public String getConvertedName(MapConverter mapConverter) {
+
+		if (replacement != null) {
+			return replacement.getConvertedName(mapConverter);
+		}
+
+		final String baseName = getConvertedBaseName(mapConverter);
+		return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 	}
 
 	/**
@@ -613,5 +652,30 @@ public class UPackageRessource {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	public boolean isUsedInStaticMesh() {
+		return isUsedInStaticMesh;
+	}
+
+	/**
+	 * If true means the material name will have to be renamed to fit with
+	 * material name max size of 64 bytes. Should be only used for texture
+	 * ressources in .psk staticmeshes files
+	 * 
+	 * @param isUsedInStaticMesh
+	 *            <code>true</code> if this ressource is used in static meshes
+	 */
+	public void setUsedInStaticMesh(boolean isUsedInStaticMesh) {
+
+		// only apply for texture ressources
+		if (this.type != Type.TEXTURE) {
+			return;
+		}
+		this.isUsedInStaticMesh = isUsedInStaticMesh;
+	}
+
+	private boolean isTextureUsedInStaticMesh() {
+		return this.isUsedInStaticMesh() && this.type == Type.TEXTURE;
 	}
 }

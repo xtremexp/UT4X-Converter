@@ -276,8 +276,8 @@ public class PSKStaticMesh {
 
 		try {
 
-			File meshFolder = new File("C:\\Temp\\psktest\\ut2004");
-			File reWriteFolder = new File("C:\\Temp\\psktest\\ut2004\\out");
+			File meshFolder = new File("C:\\Temp\\psktest\\ut3");
+			File reWriteFolder = new File("C:\\Temp\\psktest\\ut3\\out");
 
 			if (!reWriteFolder.exists()) {
 				reWriteFolder.mkdirs();
