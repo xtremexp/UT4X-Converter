@@ -1114,7 +1114,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			// need to create one (unreal package info is auto-created)
 			UPackageRessource upRessource = new UPackageRessource(this, fullRessourceName, type, true);
-			mapPackages.put(packageName.toLowerCase(), upRessource.getUnrealPackage());
+			mapPackages.put(packageName, upRessource.getUnrealPackage());
 			return upRessource;
 		}
 	}
@@ -1295,7 +1295,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public UPackage findPackageByName(String name) {
 
 		UPackage pack = null;
-		name = name.toLowerCase();
 
 		if (name != null && mapPackages.containsKey(name)) {
 			pack = mapPackages.get(name);
