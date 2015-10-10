@@ -620,6 +620,22 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 								UPackageRessource matR = findRessourceByNameOnly(matName, Type.TEXTURE);
 
 								if (matR != null) {
+
+									// try replace shader with diffuse texture
+									if (matR.getMaterialInfo() != null) {
+										matR.getMaterialInfo().findRessourcesFromNames(this);
+
+										if (matR.getMaterialInfo().getDiffuse() != null) {
+											UPackageRessource diffuse = matR.getMaterialInfo().getDiffuse();
+											matR.getMaterialInfo().setIsUsedInMap(true);
+
+											if (diffuse != null) {
+												matR.replaceWith(diffuse);
+												diffuse.setUsedInStaticMesh(true);
+											}
+										}
+									}
+
 									matR.setIsUsedInMap(true);
 									matR.setUsedInStaticMesh(true);
 									// change original material name: "<name>"

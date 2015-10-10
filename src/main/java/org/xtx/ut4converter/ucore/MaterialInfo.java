@@ -1,5 +1,8 @@
 package org.xtx.ut4converter.ucore;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+
 /**
  * Material info
  * 
@@ -14,76 +17,118 @@ public class MaterialInfo {
 	UPackageRessource diffuse;
 
 	/**
+	 * 
+	 */
+	private String diffuseName;
+
+	/**
 	 * Normal texture or material
 	 */
 	UPackageRessource normal;
+
+	private String normalName;
 
 	/**
 	 * Specular texture or material
 	 */
 	UPackageRessource specular;
 
+	private String specularName;
+
 	/**
 	 * Emissive texture or material
 	 */
 	UPackageRessource emissive;
+
+	private String emissiveName;
 
 	/**
 	 * Spec power
 	 */
 	UPackageRessource specPower;
 
+	private String specPowerName;
+
 	/**
 	 * Opacity
 	 */
 	UPackageRessource opacity;
 
+	private String opacityName;
+
 	public UPackageRessource getDiffuse() {
 		return diffuse;
-	}
-
-	public void setDiffuse(UPackageRessource diffuse) {
-		this.diffuse = diffuse;
 	}
 
 	public UPackageRessource getNormal() {
 		return normal;
 	}
 
-	public void setNormal(UPackageRessource normal) {
-		this.normal = normal;
-	}
-
 	public UPackageRessource getSpecular() {
 		return specular;
-	}
-
-	public void setSpecular(UPackageRessource specular) {
-		this.specular = specular;
 	}
 
 	public UPackageRessource getEmissive() {
 		return emissive;
 	}
 
-	public void setEmissive(UPackageRessource emissive) {
-		this.emissive = emissive;
-	}
-
 	public UPackageRessource getSpecPower() {
 		return specPower;
-	}
-
-	public void setSpecPower(UPackageRessource specPower) {
-		this.specPower = specPower;
 	}
 
 	public UPackageRessource getOpacity() {
 		return opacity;
 	}
 
-	public void setOpacity(UPackageRessource opacity) {
-		this.opacity = opacity;
+	public void setDiffuseName(String diffuseName) {
+		this.diffuseName = diffuseName;
+	}
+
+	public void setNormalName(String normalName) {
+		this.normalName = normalName;
+	}
+
+	public void setSpecularName(String specularName) {
+		this.specularName = specularName;
+	}
+
+	public void setEmissiveName(String emissiveName) {
+		this.emissiveName = emissiveName;
+	}
+
+	public void setSpecPowerName(String specPowerName) {
+		this.specPowerName = specPowerName;
+	}
+
+	public void setOpacityName(String opacityName) {
+		this.opacityName = opacityName;
+	}
+
+	public void findRessourcesFromNames(MapConverter mapConverter) {
+
+		if (diffuseName != null) {
+			diffuse = mapConverter.findRessourceByNameOnly(diffuseName, Type.TEXTURE);
+		}
+
+		if (normalName != null) {
+			normal = mapConverter.findRessourceByNameOnly(normalName, Type.TEXTURE);
+		}
+
+		if (specularName != null) {
+			specular = mapConverter.findRessourceByNameOnly(specularName, Type.TEXTURE);
+		}
+
+		if (emissiveName != null) {
+			emissive = mapConverter.findRessourceByNameOnly(emissiveName, Type.TEXTURE);
+		}
+
+		if (specPowerName != null) {
+			specPower = mapConverter.findRessourceByNameOnly(specPowerName, Type.TEXTURE);
+		}
+
+		if (opacityName != null) {
+			opacity = mapConverter.findRessourceByNameOnly(opacityName, Type.TEXTURE);
+		}
 	}
 
 	public void setIsUsedInMap(boolean isUsedInMap) {

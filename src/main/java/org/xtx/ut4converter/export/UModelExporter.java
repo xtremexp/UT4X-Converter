@@ -172,10 +172,10 @@ public class UModelExporter extends UTPackageExtractor {
 		// TODO handle .mat files for conversion
 		// either replace with Diffuse Texture or find out some library that can
 		// do the merging "diffuse + normal" stuff
-		else if (typeStr.toLowerCase().contains("material") ||  typeStr.toLowerCase().contains("shader")) {
+		else if (typeStr.toLowerCase().contains("material") || typeStr.toLowerCase().contains("shader")) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".mat");
 			isMaterial = true;
-			
+
 			// should we split texture/material/shader types ?
 			type = Type.TEXTURE;
 		} else if (type == Type.SOUND) {
@@ -220,12 +220,16 @@ public class UModelExporter extends UTPackageExtractor {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
 
 				// replace material with diffuse texture if possible
-				if (uRessource.getMaterialInfo() != null && uRessource.getMaterialInfo().getDiffuse() != null) {
-					// export diffuse texture if not ever done
-					uRessource.export(UTPackageExtractor.getExtractor(mapConverter, uRessource));
-
-					uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse());
-				}
+				/*
+				 * if (uRessource.getMaterialInfo() != null &&
+				 * uRessource.getMaterialInfo().getDiffuse() != null) { //
+				 * export diffuse texture if not ever done
+				 * uRessource.export(UTPackageExtractor
+				 * .getExtractor(mapConverter, uRessource));
+				 * 
+				 * uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse
+				 * ()); }
+				 */
 			}
 		}
 
@@ -266,49 +270,51 @@ public class UModelExporter extends UTPackageExtractor {
 				// T_HU_Deco_SM_Machinery04Alt_D
 				String matName = spl[1];
 
-				// guessing package name the material comes from
-				String pakName = parentRessource.getUnrealPackage().getName();
+				/*
+				 * // guessing package name the material comes from String
+				 * pakName = parentRessource.getUnrealPackage().getName();
+				 * 
+				 * // .mat file does not only give ressource name not where it
+				 * // belong to // we assume it belong to parent ressource which
+				 * should work for // 75%+ of cases ... if
+				 * (mapConverter.isTo(UnrealEngine.UE3) &&
+				 * mapConverter.getUt3PackageFileFromName(pakName) == null) {
+				 * continue; }
+				 * 
+				 * UPackageRessource uRessource =
+				 * mapConverter.getUPackageRessource(matName, pakName,
+				 * Type.TEXTURE);
+				 * 
+				 * if (uRessource != null) {
+				 * 
+				 * uRessource.setIsUsedInMap(parentRessource.isUsedInMap());
+				 */
+				switch (type) {
 
-				// .mat file does not only give ressource name not where it
-				// belong to
-				// we assume it belong to parent ressource which should work for
-				// 75%+ of cases ...
-				if (mapConverter.isTo(UnrealEngine.UE3) && mapConverter.getUt3PackageFileFromName(pakName) == null) {
-					continue;
+				case "Diffuse":
+					mi.setDiffuseName(matName);
+					break;
+				case "Normal":
+					mi.setNormalName(matName);
+					break;
+				case "Specular":
+					mi.setSpecularName(matName);
+					break;
+				case "Emissive":
+					mi.setEmissiveName(matName);
+					break;
+				case "SpecPower":
+					mi.setSpecPowerName(matName);
+					break;
+				case "Opacity":
+					mi.setOpacityName(matName);
+					break;
+				default:
+					logger.warning("Unhandled type " + type + " Value:" + matName);
+					break;
 				}
 
-				UPackageRessource uRessource = mapConverter.getUPackageRessource(matName, pakName, Type.TEXTURE);
-
-				if (uRessource != null) {
-
-					uRessource.setIsUsedInMap(parentRessource.isUsedInMap());
-
-					switch (type) {
-
-					case "Diffuse":
-						mi.setDiffuse(uRessource);
-						break;
-					case "Normal":
-						mi.setNormal(uRessource);
-						break;
-					case "Specular":
-						mi.setSpecular(uRessource);
-						break;
-					case "Emissive":
-						mi.setEmissive(uRessource);
-						break;
-					case "SpecPower":
-						mi.setSpecPower(uRessource);
-						break;
-					case "Opacity":
-						mi.setOpacity(uRessource);
-						break;
-					default:
-						logger.warning("Unhandled type " + type + " Value:" + matName);
-						break;
-					}
-
-				}
+				// }
 			}
 
 		} catch (IOException exception) {
