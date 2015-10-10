@@ -29,6 +29,11 @@ public class T3DStaticMesh extends T3DSound {
 
 	List<String> overiddeMaterials = new ArrayList<>();
 
+	/**
+	 * 
+	 */
+	List<UPackageRessource> skins;
+
 	BodyInstance bodyInstance;
 
 	/**
@@ -76,6 +81,14 @@ public class T3DStaticMesh extends T3DSound {
 
 		if (line.contains("StaticMesh=")) {
 			staticMesh = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.STATICMESH);
+		}
+		// Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
+		else if (line.startsWith("Skins(")) {
+
+			if (skins == null) {
+				skins = new ArrayList<>();
+			}
+			skins.add(mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE));
 		} else {
 			super.analyseT3DData(line);
 		}
@@ -145,9 +158,20 @@ public class T3DStaticMesh extends T3DSound {
 			sbf.append(IDT).append("\t\tOverriddenLightMapRes=").append(overriddenLightMapRes).append("\n");
 		}
 
+		// TODO REFACTOR (was originally for quick set texture for sheet
+		// brushes)
 		if (!overiddeMaterials.isEmpty()) {
 			for (int idx = 0; idx < overiddeMaterials.size(); idx++) {
 				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=MaterialInstanceConstant'").append(overiddeMaterials.get(idx)).append("'\n");
+			}
+		}
+
+		if (!skins.isEmpty()) {
+			int idx = 0;
+
+			for (UPackageRessource skin : skins) {
+				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName(mapConverter)).append("'\n");
+				idx++;
 			}
 		}
 
@@ -177,6 +201,12 @@ public class T3DStaticMesh extends T3DSound {
 
 		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
 			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
+		}
+
+		if (skins != null) {
+			for (UPackageRessource matSkin : skins) {
+				matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+			}
 		}
 
 		super.convert();
