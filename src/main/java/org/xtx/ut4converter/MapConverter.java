@@ -449,6 +449,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		logger.log(Level.INFO, "*****************************************");
 		logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
 		logger.log(Level.INFO, "Scale Factor: " + scale);
+		logger.log(Level.WARNING, "Shader materials are not yet converted");
+		logger.log(Level.WARNING, "Terrains are not yet converted");
 
 		updateProgress(0, 100);
 
@@ -540,7 +542,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Download https://github.com/Befzz/blender3d_import_psk_psa update .psk staticmesh blender addon zip");
 				logger.log(Level.INFO, "Update io_import_scene_unreal_psa_psk.py file from zip file in:");
 				logger.log(Level.INFO, "C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons folder");
-				logger.log(Level.INFO, "In C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons folder");
 				logger.log(Level.INFO, "--");
 				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
 				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
