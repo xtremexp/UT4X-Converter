@@ -153,7 +153,7 @@ public class UModelExporter extends UTPackageExtractor {
 				// export in that case
 				// for some specific resource(s)
 				// unrealPackage.setExported(true);
-				mapConverter.getMapPackages().put(packageName, unrealPackage);
+				mapConverter.getMapPackages().put(packageName.toLowerCase(), unrealPackage);
 				forceIsUsedInMap = true;
 			}
 		}
