@@ -542,14 +542,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Download https://github.com/Befzz/blender3d_import_psk_psa update .psk staticmesh blender addon zip");
 				logger.log(Level.INFO, "Update io_import_scene_unreal_psa_psk.py file from zip file in:");
 				logger.log(Level.INFO, "C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons folder");
-				logger.log(Level.INFO, "--");
-				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
 				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
 				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera'");
+				logger.log(Level.INFO, "--");
+				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
 				logger.log(Level.INFO, "Blender | 'File' -> 'Import' -> 'Skeleton Mesh (.psk)'");
 				logger.log(Level.INFO, "Blender | Browse for a .psk staticmesh then 'Import PSK' ");
 				logger.log(Level.INFO, "Blender | 'File' -> 'Export' -> 'FBX (.fbx)' ");
 				logger.log(Level.INFO, "Blender | Important: keep the same filename with .fbx extension as the original .psk file! ");
+				logger.log(Level.INFO, "Blender | Right Click on the 'Orange human icon' (top right) -> 'Delete hierarchy' (for next mesh import) ");
 				logger.log(Level.INFO, "--");
 				logger.log(Level.INFO, "When all staticmeshes have been converted to .fbx format, go back to Unreal Editor");
 				logger.log(Level.INFO, "UE4 | In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
