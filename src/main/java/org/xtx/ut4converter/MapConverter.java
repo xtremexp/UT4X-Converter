@@ -505,7 +505,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		logger.log(Level.INFO, "Open Unreal Editor for UT4");
 		logger.log(Level.INFO, "File -> New level -> Empty Level");
 
-		final String UE4_MAP_FOLDER = "Content -> RestrictedAssets -> WIP -> " + getOutMapName();
+		final String UE4_MAP_FOLDER = "Content -> RestrictedAssets -> Maps -> WIP -> " + getOutMapName();
 
 		if (hasConvertedRessources()) {
 			logger.log(Level.INFO, "Converted Map Ressources Import");
