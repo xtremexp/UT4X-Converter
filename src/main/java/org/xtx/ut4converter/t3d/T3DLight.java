@@ -434,7 +434,7 @@ public class T3DLight extends T3DSound {
 	@Override
 	public void convert() {
 
-		if (isCorona && skin != null) {
+		if (isCorona && skin != null && mapConverter.convertTextures()) {
 			skin.export(UTPackageExtractor.getExtractor(mapConverter, skin));
 			replaceWith(T3DEmitter.createLensFlare(mapConverter, this));
 			return;
