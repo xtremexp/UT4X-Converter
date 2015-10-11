@@ -366,6 +366,12 @@ public class T3DLight extends T3DSound {
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
 		}
+
+		// force directional lights to point light
+		// FIXME some bug on play if directional lights
+		if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+			t3dClass = UE4_LightActor.PointLight.name();
+		}
 	}
 
 	/**

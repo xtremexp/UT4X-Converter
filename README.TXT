@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.7-DEV
+- Version: 0.7
 - Author: XtremeXp
-- Release Date: 27/09/2015
+- Release Date: 11/10/2015
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -37,10 +37,10 @@ Here is the conversion table for all ut games about what the program can convert
 |                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
 |----------------|---------|-----------|--------|----------|--------|--------------|------------|:------------:|:-------:|
 | Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |  No Support  | No Support |       -      |  MEDIUM |
+| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |      No    |       -      |  MEDIUM |
 | UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |  No Support  | No Support |       +      |  MEDIUM |
-| UT3            |    ++   |     +     |    +   |    No    |   N/A  |  No Support  | No Support |       +      |   BAD   |
+| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |      No    |       +      |   GOOD  |
+| UT3            |    ++   |     +     |    +   |    No    |   N/A  |       +      |      No    |       +      |   BAD   |
 
 
 Note:
@@ -51,10 +51,13 @@ is pretty bad. (same note for some ut2004 maps)
 What is NOT converted
 ------------------------------
 - Models
-- StaticMeshes
 - Terrain
 - Music (Unreal Tournament 3 only)
 - All custom things (scripts and pickups)
+
+Note: staticmesh conversion is not fully automatic.
+You need to convert them manually using Blender software.
+Converter will do the job to get the right references and textures applied.
 
 Requirements
 ------------------------------
@@ -69,14 +72,14 @@ Requirements
   * Unreal Tournament 2004
   * Unreal Tournament 3
 * NConvert texture conversion program: http://www.xnview.com/en/nconvert/
-* UModel Unreal ressource program extractor: http://www.gildor.org/en/projects/umodel
+* UModel Unreal resource program extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
-Install nconvert http://www.xnview.com/en/nconvert/
-Install umodel http://www.gildor.org/en/projects/umodel
-Decompress the ZIP archive to any folder of your choice.
-Double-click on UT4-Converter-<version>.jar, the program should be launching.
+- Install nconvert http://www.xnview.com/en/nconvert/
+- Install umodel http://www.gildor.org/en/projects/umodel
+- Decompress the ZIP archive to any folder of your choice.
+- Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java technology version at www.java.com
 and create some "run.bat" batch file with notepad that you will save in the 
@@ -84,6 +87,16 @@ program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
+
+- For staticmesh conversion:
+  * Install Blender software (www.blender.org)
+  * Download https://github.com/Befzz/blender3d_import_psk zip archive file
+  * Overwrite io_import_scene_unreal_psa_psk.py python script file in blender folder:
+  * C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
+  
+Detailed explanations about conversion is always displayed after each end of map conversion 
+in program.
+
 
 How to convert map?
 ------------------------------
@@ -188,6 +201,15 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.7 - 11/10/2015:
+  * ut2003/ut2004: staticmeshes are now textured (note: shader textures are not fully converted,
+  possibly replaced with diffuse texture)
+  * ut2003/ut2004: lifts got their original staticmesh set now
+  Note: you need to update original python script file 'io_import_scene_unreal_psa_psk.py'
+  in C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
+  with this one (which provide fixes for .psk staticmesh import in blender)
+  by Befzz from https://github.com/Befzz/blender3d_import_psk
+
 - 0.6 - 27/09/2015:
   * u2, ut2003, ut2004, ut3: added option to export staticmeshes used in map
   (partial conversion, need to convert .psk file format to.fbx using 3d modeler (like Blender))
@@ -201,7 +223,7 @@ History
   * ut3: fixed sometimes a crash when exporting level to t3d file
   * ut3: fixed AmbientSound conversion error
   * ut3: fixed SpotLight bad rotation if 3d scale is negative
-  * ut3: fixed ressources from map package never exported
+  * ut3: fixed resources from map package never exported
   * ut2003, ut2004, ut3: now Trigger actor are replaced with CapsuleTrigger
   * ut2003, ut2004: SunLight converted to DirectionalLight 
   * ut2003, ut2004, ut3: fixed lift destination (since new UT4 version automatically scales it with 3d scale of lift mesh)
@@ -209,18 +231,18 @@ History
   * ut3: removed useless warnings for actors ModelComponent, ForcedReachSpec
   
 - 0.5 - 05/09/2015:
-* [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
+  * [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
 (https://trello.com/b/Jtvc23S1/uta-resurgence)
-* [UT99] Replaced SmokeGenerator with Blueprint_Effect_Smoke_C blueprint actor
-* Added 2.1875 scale factor in conversion settings
-* Fixed never-ending (stuck) conversion in some rare-cases
-* Fixed brush of movers no longer being converted (<actorname>_brush actors)
-* Fixed duplicated mover actors
-* Now need to create Cue assets for sounds to be working
+  * [UT99] Replaced SmokeGenerator with Blueprint_Effect_Smoke_C blueprint actor
+  * Added 2.1875 scale factor in conversion settings
+  * Fixed never-ending (stuck) conversion in some rare-cases
+  * Fixed brush of movers no longer being converted (<actorname>_brush actors)
+  * Fixed duplicated mover actors
+  * Now need to create Cue assets for sounds to be working
 (after sound files import select them in UE4 Editor asset browser then "Create CUE").
 
 - 0.4.1 - 07/06/2015:
-* Fixed untextured surfaces if texture coming from level package
+  * Fixed untextured surfaces if texture coming from level package
 
 - 0.4.0 - 06/06/2015:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
