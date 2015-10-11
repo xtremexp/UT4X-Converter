@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 
 /**
  * StaticMesh movers. Mover class for Unreal Engine >= 2 Unreal Engine 1 is
@@ -60,6 +61,9 @@ public class T3DMoverSM extends T3DStaticMesh {
 			moverProperties.convert();
 		}
 
+		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
+			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
+		}
 		super.convert();
 	}
 

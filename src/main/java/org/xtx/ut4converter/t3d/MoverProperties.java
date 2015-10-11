@@ -185,6 +185,14 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
 		}
 
+		if (mover instanceof T3DMoverSM) {
+			T3DMoverSM moverSm = (T3DMoverSM) mover;
+
+			if (moverSm.staticMesh != null && moverSm.getMapConverter().convertStaticMeshes()) {
+				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.staticMesh.getConvertedName(moverSm.getMapConverter())).append("'\n");
+			}
+		}
+
 		mover.writeEndActor();
 
 		return sbf.toString();

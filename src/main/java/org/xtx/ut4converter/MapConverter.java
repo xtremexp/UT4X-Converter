@@ -1109,6 +1109,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 			}
 		}
+		if (packageName != null && "mylevel".equals(packageName.toLowerCase())) {
+			packageName = getMapPackageName();
+		}
 
 		// Ressource ever created while parsing previous t3d lines
 		// we return it
