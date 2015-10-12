@@ -14,6 +14,7 @@ import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.geom.Vertex;
@@ -330,6 +331,14 @@ public class T3DPolygon {
 		if (mapConverter != null && mapConverter.convertTextures() && texture != null) {
 
 			texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
+
+			if (texture.getMaterialInfo() != null) {
+				texture.getMaterialInfo().findRessourcesFromNames(mapConverter);
+
+				if (texture.getMaterialInfo().getDiffuse() != null) {
+					texture.replaceWith(texture.getMaterialInfo().getDiffuse());
+				}
+			}
 
 			if (texture.getReplacement() != null) {
 				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));

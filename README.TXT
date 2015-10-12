@@ -2,9 +2,9 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.7
+- Version: 0.7.1
 - Author: XtremeXp
-- Release Date: 11/10/2015
+- Release Date: 12/10/2015
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
 
@@ -201,6 +201,9 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.7.1 - 12/10/2015:
+  * Fixed polygon for normal brushes with shader texture not replaced with diffuse texture
+  
 - 0.7 - 11/10/2015:
   * ut2003/ut2004: staticmeshes are now textured (note: shader textures are not fully converted,
   possibly replaced with diffuse texture)
