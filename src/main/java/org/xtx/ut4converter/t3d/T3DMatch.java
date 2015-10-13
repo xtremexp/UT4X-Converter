@@ -58,6 +58,8 @@ public class T3DMatch {
          *
          */
 		CAPSULE("CapsuleComponent", "Capsule"),
+		
+		SPHERE("SphereComponent", "Sphere"),
 
 		/**
          *

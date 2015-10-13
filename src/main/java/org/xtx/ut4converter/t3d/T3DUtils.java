@@ -478,4 +478,24 @@ public class T3DUtils {
 		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getSimpleName()).append("'").append(t3dObj.getName()).append("'\n");
 	}
 
+	public static void writeRootComponentAndLoc(T3DActor actor, T3DMatch.UE4_RCType rootType) {
+
+		if (actor != null) {
+			StringBuilder sbf = actor.sbf;
+
+			sbf.append(T3DObject.IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\"");
+			sbf.append(" Archetype=BP_ControlPoint_C'/Game/Domination/BP_ControlPoint.Default__BP_ControlPoint_C' \n");
+
+			actor.writeEndObject();
+
+			// Begin Object Name="Sphere"
+			sbf.append(T3DObject.IDT).append("\tBegin Object Name=\"").append(rootType.alias).append("\"\n");
+			actor.writeLocRotAndScale();
+			actor.writeEndObject();
+			// RootComponent=Sphere
+			sbf.append(T3DObject.IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
+
+		}
+	}
+
 }

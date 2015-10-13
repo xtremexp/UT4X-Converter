@@ -178,6 +178,9 @@ public class SupportedClasses {
 		putUtClass(T3DASCinematicCamera.class, "SpectatorCam");
 		putUtClass(T3DASInfo.class, "AssaultInfo");
 
+		// UT2004, UT99 Dom
+		putUtClass(DomPoint.class, "xDomPointA", "xDomPointB", "ControlPoint");
+
 		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
 		putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");

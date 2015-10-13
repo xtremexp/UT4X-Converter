@@ -46,8 +46,8 @@ public class T3DPlayerStart extends T3DSound {
 	public boolean analyseT3DData(String line) {
 
 		// TeamNumber=1
-
 		if (line.contains("TeamNumber")) {
+			// TODO force other player starts to be team player starts
 			teamNum = T3DUtils.getInteger(line);
 			isTeamPlayerStart = true;
 		} else {
