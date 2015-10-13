@@ -45,7 +45,8 @@ public class DomPoint extends T3DSound {
 	@Override
 	public String toString() {
 
-		sbf.append(IDT).append("Begin Actor Class=").append(UT4_DOMPOINT_CLASS).append(" Name=").append(name).append("\n");
+		sbf.append(IDT).append("Begin Actor Class=").append(UT4_DOMPOINT_CLASS).append(" Name=").append(name).append(" ");
+		sbf.append(" Archetype=BP_ControlPoint_C'/Game/Domination/BP_ControlPoint.Default__BP_ControlPoint_C'\n");
 
 		T3DUtils.writeRootComponentAndLoc(this, UE4_RCType.SPHERE);
 		sbf.append(IDT).append("\t").append("Discription=\"").append(name).append("\"\n");

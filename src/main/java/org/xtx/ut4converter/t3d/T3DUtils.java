@@ -483,8 +483,7 @@ public class T3DUtils {
 		if (actor != null) {
 			StringBuilder sbf = actor.sbf;
 
-			sbf.append(T3DObject.IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\"");
-			sbf.append(" Archetype=BP_ControlPoint_C'/Game/Domination/BP_ControlPoint.Default__BP_ControlPoint_C' \n");
+			sbf.append(T3DObject.IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
 
 			actor.writeEndObject();
 
