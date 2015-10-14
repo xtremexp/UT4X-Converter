@@ -229,7 +229,17 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("DrawScale3D")) {
-			scale3d = T3DUtils.getVector3d(line, 1D);
+
+			Vector3d tmpScale = T3DUtils.getVector3d(line, 1D);
+
+			if (scale3d == null) {
+				scale3d = tmpScale;
+			} else {
+				scale3d.x *= tmpScale.x;
+				scale3d.y *= tmpScale.y;
+				scale3d.z *= tmpScale.z;
+			}
+
 			sceneComponent.setRelativeScale3D(scale3d);
 		}
 
