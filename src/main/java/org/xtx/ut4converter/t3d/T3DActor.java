@@ -234,12 +234,12 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("DrawScale=")) {
-			
+
 			double scale = T3DUtils.getDouble(line);
-			
-			// Scale and Scale3d can both be used to scale up/down staticmeshes in UT3
-			if(mapConverter.isFrom(UnrealEngine.UE3) && this instanceof T3DStaticMesh){
-				if(scale3d == null){
+
+			// Scale and Scale3d can both be used to scale up/down staticmeshes
+			if (this instanceof T3DStaticMesh) {
+				if (scale3d == null) {
 					scale3d = new Vector3d(scale, scale, scale);
 				} else {
 					scale3d.scale(scale);
@@ -255,9 +255,10 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.contains("Name=")) {
-			// "Begin Object Class=Action_PLAYSOUND Name=Action_PLAYSOUND3" for UT2004 scripted trigger
+			// "Begin Object Class=Action_PLAYSOUND Name=Action_PLAYSOUND3" for
+			// UT2004 scripted trigger
 			// TODO better handle that
-			if(mapConverter.isFrom(UnrealEngine.UE2) && line.contains("Begin Object")){
+			if (mapConverter.isFrom(UnrealEngine.UE2) && line.contains("Begin Object")) {
 				return false;
 			}
 			name = line.split("Name=")[1].replaceAll("\"", "");
