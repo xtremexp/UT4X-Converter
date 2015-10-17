@@ -47,9 +47,12 @@ public class T3DPlayerStart extends T3DSound {
 
 		// TeamNumber=1
 		if (line.contains("TeamNumber")) {
-			// TODO force other player starts to be team player starts
 			teamNum = T3DUtils.getInteger(line);
 			isTeamPlayerStart = true;
+			// Next playerstarts without teamnumber prop
+			// will now be always considered as teamplayerstarts
+			// still remains the previous playerstarts ..
+			mapConverter.setIsTeamGameType(true);
 		} else {
 
 			return super.analyseT3DData(line);
