@@ -81,6 +81,11 @@ public class T3DUE2Terrain extends T3DActor {
 		// TerrainScale=(X=15.000000,Y=15.000000,Z=2.000000)
 		else if (line.startsWith("TerrainScale")) {
 			terrainScale = T3DUtils.getVector3d(line, 1d);
+
+			// Z scale might not show if default value '64'
+			if (!line.contains("Z=")) {
+				terrainScale.z = 64d;
+			}
 		}
 
 		else if (line.startsWith("Layers(") && line.contains("AlphaMap=")) {
@@ -164,7 +169,7 @@ public class T3DUE2Terrain extends T3DActor {
 			uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_BMP);
 			File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator + heightMapTexture.getUnrealPackage().getName() + File.separator);
 			uccExporter.setForcedExportFolder(exportFolder);
-
+			uccExporter.setForceSetNotExported(true);
 			heightMapTexture.export(uccExporter, true);
 
 			// Convert heightmap texture to .tiff
@@ -172,7 +177,7 @@ public class T3DUE2Terrain extends T3DActor {
 			File bmpHeightMap = heightMapTexture.getExportedFile();
 			File tiffHeightMap = new File(exportFolder + File.separator + bmpHeightMap.getName().split("\\.")[0] + ".tiff");
 
-			String command = "\"" + Installation.getG16ConvertFile() + "\" \"" + bmpHeightMap + "\" \""+ tiffHeightMap + "\"";
+			String command = "\"" + Installation.getG16ConvertFile() + "\" \"" + bmpHeightMap + "\" \"" + tiffHeightMap + "\"";
 
 			mapConverter.getLogger().log(Level.INFO, "Converting " + bmpHeightMap.getName() + " to " + tiffHeightMap.getName() + " terrain texture");
 

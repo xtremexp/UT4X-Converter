@@ -113,6 +113,7 @@ public class SupportedClasses {
 	public void setConvertOnly(String actor, Class<? extends T3DActor> t3dClass) {
 		classToUtActor.clear();
 		classToUtActor.put(actor.toLowerCase(), t3dClass);
+		mapConverter.setCreateNoteForUnconvertedActors(false);
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class SupportedClasses {
 
 		// terrain conversion disabled until working good
 		if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
-			// putUtClass(T3DUE2Terrain.class, "TerrainInfo");
+			putUtClass(T3DUE2Terrain.class, "TerrainInfo");
 		}
 
 		for (T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()) {
@@ -197,5 +198,7 @@ public class SupportedClasses {
 		uneededActors.add("ModelComponent"); // ut3
 		uneededActors.add("ForcedReachSpec"); // ut3
 		uneededActors.add("AdvancedReachSpec"); // ut3
+		
+		//setConvertOnly("TerrainInfo", T3DUE2Terrain.class);
 	}
 }

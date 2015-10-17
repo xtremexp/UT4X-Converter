@@ -41,6 +41,13 @@ public abstract class UTPackageExtractor {
 	File forcedExportFolder;
 
 	/**
+	 * Force package to be flaged as not exported even if it has been exported.
+	 * This might be used in some cases to export terrain texture using ucc.exe
+	 * but using umodel to get all other stuff from same package
+	 */
+	private boolean forceSetNotExported;
+
+	/**
 	 * 
 	 * @param mapConverter
 	 *            Map converter
@@ -172,4 +179,13 @@ public abstract class UTPackageExtractor {
 		this.forcedExportFolder = forcedExportFolder;
 	}
 
+	public boolean isForceSetNotExported() {
+		return forceSetNotExported;
+	}
+
+	public void setForceSetNotExported(boolean forceSetNotExported) {
+		this.forceSetNotExported = forceSetNotExported;
+	}
+
+	
 }

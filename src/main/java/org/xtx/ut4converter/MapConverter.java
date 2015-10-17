@@ -176,6 +176,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	UserConfig userConfig;
 
 	/**
+	 * If true will create notes for unconverted actors in level
+	 */
+	private boolean createNoteForUnconvertedActors = true;
+
+	/**
 	 * Reference to user interface
 	 */
 	ConversionViewController conversionViewController;
@@ -477,6 +482,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// export of it
 		// and directly convert it
 		t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
+		t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
 		updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
 		t3dLvlConvertor.convert();
 		updateProgress(80, 100);
@@ -1325,6 +1331,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public Map<String, UPackage> getMapPackages() {
 		return mapPackages;
+	}
+
+	/**
+	 * If true for each unconverted actor will create a "Note" actor in
+	 * converted level
+	 * 
+	 * @param createNoteForUnconvertedActors
+	 *            <code>true</code> Will create note for unconverted actors else
+	 *            no
+	 */
+	public void setCreateNoteForUnconvertedActors(boolean createNoteForUnconvertedActors) {
+		this.createNoteForUnconvertedActors = createNoteForUnconvertedActors;
 	}
 
 }

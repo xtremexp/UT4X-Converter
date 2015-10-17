@@ -398,7 +398,9 @@ public final class UCCExporter extends UTPackageExtractor {
 				logger.log(Level.SEVERE, "Full export for " + unrealPackage.getFileContainer(mapConverter).getName() + " failed with ucc.exe batchexport");
 			}
 
-			unrealPackage.setExported(true);
+			if (!isForceSetNotExported()) {
+				unrealPackage.setExported(true);
+			}
 
 			for (String logLine : logLines) {
 

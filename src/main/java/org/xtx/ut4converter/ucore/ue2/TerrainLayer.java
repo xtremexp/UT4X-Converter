@@ -157,8 +157,9 @@ public class TerrainLayer implements T3D {
 		UCCExporter uccExporter = new UCCExporter(mapConverter);
 		uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
 		File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator);
+		exportFolder.mkdirs();
 		uccExporter.setForcedExportFolder(exportFolder);
-
+		uccExporter.setForceSetNotExported(true);
 		alphaMapTexture.export(uccExporter, true);
 
 		Color color;
