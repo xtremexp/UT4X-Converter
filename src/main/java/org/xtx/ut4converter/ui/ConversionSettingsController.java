@@ -306,6 +306,8 @@ public class ConversionSettingsController implements Initializable {
 
 				if (t3dUt3EditorFile != null) {
 					mapConverter.setIntT3dUt3Editor(t3dUt3EditorFile);
+				} else {
+					return;
 				}
 			}
 
