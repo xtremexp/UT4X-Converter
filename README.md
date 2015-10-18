@@ -200,6 +200,13 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8-DEV - In progress:
+  * ut2003/ut2004: now terrain is converted (only heightmap)
+  * ut99/ut2004: added support for conversion of Domination gametype actors
+  * ut3: fixed many brushes not correctly displayed (have to manually copy/paste all actors from UT3 editor
+  in a new .t3d file)
+  * ....
+
 - 0.7.1 - 12/10/2015:
   * Fixed polygon for normal brushes with shader texture not replaced with diffuse texture
   
