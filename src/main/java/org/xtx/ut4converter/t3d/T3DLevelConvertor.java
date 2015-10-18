@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -181,7 +182,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * 
 	 * @throws Exception
 	 */
-	public void convert() throws Exception {
+	public void readConvertAndWrite() throws Exception {
 
 		if (inT3dFile == null || !inT3dFile.exists()) {
 			throw new Exception("File " + inT3dFile.getAbsolutePath() + " does not exists!");
@@ -193,13 +194,117 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
-		String line = null;
+
+		// Read actor data from file
+		readActors();
+
+		// Convert actors
+		convertActors();
+
+		// Write to file
+		writeActors();
+
+		updateProgress(100, 100);
+		updateMessage("All done!");
+	}
+
+	/**
+	 * Write actors to
+	 * 
+	 * @param line
+	 * @throws IOException
+	 */
+	private void writeActors() throws IOException {
+		try {
+
+			bwr = new BufferedWriter(new FileWriter(outT3dFile));
+
+			// Write T3D converted file
+			// fast 'code' for setting assault good order for objectives
+			// TODO move out in near future ...
+			setAssaultObjectiveOrder();
+
+			writeHeader();
+
+			String buffer = null;
+
+			for (T3DActor actor : convertedActors) {
+
+				if (actor == null) {
+					continue;
+				}
+
+				// write parent actor
+				if (actor.isValidWriting()) {
+					buffer = actor.toString();
+
+					if (buffer != null) {
+						bwr.write(buffer);
+					}
+				}
+
+				// write replacement actors
+				for (T3DActor repActor : actor.children) {
+					if (repActor.isValidWriting()) {
+						bwr.write(repActor.toString());
+					}
+				}
+			}
+
+			writeFooter();
+
+			logger.info("Written file " + outT3dFile.getName());
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "ERROR:", e);
+		} finally {
+			bwr.close();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void convertActors() {
+
+		try {
+
+			for (T3DActor uta : convertedActors) {
+				if (uta != null) {
+
+					if (uta.isValidConverting()) {
+						// we might want to only re-scale map
+						if (uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()) {
+							updateMessage("Converting " + uta.name);
+							uta.convert();
+						}
+						// rescale if needed
+						// must always be done after convert
+						uta.scale(mapConverter.getScale());
+					} else {
+						convertedActors.removeLast();
+					}
+				}
+			}
+
+			logger.info(convertedActors.size() + " converted actors ");
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Error converting actor " + uta.getName(), e);
+		}
+	}
+
+	/**
+	 * Read actor data from original t3d level file
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	private void readActors() throws IOException {
 
 		try {
 
 			bfr = new BufferedReader(new FileReader(inT3dFile));
-			bwr = new BufferedWriter(new FileWriter(outT3dFile));
 
+			String line;
 			/**
 			 * Current line of T3D File being analyzed
 			 */
@@ -221,64 +326,14 @@ public class T3DLevelConvertor extends Task<Object> {
 				}
 			}
 
-			// Write T3D converted file
-			write(bwr);
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error while writting T3D converted level file " + inT3dFile.getName());
-			logger.log(Level.SEVERE, "Line: " + line);
-			logger.log(Level.SEVERE, "ERROR:", e);
+			logger.info(convertedActors.size() + " actors read");
 		} finally {
-			bwr.close();
 			bfr.close();
 		}
-
-		updateProgress(100, 100);
-		updateMessage("All done!");
 	}
 
 	/**
-	 * 
-	 * @param bw
-	 * @throws IOException
-	 */
-	private void write(BufferedWriter bw) throws Exception {
-
-		// fast 'code' for setting assault good order for objectives
-		// TODO move out in near future ...
-		setAssaultObjectiveOrder();
-
-		writeHeader();
-
-		String buffer = null;
-
-		for (T3DActor actor : convertedActors) {
-
-			if (actor == null) {
-				continue;
-			}
-
-			// write parent actor
-			if (actor.isValidWriting()) {
-				buffer = actor.toString();
-
-				if (buffer != null) {
-					bw.write(buffer);
-				}
-			}
-
-			// write replacement actors
-			for (T3DActor repActor : actor.children) {
-				if (repActor.isValidWriting()) {
-					bw.write(repActor.toString());
-				}
-			}
-		}
-
-		writeFooter();
-	}
-
-	/**
-	 * If true means we don't anaylise t3d lines of current actor being parsed
+	 * If true means we don't analyze t3d lines of current actor being parsed
 	 */
 	boolean banalyseline = false;
 	String currentClass = "";
@@ -311,7 +366,9 @@ public class T3DLevelConvertor extends Task<Object> {
 		// Any actor/sub-class begins with "Begin Object"
 		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
-			if (line.trim().startsWith("Begin Object")) {
+			if (mapConverter.getInMap().getName().endsWith(".t3d")) {
+				return line.contains("Begin Actor");
+			} else if (line.trim().startsWith("Begin Object")) {
 
 				deepObjectLevel++;
 				return (deepObjectLevel == (LEVEL_OBJECT_LEVEL + 1));
@@ -330,7 +387,9 @@ public class T3DLevelConvertor extends Task<Object> {
 		// Any actor begin with "Begin Object"
 		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
-			if (line.trim().startsWith("End Object")) {
+			if (mapConverter.getInMap().getName().endsWith(".t3d")) {
+				return line.contains("End Actor");
+			} else if (line.trim().startsWith("End Object")) {
 				deepObjectLevel--;
 				return (deepObjectLevel == LEVEL_OBJECT_LEVEL);
 			}
@@ -394,24 +453,6 @@ public class T3DLevelConvertor extends Task<Object> {
 		else if (isEndActor(line)) {
 
 			updateProgress(actorsReadCount, actorCount);
-
-			if (banalyseline) {
-				if (uta != null) {
-
-					if (uta.isValidConverting()) {
-						// we might want to only re-scale map
-						if (uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()) {
-							updateMessage("Converting " + uta.name);
-							uta.convert();
-						}
-						// rescale if needed
-						// must always be done after convert
-						uta.scale(mapConverter.getScale());
-					} else {
-						convertedActors.removeLast();
-					}
-				}
-			}
 
 			// Reset
 			banalyseline = false;
@@ -621,7 +662,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	@Override
 	protected Object call() throws Exception {
-		convert();
+		readConvertAndWrite();
 		return null;
 	}
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -484,7 +485,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
 		t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
 		updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
-		t3dLvlConvertor.convert();
+		t3dLvlConvertor.readConvertAndWrite();
 		updateProgress(80, 100);
 
 		// find used textures in staticmeshes
@@ -746,7 +747,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 
 		// always keep original .t3d file
-		Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
+		try {
+			Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
+		} catch (AtomicMoveNotSupportedException e) {
+			logger.warning(e.getReason());
+		}
 
 		updateMessage("Deleting temporary files");
 
@@ -1161,6 +1166,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			convert();
 		} catch (Exception e) {
 			logger.severe(e.getMessage());
+			e.printStackTrace();
 		}
 		return t3dLvlConvertor;
 	}
