@@ -32,6 +32,7 @@ import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DUtils;
@@ -288,6 +289,25 @@ public class ConversionSettingsController implements Initializable {
 			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
 
 			mapConverter.setConversionViewController(mainApp.showConversionView());
+
+			if (mapConverter.isFrom(UnrealEngine.UE3)) {
+				FileChooser chooser = new FileChooser();
+				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from UT3 editor ");
+
+				File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+
+				if (mapFolder.exists()) {
+					chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+				}
+
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Editor Map (*.t3d)", "*.t3d"));
+
+				File t3dUt3EditorFile = chooser.showOpenDialog(new Stage());
+
+				if (t3dUt3EditorFile != null) {
+					mapConverter.setIntT3dUt3Editor(t3dUt3EditorFile);
+				}
+			}
 
 			SwingUtilities.invokeLater(mapConverter);
 		}

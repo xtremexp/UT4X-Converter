@@ -652,4 +652,13 @@ public abstract class T3DActor extends T3DObject {
 		return sceneComponent;
 	}
 
+	/**
+	 * Get original class of actor
+	 * 
+	 * @return
+	 */
+	public String getT3dOriginClass() {
+		return t3dOriginClass;
+	}
+
 }
