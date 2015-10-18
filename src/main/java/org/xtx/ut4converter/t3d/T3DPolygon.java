@@ -6,6 +6,7 @@
 
 package org.xtx.ut4converter.t3d;
 
+import java.awt.Dimension;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 
@@ -326,6 +327,12 @@ public class T3DPolygon {
 		this.origin = origin;
 	}
 
+	/**
+	 * UV conversion scale factor when converting UT3 texture scaling to UT4
+	 * texture scaling (this is equals to 200/256)
+	 */
+	private static final double UE3_UE4_UV_SCALE_FACTOR = 0.78125d;
+
 	public void convert() {
 
 		if (mapConverter != null && mapConverter.convertTextures() && texture != null) {
@@ -347,29 +354,52 @@ public class T3DPolygon {
 			// For Unreal 3 and 4
 			// we need to update the UV scaling which is dependant from texture
 			// size
-			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 
 				texture.readTextureDimensions();
 
+				Dimension texDimension = null;
+
+				if (texture.getReplacement() != null) {
+					texDimension = texture.getReplacement().getTextureDimensions();
+				} else {
+					texDimension = texture.getTextureDimensions();
+				}
+
 				// maybe bufferedimagereader could not read the dimensions of
 				// texture
-				if (texture.getTextureDimensions() != null) {
+				if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+					if (texDimension != null) {
+
+						if (texture_u != null) {
+							if (texDimension != null) {
+								texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
+							}
+						}
+
+						if (texture_v != null) {
+							texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
+						}
+					}
+
+					if (origin != null) {
+						// i guess it depends of normal
+						// todo check
+						origin.x += pan_u;
+						origin.y += pan_v;
+					}
+				}
+				// TODO don't read texture dimensions if from UE3
+				// not needed to convert properly uv scaling
+				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 					if (texture_u != null) {
-						texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
+						texture_u.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
 
 					if (texture_v != null) {
-						// 91.43
-						texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
+						texture_v.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
-				}
-
-				if (origin != null) {
-					// i guess it depends of normal
-					// todo check
-					origin.x += pan_u;
-					origin.y += pan_v;
 				}
 			}
 		}
