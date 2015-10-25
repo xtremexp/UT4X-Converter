@@ -101,10 +101,21 @@ How to convert map?
 ------------------------------
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
+For UT3 maps only:
+- Open a text editor (notepad for example)
+- Open ut3 map with the UT3 editor.
+- In menu go to "Edit" -> "Select all"
+- Copy all data stuff ("Edit" -> "Copy" or Ctrl+C)
+- Paste data in your text editor and save your file with a .t3d file extension
+
+Note: this .t3d file is needed because the "ut3.com batchexport" command to export
+.ut3 level to .t3d file messes up the brush order.
+
 In UT4 Converter:
 - Launch UT4 Converter
 - Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
 - In the conversion settings, press "Select" and choose the map
+- for ut3 only: select the .t3d file you previously created
 - Press ok and wait while the conversion is running (it might takes several minutes)
 
 In UT4 Editor:
@@ -208,10 +219,11 @@ Converter interfaces with these external tools:
 History
 ------------------------------
 - 0.8-DEV - In progress:
-  * ut2003/ut2004: now terrain is converted (only heightmap)
-  * ut99/ut2004: added support for conversion of Domination gametype actors
-  * ut3: fixed many brushes not correctly displayed (have to manually copy/paste all actors from UT3 editor
-  in a new .t3d file)
+  * ut2003/ut2004: now terrain heightmap is imported (texture, decolayers are NOT yet converted)
+  * ut99/ut2004: added support for conversion of Domination gametype actors. You need to get latest Domination mode from
+  Snake download site: https://ut.rushbase.net/Snake
+  * ut3: fixed some brushes not being properly converted (have to manually copy/paste level actors
+  from ut3 editor see part "How to convert map?" -> "for ut3 maps only" section)
   * ....
 
 - 0.7.1 - 12/10/2015:
