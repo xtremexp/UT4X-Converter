@@ -560,7 +560,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Blender | Check that 'Import-Export: Export Unreal Engine format (.psa/.psk)' add-on is activated");
 				logger.log(Level.INFO, "Blender | 'Save user settings' (if you have activated the addon)");
 				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
-				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera'");
+				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera' (Right click on each node -> 'Delete hierarchy')");
 				logger.log(Level.INFO, "--");
 				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
 				logger.log(Level.INFO, "Blender | 'File' -> 'Import' -> 'Skeleton Mesh (.psk)'");
