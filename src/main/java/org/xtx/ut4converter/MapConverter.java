@@ -556,6 +556,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Download https://github.com/Befzz/blender3d_import_psk_psa update .psk staticmesh blender addon zip");
 				logger.log(Level.INFO, "Update io_import_scene_unreal_psa_psk.py file from zip file in:");
 				logger.log(Level.INFO, "C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons folder");
+				logger.log(Level.INFO, "Blender | 'File' -> 'User Preferences ...' -> 'Add-ons'");
+				logger.log(Level.INFO, "Blender | Check that 'Import-Export: Export Unreal Engine format (.psa/.psk)' add-on is activated");
+				logger.log(Level.INFO, "Blender | 'Save user settings' (if you have activated the addon)");
 				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
 				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera'");
 				logger.log(Level.INFO, "--");
@@ -1366,5 +1369,4 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.intT3dUt3Editor = intT3dUt3Editor;
 	}
 
-	
 }
