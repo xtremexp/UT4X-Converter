@@ -356,19 +356,22 @@ public class T3DPolygon {
 			// size
 			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 
-				texture.readTextureDimensions();
-
-				Dimension texDimension = null;
-
-				if (texture.getReplacement() != null) {
-					texDimension = texture.getReplacement().getTextureDimensions();
-				} else {
-					texDimension = texture.getTextureDimensions();
-				}
-
 				// maybe bufferedimagereader could not read the dimensions of
 				// texture
 				if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+
+					// need to get texture dimension from UE1/UE2 to UE4 to get
+					// the right UV scaling
+					texture.readTextureDimensions();
+
+					Dimension texDimension = null;
+
+					if (texture.getReplacement() != null) {
+						texDimension = texture.getReplacement().getTextureDimensions();
+					} else {
+						texDimension = texture.getTextureDimensions();
+					}
+
 					if (texDimension != null) {
 
 						if (texture_u != null) {
@@ -389,8 +392,7 @@ public class T3DPolygon {
 						origin.y += pan_v;
 					}
 				}
-				// TODO don't read texture dimensions if from UE3
-				// not needed to convert properly uv scaling
+
 				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 					if (texture_u != null) {
