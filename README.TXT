@@ -164,8 +164,11 @@ CONVERTED MAP.
 
 How to build and run latest version ?
 ------------------------------
-With Netbeans IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Then you will need to install one of these IDE.
+I highly recommend Eclipse IDE since it's much faster
+
+With Netbeans IDE:
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
 - Set "Repository URL" = https://github.com/xtremexp/UT4Converter
@@ -173,9 +176,11 @@ With Netbeans IDE:
 - Click "Finish" and wait while project is being imported.
 Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
 - Right-Click on project and press "Run". At first time it might take several minutes to download required libraries.
+Note:
+Once project has been imported to keep the project updated:
+Right click on project -> Team -> Pull
 
 With Eclipse IDE:
-- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Download and install "Eclipse IDE for Java Developers": https://eclipse.org/downloads/packages/eclipse-ide-java-developers/lunasr2
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
@@ -185,7 +190,9 @@ With Eclipse IDE:
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4Converter.git"
 - Click "Finish"
 - Right click on "UT4-Converter" project then "Run as" -> "Java application"
-
+Note:
+Once project has been imported to keep the project updated:
+Right click on project -> "Git" -> "Remote" -> "Pull"
 
 Libraries / Technologies used
 ------------------------------
