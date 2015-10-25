@@ -347,11 +347,10 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void convertActors() {
 
-		try {
+		for (T3DActor uta : convertedActors) {
+			if (uta != null) {
 
-			for (T3DActor uta : convertedActors) {
-				if (uta != null) {
-
+				try {
 					if (uta.isValidConverting()) {
 						// we might want to only re-scale map
 						if (uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()) {
@@ -361,16 +360,16 @@ public class T3DLevelConvertor extends Task<Object> {
 						// rescale if needed
 						// must always be done after convert
 						uta.scale(mapConverter.getScale());
-					} else {
-						convertedActors.removeLast();
 					}
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, "Error converting actor " + uta.getName(), e);
 				}
-			}
 
-			logger.info(convertedActors.size() + " converted actors ");
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error converting actor " + uta.getName(), e);
+			}
 		}
+
+		logger.info(convertedActors.size() + " converted actors ");
+
 	}
 
 	/**

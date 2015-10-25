@@ -176,7 +176,7 @@ Project will be saved by default in C:\Documents and Settings\<username>\My Docu
 
 With Eclipse IDE:
 - Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
-- Download and install "Eclipse for Java Developers": https://eclipse.org/downloads/
+- Download and install "Eclipse IDE for Java Developers": https://eclipse.org/downloads/packages/eclipse-ide-java-developers/lunasr2
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
 - Install "m2e-git" connect and click on finish. 
