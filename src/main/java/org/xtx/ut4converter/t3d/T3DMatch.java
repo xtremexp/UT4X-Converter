@@ -60,6 +60,8 @@ public class T3DMatch {
 		CAPSULE("CapsuleComponent", "Capsule"),
 		
 		SPHERE("SphereComponent", "Sphere"),
+		
+		ICON("Icon","Icon"),
 
 		/**
          *
@@ -150,6 +152,8 @@ public class T3DMatch {
 				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "Trigger_ASTeam" },
 				// UT3
 				new String[] { "Trigger" }, new String[] { "TriggerCapsule" }));
+		
+		list.add(iByGame(T3DPickup.class, UE4_RCType.ICON.name, null, null, new String[] { "DefensePoint" }, null, null, null, new String[] { "UTDefensePoint" }));
 
 		// Blueprint_Effect_Smoke_C
 		list.add(iByGame(T3DPickup.class, "P_Smoke", null, null, new String[] { "SmokeGenerator" }, null, null, null, new String[] { "Blueprint_Effect_Smoke_C" }));

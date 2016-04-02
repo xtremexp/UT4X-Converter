@@ -41,14 +41,19 @@ public class T3DPickup extends T3DSound {
 
 			T3DMatch.UE4_RCType rootType;
 
+			// TODO refactoring
 			if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.SCENE_COMP.name)) {
 				rootType = T3DMatch.UE4_RCType.SCENE_COMP;
+			} else if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.ICON.name)) {
+				rootType = T3DMatch.UE4_RCType.ICON;
 			} else {
 				rootType = T3DMatch.UE4_RCType.CAPSULE;
 			}
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
-			sbf.append(IDT).append("\tEnd Object\n");
+			if (!rootType.equals(T3DMatch.UE4_RCType.ICON)) {
+				sbf.append(IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
+				sbf.append(IDT).append("\tEnd Object\n");
+			}
 
 			sbf.append(IDT).append("\tBegin Object Name=\"").append(rootType.alias).append("\"\n");
 			writeLocRotAndScale();
