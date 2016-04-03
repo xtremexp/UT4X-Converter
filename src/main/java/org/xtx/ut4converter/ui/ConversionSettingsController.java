@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.scene.control.TextField;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -106,6 +107,9 @@ public class ConversionSettingsController implements Initializable {
 
 	@FXML
 	private Label warningMessage;
+
+	@FXML
+	private TextField classesNameFilter;
 
 	/**
 	 * Initializes the controller class.
@@ -290,6 +294,7 @@ public class ConversionSettingsController implements Initializable {
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
 			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
 			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
+			mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
 
 			mapConverter.setConversionViewController(mainApp.showConversionView());
 

@@ -10,7 +10,7 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="ConversionSettings" prefHeight="480.0" prefWidth="700.0" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
     
-    <BorderPane prefHeight="480.0" prefWidth="700.0">
+    <BorderPane prefHeight="550.0" prefWidth="700.0">
 
         <center>
             <VBox>
@@ -112,10 +112,13 @@
                         </items>
                     </ComboBox>
                     
-                    <Separator GridPane.rowIndex="2" GridPane.columnIndex="0"/>  
+                    <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Restrict conversion to these actor classes:</Label>
+                    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="classesNameFilter"  prefWidth="350.0" promptText="Restrict class conversion (e.g: 'Brush;PlayerStart;DefensePoint')"></TextField>
+                    
+                    <Separator GridPane.rowIndex="3" GridPane.columnIndex="0"/>  
                 
-                    <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Detailled logs</Label>
-                    <CheckBox GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
+                    <Label GridPane.rowIndex="4" GridPane.columnIndex="0">Detailled logs</Label>
+                    <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
                 </GridPane>
             </TitledPane>
             </VBox>

@@ -126,6 +126,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	T3DLevelConvertor t3dLvlConvertor;
 
 	/**
+	 * Actor classes that should be converted. If null or empty then all classes
+	 * will be converted.
+	 */
+	private String[] filteredClasses;
+
+	/**
 	 * If <code>true</code> textures of the map will be exported and converted.
 	 */
 	private boolean convertTextures = true;
@@ -464,6 +470,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		logger.log(Level.INFO, "Scale Factor: " + scale);
 		logger.log(Level.WARNING, "Shader materials are not yet converted");
 		logger.log(Level.WARNING, "Terrains are not yet converted");
+
+		if (filteredClasses != null && filteredClasses.length > 0) {
+			getSupportedActorClasses().setConvertOnly(filteredClasses);
+			logger.log(Level.INFO, "Only these manually specified actor classes will be converted:");
+
+			for (String className : filteredClasses) {
+				logger.log(Level.INFO, "-" + className);
+			}
+		}
 
 		updateProgress(0, 100);
 
@@ -1369,4 +1384,28 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.intT3dUt3Editor = intT3dUt3Editor;
 	}
 
+	/**
+	 * Return ut class filter during conversion if any.
+	 * 
+	 * @return Filtered classes
+	 */
+	public String[] getFilteredClasses() {
+		return filteredClasses;
+	}
+
+	/**
+	 * Set a filter to UT classes that will be converted. If no filter is set
+	 * then all classes that can be converted will be converted.
+	 * 
+	 * @param classFilter
+	 *            Classes that will be converted (e.g:
+	 *            ['Brush','Light','DefensePoint', ...]
+	 */
+	public void setFilteredClasses(String[] filteredClasses) {
+		this.filteredClasses = filteredClasses;
+	}
+
+	public boolean hasClassFilter() {
+		return filteredClasses != null && filteredClasses.length > 0;
+	}
 }

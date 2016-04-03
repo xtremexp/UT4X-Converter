@@ -198,7 +198,33 @@ public class SupportedClasses {
 		uneededActors.add("ModelComponent"); // ut3
 		uneededActors.add("ForcedReachSpec"); // ut3
 		uneededActors.add("AdvancedReachSpec"); // ut3
-		
-		//setConvertOnly("TerrainInfo", T3DUE2Terrain.class);
+
+		// setConvertOnly("TerrainInfo", T3DUE2Terrain.class);
+	}
+
+	/**
+	 * Restrict convertible ut classes to the ones specified. Allows to convert
+	 * some specific actors (e.g: lights, playerstarts, ...)
+	 * 
+	 * @param className
+	 *            List of actor classes (e.g:
+	 *            ['Brush','Light','PlayerStart',...]);
+	 */
+	public void setConvertOnly(String[] className) {
+
+		if (mapConverter.getFilteredClasses() == null || mapConverter.getFilteredClasses().length == 0) {
+			return;
+		}
+
+		HashMap<String, Class<? extends T3DActor>> classToUtActorNew = new HashMap<>();
+		mapConverter.setCreateNoteForUnconvertedActors(false);
+
+		for (String classFilter : className) {
+			if (classToUtActor.containsKey((classFilter.toLowerCase()))) {
+				classToUtActorNew.put(classFilter.toLowerCase(), classToUtActor.get(classFilter.toLowerCase()));
+			}
+		}
+
+		classToUtActor = classToUtActorNew;
 	}
 }
