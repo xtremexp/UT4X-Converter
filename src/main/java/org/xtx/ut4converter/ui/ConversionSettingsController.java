@@ -294,7 +294,9 @@ public class ConversionSettingsController implements Initializable {
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
 			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
 			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
-			mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
+			if (classesNameFilter.getLength() > 1) {
+				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
+			}
 
 			mapConverter.setConversionViewController(mainApp.showConversionView());
 
