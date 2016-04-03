@@ -82,7 +82,10 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private CheckBox convMusicCheckBox;
 
-	BigDecimal scaleFactor = new BigDecimal("2.2");
+	/**
+	 * Default scale factor of converted maps.
+	 */
+	BigDecimal scaleFactor = new BigDecimal("2.4");
 	@FXML
 	private ComboBox<String> scaleFactorList;
 	@FXML
