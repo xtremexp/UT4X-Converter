@@ -221,12 +221,9 @@ public class MoverProperties implements T3D {
 	@Override
 	public void scale(Double newScale) {
 
-		// update 26092015
-		// no need scale positions from now
-		// since they are auto-scaled with 3d scale of mesh
-		/*
-		 * for (Vector3d position : positions) { position.scale(newScale); }
-		 */
+		for( Vector3d position : positions ) { 
+			position.scale(newScale); 
+		}
 	}
 
 	@Override

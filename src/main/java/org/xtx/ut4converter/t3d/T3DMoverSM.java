@@ -38,7 +38,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 	@Override
 	public void scale(Double newScale) {
 
-		moverProperties.scale(newScale);
+		//moverProperties.scale(newScale);
 
 		super.scale(newScale);
 	}
