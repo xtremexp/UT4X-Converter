@@ -62,7 +62,7 @@ public class UPackageRessource {
 	 * Means this ressource is used in map being converted. If used the exported
 	 * file should not be deleted otherwise should be
 	 */
-	boolean isUsedInMap;
+	private boolean isUsedInMap;
 
 	/**
 	 * Means this

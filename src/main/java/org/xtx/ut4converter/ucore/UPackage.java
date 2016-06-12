@@ -198,28 +198,33 @@ public class UPackage {
 			fullNameWithoutGroup = s[0] + "." + s[2];
 			group = s[1];
 		}
+		
+		// sometimes not same case
+		// e.g: Ambmodern package name in .t3d file
+		// and AmbModern with extractors
+		fullName = fullName.toLowerCase();
 
 		for (UPackageRessource packageRessource : ressources) {
 
 			// matching "pakname.groupname.name"
-			if (fullName.equals(packageRessource.getFullName()) || fullName.equals(packageRessource.getFullNameWithoutGroup())) {
+			if (fullName.equals(packageRessource.getFullName().toLowerCase()) || fullName.equals(packageRessource.getFullNameWithoutGroup().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// matching "pakname_groupname_name"
-			else if (fullName.equals(packageRessource.getFullNameWithoutDots())) {
+			else if (fullName.equals(packageRessource.getFullNameWithoutDots().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// matching "groupname_name"
-			else if (fullName.equals(packageRessource.getGroupAndNameWithoutDots())) {
+			else if (fullName.equals(packageRessource.getGroupAndNameWithoutDots().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// Package ressource was created without group info
 			// since we have this info now, update the ressource and return it
 			// matching "pakname.name"
-			else if (packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)) {
+			else if (fullNameWithoutGroup != null && packageRessource.getFullNameWithoutGroup().toLowerCase().equals(fullNameWithoutGroup.toLowerCase())) {
 
 				if (group != null) {
 					packageRessource.group = s[2];

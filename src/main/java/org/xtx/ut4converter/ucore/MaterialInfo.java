@@ -136,17 +136,17 @@ public class MaterialInfo {
 		// ressources might be ever used by some other parent ones (e.g
 		// material)
 		if (diffuse != null)
-			diffuse.setIsUsedInMap(isUsedInMap || diffuse.isUsedInMap);
+			diffuse.setIsUsedInMap(isUsedInMap || diffuse.isUsedInMap());
 		if (normal != null)
-			normal.setIsUsedInMap(isUsedInMap || normal.isUsedInMap);
+			normal.setIsUsedInMap(isUsedInMap || normal.isUsedInMap());
 		if (specular != null)
-			specular.setIsUsedInMap(isUsedInMap || specular.isUsedInMap);
+			specular.setIsUsedInMap(isUsedInMap || specular.isUsedInMap());
 		if (emissive != null)
-			emissive.setIsUsedInMap(isUsedInMap || emissive.isUsedInMap);
+			emissive.setIsUsedInMap(isUsedInMap || emissive.isUsedInMap());
 		if (specPower != null)
-			specPower.setIsUsedInMap(isUsedInMap || specPower.isUsedInMap);
+			specPower.setIsUsedInMap(isUsedInMap || specPower.isUsedInMap());
 		if (opacity != null)
-			opacity.setIsUsedInMap(isUsedInMap || opacity.isUsedInMap);
+			opacity.setIsUsedInMap(isUsedInMap || opacity.isUsedInMap());
 	}
 
 }
