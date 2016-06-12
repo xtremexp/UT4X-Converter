@@ -104,9 +104,26 @@ public class Installation {
 	public static File getProgramFolder() {
 		return Installation.getInstallDirectory(MainApp.class);
 	}
+	
+	/**
+	 * Return where UT4 converter run
+	 * @return
+	 */
+	public static String getProgramFolderPath(){
+		return getProgramFolder().getAbsolutePath();
+	}
 
 	public static File getG16ConvertFile() {
 		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
+	}
+	
+	
+	/**
+	 * 
+	 * @return Sox converter binary file
+	 */
+	public static File getSox() {
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "sox" + File.separator + "sox.exe");
 	}
 
 	/**

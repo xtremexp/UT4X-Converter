@@ -5,12 +5,12 @@
  */
 package org.xtx.ut4converter.tools;
 
-import com.sun.media.sound.WaveFileWriter;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,12 +20,15 @@ import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import com.sun.media.sound.WaveFileWriter;
+
 /**
  * 
  * @author XtremeXp
  */
 public class SoundConverter {
 
+	private File soxConverter;
 	final Logger logger;
 
 	/**
@@ -35,6 +38,7 @@ public class SoundConverter {
 	 */
 	public SoundConverter(Logger logger) {
 		this.logger = logger;
+		this.soxConverter = Installation.getSox();
 	}
 
 	/**
@@ -70,6 +74,45 @@ public class SoundConverter {
 	 */
 	public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile) {
 
+		// convert sound using sox program
+		if(this.soxConverter.exists()){
+			convertTo16BitSampleSizeUsingSox(inWaveFile, outWaveFile);
+		} 
+		// convert sound using java core api
+		else {
+			logger.warning("Sox sound converter not found in " + this.soxConverter + " Using core java converter.");
+			convertTo16BitSampleSize(inWaveFile, outWaveFile);
+		}
+
+	}
+	
+	/**
+	 * 
+	 * @param inWaveFile
+	 * @param outWaveFile
+	 */
+	private synchronized void convertTo16BitSampleSizeUsingSox(File inWaveFile, File outWaveFile){
+		
+		final String cmd = soxConverter.getAbsolutePath() + " \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 -b 16 \"" + outWaveFile.getAbsolutePath() + "\"";
+		
+		logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
+		List<String> logLines  = new ArrayList<>();
+		
+		try {
+			Installation.executeProcess(cmd, logLines);
+		} catch (InterruptedException | IOException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+	}
+	
+	/**
+	 * Convert sound wave file to 16 bit sample size (UE4 does not support 8 bits sample sound files)
+	 * Using the core conversion is crap since some sound might not be correctly imported by UE4
+	 * @deprecated might be deleted in some near future ...
+	 * @param inWaveFile Sound file
+	 * @param outWaveFile Converted 16 bit sound file
+	 */
+	private synchronized void convertTo16BitSampleSizeUsingCoreApi(File inWaveFile, File outWaveFile){
 		AudioInputStream audioInputStream = null;
 		AudioInputStream convertedIn = null;
 
@@ -121,6 +164,5 @@ public class SoundConverter {
 				}
 			}
 		}
-
 	}
 }
