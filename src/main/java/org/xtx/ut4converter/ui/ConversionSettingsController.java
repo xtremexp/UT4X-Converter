@@ -86,7 +86,7 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Default scale factor of converted maps.
 	 */
-	BigDecimal scaleFactor = new BigDecimal("2.4");
+	BigDecimal scaleFactor = new BigDecimal("2.5");
 	@FXML
 	private ComboBox<String> scaleFactorList;
 	@FXML
