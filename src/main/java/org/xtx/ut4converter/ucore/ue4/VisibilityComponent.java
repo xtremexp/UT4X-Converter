@@ -36,9 +36,8 @@ public class VisibilityComponent extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

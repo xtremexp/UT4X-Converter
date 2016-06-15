@@ -43,11 +43,9 @@ public class InterpCurve extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		T3DUtils.write(sb, "Points", points, prefix);
-
-		return "";
 	}
 
 	@Override

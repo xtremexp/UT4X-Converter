@@ -280,7 +280,6 @@ public class MoverProperties implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
-		return toString(sb);
+	public void toT3d(StringBuilder sb, String prefix) {
 	}
 }

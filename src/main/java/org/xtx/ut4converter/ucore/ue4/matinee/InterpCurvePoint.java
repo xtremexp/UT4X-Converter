@@ -114,13 +114,11 @@ public class InterpCurvePoint implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		T3DUtils.write(sb, "InVal", inVal, prefix);
 		T3DUtils.write(sb, "OutVal", outVal, ",");
 		T3DUtils.write(sb, "InterpMode", interpMode, ",");
-
-		return sb.toString();
 	}
 
 	@Override

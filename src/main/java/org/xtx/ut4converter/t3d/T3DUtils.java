@@ -376,7 +376,6 @@ public class T3DUtils {
 	/**
 	 * 
 	 * @param sb
-	 * @param bool
 	 * @param prefix
 	 */
 	public static boolean write(StringBuilder sb, String propName, Object propValue, String prefix) {
@@ -390,7 +389,8 @@ public class T3DUtils {
 		}
 
 		if (propValue instanceof T3D) {
-			sb.append(propName).append(EQUAL).append(((T3D) propValue).toT3d(sb, null));
+			sb.append(propName).append(EQUAL);
+			((T3D) propValue).toT3d(sb, null);
 		} else if (propValue instanceof List) {
 
 			sb.append("(");

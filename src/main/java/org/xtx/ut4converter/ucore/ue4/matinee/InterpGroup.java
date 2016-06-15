@@ -61,7 +61,7 @@ public class InterpGroup extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		if (interpTracks != null && !interpTracks.isEmpty()) {
 			for (InterpTrack track : interpTracks) {
@@ -78,8 +78,6 @@ public class InterpGroup extends T3DObject implements T3D {
 			T3DUtils.writeLine(sb, "GroupName", groupName, prefix + IDT);
 			T3DUtils.writeLine(sb, "GroupColor", groupColor, prefix + IDT);
 		}
-
-		return sb.toString();
 	}
 
 	/**

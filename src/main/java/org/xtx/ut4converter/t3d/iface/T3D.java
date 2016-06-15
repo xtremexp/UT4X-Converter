@@ -17,7 +17,7 @@ public interface T3D {
 
 	public boolean analyseT3DData(String line);
 
-	public abstract String toT3d(StringBuilder sb, String prefix);
+	public abstract void toT3d(StringBuilder sb, String prefix);
 
 	public abstract String getName();
 }
