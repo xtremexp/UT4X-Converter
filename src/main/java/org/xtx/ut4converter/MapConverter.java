@@ -1042,14 +1042,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		File dbFile = new File(Installation.getProgramFolder() + File.separator + "conf" + File.separator + inputGame.shortName + "TexNameToPackage.txt");
 
-		try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr);) {
+		if (dbFile.exists()) {
+			try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr);) {
 
-			String line;
+				String line;
 
-			while ((line = bfr.readLine()) != null) {
-				String[] sp = line.split("\\:");
-				nameToPackage.put(sp[0], sp[1]);
+				while ((line = bfr.readLine()) != null) {
+					String[] sp = line.split("\\:");
+					nameToPackage.put(sp[0], sp[1]);
+				}
 			}
+		} else {
+			logger.log(Level.WARNING, "Texture db file " + dbFile + " not found !");
 		}
 	}
 
@@ -1397,7 +1401,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Set a filter to UT classes that will be converted. If no filter is set
 	 * then all classes that can be converted will be converted.
 	 * 
-	 * @param classFilter
+	 * @param filteredClasses
 	 *            Classes that will be converted (e.g:
 	 *            ['Brush','Light','DefensePoint', ...]
 	 */
