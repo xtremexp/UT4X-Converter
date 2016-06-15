@@ -395,9 +395,15 @@ public class T3DUtils {
 
 			sb.append("(");
 
-			for (Object item : (List<Object>) propValue) {
-				write(sb, propName, item, prefix);
-				sb.append(",");
+			List<Object> propValues = (List<Object>) propValue;
+
+			if (!propValues.isEmpty()) {
+				for (Object item : (List<Object>) propValue) {
+					write(sb, propName, item, prefix);
+					sb.append(",");
+				}
+
+				sb.deleteCharAt(sb.length() - 1);
 			}
 
 			sb.append(")");
