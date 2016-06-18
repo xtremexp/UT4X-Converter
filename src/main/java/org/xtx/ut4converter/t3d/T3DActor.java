@@ -182,18 +182,38 @@ public abstract class T3DActor extends T3DObject {
 		return parseOtherData(line);
 	}
 
+	public T3DActor(MapConverter mc, String t3dClass){
+		super(mc, t3dClass);
+		
+		sceneComponent = new SceneComponent(mc);
+		properties = new HashMap<>();
+		this.sbf = new StringBuilder();
+	}
+	
 	/**
 	 *
 	 * @param mc
 	 * @param t3dClass
+	 * @param actor
+	 *            If not null will copy some basic properties like location to
+	 *            this actor
 	 */
-	public T3DActor(MapConverter mc, String t3dClass) {
+	public T3DActor(MapConverter mc, String t3dClass, T3DActor actor) {
 
 		super(mc, t3dClass);
 
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
 		this.sbf = new StringBuilder();
+
+		if (actor != null) {
+			this.location = actor.location;
+			this.rotation = actor.rotation;
+			this.scale3d = actor.scale3d;
+			this.drawScale = actor.drawScale;
+			this.tag = actor.tag;
+			this.name = actor.name;
+		}
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {

@@ -542,7 +542,7 @@ public class T3DLight extends T3DSound {
 		// ...
 		saturation = Math.abs(saturation - 255);
 
-		RGBColor rgb = ImageUtils.HSVToLinearRGB(hue, saturation, brightness);
+		RGBColor rgb = ImageUtils.HSVToLinearRGB(hue, saturation, brightness, false);
 
 		this.red = rgb.R;
 		this.blue = rgb.B;

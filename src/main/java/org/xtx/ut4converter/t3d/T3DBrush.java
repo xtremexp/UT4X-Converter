@@ -110,14 +110,26 @@ public class T3DBrush extends T3DSound {
 	 */
 	String modelName;
 
+	
+	public T3DBrush(MapConverter mapConverter, String t3dClass) {
+		super(mapConverter, t3dClass);
+
+		init();
+	}
+
 	/**
 	 *
 	 * @param mapConverter
 	 * @param t3dClass
+	 * @param actor Used if creating brush from another type of actor (like zoneinfo for postprocessvolume, ...)
 	 */
-	public T3DBrush(MapConverter mapConverter, String t3dClass) {
-		super(mapConverter, t3dClass);
+	public T3DBrush(MapConverter mapConverter, String t3dClass, T3DActor actor) {
+		super(mapConverter, t3dClass, actor);
 
+		init();
+	}
+	
+	private void init(){
 		brushClass = BrushClass.getBrushClass(t3dClass);
 
 		if (mapConverter.fromUE1orUE2OrUE3()) {
@@ -472,10 +484,17 @@ public class T3DBrush extends T3DSound {
 		for (String line : forcedWrittenLines) {
 			sbf.append(IDT).append(line).append("\n");
 		}
+		
+		// write specific properties of post process volume brush subclass
+		if(this instanceof T3DPostProcessVolume){
+			T3DPostProcessVolume ppv = (T3DPostProcessVolume) this;
+			ppv.writeProps();
+		}
 
 		writeEndActor();
 
 		// UT3 has postprocess volumes
+		// TODO merge/refactor/move to T3DPostProcessVolume class
 		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume)) {
 
 			// add post processvolume

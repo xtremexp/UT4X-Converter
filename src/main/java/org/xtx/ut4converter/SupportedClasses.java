@@ -162,7 +162,7 @@ public class SupportedClasses {
 
 		if (mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4)) {
 			// disabled until working good
-			// putUtClass(T3DZoneInfo.class, "ZoneInfo");
+			putUtClass(T3DZoneInfo.class, "ZoneInfo");
 		}
 
 		// terrain conversion disabled until working good

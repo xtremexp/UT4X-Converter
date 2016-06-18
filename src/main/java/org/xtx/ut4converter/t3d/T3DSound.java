@@ -178,15 +178,20 @@ public class T3DSound extends T3DActor {
 			}
 		}
 	}
+	
+	public T3DSound(MapConverter mc, String t3dClass) {
+		super(mc, t3dClass, null);
+		
+		initialise();
+	}
 
 	/**
 	 *
 	 * @param mc
 	 * @param t3dClass
 	 */
-	public T3DSound(MapConverter mc, String t3dClass) {
-		super(mc, t3dClass);
-		ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
+	public T3DSound(MapConverter mc, String t3dClass, T3DActor actor) {
+		super(mc, t3dClass, actor);
 
 		initialise();
 	}
@@ -196,6 +201,8 @@ public class T3DSound extends T3DActor {
 	 * version
 	 */
 	private void initialise() {
+		
+		ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
 
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			attenuation.attenuationShapeExtents.x = 64d; // Default Radius in

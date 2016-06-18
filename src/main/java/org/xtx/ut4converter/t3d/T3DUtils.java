@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
 
 /**
@@ -500,6 +501,33 @@ public class T3DUtils {
 			// RootComponent=Sphere
 			sbf.append(T3DObject.IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
 
+		}
+	}
+
+	/**
+	 * Write rgbcolor to t3d (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
+	 * 
+	 * @param sb
+	 * @param rgbColor
+	 *            Rgb Color
+	 */
+	public static void writeRGBColor(StringBuilder sb, RGBColor rgbColor) {
+		if (rgbColor != null) {
+			// (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
+			sb.append("(R=").append(rgbColor.R).append(",G=").append(rgbColor.G).append(",B=").append(rgbColor.B).append(",A=").append(rgbColor.A).append(")");
+		}
+	}
+
+	/**
+	 * Writes hsvcolor to t3d in RGB format
+	 * 
+	 * @param sb
+	 * @param hsvColor
+	 *            HsvColor
+	 */
+	public static void writeRGBColor(StringBuilder sb, HSVColor hsvColor) {
+		if (hsvColor != null) {
+			writeRGBColor(sb, hsvColor.toRGBColor(true));
 		}
 	}
 

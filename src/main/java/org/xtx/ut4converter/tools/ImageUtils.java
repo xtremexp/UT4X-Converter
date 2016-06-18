@@ -31,10 +31,12 @@ public class ImageUtils {
 	 *            Saturation
 	 * @param brightness
 	 *            Brightness
+	 * @param zeroOneScale
+	 *            If true will use 0..1 scale else 0...255 (UE1/UE2 scale)
 	 * @return
 	 */
-	public static RGBColor HSVToLinearRGB(float hue, float saturation, float brightness) {
-		return HSVToLinearRGB(new HSVColor(hue, saturation, brightness));
+	public static RGBColor HSVToLinearRGB(float hue, float saturation, float brightness, boolean zeroOneScale) {
+		return HSVToLinearRGB(new HSVColor(hue, saturation, brightness), zeroOneScale);
 	}
 
 	/**
@@ -43,9 +45,11 @@ public class ImageUtils {
 	 * 
 	 * @param hsv
 	 *            Color in HSV format
+	 * @param zeroOneScale
+	 *            If true will use 0..1 scale else 0...255 (UE1/UE2 scale)
 	 * @return Color in RGB format
 	 */
-	public static RGBColor HSVToLinearRGB(HSVColor hsv) {
+	public static RGBColor HSVToLinearRGB(HSVColor hsv, boolean zeroOneScale) {
 		// Hue normally in 0-360 range
 
 		// In this color, R = H, G = S, B = V
@@ -73,10 +77,17 @@ public class ImageUtils {
 		int SwizzleIndex = ((int) HDiv60_Floor) % 6;
 
 		RGBColor rgb = new RGBColor();
-		rgb.R = RGBValues[RGBMatrix[SwizzleIndex][0]] * 255f;
-		rgb.G = RGBValues[RGBMatrix[SwizzleIndex][1]] * 255f;
-		rgb.B = RGBValues[RGBMatrix[SwizzleIndex][2]] * 255f;
-		rgb.A = 255f;
+		rgb.R = RGBValues[RGBMatrix[SwizzleIndex][0]];
+		rgb.G = RGBValues[RGBMatrix[SwizzleIndex][1]];
+		rgb.B = RGBValues[RGBMatrix[SwizzleIndex][2]];
+		rgb.A = 1f;
+		
+		if(!zeroOneScale){
+			rgb.R *= 255f;
+			rgb.G *= 255f;
+			rgb.B *= 255f;
+			rgb.A *= 255f;
+		}
 
 		return rgb;
 	}
