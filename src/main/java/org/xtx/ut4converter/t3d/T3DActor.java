@@ -54,6 +54,11 @@ public abstract class T3DActor extends T3DObject {
 	 * UE1/2/3? property in Events->Tag
 	 */
 	protected String tag;
+	
+	/**
+	 * UE1/2/ (3?) property in Events->Event
+	 */
+	protected String event;
 
 	/**
 	 * Location of actor (if null means 0 location)
@@ -307,7 +312,11 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("Tag=")) {
-			tag = line.split("Tag=")[1];
+			tag = line.split("\\\"")[1];
+		}
+		
+		else if (line.startsWith("Event=")) {
+			event = line.split("\\\"")[1];
 		}
 
 		else {
@@ -524,6 +533,16 @@ public abstract class T3DActor extends T3DObject {
 			rotation.x *= rotFac;
 			rotation.y *= rotFac;
 			rotation.z *= rotFac;
+		}
+		
+		if (this.name != null) {
+			if (this.tag != null) {
+				this.name += "_" + this.tag;
+			}
+
+			if (this.event != null) {
+				this.name += "->" + this.event;
+			}
 		}
 
 		// Notify actor was converted

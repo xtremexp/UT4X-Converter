@@ -33,6 +33,8 @@ public class T3DTrigger extends T3DBrush {
 	@Override
 	public void convert() {
 		polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
+
+		super.convert();
 	}
 
 	@Override
