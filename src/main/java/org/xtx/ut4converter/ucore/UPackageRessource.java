@@ -395,7 +395,9 @@ public class UPackageRessource {
 		}
 
 		final String baseName = getConvertedBaseName(mapConverter);
-		return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
+		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
+		
+		return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
 	}
 
 	/**

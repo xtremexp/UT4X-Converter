@@ -5,13 +5,13 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.scene.control.TextField;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,9 +21,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -33,6 +35,7 @@ import javax.xml.bind.JAXBException;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
@@ -59,6 +62,13 @@ public class ConversionSettingsController implements Initializable {
 	private Label inputMapLbl;
 	@FXML
 	private Label outputFolderLbl;
+	
+	/**
+	 * Path where ressources will be referenced to
+	 * (e.g: '/Game/RestrictedAssets/Maps/WIP/DM-Deck16'
+	 */
+	@FXML
+	private Label ut4BaseReferencePath;
 
 	MainApp mainApp;
 
@@ -223,6 +233,8 @@ public class ConversionSettingsController implements Initializable {
 			if (newMapName.length() > 3) {
 				mapConverter.setOutMapName(newMapName);
 				outMapNameLbl.setText(mapConverter.getOutMapName());
+				mapConverter.initConvertedResourcesFolder();
+				ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
 			}
 		}
 
@@ -279,6 +291,9 @@ public class ConversionSettingsController implements Initializable {
 			changeMapNameBtn.setDisable(false);
 			inputMapLbl.setText(unrealMap.getName());
 			mapConverter.setInMap(unrealMap);
+			mapConverter.initConvertedResourcesFolder();
+			ut4BaseReferencePath.setDisable(false);
+			ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
 			outputFolderLbl.setText(mapConverter.getOutPath().toString());
 			outMapNameLbl.setText(mapConverter.getOutMapName());
 		}
@@ -343,6 +358,72 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param event
+	 */
+	@FXML
+	private void selectUt4BaseReferencePath(ActionEvent event) {
+
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Select ut4 editor reference base path");
+
+		UserConfig userConfig = null;
+
+		try {
+			userConfig = UserConfig.load();
+
+			if (userConfig != null) {
+				File ut4RootPath = userConfig.getGameConfigByGame(UTGame.UT4).getPath();
+
+				if (ut4RootPath.exists()) {
+					File ut4RootContentPath = new File(ut4RootPath.getAbsolutePath() + File.separator + "UnrealTournament" + File.separator + "Content");
+
+					if (ut4BaseReferencePath != null && ut4BaseReferencePath.getText() != null && !ut4BaseReferencePath.getText().trim().isEmpty()) {
+						File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ut4BaseReferencePath);
+
+						if (ut4BaseRefPath.getParentFile().exists()) {
+							chooser.setInitialDirectory(ut4BaseRefPath.getParentFile());
+						}
+					}
+					
+					if (chooser.getInitialDirectory() == null) {
+						chooser.setInitialDirectory(ut4RootContentPath);
+					}
+
+					File ut4RefFolder = chooser.showDialog(new Stage());
+
+					if (ut4RefFolder != null) {
+						if(ut4RefFolder.getPath().startsWith(ut4RootContentPath.getAbsolutePath())){
+							String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
+							ut4BaseRef = ut4BaseRef.replace("\\", "/");
+							
+							ut4BaseReferencePath.setText(ut4BaseRef);
+							mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
+						} else {
+							showErrorMessage("Reference folder must be in ut4 content subfolder!");
+						}
+						
+					}
+				} else {
+					Logger.getGlobal().severe("UT4 Editor path not set !");
+					return;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void showErrorMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Operation failed");
+		alert.setContentText("An error occured: " + message);
+		alert.showAndWait();
 	}
 
 	@FXML

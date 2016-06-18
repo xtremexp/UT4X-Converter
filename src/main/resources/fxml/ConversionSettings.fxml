@@ -21,10 +21,10 @@
                         <Label GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="inputGameLbl">UT3</Label> 
 
                         <Label GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.fillWidth="true" >Output Game:</Label>  
-                        <Label GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.columnSpan="2" fx:id="outputGameLbl" prefWidth="100.0">UT4</Label> 
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.columnSpan="2" fx:id="outputGameLbl" minWidth="200.0">UT4</Label> 
 
                         <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Input Map:</Label> 
-                        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="inputMapLbl" prefWidth="200.0">Select Map!</Label> 
+                        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="inputMapLbl">Select Map!</Label> 
                         <Button GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#selectInputMap" >Select Map</Button>
 
                         <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Output Folder:</Label> 
@@ -61,18 +61,22 @@
                         </ComboBox>
                     
                         <Separator GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="6"></Separator>
+                        
+                        <Label GridPane.rowIndex="6" GridPane.columnIndex="0">UT4 reference base path:</Label> 
+                        <Label GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="4" fx:id="ut4BaseReferencePath" minWidth="200.0"></Label> 
+                        <Button GridPane.rowIndex="6" GridPane.columnIndex="5" onAction="#selectUt4BaseReferencePath">Change Path</Button>
 
-                        <Label GridPane.rowIndex="6" GridPane.columnIndex="0">Convert Textures:</Label>
-                        <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="1" fx:id="convTexCheckBox" onAction="#toggleTexConversion" ></CheckBox>
+                        <Label GridPane.rowIndex="7" GridPane.columnIndex="0">Convert Textures:</Label>
+                        <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="1" fx:id="convTexCheckBox" onAction="#toggleTexConversion" ></CheckBox>
 
-                        <Label GridPane.rowIndex="6" GridPane.columnIndex="2">Convert Sounds:</Label>
-                        <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="3" fx:id="convSndCheckBox" onAction="#toggleSndConversion"></CheckBox>
+                        <Label GridPane.rowIndex="7" GridPane.columnIndex="2">Convert Sounds:</Label>
+                        <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="3" fx:id="convSndCheckBox" onAction="#toggleSndConversion"></CheckBox>
 
-                        <Label GridPane.rowIndex="7" GridPane.columnIndex="0">Export Music:</Label>
-                        <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
+                        <Label GridPane.rowIndex="8" GridPane.columnIndex="0">Export Music:</Label>
+                        <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
 
-                        <Label GridPane.rowIndex="7" GridPane.columnIndex="2">Export StaticMeshes (.psk):</Label>
-                        <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="3" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
+                        <Label GridPane.rowIndex="8" GridPane.columnIndex="2">Export StaticMeshes (.psk):</Label>
+                        <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="3" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
                         
                         <Label fx:id="warningMessage" GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="6"></Label>
                         

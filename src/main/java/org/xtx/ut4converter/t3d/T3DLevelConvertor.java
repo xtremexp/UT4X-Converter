@@ -15,7 +15,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,7 +24,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 import javafx.concurrent.Task;
 
@@ -575,7 +573,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	private void writeHeader() throws IOException {
 
 		bwr.write("Begin Map\n");
-		bwr.write("\tBegin Level Name=" + mapConverter.getRelativeUtMapPath() + "\n");
+		bwr.write("\tBegin Level Name=" + mapConverter.getUt4ReferenceBaseFolder() + "/" + mapConverter.getOutMapName() + "\n");
 
 		// Auto creates a big additive brush surrounding level
 		// to simulate creating a level in subtract mode (not existing in UE4

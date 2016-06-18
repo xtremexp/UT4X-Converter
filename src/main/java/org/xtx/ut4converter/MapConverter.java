@@ -74,7 +74,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Input map. Can be either a map (.unr, ...) or unreal text map (.t3d)
 	 */
-	File inMap;
+	private File inMap;
 
 	/**
 	 * Final map name, might differ from original one. E.G: AS-Mazon (UT99) ->
@@ -91,6 +91,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * 
 	 */
 	String relativeUtMapPath;
+	
+	/**
+	 * getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator
+	 */
+	String ut4ReferenceBaseFolder;
 
 	File inT3d, outT3d;
 
@@ -325,7 +330,30 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			mapName = T3DUtils.filterName(mapName);
 		}
 	}
-
+	
+	public void initConvertedResourcesFolder(){
+		initOutMapName();
+		this.ut4ReferenceBaseFolder = UTGames.UE4_FOLDER_MAP + "/" + this.getOutMapName();
+	}
+	
+	public void setUt4ReferenceBaseFolder (String folder){
+		this.ut4ReferenceBaseFolder = folder;
+	}
+	
+	public String getUt4ReferenceBaseFolder (){
+		return this.ut4ReferenceBaseFolder;
+	}
+	
+	public File getUt4ReferenceBaseFolderFile (){
+		
+		// e.g: ut4ReferenceBaseFolder = '/Game/RestrictedAssets/Map/DM-MyMap'
+		String xx = ut4ReferenceBaseFolder;
+		xx = xx.replace("/Game", "/Content");
+		UserGameConfig config = userConfig.getGameConfigByGame(outputGame);
+		
+		return new File(config.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
+	}
+	
 	private void initialise() {
 
 		if (this.outPath == null && inMap != null) {
@@ -353,7 +381,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 				getTempExportFolder().mkdirs();
 
-				initOutMapName();
+				initConvertedResourcesFolder();
 				this.relativeUtMapPath = UTGames.UE4_FOLDER_MAP + "/" + getOutMapName() + "/" + getOutMapName();
 			}
 
@@ -795,7 +823,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			File restrictedAssetsFolder = new File(userGameConfig.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
 			// TEMP thingy use custom one if user changed it
-			File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
+			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
+			File wipConvertedMapFolder = getUt4ReferenceBaseFolderFile();
+			
 			wipConvertedMapFolder.mkdirs();
 
 			logger.log(Level.FINE, "Creating " + wipConvertedMapFolder);
