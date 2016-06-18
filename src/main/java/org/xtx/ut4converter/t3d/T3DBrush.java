@@ -584,22 +584,15 @@ public class T3DBrush extends T3DSound {
 
 		if ("BlockAll".equals(t3dClass)) {
 			brushClass = BrushClass.BlockingVolume;
-			String rad = getProperty("CollisionRadius");
-			String height = getProperty("CollisionHeight");
-
-			Double radD = (rad != null ? Double.valueOf(rad) : 14d);
-			Double heightD = (height != null ? Double.valueOf(height) : 20d);
-
-			Double newScale = mapConverter.getScale();
-
-			if (newScale != null) {
-				radD *= newScale;
-				heightD *= newScale;
-				// not using scale() function because location ever scaled ...
+			if(collisionRadius == null){
+				collisionRadius = 10d; // default value in UE1/UE2
+			}
+			
+			if(collisionHeight == null){
+				collisionHeight = 10d;
 			}
 
-			polyList.clear();
-			polyList = Geometry.createCylinder(radD, heightD, 8);
+			polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
 			super.convert();
 		}
 

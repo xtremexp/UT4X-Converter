@@ -140,18 +140,7 @@ public class T3DMatch {
 				new String[] { "UTCTFBlueFlagBase" }, new String[] { "UTBlueFlagBase_C" }).withP(UTGame.UT99, "Team", "1").addConvP(UTGame.UT4, new Object[] { Z_OFFSET, -64d }));
 
 		// TODO improve t3d matcher to sync / convert properties "on the fly"
-		// TODO handle radius and height
-		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name,
-		// U1
-				new String[] { "Trigger" }, null,
-				// UT99
-				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger" },
-				// UT2003
-				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger" },
-				// UT2004
-				new String[] { "Trigger", "TeamTrigger", "ZoneTrigger", "Trigger_ASTeam" },
-				// UT3
-				new String[] { "Trigger" }, new String[] { "TriggerCapsule" }));
+
 		list.add(iByGame(T3DPickup.class, UE4_RCType.ICON.name, null, null, new String[] { "DefensePoint" }, null, null, null, new String[] { "UTDefensePoint" }));
 
 		// Blueprint_Effect_Smoke_C

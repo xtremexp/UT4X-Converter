@@ -488,8 +488,8 @@ public class Geometry {
 		for (int i = 0; i < sides; i++) {
 			T3DPolygon p = new T3DPolygon();
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 
 			for (int j = 0; j < 4; j++) {
 
@@ -504,7 +504,8 @@ public class Geometry {
 				}
 			}
 
-			p.setOrigin(p.vertices.getFirst().getCoordinates());
+			Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+			p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 			polyList.add(p);
 		}
 
@@ -518,14 +519,15 @@ public class Geometry {
 
 		for (int i = 0; i < sides; i++) {
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 			p.addVertex(Math.sin(a) * r, Math.cos(a) * r, +h);
 
 			a -= angle;
 		}
 
-		p.setOrigin(p.vertices.getFirst().getCoordinates());
+		Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
 		a = angle / 2d;
@@ -535,14 +537,15 @@ public class Geometry {
 
 		for (int i = 0; i < sides; i++) {
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 			p.addVertex(Math.sin(a) * r, Math.cos(a) * r, -h);
 
 			a += angle;
 		}
 
-		p.setOrigin(p.vertices.getFirst().getCoordinates());
+		firstVertCoord = p.vertices.getFirst().getCoordinates();
+		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
 		return polyList;

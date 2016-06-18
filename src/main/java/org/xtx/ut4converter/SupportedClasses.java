@@ -121,16 +121,15 @@ public class SupportedClasses {
 	 */
 	private void initialize() {
 
-		// FIXME block all has wrong volume, totally screwed
 		// TODO move zones to match with T3DZoneInfo.class
-		putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone");// ,
-																																// "BlockAll");
+		putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone", "BlockAll");
 
 		putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
 				"LoopMover", "InterpActor");
 
 		putUtClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
+		putUtClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam");
 
 		for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
 
