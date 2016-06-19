@@ -86,7 +86,7 @@ public class PSKStaticMesh {
 		extraUvs = new ArrayList<>();
 	}
 
-	interface BinReadWrite {
+	public interface BinReadWrite {
 		public abstract void write(FileOutputStream bos) throws IOException;
 
 		public abstract void read(ByteBuffer bf);

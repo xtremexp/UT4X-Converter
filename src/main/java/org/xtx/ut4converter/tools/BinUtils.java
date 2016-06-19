@@ -2,6 +2,7 @@ package org.xtx.ut4converter.tools;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -14,6 +15,7 @@ import javax.vecmath.Vector4d;
  * 
  * @author XtremeXp
  *
+ * DWORD = int in java
  */
 public class BinUtils {
 
@@ -48,6 +50,17 @@ public class BinUtils {
 		v.w = bf.getFloat();
 
 		return v;
+	}
+
+	public static short[] readShortArray(ByteBuffer bf, int size) {
+
+		short xx[] = new short[size];
+
+		for (int i = 0; i <= size; i++) {
+			xx[0] = bf.getShort();
+		}
+
+		return xx;
 	}
 
 	public static Vector2d readVector2d(ByteBuffer bf) {
