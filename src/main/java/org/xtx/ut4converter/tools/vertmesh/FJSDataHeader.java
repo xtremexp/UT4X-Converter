@@ -9,9 +9,8 @@ import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 
 /**
  * Datafile header for vertmesh UE1 files see: -
- * https://udn.epicgames.com/Two/rsrc
- * /Two/BinaryFormatSpecifications/UnrealVertexAnimation.h -
- * http://paulbourke.net/dataformats/unreal/
+ * - https://udn.epicgames.com/Two/rsrc/Two/BinaryFormatSpecifications/UnrealVertexAnimation.h -
+ * - http://paulbourke.net/dataformats/unreal/
  * 
  * @author XtremeXp
  *
@@ -28,20 +27,18 @@ public class FJSDataHeader implements BinReadWrite {
 	DWORD	Unused1,Unused2,Unused3; //(unused)
 	 */
 
+	/**
+	 * _WORD	NumPolys
+	 */
 	private short numPolys;
 	private short numVertices;
 	private short bogusRot;
 	private short bogusFrame;
 	private int bogusNormX, bogusNormY, bogusNormZ;
 	private int fixScale;
-	// BYTE = 8 Bits = Byte
-	// CHAR = 8 bits
-	// WORD = 16 bits = Short
-	// DWORD = 32 bits = Int
-	// int = 4 bytes
-	// long = 8 bytes
+	
 	private int unused1, unused2, unused3; // 36 bytes
-	private String unknown; // 48
+	private String unknown; // 12 bytes
 
 	@Override
 	public void read(ByteBuffer bf) {
@@ -57,10 +54,7 @@ public class FJSDataHeader implements BinReadWrite {
 		unused1 = bf.getInt();
 		unused2 = bf.getInt();
 		unused3 = bf.getInt();
-		bf.getInt();
-		bf.getInt();
-		bf.getInt();
-		//unknown = BinUtils.readString(bf, 48);
+		unknown = BinUtils.readString(bf, 12);
 	}
 
 	@Override

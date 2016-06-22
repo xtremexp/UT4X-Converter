@@ -2,7 +2,6 @@ package org.xtx.ut4converter.tools;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -12,6 +11,13 @@ import javax.vecmath.Vector4d;
 
 /**
  * Utility class for write/read binary data
+ * 
+ * // BYTE = 8 Bits = Byte
+ * CHAR = 8 bits
+ * WORD = 16 bits = Short
+ * DWORD = 32 bits = Int
+ * int = 4 bytes
+ * long = 8 bytes
  * 
  * @author XtremeXp
  *
@@ -56,8 +62,8 @@ public class BinUtils {
 
 		short xx[] = new short[size];
 
-		for (int i = 0; i <= size; i++) {
-			xx[0] = bf.getShort();
+		for (int i = 0; i < size; i++) {
+			xx[i] = bf.getShort();
 		}
 
 		return xx;
