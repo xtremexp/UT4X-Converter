@@ -596,7 +596,8 @@ public class T3DMatch {
 	 * @param inActorProps
 	 * @return
 	 */
-	public Match getMatchFor(String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, boolean withT3dClass, Map<String, String> inActorProps) {
+	public Match getMatchFor(final String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, boolean withT3dClass, Map<String, String> inActorProps) {
+
 
 		Match m = null;
 
@@ -608,28 +609,36 @@ public class T3DMatch {
 
 			for (Match matchForName : matchesForName.matches) {
 
-				if (matchForName.game == inputGame && inActorClass != null && matchForName.actorClass.contains(inActorClass)) {
+				if (matchForName.game == inputGame && inActorClass != null) {
 
-					// Useful? Normally any actor has properties ...
-					if (inActorProps == null || inActorProps.isEmpty()) {
-						break;
-					} else {
-						if (matchForName.properties == null || matchForName.properties.isEmpty()) {
-							goodMatches.add(matchesForName);
+					// insensitive case class name check matching
+					long matchCount = matchForName.actorClass.stream().filter(x -> {
+						return x.toLowerCase().equals(inActorClass.toLowerCase());
+					}).count();
+
+					if (matchCount > 0) {
+						// Useful? Normally any actor has properties ...
+						if (inActorProps == null || inActorProps.isEmpty()) {
 							break;
 						} else {
+							if (matchForName.properties == null || matchForName.properties.isEmpty()) {
+								goodMatches.add(matchesForName);
+								break;
+							} else {
 
-							// Current Actor properties match perfectly
-							// properties needed, this is the good one
-							for (String key : matchForName.properties.keySet()) {
-								if (inActorProps.containsKey(key) && inActorProps.get(key).equals(matchForName.properties.get(key))) {
-									goodMatches.clear();
-									goodMatches.add(matchesForName);
-									superBreak = true;
-									break;
+								// Current Actor properties match perfectly
+								// properties needed, this is the good one
+								for (String key : matchForName.properties.keySet()) {
+									if (inActorProps.containsKey(key) && inActorProps.get(key).equals(matchForName.properties.get(key))) {
+										goodMatches.clear();
+										goodMatches.add(matchesForName);
+										superBreak = true;
+										break;
+									}
 								}
 							}
 						}
+
 					}
 				}
 			}
