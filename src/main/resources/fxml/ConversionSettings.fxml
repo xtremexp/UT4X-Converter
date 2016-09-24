@@ -17,24 +17,24 @@
             <TitledPane fx:id="mainSettingsTitle" expanded="true" > 
                 
                     <GridPane hgap="10" vgap="10" >
-                        <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Input Game:</Label>  
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;">Input Game:</Label>  
                         <Label GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2" fx:id="inputGameLbl">UT3</Label> 
 
-                        <Label GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.fillWidth="true" >Output Game:</Label>  
+                        <Label GridPane.rowIndex="0" GridPane.columnIndex="3" GridPane.fillWidth="true" style="-fx-font-weight: bold;">Output Game:</Label>  
                         <Label GridPane.rowIndex="0" GridPane.columnIndex="4" GridPane.columnSpan="2" fx:id="outputGameLbl" minWidth="200.0">UT4</Label> 
 
-                        <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Input Map:</Label> 
+                        <Label GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;">Input Map:</Label> 
                         <Label GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="inputMapLbl">Select Map!</Label> 
                         <Button GridPane.rowIndex="1" GridPane.columnIndex="5" onAction="#selectInputMap" >Select Map</Button>
 
-                        <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Output Folder:</Label> 
+                        <Label GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;">Output Folder:</Label> 
                         <Label GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3" fx:id="outputFolderLbl"></Label> 
                         
-                        <Label GridPane.rowIndex="3" GridPane.columnIndex="0">UT4 Map Name:</Label> 
+                        <Label GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;">UT4 Map Name:</Label> 
                         <Label GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="outMapNameLbl"></Label> 
                     	<Button GridPane.rowIndex="3" GridPane.columnIndex="2" onAction="#changeMapName" fx:id="changeMapNameBtn" disable="true">Change</Button>
                     	
-                        <Label GridPane.rowIndex="4" GridPane.columnIndex="0">Scale Factor:</Label> 
+                        <Label GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;">Scale Factor:</Label> 
                         <ComboBox GridPane.rowIndex="4" GridPane.columnIndex="1" fx:id="scaleFactorList" promptText="how much the map will be scaled" >
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
@@ -62,7 +62,7 @@
                     
                         <Separator GridPane.rowIndex="5" GridPane.columnIndex="0" GridPane.columnSpan="6"></Separator>
                         
-                        <Label GridPane.rowIndex="6" GridPane.columnIndex="0">UT4 reference base path:</Label> 
+                        <Label GridPane.rowIndex="6" GridPane.columnIndex="0" style="-fx-font-weight: bold;">UT4 reference base path:</Label> 
                         <Label GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="4" fx:id="ut4BaseReferencePath" minWidth="200.0"></Label> 
                         <Button GridPane.rowIndex="6" GridPane.columnIndex="5" onAction="#selectUt4BaseReferencePath">Change Path</Button>
 
