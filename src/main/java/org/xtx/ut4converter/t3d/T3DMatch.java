@@ -181,7 +181,7 @@ public class T3DMatch {
 				"BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_JumpBoots.BP_JumpBoots_C'"));
 
 		// PowerUp - Damage Amplifier
-		gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Amplifier" }, null, new String[] { "UDamage", "Amplifier" }, new String[] { "UDamageCharger" },
+		gmPwrups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Amplifier", "WeaponPowerUp" }, null, new String[] { "UDamage", "Amplifier" }, new String[] { "UDamageCharger" },
 				new String[] { "UDamageCharger" }, new String[] { "UTPickupFactory_UDamage" }, new String[] { UT4_CLS_PWRUP }).withP(UTGame.UT4, UT4_PROP_IT,
 				"BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_UDamage.BP_UDamage_C'"));
 
@@ -215,7 +215,7 @@ public class T3DMatch {
 				new String[] { "BioAmmoPickup" }, new String[] { "UTAmmo_BioRifle_Content", "UTAmmo_BioRifle" }, new String[] { "BioAmmoPickup_C" }));
 
 		// Ammo - Minigun
-		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Clip" }, null, new String[] { "Miniammo", "EClip" }, new String[] { "MinigunAmmoPickup" },
+		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Clip", "StingerAmmo" }, null, new String[] { "Miniammo", "EClip" }, new String[] { "MinigunAmmoPickup" },
 				new String[] { "MinigunAmmoPickup" }, new String[] { "UTAmmo_Stinger" }, new String[] { "MinigunAmmoPickup_C" }));
 
 		// Ammo - Flak
@@ -231,7 +231,7 @@ public class T3DMatch {
 				new String[] { "ShockAmmoPickup" }, new String[] { "UTAmmo_ShockRifle" }, new String[] { "ShockAmmoPickup_C" }));
 
 		// Ammo - Sniper
-		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "RifleAmmo", "RifleRound" }, new String[] { "ammoSniperRifle" }, new String[] { "BulletBox", "RifleAmmo",
+		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "RifleAmmo", "RifleRound", "ShellBox" }, new String[] { "ammoSniperRifle" }, new String[] { "BulletBox", "RifleAmmo",
 				"RifleRound", "RifleShell" }, new String[] { "SniperAmmoPickup" }, new String[] { "SniperAmmoPickup" }, new String[] { "UTAmmo_SniperRifle" }, new String[] { "SniperAmmoPickup_C" }));
 
 		// Ammo - LinkGun
