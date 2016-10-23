@@ -135,9 +135,8 @@ In UT4 Editor:
 -- After import, right click on all texture in editor and choose "create material"
 
 - Import converted map
--- In menu, go to "File -> Import ..."
--- Select the file <UT4ConverterPath>/Converted/<MapName>/Level/<MapName>-<X>/U1.t3d
--- click on OK to import the map
+-- Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)
+-- Select all text (Ctrl+A) and copy(Ctrl+C)/paste(Ctrl+V) it into the editor
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
 
