@@ -626,7 +626,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 
 		logger.log(Level.INFO, "Converted Map Import");
-		logger.log(Level.INFO, "File -> Import... -> Empty Level");
 		logger.log(Level.INFO, "Open the .t3d file " + getOutT3d() + " with a text editor.");
 		logger.log(Level.INFO, "Select all text into .t3d file and copy/paste it into main viewport of the editor.");
 		logger.log(Level.INFO, "'Save' the map");
