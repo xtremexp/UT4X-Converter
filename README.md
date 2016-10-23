@@ -224,6 +224,24 @@ History
   * ut3: fixed some brushes not being properly converted (have to manually copy/paste level actors
   from ut3 editor see part "How to convert map?" -> "for ut3 maps only" section)
   * ....
+  
+- 0.7.5 - 23/10/2016
+* Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
+can no longer directly import .t3d files
+
+- 0.7.4 - 21/09/2016:
+* Fixed some classes not being converted (like pickups, weapons) when class name was lowercase
+* Fixed bad parsing of tag sometimes
+
+- 0.7.3 - 18/06/2016:
+* Changed default scale from 2.2 to 2.5 to fit with playersize change in some previous UT4 patch
+* Added settings to only convert some manually specified classes
+* u1, u2, ut: fixed bad lift destination not being scaled with conversion map scale
+* u1, u2, ut: fixed bad converted sounds that was causing crash on play in editor sometimes
+* all: fixed some resources (mainly sounds) that were not being converted
+
+- 0.7.2 - 14/10/2015:
+* u2/ut2003/ut2004: Fixed bad staticmesh scaling in level if "DrawScale" property set.
 
 - 0.7.1 - 12/10/2015:
   * Fixed polygon for normal brushes with shader texture not replaced with diffuse texture
