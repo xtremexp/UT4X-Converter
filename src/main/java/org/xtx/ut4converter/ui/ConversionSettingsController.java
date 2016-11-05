@@ -306,15 +306,6 @@ public class ConversionSettingsController implements Initializable {
 
 			dialogStage.close();
 
-			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
-			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
-			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
-			if (classesNameFilter.getLength() > 1) {
-				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
-			}
-
-			mapConverter.setConversionViewController(mainApp.showConversionView());
-
 			if (mapConverter.isFrom(UnrealEngine.UE3)) {
 				FileChooser chooser = new FileChooser();
 				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from UT3 editor ");
@@ -335,6 +326,15 @@ public class ConversionSettingsController implements Initializable {
 					return;
 				}
 			}
+			
+			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
+			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
+			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
+			if (classesNameFilter.getLength() > 1) {
+				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
+			}
+
+			mapConverter.setConversionViewController(mainApp.showConversionView());
 
 			SwingUtilities.invokeLater(mapConverter);
 		}
