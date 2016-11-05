@@ -755,45 +755,52 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			for (UPackageRessource ressource : unrealPackage.getRessources()) {
 
-				wasConverted = false;
-				File exportedFile = ressource.getExportedFile();
+				try {
 
-				if (exportedFile != null && exportedFile.length() > 0) {
+					wasConverted = false;
+					File exportedFile = ressource.getExportedFile();
 
-					// Renaming exported files (e.g: Stream2.wav ->
-					// AmbOutside_Looping_Stream2.wav)
-					// move them to non temporary folder
-					if (ressource.isUsedInMap()) {
+					if (exportedFile != null && exportedFile.length() > 0) {
 
-						// Some sounds and/or textures might need to be
-						// converted for correct import in UE4
-						if (ressource.needsConversion(this)) {
-							exportedFile = ressource.convert(logger, userConfig);
+						// Renaming exported files (e.g: Stream2.wav ->
+						// AmbOutside_Looping_Stream2.wav)
+						// move them to non temporary folder
+						if (ressource.isUsedInMap()) {
+
+							// Some sounds and/or textures might need to be
+							// converted for correct import in UE4
+							if (ressource.needsConversion(this)) {
+								exportedFile = ressource.convert(logger, userConfig);
+								ressource.setExportedFile(exportedFile);
+								wasConverted = true;
+							}
+
+							File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
+							newFile.getParentFile().mkdirs();
+							newFile.createNewFile();
+
+							// sometimes it does not find the exported texture
+							// (?
+							// ... weird)
+							if (exportedFile.exists() && exportedFile.isFile()) {
+								Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+							}
+
+							if (exportedFile.delete()) {
+								logger.fine("Deleted " + exportedFile);
+							}
+
+							exportedFile = newFile;
 							ressource.setExportedFile(exportedFile);
-							wasConverted = true;
-						}
 
-						File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
-						newFile.getParentFile().mkdirs();
-						newFile.createNewFile();
-
-						// sometimes it does not find the exported texture (?
-						// ... weird)
-						if (exportedFile.exists() && exportedFile.isFile()) {
-							Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-						}
-
-						if (exportedFile.delete()) {
-							logger.fine("Deleted " + exportedFile);
-						}
-
-						exportedFile = newFile;
-						ressource.setExportedFile(exportedFile);
-
-						if (wasConverted) {
-							logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+							if (wasConverted) {
+								logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+							}
 						}
 					}
+
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}
