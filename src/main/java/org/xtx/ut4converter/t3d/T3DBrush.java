@@ -33,7 +33,7 @@ public class T3DBrush extends T3DSound {
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
 		// UE3 and UE4 Volumes
-		PostProcessVolume, TriggerVolume,
+		PostProcessVolume, TriggerVolume, UTSlimeVolume,
 		/**
 		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
 		 */
@@ -258,7 +258,7 @@ public class T3DBrush extends T3DSound {
 		}
 
 		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone")
-				|| t3dBrushClass.equals("VaccuumZone")) {
+				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name())) {
 			brushClass = BrushClass.UTPainVolume;
 			forcedWrittenLines.add("DamagePerSec=10.000000");
 			return true;
@@ -506,6 +506,12 @@ public class T3DBrush extends T3DSound {
 			if (null != t3dClass)
 				switch (t3dClass) {
 				case "SlimeZone":
+					// slimy ppv copied/pasted from DM-DeckTest (UT4)
+					postProcessVolume.forcedWrittenLines
+							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+					break;
+					
+				case "UTSlimeVolume":
 					// slimy ppv copied/pasted from DM-DeckTest (UT4)
 					postProcessVolume.forcedWrittenLines
 							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
