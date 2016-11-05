@@ -533,18 +533,15 @@ public class UPackageRessource {
 			return false;
 		}
 
-		if (mc.isFromUE1UE2ToUE3UE4()) {
+		// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
+		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && type == Type.SOUND) {
+			return true;
+		}
 
-			// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
-			if (type == Type.SOUND) {
-				return true;
-			}
-
-			// ucc exporter exports malformed .dds textures ...
-			// that can't be imported in UE4
-			if (type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFile.getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
-				return true;
-			}
+		// ucc exporter exports malformed .dds textures ...
+		// that can't be imported in UE4
+		if (mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFile.getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
+			return true;
 		}
 
 		return false;
