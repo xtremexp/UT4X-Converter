@@ -211,7 +211,7 @@ public class T3DMatch {
 		
 		// Ammo - Enforcer
 		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, null, null,
-				null, new String[] { "UTAmmo_EnforcerRifle" }, new String[] { "EnforcerAmmoPickup_C" }));
+				null, new String[] { "UTAmmo_Enforcer" }, new String[] { "EnforcerAmmoPickup_C" }));
 
 		// Ammo - BioAmmo
 		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Sludge" }, null, new String[] { "BioAmmo", "Sludge" }, new String[] { "BioAmmoPickup" },
