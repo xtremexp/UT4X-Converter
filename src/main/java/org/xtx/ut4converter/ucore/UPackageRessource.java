@@ -535,7 +535,8 @@ public class UPackageRessource {
 
 		if (mc.isFromUE1UE2ToUE3UE4()) {
 
-			if (type == Type.SOUND && mc.getInputGame().engine.version <= 2) {
+			// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
+			if (type == Type.SOUND) {
 				return true;
 			}
 
