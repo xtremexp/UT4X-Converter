@@ -18,6 +18,8 @@ import org.xtx.ut4converter.t3d.*;
  */
 public class SupportedClasses {
 
+	private static final boolean USE_CUSTOM = true;
+	
 	MapConverter mapConverter;
 
 	/**
@@ -127,6 +129,7 @@ public class SupportedClasses {
 		putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
 				"LoopMover", "InterpActor");
 
+		//putUtClass()
 		putUtClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
 		putUtClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam");
@@ -181,6 +184,8 @@ public class SupportedClasses {
 		// UT2004, UT99 Dom
 		putUtClass(DomPoint.class, "xDomPointA", "xDomPointB", "ControlPoint");
 
+		putUtClass(DecalActor.class, "DecalActor");
+
 		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
 		putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
@@ -198,7 +203,9 @@ public class SupportedClasses {
 		uneededActors.add("ForcedReachSpec"); // ut3
 		uneededActors.add("AdvancedReachSpec"); // ut3
 
-		// setConvertOnly("TerrainInfo", T3DUE2Terrain.class);
+		if (USE_CUSTOM) {
+			putUtClass(SpecialEvent.class, "SpecialEvent");
+		}
 	}
 
 	/**
