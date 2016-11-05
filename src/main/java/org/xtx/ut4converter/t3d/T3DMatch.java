@@ -206,9 +206,12 @@ public class T3DMatch {
 	 */
 	private void initialiseAmmos() {
 
-		// UT2004, no ammo for enforcer
-		// UT3: UTAmmo_EnforcerRifle
+
 		List<GlobalMatch> gmAmmos = new ArrayList<>();
+		
+		// Ammo - Enforcer
+		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, null, null, null, null,
+				null, new String[] { "UTAmmo_EnforcerRifle" }, new String[] { "EnforcerAmmoPickup_C" }));
 
 		// Ammo - BioAmmo
 		gmAmmos.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Sludge" }, null, new String[] { "BioAmmo", "Sludge" }, new String[] { "BioAmmoPickup" },
