@@ -730,7 +730,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						// ressource);
 						// logger.log(Level.INFO, mats);
 					} catch (Exception e) {
-						logger.log(Level.SEVERE, e.getMessage(), e);
+						logger.log(Level.SEVERE, "Error while reading file " + exportedFile, e);
 					}
 				}
 			}
