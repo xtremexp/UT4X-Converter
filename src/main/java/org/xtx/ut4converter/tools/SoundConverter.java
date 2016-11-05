@@ -81,7 +81,7 @@ public class SoundConverter {
 		// convert sound using java core api
 		else {
 			logger.warning("Sox sound converter not found in " + this.soxConverter + " Using core java converter.");
-			convertTo16BitSampleSize(inWaveFile, outWaveFile);
+			convertTo16BitSampleSizeUsingCoreApi(inWaveFile, outWaveFile);
 		}
 
 	}
