@@ -139,13 +139,6 @@ public class ConversionSettingsController implements Initializable {
 		advancedSettingsTitle.setText("Advanced Settings");
 		mainSettingsTitle.setText("Main Settings");
 
-		if(mapConverter.getInputGame().engine.version <= 2){
-			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE12_UE4));
-		} else if (mapConverter.getInputGame().engine.version == 3) {
-			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
-		} else {
-			scaleFactorList.getSelectionModel().select("1");
-		}
 		lightningBrightnessFactor.getSelectionModel().select("1");
 		soundVolumeFactor.getSelectionModel().select("1");
 	}
@@ -184,6 +177,14 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
+		
+		if(mapConverter.getInputGame().engine.version <= 2){
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE12_UE4));
+		} else if (mapConverter.getInputGame().engine.version == 3) {
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+		} else {
+			scaleFactorList.getSelectionModel().select("1");
+		}
 
 		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
 		disableConversionType();
