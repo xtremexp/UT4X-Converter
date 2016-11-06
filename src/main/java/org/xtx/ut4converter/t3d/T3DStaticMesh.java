@@ -58,6 +58,12 @@ public class T3DStaticMesh extends T3DSound {
 	 * CastShadow=False TODO move this to some "Lightning" class
 	 */
 	Boolean castShadow;
+	
+	/**
+	 * UT3 (UT2004 as well) property
+	 * Do not exists in UE4
+	 */
+	private Vector3d prePivot;
 
 	/**
 	 * 
@@ -82,6 +88,10 @@ public class T3DStaticMesh extends T3DSound {
 		if (line.contains("StaticMesh=")) {
 			staticMesh = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.STATICMESH);
 		}
+		// PrePivot=(X=280.000000,Y=0.000000,Z=0.000000)
+		else if(line.startsWith("PrePivot=")){
+			prePivot = T3DUtils.getVector3d(line, 0d);
+		}
 		// Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
 		else if (line.startsWith("Skins(")) {
 
@@ -94,6 +104,13 @@ public class T3DStaticMesh extends T3DSound {
 		}
 
 		return true;
+	}
+	
+	@Override
+	public void scale(Double newScale) {
+		if(prePivot != null){
+			prePivot.scale(newScale);
+		}
 	}
 
 	/**
@@ -198,6 +215,24 @@ public class T3DStaticMesh extends T3DSound {
 
 	@Override
 	public void convert() {
+		
+		// UE4 does not support pre-pivot for staticmeshes unlike UE3/UDK
+		if (prePivot != null) {
+			if(this.scale3d != null){
+				prePivot.x *= scale3d.x;
+				prePivot.y *= scale3d.y;
+				prePivot.z *= scale3d.z;
+			}
+			
+			prePivot = Geometry.rotate(prePivot, rotation);
+			
+			if(location != null){
+				location.sub(prePivot);
+			} else {
+				prePivot.negate();
+				location = prePivot;
+			}
+		}
 
 		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
 			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
