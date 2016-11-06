@@ -80,7 +80,7 @@ public class HeightFog extends T3DActor {
 			} 
 			
 			if (lightColor != null) {
-				sbf.append(IDT).append("\t\t");
+				sbf.append(IDT).append("\t\tDefaultLightColor=");
 				lightColor.toT3D(sbf);
 				sbf.append("\n");
 			}
