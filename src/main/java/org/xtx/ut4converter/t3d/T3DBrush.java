@@ -33,7 +33,7 @@ public class T3DBrush extends T3DSound {
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
 		// UE3 and UE4 Volumes
-		PostProcessVolume, TriggerVolume, UTSlimeVolume,
+		PostProcessVolume, TriggerVolume, UTSlimeVolume, UTLavaVolume,
 		/**
 		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
 		 */
@@ -141,8 +141,6 @@ public class T3DBrush extends T3DSound {
 		// just need one
 		modelName = "Model_6";
 	}
-
-	private boolean isAnalysingPolyData = false;
 
 	/**
 	 * If true reverse the order of vertices when writting converted t3d. This
@@ -258,7 +256,7 @@ public class T3DBrush extends T3DSound {
 		}
 
 		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone")
-				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name())) {
+				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name())) {
 			brushClass = BrushClass.UTPainVolume;
 			forcedWrittenLines.add("DamagePerSec=10.000000");
 			return true;
@@ -495,7 +493,7 @@ public class T3DBrush extends T3DSound {
 
 		// UT3 has postprocess volumes
 		// TODO merge/refactor/move to T3DPostProcessVolume class
-		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume)) {
+		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
 
 			// add post processvolume
 			T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);
@@ -553,8 +551,6 @@ public class T3DBrush extends T3DSound {
 	 * @param size
 	 */
 	public void forceToBox(Double size) {
-		Double s = size;
-
 		polyList.clear();
 
 		polyList = Geometry.createBox(size, size, size);
