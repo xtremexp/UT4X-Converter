@@ -77,7 +77,9 @@ public class HeightFog extends T3DActor {
 
 			if (startDistance != null) {
 				sbf.append(IDT).append("\t\tStartDistance='").append(startDistance).append("\n");
-			} else if (lightColor != null) {
+			} 
+			
+			if (lightColor != null) {
 				sbf.append(IDT).append("\t\t");
 				lightColor.toT3D(sbf);
 				sbf.append("\n");
