@@ -37,6 +37,8 @@ public class T3DMatch {
 	private final double UE1_UT4_WP_ZOFFSET = 26d;
 
 	private final double UT2004_UT4_WP_ZOFFSET = 30d;
+	
+	private final double UT3_UT4_WP_ZOFFSET = -12d;
 
 	/**
 	 * Root component type for UT4 actor. Used when writting converted actor for
@@ -341,6 +343,8 @@ public class T3DMatch {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UT4_WP_ZOFFSET });
 			} else if (inputGame == UTGame.UT2004 || inputGame == UTGame.UT2003) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UT2004_UT4_WP_ZOFFSET });
+			} else if (inputGame == UTGame.UT3) {
+				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UT3_UT4_WP_ZOFFSET });
 			}
 
 		}
