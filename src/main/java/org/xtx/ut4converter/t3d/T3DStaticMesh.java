@@ -218,6 +218,8 @@ public class T3DStaticMesh extends T3DSound {
 		
 		// UE4 does not support pre-pivot for staticmeshes unlike UE3/UDK
 		if (prePivot != null) {
+			// FIXME does not work good (SM location) if mapconverter scale != 1
+			/*
 			if(this.scale3d != null){
 				prePivot.x *= scale3d.x;
 				prePivot.y *= scale3d.y;
@@ -232,6 +234,7 @@ public class T3DStaticMesh extends T3DSound {
 				prePivot.negate();
 				location = prePivot;
 			}
+			*/
 		}
 
 		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
