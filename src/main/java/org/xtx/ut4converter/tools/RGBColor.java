@@ -46,4 +46,8 @@ public class RGBColor {
 		B /= 255;
 		A /= 255;
 	}
+
+	public void toT3D(StringBuilder sbf) {
+		sbf.append("LightColor=(B=").append(this.B).append(",G=").append(this.G).append(",R=").append(this.R).append(",A=").append(this.A).append(")");
+	}
 }
