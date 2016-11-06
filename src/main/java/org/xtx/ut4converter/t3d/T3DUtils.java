@@ -7,6 +7,7 @@
 package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -531,4 +532,25 @@ public class T3DUtils {
 		}
 	}
 
+	/**
+	 * CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+	 * 
+	 * @param line
+	 * @return
+	 */
+	public static Map<String, String> getProperties(String line) {
+		String s = new String(line);
+		s = s.split("\\(")[1].split("\\)")[0];
+
+		String ss[] = s.split("\\,");
+
+		Map<String, String> props = new HashMap<>();
+
+		for (String sss : ss) {
+			String x[] = sss.split("\\=");
+			props.put(x[0], x[1]);
+		}
+
+		return props;
+	}
 }

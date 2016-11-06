@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
@@ -33,7 +36,7 @@ public class T3DBrush extends T3DSound {
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
 		// UE3 and UE4 Volumes
-		PostProcessVolume, TriggerVolume, UTSlimeVolume, UTLavaVolume,
+		PostProcessVolume, TriggerVolume, UTSlimeVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
 		/**
 		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
 		 */
@@ -109,6 +112,30 @@ public class T3DBrush extends T3DSound {
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
 	String modelName;
+	
+	/**
+	 * Used for cull distances only
+	 */
+	private List<CullDistance> cullDistances;
+	
+	/**
+	 * 
+	 * Used for cull distances volumes only
+	 *
+	 */
+	class CullDistance {
+		private Double size;
+		private Double distance;
+
+		public void scale(Double scale) {
+			if (size != null) {
+				size *= scale;
+			}
+			if (distance != null) {
+				distance *= scale;
+			}
+		}
+	}
 
 	
 	public T3DBrush(MapConverter mapConverter, String t3dClass) {
@@ -235,6 +262,24 @@ public class T3DBrush extends T3DSound {
 
 		else if (line.startsWith("Begin Brush") && line.contains("Name=")) {
 			// modelName = line.split("Name=")[1].replaceAll("\"", "");
+		}
+		
+		// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+		else if (line.startsWith("CullDistances(")) {
+			if (cullDistances == null) {
+				cullDistances = new ArrayList<T3DBrush.CullDistance>();
+			}
+			Map<String, String> props = T3DUtils.getProperties(line);
+
+			CullDistance cullDistance = new CullDistance();
+			if (props.containsKey("Size")) {
+				cullDistance.size = Double.valueOf(props.get("Size"));
+			}
+			if (props.containsKey("CullDistance")) {
+				cullDistance.size = Double.valueOf(props.get("CullDistance"));
+			}
+			
+			cullDistances.add(cullDistance);
 		}
 
 		else {
@@ -458,6 +503,31 @@ public class T3DBrush extends T3DSound {
 
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
 
+		// UE3 only CullDistanceVolume
+		if (brushClass == BrushClass.CullDistanceVolume && cullDistances != null) {
+
+			int idx = 0;
+			boolean hasCullDistProp = false;
+
+			for (CullDistance cullDistance : cullDistances) {
+				// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+				sbf.append(IDT).append("\tCullDistances(").append(idx).append(")=(");
+				if (cullDistance.size != null) {
+					hasCullDistProp = true;
+					sbf.append("Size=").append(cullDistance.size).append(",");
+				}
+				if (cullDistance.distance != null) {
+					hasCullDistProp = true;
+					sbf.append("CullDistance=").append(cullDistance.distance).append(",");
+				}
+				if (hasCullDistProp) {
+					sbf.deleteCharAt(sbf.length() - 1);
+				}
+				sbf.append(")\n");
+				idx++;
+			}
+		}
+		
 		sbf.append(IDT).append("\tBegin Brush Name=").append(modelName).append("\n");
 		sbf.append(IDT).append("\t\tBegin PolyList\n");
 
@@ -597,6 +667,11 @@ public class T3DBrush extends T3DSound {
 			polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
 			super.convert();
 		}
+		
+		// UT3
+		if(brushClass == BrushClass.UTKillZVolume){
+			brushClass = BrushClass.KillZVolume;
+		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
 			transformPermanently();
@@ -670,6 +745,12 @@ public class T3DBrush extends T3DSound {
 	 */
 	@Override
 	public void scale(Double newScale) {
+		
+		if (cullDistances != null) {
+			for (CullDistance cullDistance : cullDistances) {
+				cullDistance.scale(newScale);
+			}
+		}
 
 		for (T3DPolygon polygon : polyList) {
 			polygon.scale(newScale);
