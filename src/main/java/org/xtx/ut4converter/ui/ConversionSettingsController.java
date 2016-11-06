@@ -94,9 +94,15 @@ public class ConversionSettingsController implements Initializable {
 	private CheckBox convMusicCheckBox;
 
 	/**
-	 * Default scale factor of converted maps.
+	 * Default scale factor of converted maps from UE1/UE2 ut games to UT4
 	 */
-	BigDecimal scaleFactor = new BigDecimal("2.4");
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE12_UE4 = new BigDecimal("2.4");
+	
+	/**
+	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
+	 */
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE3_UE4 = new BigDecimal("2.2");
+	
 	@FXML
 	private ComboBox<String> scaleFactorList;
 	@FXML
@@ -133,7 +139,13 @@ public class ConversionSettingsController implements Initializable {
 		advancedSettingsTitle.setText("Advanced Settings");
 		mainSettingsTitle.setText("Main Settings");
 
-		scaleFactorList.getSelectionModel().select(String.valueOf(scaleFactor));
+		if(mapConverter.getInputGame().engine.version <= 2){
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE12_UE4));
+		} else if (mapConverter.getInputGame().engine.version == 3) {
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+		} else {
+			scaleFactorList.getSelectionModel().select("1");
+		}
 		lightningBrightnessFactor.getSelectionModel().select("1");
 		soundVolumeFactor.getSelectionModel().select("1");
 	}
