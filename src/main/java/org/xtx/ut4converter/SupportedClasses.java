@@ -184,7 +184,9 @@ public class SupportedClasses {
 		// UT2004, UT99 Dom
 		putUtClass(DomPoint.class, "xDomPointA", "xDomPointB", "ControlPoint");
 
+		// UT3
 		putUtClass(DecalActor.class, "DecalActor");
+		putUtClass(HeightFog.class, "HeightFog");
 
 		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
