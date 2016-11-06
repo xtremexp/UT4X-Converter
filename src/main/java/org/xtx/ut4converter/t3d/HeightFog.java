@@ -86,10 +86,10 @@ public class HeightFog extends T3DActor {
 			}
 			writeLocRotAndScale();
 			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\t\tAtmosphericFogComponent=AtmosphericFogComponent0\n");
-			sbf.append(IDT).append("\t\tArrowComponent=ArrowComponent0\n");
-			sbf.append(IDT).append("\t\tSpriteComponent=Sprite\n");
-			sbf.append(IDT).append("\t\tRootComponent=AtmosphericFogComponent0\n");
+			sbf.append(IDT).append("\tAtmosphericFogComponent=AtmosphericFogComponent0\n");
+			sbf.append(IDT).append("\tArrowComponent=ArrowComponent0\n");
+			sbf.append(IDT).append("\tSpriteComponent=Sprite\n");
+			sbf.append(IDT).append("\tRootComponent=AtmosphericFogComponent0\n");
 			writeEndActor();
 		}
 
