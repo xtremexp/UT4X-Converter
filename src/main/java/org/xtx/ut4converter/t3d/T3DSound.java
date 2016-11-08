@@ -24,6 +24,11 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * @author XtremeXp
  */
 public class T3DSound extends T3DActor {
+	
+	/**
+	 * Default volume factor from UE3 (UT3) to UE4 (UT4)
+	 */
+	private static final double UE3_UE4_SOUND_VOLUME_FACTOR = 0.1d;
 
 	/**
 	 * UE1, UE4
@@ -330,7 +335,11 @@ public class T3DSound extends T3DActor {
 			attenuation.fallOffDistance = attenuation.attenuationShapeExtents.x * 24;
 
 		} else if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-			// TODO
+			if (soundVolume != null) {
+				soundVolume *= UE3_UE4_SOUND_VOLUME_FACTOR;
+			} else {
+				soundVolume = 1/UE3_UE4_SOUND_VOLUME_FACTOR;
+			}
 		}
 
 		if (mapConverter.convertSounds() && ambientSound != null) {
