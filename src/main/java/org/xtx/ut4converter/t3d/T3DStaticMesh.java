@@ -106,12 +106,6 @@ public class T3DStaticMesh extends T3DSound {
 		return true;
 	}
 	
-	@Override
-	public void scale(Double newScale) {
-		if(prePivot != null){
-			prePivot.scale(newScale);
-		}
-	}
 
 	/**
 	 * Create t3d static mesh from t3d sheet brush using existing UT4 sheet sm
@@ -218,23 +212,22 @@ public class T3DStaticMesh extends T3DSound {
 		
 		// UE4 does not support pre-pivot for staticmeshes unlike UE3/UDK
 		if (prePivot != null) {
-			// FIXME does not work good (SM location) if mapconverter scale != 1
-			/*
-			if(this.scale3d != null){
+
+			if (this.scale3d != null) {
 				prePivot.x *= scale3d.x;
 				prePivot.y *= scale3d.y;
 				prePivot.z *= scale3d.z;
 			}
-			
+
 			prePivot = Geometry.rotate(prePivot, rotation);
-			
-			if(location != null){
+
+			if (location != null) {
 				location.sub(prePivot);
 			} else {
 				prePivot.negate();
 				location = prePivot;
 			}
-			*/
+
 		}
 
 		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
