@@ -231,14 +231,14 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void fixUt3BrushOrder(File t3dUserFile) throws FileNotFoundException, IOException {
 
+		logger.info("Fixing ut3 brush order with " + t3dUserFile);
 		// Read right order of brushes
 
-		Map<String, Integer> brushOrder = new LinkedHashMap<>();
+		LinkedList<String> orderedBrushNames = new LinkedList<String>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(t3dUserFile))) {
 
 			String line = null;
-			int idx = 0;
 
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -247,15 +247,14 @@ public class T3DLevelConvertor extends Task<Object> {
 				// Archetype=Brush'Engine.Default__Brush'
 				if (line.startsWith("Begin Actor Class=Brush")) {
 					String name = line.split("Name=")[1].split("\\ ")[0];
-					brushOrder.put(name, idx);
-					idx++;
+					orderedBrushNames.add(name+"_Brush");
 				}
 			}
 		}
 
 		LinkedList<T3DBrush> orderedBrushes = new LinkedList<>();
 
-		for (String brushName : brushOrder.keySet()) {
+		for (String brushName : orderedBrushNames) {
 			if (brushName != null) {
 				T3DBrush brushActor = findBrushByName(brushName);
 
@@ -268,11 +267,12 @@ public class T3DLevelConvertor extends Task<Object> {
 		LinkedList<T3DActor> convertedActorsNew = new LinkedList<>();
 
 		for (T3DActor uta : convertedActors) {
-			if (uta != null && !brushOrder.containsKey(uta.getName())) {
+			if (uta != null && !orderedBrushNames.contains(uta.getName())) {
 				convertedActorsNew.add(uta);
 			}
 		}
 
+		logger.info("Fixed " + orderedBrushes.size() + " brushes");
 		convertedActorsNew.addAll(orderedBrushes);
 		convertedActors = convertedActorsNew;
 	}
