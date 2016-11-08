@@ -535,12 +535,12 @@ public abstract class T3DActor extends T3DObject {
 			rotation.z *= rotFac;
 		}
 		
-		if (this.name != null) {
-			if (this.tag != null) {
+		if (this.name != null && !(this instanceof T3DBrush)) {
+			if (this.tag != null && !this.tag.equals(this.name)) {
 				this.name += "_" + this.tag;
 			}
 
-			if (this.event != null) {
+			if (this.event != null && !this.event.equals(this.name)) {
 				this.name += "->" + this.event;
 			}
 		}

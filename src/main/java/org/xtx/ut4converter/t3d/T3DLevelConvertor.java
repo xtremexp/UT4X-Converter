@@ -247,7 +247,8 @@ public class T3DLevelConvertor extends Task<Object> {
 				// Archetype=Brush'Engine.Default__Brush'
 				if (line.startsWith("Begin Actor Class=Brush")) {
 					String name = line.split("Name=")[1].split("\\ ")[0];
-					orderedBrushNames.add(name+"_Brush");
+					orderedBrushNames.add(name);
+					// beware, see T3DActor this.name
 				}
 			}
 		}
