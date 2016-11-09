@@ -535,12 +535,22 @@ public abstract class T3DActor extends T3DObject {
 			rotation.z *= rotFac;
 		}
 		
+		// Brush name need to be the original one to fix ut3 brushes order (based on actor name)
 		if (this.name != null && !(this instanceof T3DBrush)) {
-			if (this.tag != null && !this.tag.equals(this.name)) {
+
+			final String[] namePrefixSp = this.name.split("\\_");
+			String namePrefix = null;
+			if (namePrefixSp.length == 2) {
+				namePrefix = namePrefixSp[0];
+			} else if (namePrefixSp.length == 3) {
+				namePrefix = namePrefixSp[0] + "_" + namePrefixSp[1];
+			}
+
+			if (this.tag != null && !this.tag.equals(namePrefix)) {
 				this.name += "_" + this.tag;
 			}
 
-			if (this.event != null && !this.event.equals(this.name)) {
+			if (this.event != null && !this.event.equals(namePrefix)) {
 				this.name += "->" + this.event;
 			}
 		}
