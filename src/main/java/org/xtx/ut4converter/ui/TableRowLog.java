@@ -40,23 +40,27 @@ public class TableRowLog {
 	/**
 	 * Date formatter
 	 */
-	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
+	public static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss SSS");
 
 	public TableRowLog(LogRecord logRecord) {
 		this.level = logRecord.getLevel();
 
 		if(logRecord.getMessage() != null){
-			if (logRecord.getThrown() != null) {
-				this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage());
-			} else {
-				this.message = new SimpleStringProperty(MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()));
-			}
+			this.message = new SimpleStringProperty(TableRowLog.getMessageFormatted(logRecord));
 		} else {
 			// weird sometimes message is null ... (?)
 			this.message = new SimpleStringProperty("");
 		}
 
 		this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
+	}
+	
+	public static String getMessageFormatted(LogRecord logRecord){
+		if(logRecord.getThrown() != null){
+			return MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage();
+		} else {
+			return MessageFormat.format(logRecord.getMessage(), logRecord.getParameters());
+		}
 	}
 
 	public Level getLevel() {

@@ -1,9 +1,11 @@
 package org.xtx.ut4converter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
@@ -12,6 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,22 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Input map. Can be either a map (.unr, ...) or unreal text map (.t3d)
 	 */
 	private File inMap;
+	
+	
+	/**
+	 * File for logging all events during conversion process
+	 */
+	private File logFile;
+
+	/**
+	 * file writer of logfile
+	 */
+	private FileWriter logFileWriter;
+	
+	/**
+	 * Buffered writer of logfile
+	 */
+	private BufferedWriter logBuffWriter;
 
 	/**
 	 * Final map name, might differ from original one. E.G: AS-Mazon (UT99) ->
@@ -424,6 +443,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void addLoggerHandlers() {
 
+		
 		if (conversionViewController == null || conversionViewController.getConvLogTableView() == null) {
 			return;
 		}
@@ -439,6 +459,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			@Override
 			public void publish(LogRecord record) {
+				if (logBuffWriter != null) {
+					try {
+						logBuffWriter.write(TableRowLog.sdf.format(new Date(record.getMillis())) + " - " + record.getLevel().getName() + " - " + TableRowLog.getMessageFormatted(record) + "\n");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				t.getItems().add(new TableRowLog(record));
 			}
 
@@ -493,63 +521,89 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	public void convert() throws Exception {
 
-		logger.log(Level.INFO, "*****************************************");
-		logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
-		logger.log(Level.INFO, "Scale Factor: " + scale);
-		logger.log(Level.WARNING, "Shader materials are not yet converted");
-		logger.log(Level.WARNING, "Terrains are not yet converted");
+		
+		try {
+			
+			logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
+			
+			if (logFile != null && logFile.exists()) {
+				logFile.delete();
+			}
+			
+			logFile.getParentFile().mkdirs();
 
-		if (filteredClasses != null && filteredClasses.length > 0) {
-			getSupportedActorClasses().setConvertOnly(filteredClasses);
-			logger.log(Level.INFO, "Only these manually specified actor classes will be converted:");
+			logFileWriter = new FileWriter(logFile);
+			logBuffWriter = new BufferedWriter(logFileWriter);
+			
+			logger.log(Level.INFO, "Writting log file " + logFile);
 
-			for (String className : filteredClasses) {
-				logger.log(Level.INFO, "-" + className);
+			logger.log(Level.INFO, "*****************************************");
+			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
+			logger.log(Level.INFO, "Scale Factor: " + scale);
+			logger.log(Level.WARNING, "Shader materials are not yet converted");
+			logger.log(Level.WARNING, "Terrains are not yet converted");
+
+			if (filteredClasses != null && filteredClasses.length > 0) {
+				getSupportedActorClasses().setConvertOnly(filteredClasses);
+				logger.log(Level.INFO, "Only these manually specified actor classes will be converted:");
+
+				for (String className : filteredClasses) {
+					logger.log(Level.INFO, "-" + className);
+				}
+			}
+
+			updateProgress(0, 100);
+
+			if (inputGame == UTGame.UT3) {
+				initUt3PackageFilesCache();
+			}
+
+			if (!outPath.toFile().exists()) {
+				outPath.toFile().mkdirs();
+			}
+
+			// Export unreal map to Unreal Text map
+			if (inT3d == null) {
+				updateProgress(10, 100);
+				packageFilesCache.add(inMap);
+				updateMessage("Exporting map to unreal text file");
+				inT3d = UCCExporter.exportLevelToT3d(this, inMap);
+				updateProgress(20, 100);
+			}
+
+			outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + mapName + ".t3d");
+
+			// t3d ever exported or directly converting from t3d file, then skip
+			// export of it
+			// and directly convert it
+			t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
+			t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
+			updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
+			t3dLvlConvertor.readConvertAndWrite();
+			updateProgress(80, 100);
+
+			// find used textures in staticmeshes
+			findTexturesUsedInStaticMeshes();
+
+			cleanAndConvertRessources();
+
+			updateProgress(100, 100);
+			updateMessage("All done!");
+			logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
+
+			UIUtils.openExplorer(getOutPath().toFile());
+
+			showInstructions();
+
+		} finally {
+			if (logBuffWriter != null) {
+				logBuffWriter.close();
+			}
+
+			if (logFileWriter != null) {
+				logFileWriter.close();
 			}
 		}
-
-		updateProgress(0, 100);
-
-		if (inputGame == UTGame.UT3) {
-			initUt3PackageFilesCache();
-		}
-
-		if (!outPath.toFile().exists()) {
-			outPath.toFile().mkdirs();
-		}
-
-		// Export unreal map to Unreal Text map
-		if (inT3d == null) {
-			updateProgress(10, 100);
-			packageFilesCache.add(inMap);
-			updateMessage("Exporting map to unreal text file");
-			inT3d = UCCExporter.exportLevelToT3d(this, inMap);
-			updateProgress(20, 100);
-		}
-
-		outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + mapName + ".t3d");
-
-		// t3d ever exported or directly converting from t3d file, then skip
-		// export of it
-		// and directly convert it
-		t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
-		t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
-		updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
-		t3dLvlConvertor.readConvertAndWrite();
-		updateProgress(80, 100);
-
-		// find used textures in staticmeshes
-		findTexturesUsedInStaticMeshes();
-
-		cleanAndConvertRessources();
-
-		updateProgress(100, 100);
-		updateMessage("All done!");
-		logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
-
-		UIUtils.openExplorer(getOutPath().toFile());
-
-		showInstructions();
 	}
 
 	/**
