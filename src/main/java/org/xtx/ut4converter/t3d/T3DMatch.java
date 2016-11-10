@@ -29,16 +29,22 @@ public class T3DMatch {
 	 * Conversion property. Must always be checked when using 1.0x scaling! TODO
 	 * move to other class TODO enum for other conversion property
 	 */
-	public static String Z_OFFSET = "Z_OFFSET";
+	public static final String Z_OFFSET = "Z_OFFSET";
 
 	/**
 	 * Offset with "Z" location for weapons to fit with floor. It's import that
 	 */
-	private final double UE1_UT4_WP_ZOFFSET = 26d;
+	private static final double UE1_UT4_WP_ZOFFSET = 26d;
 
-	private final double UT2004_UT4_WP_ZOFFSET = 30d;
+	private static final double UT2004_UT4_WP_ZOFFSET = 30d;
+
+	private static final double UT3_UT4_WP_ZOFFSET = -12d;
 	
-	private final double UT3_UT4_WP_ZOFFSET = -12d;
+	/**
+	 * Z offset location for ut3 pickups to align with floor in ut4
+	 * Default: 24
+	 */
+	private static final double UE1_UE2_TO_UE4_HP_PICKUP_ZOFFSET = 24d;
 
 	/**
 	 * Root component type for UT4 actor. Used when writting converted actor for
@@ -116,17 +122,8 @@ public class T3DMatch {
 		// AsbestosSuit, KevlarSuit, ToxinSuit
 		// Shells (U1)
 
-		// U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
-		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Bandages" }, null, new String[] { "HealthVial", "Bandages" }, new String[] { "MiniHealthPack" },
-				new String[] { "MiniHealthPack" }, new String[] { "UTPickupFactory_HealthVial" }, new String[] { "Health_Small_C" }).addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 24d }));
-
-		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Health", "UPakHealth", "RespawningHealth", "NaliFruit" }, new String[] { "ArtifactHealth", "HealthPickup" },
-				new String[] { "MedBox", "NaliFruit" }, new String[] { "HealthCharger" }, new String[] { "HealthCharger" }, new String[] { "UTPickupFactory_MediumHealth" },
-				new String[] { "Health_Medium_C" }).addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 24d }));
-
-		list.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "SuperHealth" }, null, new String[] { "HealthPack" }, new String[] { "SuperHealthCharger" },
-				new String[] { "SuperHealthCharger" }, new String[] { "UTPickupFactory_SuperHealth" }, new String[] { "Health_Large_C" }).addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 24d }));
-
+		initialiseHealthPickups(mapConverter.getInputGame());
+		
 		initialiseWeapons(mapConverter.getInputGame());
 
 		initialiseAmmos();
@@ -148,9 +145,38 @@ public class T3DMatch {
 		// Blueprint_Effect_Smoke_C
 		list.add(iByGame(T3DPickup.class, "P_Smoke", null, null, new String[] { "SmokeGenerator" }, null, null, null, new String[] { "Blueprint_Effect_Smoke_C" }));
 	}
+	
+	/**
+	 * Initialise health pickups
+	 * @param inputGame
+	 */
+	private void initialiseHealthPickups(UTGame inputGame) {
+
+		List<GlobalMatch> gmHpPickups = new ArrayList<>();
+
+		// U1, U2, UT99, UT2003, UT2004, UT3, UT4 ...
+		gmHpPickups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Bandages" }, null, new String[] { "HealthVial", "Bandages" }, new String[] { "MiniHealthPack" },
+				new String[] { "MiniHealthPack" }, new String[] { "UTPickupFactory_HealthVial" }, new String[] { "Health_Small_C" }));
+
+		gmHpPickups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "Health", "UPakHealth", "RespawningHealth", "NaliFruit" }, new String[] { "ArtifactHealth", "HealthPickup" },
+				new String[] { "MedBox", "NaliFruit" }, new String[] { "HealthCharger" }, new String[] { "HealthCharger" }, new String[] { "UTPickupFactory_MediumHealth" },
+				new String[] { "Health_Medium_C" }));
+
+		gmHpPickups.add(iByGame(T3DPickup.class, UE4_RCType.CAPSULE.name, new String[] { "SuperHealth" }, null, new String[] { "HealthPack" }, new String[] { "SuperHealthCharger" },
+				new String[] { "SuperHealthCharger" }, new String[] { "UTPickupFactory_SuperHealth" }, new String[] { "Health_Large_C" }));
+
+		for (GlobalMatch gmHpPickup : gmHpPickups) {
+			if (inputGame.engine == UTGames.UnrealEngine.UE1 || inputGame.engine == UTGames.UnrealEngine.UE2) {
+				gmHpPickup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UE2_TO_UE4_HP_PICKUP_ZOFFSET });
+			}
+		}
+
+		list.addAll(gmHpPickups);
+	}
 
 	/**
 	 * Add actor matches for power ups
+	 * @param Input game
 	 */
 	private void initialisePowerUps() {
 
