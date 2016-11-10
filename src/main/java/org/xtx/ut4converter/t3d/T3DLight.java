@@ -366,12 +366,6 @@ public class T3DLight extends T3DSound {
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
 		}
-
-		// force directional lights to point light
-		// FIXME some bug on play if directional lights
-		if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
-			t3dClass = UE4_LightActor.PointLight.name();
-		}
 	}
 
 	/**
@@ -388,15 +382,31 @@ public class T3DLight extends T3DSound {
 	public String toString() {
 
 		if (mapConverter.toUnrealEngine4()) {
+			String componentLightClass = null;
+
+			if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
+				componentLightClass = "SkyLightComponent";
+			} else if (isSpotLight()) {
+				componentLightClass = "SpotLightComponent";
+			} else if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+				componentLightClass = "DirectionalLightComponent";
+			} else {
+				componentLightClass = "PointLightComponent";
+			}
+
 			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(isSpotLight() ? "SpotLightComponent" : "PointLightComponent").append(" Name=\"LightComponent0\"\n");
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
 
-			sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
-			sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
+			// not applicable to directional light
+			if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+				sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
+				sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
+				sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
+			}
 
 			if (lightEffect == UE12_LightEffect.LE_Cylinder) {
 				sbf.append(IDT).append("\t\tSourceLength=").append(attenuationRadius / 2).append("\n");
@@ -405,7 +415,6 @@ public class T3DLight extends T3DSound {
 				sbf.append(IDT).append("\t\tSourceRadius=").append(radius).append("\n");
 			}
 
-			sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
 			sbf.append(IDT).append("\t\tLightColor=(B=").append(blue).append(",G=").append(green).append(",R=").append(red).append(",A=").append(alpha).append(")\n");
 
 			if (intensity != null) {
@@ -425,9 +434,7 @@ public class T3DLight extends T3DSound {
 			writeLocRotAndScale();
 			sbf.append(IDT).append("\tEnd Object\n");
 
-			sbf.append(IDT).append("\t").append(isSpotLight() ? "SpotLightComponent" : "PointLightComponent").append("\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
-
 			writeEndActor();
 		}
 
@@ -566,11 +573,6 @@ public class T3DLight extends T3DSound {
 	public boolean isValidWriting() {
 
 		if (brightness == 0) {
-			return false;
-		}
-		// FIXME directional light makes crash on play (tested map CTF-Turbo)
-		else if (t3dClass == UE4_LightActor.DirectionalLight.name()) {
-			logger.log(Level.WARNING, getName() + " disabled conversion.");
 			return false;
 		} else {
 			return super.isValidWriting();
