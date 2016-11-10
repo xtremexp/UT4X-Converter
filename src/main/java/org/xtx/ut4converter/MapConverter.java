@@ -595,6 +595,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			showInstructions();
 
+			writeUnconvertedPropertiesToLogFile();
 		} finally {
 			if (logBuffWriter != null) {
 				logBuffWriter.close();
@@ -606,6 +607,25 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 	}
 
+	/**
+	 * Log to file all unconverted properties of all actors from original map
+	 * @throws IOException
+	 */
+	private void writeUnconvertedPropertiesToLogFile() throws IOException {
+		
+		logBuffWriter.write("\n *** Unconverted properties *** \n ");
+
+		for (String actorClass : t3dLvlConvertor.getUnconvertedProperties().keySet()) {
+			logBuffWriter.write("***" + actorClass + " ***\n");
+
+			for (String property : t3dLvlConvertor.getUnconvertedProperties().get(actorClass)) {
+				logBuffWriter.write("- " + property + "\n");
+			}
+			
+			logBuffWriter.write("\n");
+		}
+	}
+	
 	/**
 	 * Add log info message to guide user converting the map properly TODO add
 	 * some pics like in UT3 converter

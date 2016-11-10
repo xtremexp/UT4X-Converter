@@ -15,9 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -96,6 +97,11 @@ public class T3DLevelConvertor extends Task<Object> {
 	Vector3d boundBoxLocalisation;
 
 	int actorCount;
+	
+	/**
+	 * Unconverted properties
+	 */
+	private HashMap<String, Set<String>> unconvertedProperties;
 
 	/**
 	 * Set objective order from DefaultPriority UT99 prop from FortStandard
@@ -196,6 +202,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
+		unconvertedProperties = new HashMap<String, Set<String>>();
 
 		// Read actor data from file
 		readActors();
@@ -710,6 +717,29 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	public void setCreateNoteWhenUnconverted(boolean createNoteWhenUnconverted) {
 		this.createNoteWhenUnconverted = createNoteWhenUnconverted;
+	}
+	
+	
+	
+	public HashMap<String, Set<String>> getUnconvertedProperties() {
+		return unconvertedProperties;
+	}
+
+	/**
+	 * Logs unconverted property from actor.
+	 * Will help convertings these properties if they have not been converted yet!
+	 * @param actor
+	 * @param property
+	 */
+	public void logUnconvertedProperty(T3DActor actor, String property) {
+
+		if (unconvertedProperties.containsKey(actor.getT3dClass())) {
+			unconvertedProperties.get(actor.getT3dClass()).add(property);
+		} else {
+			Set<String> props = new HashSet<>();
+			props.add(property);
+			unconvertedProperties.put(actor.getT3dClass(), props);
+		}
 	}
 
 	/**

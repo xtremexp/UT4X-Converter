@@ -245,11 +245,11 @@ public abstract class T3DActor extends T3DObject {
 			sceneComponent.setRelativeLocation(location);
 		}
 
-		if (line.contains(" OldLocation=") || line.contains("\tOldLocation=")) {
+		else if (line.startsWith("OldLocation=") || line.contains("\tOldLocation=")) {
 			oldLocation = T3DUtils.getVector3d(line, 0D);
 		}
 
-		else if (line.contains(" ColLocation=") || line.contains("\tColLocation=") || line.contains("ColLocation=")) {
+		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
 			coLocation = T3DUtils.getVector3d(line, 0D);
 		}
 
@@ -316,10 +316,11 @@ public abstract class T3DActor extends T3DObject {
 		}
 		
 		else if (line.startsWith("Event=")) {
-			event = line.split("\\\"")[1];
+			event = line.split("\\=")[1].replaceAll("\\\"", "");
 		}
 
 		else {
+			this.mapConverter.getT3dLvlConvertor().logUnconvertedProperty(this, line.split("\\=")[0].split("\\(")[0]);
 			return false;
 		}
 
