@@ -92,8 +92,9 @@ public class T3DStaticMesh extends T3DSound {
 		else if(line.startsWith("PrePivot=")){
 			prePivot = T3DUtils.getVector3d(line, 0d);
 		}
-		// Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
-		else if (line.startsWith("Skins(")) {
+		// UT2003/4 - Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
+		// UT3      - Materials(0)=MaterialInstanceConstant'HU_Deck.SM.Materials.M_HU_Deck_SM_BioPot_Goo'
+		else if (line.startsWith("Skins(") || line.startsWith("Materials(")) {
 
 			if (skins == null) {
 				skins = new ArrayList<>();
