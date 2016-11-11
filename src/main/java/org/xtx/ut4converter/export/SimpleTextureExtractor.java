@@ -30,7 +30,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {

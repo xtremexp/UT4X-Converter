@@ -5,15 +5,16 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import static org.xtx.ut4converter.t3d.T3DObject.IDT;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector3d;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-
-import static org.xtx.ut4converter.t3d.T3DActor.IDT;
-
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -67,9 +68,15 @@ public class MoverProperties implements T3D {
 	Double delayTime;
 
 	T3DActor mover;
+	
+	/**
+	 * Reference to converter
+	 */
+	private MapConverter mapConverter;
 
-	public MoverProperties(T3DActor mover) {
+	public MoverProperties(T3DActor mover, MapConverter mapConverter) {
 		this.mover = mover;
+		this.mapConverter = mapConverter;
 	}
 
 	@Override
@@ -205,20 +212,28 @@ public class MoverProperties implements T3D {
 	@Override
 	public void convert() {
 
+		// used to match very similar sound resources by name (e.g:
+		// A_Movers.Movers.Elevator01.Loop -> A_Movers.Movers.Elevator01.LoopCue
+		final boolean isFromUe3 = mapConverter.isFrom(UnrealEngine.UE3);
+
 		if (openingSound != null) {
-			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound));
+			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound), !isFromUe3);
 		}
 
 		if (openedSound != null) {
-			openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound));
+			openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound), !isFromUe3);
 		}
 
 		if (closingSound != null) {
-			closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound));
+			closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound), !isFromUe3);
 		}
 
 		if (closedSound != null) {
-			closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound));
+			closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound), !isFromUe3);
+		}
+
+		if (moveAmbientSound != null) {
+			moveAmbientSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, moveAmbientSound), !isFromUe3);
 		}
 	}
 

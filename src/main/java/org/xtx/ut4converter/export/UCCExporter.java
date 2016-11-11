@@ -192,7 +192,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
@@ -239,7 +239,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		UPackageRessource t3dRessource = new UPackageRessource(mapConverter, unrealMap.getAbsolutePath(), Type.LEVEL, true);
 		UCCExporter ucE = new UCCExporter(mapConverter);
 
-		Set<File> files = ucE.extract(t3dRessource, false);
+		Set<File> files = ucE.extract(t3dRessource, false, true);
 
 		// UT3.com do not give info about t3d exported file in logs
 		// but is always PersistentLevel.t3d in Binaries folder

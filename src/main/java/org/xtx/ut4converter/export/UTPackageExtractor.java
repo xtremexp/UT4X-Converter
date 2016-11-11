@@ -84,7 +84,7 @@ public abstract class UTPackageExtractor {
 	 * @throws java.lang.Exception
 	 *             If anythings goes wrong when exporting this ressource
 	 */
-	public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception;
+	public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception;
 
 	public abstract File getExporterPath();
 

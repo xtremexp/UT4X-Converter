@@ -39,7 +39,7 @@ public class UModelExporter extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
@@ -65,7 +65,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 			if (logLine.startsWith("Exporting") && !logLine.startsWith("Exporting objects")) {
 				try {
-					parseRessourceExported(logLine, ressource.getUnrealPackage());
+					parseRessourceExported(logLine, ressource.getUnrealPackage(), perfectMatchOnly);
 				} catch (Exception e) {
 					logger.log(Level.WARNING, "Error umodel batch line", e);
 					System.out.println("Export Line: " + logLine);
@@ -86,7 +86,7 @@ public class UModelExporter extends UTPackageExtractor {
 	 * @param unrealPackage
 	 *            Current unreal package being exported with umodel
 	 */
-	private void parseRessourceExported(String logLine, UPackage unrealPackage) {
+	private void parseRessourceExported(String logLine, UPackage unrealPackage, boolean perfectMatchOnly) {
 
 		// Exporting Texture bdr02BA to
 		// Z:\\TEMP\\umodel_win32/UmodelExport/BarrensArchitecture/Borders
@@ -197,7 +197,7 @@ public class UModelExporter extends UTPackageExtractor {
 			ressourceName = packageName + "." + name;
 		}
 
-		UPackageRessource uRessource = unrealPackage.findRessource(ressourceName);
+		UPackageRessource uRessource = unrealPackage.findRessource(ressourceName, perfectMatchOnly);
 
 		if (uRessource != null) {
 			if (isMaterial && uRessource.getMaterialInfo() == null) {

@@ -302,24 +302,29 @@ public class UPackageRessource {
 	 * @param forceExport
 	 *            Force export of package even if it has ever been extracted
 	 */
-	public void export(UTPackageExtractor packageExtractor, boolean forceExport) {
+	public void export(UTPackageExtractor packageExtractor, boolean forceExport, boolean perfectMatchOnly) {
 
 		if ((needExport() || forceExport) && packageExtractor != null) {
 			try {
-				packageExtractor.extract(this, forceExport);
+				packageExtractor.extract(this, forceExport, perfectMatchOnly);
 			} catch (Exception ex) {
 				packageExtractor.logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
 			}
 		}
 	}
 
+	
+	public void export(UTPackageExtractor packageExtractor) {
+		export(packageExtractor, false, true);
+	}
+	
 	/**
 	 * Export the ressource from unreal package to file
 	 * 
 	 * @param packageExtractor
 	 */
-	public void export(UTPackageExtractor packageExtractor) {
-		export(packageExtractor, false);
+	public void export(UTPackageExtractor packageExtractor, boolean perfectMatchOnly) {
+		export(packageExtractor, false, perfectMatchOnly);
 	}
 
 	/**

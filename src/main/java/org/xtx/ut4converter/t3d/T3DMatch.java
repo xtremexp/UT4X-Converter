@@ -128,7 +128,7 @@ public class T3DMatch {
 
 		initialiseAmmos();
 
-		initialisePowerUps();
+		initialisePowerUps(mapConverter.getInputGame());
 
 		list.add(iByGame(T3DPickup.class, UE4_RCType.SCENE_COMP.name, null, null, new String[] { "FlagBase" }, new String[] { "xRedFlagBase" }, new String[] { "xRedFlagBase" },
 				new String[] { "UTCTFRedFlagBase" }, new String[] { "UTRedFlagBase_C" }).addConvP(UTGame.UT4, new Object[] { Z_OFFSET, -64d }));
@@ -178,7 +178,7 @@ public class T3DMatch {
 	 * Add actor matches for power ups
 	 * @param Input game
 	 */
-	private void initialisePowerUps() {
+	private void initialisePowerUps(UTGame inputGame) {
 
 		final String UT4_PROP_IT = "InventoryType";
 		final String UT4_CLS_PWRUP = "PowerupBase_C";
@@ -223,7 +223,9 @@ public class T3DMatch {
 				UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Berserk.BP_Berserk_C'"));
 
 		for (GlobalMatch gmPwrup : gmPwrups) {
-			gmPwrup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 8d });
+			if (inputGame.engine == UTGames.UnrealEngine.UE1 || inputGame.engine == UTGames.UnrealEngine.UE2) {
+				gmPwrup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 8d });
+			}
 		}
 
 		list.addAll(gmPwrups);

@@ -180,6 +180,10 @@ public class UPackage {
 
 		return null;
 	}
+	
+	public UPackageRessource findRessource(String fullName){
+		return findRessource(fullName, true);
+	}
 
 	/**
 	 * Returns ressource package by full name
@@ -188,7 +192,7 @@ public class UPackage {
 	 *            Full ressource name (e.g: "AmbAncient.Looping.Stower51")
 	 * @return ressource with same full name
 	 */
-	public UPackageRessource findRessource(String fullName) {
+	public UPackageRessource findRessource(String fullName, boolean perfectMatchOnly) {
 
 		String s[] = fullName.split("\\.");
 		String fullNameWithoutGroup = null;
@@ -231,6 +235,25 @@ public class UPackage {
 				}
 
 				return packageRessource;
+			} 
+			// try matching very close resource names
+			// e.g: A_Movers_Movers_Elevator01_LoopCue used in a InterpActor
+			// but exported resource name (.wav) is
+			// A_Movers_Movers_Elevator01_Loop
+			else if (!perfectMatchOnly && s.length >= 2) {
+				// same package
+				if (s[0].equalsIgnoreCase(packageRessource.getUnrealPackage().getName())) {
+					// e.g: A_Movers_Movers_Elevator01_LoopCue
+					final String pakResName = packageRessource.getName().toLowerCase();
+
+					// e.g: A_Movers_Movers_Elevator01_Loop
+					final String theName = s[s.length - 1].toLowerCase();
+
+					if (pakResName.length() > 6 && theName.length() > 6 && pakResName.contains(theName)) {
+						packageRessource.name = s[s.length - 1];
+						return packageRessource;
+					}
+				}
 			}
 		}
 
