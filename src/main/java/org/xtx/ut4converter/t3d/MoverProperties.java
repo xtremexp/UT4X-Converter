@@ -74,6 +74,11 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public boolean analyseT3DData(String line) {
+		/**
+		 * OpenSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
+         OpenedSound=SoundCue'A_Movers.Movers.Elevator01_StopCue'
+         CloseSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
+		 */
 		// UE1 -> 'Wait at top time' (UE4)
 		if (line.contains("StayOpenTime")) {
 			stayOpenTime = T3DUtils.getDouble(line);
@@ -92,16 +97,15 @@ public class MoverProperties implements T3D {
 		// UE1 -> 'CloseStartSound' ? (UE4)
 		else if (line.contains("ClosedSound=")) {
 			closedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
-			;
 		}
 
 		// UE1 -> 'CloseStopSound' ? (UE4)
-		else if (line.contains("ClosingSound=")) {
+		else if (line.startsWith("ClosingSound=") || line.startsWith("ClosingAmbientSound=")) {
 			closingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStartSound' ? (UE4)
-		else if (line.contains("OpeningSound=")) {
+		else if (line.startsWith("OpeningSound=") || line.startsWith("OpeningAmbientSound=")) {
 			openingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
@@ -174,7 +178,7 @@ public class MoverProperties implements T3D {
 		}
 
 		if (moveAmbientSound != null) {
-			// no property for sound when moving in UT4
+			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("'\n");
 		}
 
 		if (stayOpenTime != null) {
