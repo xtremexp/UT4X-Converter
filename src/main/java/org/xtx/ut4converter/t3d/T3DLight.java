@@ -402,7 +402,7 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
 
 			// not applicable to directional light
-			if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+			if (!UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
 				sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
 				sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
 				sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
