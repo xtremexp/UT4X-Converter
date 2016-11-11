@@ -320,7 +320,9 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else {
-			this.mapConverter.getT3dLvlConvertor().logUnconvertedProperty(this, line.split("\\=")[0].split("\\(")[0]);
+			if (equalsIdx != -1 && !(this instanceof T3DNote)) {
+				this.mapConverter.getT3dLvlConvertor().logUnconvertedProperty(this, line.substring(0, equalsIdx).split("\\(")[0]);
+			}
 			return false;
 		}
 

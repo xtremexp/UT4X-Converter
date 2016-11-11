@@ -613,10 +613,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void writeUnconvertedPropertiesToLogFile() throws IOException {
 		
-		logBuffWriter.write("\n *** Unconverted properties *** \n ");
+		logBuffWriter.write("\n*** Unconverted properties ***\n");
 
 		for (String actorClass : t3dLvlConvertor.getUnconvertedProperties().keySet()) {
-			logBuffWriter.write("***" + actorClass + " ***\n");
+			logBuffWriter.write("*** " + actorClass + " ***\n");
 
 			for (String property : t3dLvlConvertor.getUnconvertedProperties().get(actorClass)) {
 				logBuffWriter.write("- " + property + "\n");
