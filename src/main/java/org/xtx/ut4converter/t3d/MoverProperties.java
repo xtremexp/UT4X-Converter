@@ -95,7 +95,7 @@ public class MoverProperties implements T3D {
 		}
 
 		// UE1 -> 'CloseStartSound' ? (UE4)
-		else if (line.contains("ClosedSound=")) {
+		else if (line.startsWith("ClosedSound=")) {
 			closedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
@@ -110,12 +110,12 @@ public class MoverProperties implements T3D {
 		}
 
 		// UE1 -> 'OpenStopSound' ? (UE4)
-		else if (line.contains("OpenedSound=")) {
+		else if (line.startsWith("OpenedSound=")) {
 			openedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Closed Sound' (UE4)
-		else if (line.contains("MoveAmbientSound=")) {
+		else if (line.startsWith("MoveAmbientSound=") || line.startsWith("OpenSound=")) {
 			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
