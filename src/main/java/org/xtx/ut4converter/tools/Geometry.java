@@ -126,7 +126,7 @@ public class Geometry {
 	 * @param v
 	 *            Vector to be rotated
 	 * @param rotation
-	 *            Rotation vector
+	 *            Rotation vector with UE1/UE2 range (0->65536)
 	 * @return Vector rotated
 	 */
 	public static Vector3d rotate(Vector3d v, Vector3d rotation) {

@@ -1,7 +1,10 @@
 package org.xtx.ut4converter.t3d;
 
+import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -11,10 +14,13 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 public class DecalActor extends T3DActor {
 
 	private UPackageRessource decalMaterial;
+	private Vector3d decalSize;
+	private Integer sortOrder;
 
 	public DecalActor(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
-		// TODO Auto-generated constructor stub
+		// default decalsize in UE3
+		decalSize = new Vector3d(200d, 300d, 200d);
 	}
 
 	public boolean analyseT3DData(String line) {
@@ -22,6 +28,14 @@ public class DecalActor extends T3DActor {
 		// UE3
 		if (line.startsWith("DecalMaterial")) {
 			decalMaterial = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
+		} else if (line.startsWith("Width=")) {
+			decalSize.y = T3DUtils.getDouble(line);
+		} else if (line.startsWith("Height=")) {
+			decalSize.z = T3DUtils.getDouble(line);
+		} else if (line.startsWith("FarPlane=")) {
+			decalSize.x = T3DUtils.getDouble(line);
+		} else if (line.startsWith("SortOrder=")) {
+			sortOrder = T3DUtils.getInteger(line);
 		}
 
 		else {
@@ -36,6 +50,20 @@ public class DecalActor extends T3DActor {
 		if (decalMaterial != null) {
 			decalMaterial.export(UTPackageExtractor.getExtractor(mapConverter, decalMaterial));
 		}
+
+		if (decalSize != null) {
+			// x offset must not be changed by scale
+			// since the scale() operation occurs after convert()
+			// have to reduce down decalSize.x
+			Vector3d decalOffset = new Vector3d(decalSize.x / mapConverter.getScale(), 0d, 0d);
+			if (rotation != null) {
+				decalOffset = Geometry.rotate(decalOffset, rotation);
+			}
+
+			location.add(decalOffset);
+		}
+
+		super.convert();
 	}
 
 	@Override
@@ -43,29 +71,25 @@ public class DecalActor extends T3DActor {
 
 		if (mapConverter.toUnrealEngine4()) {
 			sbf.append(IDT).append("Begin Actor Class=DecalActor Name=").append(name).append("\n");
-			sbf.append(IDT).append("Begin Object Class=BillboardComponent Name=\"Sprite\" Archetype=BillboardComponent'Default__DecalActor:Sprite'\n");
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Begin Object Class=ArrowComponent Name=\"ArrowComponent0\" Archetype=ArrowComponent'Default__DecalActor:ArrowComponent0'\n");
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Begin Object Class=DecalComponent Name=\"NewDecalComponent\" Archetype=DecalComponent'Default__DecalActor:NewDecalComponent'\n");
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Begin Object Name=\"Sprite\"\n");
-			sbf.append(IDT).append("AttachParent=NewDecalComponent\n");
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Begin Object Name=\"ArrowComponent0\"\n");
-			sbf.append(IDT).append("AttachParent=NewDecalComponent\n");
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Begin Object Name=\"NewDecalComponent\"\n");
+			sbf.append(IDT).append("\tBegin Object Class=DecalComponent Name=\"NewDecalComponent\" Archetype=DecalComponent'Default__DecalActor:NewDecalComponent'\n");
+			sbf.append(IDT).append("\tEnd Object\n");
+			sbf.append(IDT).append("\tBegin Object Name=\"NewDecalComponent\"\n");
 
 			if (decalMaterial != null) {
-				sbf.append(IDT).append("DecalMaterial=Material'").append(decalMaterial.getConvertedName(mapConverter)).append("'\n");
+				sbf.append(IDT).append("\t\tDecalMaterial=Material'").append(decalMaterial.getConvertedName(mapConverter)).append("'\n");
+			}
+
+			if (decalSize != null) {
+				sbf.append(IDT).append("\t\tDecalSize=(X=").append(decalSize.x).append(",Y=").append(decalSize.y).append(",Z=").append(decalSize.z).append(")\n");
+			}
+
+			if (sortOrder != null) {
+				sbf.append(IDT).append("\t\tSortOrder=").append(sortOrder).append("\n");
 			}
 			writeLocRotAndScale();
-			sbf.append(IDT).append("End Object\n");
-			sbf.append(IDT).append("Decal=NewDecalComponent\n");
-			sbf.append(IDT).append("ArrowComponent=ArrowComponent0\n");
-			sbf.append(IDT).append("SpriteComponent=Sprite\n");
-			sbf.append(IDT).append("RootComponent=NewDecalComponent\n");
+			sbf.append(IDT).append("\tEnd Object\n");
+			sbf.append(IDT).append("\tDecal=NewDecalComponent\n");
+			sbf.append(IDT).append("\tRootComponent=NewDecalComponent\n");
 			writeEndActor();
 		}
 
