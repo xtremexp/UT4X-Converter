@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8-DEV
+- Version: 0.8.0
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -38,8 +38,8 @@ Here is the conversion table for all ut games about what the program can convert
 | Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
 | Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |      No    |       -      |  MEDIUM |
 | UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |      No    |       +      |   GOOD  |
-| UT3            |    ++   |     +     |    +   |    No    |   N/A  |       +      |      No    |       +      |   BAD   |
+| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |Yes(partial)|       +      |   GOOD  |
+| UT3            |    ++   |     +     |    +   |     +    |   N/A  |       +      |      No    |       +      |  MEDIUM |
 
 
 Note:
@@ -115,7 +115,7 @@ In UT4 Converter:
 - Launch UT4 Converter
 - Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
 - In the conversion settings, press "Select" and choose the map
-- for ut3 only: select the .t3d file you previously created
+- for ut3 only: select the .t3d file you previously created manually (see For UT3 maps only section)
 - Press ok and wait while the conversion is running (it might takes several minutes)
 
 In UT4 Editor:
@@ -217,13 +217,23 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
-- 0.8-DEV - In progress:
+- 0.8.0 - 11/11/2016
   * ut2003/ut2004: now terrain heightmap is imported (texture, decolayers are NOT yet converted)
-  * ut99/ut2004: added support for conversion of Domination gametype actors. You need to get latest Domination mode from
-  Snake download site: https://ut.rushbase.net/Snake
-  * ut3: fixed some brushes not being properly converted (have to manually copy/paste level actors
-  from ut3 editor see part "How to convert map?" -> "for ut3 maps only" section)
-  * ....
+  * ut3: default scale factor back to 2.2
+  * ut3: added staticmeshes overidden material supported
+  * ut3: added conversion of DecalActor, UTKillZVolume, CullDistanceVolume, EnforcerAmmo, UTWeaponPickupFactory, HeightFog
+  * ut3: sounds are now converted from .ogg to .wav so they can be imported into UT4 editor
+  * ut3: fixed some brushes not being properly converted that was causing bsp holes (see part "How to convert map?" -> "for ut3 maps only" section)
+  * ut3: fixed some staticmeshes not being correctly located (prepivot support)
+  * ut3: fixed many pickups not correctly aligned with floor
+  * ut3: fixed SkyLight with no color set
+  * ut3: fixed directional lights rendering as spotlights
+  * ut3: reduced by 90% default volume of AmbientSounds
+  * u1: added support for WeaponPowerup, StringerAmmo
+  * ut99/ut2004: added support for conversion of Domination gametype actors.
+  * misc: won't stop converting map resources if one fails to convert properly now.
+  * misc: conversion processing is now saved in a conversion.log file
+  * ui: slightly improved visibility in conversion settings
   
 - 0.7.5 - 23/10/2016
 * Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
