@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.0
+- Version: 0.8.1
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -217,6 +217,8 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.1 - In progress
+
 - 0.8.0 - 11/11/2016
   * ut2003/ut2004: now terrain heightmap is imported (texture, decolayers are NOT yet converted)
   * ut3: default scale factor back to 2.2
