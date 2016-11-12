@@ -742,6 +742,12 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 	}
 
+	
+	
+	public SortedSet<String> getUnconvertedActors() {
+		return unconvertedActors;
+	}
+
 	/**
 	 * Test map conversion
 	 */

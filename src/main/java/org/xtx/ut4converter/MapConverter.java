@@ -595,7 +595,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			showInstructions();
 
-			writeUnconvertedPropertiesToLogFile();
+			writeUnconvertedActorsPropertiesToLogFile();
 		} finally {
 			if (logBuffWriter != null) {
 				logBuffWriter.close();
@@ -608,11 +608,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * Log to file all unconverted properties of all actors from original map
+	 * Log to file all unconverted actors and properties of all actors from
+	 * original map
+	 * 
 	 * @throws IOException
 	 */
-	private void writeUnconvertedPropertiesToLogFile() throws IOException {
-		
+	private void writeUnconvertedActorsPropertiesToLogFile() throws IOException {
+
+		logBuffWriter.write("\n*** Unconverted actors ***\n");
+
+		for (String actorClass : t3dLvlConvertor.getUnconvertedActors()) {
+			logBuffWriter.write("- " + actorClass + "\n");
+		}
+
 		logBuffWriter.write("\n*** Unconverted properties ***\n");
 
 		for (String actorClass : t3dLvlConvertor.getUnconvertedProperties().keySet()) {
@@ -621,7 +629,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			for (String property : t3dLvlConvertor.getUnconvertedProperties().get(actorClass)) {
 				logBuffWriter.write("- " + property + "\n");
 			}
-			
+
 			logBuffWriter.write("\n");
 		}
 	}
