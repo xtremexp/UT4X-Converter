@@ -24,17 +24,13 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * @author XtremeXp
  */
 public class T3DSound extends T3DActor {
-	
-	/**
-	 * Default volume factor from UE3 (UT3) to UE4 (UT4)
-	 */
-	private static final double UE3_UE4_SOUND_VOLUME_FACTOR = 0.1d;
+
 
 	/**
 	 * UE1, UE4
 	 */
 	UPackageRessource ambientSound;
-	
+
 	private String soundClass = "AmbientSound";
 
 	AttenuationSettings attenuation = new AttenuationSettings();
@@ -72,7 +68,7 @@ public class T3DSound extends T3DActor {
 	enum DistributionType {
 		DistributionDelayTime, DistributionMinRadius, DistributionMaxRadius, DistributionLPFMinRadius, DistributionLPFMaxRadius, DistributionVolume, DistributionPitch
 	}
-	
+
 	/**
 	 * 
 	 * Ambient sound actors for UT3/UE3
@@ -157,6 +153,8 @@ public class T3DSound extends T3DActor {
 
 				Map<String, Object> props = new HashMap<>();
 
+				props.put("DistanceAlgorithm", distanceAlgorithm.name());
+
 				props.put("bAttenuateWithLPF", bAttenuateWithLPF);
 				props.put("bSpatialize", bSpatialize);
 
@@ -183,10 +181,10 @@ public class T3DSound extends T3DActor {
 			}
 		}
 	}
-	
+
 	public T3DSound(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass, null);
-		
+
 		initialise();
 	}
 
@@ -206,7 +204,7 @@ public class T3DSound extends T3DActor {
 	 * version
 	 */
 	private void initialise() {
-		
+
 		ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
 
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
@@ -230,6 +228,10 @@ public class T3DSound extends T3DActor {
 
 		else if (line.startsWith("SoundPitch")) {
 			soundPitch = T3DUtils.getDouble(line);
+		}
+
+		else if (line.startsWith("DistanceModel")) {
+			attenuation.distanceAlgorithm = DistanceAlgorithm.valueOf(line.split("\\=")[1]);
 		}
 
 		// UE3
@@ -283,14 +285,14 @@ public class T3DSound extends T3DActor {
 		return true;
 	}
 
-	private Double getMax(Double currentMax, Double newMax){
-		if(currentMax == null){
+	private Double getMax(Double currentMax, Double newMax) {
+		if (currentMax == null) {
 			return newMax;
 		} else {
 			return Math.max(currentMax, newMax);
 		}
 	}
-	
+
 	@Override
 	public void scale(Double newScale) {
 
@@ -334,12 +336,6 @@ public class T3DSound extends T3DActor {
 			// tested DM-ArcaneTemple (UT99)
 			attenuation.fallOffDistance = attenuation.attenuationShapeExtents.x * 24;
 
-		} else if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-			if (soundVolume != null) {
-				soundVolume *= UE3_UE4_SOUND_VOLUME_FACTOR;
-			} else {
-				soundVolume = 1/UE3_UE4_SOUND_VOLUME_FACTOR;
-			}
 		}
 
 		if (mapConverter.convertSounds() && ambientSound != null) {
@@ -378,7 +374,6 @@ public class T3DSound extends T3DActor {
 				sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
 			}
 
-			// bOverrideAttenuation=True
 			if (soundVolume != null) {
 				sbf.append(IDT).append("\t\tVolumeMultiplier=").append(soundVolume).append("\n");
 			}
