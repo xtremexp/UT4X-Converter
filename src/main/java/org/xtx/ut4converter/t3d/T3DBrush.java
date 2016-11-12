@@ -269,16 +269,16 @@ public class T3DBrush extends T3DSound {
 			if (cullDistances == null) {
 				cullDistances = new ArrayList<T3DBrush.CullDistance>();
 			}
-			Map<String, String> props = T3DUtils.getProperties(line);
 
 			CullDistance cullDistance = new CullDistance();
-			if (props.containsKey("Size")) {
-				cullDistance.size = Double.valueOf(props.get("Size"));
+			if (line.contains("Size=")) {
+				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split("\\,")[0]);
 			}
-			if (props.containsKey("CullDistance")) {
-				cullDistance.size = Double.valueOf(props.get("CullDistance"));
+
+			if (line.contains("CullDistance=")) {
+				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split("\\,")[0]);
 			}
-			
+
 			cullDistances.add(cullDistance);
 		}
 
