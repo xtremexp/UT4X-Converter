@@ -99,7 +99,12 @@ public class T3DStaticMesh extends T3DSound {
 			if (skins == null) {
 				skins = new ArrayList<>();
 			}
-			skins.add(mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE));
+			// can be Materials(0)=None as seen in VCTF-Kargo
+			if (line.contains("\\'")) {
+				skins.add(mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE));
+			} else {
+				skins.add(null); // simulating 'None'
+			}
 		} else {
 			super.analyseT3DData(line);
 		}
@@ -182,7 +187,12 @@ public class T3DStaticMesh extends T3DSound {
 			int idx = 0;
 
 			for (UPackageRessource skin : skins) {
-				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName(mapConverter)).append("'\n");
+				if (skin != null) {
+					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName(mapConverter)).append("'\n");
+				} else {
+					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=None\n");
+				}
+				
 				idx++;
 			}
 		}
@@ -237,7 +247,9 @@ public class T3DStaticMesh extends T3DSound {
 
 		if (skins != null) {
 			for (UPackageRessource matSkin : skins) {
-				matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+				if (matSkin != null) {
+					matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+				}
 			}
 		}
 
