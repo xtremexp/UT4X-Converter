@@ -33,7 +33,9 @@ public class PSKStaticMesh {
 	private List<Material> materials;
 	private List<Skeleton> skeletons;
 	private List<RawWeight> rawWeights;
-	private List<ExtraUv> extraUvs;
+	private List<ExtraUv> extraUv0s;
+	private List<ExtraUv> extraUv1s;
+	private List<ExtraUv> extraUv2s;
 
 	private static final String CHUNK_HEADER_HEAD_ID = "ACTRHEAD";
 
@@ -51,7 +53,11 @@ public class PSKStaticMesh {
 
 	private static final String CHUNK_HEADER_RAWWHT_ID = "RAWWEIGHTS";
 
-	private static final String CHUNK_HEADER_EXTRAUV_ID = "EXTRAUVS0";
+	private static final String CHUNK_HEADER_EXTRAUV0_ID = "EXTRAUVS0";
+
+	private static final String CHUNK_HEADER_EXTRAUV1_ID = "EXTRAUVS1";
+
+	private static final String CHUNK_HEADER_EXTRAUV2_ID = "EXTRAUVS2";
 
 	/**
 	 * Reference to .psk file
@@ -83,7 +89,9 @@ public class PSKStaticMesh {
 		materials = new ArrayList<>();
 		skeletons = new ArrayList<>();
 		rawWeights = new ArrayList<>();
-		extraUvs = new ArrayList<>();
+		extraUv0s = new ArrayList<>();
+		extraUv1s = new ArrayList<>();
+		extraUv2s = new ArrayList<>();
 	}
 
 	public interface BinReadWrite {
@@ -137,6 +145,18 @@ public class PSKStaticMesh {
 			// Write raw weights
 			Chunk chRawWght = new Chunk(CHUNK_HEADER_RAWWHT_ID, rawWeights, RawWeight.DATA_SIZE);
 			chRawWght.write(fos);
+
+			// Write extra uvs 0
+			Chunk chExtrauv0s = new Chunk(CHUNK_HEADER_EXTRAUV0_ID, extraUv0s, ExtraUv.DATA_SIZE);
+			chExtrauv0s.write(fos);
+
+			// Write extra uvs 1
+			Chunk chExtrauv1s = new Chunk(CHUNK_HEADER_EXTRAUV1_ID, extraUv1s, ExtraUv.DATA_SIZE);
+			chExtrauv1s.write(fos);
+
+			// Write extra uvs 2
+			Chunk chExtrauv2s = new Chunk(CHUNK_HEADER_EXTRAUV2_ID, extraUv2s, ExtraUv.DATA_SIZE);
+			chExtrauv2s.write(fos);
 		} finally {
 			fos.close();
 		}
@@ -166,6 +186,7 @@ public class PSKStaticMesh {
 
 				ChunkHeader ch2 = new ChunkHeader(buffer);
 				final String chunkId = ch2.chunkID.trim();
+
 				switch (chunkId) {
 
 				case CHUNK_HEADER_POINTS_ID:
@@ -178,7 +199,7 @@ public class PSKStaticMesh {
 				case CHUNK_HEADER_WEDGES_ID:
 
 					for (int i = 0; i < ch2.dataCount; i++) {
-						wedges.add(new Wedge(buffer, ch2.dataCount <= 65536));
+						wedges.add(new Wedge(buffer, ch2.dataCount > 65536));
 					}
 					break;
 
@@ -191,6 +212,7 @@ public class PSKStaticMesh {
 				// Unreal Engine >= 3
 				case CHUNK_HEADER_FACES32_ID:
 
+					System.out.println("FACCE");
 					usingFace32 = true;
 
 					for (int i = 0; i < ch2.dataCount; i++) {
@@ -219,10 +241,24 @@ public class PSKStaticMesh {
 					}
 					break;
 
-				case CHUNK_HEADER_EXTRAUV_ID:
+				case CHUNK_HEADER_EXTRAUV0_ID:
 
 					for (int i = 0; i < ch2.dataCount; i++) {
-						extraUvs.add(new ExtraUv(buffer));
+						extraUv0s.add(new ExtraUv(buffer));
+					}
+					break;
+
+				case CHUNK_HEADER_EXTRAUV1_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						extraUv1s.add(new ExtraUv(buffer));
+					}
+					break;
+
+				case CHUNK_HEADER_EXTRAUV2_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						extraUv2s.add(new ExtraUv(buffer));
 					}
 					break;
 
@@ -276,15 +312,15 @@ public class PSKStaticMesh {
 
 		try {
 
-			File meshFolder = new File("C:\\Temp\\psktest\\ut3");
-			File reWriteFolder = new File("C:\\Temp\\psktest\\ut3\\out");
+			File meshFolder = new File("D:\\test");
+			File reWriteFolder = new File("D:\\test\\out");
 
 			if (!reWriteFolder.exists()) {
 				reWriteFolder.mkdirs();
 			}
 
 			for (File pskFile : meshFolder.listFiles()) {
-				if (!pskFile.getName().endsWith(".psk")) {
+				if (!(pskFile.getName().endsWith(".psk") || pskFile.getName().endsWith(".pskx"))) {
 					continue;
 				}
 

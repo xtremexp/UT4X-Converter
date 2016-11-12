@@ -25,41 +25,44 @@ public class Wedge implements BinReadWrite {
 	private float u;
 	private float v;
 	private byte matIndex;
+	/**
+	 * For mesh with many wedges
+	 */
+	private int matIndexInt;
 	private byte reserved;
 	private short pad;
 
-	/**
-	 * 
-	 */
-	boolean isPointIndexAsShort;
+	boolean isBigWedge = false;
 
 	/**
 	 * 
 	 * @param bf
 	 *            Byte reader
-	 * @param isPointIndexAsShort
-	 *            If point index is stored as a short else is stored as integer
+	 * @param isBigWedge
+	 *            True if staticmesh has more than 65536 wedges
 	 */
-	public Wedge(ByteBuffer bf, boolean isPointIndexAsShort) {
+	public Wedge(ByteBuffer bf, boolean isBigWedge) {
 
-		this.isPointIndexAsShort = isPointIndexAsShort;
+		this.isBigWedge = isBigWedge;
 		read(bf);
 	}
 
 	public void write(FileOutputStream bos) throws IOException {
 
-		if (isPointIndexAsShort) {
+		if (!isBigWedge) {
+			BinUtils.writeInt(bos, (int) pointIndex);
+			BinUtils.writeFloat(bos, u);
+			BinUtils.writeFloat(bos, v);
+			BinUtils.writeInt(bos, (int) matIndexInt);
+		} else {
 			BinUtils.writeShort(bos, (short) pointIndex);
 			bos.write(ByteBuffer.allocate(2).array());
-		} else {
-			BinUtils.writeInt(bos, (int) pointIndex);
+			BinUtils.writeFloat(bos, u);
+			BinUtils.writeFloat(bos, v);
+			bos.write(matIndex);
+			bos.write(reserved);
+			BinUtils.writeShort(bos, pad);
 		}
-
-		BinUtils.writeFloat(bos, u);
-		BinUtils.writeFloat(bos, v);
-		bos.write(matIndex);
-		bos.write(reserved);
-		BinUtils.writeShort(bos, pad);
 	}
 
 	public float getU() {
@@ -73,18 +76,20 @@ public class Wedge implements BinReadWrite {
 	@Override
 	public void read(ByteBuffer bf) {
 
-		if (isPointIndexAsShort) {
-			pointIndex = bf.getShort();
-			bf.getShort();
+		if (isBigWedge) {
+			pointIndex = bf.getInt(); // 4
+			u = bf.getFloat(); // 4
+			v = bf.getFloat(); // 4
+			matIndexInt = bf.getInt(); // 4
 		} else {
-			pointIndex = bf.getInt();
+			pointIndex = bf.getShort(); // 2
+			bf.getShort(); // 2
+			u = bf.getFloat(); // 4
+			v = bf.getFloat(); // 4
+			matIndex = bf.get(); // 1
+			reserved = bf.get(); // 1
+			pad = bf.getShort(); // 2
 		}
-
-		u = bf.getFloat();
-		v = bf.getFloat();
-		matIndex = bf.get();
-		reserved = bf.get();
-		pad = bf.getShort();
 	}
 
 }
