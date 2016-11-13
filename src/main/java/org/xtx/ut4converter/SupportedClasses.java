@@ -206,6 +206,10 @@ public class SupportedClasses {
 		uneededActors.add("ModelComponent"); // ut3
 		uneededActors.add("ForcedReachSpec"); // ut3
 		uneededActors.add("AdvancedReachSpec"); // ut3
+		uneededActors.add("UTWeaponPickupLight"); // ut3
+		uneededActors.add("UTArmorPickupLight"); // ut3
+		uneededActors.add("UTHealthPickupLight"); // ut3
+		uneededActors.add("ProscribedReachSpec"); // ut3
 
 		if (USE_CUSTOM) {
 			putUtClass(SpecialEvent.class, "SpecialEvent");
