@@ -206,7 +206,7 @@ Right click on project -> "Git" -> "Remote" -> "Pull"
 
 Libraries / Technologies used
 ------------------------------
-- Java 1.8.0_40 - http://www.java.com
+- Java 8 - http://www.java.com
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
 - Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
@@ -217,7 +217,13 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
-- 0.8.1 - In progress
+- 0.8.1 - 13/11/2016
+  * ut2003/4, ut3: fixed some staticmeshes with long material names could not be converted
+  * ut3: fixed sniper weapon with weaponpickupfactory not converting properly
+  * ut3: fixed UTSlimeVolume, UTLavalVolume not converting properly
+  * ut3: reverted back sound volume to original, now handling logarithm distance model for sound radius
+  * ut3: added support for UTDefensePoint
+  * misc: now also logs unconverted actor class name in .log file
 
 - 0.8.0 - 11/11/2016
   * ut2003/ut2004: now terrain heightmap is imported (texture, decolayers are NOT yet converted)
