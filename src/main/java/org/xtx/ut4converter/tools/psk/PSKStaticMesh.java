@@ -212,7 +212,6 @@ public class PSKStaticMesh {
 				// Unreal Engine >= 3
 				case CHUNK_HEADER_FACES32_ID:
 
-					System.out.println("FACCE");
 					usingFace32 = true;
 
 					for (int i = 0; i < ch2.dataCount; i++) {

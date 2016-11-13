@@ -378,6 +378,12 @@ public class UPackageRessource {
 			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
 				baseName = this.name + suffix + "." + this.name + suffix;
 			}
+
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				final int maxNameSize = ((Material.MATNAME_MAX_SIZE - suffix.length() - 1 - suffix.length()) / 2) - 1;
+				this.name = this.name.substring(0, maxNameSize - 1);
+				baseName = this.name + suffix + "." + this.name + suffix;
+			}
 		}
 
 		return baseName;
@@ -417,6 +423,7 @@ public class UPackageRessource {
 
 		// umodel does export staticmeshes as .pskx
 		// but we want rename as .psk so we can import in blender
+		// the psk import plugin does keep multi material info unlike the pskx plugin
 		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
 			currentFileExt = "psk";
 		}

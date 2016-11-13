@@ -12,16 +12,12 @@ import javax.vecmath.Vector4d;
 /**
  * Utility class for write/read binary data
  * 
- * // BYTE = 8 Bits = Byte
- * CHAR = 8 bits
- * WORD = 16 bits = Short
- * DWORD = 32 bits = Int
- * int = 4 bytes
- * long = 8 bytes
+ * // BYTE = 8 Bits = Byte CHAR = 8 bits WORD = 16 bits = Short DWORD = 32 bits
+ * = Int int = 4 bytes long = 8 bytes
  * 
  * @author XtremeXp
  *
- * DWORD = int in java
+ *         DWORD = int in java
  */
 public class BinUtils {
 
@@ -132,6 +128,9 @@ public class BinUtils {
 
 			count = length;
 		} else {
+			if (s.length() > length) {
+				s = s.substring(0, length - 1);
+			}
 			bos.write(s.getBytes());
 			count = length - s.getBytes().length;
 		}

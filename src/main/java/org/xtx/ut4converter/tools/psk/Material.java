@@ -48,7 +48,7 @@ public class Material implements BinReadWrite {
 	}
 
 	public void write(FileOutputStream bos) throws IOException {
-		BinUtils.writeString(bos, materialName, 64);
+		BinUtils.writeString(bos, materialName, MATNAME_MAX_SIZE);
 		BinUtils.writeInt(bos, textureIndex);
 		BinUtils.writeInt(bos, polyFlags);
 		BinUtils.writeInt(bos, auxMaterial);
