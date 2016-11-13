@@ -672,6 +672,20 @@ public class T3DBrush extends T3DSound {
 		if(brushClass == BrushClass.UTKillZVolume){
 			brushClass = BrushClass.KillZVolume;
 		}
+		
+		// TODO handle other properties of volume like friction, ...
+		// maybe add a super-class T3DVolume?
+		// UTSlimeVolume does not exists in UT4
+		if (brushClass == BrushClass.UTSlimeVolume) {
+			brushClass = BrushClass.UTPainVolume;
+			forcedWrittenLines.add("\tDamagePerSec=10.000000");
+		}
+
+		// UTSlimeVolume does not exists in UT4
+		if (brushClass == BrushClass.UTLavaVolume) {
+			brushClass = BrushClass.UTPainVolume;
+			forcedWrittenLines.add("\tDamagePerSec=60.000000");
+		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
 			transformPermanently();
