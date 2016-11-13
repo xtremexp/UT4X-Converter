@@ -284,6 +284,21 @@ public class T3DLevelConvertor extends Task<Object> {
 		convertedActorsNew.addAll(orderedBrushes);
 		convertedActors = convertedActorsNew;
 	}
+	
+	/**
+	 * Find an actor by name
+	 * @param actorName
+	 * @return
+	 */
+	public T3DActor findActorByName(String actorName) {
+		for (T3DActor uta : convertedActors) {
+			if (uta != null && uta.getName() != null && uta.getName().equals(actorName)) {
+				return uta;
+			}
+		}
+
+		return null;
+	}
 
 	private T3DBrush findBrushByName(String actorname) {
 		for (T3DActor uta : convertedActors) {

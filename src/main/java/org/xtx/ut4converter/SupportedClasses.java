@@ -183,6 +183,8 @@ public class SupportedClasses {
 
 		// UT2004, UT99 Dom
 		putUtClass(DomPoint.class, "xDomPointA", "xDomPointB", "ControlPoint");
+		
+		putUtClass(DefensePoint.class, "UTDefensePoint");
 
 		// UT3
 		putUtClass(DecalActor.class, "DecalActor");
