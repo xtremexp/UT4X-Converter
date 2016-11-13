@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -99,6 +98,9 @@ public class UPackageRessource {
 	 * materials)
 	 */
 	UPackageRessource replacement;
+	
+
+	private String forcedFileName;
 
 	/**
      * 
@@ -371,18 +373,21 @@ public class UPackageRessource {
 			// try <packagename>_<name>
 			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
 				String fullNameWithoutGroup = getFullNameWithoutGroup().replaceAll("\\.", "\\_");
-				baseName = fullNameWithoutGroup + suffix + "." + fullNameWithoutGroup + suffix;
+				baseName = fullNameWithoutGroup + "_" + fullNameWithoutGroup + suffix;
+				forcedFileName = fullNameWithoutGroup + "_" + fullNameWithoutGroup;
 			}
 
 			// <name>
 			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
-				baseName = this.name + suffix + "." + this.name + suffix;
+				baseName = this.name + "_" + this.name + suffix;
+				forcedFileName = this.name + "_" + this.name;
 			}
 
 			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
-				final int maxNameSize = ((Material.MATNAME_MAX_SIZE - suffix.length() - 1 - suffix.length()) / 2) - 1;
+				final int maxNameSize = ((Material.MATNAME_MAX_SIZE - 1 - suffix.length()) / 2) - 1;
 				this.name = this.name.substring(0, maxNameSize - 1);
-				baseName = this.name + suffix + "." + this.name + suffix;
+				baseName = this.name + "_" + this.name + suffix;
+				forcedFileName = this.name + "_" + this.name;
 			}
 		}
 
@@ -428,7 +433,12 @@ public class UPackageRessource {
 			currentFileExt = "psk";
 		}
 
-		return getFullNameWithoutDots() + "." + currentFileExt;
+		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
+		if (forcedFileName != null) {
+			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
+		} else {
+			return getFullNameWithoutDots() + "." + currentFileExt;
+		}
 	}
 
 	/**
