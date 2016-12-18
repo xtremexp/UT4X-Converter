@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.1
+- Version: 0.8.2
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -217,6 +217,9 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.2 - 18/12/2016
+  * all: fix partial conversion if a mover had ambient sound and opened sound set
+  
 - 0.8.1 - 13/11/2016
   * ut2003/4, ut3: fixed some staticmeshes with long material names could not be converted
   * ut3: fixed sniper weapon with weaponpickupfactory not converting properly
