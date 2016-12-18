@@ -185,7 +185,7 @@ public class MoverProperties implements T3D {
 		}
 
 		if (moveAmbientSound != null) {
-			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("'\n");
 		}
 
 		if (stayOpenTime != null) {
