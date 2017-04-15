@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.2
+- Version: 0.8.3
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -217,6 +217,9 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.3 - 15/04/2017
+  * all: fixed some cases where a few brushes had some textures not converted properly
+
 - 0.8.2 - 18/12/2016
   * all: fix partial conversion if a mover had ambient sound and opened sound set
   
