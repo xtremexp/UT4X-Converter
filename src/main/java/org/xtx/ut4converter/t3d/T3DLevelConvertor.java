@@ -337,7 +337,8 @@ public class T3DLevelConvertor extends Task<Object> {
 				}
 
 				// write parent actor
-				if (actor.isValidWriting()) {
+				// actor not valid for conversion should not be written as well!
+				if (actor.isValidWriting() && actor.isValidConverting()) {
 					buffer = actor.toString();
 
 					if (buffer != null) {
