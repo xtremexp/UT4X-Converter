@@ -376,12 +376,12 @@ public class T3DPolygon {
 
 						if (texture_u != null) {
 							if (texDimension != null) {
-								texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
+								texture_u.scale(1 / (texDimension.width / 100d));
 							}
 						}
 
 						if (texture_v != null) {
-							texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
+							texture_v.scale(1 / (texDimension.height / 100d));
 						}
 					}
 
