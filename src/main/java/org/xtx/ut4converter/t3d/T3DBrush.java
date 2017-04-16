@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.vecmath.Vector3d;
 
@@ -21,13 +20,16 @@ import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
+import org.xtx.ut4converter.ucore.ue1.UnMath.ESheerAxis;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FVector;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
  * 
  * @author XtremeXp
  */
-public class T3DBrush extends T3DSound {
+public class T3DBrush extends T3DVolume {
 
 	protected BrushClass brushClass = BrushClass.Brush;
 
@@ -84,14 +86,14 @@ public class T3DBrush extends T3DSound {
 	List<BrushPolyflag> polyflags = new ArrayList<>();
 
 	/**
-	 * Used by Unreal Engine 1
+	 * UE1/2 property containing scale and sheer info
 	 */
-	Vector3d mainScale;
-
+	private FScale mainScale;
+	
 	/**
-	 * Used by Unreal Engine 1
+	 * UE1/2 property containing scale and sheer info
 	 */
-	Vector3d postScale;
+	private FScale postScale;
 
 	/**
 	 * Used by Unreal Engine 1
@@ -191,15 +193,41 @@ public class T3DBrush extends T3DSound {
 
 		// MainScale=(Scale=(Y=-1.000000),SheerAxis=SHEER_ZX)
 		// MainScale=(SheerAxis=SHEER_ZX)
-		else if (line.contains("MainScale=") && line.contains("(Scale=")) {
-			mainScale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
-			reverseVertexOrder = mainScale.x * mainScale.y * mainScale.z < 0;
-			// reverseVertexOrder = mainScale.x < 0;
+		else if (line.contains("MainScale=")) {
+			mainScale = new FScale();
+
+			if(line.contains("(Scale=")){
+				mainScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+			}
+			
+			if(line.contains("SheerAxis=")){
+				mainScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
+			}
+			
+			if(line.contains("SheerRate=")){
+				mainScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
+			}
+			
+			reverseVertexOrder = mainScale.scale.x * mainScale.scale.y * mainScale.scale.z < 0;
 		}
 
+
 		// PostScale=(Scale=(X=1.058824,Y=1.250000,Z=0.920918),SheerAxis=SHEER_ZX)
-		else if (line.contains("PostScale=") && line.contains("(Scale=")) {
-			postScale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
+		else if (line.contains("MainScale=")) {
+			postScale = new FScale();
+			
+			
+			if(line.contains("(Scale=")){
+				postScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+			}
+			
+			if(line.contains("SheerAxis=")){
+				postScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
+			}
+			
+			if(line.contains("SheerRate=")){
+				postScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
+			}
 		}
 
 		// TempScale=(Scale=(X=0.483090,Y=2.274808,Z=0.488054))

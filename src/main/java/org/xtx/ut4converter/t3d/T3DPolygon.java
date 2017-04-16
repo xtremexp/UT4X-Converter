@@ -15,10 +15,10 @@ import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.geom.Vertex;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**
  * 
@@ -103,7 +103,7 @@ public class T3DPolygon {
 	public T3DPolygon(String t3dLine, MapConverter mapConverter) {
 		// Begin Polygon Texture=Rockwal4 Flags=32768 Link=322
 		this.mapConverter = mapConverter;
-		this.texture = mapConverter.getUPackageRessource(T3DUtils.getString(t3dLine, "Texture"), T3DRessource.Type.TEXTURE);
+		this.texture = mapConverter.getUPackageRessource(T3DUtils.getStringTEMP(t3dLine, "Texture"), T3DRessource.Type.TEXTURE);
 		this.link = T3DUtils.getInteger(t3dLine, "Link");
 		this.flag = T3DUtils.getInteger(t3dLine, "Flags");
 	}
@@ -159,7 +159,7 @@ public class T3DPolygon {
 	 * @param rotation
 	 * @param postScale
 	 */
-	public void transformPermanently(Vector3d mainScale, Vector3d rotation, Vector3d postScale) {
+	public void transformPermanently(FScale mainScale, Vector3d rotation, FScale postScale) {
 
 		Geometry.transformPermanently(origin, mainScale, rotation, postScale, false);
 
@@ -177,6 +177,9 @@ public class T3DPolygon {
 			Geometry.transformPermanently(vertex.getCoordinates(), mainScale, rotation, postScale, false);
 		}
 	}
+	
+	
+	
 
 	/**
 	 * Revert the order of vertices

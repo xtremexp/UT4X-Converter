@@ -15,6 +15,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**
  * Utility class for geometry operations TODO refactor a bit (some functions
@@ -314,21 +315,25 @@ public class Geometry {
 	 *            Post Scale only available for Unreal Engine 1 UT ...
 	 * @param isUV
 	 *            if true then vector is TextureU or TextureV data (T3D Brush)
+	 * 
+	 * @param sheerAxis
+	 * @param sheerRate
 	 */
-	public static void transformPermanently(Vector3d v, Vector3d mainScale, Vector3d rotation, Vector3d postScale, boolean isUV) {
+	public static void transformPermanently(Vector3d v, FScale mainScale, Vector3d rotation, FScale postScale, boolean isUV) {
 
 		if (mainScale != null) {
 
 			if (!isUV) {
-				v.x *= mainScale.x;
-				v.y *= mainScale.y;
-				v.z *= mainScale.z;
+				v.x *= mainScale.scale.x;
+				v.y *= mainScale.scale.y;
+				v.z *= mainScale.scale.z;
 			} else {
-				v.x /= mainScale.x;
-				v.y /= mainScale.y;
-				v.z /= mainScale.z;
+				v.x /= mainScale.scale.x;
+				v.y /= mainScale.scale.y;
+				v.z /= mainScale.scale.z;
 			}
 
+			// TODO handle sheer info
 		}
 
 		if (rotation != null) {
@@ -338,19 +343,36 @@ public class Geometry {
 		if (postScale != null) {
 
 			if (!isUV) {
-				v.x *= postScale.x;
-				v.y *= postScale.y;
-				v.z *= postScale.z;
+				v.x *= postScale.scale.x;
+				v.y *= postScale.scale.y;
+				v.z *= postScale.scale.z;
 			} else {
-				v.x /= postScale.x;
-				v.y /= postScale.y;
-				v.z /= postScale.z;
+				v.x /= postScale.scale.x;
+				v.y /= postScale.scale.y;
+				v.z /= postScale.scale.z;
 			}
 
 		}
 
 		// avoid values like 1000.00000001 -> 1000.0
 		updateDoubleZeroes(v);
+	}
+	
+	public static float FSheerSnap(float Sheer) {
+		if (Sheer < -0.65f)
+			return Sheer + 0.15f;
+		else if (Sheer > +0.65f)
+			return Sheer - 0.15f;
+		else if (Sheer < -0.55f)
+			return -0.50f;
+		else if (Sheer > +0.55f)
+			return 0.50f;
+		else if (Sheer < -0.05f)
+			return Sheer + 0.05f;
+		else if (Sheer > +0.05f)
+			return Sheer - 0.05f;
+		else
+			return 0.f;
 	}
 
 	/**
@@ -597,6 +619,7 @@ public class Geometry {
 
 	/**
 	 * Converts a "stadard" java vector to apache one
+	 * 
 	 * @param v
 	 * @return
 	 */

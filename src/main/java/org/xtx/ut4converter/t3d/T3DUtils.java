@@ -29,13 +29,15 @@ public class T3DUtils {
 	 * @param line
 	 * @param split
 	 * @return
+	 * @deprecated DELETE AND MERGE WITH getString
 	 */
-	public static String getString(String line, String split) {
+	public static String getStringTEMP(String line, String split) {
 		if (!line.contains(split)) {
 			return null;
 		}
 		return line.split(split + "=")[1].split("\\ ")[0];
 	}
+
 
 	/**
 	 *
@@ -85,9 +87,36 @@ public class T3DUtils {
 	public static Float getFloat(String line) {
 		return Float.valueOf(line.split("\\=")[1]);
 	}
+	
+	/**
+	 * 
+	 * @param line
+	 * @param property
+	 * @return
+	 */
+	public static Float getFloat(String line, String property) {
+		return Float.valueOf(getPropValue(line, property, null));
+	}
+	
+	private static String getPropValue(String line, String property, String nextFieldSeparator) {
+		if (nextFieldSeparator != null) {
+			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0].split(nextFieldSeparator)[0];
+		} else {
+			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0];
+		}
+	}
 
 	public static String getString(String line) {
-		return line.split("\\=")[1].replaceAll("\"", "");
+		return line.split("\\=")[1].replaceAll("\"", "").replaceAll("\\)", "");
+	}
+	
+	public static String getString(String line, String property, String nextFieldSeparator) {
+		return getPropValue(line, property, nextFieldSeparator);
+	}
+	
+	
+	public static String getString(String line, String property) {
+		return getPropValue(line, property, null);
 	}
 
 	/**
