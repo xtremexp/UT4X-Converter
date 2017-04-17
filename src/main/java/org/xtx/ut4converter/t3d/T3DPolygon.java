@@ -297,6 +297,20 @@ public class T3DPolygon {
 	public void setTextureV(Vector3d textureV) {
 		this.texture_v = textureV;
 	}
+	
+	public void setTextureV(Double x, Double y, Double z) {
+		this.texture_v = new Vector3d(x, y, z);
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void setTextureU(Double x, Double y, Double z) {
+		this.texture_u = new Vector3d(x, y, z);
+	}
 
 	public void setTextureU(Vector3d textureU) {
 		this.texture_u = textureU;

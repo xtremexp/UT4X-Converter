@@ -52,14 +52,14 @@ public class DecalActor extends T3DActor {
 		}
 
 		if (decalSize != null) {
-			// x offset must not be changed by scale
-			// since the scale() operation occurs after convert()
-			// have to reduce down decalSize.x
 			Vector3d decalOffset = new Vector3d(decalSize.x / mapConverter.getScale(), 0d, 0d);
 			if (rotation != null) {
 				decalOffset = Geometry.rotate(decalOffset, rotation);
 			}
 
+			// x offset must not be changed by scale
+			// since the scale() operation occurs after convert()
+			// have to reduce down decalSize.x
 			location.add(decalOffset);
 		}
 
