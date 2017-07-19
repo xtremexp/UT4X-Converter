@@ -211,6 +211,28 @@ public class UTGames {
 	public static boolean isUnrealEngine1(UTGames.UTGame utGame) {
 		return utGame.engine == UnrealEngine.UE1;
 	}
+	
+	/**
+	 * Returns default folder for textures.
+	 * @param basePath
+	 * @param utgame UT Game
+	 * @return Default folder for texture (only for UE1/UE2 ut games)
+	 */
+	public static File getTexturesFolder(final File basePath, UTGames.UTGame utgame) {
+		if (utgame.engine.version <= UnrealEngine.UE2.version) {
+			return new File(basePath + File.separator + "Textures");
+		} else {
+			return null;
+		}
+	}
+	
+	public static File getSystemFolder(final File basePath, UTGames.UTGame utgame) {
+		if (utgame.engine.version <= UnrealEngine.UE2.version) {
+			return new File(basePath + File.separator + "System");
+		} else {
+			return null;
+		}
+	}
 
 	public static File getMapsFolder(File basePath, UTGames.UTGame utgame) {
 
