@@ -217,6 +217,10 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.4 - 19/07/2017
+  * u1/u2/ut2003/ut2004: invisible brushes are no longer being converted. This might slightly reduce some bsp hole cases.
+  * ut99: fixed some textures not being converted with some specific packages (like with SGTech1.utx texture package) 
+
 - 0.8.3 - 15/04/2017
   * all: fixed some cases where a few brushes had some textures not converted properly
 
