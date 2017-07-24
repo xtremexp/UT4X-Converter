@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.3
+- Version: 0.8.4
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -89,7 +89,7 @@ Go to Settings and set the unreal games folders as well as umodel and nconvert p
 
 - For staticmesh conversion:
   * Install Blender software (www.blender.org)
-  * Download https://github.com/Befzz/blender3d_import_psk zip archive file
+  * Download https://github.com/Befzz/blender3d_import_psk_psa zip archive file
   * Overwrite io_import_scene_unreal_psa_psk.py python script file in blender folder:
   * C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
   
