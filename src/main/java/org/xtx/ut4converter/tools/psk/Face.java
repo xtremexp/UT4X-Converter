@@ -63,4 +63,30 @@ class Face implements BinReadWrite {
 
 	}
 
+	public int getWedge0() {
+		return wedge0;
+	}
+
+	public int getWedge1() {
+		return wedge1;
+	}
+
+	public int getWedge2() {
+		return wedge2;
+	}
+
+	public byte getMatIndex() {
+		return matIndex;
+	}
+
+	public byte getAuxMatIndex() {
+		return auxMatIndex;
+	}
+
+	public int getSmoothingGroups() {
+		return smoothingGroups;
+	}
+	
+	
+
 }

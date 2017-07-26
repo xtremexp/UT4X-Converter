@@ -72,6 +72,11 @@ public class Wedge implements BinReadWrite {
 	public float getV() {
 		return v;
 	}
+	
+
+	public long getPointIndex() {
+		return pointIndex;
+	}
 
 	@Override
 	public void read(ByteBuffer bf) {

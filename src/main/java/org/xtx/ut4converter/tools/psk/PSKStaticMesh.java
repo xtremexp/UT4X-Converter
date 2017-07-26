@@ -3,6 +3,7 @@ package org.xtx.ut4converter.tools.psk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -305,6 +306,40 @@ public class PSKStaticMesh {
 		return rawWeights;
 	}
 
+	/**
+	 * Export .psk staticmesh to wavefront (.obj) staticmesh
+	 */
+	public void toObjStaticMesh() {
+
+		File f = new File("D:\\test\\test.obj");
+		f.delete();
+
+		try (FileWriter fw = new FileWriter(f)) {
+
+			fw.write("# Vertices\n");
+			for (Point w : this.getPoints()) {
+				fw.write("v " + w.x + " " + w.y + " " + w.z + "\n");
+			}
+
+			fw.write("# UV\n");
+			for (Wedge w : this.getWedges()) {
+				fw.write("vt " + w.getU() + " " + w.getV() + "\n");
+			}
+
+			fw.write("# Faces\n");
+			for (Face fc : this.getFaces()) {
+				fw.write("f ");
+				fw.write((this.getWedges().get(fc.getWedge2()).getPointIndex() + 1) + "/" + (fc.getWedge2() + 1) + " ");
+				fw.write((this.getWedges().get(fc.getWedge1()).getPointIndex() + 1) + "/" + (fc.getWedge1() + 1) + " ");
+				fw.write((this.getWedges().get(fc.getWedge0()).getPointIndex() + 1) + "/" + (fc.getWedge0() + 1) + "\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) {
 
 		System.out.println("OK");
@@ -347,6 +382,8 @@ public class PSKStaticMesh {
 					e.printStackTrace();
 					continue;
 				}
+
+				mesh.toObjStaticMesh();
 			}
 
 			// mesh.write(newFile);
