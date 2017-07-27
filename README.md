@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.4
+- Version: 0.8.5
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -50,7 +50,7 @@ is pretty bad. (same note for some ut2004 maps)
 What is NOT converted
 ------------------------------
 - Models
-- Terrain
+- Terrain (UT2004 has partial support only)
 - Music (Unreal Tournament 3 only)
 - All custom things (scripts and pickups)
 
@@ -216,6 +216,9 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.5 - 27/07/2017
+ * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
+ Now only need to import all .obj converted staticmeshes within the UE4 editor
 - 0.8.4 - 19/07/2017
   * u1/u2/ut2003/ut2004: invisible brushes are no longer being converted. This might slightly reduce some bsp holes cases.
   * ut99: fixed some textures not being converted with some specific packages (like with SGTech1.utx texture package) 
