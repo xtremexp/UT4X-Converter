@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,13 +107,13 @@ public class UPackageRessource {
 	/**
      * 
      */
-	class ExportInfo {
+	public class ExportInfo {
 
 		/**
 		 * Exported files, there might be several ones for same ressource (e.g:
 		 * terrain textures
 		 */
-		File exportedFile;
+		List<File> exportedFiles;
 
 		/**
 		 * Extractor used to export this package ressource
@@ -122,16 +124,57 @@ public class UPackageRessource {
 		}
 
 		public ExportInfo(File exportedFile, UTPackageExtractor extractor) {
-			this.exportedFile = exportedFile;
+			this.exportedFiles = new ArrayList<>();
+			this.exportedFiles.add(exportedFile);
 			this.extractor = extractor;
 		}
+		
+		public void setExportedFile(File exportedFile){
+			this.exportedFiles = new ArrayList<>();
+			this.exportedFiles.add(exportedFile);
+		}
 
-		public File getExportedFile() {
-			return exportedFile;
+		public void setExportedFiles(List<File> exportedFiles) {
+			this.exportedFiles = exportedFiles;
+		}
+
+		public List<File> getExportedFiles() {
+			return exportedFiles;
+		}
+		
+		public File getFirstExportedFile(){
+			if(this.exportedFiles == null || this.exportedFiles.isEmpty()){
+				return null;
+			} else {
+				return this.exportedFiles.get(0);
+			}
 		}
 
 		public UTPackageExtractor getExtractor() {
 			return extractor;
+		}
+		
+		public void replaceExportedFile(File exportedFile, File newExportedFile){
+			if(this.exportedFiles == null){
+				return;
+			}
+			
+			final int fileIdx = this.exportedFiles.indexOf(exportedFile);
+			
+			if(fileIdx != -1){
+				this.exportedFiles.set(fileIdx, newExportedFile);
+			}
+		}
+		
+		public void addExportedFile(File exportedFile){
+			if(exportedFile == null){
+				return;
+			}
+			
+			if(this.exportedFiles == null){
+				this.exportedFiles = new ArrayList<>();
+			}
+			this.exportedFiles.add(exportedFile);
 		}
 	}
 
@@ -234,17 +277,17 @@ public class UPackageRessource {
 	 */
 	public static void readTextureDimensions(MapConverter mapConverter, UPackageRessource texRessource) {
 
-		if (texRessource.type != Type.TEXTURE || texRessource.exportInfo.exportedFile == null || texRessource.textureDimensions != null) {
+		if (texRessource.type != Type.TEXTURE || texRessource.exportInfo.exportedFiles == null || texRessource.exportInfo.exportedFiles.isEmpty() || texRessource.textureDimensions != null) {
 			return;
 		}
 
 		try {
 			// FIXME this part is sloooow specially if large textures (about
 			// 1s/tex which may take a while for a whole map!)
-			texRessource.textureDimensions = ImageUtils.getTextureDimensions(texRessource.exportInfo.getExportedFile());
+			texRessource.textureDimensions = ImageUtils.getTextureDimensions(texRessource.exportInfo.getExportedFiles().get(0));
 
-			if (texRessource.exportInfo.getExportedFile() != null && texRessource.textureDimensions != null) {
-				mapConverter.getLogger().log(Level.FINE, texRessource.exportInfo.getExportedFile().getName() + " dimension read: " + texRessource.textureDimensions.toString());
+			if (texRessource.exportInfo.getExportedFiles() != null && !texRessource.exportInfo.getExportedFiles().isEmpty() && texRessource.textureDimensions != null) {
+				mapConverter.getLogger().log(Level.FINE, texRessource.exportInfo.getExportedFiles().get(0) + " dimension read: " + texRessource.textureDimensions.toString());
 			}
 		} catch (Exception e) {
 			mapConverter.getLogger().log(Level.SEVERE, e.getMessage());
@@ -294,7 +337,7 @@ public class UPackageRessource {
 	 * @return <code>true</code> if the file need to be exported
 	 */
 	public boolean needExport() {
-		return !exportFailed && exportInfo.exportedFile == null;
+		return !exportFailed && exportInfo.exportedFiles == null;
 	}
 
 	/**
@@ -415,6 +458,30 @@ public class UPackageRessource {
 		
 		return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
 	}
+	
+	public String getConvertedFileName(File exportedFile) {
+		
+		// don't change original name for .mtl file
+		if(exportedFile.getName().endsWith(".mtl")){
+			return exportedFile.getName();
+		}
+		
+		String s[] = exportedFile.getName().split("\\.");
+		String currentFileExt = s[s.length - 1];
+
+		// umodel does export staticmeshes as .pskx or .psk
+		// therefore UT4 converter convert them to .obj
+		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
+			currentFileExt = "obj";
+		}
+
+		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
+		if (forcedFileName != null) {
+			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
+		} else {
+			return getFullNameWithoutDots() + "." + currentFileExt;
+		}
+	}
 
 	/**
 	 * Sometimes we need to change name of exported file to have info about from
@@ -423,14 +490,13 @@ public class UPackageRessource {
 	 * @return
 	 */
 	public String getConvertedFileName() {
-		String s[] = exportInfo.getExportedFile().getName().split("\\.");
+		String s[] = exportInfo.getExportedFiles().get(0).getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
 
-		// umodel does export staticmeshes as .pskx
-		// but we want rename as .psk so we can import in blender
-		// the psk import plugin does keep multi material info unlike the pskx plugin
+		// umodel does export staticmeshes as .pskx or .psk
+		// therefore UT4 converter convert them to .obj
 		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
-			currentFileExt = "psk";
+			currentFileExt = "obj";
 		}
 
 		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
@@ -505,15 +571,15 @@ public class UPackageRessource {
 	 * @return true if this ressource has been exported to a file
 	 */
 	public boolean isExported() {
-		return exportInfo != null && exportInfo.exportedFile != null;
+		return exportInfo != null && exportInfo.exportedFiles != null;
 	}
 
-	public File getExportedFile() {
-		return exportInfo.getExportedFile();
+	public List<File> getExportedFiles() {
+		return exportInfo.getExportedFiles();
 	}
 
-	public void setExportedFile(File exportedFile) {
-		this.exportInfo.exportedFile = exportedFile;
+	public void addExportedFile(File exportedFile) {
+		this.exportInfo.addExportedFile(exportedFile);
 	}
 
 	/**
@@ -551,7 +617,7 @@ public class UPackageRessource {
 	 */
 	public boolean needsConversion(MapConverter mc) {
 
-		if (exportInfo.exportedFile == null) {
+		if (exportInfo.exportedFiles == null) {
 			return false;
 		}
 
@@ -562,7 +628,7 @@ public class UPackageRessource {
 
 		// ucc exporter exports malformed .dds textures ...
 		// that can't be imported in UE4
-		if (mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFile.getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
+		if (mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
 			return true;
 		}
 
@@ -582,7 +648,7 @@ public class UPackageRessource {
 
 			try {
 				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
-				scs.convertTo16BitSampleSize(exportInfo.getExportedFile(), tempFile);
+				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
 			} catch (IOException ex) {
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
@@ -594,12 +660,12 @@ public class UPackageRessource {
 
 			if (!texConverter.isNConvertAvailable()) {
 				logger.log(Level.WARNING, "Impossible to convert " + name + " texture: nconvert path not set in settings");
-				return exportInfo.getExportedFile();
+				return exportInfo.getExportedFiles().get(0);
 			}
 
 			try {
-				File tempFile = File.createTempFile(getFullNameWithoutDots(), "." + FileUtils.getExtension(exportInfo.getExportedFile()));
-				Files.copy(exportInfo.getExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				File tempFile = File.createTempFile(getFullNameWithoutDots(), "." + FileUtils.getExtension(exportInfo.getFirstExportedFile()));
+				Files.copy(exportInfo.getFirstExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				texConverter.convert(tempFile, TextureFormat.tga);
 				tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
 				return tempFile;
@@ -700,4 +766,10 @@ public class UPackageRessource {
 	private boolean isTextureUsedInStaticMesh() {
 		return this.isUsedInStaticMesh() && this.type == Type.TEXTURE;
 	}
+
+	public ExportInfo getExportInfo() {
+		return exportInfo;
+	}
+	
+	
 }

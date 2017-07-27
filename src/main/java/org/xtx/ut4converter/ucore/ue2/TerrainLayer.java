@@ -166,7 +166,7 @@ public class TerrainLayer implements T3D {
 		int value;
 		final int DEFAULT_ALPHA = 128;
 
-		BufferedImage img = ImageIO.read(alphaMapTexture.getExportedFile());
+		BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
 
 		for (int y = (img.getWidth() - 1); y >= 0; y--) {
 			for (int x = 0; x < img.getWidth(); x++) {

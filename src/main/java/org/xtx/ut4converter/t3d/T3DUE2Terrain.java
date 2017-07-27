@@ -174,7 +174,7 @@ public class T3DUE2Terrain extends T3DActor {
 
 			// Convert heightmap texture to .tiff
 			List<String> logs = new ArrayList<>();
-			File bmpHeightMap = heightMapTexture.getExportedFile();
+			File bmpHeightMap = heightMapTexture.getExportInfo().getFirstExportedFile();
 			File tiffHeightMap = new File(exportFolder + File.separator + bmpHeightMap.getName().split("\\.")[0] + ".tiff");
 
 			String command = "\"" + Installation.getG16ConvertFile() + "\" \"" + bmpHeightMap + "\" \"" + tiffHeightMap + "\"";

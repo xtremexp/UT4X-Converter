@@ -305,16 +305,44 @@ public class PSKStaticMesh {
 	public List<RawWeight> getRawWeights() {
 		return rawWeights;
 	}
+	
+	public void exportToObj(final File mtlFile, final File objFile){
+		writeMtlObjFile(mtlFile);
+		writeObjFile(objFile, mtlFile);
+	}
 
+	private void writeMtlObjFile(final File mtlFile) {
+		// TODO handle material
+		try (FileWriter fw = new FileWriter(mtlFile)) {
+
+			fw.write("# UT4 Converter MTL File:\n");
+			for(Material mat : this.getMaterials()){
+				fw.write("newmtl "+ mat.getMaterialName()+ " \n");
+				fw.write("Ns 96.078431\n");
+				fw.write("Ka 1.000000 1.000000 1.000000\n");
+				fw.write("Kd 0.640000 0.640000 0.640000\n");
+				fw.write("Ks 0.500000 0.500000 0.500000\n");
+				fw.write("Ke 0.000000 0.000000 0.000000\n");
+				fw.write("Ni 1.000000\n");
+				fw.write("d 1.000000\n");
+				fw.write("illum 2\n");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	/**
 	 * Export .psk staticmesh to wavefront (.obj) staticmesh
 	 */
-	public void toObjStaticMesh() {
-
-		File f = new File("D:\\test\\test.obj");
-		f.delete();
-
-		try (FileWriter fw = new FileWriter(f)) {
+	private void writeObjFile(final File objFile, final File mtlFile) {
+		
+		try (FileWriter fw = new FileWriter(objFile)) {
+			
+			if(mtlFile != null && !this.getMaterials().isEmpty()){
+				fw.write("mtllib " + mtlFile.getName() + "\n");
+			}
 
 			fw.write("# Vertices\n");
 			for (Point w : this.getPoints()) {
@@ -327,7 +355,16 @@ public class PSKStaticMesh {
 			}
 
 			fw.write("# Faces\n");
+			String currentMat = null;
+			
 			for (Face fc : this.getFaces()) {
+				Material mat = this.getMaterials().get(fc.getMatIndex());
+				
+				if(currentMat == null || !currentMat.equals(mat.getMaterialName())){
+					fw.write("usemtl " + mat.getMaterialName() + "\n");
+					currentMat = mat.getMaterialName();
+				}
+				
 				fw.write("f ");
 				fw.write((this.getWedges().get(fc.getWedge2()).getPointIndex() + 1) + "/" + (fc.getWedge2() + 1) + " ");
 				fw.write((this.getWedges().get(fc.getWedge1()).getPointIndex() + 1) + "/" + (fc.getWedge1() + 1) + " ");
@@ -382,8 +419,6 @@ public class PSKStaticMesh {
 					e.printStackTrace();
 					continue;
 				}
-
-				mesh.toObjStaticMesh();
 			}
 
 			// mesh.write(newFile);

@@ -87,12 +87,7 @@ program folder with this command line:
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
-- For staticmesh conversion:
-  * Install Blender software (www.blender.org)
-  * Download https://github.com/Befzz/blender3d_import_psk_psa zip archive file
-  * Overwrite io_import_scene_unreal_psa_psk.py python script file in blender folder:
-  * C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
-  
+
 Detailed explanations about conversion is always displayed after each end of map conversion 
 in program.
 
@@ -133,6 +128,10 @@ In UT4 Editor:
 -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
 -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Textures
 -- After import, right click on all texture in editor and choose "create material"
+
+- Import StaticMeshes
+-- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+-- Click on "Import" and select converted staticmeshes .obj files from <UT4ConverterPath>/Converted/<MapName>/StaticMeshes
 
 - Import converted map
 -- Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)

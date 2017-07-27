@@ -268,7 +268,7 @@ public class UModelExporter extends UTPackageExtractor {
 			if (isMaterial && uRessource.getMaterialInfo() == null) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
 			}
-			uRessource.setExportedFile(exportedFile);
+			uRessource.getExportInfo().setExportedFile(exportedFile);
 			uRessource.parseNameAndGroup(ressourceName); // for texture db that
 															// don't have group
 															// we retrieve the

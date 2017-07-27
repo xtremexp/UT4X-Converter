@@ -79,7 +79,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		UPackageRessource uRessource = unrealPackage.findRessource(name);
 
 		if (uRessource != null) {
-			uRessource.setExportedFile(exportedFile);
+			uRessource.getExportInfo().setExportedFile(exportedFile);
 			// uRessource.parseNameAndGroup(ressourceName); // for texture db
 			// that don't have group we retrieve the group ...
 		} else {

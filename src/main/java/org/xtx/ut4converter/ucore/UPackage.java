@@ -134,8 +134,8 @@ public class UPackage {
 		Set<File> exportedFiles = new HashSet<>();
 
 		for (UPackageRessource upr : ressources) {
-			if (upr.getExportedFile() != null) {
-				exportedFiles.add(upr.getExportedFile());
+			if (upr.getExportedFiles() != null) {
+				exportedFiles.addAll(upr.getExportedFiles());
 			}
 		}
 

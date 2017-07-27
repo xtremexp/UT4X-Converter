@@ -43,6 +43,7 @@ import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.UIUtils;
 import org.xtx.ut4converter.tools.psk.Material;
@@ -675,31 +676,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (convertStaticMeshes) {
 				logger.log(Level.INFO, "");
 				logger.log(Level.INFO, "StaticMeshes Import:");
-				logger.log(Level.INFO, "Note: some meshes might not be fully textured yet");
-				logger.log(Level.INFO, "Manual process is pretty loooong for the moment ... ");
-				logger.log(Level.INFO, "Download and install Blender software and open program");
-				logger.log(Level.INFO, "Download https://github.com/Befzz/blender3d_import_psk_psa update .psk staticmesh blender addon zip");
-				logger.log(Level.INFO, "Update io_import_scene_unreal_psa_psk.py file from zip file in:");
-				logger.log(Level.INFO, "C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons folder");
-				logger.log(Level.INFO, "Blender | 'File' -> 'User Preferences ...' -> 'Add-ons'");
-				logger.log(Level.INFO, "Blender | Check that 'Import-Export: Export Unreal Engine format (.psa/.psk)' add-on is activated");
-				logger.log(Level.INFO, "Blender | 'Save user settings' (if you have activated the addon)");
-				logger.log(Level.INFO, "Blender | 'File' -> 'New'");
-				logger.log(Level.INFO, "Blender | In right panel delete these nodes: 'Cube', 'Lamp', 'Camera' (Right click on each node -> 'Delete hierarchy')");
-				logger.log(Level.INFO, "--");
-				logger.log(Level.INFO, "For EACH .psk staticmesh in " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName() + " do:");
-				logger.log(Level.INFO, "Blender | 'File' -> 'Import' -> 'Skeleton Mesh (.psk)'");
-				logger.log(Level.INFO, "Blender | Browse for a .psk staticmesh then 'Import PSK' ");
-				logger.log(Level.INFO, "Blender | 'File' -> 'Export' -> 'FBX (.fbx)' ");
-				logger.log(Level.INFO, "Blender | Important: keep the same filename with .fbx extension as the original .psk file! ");
-				logger.log(Level.INFO, "Blender | Right Click on the 'Orange human icon' (top right) -> 'Delete hierarchy' (for next mesh import) ");
-				logger.log(Level.INFO, "--");
-				logger.log(Level.INFO, "When all staticmeshes have been converted to .fbx format, go back to Unreal Editor");
 				logger.log(Level.INFO, "UE4 | In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
-				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your all .fbx staticmesh");
-				logger.log(Level.INFO, "UE4 | In 'FBX Import Options' set Transform -> Import uniform scale to 0.01 ");
-				logger.log(Level.INFO, "UE4 | In 'FBX Import Options' set Material -> Import Material to false ");
-				logger.log(Level.INFO, "UE4 | In 'FBX Import Options' set Material -> Import Textures to true ");
+				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your all .obj staticmesh");
 				logger.log(Level.INFO, "UE4 | Click on 'Import'");
 
 			}
@@ -731,8 +709,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Flag textures in staticmeshes used in map as used Display material info
 	 * in logs as well
 	 * 
-	 * TODO re-write generated psk files to change material name to fit with
-	 * packname_group_name convention (with max length = 64)
 	 */
 	private void findTexturesUsedInStaticMeshes() {
 
@@ -747,7 +723,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 
 				// .psk file
-				File exportedFile = ressource.getExportedFile();
+				File exportedFile = ressource.getExportInfo().getFirstExportedFile();
 
 				if (exportedFile != null && exportedFile.length() > 0) {
 					try {
@@ -804,9 +780,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							tempPskDir.mkdirs();
 						}
 
+						/*
 						File newPskFile = new File(tempPskDir.getAbsolutePath() + File.separator + exportedFile.getName());
 						pskMesh.write(newPskFile);
-						ressource.setExportedFile(newPskFile);
+						*/
+						
+						File mtlObjFile = new File(tempPskDir.getAbsolutePath() + File.separator + exportedFile.getName());
+						mtlObjFile = FileUtils.changeExtension(mtlObjFile, "mtl");
+						
+						File objFile = FileUtils.changeExtension(mtlObjFile, "obj");
+						pskMesh.exportToObj(mtlObjFile, objFile);
+						
+						ressource.addExportedFile(mtlObjFile);
+						ressource.addExportedFile(objFile);
 
 						// logger.log(Level.INFO, "Material used for " +
 						// ressource);
@@ -825,7 +811,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * 
 	 * @throws IOException
 	 */
-	private void cleanAndConvertRessources() throws IOException {
+	private void cleanAndConvertRessources() throws Exception {
 
 		updateMessage("Converting ressource files");
 		boolean wasConverted;
@@ -840,47 +826,52 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				try {
 
 					wasConverted = false;
-					File exportedFile = ressource.getExportedFile();
+					List<File> exportedFiles = ressource.getExportedFiles();
+					
+					if(exportedFiles == null){
+						continue;
+					}
 
-					if (exportedFile != null && exportedFile.length() > 0) {
-
-						// Renaming exported files (e.g: Stream2.wav ->
-						// AmbOutside_Looping_Stream2.wav)
-						// move them to non temporary folder
-						if (ressource.isUsedInMap()) {
-
-							// Some sounds and/or textures might need to be
-							// converted for correct import in UE4
-							if (ressource.needsConversion(this)) {
-								exportedFile = ressource.convert(logger, userConfig);
-								ressource.setExportedFile(exportedFile);
-								wasConverted = true;
-							}
-
-							File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName());
-							newFile.getParentFile().mkdirs();
-							newFile.createNewFile();
-
-							// sometimes it does not find the exported texture
-							// (?
-							// ... weird)
-							if (exportedFile.exists() && exportedFile.isFile()) {
-								Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-							}
-
-							if (exportedFile.delete()) {
-								logger.fine("Deleted " + exportedFile);
-							}
-
-							exportedFile = newFile;
-							ressource.setExportedFile(exportedFile);
-
-							if (wasConverted) {
-								logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+					for(final File exportedFile : exportedFiles){
+						if (exportedFile != null && exportedFile.length() > 0) {
+	
+							// Renaming exported files (e.g: Stream2.wav ->
+							// AmbOutside_Looping_Stream2.wav)
+							// move them to non temporary folder
+							if (ressource.isUsedInMap()) {
+	
+								// Some sounds and/or textures might need to be
+								// converted for correct import in UE4
+								if (ressource.needsConversion(this)) {
+									ressource.getExportInfo().replaceExportedFile(exportedFile, ressource.convert(logger, userConfig));
+									wasConverted = true;
+								}
+								
+								// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
+								File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
+								newFile.getParentFile().mkdirs();
+								newFile.createNewFile();
+	
+								// sometimes it does not find the exported texture
+								// (?
+								// ... weird)
+								if (exportedFile.exists() && exportedFile.isFile()) {
+									Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								}
+	
+								if (exportedFile.delete()) {
+									logger.fine("Deleted " + exportedFile);
+								}
+	
+								//exportedFile = newFile;
+								ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
+	
+								if (wasConverted) {
+									logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+								}
 							}
 						}
 					}
-
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
 				}

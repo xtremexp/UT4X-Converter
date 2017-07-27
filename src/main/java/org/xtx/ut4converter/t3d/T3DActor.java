@@ -150,6 +150,8 @@ public abstract class T3DActor extends T3DObject {
 	 * perf issues)
 	 */
 	protected StringBuilder sbf;
+	
+	private boolean invalidActorForWrite;
 
 	String currentSubObjectClass;
 	String currentSubObjectName;
