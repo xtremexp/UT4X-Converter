@@ -657,7 +657,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "");
 				logger.log(Level.INFO, "Textures Import:");
 				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.TEXTURE.getName());
-				logger.log(Level.INFO, "Select all texture files and press 'Open'");
+				logger.log(Level.INFO, "Select all texture files and click on 'Open'");
 				logger.log(Level.INFO, "After import, on selected textures right click -> 'Create Material'");
 				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
 			}
@@ -666,7 +666,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "");
 				logger.log(Level.INFO, "Sounds Import:");
 				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.SOUND.getName());
-				logger.log(Level.INFO, "Select all sound files and press 'Open'");
+				logger.log(Level.INFO, "Select all sound files and click on 'Open'");
 				logger.log(Level.INFO, "After import, on selected sounds right click -> 'Create Cue'");
 				logger.log(Level.INFO, "Optional: for sound waves make them loop 'Sound wave' -> 'Looping' depending on sound usage (music, ambient sound ..)");
 				logger.log(Level.INFO, "Optional: for sound cue used in lifts, add attenuation node with attenuation pattern 'Attenuation_Lifts' ");
@@ -676,10 +676,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (convertStaticMeshes) {
 				logger.log(Level.INFO, "");
 				logger.log(Level.INFO, "StaticMeshes Import:");
-				logger.log(Level.INFO, "UE4 | In 'Content Browser' panel go to folder: " + UE4_MAP_FOLDER);
-				logger.log(Level.INFO, "UE4 | Click on 'Import' and browse for your all .obj staticmesh");
-				logger.log(Level.INFO, "UE4 | Click on 'Import'");
-
+				logger.log(Level.INFO, "UE4 | Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.STATICMESH.getName());
+				logger.log(Level.INFO, "UE4 | Select all staticmeshes .obj files and click on 'Open'");
+				logger.log(Level.INFO, "UE4 | Leave default .fbx options values and click on 'Import all'");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
 			}
 
 			logger.log(Level.INFO, "* * * * ");
