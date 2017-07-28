@@ -22,6 +22,7 @@ public class T3DTrigger extends T3DBrush {
 	 */
 	enum TriggerType {
 		TT_AnyProximity, TT_Shoot, TT_ClassProximity, TT_PawnProximity, TT_PlayerProximity,
+		TT_HumanPlayerProximity, TT_LivePlayerProximity
 	}
 
 	public T3DTrigger(MapConverter mc, String t3dClass) {
