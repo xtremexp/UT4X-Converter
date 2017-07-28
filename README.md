@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.5a
+- Version: 0.8.6
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -216,9 +216,15 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.6 - 28/07/2017
+ * ut2003/ut2004: added conversion of WaterVolume, NewWeaponBase, NewHealthCharger
+ * ut2003/ut2004: fixed conversion failure of trigger with liveproximity and humanplayerproximity trigger type
+ * u2/ut2003/ut2004/ut3: fixed bad description/tuto for converting staticmeshes
+ 
 - 0.8.5 - 27/07/2017
  * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
  Now only need to import all .obj converted staticmeshes within the UE4 editor
+ 
 - 0.8.4 - 19/07/2017
   * u1/u2/ut2003/ut2004: invisible brushes are no longer being converted. This might slightly reduce some bsp holes cases.
   * ut99: fixed some textures not being converted with some specific packages (like with SGTech1.utx texture package) 
