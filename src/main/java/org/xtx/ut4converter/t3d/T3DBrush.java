@@ -36,7 +36,7 @@ public class T3DBrush extends T3DVolume {
 	public static enum BrushClass {
 
 		// UE1, UE2 Volume
-		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume,
+		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume, WaterVolume,
 		// UE3 and UE4 Volumes
 		PostProcessVolume, TriggerVolume, UTSlimeVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
 		/**
@@ -699,6 +699,11 @@ public class T3DBrush extends T3DVolume {
 		// UT3
 		if(brushClass == BrushClass.UTKillZVolume){
 			brushClass = BrushClass.KillZVolume;
+		}
+		
+		// UT2004
+		if(brushClass == BrushClass.WaterVolume){
+			brushClass = BrushClass.UTWaterVolume;
 		}
 		
 		// TODO handle other properties of volume like friction, ...
