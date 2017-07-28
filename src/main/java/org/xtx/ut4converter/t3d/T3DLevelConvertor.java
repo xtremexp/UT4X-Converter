@@ -336,22 +336,27 @@ public class T3DLevelConvertor extends Task<Object> {
 					continue;
 				}
 
-				// write parent actor
-				// actor not valid for conversion should not be written as well!
-				if (actor.isValidWriting() && actor.isValidConverting()) {
-					buffer = actor.toString();
+				try {
+					// write parent actor
+					// actor not valid for conversion should not be written as well!
+					if (actor.isValidWriting() && actor.isValidConverting()) {
+						buffer = actor.toString();
 
-					if (buffer != null) {
-						bwr.write(buffer);
+						if (buffer != null) {
+							bwr.write(buffer);
+						}
 					}
-				}
 
-				// write replacement actors
-				for (T3DActor repActor : actor.children) {
-					if (repActor.isValidWriting()) {
-						bwr.write(repActor.toString());
+					// write replacement actors
+					for (T3DActor repActor : actor.children) {
+						if (repActor.isValidWriting()) {
+							bwr.write(repActor.toString());
+						}
 					}
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, "Error while writting actor " + actor.getName() + ":", e);
 				}
+				
 			}
 
 			writeFooter();

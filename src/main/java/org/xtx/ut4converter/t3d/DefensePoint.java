@@ -75,7 +75,7 @@ public class DefensePoint extends T3DSound {
 		writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
 
-		if (bSniperSpot) {
+		if (bSniperSpot != null && bSniperSpot == Boolean.TRUE) {
 			sbf.append(IDT).append("\tbSniperSpot=True\n");
 
 		}
