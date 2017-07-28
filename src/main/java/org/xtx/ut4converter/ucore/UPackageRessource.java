@@ -471,7 +471,7 @@ public class UPackageRessource {
 
 		// umodel does export staticmeshes as .pskx or .psk
 		// therefore UT4 converter convert them to .obj
-		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
+		if (getType() == Type.STATICMESH) {
 			currentFileExt = "obj";
 		}
 
