@@ -222,6 +222,13 @@ public class UModelExporter extends UTPackageExtractor {
 				forceIsUsedInMap = true;
 			}
 		}
+		
+		/**
+		 * If package = map then force resource as being used in map
+		 */
+		if(packageName.toLowerCase().equals(this.mapConverter.getMapPackageName().toLowerCase())){
+			forceIsUsedInMap = true;
+		}
 
 		File exportedFile = null;
 		boolean isMaterial = false;
