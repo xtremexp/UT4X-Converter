@@ -2,7 +2,7 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.6
+- Version: 0.8.7
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -216,6 +216,12 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.7 - 29/07/2017
+ * all: fixed embedded sounds and staticmeshes in level package not being converted
+ * ut3: fixed critical crash when DefensePoint actor is being converted
+ * all: now if some actor fails to be converted won't make stop other actors to be converted
+
+
 - 0.8.6 - 28/07/2017
  * ut2003/ut2004: added conversion of WaterVolume, NewWeaponBase, NewHealthCharger
  * ut2003/ut2004: fixed conversion failure of trigger with liveproximity and humanplayerproximity trigger type
