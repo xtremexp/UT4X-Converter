@@ -15,6 +15,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
+import org.xtx.ut4converter.ucore.ue1.UnMath;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**
@@ -327,6 +328,8 @@ public class Geometry {
 				v.x *= mainScale.scale.x;
 				v.y *= mainScale.scale.y;
 				v.z *= mainScale.scale.z;
+				
+				//v = UnMath.applySheerRate(v, mainScale);
 			} else {
 				v.x /= mainScale.scale.x;
 				v.y /= mainScale.scale.y;
@@ -346,6 +349,8 @@ public class Geometry {
 				v.x *= postScale.scale.x;
 				v.y *= postScale.scale.y;
 				v.z *= postScale.scale.z;
+				
+				//v = UnMath.applySheerRate(v, postScale);
 			} else {
 				v.x /= postScale.scale.x;
 				v.y /= postScale.scale.y;
@@ -444,43 +449,43 @@ public class Geometry {
 
 		T3DPolygon p = new T3DPolygon();
 		p.setNormal(-1d, 0d, 0d);
-		p.setTexU(0d, 1d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(0d, 1d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(-w, -l, -h).addVertex(-w, -l, h).addVertex(-w, l, h).addVertex(-w, l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 1d, 0d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(-w, l, -h).addVertex(-w, l, h).addVertex(w, l, h).addVertex(w, l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(1d, 0d, 0d);
-		p.setTexU(0d, -1d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(0d, -1d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(w, l, -h).addVertex(w, l, h).addVertex(w, -l, h).addVertex(w, -l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, -1d, 0d);
-		p.setTexU(-1d, 0d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(-1d, 0d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(w, -l, -h).addVertex(w, -l, h).addVertex(-w, -l, h).addVertex(-w, -l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 0d, 1d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, 1d, 0d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, 1d, 0d);
 		p.addVertex(-w, l, h).addVertex(-w, -l, h).addVertex(w, -l, h).addVertex(w, l, h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 0d, -1d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, -1d, 0d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, -1d, 0d);
 		p.addVertex(-w, -l, -h).addVertex(-w, l, -h).addVertex(w, l, -h).addVertex(w, -l, -h);
 		polyList.add(p);
 
