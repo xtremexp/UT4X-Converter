@@ -2,7 +2,8 @@
 UT4 Converter Readme file
 ------------------------------
 
-- Version: 0.8.7
+- Version: 0.8.8
+- Release date: 30/07/2017
 - Author: XtremeXp
 - Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
 - Source Code: https://github.com/xtremexp/UT4Converter
@@ -216,6 +217,9 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.8 - 30/07/2017
+ * ut3: fixed sounds not being converted
+ 
 - 0.8.7 - 29/07/2017
  * all: fixed embedded sounds and staticmeshes in level package not being converted
  * ut3: fixed critical crash when DefensePoint actor is being converted
