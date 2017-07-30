@@ -142,6 +142,25 @@ public class UPackageRessource {
 			return exportedFiles;
 		}
 		
+		/**
+		 * Get exported file by extension
+		 * @param extension Extension (e.g: "bmp")
+		 * @return Exported file with that extension else null
+		 */
+		public File getExportedFileByExtension(final String extension){
+			if(this.exportedFiles == null || extension == null){
+				return null;
+			}
+			
+			for(File exportedFile : exportedFiles){
+				if(exportedFile.getName().endsWith(extension)){
+					return exportedFile;
+				}
+			}
+			
+			return null;
+		}
+		
 		public File getFirstExportedFile(){
 			if(this.exportedFiles == null || this.exportedFiles.isEmpty()){
 				return null;
@@ -174,7 +193,10 @@ public class UPackageRessource {
 			if(this.exportedFiles == null){
 				this.exportedFiles = new ArrayList<>();
 			}
-			this.exportedFiles.add(exportedFile);
+			
+			if(!this.exportedFiles.contains(exportedFile)){
+				this.exportedFiles.add(exportedFile);
+			}
 		}
 	}
 
@@ -349,7 +371,7 @@ public class UPackageRessource {
 	 */
 	public void export(UTPackageExtractor packageExtractor, boolean forceExport, boolean perfectMatchOnly) {
 
-		if ((needExport() || forceExport) && packageExtractor != null) {
+		if (packageExtractor != null && (needExport() || forceExport || packageExtractor.isForceSetNotExported())) {
 			try {
 				packageExtractor.extract(this, forceExport, perfectMatchOnly);
 			} catch (Exception ex) {

@@ -170,30 +170,35 @@ public class T3DUE2Terrain extends T3DActor {
 			File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator + heightMapTexture.getUnrealPackage().getName() + File.separator);
 			uccExporter.setForcedExportFolder(exportFolder);
 			uccExporter.setForceSetNotExported(true);
-			heightMapTexture.export(uccExporter, true);
+			heightMapTexture.export(uccExporter, true, true);
 
 			// Convert heightmap texture to .tiff
 			List<String> logs = new ArrayList<>();
-			File bmpHeightMap = heightMapTexture.getExportInfo().getFirstExportedFile();
-			File tiffHeightMap = new File(exportFolder + File.separator + bmpHeightMap.getName().split("\\.")[0] + ".tiff");
+			File bmpHeightMap = heightMapTexture.getExportInfo().getExportedFileByExtension("bmp");
+			
+			if(bmpHeightMap != null){
+				File tiffHeightMap = new File(exportFolder + File.separator + bmpHeightMap.getName().split("\\.")[0] + ".tiff");
 
-			String command = "\"" + Installation.getG16ConvertFile() + "\" \"" + bmpHeightMap + "\" \"" + tiffHeightMap + "\"";
+				String command = "\"" + Installation.getG16ConvertFile() + "\" \"" + bmpHeightMap + "\" \"" + tiffHeightMap + "\"";
 
-			mapConverter.getLogger().log(Level.INFO, "Converting " + bmpHeightMap.getName() + " to " + tiffHeightMap.getName() + " terrain texture");
+				mapConverter.getLogger().log(Level.INFO, "Converting " + bmpHeightMap.getName() + " to " + tiffHeightMap.getName() + " terrain texture");
 
-			Installation.executeProcess(command, logs);
+				Installation.executeProcess(command, logs);
 
-			BufferedImage image = ImageIO.read(tiffHeightMap);
-			heightMapTextureDimensions = new Dimension(image.getWidth(), image.getHeight());
-			Raster rs = image.getTile(0, 0);
+				BufferedImage image = ImageIO.read(tiffHeightMap);
+				heightMapTextureDimensions = new Dimension(image.getWidth(), image.getHeight());
+				Raster rs = image.getTile(0, 0);
 
-			int a[] = null;
-			heightMap = new int[image.getWidth()][image.getHeight()];
+				int a[] = null;
+				heightMap = new int[image.getWidth()][image.getHeight()];
 
-			for (int y = 0; y < rs.getWidth(); y++) {
-				for (int x = 0; x < rs.getHeight(); x++) {
-					heightMap[x][y] = rs.getPixel(x, y, a)[0];
+				for (int y = 0; y < rs.getWidth(); y++) {
+					for (int x = 0; x < rs.getHeight(); x++) {
+						heightMap[x][y] = rs.getPixel(x, y, a)[0];
+					}
 				}
+			} else {
+				mapConverter.getLogger().log(Level.INFO, "Could not find terrain heightmap texture for resource " + heightMapTexture.getFullName());
 			}
 
 		}

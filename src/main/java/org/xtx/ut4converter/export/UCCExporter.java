@@ -429,7 +429,7 @@ public final class UCCExporter extends UTPackageExtractor {
 					UPackageRessource uRessource = unrealPackage.findRessource(ressourceName);
 
 					if (uRessource != null) {
-						uRessource.getExportInfo().setExportedFile(exportedFile);
+						uRessource.getExportInfo().addExportedFile(exportedFile);
 						uRessource.parseNameAndGroup(ressourceName); // for
 																		// texture
 																		// db
