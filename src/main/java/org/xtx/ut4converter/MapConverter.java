@@ -832,7 +832,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						continue;
 					}
 
-					for(final File exportedFile : exportedFiles){
+					for(File exportedFile : exportedFiles){
 						if (exportedFile != null && exportedFile.length() > 0) {
 	
 							// Renaming exported files (e.g: Stream2.wav ->
@@ -843,7 +843,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 								// Some sounds and/or textures might need to be
 								// converted for correct import in UE4
 								if (ressource.needsConversion(this)) {
-									ressource.getExportInfo().replaceExportedFile(exportedFile, ressource.convert(logger, userConfig));
+									File newExportedFile = ressource.convert(logger, userConfig);
+									ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
+									exportedFile = newExportedFile;
 									wasConverted = true;
 								}
 								
