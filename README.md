@@ -217,6 +217,8 @@ Converter interfaces with these external tools:
 
 History
 ------------------------------
+- 0.8.9 - 01/08/2017
+
 - 0.8.8 - 30/07/2017
  * ut3: fixed sounds not being converted
  

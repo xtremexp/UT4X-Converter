@@ -213,7 +213,7 @@ public class T3DBrush extends T3DVolume {
 
 
 		// PostScale=(Scale=(X=1.058824,Y=1.250000,Z=0.920918),SheerAxis=SHEER_ZX)
-		else if (line.contains("MainScale=")) {
+		else if (line.contains("PostScale=")) {
 			postScale = new FScale();
 			
 			
