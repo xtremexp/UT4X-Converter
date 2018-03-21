@@ -24,12 +24,12 @@ public class MainApp extends Application {
 	/**
 	 * Program Name
 	 */
-	public static final String PROGRAM_NAME = "UT4 Converter";
+	public static final String PROGRAM_NAME = "UT4X Converter";
 
 	/**
 	 * Version of UT4 Converter
 	 */
-	public static final String VERSION = "0.8.9";
+	public static final String VERSION = "0.8.10";
 
 	/**
 	 * Author

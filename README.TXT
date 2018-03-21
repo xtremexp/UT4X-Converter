@@ -1,27 +1,26 @@
 
-UT4 Converter Readme file
-------------------------------
+# UT4 Converter Readme file
 
-- Version: 0.8.8
-- Release date: 30/07/2017
-- Author: XtremeXp
-- Download latest released version at: https://forums.unrealtournament.com/showthread.php?18198
-- Source Code: https://github.com/xtremexp/UT4Converter
+* Version: 0.8.9
+* Release date: 01/08/2017
+* Author: XtremeXp
+* Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
+* Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
+---
 
+# Description
 
-Description
-------------------------------
 UT4 Converter helps converting maps from Unreal (Tournament) previous games
 to Unreal Tournament 4.
+---
 
 
-UT games supported
-------------------------------
-- Unreal 1
-- Unreal 2
-- Unreal Tournament (1999)
-- Unreal Tournament 2003/2004
-- Unreal Tournament 3
+# UT games supported
+* Unreal 1
+* Unreal 2
+* Unreal Tournament (1999)
+* Unreal Tournament 2003/2004
+* Unreal Tournament 3
 
 Event if all unreal games are supported, since program is in early stages,
 conversion quality for unreal tournament 2003/2004 and unreal tournament 3
@@ -29,9 +28,9 @@ might be pretty bad.
 
 If you want to convert UT games to Unreal Tournament 3,
 download and use UT3 Converter program instead of UT4 Converter.
+---
 
-What is converted
-------------------------------
+# What is converted
 Here is the conversion table for all ut games about what the program can convert.
 
 |                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
@@ -47,54 +46,54 @@ Note:
 UT99/U1 Lightning: For Unreal Tournament (99) and Unreal 1, zoneinfo actor does not exist in UT4, since then
 StaticMesh conversion is not yet operational. Since UT3 is nearly full of staticmeshes, conversion
 is pretty bad. (same note for some ut2004 maps)
+---
 
-What is NOT converted
-------------------------------
-- Models
-- Terrain (UT2004 has partial support only)
-- Music (Unreal Tournament 3 only)
-- All custom things (scripts and pickups)
+# What is NOT converted
+* Models
+* Terrain (UT2004 has partial support only)
+* Music (Unreal Tournament 3 only)
+* All custom things (scripts and pickups)
 
 Note: staticmesh conversion is not fully automatic.
 You need to convert them manually using Blender software.
 Converter will do the job to get the right references and textures applied.
+---
 
-Requirements
-------------------------------
-* Windows 7 / Vista / 8 - 64 Bit Operating System
-* Java > 1.8.0_40 . www.java.com
+# Requirements
+* Windows 7/8/10 - 64 Bit Operating System
+* Java SE> 1.8.0_40. www.java.com
 * Unreal Tournament 4 (2015) Editor
 * One of the following previous UT games:
-  * Unreal 1
-  * Unreal 2
-  * Unreal Tournament
-  * Unreal Tournament 2003
-  * Unreal Tournament 2004
-  * Unreal Tournament 3
+  ° Unreal 1
+  ° Unreal 2
+  ° Unreal Tournament
+  ° Unreal Tournament 2003
+  ° Unreal Tournament 2004
+  ° Unreal Tournament 3
 * NConvert texture conversion program: http://www.xnview.com/en/nconvert/
 * UModel Unreal resource program extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
-- Install nconvert http://www.xnview.com/en/nconvert/
-- Install umodel http://www.gildor.org/en/projects/umodel
-- Decompress the ZIP archive to any folder of your choice.
-- Double-click on UT4-Converter-<version>.jar, the program should be launching.
+* Install nconvert http://www.xnview.com/en/nconvert/
+* Install umodel http://www.gildor.org/en/projects/umodel
+* Decompress the ZIP archive to any folder of your choice.
+* Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java technology version at www.java.com
-and create some "run.bat" batch file with notepad that you will save in the 
+and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
-"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
+"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 
-Detailed explanations about conversion is always displayed after each end of map conversion 
+Detailed explanations about conversion is always displayed after each end of map conversion
 in program.
+---
 
+# How to convert map?
 
-How to convert map?
-------------------------------
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
 For UT3 maps only:
@@ -107,14 +106,15 @@ For UT3 maps only:
 Note: this .t3d file is needed because the "ut3.com batchexport" command to export
 .ut3 level to .t3d file messes up the brush order.
 
-In UT4 Converter:
+---
+# In UT4 Converter:
 - Launch UT4 Converter
 - Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
 - In the conversion settings, press "Select" and choose the map
 - for ut3 only: select the .t3d file you previously created manually (see For UT3 maps only section)
 - Press ok and wait while the conversion is running (it might takes several minutes)
 
-In UT4 Editor:
+# In UT4 Editor:
 - Open the UT4 Editor
 - Create new level ("File -> New level ...") and select "Empty level"
 
@@ -140,15 +140,13 @@ In UT4 Editor:
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
 
-
 Note:
 - If after conversion your map got some bsp holes, remove all
 "sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
  The converter does remove most of them, but not all of them yet.
 
-
-Limitations / Issues / Troubleshooting
-------------------------------
+---
+# Limitations / Issues / Troubleshooting
 - [UT99] Some textures may not be correctly aligned
 - Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
 containing these actors (UE4-side bug)
@@ -161,24 +159,50 @@ You may use the "Door" actor or "Matinee" actor (not auto-converted yet)
 does not remove all of them, some "bsp holes" may appear (in that case try to find out all these brushes
 and remove them until bsp holes disapear)
 
-License
-------------------------------
+# License
 - No commercial use allowed
 - You can edit/share source code as well as binaries
 always keeping original author credits
 
-
+---
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
+YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
 CONVERTED MAP.
 
-How to build and run latest version ?
-------------------------------
-- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/index.html
-Then you will need to install one of these IDE.
-I highly recommend Eclipse IDE since it's much faster
+---
 
-With Netbeans IDE:
+# How to build and run latest version ?
+- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+Then you will need to install one of these IDE.
+- Note: UT4X converter cannot be built with JDK 9 for the moment.
+---
+
+# With [IntelliJ IDEA](https://www.jetbrains.com/idea/) (not-free):
+## Retrieve project
+- File -> New -> Project from Version Control -> Git
+- Set "Git Repository URL" to: "https://github.com/xtremexp/UT4X-Converter"
+- Click on "Clone"
+
+## Build
+- Menu: "Run" -> "Edit configuration"
+- Click on "+" then select "Maven"
+- Set "Command line" parameter to "clean install -e"
+- Save "Apply"/"OK" and go to menu "Run" -> "Run.."
+
+## Run
+- After building UT4X converter double click on
+- "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
+
+---
+## Optional (UI editing):
+- Install "Java FX Scene Builder 2": http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-1x-archive-2199384.html
+- Select project then "File" -> "Project structure..." -> "Artifacts"
+- Click on "+" and add "Java FX application" artifact
+- Select UI file (.fxml) right click -> "Open in SceneBuilder"
+
+---
+
+# With [Netbeans IDE](https://netbeans.org/downloads/) (free, embedded UI editing tool):
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
 - Set "Repository URL" = https://github.com/xtremexp/UT4Converter
@@ -189,22 +213,24 @@ Project will be saved by default in C:\Documents and Settings\<username>\My Docu
 Note:
 Once project has been imported to keep the project updated:
 Right click on project -> Team -> Pull
+---
 
-With Eclipse IDE:
-- Download and install "Eclipse IDE for Java Developers": https://eclipse.org/downloads/packages/eclipse-ide-java-developers/lunasr2
+# With [Eclipse IDE](https://www.eclipse.org/ide/) (free):
+- Download and install "Java IDE" version of Eclipse: https://www.eclipse.org/ide/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
-- Install "m2e-git" connect and click on finish. 
+- Install "m2e-git" connect and click on finish.
 - Restart again Eclipse for changes to apply and go back to "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
-- Set "SCM Url" to: "https://github.com/xtremexp/UT4Converter.git"
+- Set "SCM Url" to: "https://github.com/xtremexp/UT4X-Converter.git"
 - Click "Finish"
 - Right click on "UT4-Converter" project then "Run as" -> "Java application"
 Note:
 Once project has been imported to keep the project updated:
 Right click on project -> "Git" -> "Remote" -> "Pull"
+---
 
-Libraries / Technologies used
+# Libraries / Technologies used
 ------------------------------
 - Java 8 - http://www.java.com
 - Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
@@ -214,10 +240,11 @@ Libraries / Technologies used
 Converter interfaces with these external tools:
 - Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
 - UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
+---
 
-History
-------------------------------
+# History
 - 0.8.9 - 01/08/2017
+* u1, ut99: fixed some messed up brushes with PostScale property not being correctly parsed correctly.
 
 - 0.8.8 - 30/07/2017
  * ut3: fixed sounds not being converted
