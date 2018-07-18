@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.8.9
-* Release date: 01/08/2017
+* Version: 0.8.10
+* Release date: 18/07/2018
 * Author: XtremeXp
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -57,7 +57,7 @@ is pretty bad. (same note for some ut2004 maps)
 Note: staticmesh conversion is not fully automatic.
 You need to convert them manually using Blender software.
 Converter will do the job to get the right references and textures applied.
----
+--- 
 
 # Requirements
 * Windows 7/8/10 - 64 Bit Operating System
@@ -81,14 +81,14 @@ Installation and first start
 * Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java technology version at www.java.com
-and create some "run.bat" batch file with notepad that you will save in the
+and create some "run.bat" batch file with notepad that you will save in the 
 program folder with this command line:
-"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
+"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 
-Detailed explanations about conversion is always displayed after each end of map conversion
+Detailed explanations about conversion is always displayed after each end of map conversion 
 in program.
 ---
 
@@ -145,7 +145,7 @@ Note:
 "sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
  The converter does remove most of them, but not all of them yet.
 
----
+--- 
 # Limitations / Issues / Troubleshooting
 - [UT99] Some textures may not be correctly aligned
 - Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
@@ -164,9 +164,9 @@ and remove them until bsp holes disapear)
 - You can edit/share source code as well as binaries
 always keeping original author credits
 
----
+--- 
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
+YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
 CONVERTED MAP.
 
 ---
@@ -190,7 +190,7 @@ Then you will need to install one of these IDE.
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
 
 ## Run
-- After building UT4X converter double click on
+- After building UT4X converter double click on 
 - "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
 
 ---
@@ -219,7 +219,7 @@ Right click on project -> Team -> Pull
 - Download and install "Java IDE" version of Eclipse: https://www.eclipse.org/ide/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
-- Install "m2e-git" connect and click on finish.
+- Install "m2e-git" connect and click on finish. 
 - Restart again Eclipse for changes to apply and go back to "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4X-Converter.git"
@@ -240,9 +240,15 @@ Right click on project -> "Git" -> "Remote" -> "Pull"
 Converter interfaces with these external tools:
 - Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
 - UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
----
+--- 
 
 # History
+- 0.8.10 - 18/07/2018
+* all: fixed low quality texture
+* all: now tries to export with UCC with UModel fails to load package
+* ut2004: fixed no sound for jumppads
+* ut2004: changed default scale from 2.4 to 2.2
+
 - 0.8.9 - 01/08/2017
 * u1, ut99: fixed some messed up brushes with PostScale property not being correctly parsed correctly.
 

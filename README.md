@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.8.9
-* Release date: 01/08/2017
+* Version: 0.8.10
+* Release date: 18/07/2018
 * Author: XtremeXp
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -243,6 +243,12 @@ Converter interfaces with these external tools:
 --- 
 
 # History
+- 0.8.10 - 18/07/2018
+* all: fixed low quality texture
+* all: now tries to export with UCC with UModel fails to load package
+* ut2004: fixed no sound for jumppads
+* ut2004: changed default scale from 2.4 to 2.2
+
 - 0.8.9 - 01/08/2017
 * u1, ut99: fixed some messed up brushes with PostScale property not being correctly parsed correctly.
 
