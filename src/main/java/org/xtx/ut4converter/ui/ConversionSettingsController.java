@@ -94,9 +94,14 @@ public class ConversionSettingsController implements Initializable {
 	private CheckBox convMusicCheckBox;
 
 	/**
-	 * Default scale factor of converted maps from UE1/UE2 ut games to UT4
+	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
-	static final BigDecimal DEFAULT_SCALE_FACTOR_UE12_UE4 = new BigDecimal("2.4");
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE1_UE4 = new BigDecimal("2.4");
+	
+	/**
+	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
+	 */
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE2_UE4 = new BigDecimal("2.2");
 	
 	/**
 	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
@@ -178,12 +183,18 @@ public class ConversionSettingsController implements Initializable {
 
 		mapConverter = new MapConverter(inputGame, outputGame);
 		
-		if(mapConverter.getInputGame().engine.version <= 2){
-			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE12_UE4));
-		} else if (mapConverter.getInputGame().engine.version == 3) {
-			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
-		} else {
-			scaleFactorList.getSelectionModel().select("1");
+		
+		switch(mapConverter.getInputGame().engine.version){
+			case 1:
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE1_UE4));
+			case 2:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE2_UE4));
+			case 3:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+			case 4:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+			default:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
 		}
 
 		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
