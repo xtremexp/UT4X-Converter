@@ -122,7 +122,17 @@ public class UModelExporter extends UTPackageExtractor {
 		logger.log(Level.FINE, command);
 
 		Installation.executeProcess(command, logLines);
-
+		
+		final String failedLoadPackage = "UModel: bad command line: failed to load provided packages";
+		
+		// UMODEL was not able to load package
+		// we try using the basic ucc exporter one
+		if(logLines.contains(failedLoadPackage)){
+			final UCCExporter uccExporter = new UCCExporter(this.mapConverter);
+			logger.log(Level.WARNING, "Failed to load " + fileContainer.getName() + " with " + getName() + " testing with " + uccExporter.getName());
+			return uccExporter.extract(ressource, forceExport, perfectMatchOnly);
+		}
+		
 		ressource.getUnrealPackage().setExported(true);
 
 		for (String logLine : logLines) {

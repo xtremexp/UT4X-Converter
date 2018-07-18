@@ -727,6 +727,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 				if (exportedFile != null && exportedFile.length() > 0) {
 					try {
+						// TODO handle .t3d staticmeshes in case UMODEL could not load package
+						// and UCCExporter was used as replacement and generated .t3d staticmesh file
 						pskMesh = new PSKStaticMesh(exportedFile);
 						String mats = "";
 
