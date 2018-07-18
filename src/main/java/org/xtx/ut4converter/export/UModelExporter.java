@@ -111,13 +111,14 @@ public class UModelExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		String command = getExporterPath() + " -export -sounds -groups \"" + ressource.getUnrealPackage().getFileContainer(mapConverter) + "\"";
+		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
 		List<String> logLines = new ArrayList<>();
 
-		logger.log(Level.INFO, "Exporting " + ressource.getUnrealPackage().getFileContainer(mapConverter).getName() + " with " + getName());
+		logger.log(Level.INFO, "Exporting " + fileContainer.getName() + " with " + getName());
 		logger.log(Level.FINE, command);
 
 		Installation.executeProcess(command, logLines);
