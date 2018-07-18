@@ -6,8 +6,10 @@
 package org.xtx.ut4converter.t3d;
 
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
@@ -100,6 +102,10 @@ public class T3DJumpPad extends T3DSound {
 
 	@Override
 	public void convert() {
+		
+		if (jumpSound != null && mapConverter.convertSounds()) {
+			jumpSound.export(UTPackageExtractor.getExtractor(mapConverter, jumpSound));
+		}
 
 		if (mapConverter.getOutputGame() == UTGame.UT4) {
 
