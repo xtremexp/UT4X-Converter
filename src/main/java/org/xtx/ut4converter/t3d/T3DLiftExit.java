@@ -16,19 +16,23 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DLiftExit extends T3DSound {
 
-	T3DMover linkedLift;
+	/**
+	 * T3DMover (brush)
+	 * or T3DMoverSM (staticmesh)
+	 */
+	private T3DActor linkedLift;
 
-	Boolean bLiftJump;
+	private Boolean bLiftJump;
 
 	/**
 	 * UT4 UT3: bExitOnly
 	 */
-	Boolean bLiftExit;
+	private Boolean bLiftExit;
 
 	/**
 	 * UT99
 	 */
-	String liftTag;
+	private String liftTag;
 
 	public T3DLiftExit(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -39,7 +43,7 @@ public class T3DLiftExit extends T3DSound {
 
 		// UE1 -> "LiftTag=lastone"
 		if (line.contains("LiftTag=")) {
-			liftTag = line.split("\\=")[1];
+			liftTag = T3DUtils.getString(line);
 		}
 
 		// UT3: MyLiftCenter=LiftCenter'LiftCenter_5'
@@ -48,9 +52,14 @@ public class T3DLiftExit extends T3DSound {
 			// UT4 does not have UTLift_Center actor
 		}
 
+		// UT2003/4
+		else if(line.startsWith("bLiftJumpExit")){
+			this.bLiftJump = T3DUtils.getBoolean(line);
+		}
+
 		// UT3
 		else if (line.contains("bExitOnly=")) {
-			bLiftExit = Boolean.getBoolean(line.split("\\=")[1]);
+			bLiftExit = T3DUtils.getBoolean(line);
 		} else if (line.contains("LiftTag=")) {
 			liftTag = line.split("\\=")[1];
 		} else {
@@ -74,15 +83,22 @@ public class T3DLiftExit extends T3DSound {
 		sbf.append(IDT).append("\tIcon=Icon\n");
 
 		if (bLiftJump != null) {
-			sbf.append(IDT).append("\n" + "\tbLiftJump=").append(bLiftJump);
+			sbf.append(IDT).append("\tbLiftJump=").append(bLiftJump).append("\n");
 		}
 
 		if (bLiftExit != null) {
-			sbf.append(IDT).append("\n" + "\tbLiftExit=").append(bLiftExit);
+			sbf.append(IDT).append("\tbLiftExit=").append(bLiftExit).append("\n");
 		}
 
 		if (linkedLift != null) {
-			sbf.append(IDT).append("\tMyLift='").append(linkedLift.name).append("'\n");
+			String linkedLiftConvertedName = linkedLift.name;
+
+			// converter change the name and add the tag
+			if(linkedLift.tag != null) {
+				linkedLiftConvertedName += "_" + linkedLift.tag;
+			}
+
+			sbf.append(IDT).append("\tMyLift=Generic_Lift_C'").append(linkedLiftConvertedName).append("'\n");
 		}
 
 		sbf.append(IDT).append("\tRootComponent=Icon\n");
@@ -104,12 +120,12 @@ public class T3DLiftExit extends T3DSound {
 
 				// Note in previous UTs lifttag could be link to actor not
 				// necessarly movers (e.g: SpecialEvents)
-				if (actor instanceof T3DMover) {
+				if (actor instanceof T3DMover || actor instanceof T3DMoverSM) {
 
 					if (actor.tag != null && this.liftTag != null && this.liftTag.equals(actor.tag)) {
 						this.linkedTo.add(actor);
 						actor.linkedTo.add(this);
-						linkedLift = (T3DMover) actor;
+						this.linkedLift = actor;
 						break;
 					}
 				}
