@@ -279,7 +279,7 @@ public class T3DLight extends T3DSound {
 
 		// Skin=Texture'GenFX.LensFlar.3'
 		else if (line.startsWith("Skin=") || line.startsWith("Skins(")) {
-			if(this.skins != null){
+			if(this.skins == null){
 				this.skins = new ArrayList<>();
 			}
 
