@@ -61,7 +61,7 @@ Converter will do the job to get the right references and textures applied.
 
 # Requirements
 * Windows 7/8/10 - 64 Bit Operating System
-* Java SE> 1.8.0_40. www.java.com
+* Java 8 - https://www.java.com/fr/download/ (not yet compatible with Java 9+)
 * Unreal Tournament 4 (2015) Editor
 * One of the following previous UT games:
   ° Unreal 1
