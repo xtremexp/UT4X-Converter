@@ -82,8 +82,11 @@ public class T3DJumpPad extends T3DSound {
 		else if (line.contains("JumpSound") || line.contains("KickSound")) {
 			jumpSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
+		else {
+			return super.analyseT3DData(line);
+		}
 
-		return super.analyseT3DData(line);
+		return true;
 	}
 
 	@Override
