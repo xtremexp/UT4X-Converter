@@ -15,6 +15,9 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class for converting lights.
  * 
@@ -87,51 +90,53 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Default light effect Used in Unreal Engine 1 / 2
 	 */
-	UE12_LightEffect lightEffect = UE12_LightEffect.LE_None;
+	private UE12_LightEffect lightEffect = UE12_LightEffect.LE_None;
 
 	/**
 	 * Default light type (TODO check isdefaut) Used in Unreal Engine 1 / 2
 	 */
-	UE12_LightType lightType = UE12_LightType.LT_Steady;
+	private UE12_LightType lightType = UE12_LightType.LT_Steady;
+
+	/**
+	 * Skins of light for corona
+	 */
+	private List<UPackageRessource> skins;
 
 	/**
 	 * For spot lights UE3 only default 0
 	 */
-	Double innerConeAngle;
+	private Double innerConeAngle;
 
 	/**
 	 * UE1/2: LightCone - default 128 UE4: OuterConeAngle - default 44
 	 */
-	Double outerConeAngle;
+	private Double outerConeAngle;
 
-	// *** Unreal Engine 1 / 2 Properties ***
-	// Skin=Texture'GenFX.LensFlar.3'
-	UPackageRessource skin;
 
-	boolean isCorona;
+	private boolean isCorona;
 
 	/**
 	 * UE1/2 brightness UE1 range: 0-255 UE2 range: 0-Infinite
 	 */
-	float brightness;
+	private float brightness;
 
 	/**
 	 * UE1/2 hue
 	 */
-	float hue;
+	private float hue;
 
 	/**
 	 * UE1/2 saturation
 	 */
-	float saturation;
-	float radius;
+	private float saturation;
+	private float radius;
 
 	// *** Unreal Engine 3 / 4 Properties ***
 
 	/**
 	 * Range Value 0->1
 	 */
-	float red, green, blue, alpha = 255;
+	private float red, green, blue, alpha = 255;
 
 	/**
 	 * Unreal Engine 4 Default Intensity
@@ -155,19 +160,25 @@ public class T3DLight extends T3DSound {
 	 */
 	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 22;
 
-	Double intensity;
+	private Double intensity;
 
 	/**
 	 * UE4 Only
 	 */
-	Double lightFalloffExponent;
+	private Double lightFalloffExponent;
 
 	/**
 	 * Attenuation Radius (dunno how it works yet compared with sourceRadius)
 	 */
-	float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
+	private float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
 
-	UE4_Mobility mobility = UE4_Mobility.Static;
+	private UE4_Mobility mobility = UE4_Mobility.Static;
+
+	/**
+	 * As seen in UT2004.
+	 * Overrides spot light class to directional light if true
+	 */
+	private Boolean isDirectional;
 
 	/**
 	 *
@@ -267,8 +278,17 @@ public class T3DLight extends T3DSound {
 		}
 
 		// Skin=Texture'GenFX.LensFlar.3'
-		else if (line.startsWith("Skin=")) {
-			skin = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
+		else if (line.startsWith("Skin=") || line.startsWith("Skins(")) {
+			if(this.skins != null){
+				this.skins = new ArrayList<>();
+			}
+
+			this.skins.add(mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.TEXTURE));
+		}
+
+		// seen in ut2004 overrides spot light type ?
+		else if (line.startsWith("bDirectional=")) {
+			this.isDirectional = T3DUtils.getBoolean(line);
 		}
 
 		else {
@@ -305,65 +325,79 @@ public class T3DLight extends T3DSound {
 
 		if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
-			if (t3dClass.equals(UE3_LightActor.DirectionalLight.name()) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
-
-				if (t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
-					mobility = UE4_Mobility.Stationary;
-				}
-
-				t3dClass = UE4_LightActor.DirectionalLight.name();
-
-			} else if (t3dClass.equals(UE3_LightActor.PointLight.name()) || t3dClass.equals(UE3_LightActor.PointLightToggleable.name()) || t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
-
-				if (t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
-					mobility = UE4_Mobility.Movable;
-				} else if (t3dClass.equals(UE3_LightActor.PointLightToggleable.name())) {
-					mobility = UE4_Mobility.Stationary;
-				}
-
-				t3dClass = UE4_LightActor.PointLight.name();
-
-			} else if (t3dClass.equals(UE3_LightActor.SkyLight.name()) || t3dClass.equals(UE3_LightActor.SkyLightToggleable.name())) {
-				t3dClass = UE4_LightActor.SkyLight.name();
-
-			} else if (t3dClass.equals(UE3_LightActor.SpotLight.name()) || t3dClass.equals(UE3_LightActor.SpotLightMovable.name()) || t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
-
-				if (t3dClass.equals(UE3_LightActor.SpotLightMovable.name())) {
-					mobility = UE4_Mobility.Movable;
-				} else if (t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
-					mobility = UE4_Mobility.Stationary;
-				}
-
-				t3dClass = UE4_LightActor.SpotLight.name();
-			} else {
-				t3dClass = UE4_LightActor.PointLight.name();
-			}
+			convertUE3ClassAndMobility();
 
 		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
-			if (isSpotLight()) {
-				t3dClass = UE4_LightActor.SpotLight.name();
-			}
-
-			else if (isSunLight()) {
-				t3dClass = UE4_LightActor.DirectionalLight.name();
-			}
-
-			else {
-				t3dClass = UE4_LightActor.PointLight.name();
-			}
-
-			// disabled for the moment for perf issues
-			/**
-			 * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
-			 * UE12_LightEffect.LE_StaticSpot || lightEffect ==
-			 * UE12_LightEffect.LE_Unused || lightEffect ==
-			 * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; }
-			 * else { t3dClass = UE4_Mobility.Stationary; }
-			 */
+			convertUE4ClassAndMobility();
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
 		}
+	}
+
+	/**
+	 * Convert UE1/2 light class and mobility to UE4
+	 */
+	private void convertUE4ClassAndMobility() {
+
+		this.t3dClass = UE4_LightActor.PointLight.name();
+
+		if (isSpotLight()) {
+			this.t3dClass = UE4_LightActor.SpotLight.name();
+        }
+
+        // seen in some map light as spot but bDirectional set to true
+        if (isSunLight() || (this.isDirectional != null && this.isDirectional)) {
+			this.t3dClass = UE4_LightActor.DirectionalLight.name();
+        }
+
+
+		// disabled for the moment for perf issues
+		/**
+         * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
+         * UE12_LightEffect.LE_StaticSpot || lightEffect ==
+         * UE12_LightEffect.LE_Unused || lightEffect ==
+         * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; }
+         * else { t3dClass = UE4_Mobility.Stationary; }
+         */}
+
+	/**
+	 * Convert UE3 light class and mobility to UE4
+	 */
+	private void convertUE3ClassAndMobility() {
+		if (t3dClass.equals(UE3_LightActor.DirectionalLight.name()) || t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
+
+            if (t3dClass.equals(UE3_LightActor.DirectionalLightToggleable.name())) {
+                mobility = UE4_Mobility.Stationary;
+            }
+
+            t3dClass = UE4_LightActor.DirectionalLight.name();
+
+        } else if (t3dClass.equals(UE3_LightActor.PointLight.name()) || t3dClass.equals(UE3_LightActor.PointLightToggleable.name()) || t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
+
+            if (t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
+                mobility = UE4_Mobility.Movable;
+            } else if (t3dClass.equals(UE3_LightActor.PointLightToggleable.name())) {
+                mobility = UE4_Mobility.Stationary;
+            }
+
+            t3dClass = UE4_LightActor.PointLight.name();
+
+        } else if (t3dClass.equals(UE3_LightActor.SkyLight.name()) || t3dClass.equals(UE3_LightActor.SkyLightToggleable.name())) {
+            t3dClass = UE4_LightActor.SkyLight.name();
+
+        } else if (t3dClass.equals(UE3_LightActor.SpotLight.name()) || t3dClass.equals(UE3_LightActor.SpotLightMovable.name()) || t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
+
+            if (t3dClass.equals(UE3_LightActor.SpotLightMovable.name())) {
+                mobility = UE4_Mobility.Movable;
+            } else if (t3dClass.equals(UE3_LightActor.SpotLightToggleable.name())) {
+                mobility = UE4_Mobility.Stationary;
+            }
+
+            t3dClass = UE4_LightActor.SpotLight.name();
+        } else {
+            t3dClass = UE4_LightActor.PointLight.name();
+        }
 	}
 
 	/**
@@ -445,9 +479,13 @@ public class T3DLight extends T3DSound {
 	@Override
 	public void convert() {
 
-		if (isCorona && skin != null && mapConverter.convertTextures()) {
-			skin.export(UTPackageExtractor.getExtractor(mapConverter, skin));
-			replaceWith(T3DEmitter.createLensFlare(mapConverter, this));
+		if (isCorona && skins != null && !skins.isEmpty() && mapConverter.convertTextures()) {
+
+			for(final UPackageRessource skinMaterial : this.skins) {
+				skinMaterial.export(UTPackageExtractor.getExtractor(mapConverter, skinMaterial));
+				replaceWith(T3DEmitter.createLensFlare(mapConverter, this));
+			}
+
 			return;
 		}
 
@@ -534,13 +572,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Convert Hue Saturation Brightness values from old UT2004 lightning system
 	 * to Red Blue Green values with new UT3 lightning system
-	 * 
-	 * @param h
-	 *            Hue, float Range: 0->255
-	 * @param s
-	 *            Saturation, float Range: 0->255
-	 * @param b
-	 *            Brightness, float Range: 0->255
+	 *
 	 */
 	private void convertColorToRGB() {
 		// Saturation is reversed in Unreal Engine 1/2 compared with standards
