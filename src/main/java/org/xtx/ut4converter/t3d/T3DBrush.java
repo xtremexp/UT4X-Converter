@@ -38,7 +38,7 @@ public class T3DBrush extends T3DVolume {
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume, WaterVolume,
 		// UE3 and UE4 Volumes
-		PostProcessVolume, TriggerVolume, UTSlimeVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
+		PostProcessVolume, TriggerVolume, UTSlimeVolume, LavaVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
 		/**
 		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
 		 */
@@ -114,6 +114,11 @@ public class T3DBrush extends T3DVolume {
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
 	String modelName;
+
+	/**
+	 * Damage par sec for pain causing volumes (lava, slime ...)
+	 */
+	private Float damagePerSec;
 	
 	/**
 	 * Used for cull distances only
@@ -310,6 +315,10 @@ public class T3DBrush extends T3DVolume {
 			cullDistances.add(cullDistance);
 		}
 
+		else if(line.startsWith("DamagePerSec=")){
+			this.damagePerSec = T3DUtils.getFloat(line);
+		}
+
 		else {
 			return super.analyseT3DData(line);
 		}
@@ -329,9 +338,9 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone")
-				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name())) {
+				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name()) || t3dBrushClass.equals(BrushClass.LavaVolume.name())) {
 			brushClass = BrushClass.UTPainVolume;
-			forcedWrittenLines.add("DamagePerSec=10.000000");
+			this.damagePerSec = 20f;
 			return true;
 		}
 
@@ -528,6 +537,10 @@ public class T3DBrush extends T3DVolume {
 		sbf.append(IDT).append("\tBegin Object Name=\"BrushComponent0\"\n");
 		writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
+
+		if(this.damagePerSec != null){
+			sbf.append(IDT).append("\tDamagePerSec=").append(this.damagePerSec).append("\n");
+		}
 
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
 
