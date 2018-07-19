@@ -87,7 +87,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	/**
 	 * Exporter options of embedded UT extractor for Unreal Packages
 	 */
-	public static enum UccOptions {
+	public enum UccOptions {
 
 		UNKNOWN("UNKNOWN"), // fake option so will make crash export
 		LEVEL_T3D("Level t3d"), SOUND_WAV("Sound wav"), MUSIC_XM("Music xm"), MUSIC_S3M("Music s3m"), // todo

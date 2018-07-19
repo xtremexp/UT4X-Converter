@@ -59,9 +59,9 @@ public class InterpCurvePoint implements T3D {
 
 		/** Invalid or unknown curve type. */
 		CIM_Unknown
-	};
+	}
 
-	/**
+    /**
 	 * Time where the point should be reached by actor
 	 */
 	Double inVal;

@@ -5,8 +5,6 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.logging.Level;
-
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.MapConverter;
@@ -30,7 +28,7 @@ public class T3DLight extends T3DSound {
 	enum UE12_LightEffect {
 		LE_None, LE_TorchWaver, LE_FireWaver, LE_WateryShimmer, LE_Searchlight, LE_SlowWave, LE_FastWave, LE_CloudCast, LE_StaticSpot, LE_Shock, LE_Disco, LE_Warp, LE_Spotlight, LE_NonIncidence, LE_Shell, LE_OmniBumpMap, LE_Interference, LE_Cylinder, LE_Rotor, LE_Unused,
 		// Unreal Engine 2 new light effects
-		LE_Sunlight, LE_Spotlight2, LE_SquareSpotlight, LE_QuadraticNonIncidence;
+		LE_Sunlight, LE_Spotlight2, LE_SquareSpotlight, LE_QuadraticNonIncidence
 	}
 
 	/**
@@ -53,16 +51,16 @@ public class T3DLight extends T3DSound {
 	 * Light actors for UT99. Basically are normal lights with either some skin
 	 * or special light effect + type TODO move out this to some "core class"
 	 */
-	public static enum UE12_LightActors {
+	public enum UE12_LightActors {
 		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, SpotLight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight,
 		// Unreal Engine 2 new light actors
-		Sunlight;
+		Sunlight
 	}
 
 	/**
 	 *
 	 */
-	public static enum UE3_LightActor {
+	public enum UE3_LightActor {
 
 		DirectionalLight, DirectionalLightToggleable,
 		/**
@@ -82,8 +80,8 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Unreal Engine 4 light actors TODO check UE3 (might be same)
 	 */
-	public static enum UE4_LightActor {
-		PointLight, SkyLight, SpotLight, DirectionalLight;
+	public enum UE4_LightActor {
+		PointLight, SkyLight, SpotLight, DirectionalLight
 	}
 
 	/**

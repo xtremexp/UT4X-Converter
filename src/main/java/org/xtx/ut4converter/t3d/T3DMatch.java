@@ -50,7 +50,7 @@ public class T3DMatch {
 	 * Root component type for UT4 actor. Used when writting converted actor for
 	 * UT4
 	 */
-	public static enum UE4_RCType {
+	public enum UE4_RCType {
 
 		/**
          *

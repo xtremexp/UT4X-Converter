@@ -650,12 +650,9 @@ public class UPackageRessource {
 
 		// ucc exporter exports malformed .dds textures ...
 		// that can't be imported in UE4
-		if (mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
-			return true;
-		}
+        return mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter);
 
-		return false;
-	}
+    }
 
 	/**
 	 * Convert ressource to good format if needed

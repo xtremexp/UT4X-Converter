@@ -73,7 +73,7 @@ public class T3DSound extends T3DActor {
 	 * 
 	 * Ambient sound actors for UT3/UE3
 	 */
-	public static enum UE3_AmbientSoundActor {
+	public enum UE3_AmbientSoundActor {
 		AmbientSound, AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
 	}
 

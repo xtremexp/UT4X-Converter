@@ -92,7 +92,7 @@ public class UnMath {
 
 	}
 
-	public static enum ESheerAxis {
+	public enum ESheerAxis {
 		SHEER_NONE, SHEER_XY, SHEER_XZ, SHEER_YX, SHEER_YZ, SHEER_ZX, SHEER_ZY
 	}
 
@@ -212,9 +212,9 @@ public class UnMath {
 			this.sheerAxis = ESheerAxis.SHEER_NONE;
 		}
 
-	};
+	}
 
-	/**
+    /**
 	 * 
 	 * Code from:
 	 * https://github.com/stephank/surreal/blob/master/Core/Inc/UnMath.h

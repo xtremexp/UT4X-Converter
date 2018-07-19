@@ -39,7 +39,7 @@ public class MainApp extends Application {
 	/**
 	 * All scenes should be enumerated here
 	 */
-	public static enum FXMLoc {
+	public enum FXMLoc {
 
 		MAIN("/fxml/Scene.fxml"), WELCOME("/fxml/WelcomeView.fxml"), SETTINGS("/fxml/SettingsScene.fxml"), CONV_SETTINGS("/fxml/ConversionSettings.fxml"), CONVERSION("/fxml/ConversionView.fxml");
 
@@ -78,7 +78,7 @@ public class MainApp extends Application {
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(FXMLoc.MAIN.path));
-			rootLayout = (BorderPane) loader.load();
+			rootLayout = loader.load();
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
@@ -93,8 +93,7 @@ public class MainApp extends Application {
 						stop();
 					} catch (Exception e) {
 					}
-					;
-					System.exit(0);
+                    System.exit(0);
 				}
 			});
 
@@ -122,7 +121,7 @@ public class MainApp extends Application {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(name));
-			Pane view = (Pane) loader.load();
+			Pane view = loader.load();
 
 			rootLayout.setCenter(view);
 

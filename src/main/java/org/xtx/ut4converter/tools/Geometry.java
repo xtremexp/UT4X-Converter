@@ -15,7 +15,6 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
-import org.xtx.ut4converter.ucore.ue1.UnMath;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**

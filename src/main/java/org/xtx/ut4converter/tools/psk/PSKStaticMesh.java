@@ -96,9 +96,9 @@ public class PSKStaticMesh {
 	}
 
 	public interface BinReadWrite {
-		public abstract void write(FileOutputStream bos) throws IOException;
+		void write(FileOutputStream bos) throws IOException;
 
-		public abstract void read(ByteBuffer bf);
+		void read(ByteBuffer bf);
 	}
 
 	/**

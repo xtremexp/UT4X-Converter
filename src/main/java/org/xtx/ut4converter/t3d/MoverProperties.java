@@ -48,9 +48,9 @@ public class MoverProperties implements T3D {
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
 	 */
-	List<Vector3d> savedRotations = new ArrayList<>();;
+	List<Vector3d> savedRotations = new ArrayList<>();
 
-	/**
+    /**
 	 * How long it takes for the mover to get to next position
 	 */
 	Double moveTime;

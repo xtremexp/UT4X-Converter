@@ -1,7 +1,6 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.t3d.T3DBrush.CullDistance;
 
 /**
  * WIP class

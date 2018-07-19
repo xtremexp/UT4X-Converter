@@ -34,9 +34,9 @@ public class FJSMeshTri implements BinReadWrite {
 	class FMeshByteUV {
 		byte u;
 		byte v;
-	};
+	}
 
-	@Override
+    @Override
 	public void write(FileOutputStream bos) throws IOException {
 		// TODO Auto-generated method stub
 

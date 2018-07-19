@@ -229,7 +229,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	private void fixUt3BrushOrder(File t3dUserFile) throws FileNotFoundException, IOException {
+	private void fixUt3BrushOrder(File t3dUserFile) throws IOException {
 
 		logger.info("Fixing ut3 brush order with " + t3dUserFile);
 		// Read right order of brushes

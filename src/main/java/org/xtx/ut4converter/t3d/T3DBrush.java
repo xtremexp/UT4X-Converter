@@ -33,7 +33,7 @@ public class T3DBrush extends T3DVolume {
 
 	protected BrushClass brushClass = BrushClass.Brush;
 
-	public static enum BrushClass {
+	public enum BrushClass {
 
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume, WaterVolume,
@@ -68,14 +68,14 @@ public class T3DBrush extends T3DVolume {
 	 * UE1/2/3
 	 */
 	private enum UE123_BrushType {
-		CSG_Active, CSG_Add, CSG_Subtract, CSG_Intersect, CSG_Deintersect;
+		CSG_Active, CSG_Add, CSG_Subtract, CSG_Intersect, CSG_Deintersect
 	}
 
 	/**
 	 * UE4
 	 */
 	private enum UE4_BrushType {
-		Brush_Subtract, Brush_Add;
+		Brush_Subtract, Brush_Add
 	}
 
 	private String brushType;

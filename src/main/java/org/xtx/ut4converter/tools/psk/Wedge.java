@@ -53,7 +53,7 @@ public class Wedge implements BinReadWrite {
 			BinUtils.writeInt(bos, (int) pointIndex);
 			BinUtils.writeFloat(bos, u);
 			BinUtils.writeFloat(bos, v);
-			BinUtils.writeInt(bos, (int) matIndexInt);
+			BinUtils.writeInt(bos, matIndexInt);
 		} else {
 			BinUtils.writeShort(bos, (short) pointIndex);
 			bos.write(ByteBuffer.allocate(2).array());

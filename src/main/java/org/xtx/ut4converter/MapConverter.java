@@ -1151,12 +1151,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	Map<String, String> nameToPackage = new HashMap<>();
 
-	private void loadNameToPackage() throws FileNotFoundException, IOException {
+	private void loadNameToPackage() throws IOException {
 
 		File dbFile = new File(Installation.getProgramFolder() + File.separator + "conf" + File.separator + inputGame.shortName + "TexNameToPackage.txt");
 
 		if (dbFile.exists()) {
-			try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr);) {
+			try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr)) {
 
 				String line;
 

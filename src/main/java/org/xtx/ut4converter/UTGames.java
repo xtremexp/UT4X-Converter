@@ -27,7 +27,7 @@ public class UTGames {
 	/**
 	 * List all unreal engines
 	 */
-	public static enum UnrealEngine {
+	public enum UnrealEngine {
 
 		/**
          *
@@ -80,7 +80,7 @@ public class UTGames {
 	/**
 	 * List all UT Games
 	 */
-	public static enum UTGame {
+	public enum UTGame {
 
 		/**
 		 * Undefined

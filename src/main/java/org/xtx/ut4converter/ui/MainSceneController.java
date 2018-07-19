@@ -167,7 +167,7 @@ public class MainSceneController implements Initializable {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(FXMLoc.SETTINGS.getPath()));
-			AnchorPane page = (AnchorPane) loader.load();
+			AnchorPane page = loader.load();
 
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Settings");
@@ -285,7 +285,7 @@ public class MainSceneController implements Initializable {
 			if (checkGamePathSet(inputGame, outputGame)) {
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
-				AnchorPane page = (AnchorPane) loader.load();
+				AnchorPane page = loader.load();
 
 				Stage dialogStage = new Stage();
 				dialogStage.setTitle("Conversion Settings");
