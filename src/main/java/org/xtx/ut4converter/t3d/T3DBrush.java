@@ -749,14 +749,13 @@ public class T3DBrush extends T3DVolume {
 		// UTSlimeVolume does not exists in UT4
 		else if (brushClass == BrushClass.UTSlimeVolume || brushClass == BrushClass.UTLavaVolume || brushClass == BrushClass.LavaVolume || brushClass == BrushClass.PressureVolume) {
 			brushClass = BrushClass.UTPainVolume;
-			physicsVolumeebWaterVolume = Boolean.FALSE;
 
 			if(this.damagePerSec == null){
 				this.damagePerSec = 20f;
 			}
 
-			if(brushClass != BrushClass.PressureVolume){
-				this.physicsVolumeFluidFriction = 1f;
+			if(brushClass == BrushClass.PressureVolume){
+				this.physicsVolumeebWaterVolume = Boolean.FALSE;
 			}
 		}
 
