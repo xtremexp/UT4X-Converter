@@ -126,6 +126,15 @@ public class SupportedClasses {
 		// TODO move zones to match with T3DZoneInfo.class
 		putUtClass(T3DBrush.class, "Brush", "LavaZone", "WaterZone", "SlimeZone", "NitrogenZone", "PressureZone", "VacuumZone", "BlockAll");
 
+        for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
+
+            // mover is special case because is dependant of staticmesh for UE2
+            // not brush (UE1)
+            if (brushClass != T3DBrush.BrushClass.Mover) {
+                putUtClass(T3DBrush.class, brushClass.name());
+            }
+        }
+
 		putUtClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
 				"LoopMover", "InterpActor");
 
@@ -135,14 +144,7 @@ public class SupportedClasses {
 		putUtClass(T3DTrigger.class,  "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 				"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
 
-		for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
 
-			// mover is special case because is dependant of staticmesh for UE2
-			// not brush (UE1)
-			if (brushClass != T3DBrush.BrushClass.Mover) {
-				putUtClass(T3DBrush.class, brushClass.name());
-			}
-		}
 
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			for (T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()) {

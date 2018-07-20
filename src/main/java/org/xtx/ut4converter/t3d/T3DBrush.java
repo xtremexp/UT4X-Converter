@@ -37,6 +37,9 @@ public class T3DBrush extends T3DVolume {
 
 		// UE1, UE2 Volume
 		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume, WaterVolume,
+		LadderVolume, PressureVolume, SnipingVolume, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
+		HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume,
+
 		// UE3 and UE4 Volumes
 		PostProcessVolume, TriggerVolume, UTSlimeVolume, LavaVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
 		/**
@@ -50,7 +53,11 @@ public class T3DBrush extends T3DVolume {
 		 */
 		ReverbVolume, DynamicTriggerVolume,
 		// Specific UE4 Volume
-		AudioVolume, PainCausingVolume, LightmassImportanceVolume, NavMeshBoundsVolume;
+		AudioVolume, PainCausingVolume, LightmassImportanceVolume, NavMeshBoundsVolume,
+
+		// UT4 specific volume
+		UTGameVolume, UTCustomPhysicsVolume, UTNoCameraVolume, UTNavBlockingVolume
+		;
 
 		public static BrushClass getBrushClass(String t3dBrushClass) {
 
@@ -119,6 +126,16 @@ public class T3DBrush extends T3DVolume {
 	 * Damage par sec for pain causing volumes (lava, slime ...)
 	 */
 	private Float damagePerSec;
+
+	/**
+	 * Used for UT pain volumes
+	 */
+	private Boolean physicsVolumeebWaterVolume;
+
+	/**
+	 * Used for UT pain volumes
+	 */
+	private Float physicsVolumeFluidFriction;
 	
 	/**
 	 * Used for cull distances only
@@ -542,6 +559,14 @@ public class T3DBrush extends T3DVolume {
 			sbf.append(IDT).append("\tDamagePerSec=").append(this.damagePerSec).append("\n");
 		}
 
+		if(this.physicsVolumeebWaterVolume != null){
+			sbf.append(IDT).append("\tbWaterVolume=").append(this.physicsVolumeebWaterVolume).append("\n");
+		}
+
+		if(this.physicsVolumeFluidFriction != null){
+			sbf.append(IDT).append("\tFluidFriction=").append(this.physicsVolumeFluidFriction).append("\n");
+		}
+
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
 
 		// UE3 only CullDistanceVolume
@@ -710,27 +735,29 @@ public class T3DBrush extends T3DVolume {
 		}
 		
 		// UT3
-		if(brushClass == BrushClass.UTKillZVolume){
+		if(brushClass == BrushClass.UTKillZVolume || brushClass == BrushClass.xFallingVolume){
 			brushClass = BrushClass.KillZVolume;
 		}
 		
 		// UT2004
-		if(brushClass == BrushClass.WaterVolume){
+		else if(brushClass == BrushClass.WaterVolume){
 			brushClass = BrushClass.UTWaterVolume;
 		}
 		
 		// TODO handle other properties of volume like friction, ...
 		// maybe add a super-class T3DVolume?
 		// UTSlimeVolume does not exists in UT4
-		if (brushClass == BrushClass.UTSlimeVolume) {
+		else if (brushClass == BrushClass.UTSlimeVolume || brushClass == BrushClass.UTLavaVolume || brushClass == BrushClass.LavaVolume || brushClass == BrushClass.PressureVolume) {
 			brushClass = BrushClass.UTPainVolume;
-			forcedWrittenLines.add("\tDamagePerSec=10.000000");
-		}
+			physicsVolumeebWaterVolume = Boolean.FALSE;
 
-		// UTSlimeVolume does not exists in UT4
-		if (brushClass == BrushClass.UTLavaVolume) {
-			brushClass = BrushClass.UTPainVolume;
-			forcedWrittenLines.add("\tDamagePerSec=60.000000");
+			if(this.damagePerSec == null){
+				this.damagePerSec = 20f;
+			}
+
+			if(brushClass != BrushClass.PressureVolume){
+				this.physicsVolumeFluidFriction = 1f;
+			}
 		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
