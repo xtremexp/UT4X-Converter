@@ -132,7 +132,8 @@ public class SupportedClasses {
 		//putUtClass()
 		putUtClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
-		putUtClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger");
+		putUtClass(T3DTrigger.class,  "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
+				"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
 
 		for (T3DBrush.BrushClass brushClass : T3DBrush.BrushClass.values()) {
 
