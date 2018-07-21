@@ -1,5 +1,8 @@
 package org.xtx.ut4converter.tools.t3dmesh;
 
+import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
+import org.xtx.ut4converter.tools.psk.Material;
+
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +60,13 @@ public class StaticMesh {
     }
 
     public static void main(final String args[]){
-        final File t3dFile = new File("E:\\TEMP\\UT4X-Converter\\Converted\\DM-OSR-Cheops\\StaticMesh\\DM-OSR-Cheops_Floor_lift.t3d");
+        final File t3dFile = new File("E:\\TEMP\\UT4X-Converter\\Converted\\DM-OSR-Cheops\\StaticMesh\\DM-OSR-Cheops_Floor_lift.obj");
         final StaticMesh staticMesh = new StaticMesh(t3dFile);
-        staticMesh.getTriangles();
+
+        final File mtlFile = new File("E:\\TEMP\\test.mtl");
+        final File objFile = new File("E:\\TEMP\\test.obj");
+
+        final ObjStaticMesh objStaticMesh = new ObjStaticMesh(staticMesh);
+        objStaticMesh.exportToObj(mtlFile, objFile);
     }
 }

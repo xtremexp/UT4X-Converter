@@ -108,10 +108,7 @@ public class PSKStaticMesh {
 	 */
 	public void write(File f) throws IOException {
 
-		FileOutputStream fos = null;
-
-		try {
-			fos = new FileOutputStream(f);
+		try (final FileOutputStream fos = new FileOutputStream(f)) {
 
 			// Write header
 			ChunkHeader ch = new ChunkHeader(CHUNK_HEADER_HEAD_ID, null, 0);
@@ -158,8 +155,6 @@ public class PSKStaticMesh {
 			// Write extra uvs 2
 			Chunk chExtrauv2s = new Chunk(CHUNK_HEADER_EXTRAUV2_ID, extraUv2s, ExtraUv.DATA_SIZE);
 			chExtrauv2s.write(fos);
-		} finally {
-			fos.close();
 		}
 	}
 
@@ -417,7 +412,6 @@ public class PSKStaticMesh {
 				} catch (Exception e) {
 					System.out.println(" ERROR ! ");
 					e.printStackTrace();
-					continue;
 				}
 			}
 
