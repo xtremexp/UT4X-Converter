@@ -747,7 +747,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						// and change their name to fix with <packagename>_<group>_<name>_mat convention
 
 						// static mesh exported by UModel
-						if("psk".equals(fileExt)) {
+						if("psk".equals(fileExt) || "pskx".equals(fileExt)) {
 							final PSKStaticMesh pskMesh = listAndRenameMaterialsForPsk(exportedFile);
 							pskMesh.exportToObj(mtlObjFile, objFile);
 
@@ -820,7 +820,16 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	private String listMatAndGetNewMatName(final String matName) {
 
 		if (matName != null) {
-            final UPackageRessource matRessource = findRessourceByNameOnly(matName, Type.TEXTURE);
+			UPackageRessource matRessource;
+
+			// material name containing full info packagename.group.name
+			if(matName.contains(".")){
+				matRessource = getUPackageRessource(matName, Type.TEXTURE);
+			}
+			// material name without package and group info
+			else {
+				matRessource = findRessourceByNameOnly(matName, Type.TEXTURE);
+			}
 
             if (matRessource != null) {
 
@@ -828,16 +837,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                 if (matRessource.getMaterialInfo() != null) {
                     matRessource.getMaterialInfo().findRessourcesFromNames(this);
 
-                    if (matRessource.getMaterialInfo().getDiffuse() != null) {
-                        UPackageRessource diffuse = matRessource.getMaterialInfo().getDiffuse();
-                        matRessource.getMaterialInfo().setIsUsedInMap(true);
+					UPackageRessource diffuse = matRessource.getMaterialInfo().getDiffuse();
 
-                        if (diffuse != null) {
-                            matRessource.replaceWith(diffuse);
-                            diffuse.setUsedInStaticMesh(true);
-                        }
+                    if (diffuse != null) {
+						matRessource.replaceWith(diffuse);
+
+                        diffuse.setIsUsedInMap(true);
+						diffuse.setUsedInStaticMesh(true);
                     }
                 }
+
+                // export material if it has not been exported yet
+                if(!matRessource.isExported() && this.convertTextures()) {
+					matRessource.export(UTPackageExtractor.getExtractor(this, matRessource));
+				}
 
                 matRessource.setIsUsedInMap(true);
                 matRessource.setUsedInStaticMesh(true);
