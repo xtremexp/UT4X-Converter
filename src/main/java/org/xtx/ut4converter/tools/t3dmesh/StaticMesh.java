@@ -1,7 +1,6 @@
 package org.xtx.ut4converter.tools.t3dmesh;
 
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
-import org.xtx.ut4converter.tools.psk.Material;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -67,6 +66,6 @@ public class StaticMesh {
         final File objFile = new File("E:\\TEMP\\test.obj");
 
         final ObjStaticMesh objStaticMesh = new ObjStaticMesh(staticMesh);
-        objStaticMesh.exportToObj(mtlFile, objFile);
+        objStaticMesh.export(mtlFile, objFile);
     }
 }

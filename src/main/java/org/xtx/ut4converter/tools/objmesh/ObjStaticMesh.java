@@ -75,7 +75,7 @@ public class ObjStaticMesh {
         }
     }
 
-    public void exportToObj(final File mtlFile, final File objFile){
+    public void export(final File mtlFile, final File objFile){
         writeMtlObjFile(mtlFile);
         writeObjFile(objFile, mtlFile);
     }

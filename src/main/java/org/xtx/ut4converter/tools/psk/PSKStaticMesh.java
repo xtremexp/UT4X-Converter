@@ -300,7 +300,13 @@ public class PSKStaticMesh {
 	public List<RawWeight> getRawWeights() {
 		return rawWeights;
 	}
-	
+
+	/**
+	 * TODO move/delete to ObjStaticMesh class
+	 * @param mtlFile
+	 * @param objFile
+	 */
+	@Deprecated
 	public void exportToObj(final File mtlFile, final File objFile){
 		writeMtlObjFile(mtlFile);
 		writeObjFile(objFile, mtlFile);

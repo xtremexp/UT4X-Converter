@@ -1,5 +1,9 @@
 package org.xtx.ut4converter.tools.objmesh;
 
+
+/**
+ * TODO handle properties of .obj material info
+ */
 public class ObjMaterial {
 
     /**
@@ -14,7 +18,7 @@ public class ObjMaterial {
      fw.write("illum 2\n");
      */
 
-    private final String materialName;
+    private String materialName;
 
 
     public ObjMaterial(final String materialName){
@@ -23,5 +27,9 @@ public class ObjMaterial {
 
     public String getMaterialName() {
         return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 }
