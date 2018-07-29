@@ -1,17 +1,19 @@
 package org.xtx.ut4converter.tools.vertmesh;
 
+import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
 /**
- * Class for reading vertmesh files (.3d files)
+ * Class for reading vertmesh files ( *d.3d files)
  * 
  * @author XtremeXp
  *
@@ -37,13 +39,17 @@ public class VertMesh {
 
 	private void init() {
 		dataHead = new FJSDataHeader();
-		faces = new ArrayList<>();
+		faces = new LinkedList<>();
 	}
 
 	
 	
 	public FJSDataHeader getDataHead() {
 		return dataHead;
+	}
+
+	public List<FJSMeshTri> getFaces() {
+		return faces;
 	}
 
 	public void read() throws Exception {
@@ -66,6 +72,7 @@ public class VertMesh {
 			for(int i=0; i < dataHead.getNumPolys() ; i++){
 				FJSMeshTri face = new FJSMeshTri();
 				face.read(buffer);
+				System.out.println(face.toString());
 				faces.add(face);
 			}
 		}
@@ -81,13 +88,19 @@ public class VertMesh {
 
 	public static void main(String args[]) {
 
-		File f = new File("C:\\Temp\\umodel_win32\\UmodelExport\\UnrealShare\\VertMesh\\Female1_d.3d");
+		File f = new File("E:\\TEMP\\bandage_d.3d");
 
 		VertMesh vm = new VertMesh(f);
 		try {
 			System.out.println("Reading ...");
 			vm.read();
 			System.out.println(vm.getDataHead());
+
+			// test VertMesh to .obj conversion
+			final ObjStaticMesh objStaticMesh = new ObjStaticMesh(vm);
+			final File mtlFile = new File("E:\\TEMP\\VertMesh.mtl");
+			final File objFile = new File("E:\\TEMP\\VertMesh.obj");
+			objStaticMesh.export(mtlFile, objFile);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

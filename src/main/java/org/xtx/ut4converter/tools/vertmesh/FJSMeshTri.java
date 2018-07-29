@@ -1,12 +1,15 @@
 package org.xtx.ut4converter.tools.vertmesh;
 
+import org.xtx.ut4converter.tools.BinUtils;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.xtx.ut4converter.tools.BinUtils;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
-
+/**
+ * Representation of face for VertMesh
+ */
 public class FJSMeshTri implements BinReadWrite {
 
 	/**
@@ -18,12 +21,12 @@ public class FJSMeshTri implements BinReadWrite {
 	 * BYTE Flags; // Unreal mesh flags (currently unused).
 	 */
 
-	short iVertex[]; // 3
-	byte type;
-	byte color;
-	FMeshByteUV[] tex; // 3
-	byte textureNum;
-	byte flags;
+	private short iVertex[]; // 3
+	private byte type;
+	private byte color;
+	private FMeshByteUV[] tex; // 3
+	private byte textureNum;
+	private byte flags;
 
 	/**
 	 * Texture coordinates associated with a vertex and one or more mesh
@@ -31,15 +34,35 @@ public class FJSMeshTri implements BinReadWrite {
 	 * same texture coordinates at the vertex.
 	 *
 	 */
-	class FMeshByteUV {
+	public class FMeshByteUV {
 		byte u;
 		byte v;
+
+		public byte getU() {
+			return u;
+		}
+
+		public byte getV() {
+			return v;
+		}
 	}
 
     @Override
 	public void write(FileOutputStream bos) throws IOException {
 		// TODO Auto-generated method stub
 
+	}
+
+	public short[] getiVertex() {
+		return iVertex;
+	}
+
+	public FMeshByteUV[] getTex() {
+		return tex;
+	}
+
+	public byte getTextureNum() {
+		return textureNum;
 	}
 
 	@Override
