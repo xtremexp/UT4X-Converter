@@ -26,7 +26,7 @@ public class T3DTrigger extends T3DBrush {
 		/**
 		 * Unreal 2 - Trigger activated by using it
 		 */
-		TT_USE
+		TT_Use
 	}
 
 	public T3DTrigger(MapConverter mc, String t3dClass) {
