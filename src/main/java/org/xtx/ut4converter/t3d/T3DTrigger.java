@@ -37,6 +37,16 @@ public class T3DTrigger extends T3DBrush {
 	
 	@Override
 	public void convert() {
+
+		// TriggerVolume must have radius or height else UT4 editor will crash !
+		if(collisionHeight == 0d){
+			collisionHeight = 40d;
+		}
+
+		if(collisionRadius == 0d){
+			collisionRadius = 40d;
+		}
+
 		polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
 
 		super.convert();
