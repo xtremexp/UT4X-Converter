@@ -1,43 +1,13 @@
 package org.xtx.ut4converter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.AtomicMoveNotSupportedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
-
-import javax.imageio.spi.IIORegistry;
-import javax.xml.bind.JAXBException;
-
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.export.CopyExporter;
-import org.xtx.ut4converter.export.SimpleTextureExtractor;
-import org.xtx.ut4converter.export.UCCExporter;
-import org.xtx.ut4converter.export.UModelExporter;
-import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.export.*;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
 import org.xtx.ut4converter.t3d.T3DRessource;
@@ -55,6 +25,16 @@ import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.TableRowLog;
+
+import javax.imageio.spi.IIORegistry;
+import javax.xml.bind.JAXBException;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -530,7 +510,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			
 			logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
 			
-			if (logFile != null && logFile.exists()) {
+			if (logFile.exists()) {
 				logFile.delete();
 			}
 			
@@ -715,10 +695,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void findTexturesUsedInStaticMeshes() {
 
+		final String msg = "Identifying staticmeshes textures";
+		updateMessage(msg);
+		logger.log(Level.INFO, msg);
 
-		for (UPackage unrealPackage : mapPackages.values()) {
+		// have to make a copy to avoid concurrentmodification exception
+		// (some new packages might be identified)
+		final Map<String, UPackage> mapPackagesCopy = new LinkedHashMap<>();
+		mapPackagesCopy.putAll(mapPackages);
 
-			for (UPackageRessource ressource : unrealPackage.getRessources()) {
+		for (final UPackage unrealPackage : mapPackagesCopy.values()) {
+
+			for (final UPackageRessource ressource : unrealPackage.getRessources()) {
 
 				if (!ressource.isUsedInMap() || ressource.getType() != Type.STATICMESH) {
 					continue;
@@ -776,6 +764,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 			}
 		}
+
+		// while identifying textures, some textures may not have been exported yet
+		for(final UPackageRessource matRessource : pendingExport){
+
+			// export material if it has not been exported yet
+			if(!matRessource.isExported() && this.convertTextures()) {
+				matRessource.export(UTPackageExtractor.getExtractor(this, matRessource));
+			}
+		}
+
+		logger.log(Level.INFO, "DONE!");
 	}
 
 	private ObjStaticMesh listAndRenameMaterialsForT3d(StaticMesh t3dMesh) {
@@ -812,6 +811,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return pskMesh;
 	}
 
+	final List<UPackageRessource> pendingExport = new ArrayList<>();
+
 	/**
 	 *
 	 * @param matName Staticmesh material name
@@ -840,6 +841,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 					UPackageRessource diffuse = matRessource.getMaterialInfo().getDiffuse();
 
                     if (diffuse != null) {
+						pendingExport.add(diffuse);
 						matRessource.replaceWith(diffuse);
 
                         diffuse.setIsUsedInMap(true);
@@ -847,10 +849,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                     }
                 }
 
-                // export material if it has not been exported yet
-                if(!matRessource.isExported() && this.convertTextures()) {
-					matRessource.export(UTPackageExtractor.getExtractor(this, matRessource));
-				}
+				pendingExport.add(matRessource);
+
 
                 matRessource.setIsUsedInMap(true);
                 matRessource.setUsedInStaticMesh(true);
@@ -1365,7 +1365,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	protected T3DLevelConvertor call() throws Exception {
 		try {
 			convert();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logger.severe(e.getMessage());
 			e.printStackTrace();
 		}
