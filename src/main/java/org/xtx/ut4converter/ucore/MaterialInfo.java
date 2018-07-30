@@ -110,23 +110,23 @@ public class MaterialInfo {
 			diffuse = mapConverter.findRessourceByNameOnly(diffuseName, Type.TEXTURE);
 		}
 
-		if (normalName != null && normalName == null) {
+		if (normalName != null && normal == null) {
 			normal = mapConverter.findRessourceByNameOnly(normalName, Type.TEXTURE);
 		}
 
-		if (specularName != null && specularName == null) {
+		if (specularName != null && specular == null) {
 			specular = mapConverter.findRessourceByNameOnly(specularName, Type.TEXTURE);
 		}
 
-		if (emissiveName != null && emissiveName == null) {
+		if (emissiveName != null && emissive == null) {
 			emissive = mapConverter.findRessourceByNameOnly(emissiveName, Type.TEXTURE);
 		}
 
-		if (specPowerName != null && specPowerName == null) {
+		if (specPowerName != null && specPower == null) {
 			specPower = mapConverter.findRessourceByNameOnly(specPowerName, Type.TEXTURE);
 		}
 
-		if (opacityName != null && opacityName == null) {
+		if (opacityName != null && opacity == null) {
 			opacity = mapConverter.findRessourceByNameOnly(opacityName, Type.TEXTURE);
 		}
 	}
