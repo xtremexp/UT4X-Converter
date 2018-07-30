@@ -5,17 +5,16 @@
  */
 package org.xtx.ut4converter.export;
 
-import java.io.File;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import java.io.File;
+import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Base class for exporting stuff from Unreal Packages (including levels) such
@@ -38,7 +37,7 @@ public abstract class UTPackageExtractor {
 	/**
 	 * Force export folder
 	 */
-	File forcedExportFolder;
+	private File forcedExportFolder;
 
 	/**
 	 * Force package to be flaged as not exported even if it has been exported.
@@ -113,41 +112,33 @@ public abstract class UTPackageExtractor {
 	 * @param ressource
 	 * @return
 	 */
-	public static UTPackageExtractor getExtractor(MapConverter mapConverter, UPackageRessource ressource) {
+	public static UTPackageExtractor getExtractor(final MapConverter mapConverter, final UPackageRessource ressource) {
 
-		UTPackageExtractor extractor = null;
-
-		try {
-			// Special case UT2004 .ogg files
-			if (ressource.getType() == T3DRessource.Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE2) {
-				extractor = getUtPackageExtractor(mapConverter, CopyExporter.class);
+		// umodel does not support unreal 2 at all ...
+		if (mapConverter.getInputGame() == UTGame.U2) {
+			if (ressource.getType() == Type.TEXTURE) {
+				return getUtPackageExtractor(mapConverter, SimpleTextureExtractor.class);
+			} else {
+				return getUtPackageExtractor(mapConverter, UCCExporter.class);
 			}
-
-			else {
-				UTPackageExtractor uccExtractor = getUtPackageExtractor(mapConverter, UCCExporter.class);
-
-				// UMODEL does not support extract music from .umx files
-				if (ressource.getType() == Type.MUSIC && mapConverter.getInputGame().engine == UnrealEngine.UE1) {
-					return uccExtractor;
-				}
-
-				// UMODEL does not support extraction of textures from unreal 2
-				// packages
-				// UCC always produces 0 bytes textures sizes on export
-				if (ressource.getType() == Type.TEXTURE && mapConverter.getInputGame() == UTGame.U2) {
-					return getUtPackageExtractor(mapConverter, SimpleTextureExtractor.class);
-				}
-
-				UTPackageExtractor uModelExtractor = getUtPackageExtractor(mapConverter, UModelExporter.class);
-
-				// return uccExtractor;
-				return uModelExtractor != null ? uModelExtractor : uccExtractor;
-			}
-		} catch (Exception e) {
-			mapConverter.getLogger().log(Level.SEVERE, "Error getting the extractor", e);
 		}
-
-		return extractor;
+		else if (ressource.getType() == T3DRessource.Type.MUSIC) {
+			// only ucc can export .umx files
+			if (mapConverter.getInputGame().engine == UnrealEngine.UE1) {
+				return getUtPackageExtractor(mapConverter, UCCExporter.class);
+			}
+			// Special case UT2004 .ogg files
+			else if (mapConverter.getInputGame().engine == UnrealEngine.UE2) {
+				return getUtPackageExtractor(mapConverter, CopyExporter.class);
+			}
+			// else embedded .wav files
+			else {
+				return getUtPackageExtractor(mapConverter, UModelExporter.class);
+			}
+		}
+		else {
+			return getUtPackageExtractor(mapConverter, UModelExporter.class);
+		}
 	}
 
 	/**
@@ -158,7 +149,7 @@ public abstract class UTPackageExtractor {
 	 * @return
 	 * @throws Exception
 	 */
-	private static UTPackageExtractor getUtPackageExtractor(MapConverter mapConverter, Class<? extends UTPackageExtractor> extractorClass) throws Exception {
+	private static UTPackageExtractor getUtPackageExtractor(MapConverter mapConverter, Class<? extends UTPackageExtractor> extractorClass) {
 
 		for (UTPackageExtractor extractor : mapConverter.packageExtractors) {
 			if (extractor.getClass() == extractorClass) {
