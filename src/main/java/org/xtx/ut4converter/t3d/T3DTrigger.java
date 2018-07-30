@@ -5,14 +5,14 @@ import org.xtx.ut4converter.tools.Geometry;
 
 public class T3DTrigger extends T3DBrush {
 
-	Boolean bInitiallyActive;
-	Boolean bTriggerOnceOnly;
-	String classProximityType;
-	Float damageThreshold;
-	Float repeatTriggerTime;
-	Float reRriggerDelay = 1f;
-	TriggerType triggerType = TriggerType.TT_AnyProximity;
-	String message;
+	private Boolean bInitiallyActive;
+	private Boolean bTriggerOnceOnly;
+	private String classProximityType;
+	private Float damageThreshold;
+	private Float repeatTriggerTime;
+	private Float reRriggerDelay = 1f;
+	private TriggerType triggerType = TriggerType.TT_AnyProximity;
+	private String message;
 
 	/**
 	 * UE1/UE2
@@ -22,7 +22,11 @@ public class T3DTrigger extends T3DBrush {
 	 */
 	enum TriggerType {
 		TT_AnyProximity, TT_Shoot, TT_ClassProximity, TT_PawnProximity, TT_PlayerProximity,
-		TT_HumanPlayerProximity, TT_LivePlayerProximity
+		TT_HumanPlayerProximity, TT_LivePlayerProximity,
+		/**
+		 * Unreal 2 - Trigger activated by using it
+		 */
+		TT_USE
 	}
 
 	public T3DTrigger(MapConverter mc, String t3dClass) {
