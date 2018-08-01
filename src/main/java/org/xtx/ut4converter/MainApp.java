@@ -1,7 +1,5 @@
 package org.xtx.ut4converter;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +8,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.MainSceneController;
+
+import java.io.IOException;
 
 /**
  * 
@@ -29,7 +28,7 @@ public class MainApp extends Application {
 	/**
 	 * Version of UT4 Converter
 	 */
-	public static final String VERSION = "0.8.10";
+	public static final String VERSION = "0.9.0";
 
 	/**
 	 * Author
