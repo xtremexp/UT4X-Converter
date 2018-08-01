@@ -799,4 +799,8 @@ public class T3DLevelConvertor extends Task<Object> {
 		readConvertAndWrite();
 		return null;
 	}
+
+	public LinkedList<T3DActor> getConvertedActors() {
+		return convertedActors;
+	}
 }

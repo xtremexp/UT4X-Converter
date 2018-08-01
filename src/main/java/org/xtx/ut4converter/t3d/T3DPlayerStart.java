@@ -49,9 +49,16 @@ public class T3DPlayerStart extends T3DSound {
 		if (line.contains("TeamNumber")) {
 			teamNum = T3DUtils.getInteger(line);
 			isTeamPlayerStart = true;
-			// Next playerstarts without teamnumber prop
-			// will now be always considered as teamplayerstarts
-			// still remains the previous playerstarts ..
+
+			// flag previous playerstarts analyszed as teamplayerstarts
+			if(!mapConverter.isTeamGameType()){
+				for(final T3DActor actor : mapConverter.getT3dLvlConvertor().getConvertedActors()){
+					if(actor instanceof  T3DPlayerStart){
+						((T3DPlayerStart) actor).setTeamPlayerStart(true);
+					}
+				}
+			}
+
 			mapConverter.setIsTeamGameType(true);
 		} else {
 
@@ -59,6 +66,10 @@ public class T3DPlayerStart extends T3DSound {
 		}
 
 		return true;
+	}
+
+	public void setTeamPlayerStart(boolean teamPlayerStart) {
+		isTeamPlayerStart = teamPlayerStart;
 	}
 
 	/**
