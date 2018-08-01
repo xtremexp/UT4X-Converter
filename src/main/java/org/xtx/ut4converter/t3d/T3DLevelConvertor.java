@@ -6,28 +6,20 @@ $ * To change this license header, choose License Headers in Project Properties.
 
 package org.xtx.ut4converter.t3d;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.concurrent.Task;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
+
+import javax.vecmath.Vector3d;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament to Unreal Tournament "4" t3d file
@@ -40,38 +32,38 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Current map converter
 	 */
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
 	/**
 	 * Input t3d file that need conversion
 	 */
-	File inT3dFile;
+	private File inT3dFile;
 
 	/**
 	 * Converted input t3d file
 	 */
-	File outT3dFile;
+	private File outT3dFile;
 
 	/**
 	 * Reader for input t3d file
 	 */
-	BufferedReader bfr;
+	private BufferedReader bfr;
 
 	/**
 	 * Writer for converted t3d file
 	 */
-	BufferedWriter bwr;
+	private BufferedWriter bwr;
 
 	/**
 	 * String cache for converted t3d actors. Converted actor is sent to the
 	 * writer.
 	 */
-	StringBuilder sbf;
+	private StringBuilder sbf;
 
 	/**
 	 * Actors that were not converted.
 	 */
-	public SortedSet<String> unconvertedActors = new TreeSet<>();
+	private SortedSet<String> unconvertedActors = new TreeSet<>();
 
 	LinkedList<T3DActor> convertedActors = new LinkedList<>();
 
@@ -81,15 +73,15 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
 
-	boolean createNoteWhenUnconverted = true;
+	private boolean createNoteWhenUnconverted = true;
 
-	Logger logger;
+	private Logger logger;
 
-	Vector3d levelDimension;
+	private Vector3d levelDimension;
 
-	Vector3d boundBoxLocalisation;
+	private Vector3d boundBoxLocalisation;
 
-	int actorCount;
+	private int actorCount;
 	
 	/**
 	 * Unconverted properties
@@ -195,7 +187,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
-		unconvertedProperties = new HashMap<String, Set<String>>();
+		unconvertedProperties = new HashMap<>();
 
 		// Read actor data from file
 		readActors();
@@ -207,7 +199,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		// resulting in some brushes not being displayed ...
 		// have to use the manual ".t3d" file from UT3 editor
 		// to set order
-		if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.getInMap().getName().endsWith(".ut3")) {
+		if (mapConverter.getInputGame() == UTGames.UTGame.UT3 && mapConverter.getInMap().getName().endsWith(".ut3")) {
 			fixUt3BrushOrder(mapConverter.getIntT3dUt3Editor());
 		}
 
@@ -383,6 +375,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, "Error converting actor " + uta.getName(), e);
+					e.printStackTrace();
 				}
 
 			}

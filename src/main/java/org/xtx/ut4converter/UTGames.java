@@ -5,6 +5,8 @@
 
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.tools.SystemUtil;
+
 import java.io.File;
 
 /**
@@ -121,6 +123,11 @@ public class UTGames {
 		 * Unreal 2
 		 */
 		U2("Unreal 2", "U2", UnrealEngine.UE2, "un2"),
+
+		/**
+		 * UDK
+		 */
+		UDK("Unreal Development Kit", "UDK", UnrealEngine.UE3, "udk"),
 
 		/**
          *
@@ -246,6 +253,10 @@ public class UTGames {
 			return new File(basePath + File.separator + "UTGame" + File.separator + "CookedPC");
 		}
 
+		else if (utgame == UTGame.UDK) {
+			return new File(basePath + File.separator + "UDKGame" + File.separator + "Content" + File.separator + "Maps");
+		}
+
 		else if (utgame == UTGame.UT4) {
 			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets" + File.separator + "Maps" + File.separator + "WIP");
 		}
@@ -257,11 +268,11 @@ public class UTGames {
 
 	/**
 	 * 
-	 * @param basePath
-	 * @param utgame
-	 * @return
+	 * @param basePath Game path from config
+	 * @param utgame UT Game
+	 * @return Folder where binaries files of UT game are.
 	 */
-	public static File getBinariesFolder(File basePath, UTGames.UTGame utgame) {
+	public static File getBinariesFolder(final File basePath, final UTGames.UTGame utgame) {
 
 		if (utgame.engine.version <= UnrealEngine.UE2.version) {
 			return new File(basePath + File.separator + "System");
@@ -271,6 +282,14 @@ public class UTGames {
 		// folder cookedpc
 		else if (utgame == UTGame.UT3) {
 			return new File(basePath + File.separator + "Binaries");
+		}
+		else if (utgame == UTGame.UDK) {
+			if(SystemUtil.is32BitOS()){
+				return new File(basePath + File.separator + "Binaries" + File.separator + "Win32");
+			} else {
+				return new File(basePath + File.separator + "Binaries" + File.separator + "Win64");
+			}
+
 		}
 
 		else {

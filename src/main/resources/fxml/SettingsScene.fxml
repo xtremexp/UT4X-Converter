@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import java.net.URL?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="650.0" styleClass="mainFxmlClass" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
@@ -41,12 +37,16 @@
                         <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6" ></Label>
                         <TextField fx:id="ut3Folder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="6" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 3"></TextField>
                         <Button onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
+
+                        <Label text="UDK Folder" GridPane.columnIndex="0" GridPane.rowIndex="7" ></Label>
+                        <TextField fx:id="udkFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="e.g: C:\UDK-2015-02"></TextField>
+                        <Button onAction="#selectUdkFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
             
-                        <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="7" ></Label>
-                        <TextField fx:id="ut4EditorFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" ></TextField>
-                        <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
+                        <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="8" ></Label>
+                        <TextField fx:id="ut4EditorFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="8" editable="false" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" ></TextField>
+                        <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="8">Select</Button>
                         
-                        <Label fx:id="settingsLog" GridPane.columnIndex="0" GridPane.rowIndex="8"  alignment="CENTER" GridPane.columnSpan="3" ></Label>
+                        <Label fx:id="settingsLog" GridPane.columnIndex="0" GridPane.rowIndex="9"  alignment="CENTER" GridPane.columnSpan="3" ></Label>
                     </GridPane>
 
                 </TitledPane>

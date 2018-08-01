@@ -5,6 +5,25 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.tools.Installation;
+
+import javax.swing.*;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -12,35 +31,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import javax.swing.SwingUtilities;
-import javax.xml.bind.JAXBException;
-
-import org.xtx.ut4converter.MainApp;
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.t3d.T3DUtils;
-import org.xtx.ut4converter.tools.Installation;
 
 /**
  * FXML Controller class
@@ -330,7 +320,9 @@ public class ConversionSettingsController implements Initializable {
 
 			dialogStage.close();
 
-			if (mapConverter.isFrom(UnrealEngine.UE3)) {
+			// FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
+			// because the UT3 commandlet is kinda in "alpha" stages
+			if (mapConverter.getInputGame() == UTGame.UT3) {
 				FileChooser chooser = new FileChooser();
 				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from UT3 editor ");
 

@@ -469,14 +469,25 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	final String UPK = "upk";
 
 	/**
-	 * Caches all .upk files in UTGame folder of UT3 for performance
+	 * Caches all .upk files list
+	 * for unreal engine 3 maps
 	 */
-	private void initUt3PackageFilesCache() {
+	private void initUe3PackageFilesCache() {
 
-		File utGameFolder = new File(userConfig.getGameConfigByGame(inputGame).getPath().getAbsolutePath() + File.separator + "UTGame");
-		packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[] { UPK }, true);
+		File utGameFolder = null;
 
-		logger.info("Scanned " + packageFilesCache.size() + " .upk files in UT3 folder");
+		final String basePath = userConfig.getGameConfigByGame(inputGame).getPath().getAbsolutePath() + File.separator;
+
+		if(this.inputGame == UTGame.UT3) {
+			utGameFolder = new File(basePath + "UTGame");
+		} else if(this.inputGame == UTGame.UDK){
+			utGameFolder = new File(basePath + "UDKGame" + File.separator + "Content");
+		}
+
+		if(utGameFolder != null) {
+			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
+			logger.info("Scanned " + packageFilesCache.size() + " .upk files");
+		}
 	}
 
 	/**
@@ -486,11 +497,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *            Package Name (HU_Deco)
 	 * @return File container of package (e.g: HU_Deco.upk)
 	 */
-	public File getUt3PackageFileFromName(String packageName) {
+	public File getUe3PackageFileFromName(final String packageName) {
 
 		for (File upk : packageFilesCache) {
 
-			if (upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + UPK) || upk.getName().toLowerCase().equals(packageName.toLowerCase() + ".ut3")) {
+			if (upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + UPK) || upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + getInputGame().mapExtension)) {
 				return upk;
 			}
 		}
@@ -538,8 +549,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			updateProgress(0, 100);
 
-			if (inputGame == UTGame.UT3) {
-				initUt3PackageFilesCache();
+			if (isFrom(UnrealEngine.UE3)) {
+				initUe3PackageFilesCache();
 			}
 
 			if (!outPath.toFile().exists()) {

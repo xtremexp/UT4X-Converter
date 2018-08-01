@@ -5,16 +5,6 @@
  */
 package org.xtx.ut4converter.ui;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,13 +18,21 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import javax.xml.bind.JAXBException;
-
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
+
+import javax.xml.bind.JAXBException;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class TODO i18n
@@ -334,6 +332,12 @@ public class MainSceneController implements Initializable {
 	private void convertUt3Map(ActionEvent event) {
 		convertUtxMap(UTGame.UT3);
 	}
+
+	@FXML
+	private void convertUdkMap(ActionEvent event) {
+		convertUtxMap(UTGame.UDK);
+	}
+
 
 	@FXML
 	private void convertUt2003Map(ActionEvent event) {

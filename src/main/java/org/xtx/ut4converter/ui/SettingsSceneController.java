@@ -5,12 +5,6 @@
  */
 package org.xtx.ut4converter.ui;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,14 +15,18 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import javax.xml.bind.JAXBException;
-
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
+
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -47,6 +45,8 @@ public class SettingsSceneController implements Initializable {
 	private TextField ut2003Folder;
 	@FXML
 	private TextField ut3Folder;
+	@FXML
+	private TextField udkFolder;
 	@FXML
 	private TextField ut4EditorFolder;
 	@FXML
@@ -114,6 +114,11 @@ public class SettingsSceneController implements Initializable {
 	@FXML
 	private void selectUt3Folder(ActionEvent event) {
 		setUTxFolder(UTGame.UT3, ut3Folder);
+	}
+
+	@FXML
+	private void selectUdkFolder(ActionEvent event) {
+		setUTxFolder(UTGame.UDK, udkFolder);
 	}
 
 	@FXML
@@ -216,6 +221,9 @@ public class SettingsSceneController implements Initializable {
 							break;
 						case UT3:
 							ut3Folder.setText(game.getPath().getAbsolutePath());
+							break;
+						case UDK:
+							udkFolder.setText(game.getPath().getAbsolutePath());
 							break;
 						case UT4:
 							ut4EditorFolder.setText(game.getPath().getAbsolutePath());

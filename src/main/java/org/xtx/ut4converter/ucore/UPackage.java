@@ -5,15 +5,14 @@
  */
 package org.xtx.ut4converter.ucore;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
  * Very basic implementation of unreal package
@@ -77,12 +76,11 @@ public class UPackage {
 	/**
 	 * Gets the associated file with this package.
 	 * 
-	 * @param gamePath
-	 *            Base path of the ut game this unreal package comes from
-	 * @param inputEngine
+	 * @param mapConverter
+	 *            Map converter
 	 * @return
 	 */
-	public File getFileContainer(MapConverter mapConverter) {
+	public File getFileContainer(final MapConverter mapConverter) {
 
 		File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
 
@@ -108,8 +106,8 @@ public class UPackage {
 				if (!this.file.exists() && !mapConverter.getInMap().getName().endsWith(".t3d")) {
 					this.file = mapConverter.getInMap();
 				}
-			} else if (mapConverter.getInputGame() == UTGame.UT3) {
-				return mapConverter.getUt3PackageFileFromName(getName());
+			} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+				return mapConverter.getUe3PackageFileFromName(getName());
 			}
 		}
 

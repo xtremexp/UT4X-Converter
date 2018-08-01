@@ -5,6 +5,17 @@
  */
 package org.xtx.ut4converter.export;
 
+import com.sun.istack.internal.logging.Logger;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ucore.UPackage;
+import org.xtx.ut4converter.ucore.UPackageRessource;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,18 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
-import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.ucore.UPackage;
-import org.xtx.ut4converter.ucore.UPackageRessource;
-
-import com.sun.istack.internal.logging.Logger;
 
 /**
  * Export ressources from map such as sounds to .wav, textures to .bmp and so on
@@ -47,9 +46,9 @@ public final class UCCExporter extends UTPackageExtractor {
 	/**
 	 * File path of ucc.exe or ut3.com program. Depends of user game settings
 	 */
-	File uccExporterPath;
+	private File uccExporterPath;
 
-	UccOptions forcedUccOption;
+	private UccOptions forcedUccOption;
 
 	@Override
 	public boolean supportLinux() {
@@ -68,11 +67,29 @@ public final class UCCExporter extends UTPackageExtractor {
 		return new UnrealEngine[] { UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2 };
 	}
 
+	/**
+	 * Exporter names
+	 */
 	private enum Name {
 
-		UCC_EXE("ucc.exe"), UCC_BIN("UCCLinux.bin"), UT3_COM("ut3.com");
+		UCC_EXE("ucc.exe"),
+		/**
+		 * Linux version of ucc (Unreal 1 only)
+		 */
+		UCC_BIN("UCCLinux.bin"),
+		/**
+		 * Unreal Tournament 3
+		 */
+		UT3_COM("ut3.com"),
+		/**
+		 * UDK
+		 */
+		UDK_COM("UDK.com");
 
-		String programName;
+		/**
+		 * Filename of exporter
+		 */
+		private String programName;
 
 		Name(String programName) {
 			this.programName = programName;
@@ -241,14 +258,13 @@ public final class UCCExporter extends UTPackageExtractor {
 
 		Set<File> files = ucE.extract(t3dRessource, false, true);
 
-		// UT3.com do not give info about t3d exported file in logs
+		// UT3.com or UDK.com does not give info about t3d exported file in logs
 		// but is always PersistentLevel.t3d in Binaries folder
-		if (mapConverter.getInputGame() == UTGame.UT3) {
-
-			File binariesFolder = UTGames.getBinariesFolder(mapConverter.getUserConfig().getGameConfigByGame(UTGame.UT3).getPath(), UTGame.UT3);
-
+		if (mapConverter.getInputGame() == UTGame.UT3 || mapConverter.getInputGame() == UTGame.UDK) {
+			final File binariesFolder = UTGames.getBinariesFolder(mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath(), mapConverter.getInputGame());
 			return new File(binariesFolder + File.separator + UTGames.T3D_LEVEL_NAME_UE3);
-		} else {
+		}
+		else {
 			return !files.isEmpty() ? files.iterator().next() : null;
 		}
 	}
@@ -268,9 +284,9 @@ public final class UCCExporter extends UTPackageExtractor {
 	 */
 	private File createExportFileBatch(File unrealPackage, Type type) throws IOException {
 
-		File fbat = File.createTempFile("UCCExportPackage", ".bat");
+		final File fbat = File.createTempFile("UCCExportPackage", ".bat");
 
-		try (FileWriter fw = new FileWriter(fbat); BufferedWriter bwr = new BufferedWriter(fw)) {
+		try (final FileWriter fw = new FileWriter(fbat); final BufferedWriter bwr = new BufferedWriter(fw)) {
 
 			String drive = uccExporterPath.getAbsolutePath().substring(0, 2);
 			bwr.write(drive + "\n"); // switch to good drive (e.g, executing UT4
@@ -280,8 +296,6 @@ public final class UCCExporter extends UTPackageExtractor {
 			String cmd = getCommandLine(unrealPackage.getName(), type);
 			logger.fine(cmd);
 			bwr.write(getCommandLine(unrealPackage.getName(), type));
-
-			bwr.close();
 		}
 
 		return fbat;
@@ -294,13 +308,11 @@ public final class UCCExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		// U1, UT, U2(TODO CHECK), UT2003(TODO CHECK), UT2004
 		if (mapConverter.getInputGame().engine.version < UTGames.UnrealEngine.UE3.version) {
 			String basePathUcc = userGameConfig.getPath() + File.separator + "System" + File.separator;
 
 			if (supportLinux() && Installation.isLinux()) {
-				basePathUcc += Name.UCC_BIN; // basically only U1 for the moment
-												// TODO check UT2003, U2, UT2004
+				basePathUcc += Name.UCC_BIN;
 			} else {
 				basePathUcc += Name.UCC_EXE;
 			}
@@ -311,6 +323,11 @@ public final class UCCExporter extends UTPackageExtractor {
 		// UT3
 		else if (mapConverter.getInputGame() == UTGames.UTGame.UT3) {
 			return new File(userGameConfig.getPath() + File.separator + "Binaries" + File.separator + Name.UT3_COM);
+		}
+
+		// UDK
+		else if (mapConverter.getInputGame() == UTGames.UTGame.UDK) {
+			return new File(UTGames.getBinariesFolder(userGameConfig.getPath(), UTGame.UDK) + File.separator + Name.UDK_COM);
 		}
 
 		// UT4 TODO CHECK if exporter does exists in command line

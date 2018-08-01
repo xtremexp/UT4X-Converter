@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="600" prefWidth="800" fx:controller="org.xtx.ut4converter.ui.MainSceneController" >
     <!-- MENU BAR -->
     <top>
@@ -28,6 +24,9 @@
                 </Menu>
                 <Menu text="Unreal Tournament 3 Map">
                     <MenuItem text="Convert to UT4 ..." onAction="#convertUt3Map"/>
+                </Menu>
+                <Menu text="UDK Map">
+                    <MenuItem text="Convert to UT4 ..." onAction="#convertUdkMap"/>
                 </Menu>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
