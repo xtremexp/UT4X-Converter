@@ -50,12 +50,17 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Link to UT4 Converter topic
 	 */
-	final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
+	private final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
 
 	/**
 	 * Url to git hub for source code
 	 */
-	final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
+	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
+
+	/**
+	 * Url to github project for reporting issues
+	 */
+	private final String URL_UTCONV_GITHUB_ISSUES = "https://github.com/xtremexp/UT4X-Converter/issues";
 
 	@FXML
 	private MenuItem menuExit;
@@ -186,9 +191,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Opens url in web browser
-	 * 
-	 * @param if <code>true</code> then display a confirmation dialog before
-	 *        opening directly web browser.
+	 *
 	 * @param url
 	 *            Url to open with web browser
 	 */
@@ -254,6 +257,12 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private void openUtTopicUrl(ActionEvent event) {
 		openUrl(URL_UT4CONV_FORUM, true, null);
+	}
+
+
+	@FXML
+	private void openGitHubIssues(ActionEvent event){
+		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
 	}
 
 	private void openGitHubUrl(ActionEvent event) {

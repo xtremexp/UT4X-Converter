@@ -33,7 +33,7 @@ public class MainApp extends Application {
 	/**
 	 * Author
 	 */
-	public static final String AUTHOR = "XtremeXp";
+	public static final String AUTHOR = "XtremeXp / WinterIsComing";
 
 	/**
 	 * All scenes should be enumerated here
