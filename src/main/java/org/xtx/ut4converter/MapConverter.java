@@ -509,6 +509,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return null;
 	}
 
+	public static final long PROGRESS_BEFORE_CONVERT = 20;
+
 	/**
 	 * Converts level
 	 * 
@@ -563,7 +565,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				packageFilesCache.add(inMap);
 				updateMessage("Exporting map to unreal text file");
 				inT3d = UCCExporter.exportLevelToT3d(this, inMap);
-				updateProgress(20, 100);
+				updateProgress(PROGRESS_BEFORE_CONVERT, 100);
 			}
 
 			outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + mapName + ".t3d");
@@ -580,6 +582,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// find used textures in staticmeshes
 			findTexturesUsedInStaticMeshes();
 
+			updateProgress(90, 100);
 			cleanAndConvertRessources();
 
 			updateProgress(100, 100);
@@ -600,6 +603,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logFileWriter.close();
 			}
 		}
+	}
+
+	public void updateMapConverterProgress(long workDone, long max){
+		updateProgress(workDone, max);
 	}
 
 	/**

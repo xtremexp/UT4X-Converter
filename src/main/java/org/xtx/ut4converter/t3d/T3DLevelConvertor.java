@@ -359,6 +359,9 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void convertActors() {
 
+		int convertedActorsCount = 0;
+		long xx = 80 - MapConverter.PROGRESS_BEFORE_CONVERT;
+
 		for (T3DActor uta : convertedActors) {
 			if (uta != null) {
 
@@ -378,6 +381,15 @@ public class T3DLevelConvertor extends Task<Object> {
 					e.printStackTrace();
 				}
 
+			}
+
+			convertedActorsCount ++;
+
+			// update global conversion
+			if(convertedActorsCount % 10 == 0){
+				float pcDone = ((float) convertedActorsCount) / convertedActors.size();
+				long newProgress = (long) (MapConverter.PROGRESS_BEFORE_CONVERT + xx * pcDone);
+				mapConverter.updateMapConverterProgress(newProgress, 100);
 			}
 		}
 
