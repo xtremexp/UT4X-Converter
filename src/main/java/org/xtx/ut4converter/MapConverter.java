@@ -481,7 +481,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		if(this.inputGame == UTGame.UT3) {
 			utGameFolder = new File(basePath + "UTGame");
 		} else if(this.inputGame == UTGame.UDK){
-			utGameFolder = new File(basePath + "UDKGame" + File.separator + "Content");
+			utGameFolder = new File(basePath);
 		}
 
 		if(utGameFolder != null) {
@@ -784,8 +784,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				matRessource.export(UTPackageExtractor.getExtractor(this, matRessource));
 			}
 		}
-
-		logger.log(Level.INFO, "DONE!");
 	}
 
 	private ObjStaticMesh listAndRenameMaterialsForT3d(StaticMesh t3dMesh) {
