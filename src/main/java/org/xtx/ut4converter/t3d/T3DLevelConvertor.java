@@ -190,9 +190,11 @@ public class T3DLevelConvertor extends Task<Object> {
 		unconvertedProperties = new HashMap<>();
 
 		// Read actor data from file
+		updateMessage("Reading actors");
 		readActors();
 
 		// Convert actors
+		updateMessage("Converting actors");
 		convertActors();
 
 		// UT3 batchexport command is bugged and brush order is messed up
@@ -204,6 +206,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		// Write to file
+		updateMessage("Writing actors");
 		writeActors();
 
 		updateProgress(100, 100);
@@ -296,9 +299,8 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
-	 * Write actors to
+	 * Write actors to .t3d file
 	 * 
-	 * @param line
 	 * @throws IOException
 	 */
 	private void writeActors() throws IOException {
@@ -313,7 +315,10 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			writeHeader();
 
-			String buffer = null;
+			String buffer;
+
+			updateProgress(0, convertedActors.size());
+			long actorsWriten = 0;
 
 			for (T3DActor actor : convertedActors) {
 
@@ -341,7 +346,8 @@ public class T3DLevelConvertor extends Task<Object> {
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, "Error while writting actor " + actor.getName() + ":", e);
 				}
-				
+
+				updateProgress(++ actorsWriten, convertedActors.size());
 			}
 
 			writeFooter();
@@ -361,6 +367,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		int convertedActorsCount = 0;
 		long xx = 80 - MapConverter.PROGRESS_BEFORE_CONVERT;
+		updateProgress(0, convertedActors.size());
 
 		for (T3DActor uta : convertedActors) {
 			if (uta != null) {
@@ -386,10 +393,11 @@ public class T3DLevelConvertor extends Task<Object> {
 			convertedActorsCount ++;
 
 			// update global conversion
-			if(convertedActorsCount % 10 == 0){
+			if(convertedActorsCount % 5 == 0){
 				float pcDone = ((float) convertedActorsCount) / convertedActors.size();
 				long newProgress = (long) (MapConverter.PROGRESS_BEFORE_CONVERT + xx * pcDone);
 				mapConverter.updateMapConverterProgress(newProgress, 100);
+				updateProgress(convertedActorsCount, convertedActors.size());
 			}
 		}
 
