@@ -3,7 +3,7 @@
 
 * Version: 0.8.10
 * Release date: 18/07/2018
-* Author: XtremeXp
+* Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
 ---
@@ -21,6 +21,7 @@ to Unreal Tournament 4.
 * Unreal Tournament (1999)
 * Unreal Tournament 2003/2004
 * Unreal Tournament 3
+* UDK
 
 Event if all unreal games are supported, since program is in early stages,
 conversion quality for unreal tournament 2003/2004 and unreal tournament 3
@@ -36,17 +37,11 @@ Here is the conversion table for all ut games about what the program can convert
 |                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
 |----------------|---------|-----------|--------|----------|--------|--------------|------------|:------------:|:-------:|
 | Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |      No    |       -      |  MEDIUM |
+| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |       +      |      No    |       -      |  MEDIUM |
 | UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
 | UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |Yes(partial)|       +      |   GOOD  |
 | UT3            |    ++   |     +     |    +   |     +    |   N/A  |       +      |      No    |       +      |  MEDIUM |
 
-
-Note:
-UT99/U1 Lightning: For Unreal Tournament (99) and Unreal 1, zoneinfo actor does not exist in UT4, since then
-StaticMesh conversion is not yet operational. Since UT3 is nearly full of staticmeshes, conversion
-is pretty bad. (same note for some ut2004 maps)
----
 
 # What is NOT converted
 * Models
@@ -57,7 +52,7 @@ is pretty bad. (same note for some ut2004 maps)
 Note: staticmesh conversion is not fully automatic.
 You need to convert them manually using Blender software.
 Converter will do the job to get the right references and textures applied.
---- 
+---
 
 # Requirements
 * Windows 7/8/10 - 64 Bit Operating System
@@ -81,14 +76,14 @@ Installation and first start
 * Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java technology version at www.java.com
-and create some "run.bat" batch file with notepad that you will save in the 
+and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
-"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
+"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 
-Detailed explanations about conversion is always displayed after each end of map conversion 
+Detailed explanations about conversion is always displayed after each end of map conversion
 in program.
 ---
 
@@ -96,15 +91,15 @@ in program.
 
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
-For UT3 maps only:
+For UT3/UDK maps only:
 - Open a text editor (notepad for example)
-- Open ut3 map with the UT3 editor.
+- Open map with the UT3 or UDK editor.
 - In menu go to "Edit" -> "Select all"
 - Copy all data stuff ("Edit" -> "Copy" or Ctrl+C)
 - Paste data in your text editor and save your file with a .t3d file extension
 
-Note: this .t3d file is needed because the "ut3.com batchexport" command to export
-.ut3 level to .t3d file messes up the brush order.
+Note: this .t3d file is needed because the "ut3/udk.com batchexport" command to export
+.ut3 level to .t3d file messes up the brush order unlike the copy/paste from editor.
 
 ---
 # In UT4 Converter:
@@ -145,7 +140,7 @@ Note:
 "sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
  The converter does remove most of them, but not all of them yet.
 
---- 
+---
 # Limitations / Issues / Troubleshooting
 - [UT99] Some textures may not be correctly aligned
 - Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
@@ -164,9 +159,9 @@ and remove them until bsp holes disapear)
 - You can edit/share source code as well as binaries
 always keeping original author credits
 
---- 
+---
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
+YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
 CONVERTED MAP.
 
 ---
@@ -183,15 +178,11 @@ Then you will need to install one of these IDE.
 - Set "Git Repository URL" to: "https://github.com/xtremexp/UT4X-Converter"
 - Click on "Clone"
 
-## Build
+## Build and Run
 - Menu: "Run" -> "Edit configuration"
-- Click on "+" then select "Maven"
-- Set "Command line" parameter to "clean install -e"
+- Click on "+" then select "Application"
+- Set "org.xtx.ut4converter.MainApp" as "Main class"
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
-
-## Run
-- After building UT4X converter double click on 
-- "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
 
 ---
 ## Optional (UI editing):
@@ -219,7 +210,7 @@ Right click on project -> Team -> Pull
 - Download and install "Java IDE" version of Eclipse: https://www.eclipse.org/ide/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
-- Install "m2e-git" connect and click on finish. 
+- Install "m2e-git" connect and click on finish.
 - Restart again Eclipse for changes to apply and go back to "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4X-Converter.git"
@@ -233,16 +224,37 @@ Right click on project -> "Git" -> "Remote" -> "Pull"
 # Libraries / Technologies used
 ------------------------------
 - Java 8 - http://www.java.com
-- Java Vecmath library - 1.3.1 - https://java.net/projects/vecmath
+- Java Vecmath library - 1.5.2 - https://java.net/projects/vecmath
+- Java Image IO - 1.4.0 - https://github.com/jai-imageio/jai-imageio-core
+- Apache commons IO - 2.6 - https://commons.apache.org/proper/commons-io/
 - Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
+- Sound Exchange (Sox) - 14.4.1 - http://sox.sourceforge.net/
 
 Converter interfaces with these external tools:
 - Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
 - UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
---- 
+---
 
 # History
+- 0.9.0 - XX/08/2018
+* added support for UDK maps (conversion quality is like UT3)
+* ut2003/4/ut3: fixed some cases where some textures from staticmeshes where not converted
+* ut2003/4: added support for LadderVolume, PressureVolume, SnipingVolue, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
+HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
+* ut2003/4: VolumeTrigger, MessageTrigger, CrowdTrigger, UseTrigger, MusicTrigger, RedirectionTrigger,
+GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
+* ut2003/4: fixed lift actor property in lift exit actor not being set
+* ut2003/4: added support for multiple skins (corona) with lights
+* all: fixed some teamplayerstarts being converted as playerstart
+* all: fixed crash on UT4 editor import if trigger had either radius or hieght set to 0
+* unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
+the conversion quality of resources is not optimal (staticmeshes with bad roration)
+* unreal 2: added support for Trigger TT_USE case
+* ui: updated welcome screen
+* ui: added menu to report issues/bugs
+* ui: progress bar now being update more often
+
 - 0.8.10 - 18/07/2018
 * all: fixed low quality texture
 * all: now tries to export with UCC with UModel fails to load package
