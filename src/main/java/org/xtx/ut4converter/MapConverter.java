@@ -21,6 +21,7 @@ import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.tools.psk.Material;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 import org.xtx.ut4converter.tools.t3dmesh.StaticMesh;
+import org.xtx.ut4converter.tools.psk.PSKReader;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -949,7 +950,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 									logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
 								}
 							}
-						}
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
