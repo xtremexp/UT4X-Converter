@@ -39,7 +39,7 @@ public class T3DStaticMesh extends T3DSound {
 	 * "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500"
 	 * e.g/ StaticMesh=StaticMesh'BarrenHardware-epic.Decos.rec-lift'
 	 */
-	private UPackageRessource staticMesh;
+	UPackageRessource staticMesh;
 
 	/**
 	 * Temp hack

@@ -21,7 +21,6 @@ import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.tools.psk.Material;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 import org.xtx.ut4converter.tools.t3dmesh.StaticMesh;
-import org.xtx.ut4converter.tools.psk.PSKReader;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -905,19 +904,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 					wasConverted = false;
 					List<File> exportedFiles = ressource.getExportedFiles();
-					
-					if(exportedFiles == null){
+
+					if (exportedFiles == null) {
 						continue;
 					}
 
-					for(File exportedFile : exportedFiles){
+					for (File exportedFile : exportedFiles) {
 						if (exportedFile != null && exportedFile.length() > 0) {
-	
+
 							// Renaming exported files (e.g: Stream2.wav ->
 							// AmbOutside_Looping_Stream2.wav)
 							// move them to non temporary folder
 							if (ressource.isUsedInMap()) {
-	
+
 								// Some sounds and/or textures might need to be
 								// converted for correct import in UE4
 								if (ressource.needsConversion(this)) {
@@ -926,30 +925,31 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 									exportedFile = newExportedFile;
 									wasConverted = true;
 								}
-								
+
 								// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
 								File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
 								newFile.getParentFile().mkdirs();
 								newFile.createNewFile();
-	
+
 								// sometimes it does not find the exported texture
 								// (?
 								// ... weird)
 								if (exportedFile.exists() && exportedFile.isFile()) {
 									Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 								}
-	
+
 								if (exportedFile.delete()) {
 									logger.fine("Deleted " + exportedFile);
 								}
-	
+
 								//exportedFile = newFile;
 								ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
-	
+
 								if (wasConverted) {
 									logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
 								}
 							}
+						}
 					}
 				} catch (Exception e) {
 					logger.log(Level.SEVERE, e.getMessage(), e);
