@@ -5,11 +5,6 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
@@ -17,53 +12,72 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 
+import javax.vecmath.Vector3d;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author XtremeXp
  */
 public class T3DStaticMesh extends T3DSound {
 
-	final String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
-	final String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
-	final int UT4_SHEET_SM_SIZE = 500; // in UE4 units
+	private final String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
+	private final String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
 
-	List<String> overiddeMaterials = new ArrayList<>();
+	private List<String> overiddeMaterials = new ArrayList<>();
 
 	/**
 	 * 
 	 */
-	List<UPackageRessource> skins;
+	private List<UPackageRessource> skins;
 
-	BodyInstance bodyInstance;
+	private BodyInstance bodyInstance;
 
 	/**
 	 * e.g:
 	 * "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500"
 	 * e.g/ StaticMesh=StaticMesh'BarrenHardware-epic.Decos.rec-lift'
 	 */
-	UPackageRessource staticMesh;
+	private UPackageRessource staticMesh;
 
 	/**
 	 * Temp hack
 	 */
-	String forcedStaticMesh;
+	private String forcedStaticMesh;
 
 	/**
 	 * If not null overiddes light map resolution for this static mesh (which is
 	 * normally equal to 64 by default) TODO move this to some "Lightning" class
 	 */
-	Integer overriddenLightMapRes;
+	private Integer overriddenLightMapRes;
 
 	/**
 	 * CastShadow=False TODO move this to some "Lightning" class
 	 */
-	Boolean castShadow;
+	private Boolean castShadow;
 	
 	/**
 	 * UT3 (UT2004 as well) property
 	 * Do not exists in UE4
 	 */
 	private Vector3d prePivot;
+
+	/**
+	 * Property seen in UT2004
+	 */
+	private UV2Mode uv2Mode = UV2Mode.UVM_Skin;
+
+	/**
+	 * UV2Texture
+	 */
+	private UPackageRessource uv2Texture;
+
+	public enum UV2Mode {
+		UVM_MacroTexture,
+		UVM_LightMap,
+		UVM_Skin
+	}
 
 	/**
 	 * 
@@ -91,6 +105,12 @@ public class T3DStaticMesh extends T3DSound {
 		// PrePivot=(X=280.000000,Y=0.000000,Z=0.000000)
 		else if(line.startsWith("PrePivot=")){
 			prePivot = T3DUtils.getVector3d(line, 0d);
+		}
+		else if(line.startsWith("UV2Texture=")){
+			this.uv2Texture = mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.TEXTURE);
+		}
+		else if(line.startsWith("UV2Mode=")){
+			this.uv2Mode = UV2Mode.valueOf(T3DUtils.getString(line));
 		}
 		// UT2003/4 - Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
 		// UT3      - Materials(0)=MaterialInstanceConstant'HU_Deck.SM.Materials.M_HU_Deck_SM_BioPot_Goo'
@@ -122,7 +142,7 @@ public class T3DStaticMesh extends T3DSound {
 	 * @param sheetBrush
 	 *            Sheet Brush (brush with only 2 polygons)
 	 */
-	public T3DStaticMesh(MapConverter mc, T3DBrush sheetBrush) {
+	T3DStaticMesh(MapConverter mc, T3DBrush sheetBrush) {
 		super(mc, "StaticMesh");
 		// Temp material
 		// TODO use original texture from brush
@@ -245,10 +265,16 @@ public class T3DStaticMesh extends T3DSound {
 			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
 		}
 
-		if (skins != null) {
-			for (UPackageRessource matSkin : skins) {
-				if (matSkin != null) {
-					matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+		if(mapConverter.convertTextures()) {
+			if (this.uv2Texture != null) {
+				this.uv2Texture.export(UTPackageExtractor.getExtractor(mapConverter, uv2Texture));
+			}
+
+			if (this.skins != null) {
+				for (final UPackageRessource matSkin : skins) {
+					if (matSkin != null) {
+						matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+					}
 				}
 			}
 		}
