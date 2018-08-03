@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.tools;
 
+
 /**
  *
  * @author XtremeXp
@@ -40,8 +41,8 @@ public class HSVColor {
 	 * 
 	 * @return
 	 */
-	public RGBColor toRGBColor() {
-		return ImageUtils.HSVToLinearRGB(this);
+	public RGBColor toRGBColor(boolean zeroOneScale) {
+		return ImageUtils.HSVToLinearRGB(this, zeroOneScale);
 	}
 
 	public static HSVColor getDefaultUE12Color() {

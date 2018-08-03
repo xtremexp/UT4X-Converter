@@ -5,6 +5,8 @@
 
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.tools.SystemUtil;
+
 import java.io.File;
 
 /**
@@ -22,12 +24,12 @@ public class UTGames {
 	 * Default internal UT4 Editor folder where converted map stuff should by
 	 * copied to
 	 */
-	public static final String UE4_FOLDER_MAP = "/Game/Maps";
+	public static final String UE4_FOLDER_MAP = "/Game/RestrictedAssets/Maps/WIP";
 
 	/**
 	 * List all unreal engines
 	 */
-	public static enum UnrealEngine {
+	public enum UnrealEngine {
 
 		/**
          *
@@ -80,7 +82,7 @@ public class UTGames {
 	/**
 	 * List all UT Games
 	 */
-	public static enum UTGame {
+	public enum UTGame {
 
 		/**
 		 * Undefined
@@ -121,6 +123,11 @@ public class UTGames {
 		 * Unreal 2
 		 */
 		U2("Unreal 2", "U2", UnrealEngine.UE2, "un2"),
+
+		/**
+		 * UDK
+		 */
+		UDK("Unreal Development Kit", "UDK", UnrealEngine.UE3, "udk"),
 
 		/**
          *
@@ -211,6 +218,28 @@ public class UTGames {
 	public static boolean isUnrealEngine1(UTGames.UTGame utGame) {
 		return utGame.engine == UnrealEngine.UE1;
 	}
+	
+	/**
+	 * Returns default folder for textures.
+	 * @param basePath
+	 * @param utgame UT Game
+	 * @return Default folder for texture (only for UE1/UE2 ut games)
+	 */
+	public static File getTexturesFolder(final File basePath, UTGames.UTGame utgame) {
+		if (utgame.engine.version <= UnrealEngine.UE2.version) {
+			return new File(basePath + File.separator + "Textures");
+		} else {
+			return null;
+		}
+	}
+	
+	public static File getSystemFolder(final File basePath, UTGames.UTGame utgame) {
+		if (utgame.engine.version <= UnrealEngine.UE2.version) {
+			return new File(basePath + File.separator + "System");
+		} else {
+			return null;
+		}
+	}
 
 	public static File getMapsFolder(File basePath, UTGames.UTGame utgame) {
 
@@ -224,8 +253,12 @@ public class UTGames {
 			return new File(basePath + File.separator + "UTGame" + File.separator + "CookedPC");
 		}
 
+		else if (utgame == UTGame.UDK) {
+			return new File(basePath + File.separator + "UDKGame" + File.separator + "Content" + File.separator + "Maps");
+		}
+
 		else if (utgame == UTGame.UT4) {
-			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "Maps");
+			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets" + File.separator + "Maps" + File.separator + "WIP");
 		}
 
 		else {
@@ -235,11 +268,11 @@ public class UTGames {
 
 	/**
 	 * 
-	 * @param basePath
-	 * @param utgame
-	 * @return
+	 * @param basePath Game path from config
+	 * @param utgame UT Game
+	 * @return Folder where binaries files of UT game are.
 	 */
-	public static File getBinariesFolder(File basePath, UTGames.UTGame utgame) {
+	public static File getBinariesFolder(final File basePath, final UTGames.UTGame utgame) {
 
 		if (utgame.engine.version <= UnrealEngine.UE2.version) {
 			return new File(basePath + File.separator + "System");
@@ -249,6 +282,14 @@ public class UTGames {
 		// folder cookedpc
 		else if (utgame == UTGame.UT3) {
 			return new File(basePath + File.separator + "Binaries");
+		}
+		else if (utgame == UTGame.UDK) {
+			if(SystemUtil.is32BitOS()){
+				return new File(basePath + File.separator + "Binaries" + File.separator + "Win32");
+			} else {
+				return new File(basePath + File.separator + "Binaries" + File.separator + "Win64");
+			}
+
 		}
 
 		else {

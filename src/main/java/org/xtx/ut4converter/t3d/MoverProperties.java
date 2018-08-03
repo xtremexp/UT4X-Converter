@@ -5,15 +5,16 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import static org.xtx.ut4converter.t3d.T3DObject.IDT;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector3d;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-
-import static org.xtx.ut4converter.t3d.T3DActor.IDT;
-
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -47,9 +48,9 @@ public class MoverProperties implements T3D {
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
 	 */
-	List<Vector3d> savedRotations = new ArrayList<>();;
+	List<Vector3d> savedRotations = new ArrayList<>();
 
-	/**
+    /**
 	 * How long it takes for the mover to get to next position
 	 */
 	Double moveTime;
@@ -67,13 +68,24 @@ public class MoverProperties implements T3D {
 	Double delayTime;
 
 	T3DActor mover;
+	
+	/**
+	 * Reference to converter
+	 */
+	private MapConverter mapConverter;
 
-	public MoverProperties(T3DActor mover) {
+	public MoverProperties(T3DActor mover, MapConverter mapConverter) {
 		this.mover = mover;
+		this.mapConverter = mapConverter;
 	}
 
 	@Override
 	public boolean analyseT3DData(String line) {
+		/**
+		 * OpenSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
+         OpenedSound=SoundCue'A_Movers.Movers.Elevator01_StopCue'
+         CloseSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
+		 */
 		// UE1 -> 'Wait at top time' (UE4)
 		if (line.contains("StayOpenTime")) {
 			stayOpenTime = T3DUtils.getDouble(line);
@@ -90,28 +102,27 @@ public class MoverProperties implements T3D {
 		}
 
 		// UE1 -> 'CloseStartSound' ? (UE4)
-		else if (line.contains("ClosedSound=")) {
+		else if (line.startsWith("ClosedSound=")) {
 			closedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
-			;
 		}
 
 		// UE1 -> 'CloseStopSound' ? (UE4)
-		else if (line.contains("ClosingSound=")) {
+		else if (line.startsWith("ClosingSound=") || line.startsWith("ClosingAmbientSound=")) {
 			closingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStartSound' ? (UE4)
-		else if (line.contains("OpeningSound=")) {
+		else if (line.startsWith("OpeningSound=") || line.startsWith("OpeningAmbientSound=")) {
 			openingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStopSound' ? (UE4)
-		else if (line.contains("OpenedSound=")) {
+		else if (line.startsWith("OpenedSound=")) {
 			openedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Closed Sound' (UE4)
-		else if (line.contains("MoveAmbientSound=")) {
+		else if (line.startsWith("MoveAmbientSound=") || line.startsWith("OpenSound=")) {
 			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
 		}
 
@@ -138,7 +149,8 @@ public class MoverProperties implements T3D {
 	public String toString(StringBuilder sbf) {
 		// Write the mover as Destination Lift
 		// TODO write as well matinee actor (once implementation done)
-		// because it's impossible to know ("guess") if a mover is a lift or another kind of mover (button, door, ...)
+		// because it's impossible to know ("guess") if a mover is a lift or
+		// another kind of mover (button, door, ...)
 		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("_Lift\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
@@ -173,7 +185,7 @@ public class MoverProperties implements T3D {
 		}
 
 		if (moveAmbientSound != null) {
-			// no property for sound when moving in UT4
+			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("'\n");
 		}
 
 		if (stayOpenTime != null) {
@@ -184,6 +196,14 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
 		}
 
+		if (mover instanceof T3DMoverSM) {
+			T3DMoverSM moverSm = (T3DMoverSM) mover;
+
+			if (moverSm.staticMesh != null && moverSm.getMapConverter().convertStaticMeshes()) {
+				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.staticMesh.getConvertedName(moverSm.getMapConverter())).append("'\n");
+			}
+		}
+
 		mover.writeEndActor();
 
 		return sbf.toString();
@@ -192,28 +212,36 @@ public class MoverProperties implements T3D {
 	@Override
 	public void convert() {
 
+		// used to match very similar sound resources by name (e.g:
+		// A_Movers.Movers.Elevator01.Loop -> A_Movers.Movers.Elevator01.LoopCue
+		final boolean isFromUe3 = mapConverter.isFrom(UnrealEngine.UE3);
+
 		if (openingSound != null) {
-			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound));
+			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound), !isFromUe3);
 		}
 
 		if (openedSound != null) {
-			openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound));
+			openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound), !isFromUe3);
 		}
 
 		if (closingSound != null) {
-			closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound));
+			closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound), !isFromUe3);
 		}
 
 		if (closedSound != null) {
-			closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound));
+			closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound), !isFromUe3);
+		}
+
+		if (moveAmbientSound != null) {
+			moveAmbientSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, moveAmbientSound), !isFromUe3);
 		}
 	}
 
 	@Override
 	public void scale(Double newScale) {
 
-		for (Vector3d position : positions) {
-			position.scale(newScale);
+		for( Vector3d position : positions ) { 
+			position.scale(newScale); 
 		}
 	}
 
@@ -271,7 +299,6 @@ public class MoverProperties implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
-		return toString(sb);
+	public void toT3d(StringBuilder sb, String prefix) {
 	}
 }

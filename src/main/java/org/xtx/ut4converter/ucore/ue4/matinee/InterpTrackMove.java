@@ -34,9 +34,9 @@ public class InterpTrackMove extends InterpTrack {
 		 * Do not change rotation. Ignore it
 		 */
 		IMR_Ignore, IMR_MAX,
-	};
+	}
 
-	private enum ActiveCondition {
+    private enum ActiveCondition {
 		ETAC_GoreEnabled, ETAC_GoreDisabled, ETAC_Always
 	}
 
@@ -99,7 +99,7 @@ public class InterpTrackMove extends InterpTrack {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		T3DUtils.writeBeginObj(sb, name, prefix + "\t\t");
 
@@ -108,8 +108,6 @@ public class InterpTrackMove extends InterpTrack {
 		T3DUtils.writeLine(sb, "LookupTrack", lookupTrack, prefix + "\t");
 
 		T3DUtils.writeEndObj(sb, prefix + "\t\t");
-
-		return "";
 	}
 
 	@Override

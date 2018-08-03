@@ -5,37 +5,32 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.tools.Installation;
+
+import javax.swing.*;
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import javax.swing.SwingUtilities;
-import javax.xml.bind.JAXBException;
-
-import org.xtx.ut4converter.MainApp;
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.t3d.T3DUtils;
-import org.xtx.ut4converter.tools.Installation;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class
@@ -57,6 +52,13 @@ public class ConversionSettingsController implements Initializable {
 	private Label inputMapLbl;
 	@FXML
 	private Label outputFolderLbl;
+	
+	/**
+	 * Path where ressources will be referenced to
+	 * (e.g: '/Game/RestrictedAssets/Maps/WIP/DM-Deck16'
+	 */
+	@FXML
+	private Label ut4BaseReferencePath;
 
 	MainApp mainApp;
 
@@ -81,7 +83,21 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private CheckBox convMusicCheckBox;
 
-	BigDecimal scaleFactor = new BigDecimal("2.2");
+	/**
+	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
+	 */
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE1_UE4 = new BigDecimal("2.4");
+	
+	/**
+	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
+	 */
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE2_UE4 = new BigDecimal("2.2");
+	
+	/**
+	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
+	 */
+	static final BigDecimal DEFAULT_SCALE_FACTOR_UE3_UE4 = new BigDecimal("2.2");
+	
 	@FXML
 	private ComboBox<String> scaleFactorList;
 	@FXML
@@ -90,8 +106,8 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<String> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
-	//@FXML
-	//private Label relativeUtMapPathLbl;
+	// @FXML
+	// private Label relativeUtMapPathLbl;
 	@FXML
 	private CheckBox debugLogLevel;
 	@FXML
@@ -102,6 +118,9 @@ public class ConversionSettingsController implements Initializable {
 
 	@FXML
 	private Label warningMessage;
+
+	@FXML
+	private TextField classesNameFilter;
 
 	/**
 	 * Initializes the controller class.
@@ -115,7 +134,6 @@ public class ConversionSettingsController implements Initializable {
 		advancedSettingsTitle.setText("Advanced Settings");
 		mainSettingsTitle.setText("Main Settings");
 
-		scaleFactorList.getSelectionModel().select(String.valueOf(scaleFactor));
 		lightningBrightnessFactor.getSelectionModel().select("1");
 		soundVolumeFactor.getSelectionModel().select("1");
 	}
@@ -154,8 +172,22 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
+		
+		
+		switch(mapConverter.getInputGame().engine.version){
+			case 1:
+			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE1_UE4));
+			case 2:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE2_UE4));
+			case 3:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+			case 4:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+			default:
+				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+		}
 
-		//relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
+		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
 		disableConversionType();
 
 		initConvCheckBoxes();
@@ -174,42 +206,21 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	private void disableConversionType() {
 
-		// force disabled for UT3 since
-		// it has very light support (hardly tested things)
-		if (inputGame == UTGames.UTGame.UT3) {
-			mapConverter.noConvertRessources();
+		boolean canConvertTextures = mapConverter.canConvertTextures();
+		mapConverter.setConvertTextures(canConvertTextures);
+		convTexCheckBox.setDisable(!canConvertTextures);
 
-			convTexCheckBox.setDisable(true);
-			convMusicCheckBox.setDisable(true);
-			convSmCheckBox.setDisable(true);
+		boolean canConvertSounds = mapConverter.canConvertSounds();
+		mapConverter.setConvertSounds(canConvertSounds);
+		convSndCheckBox.setDisable(!canConvertSounds);
 
-			convTexCheckBox.setDisable(false);
-			mapConverter.setConvertTextures(true);
+		boolean canConvertMusic = mapConverter.canConvertMusic();
+		mapConverter.setConvertMusic(canConvertMusic);
+		convMusicCheckBox.setDisable(!canConvertMusic);
 
-			convSndCheckBox.setDisable(false);
-			mapConverter.setConvertSounds(true);
-		} else {
-			boolean canConvertTextures = mapConverter.canConvertTextures();
-			mapConverter.setConvertTextures(canConvertTextures);
-			convTexCheckBox.setDisable(!canConvertTextures);
-
-			boolean canConvertSounds = mapConverter.canConvertSounds();
-			mapConverter.setConvertSounds(canConvertSounds);
-			convSndCheckBox.setDisable(!canConvertSounds);
-
-			boolean canConvertMusic = mapConverter.canConvertMusic();
-			mapConverter.setConvertMusic(canConvertMusic);
-			convMusicCheckBox.setDisable(!canConvertMusic);
-
-			boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
-			mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
-			convSmCheckBox.setDisable(!canConvertStaticMeshes);
-		}
-
-		// SM converter not yet operational
-		// delete once operational
-		//mapConverter.setConvertStaticMeshes(false);
-		//convSmCheckBox.setDisable(true);
+		boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
+		mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
+		convSmCheckBox.setDisable(!canConvertStaticMeshes);
 	}
 
 	/**
@@ -236,6 +247,8 @@ public class ConversionSettingsController implements Initializable {
 			if (newMapName.length() > 3) {
 				mapConverter.setOutMapName(newMapName);
 				outMapNameLbl.setText(mapConverter.getOutMapName());
+				mapConverter.initConvertedResourcesFolder();
+				ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
 			}
 		}
 
@@ -292,6 +305,9 @@ public class ConversionSettingsController implements Initializable {
 			changeMapNameBtn.setDisable(false);
 			inputMapLbl.setText(unrealMap.getName());
 			mapConverter.setInMap(unrealMap);
+			mapConverter.initConvertedResourcesFolder();
+			ut4BaseReferencePath.setDisable(false);
+			ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
 			outputFolderLbl.setText(mapConverter.getOutPath().toString());
 			outMapNameLbl.setText(mapConverter.getOutMapName());
 		}
@@ -304,9 +320,35 @@ public class ConversionSettingsController implements Initializable {
 
 			dialogStage.close();
 
+			// FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
+			// because the UT3 commandlet is kinda in "alpha" stages
+			if (mapConverter.getInputGame() == UTGame.UT3) {
+				FileChooser chooser = new FileChooser();
+				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from UT3 editor ");
+
+				File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+
+				if (mapFolder.exists()) {
+					chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+				}
+
+				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Editor Map (*.t3d)", "*.t3d"));
+
+				File t3dUt3EditorFile = chooser.showOpenDialog(new Stage());
+
+				if (t3dUt3EditorFile != null) {
+					mapConverter.setIntT3dUt3Editor(t3dUt3EditorFile);
+				} else {
+					return;
+				}
+			}
+			
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
 			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
 			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());
+			if (classesNameFilter.getLength() > 1) {
+				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
+			}
 
 			mapConverter.setConversionViewController(mainApp.showConversionView());
 
@@ -332,6 +374,72 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param event
+	 */
+	@FXML
+	private void selectUt4BaseReferencePath(ActionEvent event) {
+
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Select ut4 editor reference base path");
+
+		UserConfig userConfig = null;
+
+		try {
+			userConfig = UserConfig.load();
+
+			if (userConfig != null) {
+				File ut4RootPath = userConfig.getGameConfigByGame(UTGame.UT4).getPath();
+
+				if (ut4RootPath.exists()) {
+					File ut4RootContentPath = new File(ut4RootPath.getAbsolutePath() + File.separator + "UnrealTournament" + File.separator + "Content");
+
+					if (ut4BaseReferencePath != null && ut4BaseReferencePath.getText() != null && !ut4BaseReferencePath.getText().trim().isEmpty()) {
+						File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ut4BaseReferencePath);
+
+						if (ut4BaseRefPath.getParentFile().exists()) {
+							chooser.setInitialDirectory(ut4BaseRefPath.getParentFile());
+						}
+					}
+					
+					if (chooser.getInitialDirectory() == null) {
+						chooser.setInitialDirectory(ut4RootContentPath);
+					}
+
+					File ut4RefFolder = chooser.showDialog(new Stage());
+
+					if (ut4RefFolder != null) {
+						if(ut4RefFolder.getPath().startsWith(ut4RootContentPath.getAbsolutePath())){
+							String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
+							ut4BaseRef = ut4BaseRef.replace("\\", "/");
+							
+							ut4BaseReferencePath.setText(ut4BaseRef);
+							mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
+						} else {
+							showErrorMessage("Reference folder must be in ut4 content subfolder!");
+						}
+						
+					}
+				} else {
+					Logger.getGlobal().severe("UT4 Editor path not set !");
+					return;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private void showErrorMessage(String message) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Operation failed");
+		alert.setContentText("An error occured: " + message);
+		alert.showAndWait();
 	}
 
 	@FXML

@@ -25,10 +25,13 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  */
 public class T3DSound extends T3DActor {
 
+
 	/**
 	 * UE1, UE4
 	 */
 	UPackageRessource ambientSound;
+
+	private String soundClass = "AmbientSound";
 
 	AttenuationSettings attenuation = new AttenuationSettings();
 
@@ -64,6 +67,14 @@ public class T3DSound extends T3DActor {
 	 */
 	enum DistributionType {
 		DistributionDelayTime, DistributionMinRadius, DistributionMaxRadius, DistributionLPFMinRadius, DistributionLPFMaxRadius, DistributionVolume, DistributionPitch
+	}
+
+	/**
+	 * 
+	 * Ambient sound actors for UT3/UE3
+	 */
+	public enum UE3_AmbientSoundActor {
+		AmbientSound, AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
 	}
 
 	/**
@@ -142,6 +153,8 @@ public class T3DSound extends T3DActor {
 
 				Map<String, Object> props = new HashMap<>();
 
+				props.put("DistanceAlgorithm", distanceAlgorithm.name());
+
 				props.put("bAttenuateWithLPF", bAttenuateWithLPF);
 				props.put("bSpatialize", bSpatialize);
 
@@ -169,14 +182,19 @@ public class T3DSound extends T3DActor {
 		}
 	}
 
+	public T3DSound(MapConverter mc, String t3dClass) {
+		super(mc, t3dClass, null);
+
+		initialise();
+	}
+
 	/**
 	 *
 	 * @param mc
 	 * @param t3dClass
 	 */
-	public T3DSound(MapConverter mc, String t3dClass) {
-		super(mc, t3dClass);
-		ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
+	public T3DSound(MapConverter mc, String t3dClass, T3DActor actor) {
+		super(mc, t3dClass, actor);
 
 		initialise();
 	}
@@ -186,6 +204,8 @@ public class T3DSound extends T3DActor {
 	 * version
 	 */
 	private void initialise() {
+
+		ue4RootCompType = T3DMatch.UE4_RCType.AUDIO;
 
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			attenuation.attenuationShapeExtents.x = 64d; // Default Radius in
@@ -208,6 +228,10 @@ public class T3DSound extends T3DActor {
 
 		else if (line.startsWith("SoundPitch")) {
 			soundPitch = T3DUtils.getDouble(line);
+		}
+
+		else if (line.startsWith("DistanceModel")) {
+			attenuation.distanceAlgorithm = DistanceAlgorithm.valueOf(line.split("\\=")[1]);
 		}
 
 		// UE3
@@ -236,7 +260,7 @@ public class T3DSound extends T3DActor {
 			Double max = T3DUtils.getDouble(line);
 
 			if (DistributionType.DistributionPitch.name().equals(currentSubObjectName)) {
-				soundPitch = Math.max(soundPitch, max);
+				soundPitch = getMax(soundPitch, max);
 			} else if (DistributionType.DistributionVolume.name().equals(currentSubObjectName)) {
 				soundVolume = getMax(soundVolume, max);
 			} else if (DistributionType.DistributionLPFMinRadius.name().equals(currentSubObjectName)) {
@@ -261,14 +285,14 @@ public class T3DSound extends T3DActor {
 		return true;
 	}
 
-	private Double getMax(Double currentMax, Double newMax){
-		if(currentMax == null){
+	private Double getMax(Double currentMax, Double newMax) {
+		if (currentMax == null) {
 			return newMax;
 		} else {
 			return Math.max(currentMax, newMax);
 		}
 	}
-	
+
 	@Override
 	public void scale(Double newScale) {
 
@@ -312,8 +336,6 @@ public class T3DSound extends T3DActor {
 			// tested DM-ArcaneTemple (UT99)
 			attenuation.fallOffDistance = attenuation.attenuationShapeExtents.x * 24;
 
-		} else if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-			// TODO
 		}
 
 		if (mapConverter.convertSounds() && ambientSound != null) {
@@ -340,7 +362,7 @@ public class T3DSound extends T3DActor {
 				name += "Sound";
 			}
 
-			sbf.append(IDT).append("Begin Actor Class=AmbientSound Name=").append(name).append("\n");
+			sbf.append(IDT).append("Begin Actor Class=").append(soundClass).append(" Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"AudioComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
@@ -352,7 +374,6 @@ public class T3DSound extends T3DActor {
 				sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
 			}
 
-			// bOverrideAttenuation=True
 			if (soundVolume != null) {
 				sbf.append(IDT).append("\t\tVolumeMultiplier=").append(soundVolume).append("\n");
 			}

@@ -54,6 +54,11 @@ public abstract class T3DActor extends T3DObject {
 	 * UE1/2/3? property in Events->Tag
 	 */
 	protected String tag;
+	
+	/**
+	 * UE1/2/ (3?) property in Events->Event
+	 */
+	protected String event;
 
 	/**
 	 * Location of actor (if null means 0 location)
@@ -112,8 +117,7 @@ public abstract class T3DActor extends T3DObject {
 	protected boolean validWriting = true;
 
 	/**
-	 * Only used bu UE4 (and UE3?)
-	 * Contains location and rotation data of actor
+	 * Only used bu UE4 (and UE3?) Contains location and rotation data of actor
 	 */
 	public SceneComponent sceneComponent;
 
@@ -139,13 +143,15 @@ public abstract class T3DActor extends T3DObject {
 	 * t3d converted stuff.
 	 */
 	protected List<T3DActor> children = new ArrayList<>();
-	
+
 	/**
 	 * Used to write actor TODO make global StringBuilder that we would 'reset'
 	 * after write of each actor (avoiding creating one for each single actor /
 	 * perf issues)
 	 */
 	protected StringBuilder sbf;
+	
+	private boolean invalidActorForWrite;
 
 	String currentSubObjectClass;
 	String currentSubObjectName;
@@ -158,7 +164,7 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public void preAnalyse(String line) {
 
-		if (!UTGames.isUnrealEngine3(mapConverter.getInputGame())) {
+		if (!mapConverter.isFrom(UnrealEngine.UE3)) {
 			return;
 		}
 		// Class=DistributionFloatUniform Name=DistributionPitch
@@ -183,18 +189,38 @@ public abstract class T3DActor extends T3DObject {
 		return parseOtherData(line);
 	}
 
+	public T3DActor(MapConverter mc, String t3dClass){
+		super(mc, t3dClass);
+		
+		sceneComponent = new SceneComponent(mc);
+		properties = new HashMap<>();
+		this.sbf = new StringBuilder();
+	}
+	
 	/**
 	 *
 	 * @param mc
 	 * @param t3dClass
+	 * @param actor
+	 *            If not null will copy some basic properties like location to
+	 *            this actor
 	 */
-	public T3DActor(MapConverter mc, String t3dClass) {
+	public T3DActor(MapConverter mc, String t3dClass, T3DActor actor) {
 
 		super(mc, t3dClass);
 
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
 		this.sbf = new StringBuilder();
+
+		if (actor != null) {
+			this.location = actor.location;
+			this.rotation = actor.rotation;
+			this.scale3d = actor.scale3d;
+			this.drawScale = actor.drawScale;
+			this.tag = actor.tag;
+			this.name = actor.name;
+		}
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {
@@ -221,21 +247,43 @@ public abstract class T3DActor extends T3DObject {
 			sceneComponent.setRelativeLocation(location);
 		}
 
-		if (line.contains(" OldLocation=") || line.contains("\tOldLocation=")) {
+		else if (line.startsWith("OldLocation=") || line.contains("\tOldLocation=")) {
 			oldLocation = T3DUtils.getVector3d(line, 0D);
 		}
 
-		else if (line.contains(" ColLocation=") || line.contains("\tColLocation=") || line.contains("ColLocation=")) {
+		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
 			coLocation = T3DUtils.getVector3d(line, 0D);
 		}
 
 		else if (line.startsWith("DrawScale3D")) {
-			scale3d = T3DUtils.getVector3d(line, 1D);
+
+			Vector3d tmpScale = T3DUtils.getVector3d(line, 1D);
+
+			if (scale3d == null) {
+				scale3d = tmpScale;
+			} else {
+				scale3d.x *= tmpScale.x;
+				scale3d.y *= tmpScale.y;
+				scale3d.z *= tmpScale.z;
+			}
+
 			sceneComponent.setRelativeScale3D(scale3d);
 		}
 
 		else if (line.startsWith("DrawScale=")) {
-			drawScale = T3DUtils.getDouble(line);
+
+			double scale = T3DUtils.getDouble(line);
+
+			// Scale and Scale3d can both be used to scale up/down staticmeshes
+			if (this instanceof T3DStaticMesh) {
+				if (scale3d == null) {
+					scale3d = new Vector3d(scale, scale, scale);
+				} else {
+					scale3d.scale(scale);
+				}
+			} else {
+				drawScale = T3DUtils.getDouble(line);
+			}
 		}
 
 		else if (line.startsWith("Rotation")) {
@@ -244,6 +292,12 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.contains("Name=")) {
+			// "Begin Object Class=Action_PLAYSOUND Name=Action_PLAYSOUND3" for
+			// UT2004 scripted trigger
+			// TODO better handle that
+			if (mapConverter.isFrom(UnrealEngine.UE2) && line.contains("Begin Object")) {
+				return false;
+			}
 			name = line.split("Name=")[1].replaceAll("\"", "");
 		}
 
@@ -260,10 +314,17 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("Tag=")) {
-			tag = line.split("Tag=")[1];
+			tag = T3DUtils.getString(line);
+		}
+		
+		else if (line.startsWith("Event=")) {
+			event = line.split("\\=")[1].replaceAll("\\\"", "");
 		}
 
 		else {
+			if (equalsIdx != -1 && !(this instanceof T3DNote)) {
+				this.mapConverter.getT3dLvlConvertor().logUnconvertedProperty(this.getT3dClass(), line.substring(0, equalsIdx).split("\\(")[0]);
+			}
 			return false;
 		}
 
@@ -274,12 +335,12 @@ public abstract class T3DActor extends T3DObject {
 		writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
 	}
 
-	public void writeLocRotSceneComponent(String prefix){
+	public void writeLocRotSceneComponent(String prefix) {
 		sceneComponent.writeBeginObj(sbf, prefix);
 		writeLocRotAndScale();
 		sceneComponent.writeEndObj(sbf, prefix);
 	}
-	
+
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 * 
@@ -461,22 +522,42 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		if (rotation != null) {
-			// Rotation range changed between UE2 and UE3
+			// Rotation range changed from UE4
 			// for brushes no need that since they have been transformed
 			// permanently
 			// Vertice data updated with rotation and rotation reset
-			
+
 			double rotFac = 1d;
-			
-			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
+
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 				rotFac = 360d / 65536d;
-			} else if (mapConverter.isFromUE3UE4ToUE1UE2()) {
+			} else if (mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isFrom(UnrealEngine.UE4)) {
 				rotFac = 65536d / 360d;
 			}
-			
+
 			rotation.x *= rotFac;
 			rotation.y *= rotFac;
 			rotation.z *= rotFac;
+		}
+		
+		// Brush name need to be the original one to fix ut3 brushes order (based on actor name)
+		if (this.name != null && !(this instanceof T3DBrush)) {
+
+			final String[] namePrefixSp = this.name.split("\\_");
+			String namePrefix = null;
+			if (namePrefixSp.length == 2) {
+				namePrefix = namePrefixSp[0];
+			} else if (namePrefixSp.length == 3) {
+				namePrefix = namePrefixSp[0] + "_" + namePrefixSp[1];
+			}
+
+			if (this.tag != null && !this.tag.equals(namePrefix)) {
+				this.name += "_" + this.tag;
+			}
+
+			if (this.event != null && !this.event.equals(namePrefix)) {
+				this.name += "->" + this.event;
+			}
 		}
 
 		// Notify actor was converted
@@ -520,11 +601,7 @@ public abstract class T3DActor extends T3DObject {
 
 		if (mapConverter.toUnrealEngine4()) {
 			if (drawScale != null) {
-				// limited sprite scale for staticmeshes because UT3 uses
-				// drawscale as drawscale3d in same time
-				if (!"StaticMeshActor".equals(t3dOriginClass)) {
-					sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
-				}
+				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}
 			sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
 		}
@@ -532,8 +609,7 @@ public abstract class T3DActor extends T3DObject {
 		else {
 			if (drawScale != null) {
 				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");
-				;
-			}
+            }
 			sbf.append(IDT).append("\tName=\"").append(name).append("\n");
 		}
 
@@ -627,6 +703,15 @@ public abstract class T3DActor extends T3DObject {
 
 	public SceneComponent getSceneComponent() {
 		return sceneComponent;
+	}
+
+	/**
+	 * Get original class of actor
+	 * 
+	 * @return
+	 */
+	public String getT3dOriginClass() {
+		return t3dOriginClass;
 	}
 
 }

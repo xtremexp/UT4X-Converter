@@ -182,14 +182,17 @@ public class T3DUE4Terrain extends T3DActor {
 
 			double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;
 			double offsetY = (nbCompY * this.scale3d.y * this.componentSizeQuads) / 2;
+			double offsetZ = this.scale3d.z * 128;
 
 			if (mapConverter.getScale() != null) {
 				offsetX *= mapConverter.getScale();
 				offsetY *= mapConverter.getScale();
+				offsetZ *= mapConverter.getScale();
 			}
 
 			this.location.x -= (offsetX + 100);
 			this.location.y -= (offsetY + 100);
+			this.location.z += offsetZ;
 		}
 	}
 

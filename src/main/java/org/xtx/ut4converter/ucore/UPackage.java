@@ -5,15 +5,14 @@
  */
 package org.xtx.ut4converter.ucore;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 /**
  * Very basic implementation of unreal package
@@ -64,7 +63,10 @@ public class UPackage {
 		this.name = name;
 		this.type = type;
 		this.game = game;
-		ressources.add(uRessource);
+
+		if (uRessource != null) {
+			ressources.add(uRessource);
+		}
 	}
 
 	public String getName() {
@@ -74,12 +76,11 @@ public class UPackage {
 	/**
 	 * Gets the associated file with this package.
 	 * 
-	 * @param gamePath
-	 *            Base path of the ut game this unreal package comes from
-	 * @param inputEngine
+	 * @param mapConverter
+	 *            Map converter
 	 * @return
 	 */
-	public File getFileContainer(MapConverter mapConverter) {
+	public File getFileContainer(final MapConverter mapConverter) {
 
 		File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
 
@@ -105,8 +106,8 @@ public class UPackage {
 				if (!this.file.exists() && !mapConverter.getInMap().getName().endsWith(".t3d")) {
 					this.file = mapConverter.getInMap();
 				}
-			} else if (mapConverter.getInputGame() == UTGame.UT3) {
-				return mapConverter.getUt3PackageFileFromName(getName());
+			} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+				return mapConverter.getUe3PackageFileFromName(getName());
 			}
 		}
 
@@ -131,8 +132,8 @@ public class UPackage {
 		Set<File> exportedFiles = new HashSet<>();
 
 		for (UPackageRessource upr : ressources) {
-			if (upr.getExportedFile() != null) {
-				exportedFiles.add(upr.getExportedFile());
+			if (upr.getExportedFiles() != null) {
+				exportedFiles.addAll(upr.getExportedFiles());
 			}
 		}
 
@@ -177,6 +178,10 @@ public class UPackage {
 
 		return null;
 	}
+	
+	public UPackageRessource findRessource(String fullName){
+		return findRessource(fullName, true);
+	}
 
 	/**
 	 * Returns ressource package by full name
@@ -185,7 +190,7 @@ public class UPackage {
 	 *            Full ressource name (e.g: "AmbAncient.Looping.Stower51")
 	 * @return ressource with same full name
 	 */
-	public UPackageRessource findRessource(String fullName) {
+	public UPackageRessource findRessource(String fullName, boolean perfectMatchOnly) {
 
 		String s[] = fullName.split("\\.");
 		String fullNameWithoutGroup = null;
@@ -195,34 +200,58 @@ public class UPackage {
 			fullNameWithoutGroup = s[0] + "." + s[2];
 			group = s[1];
 		}
+		
+		// sometimes not same case
+		// e.g: Ambmodern package name in .t3d file
+		// and AmbModern with extractors
+		fullName = fullName.toLowerCase();
 
 		for (UPackageRessource packageRessource : ressources) {
 
 			// matching "pakname.groupname.name"
-			if (fullName.equals(packageRessource.getFullName()) || fullName.equals(packageRessource.getFullNameWithoutGroup())) {
+			if (fullName.equals(packageRessource.getFullName().toLowerCase()) || fullName.equals(packageRessource.getFullNameWithoutGroup().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// matching "pakname_groupname_name"
-			else if (fullName.equals(packageRessource.getFullNameWithoutDots())) {
+			else if (fullName.equals(packageRessource.getFullNameWithoutDots().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// matching "groupname_name"
-			else if (fullName.equals(packageRessource.getGroupAndNameWithoutDots())) {
+			else if (fullName.equals(packageRessource.getGroupAndNameWithoutDots().toLowerCase())) {
 				return packageRessource;
 			}
 
 			// Package ressource was created without group info
 			// since we have this info now, update the ressource and return it
 			// matching "pakname.name"
-			else if (packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)) {
+			else if (fullNameWithoutGroup != null && packageRessource.getFullNameWithoutGroup().toLowerCase().equals(fullNameWithoutGroup.toLowerCase())) {
 
 				if (group != null) {
 					packageRessource.group = s[2];
 				}
 
 				return packageRessource;
+			} 
+			// try matching very close resource names
+			// e.g: A_Movers_Movers_Elevator01_LoopCue used in a InterpActor
+			// but exported resource name (.wav) is
+			// A_Movers_Movers_Elevator01_Loop
+			else if (!perfectMatchOnly && s.length >= 2) {
+				// same package
+				if (s[0].equalsIgnoreCase(packageRessource.getUnrealPackage().getName())) {
+					// e.g: A_Movers_Movers_Elevator01_LoopCue
+					final String pakResName = packageRessource.getName().toLowerCase();
+
+					// e.g: A_Movers_Movers_Elevator01_Loop
+					final String theName = s[s.length - 1].toLowerCase();
+
+					if (pakResName.length() > 6 && theName.length() > 6 && pakResName.contains(theName)) {
+						packageRessource.name = s[s.length - 1];
+						return packageRessource;
+					}
+				}
 			}
 		}
 
@@ -305,6 +334,15 @@ public class UPackage {
 
 	public void setExported(boolean exported) {
 		this.exported = exported;
+	}
+
+	public boolean isMapPackage(String mapName) {
+		return name != null && name.equals(mapName);
+	}
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }

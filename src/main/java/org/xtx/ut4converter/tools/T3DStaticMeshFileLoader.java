@@ -38,7 +38,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  */
 public class T3DStaticMeshFileLoader {
 
-	public static enum ExportFormat {
+	public enum ExportFormat {
 		ASE, // Ascii Scene (can be imported by UT3 not UT4)
 		FBX, // Flimbox format (can be imported by UT4 not UT3)
 		T3D // Unreal Engine 2 internal format (this one)
@@ -99,7 +99,7 @@ public class T3DStaticMeshFileLoader {
 	 * 
 	 * @return List of polygons
 	 */
-	private void loadBrush() throws FileNotFoundException, IOException {
+	private void loadBrush() throws IOException {
 
 		brush = new T3DBrush(mapConverter, null);
 		LinkedList<T3DPolygon> polygons = new LinkedList<>();

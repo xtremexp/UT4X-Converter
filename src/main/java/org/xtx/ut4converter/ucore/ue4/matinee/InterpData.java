@@ -55,7 +55,7 @@ public class InterpData extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		if (interpCurveEdSetup != null) {
 			interpCurveEdSetup.toT3d(sb, prefix);
@@ -70,8 +70,6 @@ public class InterpData extends T3DObject implements T3D {
 		T3DUtils.writeClassRef(sb, "CurveEdSetup", interpCurveEdSetup, prefix + "\t");
 		T3DUtils.writeClassRef(sb, "InterpGroups", interpGroups, prefix + "\t");
 		T3DUtils.writeLine(sb, "SelectedFilter", "InterpFilter'FilterAll'", prefix + "\t");
-
-		return sb.toString();
 	}
 
 }

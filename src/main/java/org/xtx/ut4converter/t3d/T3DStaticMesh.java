@@ -29,6 +29,11 @@ public class T3DStaticMesh extends T3DSound {
 
 	List<String> overiddeMaterials = new ArrayList<>();
 
+	/**
+	 * 
+	 */
+	List<UPackageRessource> skins;
+
 	BodyInstance bodyInstance;
 
 	/**
@@ -53,6 +58,12 @@ public class T3DStaticMesh extends T3DSound {
 	 * CastShadow=False TODO move this to some "Lightning" class
 	 */
 	Boolean castShadow;
+	
+	/**
+	 * UT3 (UT2004 as well) property
+	 * Do not exists in UE4
+	 */
+	private Vector3d prePivot;
 
 	/**
 	 * 
@@ -65,24 +76,42 @@ public class T3DStaticMesh extends T3DSound {
 	}
 
 	/**
-	 * Set scale to 1 so will be correctly scaled up
-	 * after conversion
+	 * Set scale to 1 so will be correctly scaled up after conversion
 	 */
-	private void initialize(){
-		scale3d = new Vector3d(new double[]{1d, 1d, 1d});
+	private void initialize() {
+		scale3d = new Vector3d(new double[] { 1d, 1d, 1d });
 	}
-	
+
 	@Override
 	public boolean analyseT3DData(String line) {
 
 		if (line.contains("StaticMesh=")) {
 			staticMesh = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.STATICMESH);
+		}
+		// PrePivot=(X=280.000000,Y=0.000000,Z=0.000000)
+		else if(line.startsWith("PrePivot=")){
+			prePivot = T3DUtils.getVector3d(line, 0d);
+		}
+		// UT2003/4 - Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
+		// UT3      - Materials(0)=MaterialInstanceConstant'HU_Deck.SM.Materials.M_HU_Deck_SM_BioPot_Goo'
+		else if (line.startsWith("Skins(") || line.startsWith("Materials(")) {
+
+			if (skins == null) {
+				skins = new ArrayList<>();
+			}
+			// can be Materials(0)=None as seen in VCTF-Kargo
+			if (line.contains("\\'")) {
+				skins.add(mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE));
+			} else {
+				skins.add(null); // simulating 'None'
+			}
 		} else {
 			super.analyseT3DData(line);
 		}
 
 		return true;
 	}
+	
 
 	/**
 	 * Create t3d static mesh from t3d sheet brush using existing UT4 sheet sm
@@ -137,7 +166,7 @@ public class T3DStaticMesh extends T3DSound {
 		// backward compatibility for created sheet SM from brushes
 		if (forcedStaticMesh != null) {
 			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
-		} else {
+		} else if (staticMesh != null) {
 			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName(mapConverter)).append("'\n");
 		}
 
@@ -146,9 +175,25 @@ public class T3DStaticMesh extends T3DSound {
 			sbf.append(IDT).append("\t\tOverriddenLightMapRes=").append(overriddenLightMapRes).append("\n");
 		}
 
+		// TODO REFACTOR (was originally for quick set texture for sheet
+		// brushes)
 		if (!overiddeMaterials.isEmpty()) {
 			for (int idx = 0; idx < overiddeMaterials.size(); idx++) {
 				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=MaterialInstanceConstant'").append(overiddeMaterials.get(idx)).append("'\n");
+			}
+		}
+
+		if (skins != null && !skins.isEmpty()) {
+			int idx = 0;
+
+			for (UPackageRessource skin : skins) {
+				if (skin != null) {
+					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName(mapConverter)).append("'\n");
+				} else {
+					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=None\n");
+				}
+				
+				idx++;
 			}
 		}
 
@@ -175,13 +220,44 @@ public class T3DStaticMesh extends T3DSound {
 
 	@Override
 	public void convert() {
+		
+		// UE4 does not support pre-pivot for staticmeshes unlike UE3/UDK
+		if (prePivot != null) {
 
-		if (mapConverter.convertStaticMeshes()) {
-			if (staticMesh != null) {
-				staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
+			if (this.scale3d != null) {
+				prePivot.x *= scale3d.x;
+				prePivot.y *= scale3d.y;
+				prePivot.z *= scale3d.z;
+			}
+
+			prePivot = Geometry.rotate(prePivot, rotation);
+
+			if (location != null) {
+				location.sub(prePivot);
+			} else {
+				prePivot.negate();
+				location = prePivot;
+			}
+
+		}
+
+		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
+			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
+		}
+
+		if (skins != null) {
+			for (UPackageRessource matSkin : skins) {
+				if (matSkin != null) {
+					matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
+				}
 			}
 		}
 
 		super.convert();
+	}
+
+	@Override
+	public boolean isValidWriting() {
+		return staticMesh != null || forcedStaticMesh != null;
 	}
 }

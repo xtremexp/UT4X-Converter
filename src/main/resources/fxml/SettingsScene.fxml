@@ -1,75 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="500.0" prefWidth="650.0" styleClass="mainFxmlClass" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
+<?import java.net.URL?>
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="650.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
     <stylesheets>
-        <URL value="@/styles/Styles.css"/>
+        <URL value="@/styles/Styles.css" />
     </stylesheets>
-    
-    <BorderPane prefHeight="400.0">
-        <center>
-            <VBox>
-                <TitledPane fx:id="gamePathsPane" expanded="true" >
-                    
-                    <GridPane hgap="10" vgap="10" alignment="CENTER" >
-                        <Label text="Unreal 1 Folder" GridPane.columnIndex="0" GridPane.rowIndex="1"></Label>
-                        <TextField fx:id="u1Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="1" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Gold"></TextField>
-                        <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1">Select</Button>
-            
-                        <Label text="Unreal 2 Folder" GridPane.columnIndex="0" GridPane.rowIndex="2" ></Label>
-                        <TextField fx:id="u2Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="2" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal II The Awakening"></TextField>
-                        <Button onAction="#selectU2Folder" GridPane.columnIndex="2" GridPane.rowIndex="2">Select</Button>
-            
-                        <Label text="UT99 Folder" GridPane.columnIndex="0" GridPane.rowIndex="3" ></Label>
-                        <TextField fx:id="ut99Path" GridPane.columnIndex="1" prefWidth="450.0" GridPane.rowIndex="3" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament"></TextField>
-                        <Button onAction="#selectUt99Folder" GridPane.columnIndex="2" GridPane.rowIndex="3">Select</Button>
-
-                        <Label text="UT2003 Folder" GridPane.columnIndex="0" GridPane.rowIndex="4" ></Label>
-                        <TextField fx:id="ut2003Folder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="4" editable="false" promptText="e.g: C:\UT2003"></TextField>
-                        <Button onAction="#selectUt2003Folder" GridPane.columnIndex="2" GridPane.rowIndex="4">Select</Button>
-            
-                        <Label text="UT2004 Folder" GridPane.columnIndex="0" GridPane.rowIndex="5" ></Label>
-                        <TextField fx:id="ut2004Path" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="5" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 2004"></TextField>
-                        <Button onAction="#selectUt2004Folder" GridPane.columnIndex="2" GridPane.rowIndex="5">Select</Button>
-            
-                        <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6" ></Label>
-                        <TextField fx:id="ut3Folder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="6" editable="false" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 3"></TextField>
-                        <Button onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
-            
-                        <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="7" ></Label>
-                        <TextField fx:id="ut4EditorFolder" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="7" editable="false" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" ></TextField>
-                        <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
+   <children>
+       
+       <BorderPane prefHeight="500.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <center>
+               <VBox>
+                  <children>
+                      <TitledPane fx:id="gamePathsPane" expanded="true">
+                         <content>
+                             
+                             <GridPane alignment="CENTER" hgap="10" vgap="10">
+                                <children>
+                                    <Label text="Unreal 1 Folder" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                    <TextField fx:id="u1Path" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Gold" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1">Select</Button>
                         
-                        <Label fx:id="settingsLog" GridPane.columnIndex="0" GridPane.rowIndex="8"  alignment="CENTER" GridPane.columnSpan="3" ></Label>
-                    </GridPane>
-
-                </TitledPane>
-        
-                <TitledPane fx:id="externalPrograms" expanded="true" >
-                    <GridPane hgap="10" vgap="10" alignment="CENTER" >
-                    
-                    	<!-- UMODEL - Package Extractor -->
-                        <Hyperlink onAction="#gotoUModelWebsite" text="UModel Path:" GridPane.rowIndex="0" GridPane.columnIndex="0" ></Hyperlink>
-                        <TextField fx:id="uModelPath" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel_win32\umodel.exe" editable="false"></TextField>
-                        <Button onAction="#setUModelPath" GridPane.rowIndex="0" GridPane.columnIndex="2">Select</Button>
+                                    <Label text="Unreal 2 Folder" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                    <TextField fx:id="u2Path" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal II The Awakening" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Button onAction="#selectU2Folder" GridPane.columnIndex="2" GridPane.rowIndex="2">Select</Button>
                         
-                        <!-- NCONVERT - Texture Conversion -->
-                        <Hyperlink onAction="#gotoNConvertWebsite" text="NConvert Path:" GridPane.rowIndex="1" GridPane.columnIndex="0" ></Hyperlink>
-                        <TextField fx:id="nconvertPath" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\XnView\nconvert.exe" editable="false"></TextField>
-                        <Button onAction="#setNConvertPath" GridPane.rowIndex="1" GridPane.columnIndex="2">Select</Button>
-                    </GridPane>
-                </TitledPane>
-            </VBox>
-        </center>
-        
-        <bottom>
-            <Button onAction="#closeDialog" >Close</Button>
-        </bottom>
-    </BorderPane>
+                                    <Label text="UT99 Folder" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                    <TextField fx:id="ut99Path" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Button onAction="#selectUt99Folder" GridPane.columnIndex="2" GridPane.rowIndex="3">Select</Button>
+            
+                                    <Label text="UT2003 Folder" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                    <TextField fx:id="ut2003Folder" editable="false" prefWidth="450.0" promptText="e.g: C:\UT2003" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Button onAction="#selectUt2003Folder" GridPane.columnIndex="2" GridPane.rowIndex="4">Select</Button>
+                        
+                                    <Label text="UT2004 Folder" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                    <TextField fx:id="ut2004Path" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 2004" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Button onAction="#selectUt2004Folder" GridPane.columnIndex="2" GridPane.rowIndex="5">Select</Button>
+                        
+                                    <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                    <TextField fx:id="ut3Folder" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 3" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Button onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">Select</Button>
+            
+                                    <Label text="UDK Folder" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                                    <TextField fx:id="udkFolder" editable="false" prefWidth="450.0" promptText="e.g: C:\UDK-2015-02" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Button onAction="#selectUdkFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">Select</Button>
+                        
+                                    <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                                    <TextField fx:id="ut4EditorFolder" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                    <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2" GridPane.rowIndex="8">Select</Button>
+                                    
+                                    <Label fx:id="settingsLog" alignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="9" />
+                                </children>
+                           <columnConstraints>
+                              <ColumnConstraints />
+                              <ColumnConstraints />
+                              <ColumnConstraints />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints />
+                           </rowConstraints>
+                             </GridPane>
+                         </content>
+      
+                      </TitledPane>
+              
+                      <TitledPane fx:id="externalPrograms" expanded="true">
+                 <content>
+                             <GridPane alignment="CENTER" hgap="10" vgap="10">
+                                <children>
+                                
+                                	<!-- UMODEL - Package Extractor -->
+                                    <Hyperlink onAction="#gotoUModelWebsite" text="UModel Path:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                    <TextField fx:id="uModelPath" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel_win32\umodel.exe" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                    <Button onAction="#setUModelPath" GridPane.columnIndex="2" GridPane.rowIndex="0">Select</Button>
+                                    
+                                    <!-- NCONVERT - Texture Conversion -->
+                                    <Hyperlink onAction="#gotoNConvertWebsite" text="NConvert Path:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                    <TextField fx:id="nconvertPath" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\XnView\nconvert.exe" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Button onAction="#setNConvertPath" GridPane.columnIndex="2" GridPane.rowIndex="1">Select</Button>
+                                </children>
+                           <columnConstraints>
+                              <ColumnConstraints />
+                              <ColumnConstraints />
+                              <ColumnConstraints />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints />
+                              <RowConstraints />
+                           </rowConstraints>
+                             </GridPane>
+                 </content>
+                      </TitledPane>
+                  </children>
+               </VBox>
+           </center>
+           
+           <bottom>
+               <Button onAction="#closeDialog">Close</Button>
+           </bottom>
+       </BorderPane>
+   </children>
 </AnchorPane>

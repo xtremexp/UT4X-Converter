@@ -144,7 +144,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		String base = "\t\t";
 
@@ -180,8 +180,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		sb.append(" LayerNum=0\n");
 		sb.append(base).append("End Object\n");
-
-		return sb.toString();
 	}
 
 	@Override

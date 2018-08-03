@@ -36,14 +36,12 @@ public class InterpCurveEdSetup extends T3DObject implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 
 		T3DUtils.writeBeginObj(sb, name, "\t");
 		// TODO implement tab class
 		sb.append("\t\tTabs(0)=(ViewEndInput=").append(viewEndInput).append(")");
 		T3DUtils.writeEndObj(sb, "\t");
-
-		return sb.toString();
 	}
 
 	@Override

@@ -46,16 +46,30 @@ public class T3DPlayerStart extends T3DSound {
 	public boolean analyseT3DData(String line) {
 
 		// TeamNumber=1
-
 		if (line.contains("TeamNumber")) {
 			teamNum = T3DUtils.getInteger(line);
 			isTeamPlayerStart = true;
+
+			// flag previous playerstarts analyszed as teamplayerstarts
+			if(!mapConverter.isTeamGameType()){
+				for(final T3DActor actor : mapConverter.getT3dLvlConvertor().getConvertedActors()){
+					if(actor instanceof  T3DPlayerStart){
+						((T3DPlayerStart) actor).setTeamPlayerStart(true);
+					}
+				}
+			}
+
+			mapConverter.setIsTeamGameType(true);
 		} else {
 
 			return super.analyseT3DData(line);
 		}
 
 		return true;
+	}
+
+	public void setTeamPlayerStart(boolean teamPlayerStart) {
+		isTeamPlayerStart = teamPlayerStart;
 	}
 
 	/**

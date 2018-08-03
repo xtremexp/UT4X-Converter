@@ -15,6 +15,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**
  * Utility class for geometry operations TODO refactor a bit (some functions
@@ -126,7 +127,7 @@ public class Geometry {
 	 * @param v
 	 *            Vector to be rotated
 	 * @param rotation
-	 *            Rotation vector
+	 *            Rotation vector with UE1/UE2 range (0->65536)
 	 * @return Vector rotated
 	 */
 	public static Vector3d rotate(Vector3d v, Vector3d rotation) {
@@ -314,21 +315,27 @@ public class Geometry {
 	 *            Post Scale only available for Unreal Engine 1 UT ...
 	 * @param isUV
 	 *            if true then vector is TextureU or TextureV data (T3D Brush)
+	 * 
+	 * @param sheerAxis
+	 * @param sheerRate
 	 */
-	public static void transformPermanently(Vector3d v, Vector3d mainScale, Vector3d rotation, Vector3d postScale, boolean isUV) {
+	public static void transformPermanently(Vector3d v, FScale mainScale, Vector3d rotation, FScale postScale, boolean isUV) {
 
 		if (mainScale != null) {
 
 			if (!isUV) {
-				v.x *= mainScale.x;
-				v.y *= mainScale.y;
-				v.z *= mainScale.z;
+				v.x *= mainScale.scale.x;
+				v.y *= mainScale.scale.y;
+				v.z *= mainScale.scale.z;
+				
+				//v = UnMath.applySheerRate(v, mainScale);
 			} else {
-				v.x /= mainScale.x;
-				v.y /= mainScale.y;
-				v.z /= mainScale.z;
+				v.x /= mainScale.scale.x;
+				v.y /= mainScale.scale.y;
+				v.z /= mainScale.scale.z;
 			}
 
+			// TODO handle sheer info
 		}
 
 		if (rotation != null) {
@@ -338,19 +345,38 @@ public class Geometry {
 		if (postScale != null) {
 
 			if (!isUV) {
-				v.x *= postScale.x;
-				v.y *= postScale.y;
-				v.z *= postScale.z;
+				v.x *= postScale.scale.x;
+				v.y *= postScale.scale.y;
+				v.z *= postScale.scale.z;
+				
+				//v = UnMath.applySheerRate(v, postScale);
 			} else {
-				v.x /= postScale.x;
-				v.y /= postScale.y;
-				v.z /= postScale.z;
+				v.x /= postScale.scale.x;
+				v.y /= postScale.scale.y;
+				v.z /= postScale.scale.z;
 			}
 
 		}
 
 		// avoid values like 1000.00000001 -> 1000.0
 		updateDoubleZeroes(v);
+	}
+	
+	public static float FSheerSnap(float Sheer) {
+		if (Sheer < -0.65f)
+			return Sheer + 0.15f;
+		else if (Sheer > +0.65f)
+			return Sheer - 0.15f;
+		else if (Sheer < -0.55f)
+			return -0.50f;
+		else if (Sheer > +0.55f)
+			return 0.50f;
+		else if (Sheer < -0.05f)
+			return Sheer + 0.05f;
+		else if (Sheer > +0.05f)
+			return Sheer - 0.05f;
+		else
+			return 0.f;
 	}
 
 	/**
@@ -422,43 +448,43 @@ public class Geometry {
 
 		T3DPolygon p = new T3DPolygon();
 		p.setNormal(-1d, 0d, 0d);
-		p.setTexU(0d, 1d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(0d, 1d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(-w, -l, -h).addVertex(-w, -l, h).addVertex(-w, l, h).addVertex(-w, l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 1d, 0d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(-w, l, -h).addVertex(-w, l, h).addVertex(w, l, h).addVertex(w, l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(1d, 0d, 0d);
-		p.setTexU(0d, -1d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(0d, -1d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(w, l, -h).addVertex(w, l, h).addVertex(w, -l, h).addVertex(w, -l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, -1d, 0d);
-		p.setTexU(-1d, 0d, 0d);
-		p.setTexV(0d, 0d, -1d);
+		p.setTextureU(-1d, 0d, 0d);
+		p.setTextureV(0d, 0d, -1d);
 		p.addVertex(w, -l, -h).addVertex(w, -l, h).addVertex(-w, -l, h).addVertex(-w, -l, -h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 0d, 1d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, 1d, 0d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, 1d, 0d);
 		p.addVertex(-w, l, h).addVertex(-w, -l, h).addVertex(w, -l, h).addVertex(w, l, h);
 		polyList.add(p);
 
 		p = new T3DPolygon();
 		p.setNormal(0d, 0d, -1d);
-		p.setTexU(1d, 0d, 0d);
-		p.setTexV(0d, -1d, 0d);
+		p.setTextureU(1d, 0d, 0d);
+		p.setTextureV(0d, -1d, 0d);
 		p.addVertex(-w, -l, -h).addVertex(-w, l, -h).addVertex(w, l, -h).addVertex(w, -l, -h);
 		polyList.add(p);
 
@@ -488,8 +514,8 @@ public class Geometry {
 		for (int i = 0; i < sides; i++) {
 			T3DPolygon p = new T3DPolygon();
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 
 			for (int j = 0; j < 4; j++) {
 
@@ -504,7 +530,8 @@ public class Geometry {
 				}
 			}
 
-			p.setOrigin(p.vertices.getFirst().getCoordinates());
+			Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+			p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 			polyList.add(p);
 		}
 
@@ -518,14 +545,15 @@ public class Geometry {
 
 		for (int i = 0; i < sides; i++) {
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 			p.addVertex(Math.sin(a) * r, Math.cos(a) * r, +h);
 
 			a -= angle;
 		}
 
-		p.setOrigin(p.vertices.getFirst().getCoordinates());
+		Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
 		a = angle / 2d;
@@ -535,14 +563,15 @@ public class Geometry {
 
 		for (int i = 0; i < sides; i++) {
 			p.setNormal(1d, 0d, 0d);
-			p.setTexU(0d, -1d, 0d);
-			p.setTexV(0d, 0d, -1d); // unrealiable - values
+			p.setTextureU(new Vector3d(0d, -1d, 0d));
+			p.setTextureV(new Vector3d(0d, 0d, -1d)); // unrealiable - values
 			p.addVertex(Math.sin(a) * r, Math.cos(a) * r, -h);
 
 			a += angle;
 		}
 
-		p.setOrigin(p.vertices.getFirst().getCoordinates());
+		firstVertCoord = p.vertices.getFirst().getCoordinates();
+		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
 		return polyList;
@@ -594,6 +623,7 @@ public class Geometry {
 
 	/**
 	 * Converts a "stadard" java vector to apache one
+	 * 
 	 * @param v
 	 * @return
 	 */

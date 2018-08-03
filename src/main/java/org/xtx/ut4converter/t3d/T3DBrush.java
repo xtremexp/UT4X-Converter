@@ -12,24 +12,52 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
+import org.xtx.ut4converter.ucore.ue1.UnMath.ESheerAxis;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FVector;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
  * 
  * @author XtremeXp
  */
-public class T3DBrush extends T3DSound {
+public class T3DBrush extends T3DVolume {
 
-	BrushClass brushClass = BrushClass.Brush;
+	protected BrushClass brushClass = BrushClass.Brush;
 
-	public static enum BrushClass {
-		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, PostProcessVolume, BlockingVolume, LightmassImportanceVolume, NavMeshBoundsVolume;
+	public enum BrushClass {
+
+		// UE1, UE2 Volume
+		Brush, Mover, KillZVolume, UTPainVolume, UTWaterVolume, BlockingVolume, WaterVolume,
+		LadderVolume, PressureVolume, SnipingVolume, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
+		HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume,
+
+		// UE3 and UE4 Volumes
+		PostProcessVolume, TriggerVolume, UTSlimeVolume, LavaVolume, UTLavaVolume, UTKillZVolume, CullDistanceVolume,
+		/**
+		 * TODO for UE3 -> UE4 convert to PhysicsVolume + PainVolume
+		 */
+		PhysicsVolume,
+		// Specific UE3 Volumes
+
+		/**
+		 * Has been replaced by AudioVolume in UE4
+		 */
+		ReverbVolume, DynamicTriggerVolume,
+		// Specific UE4 Volume
+		AudioVolume, PainCausingVolume, LightmassImportanceVolume, NavMeshBoundsVolume,
+
+		// UT4 specific volume
+		UTGameVolume, UTCustomPhysicsVolume, UTNoCameraVolume, UTNavBlockingVolume
+		;
 
 		public static BrushClass getBrushClass(String t3dBrushClass) {
 
@@ -47,14 +75,14 @@ public class T3DBrush extends T3DSound {
 	 * UE1/2/3
 	 */
 	private enum UE123_BrushType {
-		CSG_Active, CSG_Add, CSG_Subtract, CSG_Intersect, CSG_Deintersect;
+		CSG_Active, CSG_Add, CSG_Subtract, CSG_Intersect, CSG_Deintersect
 	}
 
 	/**
 	 * UE4
 	 */
 	private enum UE4_BrushType {
-		Brush_Subtract, Brush_Add;
+		Brush_Subtract, Brush_Add
 	}
 
 	private String brushType;
@@ -65,14 +93,14 @@ public class T3DBrush extends T3DSound {
 	List<BrushPolyflag> polyflags = new ArrayList<>();
 
 	/**
-	 * Used by Unreal Engine 1
+	 * UE1/2 property containing scale and sheer info
 	 */
-	Vector3d mainScale;
-
+	private FScale mainScale;
+	
 	/**
-	 * Used by Unreal Engine 1
+	 * UE1/2 property containing scale and sheer info
 	 */
-	Vector3d postScale;
+	private FScale postScale;
 
 	/**
 	 * Used by Unreal Engine 1
@@ -88,20 +116,71 @@ public class T3DBrush extends T3DSound {
 	 * Polygons of the brush
 	 */
 	LinkedList<T3DPolygon> polyList = new LinkedList<>();
-	
+
 	/**
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
 	String modelName;
 
 	/**
-	 *
-	 * @param mapConverter
-	 * @param t3dClass
+	 * Damage par sec for pain causing volumes (lava, slime ...)
 	 */
+	private Float damagePerSec;
+
+	/**
+	 * Used for UT pain volumes
+	 */
+	private Boolean physicsVolumeebWaterVolume;
+
+	/**
+	 * Used for UT pain volumes
+	 */
+	private Float physicsVolumeFluidFriction;
+	
+	/**
+	 * Used for cull distances only
+	 */
+	private List<CullDistance> cullDistances;
+	
+	/**
+	 * 
+	 * Used for cull distances volumes only
+	 *
+	 */
+	class CullDistance {
+		private Double size;
+		private Double distance;
+
+		public void scale(Double scale) {
+			if (size != null) {
+				size *= scale;
+			}
+			if (distance != null) {
+				distance *= scale;
+			}
+		}
+	}
+
+	
 	public T3DBrush(MapConverter mapConverter, String t3dClass) {
 		super(mapConverter, t3dClass);
 
+		init();
+	}
+
+	/**
+	 *
+	 * @param mapConverter
+	 * @param t3dClass
+	 * @param actor Used if creating brush from another type of actor (like zoneinfo for postprocessvolume, ...)
+	 */
+	public T3DBrush(MapConverter mapConverter, String t3dClass, T3DActor actor) {
+		super(mapConverter, t3dClass, actor);
+
+		init();
+	}
+	
+	private void init(){
 		brushClass = BrushClass.getBrushClass(t3dClass);
 
 		if (mapConverter.fromUE1orUE2OrUE3()) {
@@ -109,23 +188,19 @@ public class T3DBrush extends T3DSound {
 		} else {
 			brushType = UE4_BrushType.Brush_Add.name();
 		}
-		
+
 		// just need one
 		modelName = "Model_6";
 	}
-
-	private boolean isAnalysingPolyData = false;
 
 	/**
 	 * If true reverse the order of vertices when writting converted t3d. This
 	 * is due to MainScale factor. Depending on it it.
 	 */
 	boolean reverseVertexOrder = false;
-	
+
 	/**
-	 * If true this brush might
-	 * create bsp holes
-	 * and should not be written
+	 * If true this brush might create bsp holes and should not be written
 	 */
 	boolean bspHoleCausing;
 
@@ -140,15 +215,41 @@ public class T3DBrush extends T3DSound {
 
 		// MainScale=(Scale=(Y=-1.000000),SheerAxis=SHEER_ZX)
 		// MainScale=(SheerAxis=SHEER_ZX)
-		else if (line.contains("MainScale=") && line.contains("(Scale=")) {
-			mainScale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
-			reverseVertexOrder = mainScale.x * mainScale.y * mainScale.z < 0;
-			// reverseVertexOrder = mainScale.x < 0;
+		else if (line.contains("MainScale=")) {
+			mainScale = new FScale();
+
+			if(line.contains("(Scale=")){
+				mainScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+			}
+			
+			if(line.contains("SheerAxis=")){
+				mainScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
+			}
+			
+			if(line.contains("SheerRate=")){
+				mainScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
+			}
+			
+			reverseVertexOrder = mainScale.scale.x * mainScale.scale.y * mainScale.scale.z < 0;
 		}
 
+
 		// PostScale=(Scale=(X=1.058824,Y=1.250000,Z=0.920918),SheerAxis=SHEER_ZX)
-		else if (line.contains("PostScale=") && line.contains("(Scale=")) {
-			postScale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
+		else if (line.contains("PostScale=")) {
+			postScale = new FScale();
+			
+			
+			if(line.contains("(Scale=")){
+				postScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+			}
+			
+			if(line.contains("SheerAxis=")){
+				postScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
+			}
+			
+			if(line.contains("SheerRate=")){
+				postScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
+			}
 		}
 
 		// TempScale=(Scale=(X=0.483090,Y=2.274808,Z=0.488054))
@@ -208,9 +309,31 @@ public class T3DBrush extends T3DSound {
 			// need force trigger function else name is null
 			return super.analyseT3DData(line);
 		}
+
+		else if (line.startsWith("Begin Brush") && line.contains("Name=")) {
+			// modelName = line.split("Name=")[1].replaceAll("\"", "");
+		}
 		
-		else if(line.startsWith("Begin Brush") && line.contains("Name=")){
-			//modelName = line.split("Name=")[1].replaceAll("\"", "");
+		// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+		else if (line.startsWith("CullDistances(")) {
+			if (cullDistances == null) {
+				cullDistances = new ArrayList<T3DBrush.CullDistance>();
+			}
+
+			CullDistance cullDistance = new CullDistance();
+			if (line.contains("Size=")) {
+				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split("\\,")[0]);
+			}
+
+			if (line.contains("CullDistance=")) {
+				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split("\\,")[0]);
+			}
+
+			cullDistances.add(cullDistance);
+		}
+
+		else if(line.startsWith("DamagePerSec=")){
+			this.damagePerSec = T3DUtils.getFloat(line);
 		}
 
 		else {
@@ -232,9 +355,9 @@ public class T3DBrush extends T3DSound {
 		}
 
 		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone")
-				|| t3dBrushClass.equals("VaccuumZone")) {
+				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name()) || t3dBrushClass.equals(BrushClass.LavaVolume.name())) {
 			brushClass = BrushClass.UTPainVolume;
-			forcedWrittenLines.add("DamagePerSec=10.000000");
+			this.damagePerSec = 20f;
 			return true;
 		}
 
@@ -305,11 +428,11 @@ public class T3DBrush extends T3DSound {
 				}
 			}
 			/*
-			else if (willCauseBspHoles()) {
-				bspHoleCausing = true;
-				brushClass = BrushClass.BlockingVolume;
-				logger.warning("Replaced potential bsphole with " + name + " to blockingvolume");
-			}*/
+			 * else if (willCauseBspHoles()) { bspHoleCausing = true; brushClass
+			 * = BrushClass.BlockingVolume;
+			 * logger.warning("Replaced potential bsphole with " + name +
+			 * " to blockingvolume"); }
+			 */
 
 			if (!valid) {
 				return valid;
@@ -354,29 +477,29 @@ public class T3DBrush extends T3DSound {
 	}
 
 	/**
-	 * Compute if this brush will cause bsp holes:
-	 * - only 4 or less polygon
-	 * - OR some vertex not bound with at least 3 polygons
-	 * not enough accurate at this stage
+	 * Compute if this brush will cause bsp holes: - only 4 or less polygon - OR
+	 * some vertex not bound with at least 3 polygons not enough accurate at
+	 * this stage
+	 * 
 	 * @return <code>true</code> if this brush will cause bsp holes on import
 	 */
 	private boolean willCauseBspHoles() {
 
 		// sheet brush (total nb polygons <= 4)
-		if(polyList.size() <= 4){
+		if (polyList.size() <= 4) {
 			return true;
 		}
-		
+
 		for (T3DPolygon poly : polyList) {
 			for (Vertex v : poly.vertices) {
 				// vertex only linked with 2 or less other vertices
 				// might be candidate for bsp hole
 				// however need to do some extra checks
 				if (getPolyCountWithVertexCoordinate(v) < 3) {
-					
+
 					// if this vertex is belonging to edge
 					// of another polygon
-					if(!Geometry.vertexInOtherPoly(polyList, poly, v)){
+					if (!Geometry.vertexInOtherPoly(polyList, poly, v)) {
 						return true;
 					}
 				}
@@ -432,8 +555,45 @@ public class T3DBrush extends T3DSound {
 		writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
 
+		if(this.damagePerSec != null){
+			sbf.append(IDT).append("\tDamagePerSec=").append(this.damagePerSec).append("\n");
+		}
+
+		if(this.physicsVolumeebWaterVolume != null){
+			sbf.append(IDT).append("\tbWaterVolume=").append(this.physicsVolumeebWaterVolume).append("\n");
+		}
+
+		if(this.physicsVolumeFluidFriction != null){
+			sbf.append(IDT).append("\tFluidFriction=").append(this.physicsVolumeFluidFriction).append("\n");
+		}
+
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
 
+		// UE3 only CullDistanceVolume
+		if (brushClass == BrushClass.CullDistanceVolume && cullDistances != null) {
+
+			int idx = 0;
+			boolean hasCullDistProp = false;
+
+			for (CullDistance cullDistance : cullDistances) {
+				// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+				sbf.append(IDT).append("\tCullDistances(").append(idx).append(")=(");
+				if (cullDistance.size != null) {
+					hasCullDistProp = true;
+					sbf.append("Size=").append(cullDistance.size).append(",");
+				}
+				if (cullDistance.distance != null) {
+					hasCullDistProp = true;
+					sbf.append("CullDistance=").append(cullDistance.distance).append(",");
+				}
+				if (hasCullDistProp) {
+					sbf.deleteCharAt(sbf.length() - 1);
+				}
+				sbf.append(")\n");
+				idx++;
+			}
+		}
+		
 		sbf.append(IDT).append("\tBegin Brush Name=").append(modelName).append("\n");
 		sbf.append(IDT).append("\t\tBegin PolyList\n");
 
@@ -458,11 +618,18 @@ public class T3DBrush extends T3DSound {
 		for (String line : forcedWrittenLines) {
 			sbf.append(IDT).append(line).append("\n");
 		}
+		
+		// write specific properties of post process volume brush subclass
+		if(this instanceof T3DPostProcessVolume){
+			T3DPostProcessVolume ppv = (T3DPostProcessVolume) this;
+			ppv.writeProps();
+		}
 
 		writeEndActor();
 
 		// UT3 has postprocess volumes
-		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTWaterVolume)) {
+		// TODO merge/refactor/move to T3DPostProcessVolume class
+		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
 
 			// add post processvolume
 			T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);
@@ -473,6 +640,12 @@ public class T3DBrush extends T3DSound {
 			if (null != t3dClass)
 				switch (t3dClass) {
 				case "SlimeZone":
+					// slimy ppv copied/pasted from DM-DeckTest (UT4)
+					postProcessVolume.forcedWrittenLines
+							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+					break;
+					
+				case "UTSlimeVolume":
 					// slimy ppv copied/pasted from DM-DeckTest (UT4)
 					postProcessVolume.forcedWrittenLines
 							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
@@ -514,8 +687,6 @@ public class T3DBrush extends T3DSound {
 	 * @param size
 	 */
 	public void forceToBox(Double size) {
-		Double s = size;
-
 		polyList.clear();
 
 		polyList = Geometry.createBox(size, size, size);
@@ -551,23 +722,41 @@ public class T3DBrush extends T3DSound {
 
 		if ("BlockAll".equals(t3dClass)) {
 			brushClass = BrushClass.BlockingVolume;
-			String rad = getProperty("CollisionRadius");
-			String height = getProperty("CollisionHeight");
-
-			Double radD = (rad != null ? Double.valueOf(rad) : 14d);
-			Double heightD = (height != null ? Double.valueOf(height) : 20d);
-
-			Double newScale = mapConverter.getScale();
-
-			if (newScale != null) {
-				radD *= newScale;
-				heightD *= newScale;
-				// not using scale() function because location ever scaled ...
+			if(collisionRadius == null){
+				collisionRadius = 10d; // default value in UE1/UE2
+			}
+			
+			if(collisionHeight == null){
+				collisionHeight = 10d;
 			}
 
-			polyList.clear();
-			polyList = Geometry.createCylinder(radD, heightD, 8);
+			polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
 			super.convert();
+		}
+		
+		// UT3
+		if(brushClass == BrushClass.UTKillZVolume || brushClass == BrushClass.xFallingVolume){
+			brushClass = BrushClass.KillZVolume;
+		}
+		
+		// UT2004
+		else if(brushClass == BrushClass.WaterVolume){
+			brushClass = BrushClass.UTWaterVolume;
+		}
+		
+		// TODO handle other properties of volume like friction, ...
+		// maybe add a super-class T3DVolume?
+		// UTSlimeVolume does not exists in UT4
+		else if (brushClass == BrushClass.UTSlimeVolume || brushClass == BrushClass.UTLavaVolume || brushClass == BrushClass.LavaVolume || brushClass == BrushClass.PressureVolume) {
+			brushClass = BrushClass.UTPainVolume;
+
+			if(this.damagePerSec == null){
+				this.damagePerSec = 20f;
+			}
+
+			if(brushClass == BrushClass.PressureVolume){
+				this.physicsVolumeebWaterVolume = Boolean.FALSE;
+			}
 		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
@@ -597,6 +786,17 @@ public class T3DBrush extends T3DSound {
 		if (isSheetBrush()) {
 			T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
 			children.add(sheetStaticMesh);
+		}
+
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
+			// ReverbVolume replaced with audio volume from ut3 to ut4
+			// TODO convert specific properties of these volume
+			if (brushClass == BrushClass.ReverbVolume) {
+				brushClass = BrushClass.AudioVolume;
+			}
+			if (brushClass == BrushClass.DynamicTriggerVolume) {
+				brushClass = BrushClass.TriggerVolume;
+			}
 		}
 
 		super.convert();
@@ -631,6 +831,12 @@ public class T3DBrush extends T3DSound {
 	 */
 	@Override
 	public void scale(Double newScale) {
+		
+		if (cullDistances != null) {
+			for (CullDistance cullDistance : cullDistances) {
+				cullDistance.scale(newScale);
+			}
+		}
 
 		for (T3DPolygon polygon : polyList) {
 			polygon.scale(newScale);

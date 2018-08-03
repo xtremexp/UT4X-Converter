@@ -11,13 +11,13 @@ package org.xtx.ut4converter.t3d.iface;
  */
 public interface T3D {
 
-	public abstract void convert();
+	void convert();
 
-	public abstract void scale(Double newScale);
+	void scale(Double newScale);
 
-	public boolean analyseT3DData(String line);
+	boolean analyseT3DData(String line);
 
-	public abstract String toT3d(StringBuilder sb, String prefix);
+	void toT3d(StringBuilder sb, String prefix);
 
-	public abstract String getName();
+	String getName();
 }

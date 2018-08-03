@@ -157,15 +157,16 @@ public class TerrainLayer implements T3D {
 		UCCExporter uccExporter = new UCCExporter(mapConverter);
 		uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
 		File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator);
+		exportFolder.mkdirs();
 		uccExporter.setForcedExportFolder(exportFolder);
-
+		uccExporter.setForceSetNotExported(true);
 		alphaMapTexture.export(uccExporter, true);
 
 		Color color;
 		int value;
 		final int DEFAULT_ALPHA = 128;
 
-		BufferedImage img = ImageIO.read(alphaMapTexture.getExportedFile());
+		BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
 
 		for (int y = (img.getWidth() - 1); y >= 0; y--) {
 			for (int x = 0; x < img.getWidth(); x++) {
@@ -187,7 +188,7 @@ public class TerrainLayer implements T3D {
 	}
 
 	@Override
-	public String toT3d(StringBuilder sb, String prefix) {
+	public void toT3d(StringBuilder sb, String prefix) {
 		throw new UnsupportedOperationException("Not supported yet."); // To
 																		// change
 																		// body

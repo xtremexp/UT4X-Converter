@@ -15,6 +15,8 @@ public class UTGameTypes {
 
 	public static final String UT4_ASSAULT_CLASS = "BlueprintGeneratedClass'/Game/Blueprints/UTASGameMode.UTASGameMode_C'";
 
+	public static final String UT4_DOM_CLASS = "Blueprint'/Game/Domination/BP_Domination.BP_Domination'";
+
 	/**
      *
      */
@@ -43,7 +45,17 @@ public class UTGameTypes {
 		/**
          *
          */
-		TDM("TDM", "Team deathmatch", true);
+		TDM("TDM", "Team deathmatch", true),
+
+		/**
+        *
+        */
+		DOM("DOM", "Domination", true),
+
+		/**
+        *
+        */
+		BR("BR", "Bombing run", true);
 
 		String prefix;
 		String name;
@@ -78,6 +90,16 @@ public class UTGameTypes {
      *
      */
 	public static final String GAMETYPE_ASSAULT = "AS";
+
+	/**
+    *
+    */
+	public static final String GAMETYPE_DOMINATION = "DOM";
+
+	/**
+    *
+    */
+	public static final String GAMETYPE_BOMBING_RUN = "BR";
 
 	/**
 	 *
@@ -121,6 +143,10 @@ public class UTGameTypes {
 			return GameType.ASSAULT;
 		case "CTF":
 			return GameType.CTF;
+		case "DOM":
+			return GameType.DOM;
+		case "BR":
+			return GameType.BR;
 		default:
 			return null;
 		}
@@ -142,6 +168,10 @@ public class UTGameTypes {
 			return true;
 		case GAMETYPE_DUEL:
 			return false;
+		case GAMETYPE_DOMINATION:
+			return true;
+		case GAMETYPE_BOMBING_RUN:
+			return true;
 		default:
 			return false;
 		}

@@ -30,6 +30,10 @@ public class T3DNote extends T3DActor {
 	public T3DNote(MapConverter mc) {
 		super(mc, "Note");
 	}
+	
+	public T3DNote(MapConverter mc, String t3dClass) {
+		super(mc, t3dClass);
+	}
 
 	/**
 	 *
@@ -41,6 +45,18 @@ public class T3DNote extends T3DActor {
 		super(mc, "Note");
 		this.text = text;
 		this.isUnconvertedInfo = isUnconvertedInfo;
+	}
+
+	@Override
+	public boolean analyseT3DData(String line) {
+
+		if (line.startsWith("Text=")) {
+			text = T3DUtils.getString(line);
+		} else {
+			return super.analyseT3DData(line);
+		}
+
+		return true;
 	}
 
 	/**
@@ -65,7 +81,7 @@ public class T3DNote extends T3DActor {
 		sbf.append(IDT).append("\tRootComponent=SceneComp\n");
 
 		writeEndActor();
-		
+
 		return sbf.toString();
 	}
 

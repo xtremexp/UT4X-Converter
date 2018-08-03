@@ -34,21 +34,21 @@ public class BodyInstance {
 		this.collisionEnabled = collisionEnabled;
 	}
 
-	public static enum CollisionEnabled {
+	public enum CollisionEnabled {
 		NoCollision, QueryOnly, QueryAndPhysics
 	}
 
-	public static enum ECollisionChannel {
+	public enum ECollisionChannel {
 		WorldStatic, WorldDynamic, Pawn, Visibility, Camera, PhysicsBody, Vehicle, Destructible,
 		// UT4 Custom
-		Weapon, WeaponNoCharacter;
-	};
+		Weapon, WeaponNoCharacter
+    }
 
-	/**
+    /**
 	 * Collision Response when attached actor to this body instance collides
 	 * with another ones
 	 */
-	public static enum ECollisionResponse {
+	public enum ECollisionResponse {
 		ECR_Ignore, ECR_Overlap, ECR_Block
 	}
 

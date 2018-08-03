@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    <Label alignment="CENTER" >Welcome to UT4 Converter!</Label>
-</AnchorPane>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" layoutX="148.0" layoutY="46.0" prefHeight="35.0" prefWidth="305.0" text="Welcome to UT4 converter !">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="45.0" layoutY="101.0" prefHeight="17.0" prefWidth="511.0" text="Program helps converting maps from previous Unreal (Tournament) games" />
+      <Label alignment="CENTER" layoutX="102.0" layoutY="118.0" prefHeight="17.0" prefWidth="396.0" text="to new Unreal Tournament 4 (2015) game." />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="45.0" layoutY="168.0" prefHeight="17.0" prefWidth="526.0" text="You may ask authorization from original author prior to converting map." textFill="#ff681c" />
+      <Label alignment="CENTER_RIGHT" layoutX="408.0" layoutY="206.0" text="ШιητεЯΙsСσmιηɡ" />
+   </children>
+</Pane>

@@ -30,7 +30,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
@@ -79,7 +79,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		UPackageRessource uRessource = unrealPackage.findRessource(name);
 
 		if (uRessource != null) {
-			uRessource.setExportedFile(exportedFile);
+			uRessource.getExportInfo().setExportedFile(exportedFile);
 			// uRessource.parseNameAndGroup(ressourceName); // for texture db
 			// that don't have group we retrieve the group ...
 		} else {

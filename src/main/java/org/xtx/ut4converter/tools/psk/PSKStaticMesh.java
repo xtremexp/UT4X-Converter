@@ -2,6 +2,8 @@ package org.xtx.ut4converter.tools.psk;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,203 +11,158 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
-
 /**
- * PSK staticmesh file reader.
+ * PSK staticmesh file reader/writer.
  * 
- * Code partially ported to java from actorx importer source code -
- * http://www.gildor.org/projects/unactorx
- * 
+ * @author XtremeXp
  */
 public class PSKStaticMesh {
 
 	/**
+	 * Order how bytes are read for .psk files
+	 */
+	private static final ByteOrder BYTE_ORDER_LE = ByteOrder.LITTLE_ENDIAN;
+
+	private List<Point> points;
+	private List<Wedge> wedges;
+	private List<Face> faces;
+
+	/**
+	 * Means faces are using wedges as integer rather than short type
+	 */
+	private boolean usingFace32;
+	private List<Material> materials;
+	private List<Skeleton> skeletons;
+	private List<RawWeight> rawWeights;
+	private List<ExtraUv> extraUv0s;
+	private List<ExtraUv> extraUv1s;
+	private List<ExtraUv> extraUv2s;
+
+	private static final String CHUNK_HEADER_HEAD_ID = "ACTRHEAD";
+
+	private static final String CHUNK_HEADER_POINTS_ID = "PNTS0000";
+
+	private static final String CHUNK_HEADER_WEDGES_ID = "VTXW0000";
+
+	private static final String CHUNK_HEADER_FACES_ID = "FACE0000";
+
+	private static final String CHUNK_HEADER_FACES32_ID = "FACE3200";
+
+	private static final String CHUNK_HEADER_MATT_ID = "MATT0000";
+
+	private static final String CHUNK_HEADER_SKEL_ID = "REFSKELT";
+
+	private static final String CHUNK_HEADER_RAWWHT_ID = "RAWWEIGHTS";
+
+	private static final String CHUNK_HEADER_EXTRAUV0_ID = "EXTRAUVS0";
+
+	private static final String CHUNK_HEADER_EXTRAUV1_ID = "EXTRAUVS1";
+
+	private static final String CHUNK_HEADER_EXTRAUV2_ID = "EXTRAUVS2";
+
+	/**
 	 * Reference to .psk file
 	 */
-	File pskFile;
+	private File pskFile;
 
-	public PSKStaticMesh(File pskFile) {
-		super();
+	public PSKStaticMesh() {
+	}
+
+	/**
+	 * 
+	 * @param pskFile
+	 *            .psk staticmesh file
+	 * @throws Exception
+	 */
+	public PSKStaticMesh(File pskFile) throws Exception {
 		this.pskFile = pskFile;
 		initialise();
-		load();
+		read();
 	}
 
+	/**
+	 * 
+	 */
 	private void initialise() {
-		vertices = new ArrayList<>();
+		points = new ArrayList<>();
 		wedges = new ArrayList<>();
-		triangles = new ArrayList<>();
+		faces = new ArrayList<>();
 		materials = new ArrayList<>();
-		bones = new ArrayList<>();
+		skeletons = new ArrayList<>();
 		rawWeights = new ArrayList<>();
+		extraUv0s = new ArrayList<>();
+		extraUv1s = new ArrayList<>();
+		extraUv2s = new ArrayList<>();
 	}
 
-	List<Vector3d> vertices;
-	List<Vertex> wedges;
-	List<Triangle> triangles;
-	List<Material> materials;
-	List<Bone> bones;
-	List<RawWeight> rawWeights;
+	public interface BinReadWrite {
+		void write(FileOutputStream bos) throws IOException;
 
-	class ChunkHeader {
-
-		public String chunkID;
-		public long typeFlag;
-		public long dataSize;
-		public long dataCount;
-
-		public ChunkHeader(ByteBuffer bf) {
-
-			chunkID = readString(bf, 20);
-			typeFlag = bf.getInt();
-			dataSize = bf.getInt();
-			dataCount = bf.getInt();
-		}
+		void read(ByteBuffer bf);
 	}
 
-	private String readString(ByteBuffer bf, int length) {
+	/**
+	 * 
+	 * @param f
+	 * @throws IOException
+	 */
+	public void write(File f) throws IOException {
 
-		String s = "";
+		try (final FileOutputStream fos = new FileOutputStream(f)) {
 
-		for (int i = 0; i < length; i++) {
-			s += (char) bf.get();
-		}
+			// Write header
+			ChunkHeader ch = new ChunkHeader(CHUNK_HEADER_HEAD_ID, null, 0);
+			ch.write(fos);
 
-		return s;
-	}
+			// Write points
+			Chunk chPoints = new Chunk(CHUNK_HEADER_POINTS_ID, points, Point.DATA_SIZE);
+			chPoints.write(fos);
 
-	public class Vertex {
+			// Write wedges
+			Chunk chWedges = new Chunk(CHUNK_HEADER_WEDGES_ID, wedges, Wedge.DATA_SIZE);
+			chWedges.write(fos);
 
-		public long pointIndex;
-		public float u, v;
-		byte matIndex;
-		byte reserved;
-		short pad;
+			// Write faces
+			Chunk chFaces = null;
 
-		public Vertex(ByteBuffer bf, boolean x) {
-
-			if (x) {
-				pointIndex = bf.getShort();
-				bf.getShort();
-				u = bf.getFloat();
-				v = bf.getFloat();
-				matIndex = bf.get();
-				reserved = bf.get();
-				pad = bf.getShort();
-
-				System.out.println("pointIndex:" + pointIndex + " u:" + u + " v:" + v + " reserved:" + reserved + " pad:" + pad);
+			if (usingFace32) {
+				chFaces = new Chunk(CHUNK_HEADER_FACES32_ID, faces, Face.DATA_SIZE_FACE32);
 			} else {
-				pointIndex = bf.getInt();
-				u = bf.getFloat();
-				v = bf.getFloat();
-				matIndex = bf.get();
-				reserved = bf.get();
-				pad = bf.getShort();
+				chFaces = new Chunk(CHUNK_HEADER_FACES_ID, faces, Face.DATA_SIZE);
 			}
+			chFaces.write(fos);
+
+			// Write mat info
+			Chunk chMatt = new Chunk(CHUNK_HEADER_MATT_ID, materials, Material.DATA_SIZE);
+			chMatt.write(fos);
+
+			// Write skeleton info
+			Chunk chSkl = new Chunk(CHUNK_HEADER_SKEL_ID, skeletons, Skeleton.DATA_SIZE);
+			chSkl.write(fos);
+
+			// Write raw weights
+			Chunk chRawWght = new Chunk(CHUNK_HEADER_RAWWHT_ID, rawWeights, RawWeight.DATA_SIZE);
+			chRawWght.write(fos);
+
+			// Write extra uvs 0
+			Chunk chExtrauv0s = new Chunk(CHUNK_HEADER_EXTRAUV0_ID, extraUv0s, ExtraUv.DATA_SIZE);
+			chExtrauv0s.write(fos);
+
+			// Write extra uvs 1
+			Chunk chExtrauv1s = new Chunk(CHUNK_HEADER_EXTRAUV1_ID, extraUv1s, ExtraUv.DATA_SIZE);
+			chExtrauv1s.write(fos);
+
+			// Write extra uvs 2
+			Chunk chExtrauv2s = new Chunk(CHUNK_HEADER_EXTRAUV2_ID, extraUv2s, ExtraUv.DATA_SIZE);
+			chExtrauv2s.write(fos);
 		}
 	}
 
-	public class Triangle {
+	private void read() throws Exception {
 
-		long wedge0, wedge1, wedge2;
-		byte matIndex, auxMatIndex;
-		long smoothingGroups;
-
-		public Triangle(ByteBuffer bf) {
-			wedge0 = bf.getShort();
-			wedge1 = bf.getShort();
-			wedge2 = bf.getShort();
-			matIndex = bf.get();
-			auxMatIndex = bf.get();
-			smoothingGroups = bf.getInt();
-			System.out.println("W0:" + wedge0 + " W1:" + wedge1 + " W2:" + wedge2 + " smoothingGroups:" + smoothingGroups);
+		if (pskFile == null || !pskFile.exists()) {
+			return;
 		}
-	}
-
-	public class Material {
-
-		String materialName;
-		long textureIndex;
-		long polyFlags;
-		long auxMaterial;
-		long auxFlags;
-		long lodBias;
-		long lodStyle;
-
-		public Material(ByteBuffer bf) {
-			materialName = readString(bf, 64).trim();
-			textureIndex = bf.getInt();
-			polyFlags = bf.getInt();
-			auxMaterial = bf.getInt();
-			auxFlags = bf.getInt();
-			lodBias = bf.getInt();
-			lodStyle = bf.getInt();
-
-			System.out.println("materialName:" + materialName + " textureIndex:" + textureIndex + " polyFlags:" + polyFlags + " auxMaterial:" + auxMaterial);
-		}
-	}
-
-	public class Bone {
-
-		String name;
-		long flags;
-		long numChildren;
-		long parentIndex;
-		Vector4d orientation;
-		Vector3d position;
-		float lenght;
-		Vector3d size;
-
-		public Bone(ByteBuffer bf) {
-			name = readString(bf, 64);
-			flags = bf.getInt();
-			numChildren = bf.getInt();
-			parentIndex = bf.getInt();
-			orientation = readVector4d(bf);
-			position = readVector3d(bf);
-			lenght = bf.getFloat();
-			size = readVector3d(bf);
-		}
-	}
-
-	public class RawWeight {
-
-		float weight;
-		long pointIndex;
-		long boneIndex;
-
-		public RawWeight(ByteBuffer bf) {
-			weight = bf.getFloat();
-			pointIndex = bf.getInt();
-			boneIndex = bf.getInt();
-		}
-	}
-
-	private Vector3d readVector3d(ByteBuffer bf) {
-
-		Vector3d v = new Vector3d();
-		v.x = bf.getFloat();
-		v.y = bf.getFloat();
-		v.z = bf.getFloat();
-
-		System.out.println(v);
-		return v;
-	}
-
-	private Vector4d readVector4d(ByteBuffer bf) {
-
-		Vector4d v = new Vector4d();
-		v.x = bf.getFloat();
-		v.y = bf.getFloat();
-		v.z = bf.getFloat();
-		v.w = bf.getFloat();
-
-		return v;
-	}
-
-	public void load() {
 
 		FileChannel inChannel = null;
 
@@ -213,81 +170,98 @@ public class PSKStaticMesh {
 
 			inChannel = fis.getChannel();
 			ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) pskFile.length());
-			buffer.order(ByteOrder.LITTLE_ENDIAN);
+			buffer.order(BYTE_ORDER_LE);
 
 			ChunkHeader header = new ChunkHeader(buffer);
 
-			if (!"ACTRHEAD".equals(header.chunkID.trim())) {
+			if (!CHUNK_HEADER_HEAD_ID.equals(header.chunkID.trim())) {
 				throw new Exception("Not a psk file");
 			}
 
 			while (buffer.hasRemaining()) {
 
 				ChunkHeader ch2 = new ChunkHeader(buffer);
+				final String chunkId = ch2.chunkID.trim();
 
-				if ("PNTS0000".equals(ch2.chunkID.trim())) {
-					long numVertex = ch2.dataCount;
+				switch (chunkId) {
 
-					for (int i = 0; i < numVertex; i++) {
-						vertices.add(readVector3d(buffer));
+				case CHUNK_HEADER_POINTS_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						points.add(new Point(buffer));
 					}
+					break;
 
-				} else if ("VTXW0000".equals(ch2.chunkID.trim())) {
-					long numWedges = ch2.dataCount;
+				case CHUNK_HEADER_WEDGES_ID:
 
-					boolean x = numWedges <= 65536;
-
-					for (int i = 0; i < numWedges; i++) {
-						wedges.add(new Vertex(buffer, x));
+					for (int i = 0; i < ch2.dataCount; i++) {
+						wedges.add(new Wedge(buffer, ch2.dataCount > 65536));
 					}
+					break;
 
-				} else if ("FACE0000".equals(ch2.chunkID.trim())) {
-
-					long numTriangles = ch2.dataCount;
-
-					for (int i = 0; i < numTriangles; i++) {
-						triangles.add(new Triangle(buffer));
+				case CHUNK_HEADER_FACES_ID:
+					for (int i = 0; i < ch2.dataCount; i++) {
+						faces.add(new Face(buffer, false));
 					}
+					break;
 
-				} else if ("FACE3200".equals(ch2.chunkID.trim())) {
+				// Unreal Engine >= 3
+				case CHUNK_HEADER_FACES32_ID:
 
-					long numTriangles = ch2.dataCount;
-					System.out.println("TODO");
+					usingFace32 = true;
 
-				}
+					for (int i = 0; i < ch2.dataCount; i++) {
+						faces.add(new Face(buffer, true));
+					}
+					break;
 
-				else if ("MATT0000".equals(ch2.chunkID.trim())) {
+				case CHUNK_HEADER_MATT_ID:
 
-					long numMat = ch2.dataCount;
-
-					for (int i = 0; i < numMat; i++) {
+					for (int i = 0; i < ch2.dataCount; i++) {
 						materials.add(new Material(buffer));
 					}
-				}
+					break;
 
-				else if ("REFSKELT".equals(ch2.chunkID.trim())) {
+				case CHUNK_HEADER_SKEL_ID:
 
-					long numRefSklt = ch2.dataCount;
-
-					for (int i = 0; i < numRefSklt; i++) {
-						bones.add(new Bone(buffer));
+					for (int i = 0; i < ch2.dataCount; i++) {
+						skeletons.add(new Skeleton(buffer));
 					}
-				}
+					break;
 
-				else if ("RAWWEIGHTS".equals(ch2.chunkID.trim())) {
+				case CHUNK_HEADER_RAWWHT_ID:
 
-					long numRawWeights = ch2.dataCount;
-
-					for (int i = 0; i < numRawWeights; i++) {
+					for (int i = 0; i < ch2.dataCount; i++) {
 						rawWeights.add(new RawWeight(buffer));
 					}
+					break;
+
+				case CHUNK_HEADER_EXTRAUV0_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						extraUv0s.add(new ExtraUv(buffer));
+					}
+					break;
+
+				case CHUNK_HEADER_EXTRAUV1_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						extraUv1s.add(new ExtraUv(buffer));
+					}
+					break;
+
+				case CHUNK_HEADER_EXTRAUV2_ID:
+
+					for (int i = 0; i < ch2.dataCount; i++) {
+						extraUv2s.add(new ExtraUv(buffer));
+					}
+					break;
+
+				default:
+					break;
 				}
-				// TODO EXTRAUV0
-				// TODO FACE3200
+
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
 		} finally {
 			try {
 				inChannel.close();
@@ -303,47 +277,154 @@ public class PSKStaticMesh {
 		return pskFile;
 	}
 
-	public List<Vector3d> getVertices() {
-		return vertices;
+	public List<Point> getPoints() {
+		return points;
 	}
 
-	public List<Vertex> getWedges() {
+	public List<Wedge> getWedges() {
 		return wedges;
 	}
 
-	public List<Triangle> getTriangles() {
-		return triangles;
+	public List<Face> getFaces() {
+		return faces;
 	}
 
 	public List<Material> getMaterials() {
 		return materials;
 	}
 
-	public List<Bone> getBones() {
-		return bones;
+	public List<Skeleton> getSkeletons() {
+		return skeletons;
 	}
 
 	public List<RawWeight> getRawWeights() {
 		return rawWeights;
 	}
 
+	/**
+	 * TODO move/delete to ObjStaticMesh class
+	 * @param mtlFile
+	 * @param objFile
+	 */
+	@Deprecated
+	public void exportToObj(final File mtlFile, final File objFile){
+		writeMtlObjFile(mtlFile);
+		writeObjFile(objFile, mtlFile);
+	}
+
+	private void writeMtlObjFile(final File mtlFile) {
+		// TODO handle material
+		try (FileWriter fw = new FileWriter(mtlFile)) {
+
+			fw.write("# UT4 Converter MTL File:\n");
+			for(Material mat : this.getMaterials()){
+				fw.write("newmtl "+ mat.getMaterialName()+ " \n");
+				fw.write("Ns 96.078431\n");
+				fw.write("Ka 1.000000 1.000000 1.000000\n");
+				fw.write("Kd 0.640000 0.640000 0.640000\n");
+				fw.write("Ks 0.500000 0.500000 0.500000\n");
+				fw.write("Ke 0.000000 0.000000 0.000000\n");
+				fw.write("Ni 1.000000\n");
+				fw.write("d 1.000000\n");
+				fw.write("illum 2\n");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	/**
+	 * Export .psk staticmesh to wavefront (.obj) staticmesh
+	 */
+	private void writeObjFile(final File objFile, final File mtlFile) {
+		
+		try (FileWriter fw = new FileWriter(objFile)) {
+			
+			if(mtlFile != null && !this.getMaterials().isEmpty()){
+				fw.write("mtllib " + mtlFile.getName() + "\n");
+			}
+
+			fw.write("# Vertices\n");
+			for (Point w : this.getPoints()) {
+				fw.write("v " + w.x + " " + w.y + " " + w.z + "\n");
+			}
+
+			fw.write("# UV\n");
+			for (Wedge w : this.getWedges()) {
+				fw.write("vt " + w.getU() + " " + w.getV() + "\n");
+			}
+
+			fw.write("# Faces\n");
+			String currentMat = null;
+			
+			for (Face fc : this.getFaces()) {
+				Material mat = this.getMaterials().get(fc.getMatIndex());
+				
+				if(currentMat == null || !currentMat.equals(mat.getMaterialName())){
+					fw.write("usemtl " + mat.getMaterialName() + "\n");
+					currentMat = mat.getMaterialName();
+				}
+				
+				fw.write("f ");
+				fw.write((this.getWedges().get(fc.getWedge2()).getPointIndex() + 1) + "/" + (fc.getWedge2() + 1) + " ");
+				fw.write((this.getWedges().get(fc.getWedge1()).getPointIndex() + 1) + "/" + (fc.getWedge1() + 1) + " ");
+				fw.write((this.getWedges().get(fc.getWedge0()).getPointIndex() + 1) + "/" + (fc.getWedge0() + 1) + "\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) {
 
-		File file = new File("Z:\\BarrenHardware_Lights_ELight01BA.psk");
-		PSKStaticMesh psk = new PSKStaticMesh(file);
+		System.out.println("OK");
 
-		System.out.println(file);
+		try {
 
-		System.out.println("Num Points: " + psk.getVertices().size());
-		System.out.println("Num Wedges: " + psk.getWedges().size());
-		System.out.println("Num Triangles: " + psk.getTriangles().size());
-		System.out.println("Num Materials: " + psk.getMaterials().size());
-		System.out.println("Num RawWeights: " + psk.getRawWeights().size());
+			File meshFolder = new File("D:\\test");
+			File reWriteFolder = new File("D:\\test\\out");
 
-		for (Material mat : psk.getMaterials()) {
-			System.out.println("Material: " + mat.materialName);
+			if (!reWriteFolder.exists()) {
+				reWriteFolder.mkdirs();
+			}
+
+			for (File pskFile : meshFolder.listFiles()) {
+				if (!(pskFile.getName().endsWith(".psk") || pskFile.getName().endsWith(".pskx"))) {
+					continue;
+				}
+
+				System.out.print("Loading " + pskFile.getName() + " ... ");
+
+				PSKStaticMesh mesh = null;
+
+				try {
+					mesh = new PSKStaticMesh(pskFile);
+					System.out.println(" OK ! Size: " + pskFile.length());
+				} catch (Exception e) {
+					System.out.println(" ERROR ! Size: " + pskFile.length());
+					e.printStackTrace();
+					continue;
+				}
+
+				File out = new File(reWriteFolder + File.separator + pskFile.getName());
+
+				try {
+					System.out.print("Wrtting " + pskFile.getName() + " ... ");
+					mesh.write(out);
+					System.out.println(" OK ! ");
+				} catch (Exception e) {
+					System.out.println(" ERROR ! ");
+					e.printStackTrace();
+				}
+			}
+
+			// mesh.write(newFile);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		System.out.println("Num Bones: " + psk.getBones().size());
 	}
 }

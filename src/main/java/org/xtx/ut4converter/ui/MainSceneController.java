@@ -5,16 +5,6 @@
  */
 package org.xtx.ut4converter.ui;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,13 +18,21 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import javax.xml.bind.JAXBException;
-
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
+
+import javax.xml.bind.JAXBException;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * FXML Controller class TODO i18n
@@ -52,12 +50,17 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Link to UT4 Converter topic
 	 */
-	final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
+	private final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
 
 	/**
 	 * Url to git hub for source code
 	 */
-	final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
+	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
+
+	/**
+	 * Url to github project for reporting issues
+	 */
+	private final String URL_UTCONV_GITHUB_ISSUES = "https://github.com/xtremexp/UT4X-Converter/issues";
 
 	@FXML
 	private MenuItem menuExit;
@@ -167,7 +170,7 @@ public class MainSceneController implements Initializable {
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(FXMLoc.SETTINGS.getPath()));
-			AnchorPane page = (AnchorPane) loader.load();
+			AnchorPane page = loader.load();
 
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Settings");
@@ -188,9 +191,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Opens url in web browser
-	 * 
-	 * @param if <code>true</code> then display a confirmation dialog before
-	 *        opening directly web browser.
+	 *
 	 * @param url
 	 *            Url to open with web browser
 	 */
@@ -258,6 +259,12 @@ public class MainSceneController implements Initializable {
 		openUrl(URL_UT4CONV_FORUM, true, null);
 	}
 
+
+	@FXML
+	private void openGitHubIssues(ActionEvent event){
+		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
+	}
+
 	private void openGitHubUrl(ActionEvent event) {
 		openUrl(URL_UTCONV_GITHUB, true, null);
 	}
@@ -285,7 +292,7 @@ public class MainSceneController implements Initializable {
 			if (checkGamePathSet(inputGame, outputGame)) {
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
-				AnchorPane page = (AnchorPane) loader.load();
+				AnchorPane page = loader.load();
 
 				Stage dialogStage = new Stage();
 				dialogStage.setTitle("Conversion Settings");
@@ -334,6 +341,12 @@ public class MainSceneController implements Initializable {
 	private void convertUt3Map(ActionEvent event) {
 		convertUtxMap(UTGame.UT3);
 	}
+
+	@FXML
+	private void convertUdkMap(ActionEvent event) {
+		convertUtxMap(UTGame.UDK);
+	}
+
 
 	@FXML
 	private void convertUt2003Map(ActionEvent event) {

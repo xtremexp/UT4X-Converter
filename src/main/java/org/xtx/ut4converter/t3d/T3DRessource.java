@@ -11,7 +11,7 @@ package org.xtx.ut4converter.t3d;
  */
 public class T3DRessource {
 
-	public static enum Type {
+	public enum Type {
 		UNKNOWN("Unknown"), LEVEL("Level"), TEXTURE("Texture"), MESH("Mesh"), STATICMESH("StaticMesh"), MUSIC("Music"), SCRIPT("Script"), SOUND("Sound");
 
 		String name;

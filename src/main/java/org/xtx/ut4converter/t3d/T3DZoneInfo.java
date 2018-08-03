@@ -98,7 +98,7 @@ public class T3DZoneInfo extends T3DActor {
 			ambientColor.S = T3DUtils.getFloat(line);
 		}
 
-		return false;
+		return super.analyseT3DData(line);
 	}
 
 	@Override
@@ -106,6 +106,16 @@ public class T3DZoneInfo extends T3DActor {
 
 		if (distanceFogColor != null) {
 			distanceFogColor.toOneRange();
+		}
+		
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4)) {
+
+			// replace with postprocess volume if light or fog info set
+			if (distanceFogColor != null || ambientColor != null) {
+				T3DPostProcessVolume ppv = new T3DPostProcessVolume(mapConverter, this);
+				replaceWith(ppv);
+			}
+
 		}
 	}
 
@@ -119,23 +129,14 @@ public class T3DZoneInfo extends T3DActor {
 		if (distanceFogStart != null) {
 			distanceFogStart *= newScale;
 		}
+		
+		super.scale(newScale);
 	}
 
 	@Override
 	public String toString() {
 
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4)) {
-
-			// replace with postprocess volume if light or fog info set
-			if (distanceFogColor != null || ambientColor != null) {
-				T3DPostProcessVolume ppv = new T3DPostProcessVolume(mapConverter, this);
-				replaceWith(ppv);
-			}
-
-		} else {
-			// not implemented yet
-		}
-
+		// replaced with postprocessvolume
 		return null;
 	}
 

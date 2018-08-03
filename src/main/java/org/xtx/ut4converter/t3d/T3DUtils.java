@@ -7,12 +7,14 @@
 package org.xtx.ut4converter.t3d;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Vector3d;
 
 import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
 
 /**
@@ -27,13 +29,15 @@ public class T3DUtils {
 	 * @param line
 	 * @param split
 	 * @return
+	 * @deprecated DELETE AND MERGE WITH getString
 	 */
-	public static String getString(String line, String split) {
+	public static String getStringTEMP(String line, String split) {
 		if (!line.contains(split)) {
 			return null;
 		}
 		return line.split(split + "=")[1].split("\\ ")[0];
 	}
+
 
 	/**
 	 *
@@ -83,9 +87,36 @@ public class T3DUtils {
 	public static Float getFloat(String line) {
 		return Float.valueOf(line.split("\\=")[1]);
 	}
+	
+	/**
+	 * 
+	 * @param line
+	 * @param property
+	 * @return
+	 */
+	public static Float getFloat(String line, String property) {
+		return Float.valueOf(getPropValue(line, property, null));
+	}
+	
+	private static String getPropValue(String line, String property, String nextFieldSeparator) {
+		if (nextFieldSeparator != null) {
+			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0].split(nextFieldSeparator)[0];
+		} else {
+			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0];
+		}
+	}
 
 	public static String getString(String line) {
-		return line.split("\\=")[1].replaceAll("\"", "");
+		return line.split("\\=")[1].replaceAll("\"", "").replaceAll("\\)", "");
+	}
+	
+	public static String getString(String line, String property, String nextFieldSeparator) {
+		return getPropValue(line, property, nextFieldSeparator);
+	}
+	
+	
+	public static String getString(String line, String property) {
+		return getPropValue(line, property, null);
 	}
 
 	/**
@@ -376,7 +407,6 @@ public class T3DUtils {
 	/**
 	 * 
 	 * @param sb
-	 * @param bool
 	 * @param prefix
 	 */
 	public static boolean write(StringBuilder sb, String propName, Object propValue, String prefix) {
@@ -390,14 +420,21 @@ public class T3DUtils {
 		}
 
 		if (propValue instanceof T3D) {
-			sb.append(propName).append(EQUAL).append(((T3D) propValue).toT3d(sb, null));
+			sb.append(propName).append(EQUAL);
+			((T3D) propValue).toT3d(sb, null);
 		} else if (propValue instanceof List) {
 
 			sb.append("(");
 
-			for (Object item : (List<Object>) propValue) {
-				write(sb, propName, item, prefix);
-				sb.append(",");
+			List<Object> propValues = (List<Object>) propValue;
+
+			if (!propValues.isEmpty()) {
+				for (Object item : (List<Object>) propValue) {
+					write(sb, propName, item, prefix);
+					sb.append(",");
+				}
+
+				sb.deleteCharAt(sb.length() - 1);
 			}
 
 			sb.append(")");
@@ -478,4 +515,71 @@ public class T3DUtils {
 		sb.append(propName).append(EQUAL).append(t3dObj.getClass().getSimpleName()).append("'").append(t3dObj.getName()).append("'\n");
 	}
 
+	public static void writeRootComponentAndLoc(T3DActor actor, T3DMatch.UE4_RCType rootType) {
+
+		if (actor != null) {
+			StringBuilder sbf = actor.sbf;
+
+			sbf.append(T3DObject.IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
+
+			actor.writeEndObject();
+
+			// Begin Object Name="Sphere"
+			sbf.append(T3DObject.IDT).append("\tBegin Object Name=\"").append(rootType.alias).append("\"\n");
+			actor.writeLocRotAndScale();
+			actor.writeEndObject();
+			// RootComponent=Sphere
+			sbf.append(T3DObject.IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
+
+		}
+	}
+
+	/**
+	 * Write rgbcolor to t3d (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
+	 * 
+	 * @param sb
+	 * @param rgbColor
+	 *            Rgb Color
+	 */
+	public static void writeRGBColor(StringBuilder sb, RGBColor rgbColor) {
+		if (rgbColor != null) {
+			// (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
+			sb.append("(R=").append(rgbColor.R).append(",G=").append(rgbColor.G).append(",B=").append(rgbColor.B).append(",A=").append(rgbColor.A).append(")");
+		}
+	}
+
+	/**
+	 * Writes hsvcolor to t3d in RGB format
+	 * 
+	 * @param sb
+	 * @param hsvColor
+	 *            HsvColor
+	 */
+	public static void writeRGBColor(StringBuilder sb, HSVColor hsvColor) {
+		if (hsvColor != null) {
+			writeRGBColor(sb, hsvColor.toRGBColor(true));
+		}
+	}
+
+	/**
+	 * CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
+	 * 
+	 * @param line
+	 * @return
+	 */
+	public static Map<String, String> getProperties(String line) {
+		String s = new String(line);
+		s = s.split("\\(")[1].split("\\)")[0];
+
+		String ss[] = s.split("\\,");
+
+		Map<String, String> props = new HashMap<>();
+
+		for (String sss : ss) {
+			String x[] = sss.split("\\=");
+			props.put(x[0], x[1]);
+		}
+
+		return props;
+	}
 }

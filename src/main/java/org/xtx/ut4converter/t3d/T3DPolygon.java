@@ -6,14 +6,19 @@
 
 package org.xtx.ut4converter.t3d;
 
+import java.awt.Dimension;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
+
 import javax.vecmath.Vector3d;
+
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.geom.Vertex;
+import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 /**
  * 
@@ -71,12 +76,9 @@ public class T3DPolygon {
 	 */
 	Integer smoothingMask;
 
-	public Vector3d texture_u,
+	Vector3d original_tex_u, original_tex_v;
 
-	/**
-     *
-     */
-	texture_v;
+	Vector3d texture_u, texture_v;
 
 	/**
      *
@@ -101,7 +103,7 @@ public class T3DPolygon {
 	public T3DPolygon(String t3dLine, MapConverter mapConverter) {
 		// Begin Polygon Texture=Rockwal4 Flags=32768 Link=322
 		this.mapConverter = mapConverter;
-		this.texture = mapConverter.getUPackageRessource(T3DUtils.getString(t3dLine, "Texture"), T3DRessource.Type.TEXTURE);
+		this.texture = mapConverter.getUPackageRessource(T3DUtils.getStringTEMP(t3dLine, "Texture"), T3DRessource.Type.TEXTURE);
 		this.link = T3DUtils.getInteger(t3dLine, "Link");
 		this.flag = T3DUtils.getInteger(t3dLine, "Flags");
 	}
@@ -157,7 +159,7 @@ public class T3DPolygon {
 	 * @param rotation
 	 * @param postScale
 	 */
-	public void transformPermanently(Vector3d mainScale, Vector3d rotation, Vector3d postScale) {
+	public void transformPermanently(FScale mainScale, Vector3d rotation, FScale postScale) {
 
 		Geometry.transformPermanently(origin, mainScale, rotation, postScale, false);
 
@@ -175,6 +177,9 @@ public class T3DPolygon {
 			Geometry.transformPermanently(vertex.getCoordinates(), mainScale, rotation, postScale, false);
 		}
 	}
+	
+	
+	
 
 	/**
 	 * Revert the order of vertices
@@ -292,6 +297,20 @@ public class T3DPolygon {
 	public void setTextureV(Vector3d textureV) {
 		this.texture_v = textureV;
 	}
+	
+	public void setTextureV(Double x, Double y, Double z) {
+		this.texture_v = new Vector3d(x, y, z);
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void setTextureU(Double x, Double y, Double z) {
+		this.texture_u = new Vector3d(x, y, z);
+	}
 
 	public void setTextureU(Vector3d textureU) {
 		this.texture_u = textureU;
@@ -325,38 +344,81 @@ public class T3DPolygon {
 		this.origin = origin;
 	}
 
+	/**
+	 * UV conversion scale factor when converting UT3 texture scaling to UT4
+	 * texture scaling (this is equals to 200/256)
+	 */
+	private static final double UE3_UE4_UV_SCALE_FACTOR = 0.78125d;
+
 	public void convert() {
 
 		if (mapConverter != null && mapConverter.convertTextures() && texture != null) {
 
 			texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
 
+			if (texture.getMaterialInfo() != null) {
+				texture.getMaterialInfo().findRessourcesFromNames(mapConverter);
+
+				if (texture.getMaterialInfo().getDiffuse() != null) {
+					texture.replaceWith(texture.getMaterialInfo().getDiffuse());
+				}
+			}
+
+			if (texture.getReplacement() != null) {
+				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));
+			}
+
 			// For Unreal 3 and 4
 			// we need to update the UV scaling which is dependant from texture
 			// size
-			if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-
-				texture.readTextureDimensions();
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
 
 				// maybe bufferedimagereader could not read the dimensions of
 				// texture
-				if (texture.getTextureDimensions() != null) {
+				if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+
+					// need to get texture dimension from UE1/UE2 to UE4 to get
+					// the right UV scaling
+					texture.readTextureDimensions();
+
+					Dimension texDimension = null;
+
+					if (texture.getReplacement() != null) {
+						texDimension = texture.getReplacement().getTextureDimensions();
+					} else {
+						texDimension = texture.getTextureDimensions();
+					}
+
+					if (texDimension != null) {
+
+						if (texture_u != null) {
+							if (texDimension != null) {
+								texture_u.scale(1 / (texDimension.width / 100d));
+							}
+						}
+
+						if (texture_v != null) {
+							texture_v.scale(1 / (texDimension.height / 100d));
+						}
+					}
+
+					if (origin != null) {
+						// i guess it depends of normal
+						// todo check
+						origin.x += pan_u;
+						origin.y += pan_v;
+					}
+				}
+
+				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 					if (texture_u != null) {
-						texture_u.scale(1 / (texture.getTextureDimensions().width / 100d));
+						texture_u.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
 
 					if (texture_v != null) {
-						texture_v.scale(1 / (texture.getTextureDimensions().height / 100d));
+						texture_v.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
-
-				}
-
-				if (origin != null) {
-					// i guess it depends of normal
-					// todo check
-					origin.x += pan_u;
-					origin.y += pan_v;
 				}
 			}
 		}

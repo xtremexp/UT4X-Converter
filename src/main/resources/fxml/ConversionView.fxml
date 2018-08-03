@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <GridPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
     <children>
         <!-- PROGRESS -->
@@ -23,7 +19,7 @@
             <columns>
                 <TableColumn text="Time" fx:id="logTime"></TableColumn>
                 <TableColumn text="Log Level" fx:id="logLevel"></TableColumn>
-                <TableColumn text="Message" fx:id="logMsg" prefWidth="400" ></TableColumn>
+                <TableColumn text="Message" fx:id="logMsg" prefWidth="650" ></TableColumn>
             </columns>
         </TableView>
     </children>

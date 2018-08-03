@@ -10,12 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -26,6 +26,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.TextureConverter;
 import org.xtx.ut4converter.tools.TextureFormat;
+import org.xtx.ut4converter.tools.psk.Material;
 
 /**
  * Some ressource such as texture, sound, ... embedded into some unreal package
@@ -58,7 +59,16 @@ public class UPackageRessource {
 	 */
 	boolean exportFailed;
 
-	boolean isUsedInMap;
+	/**
+	 * Means this ressource is used in map being converted. If used the exported
+	 * file should not be deleted otherwise should be
+	 */
+	private boolean isUsedInMap;
+
+	/**
+	 * Means this
+	 */
+	boolean isUsedInStaticMesh;
 
 	/**
 	 * Group of ressource (optional)
@@ -84,17 +94,26 @@ public class UPackageRessource {
 	 * Only for material package ressources
 	 */
 	MaterialInfo materialInfo;
+	/**
+	 * Use this ressource as replacement. Might be used for material ressources
+	 * which are replaced with diffuse texture (until we can manage properly
+	 * materials)
+	 */
+	UPackageRessource replacement;
+	
+
+	private String forcedFileName;
 
 	/**
      * 
      */
-	class ExportInfo {
+	public class ExportInfo {
 
 		/**
 		 * Exported files, there might be several ones for same ressource (e.g:
 		 * terrain textures
 		 */
-		File exportedFile;
+		List<File> exportedFiles;
 
 		/**
 		 * Extractor used to export this package ressource
@@ -105,16 +124,79 @@ public class UPackageRessource {
 		}
 
 		public ExportInfo(File exportedFile, UTPackageExtractor extractor) {
-			this.exportedFile = exportedFile;
+			this.exportedFiles = new ArrayList<>();
+			this.exportedFiles.add(exportedFile);
 			this.extractor = extractor;
 		}
+		
+		public void setExportedFile(File exportedFile){
+			this.exportedFiles = new ArrayList<>();
+			this.exportedFiles.add(exportedFile);
+		}
 
-		public File getExportedFile() {
-			return exportedFile;
+		public void setExportedFiles(List<File> exportedFiles) {
+			this.exportedFiles = exportedFiles;
+		}
+
+		public List<File> getExportedFiles() {
+			return exportedFiles;
+		}
+		
+		/**
+		 * Get exported file by extension
+		 * @param extension Extension (e.g: "bmp")
+		 * @return Exported file with that extension else null
+		 */
+		public File getExportedFileByExtension(final String extension){
+			if(this.exportedFiles == null || extension == null){
+				return null;
+			}
+			
+			for(File exportedFile : exportedFiles){
+				if(exportedFile.getName().endsWith(extension)){
+					return exportedFile;
+				}
+			}
+			
+			return null;
+		}
+		
+		public File getFirstExportedFile(){
+			if(this.exportedFiles == null || this.exportedFiles.isEmpty()){
+				return null;
+			} else {
+				return this.exportedFiles.get(0);
+			}
 		}
 
 		public UTPackageExtractor getExtractor() {
 			return extractor;
+		}
+		
+		public void replaceExportedFile(File exportedFile, File newExportedFile){
+			if(this.exportedFiles == null){
+				return;
+			}
+			
+			final int fileIdx = this.exportedFiles.indexOf(exportedFile);
+			
+			if(fileIdx != -1){
+				this.exportedFiles.set(fileIdx, newExportedFile);
+			}
+		}
+		
+		public void addExportedFile(File exportedFile){
+			if(exportedFile == null){
+				return;
+			}
+			
+			if(this.exportedFiles == null){
+				this.exportedFiles = new ArrayList<>();
+			}
+			
+			if(!this.exportedFiles.contains(exportedFile)){
+				this.exportedFiles.add(exportedFile);
+			}
 		}
 	}
 
@@ -194,26 +276,40 @@ public class UPackageRessource {
 
 		this.unrealPackage = uPackage;
 		this.type = uPackage.type;
+
+		// if ressource in map package
+		// means is always used
+		if (uPackage.isMapPackage(mapConverter.getMapPackageName())) {
+			setIsUsedInMap(true);
+		}
 		uPackage.ressources.add(this);
+	}
+
+	public void readTextureDimensions() {
+		if (replacement != null) {
+			readTextureDimensions(mapConverter, replacement);
+		} else {
+			readTextureDimensions(mapConverter, this);
+		}
 	}
 
 	/**
 	 * From exported texture file get the dimension of the texture Should be
 	 * only called when converting polygon with the texture associated
 	 */
-	public void readTextureDimensions() {
+	public static void readTextureDimensions(MapConverter mapConverter, UPackageRessource texRessource) {
 
-		if (type != Type.TEXTURE || exportInfo.exportedFile == null || this.textureDimensions != null) {
+		if (texRessource.type != Type.TEXTURE || texRessource.exportInfo.exportedFiles == null || texRessource.exportInfo.exportedFiles.isEmpty() || texRessource.textureDimensions != null) {
 			return;
 		}
 
 		try {
 			// FIXME this part is sloooow specially if large textures (about
 			// 1s/tex which may take a while for a whole map!)
-			this.textureDimensions = ImageUtils.getTextureDimensions(exportInfo.getExportedFile());
+			texRessource.textureDimensions = ImageUtils.getTextureDimensions(texRessource.exportInfo.getExportedFiles().get(0));
 
-			if (exportInfo.getExportedFile() != null && this.textureDimensions != null) {
-				mapConverter.getLogger().log(Level.FINE, exportInfo.getExportedFile().getName() + " dimension read: " + this.textureDimensions.toString());
+			if (texRessource.exportInfo.getExportedFiles() != null && !texRessource.exportInfo.getExportedFiles().isEmpty() && texRessource.textureDimensions != null) {
+				mapConverter.getLogger().log(Level.FINE, texRessource.exportInfo.getExportedFiles().get(0) + " dimension read: " + texRessource.textureDimensions.toString());
 			}
 		} catch (Exception e) {
 			mapConverter.getLogger().log(Level.SEVERE, e.getMessage());
@@ -253,6 +349,7 @@ public class UPackageRessource {
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -262,7 +359,7 @@ public class UPackageRessource {
 	 * @return <code>true</code> if the file need to be exported
 	 */
 	public boolean needExport() {
-		return !exportFailed && exportInfo.exportedFile == null;
+		return !exportFailed && exportInfo.exportedFiles == null;
 	}
 
 	/**
@@ -272,41 +369,54 @@ public class UPackageRessource {
 	 * @param forceExport
 	 *            Force export of package even if it has ever been extracted
 	 */
-	public void export(UTPackageExtractor packageExtractor, boolean forceExport) {
+	public void export(UTPackageExtractor packageExtractor, boolean forceExport, boolean perfectMatchOnly) {
 
-		if ((needExport() || forceExport) && packageExtractor != null) {
+		if (packageExtractor != null && (needExport() || forceExport || packageExtractor.isForceSetNotExported())) {
 			try {
-				packageExtractor.extract(this, forceExport);
+				packageExtractor.extract(this, forceExport, perfectMatchOnly);
 			} catch (Exception ex) {
 				packageExtractor.logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
 			}
 		}
 	}
 
+	
+	public void export(UTPackageExtractor packageExtractor) {
+		export(packageExtractor, false, true);
+	}
+	
 	/**
 	 * Export the ressource from unreal package to file
 	 * 
 	 * @param packageExtractor
 	 */
-	public void export(UTPackageExtractor packageExtractor) {
-		export(packageExtractor, false);
+	public void export(UTPackageExtractor packageExtractor, boolean perfectMatchOnly) {
+		export(packageExtractor, false, perfectMatchOnly);
 	}
 
 	/**
-	 * Guess the converted name used in converted t3d unreal map E.G: UT99:
+	 * returns
+	 * <pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
+	 * 
+	 * with suffix depending on type of ressource (_Mat for texture, _Cue for
+	 * sound, ...)
 	 * 
 	 * @param mapConverter
-	 *            Map Converter
 	 * @return
 	 */
-	public String getConvertedName(MapConverter mapConverter) {
+	public String getConvertedBaseName(MapConverter mapConverter) {
+
+		if (replacement != null) {
+			return replacement.getConvertedBaseName(mapConverter);
+		}
 
 		String suffix = "";
 
 		if (type == Type.SOUND) {
 			// UE4 can handle both cue or normal sounds
 			// but better use cue since lift sounds need volume attenuation
-			// depending on player distance ("AttenuationSettings=Attenuation_Lifts")
+			// depending on player distance
+			// ("AttenuationSettings=Attenuation_Lifts")
 			if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 				// beware UT3 needs cue for AmbientSound but not for
 				// AmbientSoundSimple actor
@@ -318,8 +428,81 @@ public class UPackageRessource {
 			suffix = "_Mat";
 		}
 
-		// /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
-		return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + getFullNameWithoutDots() + suffix + "." + getFullNameWithoutDots() + suffix;
+		String baseName = getFullNameWithoutDots() + suffix;
+
+		// have to fit base material name with max size of material names in
+		// .psk
+		// staticmesh files
+		if (isTextureUsedInStaticMesh()) {
+
+			// try <packagename>_<name>
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				String fullNameWithoutGroup = getFullNameWithoutGroup().replaceAll("\\.", "\\_");
+				baseName = fullNameWithoutGroup + "_" + fullNameWithoutGroup + suffix;
+				forcedFileName = fullNameWithoutGroup + "_" + fullNameWithoutGroup;
+			}
+
+			// <name>
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				baseName = this.name + "_" + this.name + suffix;
+				forcedFileName = this.name + "_" + this.name;
+			}
+
+			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
+				final int maxNameSize = ((Material.MATNAME_MAX_SIZE - 1 - suffix.length()) / 2) - 1;
+				this.name = this.name.substring(0, maxNameSize - 1);
+				baseName = this.name + "_" + this.name + suffix;
+				forcedFileName = this.name + "_" + this.name;
+			}
+		}
+
+		return baseName;
+	}
+
+	/**
+	 * Guess the converted name used in converted t3d unreal map E.G: UT99:
+	 * Returns: //
+	 * /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix
+	 * >.<pkgName>_<group>_<name>_<suffix>
+	 * 
+	 * @param mapConverter
+	 *            Map Converter
+	 * @return
+	 */
+	public String getConvertedName(MapConverter mapConverter) {
+
+		if (replacement != null) {
+			return replacement.getConvertedName(mapConverter);
+		}
+
+		final String baseName = getConvertedBaseName(mapConverter);
+		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
+		
+		return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+	}
+	
+	public String getConvertedFileName(File exportedFile) {
+		
+		// don't change original name for .mtl file
+		if(exportedFile.getName().endsWith(".mtl")){
+			return exportedFile.getName();
+		}
+		
+		String s[] = exportedFile.getName().split("\\.");
+		String currentFileExt = s[s.length - 1];
+
+		// umodel does export staticmeshes as .pskx or .psk
+		// therefore UT4 converter convert them to .obj
+		if (getType() == Type.STATICMESH) {
+			currentFileExt = "obj";
+		}
+
+		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
+		if (forcedFileName != null) {
+			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
+		} else {
+			return getFullNameWithoutDots() + "." + currentFileExt;
+		}
 	}
 
 	/**
@@ -329,16 +512,21 @@ public class UPackageRessource {
 	 * @return
 	 */
 	public String getConvertedFileName() {
-		String s[] = exportInfo.getExportedFile().getName().split("\\.");
+		String s[] = exportInfo.getExportedFiles().get(0).getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
-		
-		// umodel does export staticmeshes as .pskx
-		// but we want rename as .psk so we can import in blender
-		if(getType() == Type.STATICMESH && "pskx".equals(currentFileExt)){
-			currentFileExt = "psk";
+
+		// umodel does export staticmeshes as .pskx or .psk
+		// therefore UT4 converter convert them to .obj
+		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
+			currentFileExt = "obj";
 		}
 
-		return getFullNameWithoutDots() + "." + currentFileExt;
+		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
+		if (forcedFileName != null) {
+			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
+		} else {
+			return getFullNameWithoutDots() + "." + currentFileExt;
+		}
 	}
 
 	/**
@@ -405,15 +593,15 @@ public class UPackageRessource {
 	 * @return true if this ressource has been exported to a file
 	 */
 	public boolean isExported() {
-		return exportInfo != null && exportInfo.exportedFile != null;
+		return exportInfo != null && exportInfo.exportedFiles != null;
 	}
 
-	public File getExportedFile() {
-		return exportInfo.getExportedFile();
+	public List<File> getExportedFiles() {
+		return exportInfo.getExportedFiles();
 	}
 
-	public void setExportedFile(File exportedFile) {
-		this.exportInfo.exportedFile = exportedFile;
+	public void addExportedFile(File exportedFile) {
+		this.exportInfo.addExportedFile(exportedFile);
 	}
 
 	/**
@@ -451,25 +639,20 @@ public class UPackageRessource {
 	 */
 	public boolean needsConversion(MapConverter mc) {
 
-		if (exportInfo.exportedFile == null) {
+		if (exportInfo.exportedFiles == null) {
 			return false;
 		}
 
-		if (mc.isFromUE1UE2ToUE3UE4()) {
-
-			if (type == Type.SOUND && mc.getInputGame().engine.version <= 2) {
-				return true;
-			}
-
-			// ucc exporter exports malformed .dds textures ...
-			// that can't be imported in UE4
-			if (type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFile.getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)) {
-				return true;
-			}
+		// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
+		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && type == Type.SOUND) {
+			return true;
 		}
 
-		return false;
-	}
+		// ucc exporter exports malformed .dds textures ...
+		// that can't be imported in UE4
+        return mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter);
+
+    }
 
 	/**
 	 * Convert ressource to good format if needed
@@ -484,7 +667,7 @@ public class UPackageRessource {
 
 			try {
 				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
-				scs.convertTo16BitSampleSize(exportInfo.getExportedFile(), tempFile);
+				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
 			} catch (IOException ex) {
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
@@ -496,12 +679,12 @@ public class UPackageRessource {
 
 			if (!texConverter.isNConvertAvailable()) {
 				logger.log(Level.WARNING, "Impossible to convert " + name + " texture: nconvert path not set in settings");
-				return exportInfo.getExportedFile();
+				return exportInfo.getExportedFiles().get(0);
 			}
 
 			try {
-				File tempFile = File.createTempFile(getFullNameWithoutDots(), "." + FileUtils.getExtension(exportInfo.getExportedFile()));
-				Files.copy(exportInfo.getExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				File tempFile = File.createTempFile(getFullNameWithoutDots(), "." + FileUtils.getExtension(exportInfo.getFirstExportedFile()));
+				Files.copy(exportInfo.getFirstExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				texConverter.convert(tempFile, TextureFormat.tga);
 				tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
 				return tempFile;
@@ -554,4 +737,58 @@ public class UPackageRessource {
 		return getFullName();
 	}
 
+	/**
+	 * Replaces current resources with new one
+	 * 
+	 * @param ressource
+	 */
+	public void replaceWith(UPackageRessource ressource) {
+		this.replacement = ressource;
+		ressource.setIsUsedInMap(true);
+	}
+
+	public UPackageRessource getReplacement() {
+		return replacement;
+	}
+
+	/**
+	 * Return the simple name of the ressource E.G:
+	 * Texture'HumanoidArchitecture.Bases.bas05bHA' -> bas05bHA
+	 * 
+	 * @return Simple name of texture
+	 */
+	public String getName() {
+		return name;
+	}
+
+	public boolean isUsedInStaticMesh() {
+		return isUsedInStaticMesh;
+	}
+
+	/**
+	 * If true means the material name will have to be renamed to fit with
+	 * material name max size of 64 bytes. Should be only used for texture
+	 * ressources in .psk staticmeshes files
+	 * 
+	 * @param isUsedInStaticMesh
+	 *            <code>true</code> if this ressource is used in static meshes
+	 */
+	public void setUsedInStaticMesh(boolean isUsedInStaticMesh) {
+
+		// only apply for texture ressources
+		if (this.type != Type.TEXTURE) {
+			return;
+		}
+		this.isUsedInStaticMesh = isUsedInStaticMesh;
+	}
+
+	private boolean isTextureUsedInStaticMesh() {
+		return this.isUsedInStaticMesh() && this.type == Type.TEXTURE;
+	}
+
+	public ExportInfo getExportInfo() {
+		return exportInfo;
+	}
+	
+	
 }
