@@ -7,26 +7,26 @@
     <top>
         <MenuBar>
             <Menu text="File">
-                <Menu text="Unreal 1 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvertU1Map"/>
+                <Menu text="Unreal 1">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#handleConvertU1Map"/>
                 </Menu>
-                <Menu text="Unreal 2 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#convertU2Map"/>
+                <Menu text="Unreal 2">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#convertU2Map"/>
                 </Menu>
-                <Menu text="Unreal Tournament Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#handleConvert"/>
+                <Menu text="Unreal Tournament">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#handleConvert"/>
                 </Menu>
-                <Menu text="Unreal Tournament 2003 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt2003Map"/>
+                <Menu text="Unreal Tournament 2003">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt2003Map"/>
                 </Menu>
-                <Menu text="Unreal Tournament 2004 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt2004Map"/>
+                <Menu text="Unreal Tournament 2004">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt2004Map"/>
                 </Menu>
-                <Menu text="Unreal Tournament 3 Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#convertUt3Map"/>
+                <Menu text="Unreal Tournament 3">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt3Map"/>
                 </Menu>
-                <Menu text="UDK Map">
-                    <MenuItem text="Convert to UT4 ..." onAction="#convertUdkMap"/>
+                <Menu text="UDK">
+                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUdkMap"/>
                 </Menu>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
