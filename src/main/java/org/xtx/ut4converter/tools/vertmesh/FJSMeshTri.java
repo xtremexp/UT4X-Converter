@@ -1,6 +1,5 @@
 package org.xtx.ut4converter.tools.vertmesh;
 
-import org.xtx.ut4converter.tools.BinUtils;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 
 import java.io.FileOutputStream;
@@ -67,7 +66,11 @@ public class FJSMeshTri implements BinReadWrite {
 
 	@Override
 	public void read(ByteBuffer bf) {
-		iVertex = BinUtils.readShortArray(bf, 3);
+		iVertex = new short[3];
+		iVertex[0] = bf.getShort();
+		iVertex[1] = bf.getShort();
+		iVertex[2] = bf.getShort();
+
 		type = bf.get();
 		color = bf.get();
 		FMeshByteUV tex_0 = new FMeshByteUV();

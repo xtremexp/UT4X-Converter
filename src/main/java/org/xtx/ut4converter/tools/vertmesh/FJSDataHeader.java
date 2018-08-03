@@ -1,11 +1,11 @@
 package org.xtx.ut4converter.tools.vertmesh;
 
+import org.xtx.ut4converter.tools.BinUtils;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import org.xtx.ut4converter.tools.BinUtils;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 
 /**
  * Datafile header for vertmesh UE1 files see: -
@@ -38,7 +38,7 @@ public class FJSDataHeader implements BinReadWrite {
 	private int fixScale;
 	
 	private int unused1, unused2, unused3; // 36 bytes
-	private String unknown; // 12 bytes
+	private byte[] unknown; // 12 bytes
 
 	@Override
 	public void read(ByteBuffer bf) {
@@ -54,7 +54,20 @@ public class FJSDataHeader implements BinReadWrite {
 		unused1 = bf.getInt();
 		unused2 = bf.getInt();
 		unused3 = bf.getInt();
-		unknown = BinUtils.readString(bf, 12);
+
+		unknown = new byte[12];
+		unknown[0] = bf.get();
+		unknown[1] = bf.get();
+		unknown[2] = bf.get();
+		unknown[3] = bf.get();
+		unknown[4] = bf.get();
+		unknown[5] = bf.get();
+		unknown[6] = bf.get();
+		unknown[7] = bf.get();
+		unknown[8] = bf.get();
+		unknown[9] = bf.get();
+		unknown[10] = bf.get();
+		unknown[11] = bf.get();
 	}
 
 	@Override
@@ -70,7 +83,7 @@ public class FJSDataHeader implements BinReadWrite {
 		BinUtils.writeInt(bos, unused1);
 		BinUtils.writeInt(bos, unused2);
 		BinUtils.writeInt(bos, unused3);
-		BinUtils.writeString(bos, unknown, 12);
+		bos.write(unknown);
 	}
 
 	public String toString() {
