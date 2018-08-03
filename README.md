@@ -238,48 +238,48 @@ Converter interfaces with these external tools:
 
 # History
 - 0.9.0 - XX/08/2018
-* added support for UDK maps (conversion quality is like UT3)
-* ut2003/4/ut3: fixed some cases where some textures from staticmeshes where not converted
-* ut2003/4: added support for LadderVolume, PressureVolume, SnipingVolue, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
-HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
-* ut2003/4: VolumeTrigger, MessageTrigger, CrowdTrigger, UseTrigger, MusicTrigger, RedirectionTrigger,
-GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
-* ut2003/4: fixed lift actor property in lift exit actor not being set
-* ut2003/4: added support for multiple skins (corona) with lights 
-* all: fixed some teamplayerstarts being converted as playerstart
-* all: fixed crash on UT4 editor import if trigger had either radius or hieght set to 0
-* unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
+  * added support for UDK maps (conversion quality is like UT3)
+  * ut2003/4/ut3: fixed some cases where some textures from staticmeshes where not converted
+  * ut2003/4: added support for LadderVolume, PressureVolume, SnipingVolue, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
+  HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
+  * ut2003/4: VolumeTrigger, MessageTrigger, CrowdTrigger, UseTrigger, MusicTrigger, RedirectionTrigger,
+  GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
+  * ut2003/4: fixed lift actor property in lift exit actor not being set
+  * ut2003/4: added support for multiple skins (corona) with lights 
+  * all: fixed some teamplayerstarts being converted as playerstart
+  * all: fixed crash on UT4 editor import if trigger had either radius or hieght set to 0
+  * unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
 the conversion quality of resources is not optimal (staticmeshes with bad roration)
-* unreal 2: added support for Trigger TT_USE case
-* ui: updated welcome screen
-* ui: added menu to report issues/bugs
-* ui: progress bar now being update more often
+  * unreal 2: added support for Trigger TT_USE case
+  * ui: updated welcome screen
+  * ui: added menu to report issues/bugs
+  * ui: progress bar now being update more often
 
 - 0.8.10 - 18/07/2018
-* all: fixed low quality texture
-* all: now tries to export with UCC with UModel fails to load package
-* ut2004: fixed no sound for jumppads
-* ut2004: changed default scale from 2.4 to 2.2
+  * all: fixed low quality texture
+  * all: now tries to export with UCC with UModel fails to load package
+  * ut2004: fixed no sound for jumppads
+  * ut2004: changed default scale from 2.4 to 2.2
 
 - 0.8.9 - 01/08/2017
-* u1, ut99: fixed some messed up brushes with PostScale property not being correctly parsed correctly.
+  * u1, ut99: fixed some messed up brushes with PostScale property not being correctly parsed correctly.
 
 - 0.8.8 - 30/07/2017
- * ut3: fixed sounds not being converted
+  * ut3: fixed sounds not being converted
  
 - 0.8.7 - 29/07/2017
- * all: fixed embedded sounds and staticmeshes in level package not being converted
- * ut3: fixed critical crash when DefensePoint actor is being converted
- * all: now if some actor fails to be converted won't make stop other actors to be converted
+  * all: fixed embedded sounds and staticmeshes in level package not being converted
+  * ut3: fixed critical crash when DefensePoint actor is being converted
+  * all: now if some actor fails to be converted won't make stop other actors to be converted
 
 
 - 0.8.6 - 28/07/2017
- * ut2003/ut2004: added conversion of WaterVolume, NewWeaponBase, NewHealthCharger
- * ut2003/ut2004: fixed conversion failure of trigger with liveproximity and humanplayerproximity trigger type
- * u2/ut2003/ut2004/ut3: fixed bad description/tuto for converting staticmeshes
+  * ut2003/ut2004: added conversion of WaterVolume, NewWeaponBase, NewHealthCharger
+  * ut2003/ut2004: fixed conversion failure of trigger with liveproximity and humanplayerproximity trigger type
+  * u2/ut2003/ut2004/ut3: fixed bad description/tuto for converting staticmeshes
  
 - 0.8.5 - 27/07/2017
- * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
+  * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
  Now only need to import all .obj converted staticmeshes within the UE4 editor
  
 - 0.8.4 - 19/07/2017
@@ -319,22 +319,22 @@ the conversion quality of resources is not optimal (staticmeshes with bad rorati
   * ui: slightly improved visibility in conversion settings
   
 - 0.7.5 - 23/10/2016
-* Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
+  * Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
 can no longer directly import .t3d files
 
 - 0.7.4 - 21/09/2016:
-* Fixed some classes not being converted (like pickups, weapons) when class name was lowercase
-* Fixed bad parsing of tag sometimes
+  * Fixed some classes not being converted (like pickups, weapons) when class name was lowercase
+  * Fixed bad parsing of tag sometimes
 
 - 0.7.3 - 18/06/2016:
-* Changed default scale from 2.2 to 2.5 to fit with playersize change in some previous UT4 patch
-* Added settings to only convert some manually specified classes
-* u1, u2, ut: fixed bad lift destination not being scaled with conversion map scale
-* u1, u2, ut: fixed bad converted sounds that was causing crash on play in editor sometimes
-* all: fixed some resources (mainly sounds) that were not being converted
+  * Changed default scale from 2.2 to 2.5 to fit with playersize change in some previous UT4 patch
+  * Added settings to only convert some manually specified classes
+  * u1, u2, ut: fixed bad lift destination not being scaled with conversion map scale
+  * u1, u2, ut: fixed bad converted sounds that was causing crash on play in editor sometimes
+  * all: fixed some resources (mainly sounds) that were not being converted
 
 - 0.7.2 - 14/10/2015:
-* u2/ut2003/ut2004: Fixed bad staticmesh scaling in level if "DrawScale" property set.
+  * u2/ut2003/ut2004: Fixed bad staticmesh scaling in level if "DrawScale" property set.
 
 - 0.7.1 - 12/10/2015:
   * Fixed polygon for normal brushes with shader texture not replaced with diffuse texture
