@@ -266,8 +266,12 @@ public class T3DStaticMesh extends T3DSound {
 		}
 
 		if(mapConverter.convertTextures()) {
-			if (this.uv2Texture != null) {
-				this.uv2Texture.export(UTPackageExtractor.getExtractor(mapConverter, uv2Texture));
+			if (this.uv2Texture != null && this.uv2Mode == UV2Mode.UVM_Skin) {
+				if(this.skins == null){
+					this.skins = new ArrayList<>();
+				}
+				this.skins.clear();
+				this.skins.add(this.uv2Texture);
 			}
 
 			if (this.skins != null) {
