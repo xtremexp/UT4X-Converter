@@ -199,7 +199,7 @@ public class T3DStaticMesh extends T3DSound {
 		// brushes)
 		if (!overiddeMaterials.isEmpty()) {
 			for (int idx = 0; idx < overiddeMaterials.size(); idx++) {
-				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=MaterialInstanceConstant'").append(overiddeMaterials.get(idx)).append("'\n");
+				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(overiddeMaterials.get(idx)).append("'\n");
 			}
 		}
 
