@@ -5,8 +5,6 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -15,6 +13,7 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -414,7 +413,7 @@ public class T3DLight extends T3DSound {
 	public String toString() {
 
 		if (mapConverter.toUnrealEngine4()) {
-			String componentLightClass = null;
+			String componentLightClass;
 
 			if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
 				componentLightClass = "SkyLightComponent";
@@ -428,7 +427,7 @@ public class T3DLight extends T3DSound {
 
 			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
