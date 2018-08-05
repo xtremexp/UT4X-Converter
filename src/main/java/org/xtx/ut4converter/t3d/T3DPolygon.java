@@ -6,12 +6,6 @@
 
 package org.xtx.ut4converter.t3d;
 
-import java.awt.Dimension;
-import java.text.DecimalFormat;
-import java.util.LinkedList;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -19,6 +13,11 @@ import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
+
+import javax.vecmath.Vector3d;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.util.LinkedList;
 
 /**
  * 
@@ -421,6 +420,13 @@ public class T3DPolygon {
 					}
 				}
 			}
+		}
+
+		// originally UE1 had a low light resolution
+		// default is 32 in UE4
+		// 128 seems good enough
+		if(mapConverter.isFrom(UnrealEngine.UE1)){
+			lightMapScale = 128d;
 		}
 	}
 
