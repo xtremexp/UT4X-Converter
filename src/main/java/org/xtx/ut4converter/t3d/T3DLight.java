@@ -328,7 +328,7 @@ public class T3DLight extends T3DSound {
 
 		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
-			convertUE4ClassAndMobility();
+			convertUE12ClassAndMobility();
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
 		}
@@ -337,7 +337,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Convert UE1/2 light class and mobility to UE4
 	 */
-	private void convertUE4ClassAndMobility() {
+	private void convertUE12ClassAndMobility() {
 
 		this.t3dClass = UE4_LightActor.PointLight.name();
 
@@ -346,7 +346,10 @@ public class T3DLight extends T3DSound {
         }
 
         // seen in some map light as spot but bDirectional set to true
-        if (isSunLight() || (this.isDirectional != null && this.isDirectional)) {
+		// special case as seen in unreal 1 map NyLeve
+		// where some light avec bDirectional=true and LightEffect=LE_StaticSpot
+		// in that case LightEffect StaticSpot is prioritary to bDirectional
+        if (!isSpotLight() && (isSunLight() || (this.isDirectional != null && this.isDirectional))) {
 			this.t3dClass = UE4_LightActor.DirectionalLight.name();
         }
 
@@ -427,7 +430,7 @@ public class T3DLight extends T3DSound {
 
 			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("0\"\n");
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
@@ -466,6 +469,8 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
+            sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
+
 			writeEndActor();
 		}
 
