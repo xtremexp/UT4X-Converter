@@ -5,17 +5,6 @@
  */
 package org.xtx.ut4converter.export;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
@@ -27,6 +16,13 @@ import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.MaterialInfo;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  *
@@ -112,7 +108,7 @@ public class UModelExporter extends UTPackageExtractor {
 		}
 
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
-		String command = getExporterPath() + " -export -sounds -groups -notgacomp \"" + fileContainer + "\"";
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nolightmap \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
