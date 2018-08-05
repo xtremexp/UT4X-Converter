@@ -425,7 +425,7 @@ public class T3DPolygon {
 		// originally UE1 had a low light resolution
 		// default is 32 in UE4
 		// 128 seems good enough
-		if(mapConverter.isFrom(UnrealEngine.UE1)){
+		if(mapConverter != null && mapConverter.isFrom(UnrealEngine.UE1)){
 			lightMapScale = 128d;
 		}
 	}
