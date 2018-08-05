@@ -5,21 +5,16 @@
 
 package org.xtx.ut4converter.t3d;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.ucore.ue4.SceneComponent;
+
+import javax.vecmath.Vector3d;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.*;
 
 /**
  * 
@@ -541,7 +536,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 		
 		// Brush name need to be the original one to fix ut3 brushes order (based on actor name)
-		if (this.name != null && !(this instanceof T3DBrush)) {
+		if (this.name != null && !(this instanceof T3DBrush && this.mapConverter.isFrom(UnrealEngine.UE3))) {
 
 			final String[] namePrefixSp = this.name.split("\\_");
 			String namePrefix = null;
