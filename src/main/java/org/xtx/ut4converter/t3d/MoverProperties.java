@@ -13,6 +13,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.xtx.ut4converter.t3d.T3DObject.IDT;
@@ -30,52 +31,96 @@ public class MoverProperties implements T3D {
 	 * Sounds used by movers when it started moving, is moving ... TODO make a
 	 * list of UPackageRessource binded with some property name
 	 */
-	UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
+	private UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
 
 	/**
 	 * CHECK usage?
 	 */
-	List<Vector3d> savedPositions = new ArrayList<>();
+	private List<Vector3d> savedPositions = new ArrayList<>();
 
 	/**
 	 * List of positions where mover moves UTUE4: Lift
 	 * Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several
 	 * nav localisations unlike UE1/2) UT99: KeyPos(1)=(Y=72.000000)
 	 */
-	List<Vector3d> positions = new ArrayList<>();
+	private List<Vector3d> positions = new LinkedList<>();
+
+	private List<Vector3d> rotations = new LinkedList<>();
 
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
 	 */
-	List<Vector3d> savedRotations = new ArrayList<>();
+	private List<Vector3d> savedRotations = new ArrayList<>();
 
     /**
 	 * How long it takes for the mover to get to next position
 	 */
-	Double moveTime;
+	private Double moveTime;
 
 	/**
 	 * How long the mover stay static in his final position before returning to
 	 * home
 	 */
-	Double stayOpenTime;
+	private Double stayOpenTime;
 
 	/**
 	 * How long time the mover is available again after getting back to home
 	 * position
 	 */
-	Double delayTime;
+	private Double delayTime;
 
-	T3DActor mover;
-	
+	private T3DActor mover;
+
+	/**
+	 * Default state for Unreal 1
+	 * TODO check for other games
+	 * Depending on state mover will stay open, loop, be controled by trigger only and so on...
+	 */
+	private InitialState initialState;
+
+	private BumpType bumpType;
+
+	private MoverEncroachType moverEncroachType;
+
+	private MoverGlideType moverGlideType;
+
 	/**
 	 * Reference to converter
 	 */
 	private MapConverter mapConverter;
 
+	private List<T3DSimpleProperty> simpleProperties = new LinkedList<>();
+
 	public MoverProperties(T3DActor mover, MapConverter mapConverter) {
 		this.mover = mover;
 		this.mapConverter = mapConverter;
+
+		mover.registerSimpleProperty("bDamageTriggered", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("bDirectionalPushoff", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("bSlave", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("bTriggerOnceOnly", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("BumpEvent", String.class, null);
+		mover.registerSimpleProperty("bUseTriggered", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("DamageTreshold", Float.class, 0f);
+		mover.registerSimpleProperty("EncroachDamage", Float.class, 0f);
+		mover.registerSimpleProperty("OtherTime", Float.class, 0f);
+		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
+	}
+
+	enum BumpType {
+		BT_PlayerBump, BT_PawnBump, BT_AnyBump
+	}
+
+	enum MoverEncroachType {
+		ME_StopWhenEncroach, ME_ReturnWhenEncroach, ME_CrushWhenEncroach, ME_IgnoreWhenEncroach
+	}
+
+	enum MoverGlideType {
+		MV_GlideByTime, MV_MoveByTime
+	}
+
+	enum InitialState {
+		None, StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed
 	}
 
 	@Override
@@ -102,27 +147,27 @@ public class MoverProperties implements T3D {
 
 		// UE1 -> 'CloseStartSound' ? (UE4)
 		else if (line.startsWith("ClosedSound=")) {
-			closedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			closedSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'CloseStopSound' ? (UE4)
 		else if (line.startsWith("ClosingSound=") || line.startsWith("ClosingAmbientSound=")) {
-			closingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			closingSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStartSound' ? (UE4)
 		else if (line.startsWith("OpeningSound=") || line.startsWith("OpeningAmbientSound=")) {
-			openingSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			openingSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStopSound' ? (UE4)
 		else if (line.startsWith("OpenedSound=")) {
-			openedSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			openedSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Closed Sound' (UE4)
 		else if (line.startsWith("MoveAmbientSound=") || line.startsWith("OpenSound=")) {
-			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Lift Destination' (UE12)
@@ -133,6 +178,26 @@ public class MoverProperties implements T3D {
 		// UE1 -> 'Saved Positions' (UE12)
 		else if (line.contains("SavedRot=")) {
 			savedRotations.add(T3DUtils.getVector3dRot(line.split("SavedRot")[1]));
+		}
+
+		else if (line.contains("InitialState=")) {
+			this.initialState = InitialState.valueOf(T3DUtils.getString(line));
+		}
+
+		else if (line.contains("BumpType=")) {
+			this.bumpType = BumpType.valueOf(T3DUtils.getString(line));
+		}
+
+		else if (line.contains("MoverEncroachType=")) {
+			this.moverEncroachType = MoverEncroachType.valueOf(T3DUtils.getString(line));
+		}
+
+		else if (line.contains("MoverGlideType=")) {
+			this.moverGlideType = MoverGlideType.valueOf(T3DUtils.getString(line));
+		}
+
+		else if(line.startsWith("KeyRot")){
+			rotations.add(T3DUtils.getVector3dRot(line.split("\\)=")[1]));
 		}
 
 		// UE1 -> 'Saved Positions' (UE12)
@@ -150,6 +215,7 @@ public class MoverProperties implements T3D {
 		// TODO write as well matinee actor (once implementation done)
 		// because it's impossible to know ("guess") if a mover is a lift or
 		// another kind of mover (button, door, ...)
+		// TODO use UBMover once UBMover blueprint done
 		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("_Lift\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
@@ -161,10 +227,17 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tLift Time=").append(moveTime).append("\n");
 		}
 
+		// TODO handle multi position / rotation later
+		// because we use last position but there might more than one position !
 		if (!positions.isEmpty()) {
-			Vector3d v = positions.get(0);
+			Vector3d v = positions.get(positions.size() - 1);
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(v.x)).append(",Y=").append(T3DActor.fmt(v.y)).append(",Z=").append(T3DActor.fmt(v.z)).append(")\n");
+		}
+
+		if(!rotations.isEmpty()){
+			final Vector3d v = rotations.get(rotations.size() - 1);
+			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(v.x)).append(",Yaw=").append(T3DActor.fmt(v.y)).append(",Roll=").append(T3DActor.fmt(v.z)).append(")\n");
 		}
 
 		if (openingSound != null) {
@@ -195,6 +268,22 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
 		}
 
+		if (initialState != null) {
+			sbf.append(IDT).append("\tInitialState=").append("NewEnumerator").append(initialState.ordinal()).append("\n");
+		}
+
+		if (bumpType != null) {
+			sbf.append(IDT).append("\tBumpType=").append("NewEnumerator").append(bumpType.ordinal()).append("\n");
+		}
+
+		if (moverEncroachType != null) {
+			sbf.append(IDT).append("\tMoverEncroachType=").append("NewEnumerator").append(moverEncroachType.ordinal()).append("\n");
+		}
+
+		if (moverGlideType != null) {
+			sbf.append(IDT).append("\tMoverGlideType=").append("NewEnumerator").append(moverGlideType.ordinal()).append("\n");
+		}
+
 		if (mover instanceof T3DMoverSM) {
 			T3DMoverSM moverSm = (T3DMoverSM) mover;
 
@@ -202,6 +291,8 @@ public class MoverProperties implements T3D {
 				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.staticMesh.getConvertedName(moverSm.getMapConverter())).append("'\n");
 			}
 		}
+
+		mover.writeSimpleProperties();
 
 		mover.writeEndActor();
 
@@ -220,24 +311,40 @@ public class MoverProperties implements T3D {
 			stayOpenTime = 4d;
 		}
 
-		if (openingSound != null) {
-			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound), !isFromUe3);
+		// mover might be rotated only
+		// so we don't want to have the default 200 Z axis offset
+		// by adding a 0 destination position
+		if(this.positions.isEmpty()){
+			this.positions.add(new Vector3d(0, 0, 0));
 		}
 
-		if (openedSound != null) {
-			openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound), !isFromUe3);
+		if(mapConverter.convertSounds()) {
+			if (openingSound != null) {
+				openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound), !isFromUe3);
+			}
+
+			if (openedSound != null) {
+				openedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openedSound), !isFromUe3);
+			}
+
+			if (closingSound != null) {
+				closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound), !isFromUe3);
+			}
+
+			if (closedSound != null) {
+				closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound), !isFromUe3);
+			}
+
+			if (moveAmbientSound != null) {
+				moveAmbientSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, moveAmbientSound), !isFromUe3);
+			}
 		}
 
-		if (closingSound != null) {
-			closingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closingSound), !isFromUe3);
-		}
-
-		if (closedSound != null) {
-			closedSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, closedSound), !isFromUe3);
-		}
-
-		if (moveAmbientSound != null) {
-			moveAmbientSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, moveAmbientSound), !isFromUe3);
+		for(Vector3d rotator : rotations){
+			// convert 65536 rotator old range to UE4 range
+			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE3, UnrealEngine.UE3)){
+				T3DUtils.convertRotatorTo360Format(rotator);
+			}
 		}
 	}
 

@@ -25,6 +25,6 @@ public class T3DCreatureFactory extends T3DThingFactory {
 
     @Override
     public String toString() {
-        return writeSimpleActor("CreatureFactory_C");
+        return writeSimpleActor("UBCreatureFactory_C");
     }
 }

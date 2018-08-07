@@ -31,6 +31,6 @@ public class T3DAlarmPoint extends T3DNavigationPoint {
 
     @Override
     public String toString() {
-        return writeSimpleActor("AlarmPoint_C");
+        return writeSimpleActor("UBAlarmPoint_C");
     }
 }

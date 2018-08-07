@@ -154,7 +154,7 @@ public abstract class T3DObject {
 		}
 	}
 
-	protected boolean parseSimpleProperty(final String line){
+	public boolean parseSimpleProperty(final String line){
 
 		boolean propFound = false;
 
@@ -171,7 +171,7 @@ public abstract class T3DObject {
 	 * @param classType Type of property (String, Float, or other)
 	 * @param defaultValue Default value for INPUT game
 	 */
-	protected void registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
+	public void registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
 		this.registeredProperties.add(new T3DSimpleProperty(propertyName, classType, defaultValue));
 	}
 

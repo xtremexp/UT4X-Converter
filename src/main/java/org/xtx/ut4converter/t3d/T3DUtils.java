@@ -6,16 +6,15 @@
 
 package org.xtx.ut4converter.t3d;
 
+import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.tools.HSVColor;
+import org.xtx.ut4converter.tools.RGBColor;
+
+import javax.vecmath.Vector3d;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.vecmath.Vector3d;
-
-import org.xtx.ut4converter.t3d.iface.T3D;
-import org.xtx.ut4converter.tools.HSVColor;
-import org.xtx.ut4converter.tools.RGBColor;
 
 /**
  * 
@@ -581,5 +580,21 @@ public class T3DUtils {
 		}
 
 		return props;
+	}
+
+	/**
+	 * Converts an Unreal Engine 1/2/3 rotator in 65536 range
+	 * with Unreal Engine 4 values in 360 range
+	 * @param rotator UE1/2/3 rotator
+	 * @return Converted rotator
+	 */
+	public static Vector3d convertRotatorTo360Format(final Vector3d rotator){
+		double rotFac = 360d / 65536d;
+
+		rotator.x *= rotFac;
+		rotator.y *= rotFac;
+		rotator.z *= rotFac;
+
+		return rotator;
 	}
 }

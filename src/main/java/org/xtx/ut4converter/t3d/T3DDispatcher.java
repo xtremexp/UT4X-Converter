@@ -24,12 +24,6 @@ public class T3DDispatcher extends T3DActor {
         outDelays = new LinkedHashMap<>();
     }
 
-    public T3DDispatcher(MapConverter mc, String t3dClass, T3DActor actor) {
-        super(mc, t3dClass, actor);
-        outEvents = new LinkedHashMap<>();
-        outDelays = new LinkedHashMap<>();
-    }
-
     @Override
     public boolean analyseT3DData(String line) {
         if (line.startsWith("OutDelays(")) {

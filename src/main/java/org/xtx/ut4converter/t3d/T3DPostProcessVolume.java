@@ -69,11 +69,6 @@ public class T3DPostProcessVolume extends T3DBrush {
 		Gaussian, BokedDOH
 	}
 
-	public T3DPostProcessVolume(MapConverter mapConverter, String t3dClass) {
-		super(mapConverter, t3dClass, null);
-
-		initialise();
-	}
 
 	public T3DPostProcessVolume(MapConverter mapConverter, T3DZoneInfo zoneInfo) {
 		super(mapConverter, zoneInfo.t3dClass, zoneInfo);

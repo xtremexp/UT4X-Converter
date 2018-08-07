@@ -5,16 +5,15 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import javax.vecmath.Vector3d;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class for converting any actor related to sound (might be music as well) TODO
@@ -183,7 +182,7 @@ public class T3DSound extends T3DActor {
 	}
 
 	public T3DSound(MapConverter mc, String t3dClass) {
-		super(mc, t3dClass, null);
+		super(mc, t3dClass);
 
 		initialise();
 	}

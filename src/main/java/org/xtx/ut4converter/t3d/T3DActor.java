@@ -304,7 +304,7 @@ public abstract class T3DActor extends T3DObject {
 		else if (line.startsWith("Tag=")) {
 			tag = T3DUtils.getString(line);
 		}
-		
+
 		else if (line.startsWith("Event=")) {
 			event = line.split("\\=")[1].replaceAll("\\\"", "");
 		}
@@ -720,7 +720,7 @@ public abstract class T3DActor extends T3DObject {
 
 		writeEndActor();
 
-		return super.toString();
+		return sbf.toString();
 	}
 
 }

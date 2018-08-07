@@ -15,6 +15,6 @@ public class T3DSpawnPoint extends T3DNavigationPoint {
 
     @Override
     public String toString() {
-        return writeSimpleActor("SpawnPoint_C");
+        return writeSimpleActor("UBSpawnPoint_C");
     }
 }

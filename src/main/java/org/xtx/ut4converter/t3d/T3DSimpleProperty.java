@@ -34,14 +34,21 @@ public class T3DSimpleProperty {
         if(line.toLowerCase().startsWith(this.propertyName.toLowerCase() + "=")){
             if(propertyClass == String.class){
                 this.propertyValue = T3DUtils.getString(line);
-            } else if(propertyClass == Short.class){
+            }
+            else if(propertyClass == Short.class){
                 this.propertyValue = T3DUtils.getShort(line);
-            } else if(propertyClass == Float.class){
+            }
+            else if(propertyClass == Float.class){
                 this.propertyValue = T3DUtils.getFloat(line);
-            } else if(propertyClass == Boolean.class){
+            }
+            else if(propertyClass == Boolean.class){
                 this.propertyValue = T3DUtils.getFloat(line);
-            } else if(propertyClass == Integer.class){
+            }
+            else if(propertyClass == Integer.class){
                 this.propertyValue = T3DUtils.getInteger(line);
+            }
+            else if(propertyClass == Double.class){
+                this.propertyValue = T3DUtils.getDouble(line);
             }
         }
 

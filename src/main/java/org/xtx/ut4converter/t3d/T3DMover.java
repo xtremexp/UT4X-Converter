@@ -87,9 +87,7 @@ public class T3DMover extends T3DBrush {
 	@Override
 	public void convert() {
 
-		if (mapConverter.convertSounds()) {
-			moverProperties.convert();
-		}
+		moverProperties.convert();
 
 		super.convert();
 	}
