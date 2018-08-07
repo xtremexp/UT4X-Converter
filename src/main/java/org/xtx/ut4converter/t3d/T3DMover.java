@@ -59,7 +59,7 @@ public class T3DMover extends T3DBrush {
 
 		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
 
-			moverProperties.toString(sbf);
+			moverProperties.writeMoverProperties(sbf);
 
 			// TODO for UT4 make converter from brush to .fbx Autodesk file and
 			// transform into StaticMesh

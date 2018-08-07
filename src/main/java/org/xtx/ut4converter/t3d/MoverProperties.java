@@ -120,7 +120,7 @@ public class MoverProperties implements T3D {
 	}
 
 	enum InitialState {
-		None, StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed
+		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed, None
 	}
 
 	@Override
@@ -204,13 +204,13 @@ public class MoverProperties implements T3D {
 		else if (line.contains("KeyPos")) {
 			positions.add(T3DUtils.getVector3d(line.split("\\)=")[1], 0D));
 		} else {
-			return false;
+			return mover.parseSimpleProperty(line);
 		}
 
 		return true;
 	}
 
-	public String toString(StringBuilder sbf) {
+	public void writeMoverProperties(final StringBuilder sbf) {
 		// Write the mover as Destination Lift
 		// TODO write as well matinee actor (once implementation done)
 		// because it's impossible to know ("guess") if a mover is a lift or
@@ -295,8 +295,6 @@ public class MoverProperties implements T3D {
 		mover.writeSimpleProperties();
 
 		mover.writeEndActor();
-
-		return sbf.toString();
 	}
 
 	@Override
@@ -359,50 +357,6 @@ public class MoverProperties implements T3D {
 	@Override
 	public String getName() {
 		return mover.name;
-	}
-
-	public UPackageRessource getClosedSound() {
-		return closedSound;
-	}
-
-	public UPackageRessource getClosingSound() {
-		return closingSound;
-	}
-
-	public UPackageRessource getOpenedSound() {
-		return openedSound;
-	}
-
-	public UPackageRessource getOpeningSound() {
-		return openingSound;
-	}
-
-	public UPackageRessource getMoveAmbientSound() {
-		return moveAmbientSound;
-	}
-
-	public List<Vector3d> getSavedPositions() {
-		return savedPositions;
-	}
-
-	public List<Vector3d> getPositions() {
-		return positions;
-	}
-
-	public List<Vector3d> getSavedRotations() {
-		return savedRotations;
-	}
-
-	public Double getMoveTime() {
-		return moveTime;
-	}
-
-	public Double getStayOpenTime() {
-		return stayOpenTime;
-	}
-
-	public Double getDelayTime() {
-		return delayTime;
 	}
 
 	public T3DActor getMover() {

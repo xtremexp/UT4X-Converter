@@ -71,7 +71,7 @@ public class VertMesh {
 			for(int i=0; i < dataHead.getNumPolys() ; i++){
 				FJSMeshTri face = new FJSMeshTri();
 				face.read(buffer);
-				//System.out.println(face.toString());
+				//System.out.println(face.writeMoverProperties());
 				faces.add(face);
 			}
 		}

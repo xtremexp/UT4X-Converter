@@ -31,6 +31,12 @@ public class T3DSimpleProperty {
     }
 
     public boolean readPropertyFromT3dLine(final String line){
+
+        // property ever parsed before
+        if(this.propertyValue != null){
+            return false;
+        }
+
         if(line.toLowerCase().startsWith(this.propertyName.toLowerCase() + "=")){
             if(propertyClass == String.class){
                 this.propertyValue = T3DUtils.getString(line);
@@ -42,7 +48,7 @@ public class T3DSimpleProperty {
                 this.propertyValue = T3DUtils.getFloat(line);
             }
             else if(propertyClass == Boolean.class){
-                this.propertyValue = T3DUtils.getFloat(line);
+                this.propertyValue = T3DUtils.getBoolean(line);
             }
             else if(propertyClass == Integer.class){
                 this.propertyValue = T3DUtils.getInteger(line);

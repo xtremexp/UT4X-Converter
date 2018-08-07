@@ -609,7 +609,7 @@ public abstract class T3DActor extends T3DObject {
 	 * after isValidConverting Some actors might be valid for convert but not
 	 * for write. E.g: sheet brushes not valid for write but valid for
 	 * convert(auto-create sheet static mesh) isValidConverting() --> convert()
-	 * -> isValidWritting() -> write(actor.toString())
+	 * -> isValidWritting() -> write(actor.writeMoverProperties())
 	 * 
 	 * @return
 	 */

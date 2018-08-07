@@ -718,7 +718,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			 * navMeshBoundsVolume.location = loc; navMeshBoundsVolume.name =
 			 * "NavMeshBndsVolume"; navMeshBoundsVolume.brushClass =
 			 * T3DBrush.BrushClass.NavMeshBoundsVolume;
-			 * bwr.write(navMeshBoundsVolume.toString());
+			 * bwr.write(navMeshBoundsVolume.writeMoverProperties());
 			 */
 
 			// warn designer to do these steps
