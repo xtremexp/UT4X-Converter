@@ -76,6 +76,15 @@ public class T3DTranslatorEvent extends T3DActor {
     @Override
     public void convert() {
 
+        // set default collision so it's being scaled up correctly
+        if(collisionHeight == null || collisionHeight == 0d){
+            collisionHeight = 40d;
+        }
+
+        if(collisionRadius == null || collisionRadius == 0d){
+            collisionRadius = 40d;
+        }
+
         if(newMessageSound == null){
             newMessageSound = mapConverter.getUPackageRessource(defaultNewMessageSound, T3DRessource.Type.SOUND);
         }
@@ -144,7 +153,15 @@ public class T3DTranslatorEvent extends T3DActor {
         }
 
         if(reTriggerDelay != null){
-            sbf.append(IDT).append("\tReTriggerDelay=").append(reTriggerDelay).append("\"\n");
+            sbf.append(IDT).append("\tReTriggerDelay=").append(reTriggerDelay).append("\n");
+        }
+
+        if(collisionRadius != null){
+            sbf.append(IDT).append("\tCollisionRadius=").append(collisionRadius).append("\n");
+        }
+
+        if(collisionHeight != null){
+            sbf.append(IDT).append("\tCollisionHeight=").append(collisionHeight).append("\n");
         }
 
         sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");

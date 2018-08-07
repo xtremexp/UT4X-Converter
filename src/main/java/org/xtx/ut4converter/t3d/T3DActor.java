@@ -139,12 +139,7 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	protected List<T3DActor> children = new ArrayList<>();
 
-	/**
-	 * Used to write actor TODO make global StringBuilder that we would 'reset'
-	 * after write of each actor (avoiding creating one for each single actor /
-	 * perf issues)
-	 */
-	protected StringBuilder sbf;
+
 	
 	private boolean invalidActorForWrite;
 
@@ -189,7 +184,6 @@ public abstract class T3DActor extends T3DObject {
 		
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
-		this.sbf = new StringBuilder();
 	}
 	
 	/**
@@ -206,7 +200,6 @@ public abstract class T3DActor extends T3DObject {
 
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
-		this.sbf = new StringBuilder();
 
 		if (actor != null) {
 			this.location = actor.location;
@@ -317,7 +310,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else {
-			if (equalsIdx != -1 && !(this instanceof T3DNote)) {
+			if (equalsIdx != -1 && !(this instanceof T3DNote) && !parseSimpleProperty(line)) {
 				this.mapConverter.getT3dLvlConvertor().logUnconvertedProperty(this.getT3dClass(), line.substring(0, equalsIdx).split("\\(")[0]);
 			}
 			return false;
@@ -707,6 +700,27 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public String getT3dOriginClass() {
 		return t3dOriginClass;
+	}
+
+	String writeSimpleActor(final String actorClass){
+		sbf.append(IDT).append("Begin Actor Class=").append(actorClass).append(" \n");
+
+		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
+		sbf.append(IDT).append("\tEnd Object\n");
+
+		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
+		writeLocRotAndScale();
+		sbf.append(IDT).append("\tEnd Object\n");
+
+		sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
+
+		writeSimpleProperties();
+
+		sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
+
+		writeEndActor();
+
+		return super.toString();
 	}
 
 }

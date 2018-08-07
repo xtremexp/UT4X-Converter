@@ -1,11 +1,12 @@
 package org.xtx.ut4converter.t3d;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class T3DObject {
 
@@ -34,6 +35,15 @@ public abstract class T3DObject {
 	protected Logger logger;
 
 	/**
+	 * Used to write actor TODO make global StringBuilder that we would 'reset'
+	 * after write of each actor (avoiding creating one for each single actor /
+	 * perf issues)
+	 */
+	protected final StringBuilder sbf;
+
+	private final List<T3DSimpleProperty> registeredProperties;
+
+	/**
 	 * Minimal indentation when writing t3d converted actor
 	 */
 	public final static String IDT = "\t";
@@ -42,12 +52,16 @@ public abstract class T3DObject {
 		initialise(mc);
 		this.t3dClass = this.getClass().getSimpleName();
 		this.name = this.t3dClass;
+		this.registeredProperties = new ArrayList<>();
+		this.sbf = new StringBuilder();
 	}
 
 	public T3DObject(MapConverter mc, String t3dClass) {
 		initialise(mc);
 		this.t3dClass = t3dClass;
 		this.name = this.t3dClass + "_0";
+		this.registeredProperties = new ArrayList<>();
+		this.sbf = new StringBuilder();
 	}
 
 	private void initialise(MapConverter mc) {
@@ -99,7 +113,7 @@ public abstract class T3DObject {
 	 * Write sub-objects of this object if not-null and of class T3DObject
 	 * (unreal objects). Only write "public" fields in class not null
 	 * 
-	 * @param sb
+	 * @param sbf
 	 * @param prefix
 	 */
 	public void writeObjDefinition(StringBuilder sbf, String prefix) {
@@ -138,7 +152,32 @@ public abstract class T3DObject {
 				e1.printStackTrace();
 			}
 		}
-
 	}
 
+	protected boolean parseSimpleProperty(final String line){
+
+		boolean propFound = false;
+
+		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
+			propFound |= simpleProperty.readPropertyFromT3dLine(line);
+		}
+
+		return propFound;
+	}
+
+	/**
+	 *
+	 * @param propertyName Property name
+	 * @param classType Type of property (String, Float, or other)
+	 * @param defaultValue Default value for INPUT game
+	 */
+	protected void registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
+		this.registeredProperties.add(new T3DSimpleProperty(propertyName, classType, defaultValue));
+	}
+
+	void writeSimpleProperties(){
+		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
+			simpleProperty.writeProperty(sbf);
+		}
+	}
 }
