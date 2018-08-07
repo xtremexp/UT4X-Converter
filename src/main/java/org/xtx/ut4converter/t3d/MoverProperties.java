@@ -5,18 +5,17 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import static org.xtx.ut4converter.t3d.T3DObject.IDT;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import javax.vecmath.Vector3d;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.xtx.ut4converter.t3d.T3DObject.IDT;
 
 /**
  * Since T3DMover extends T3DBrush for Unreal Engine 1 and T3DMover extends
@@ -215,6 +214,11 @@ public class MoverProperties implements T3D {
 		// used to match very similar sound resources by name (e.g:
 		// A_Movers.Movers.Elevator01.Loop -> A_Movers.Movers.Elevator01.LoopCue
 		final boolean isFromUe3 = mapConverter.isFrom(UnrealEngine.UE3);
+
+		if(stayOpenTime == null){
+			// default stay open time with UE1 (TODO check UE2/UE3)
+			stayOpenTime = 4d;
+		}
 
 		if (openingSound != null) {
 			openingSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, openingSound), !isFromUe3);
