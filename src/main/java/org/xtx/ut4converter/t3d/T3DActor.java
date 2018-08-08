@@ -592,6 +592,15 @@ public abstract class T3DActor extends T3DObject {
 				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}
 			sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
+
+			if (this.tag != null) {
+				sbf.append(IDT).append("\tTags(0)=\"").append(this.tag).append("\"\n");
+			}
+
+			// not handle by UE4 natively but by some of our custom blueprints !
+			if (this.event != null) {
+				sbf.append(IDT).append("\tEvent=\"").append(this.event).append("\"\n");
+			}
 		}
 		// Checked u1, ut99, ut2004, ut3
 		else {
@@ -601,7 +610,7 @@ public abstract class T3DActor extends T3DObject {
 			sbf.append(IDT).append("\tName=\"").append(name).append("\n");
 		}
 
-		sbf.append(IDT).append("End Actor\n").toString();
+		sbf.append(IDT).append("End Actor\n");
 	}
 
 	/**
