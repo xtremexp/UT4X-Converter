@@ -5,11 +5,12 @@
 
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.t3d.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.t3d.*;
 
 /**
  * Tells which UT actor classes will be converted
@@ -39,7 +40,7 @@ public class SupportedClasses {
 	 *
 	 * @param mapConverter
 	 */
-	public SupportedClasses(MapConverter mapConverter) {
+	public SupportedClasses(final MapConverter mapConverter) {
 		this.mapConverter = mapConverter;
 		initialize();
 	}
@@ -57,7 +58,7 @@ public class SupportedClasses {
 	 * @param classNames
 	 * @param utActorClass
 	 */
-	public void putUtClass(Class<? extends T3DActor> utActorClass, String... classNames) {
+	private void putUtClass(Class<? extends T3DActor> utActorClass, String... classNames) {
 		if (classNames == null) {
 			return;
 		}
@@ -141,8 +142,25 @@ public class SupportedClasses {
 		//putUtClass()
 		putUtClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		putUtClass(T3DStaticMesh.class, "StaticMeshActor");
-		putUtClass(T3DTrigger.class,  "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
-				"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
+		// TODO args param only
+		final boolean useUbClasses = true;
+
+		// SPECIFIC Unreal 1 conversion test
+		if(mapConverter.isFrom(UnrealEngine.UE1) && useUbClasses) {
+			putUtClass(T3DDispatcher.class, "Dispatcher");
+			putUtClass(T3DSpecialEvent.class, "SpecialEvent");
+			putUtClass(T3DMusicEvent.class, "MusicEvent");
+			putUtClass(T3DTranslatorEvent.class, "TranslatorEvent");
+			putUtClass(T3DCreatureFactory.class, "CreatureFactory");
+			putUtClass(T3DSpawnPoint.class, "SpawnPoint");
+			putUtClass(T3DAlarmPoint.class, "AlarmPoint");
+
+			putUtClass(T3DUE1Trigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
+					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
+		} else {
+			putUtClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
+					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
+		}
 
 
 

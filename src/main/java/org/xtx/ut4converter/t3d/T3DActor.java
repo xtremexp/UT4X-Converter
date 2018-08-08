@@ -488,6 +488,16 @@ public abstract class T3DActor extends T3DObject {
      */
 	public void convert() {
 
+	    if(collisionHeight == null){
+	        // default collision height for UE1
+            collisionHeight = 40d;
+        }
+
+        if(collisionRadius == null){
+            // default collision radius for UE1
+            collisionRadius = 40d;
+        }
+
 		if (coLocation != null && mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE1) {
 			if (location != null) {
 				location.add(coLocation);
