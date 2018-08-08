@@ -242,22 +242,32 @@ public class MoverProperties implements T3D {
 
 		if (openingSound != null) {
 			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("'\n");
+		} else if(mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tOpenStartSound=None\n");
 		}
 
 		if (openedSound != null) {
 			sbf.append(IDT).append("\tOpenStopSound=SoundCue'").append(openedSound.getConvertedName(mover.mapConverter)).append("'\n");
+		} else if(mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tOpenStopSound=None\n");
 		}
 
 		if (closingSound != null) {
 			sbf.append(IDT).append("\tCloseStartSound=SoundCue'").append(closingSound.getConvertedName(mover.mapConverter)).append("'\n");
+		} else if(mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tCloseStartSound=None\n");
 		}
 
 		if (closedSound != null) {
 			sbf.append(IDT).append("\tCloseStopSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("'\n");
+		} else if(mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tCloseStopSound=None\n");
 		}
 
 		if (moveAmbientSound != null) {
 			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("'\n");
+		} else if(mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tMoveLoopSound=None\n");
 		}
 
 		if (stayOpenTime != null) {
