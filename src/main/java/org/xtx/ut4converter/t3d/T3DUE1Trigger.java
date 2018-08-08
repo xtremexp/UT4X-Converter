@@ -8,6 +8,9 @@ import org.xtx.ut4converter.MapConverter;
  * compared to {@link T3DTrigger}
  */
 public class T3DUE1Trigger extends T3DSound {
+
+    private TriggerType triggerType;
+
     public T3DUE1Trigger(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
@@ -22,6 +25,18 @@ public class T3DUE1Trigger extends T3DSound {
 
     enum TriggerType{
         TT_PlayerProximity, TT_PawnProximity, TT_ClassProximity, TT_AnyProximity, TT_Shoot
+    }
+
+    @Override
+    public boolean analyseT3DData(String line) {
+
+        if (line.startsWith("TriggerType=")) {
+            this.triggerType = TriggerType.valueOf(T3DUtils.getString(line));
+        } else {
+            return super.analyseT3DData(line);
+        }
+
+        return false;
     }
 
     @Override
@@ -44,6 +59,10 @@ public class T3DUE1Trigger extends T3DSound {
 
         if(collisionHeight != null){
             sbf.append(IDT).append("\tCollisionHeight=").append(collisionHeight).append("\n");
+        }
+
+        if(this.triggerType != null){
+            sbf.append(IDT).append("\tTriggerType=NewEnumerator").append(this.triggerType.ordinal()).append("\n");
         }
 
         writeSimpleProperties();
