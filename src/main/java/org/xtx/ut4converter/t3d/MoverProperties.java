@@ -230,13 +230,26 @@ public class MoverProperties implements T3D {
 		// TODO handle multi position / rotation later
 		// because we use last position but there might more than one position !
 		if (!positions.isEmpty()) {
-			Vector3d v = positions.get(positions.size() - 1);
+			final Vector3d v = new Vector3d();
+
+			// all positions are relative to previous one
+			// since then need to sum them all
+			// TODO remove this when blueprint handle multi-position
+			for(final Vector3d position : positions){
+				v.add(position);
+			}
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(v.x)).append(",Y=").append(T3DActor.fmt(v.y)).append(",Z=").append(T3DActor.fmt(v.z)).append(")\n");
 		}
 
 		if(!rotations.isEmpty()){
-			final Vector3d v = rotations.get(rotations.size() - 1);
+			final Vector3d v = new Vector3d();
+
+			// same comment as above
+			for(final Vector3d rotation : rotations){
+				v.add(rotation);
+			}
+
 			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(v.x)).append(",Yaw=").append(T3DActor.fmt(v.y)).append(",Roll=").append(T3DActor.fmt(v.z)).append(")\n");
 		}
 
