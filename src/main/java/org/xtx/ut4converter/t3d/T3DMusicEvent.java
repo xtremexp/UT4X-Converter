@@ -117,7 +117,7 @@ public class T3DMusicEvent extends T3DActor {
         }
 
         if(transition != null){
-            sbf.append(IDT).append("\tTransition=").append(transition).append("\n");
+            sbf.append(IDT).append("\tTransition=NewEnumerator").append(transition.ordinal()).append("\n");
         }
 
         sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");

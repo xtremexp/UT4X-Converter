@@ -154,6 +154,7 @@ public class SupportedClasses {
 			putUtClass(T3DCreatureFactory.class, "CreatureFactory");
 			putUtClass(T3DSpawnPoint.class, "SpawnPoint");
 			putUtClass(T3DAlarmPoint.class, "AlarmPoint");
+			putUtClass(T3DCounter.class, "Counter");
 
 			putUtClass(T3DUE1Trigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
