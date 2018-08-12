@@ -466,6 +466,7 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\t\tMobility=").append(mobility.name()).append("\n");
 
 			writeLocRotAndScale();
+			writeSimpleProperties();
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");

@@ -167,7 +167,12 @@ public class SupportedClasses {
 
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			for (T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()) {
-				putUtClass(T3DLight.class, ut99LightActor.name());
+
+				if(useUbClasses && ut99LightActor == T3DLight.UE12_LightActors.TriggerLight){
+					putUtClass(T3DTriggerLight.class, ut99LightActor.name());
+				} else {
+					putUtClass(T3DLight.class, ut99LightActor.name());
+				}
 			}
 		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
