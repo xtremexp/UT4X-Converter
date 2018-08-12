@@ -173,10 +173,7 @@ public class T3DStaticMesh extends T3DSound {
 		}
 	}
 
-	@Override
-	public String toString() {
-
-		sbf.append(IDT).append("Begin Actor Class=StaticMeshActor").append(" Name=").append(name).append("\n");
+	protected void writeStaticMeshComponent(){
 
 		sbf.append(IDT).append("\tBegin Object Class=StaticMeshComponent Name=\"StaticMeshComponent0\"\n");
 		sbf.append(IDT).append("\tEnd Object\n");
@@ -212,7 +209,7 @@ public class T3DStaticMesh extends T3DSound {
 				} else {
 					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=None\n");
 				}
-				
+
 				idx++;
 			}
 		}
@@ -231,8 +228,19 @@ public class T3DStaticMesh extends T3DSound {
 
 		sbf.append(IDT).append("\t\tCustomProperties\n"); // ?
 		sbf.append(IDT).append("\tEnd Object\n");
+
 		sbf.append(IDT).append("\tStaticMeshComponent=StaticMeshComponent0\n");
 		sbf.append(IDT).append("\tRootComponent=StaticMeshComponent0\n");
+	}
+
+	@Override
+	public String toString() {
+
+		sbf.append(IDT).append("Begin Actor Class=StaticMeshActor").append(" Name=").append(name).append("\n");
+
+
+		writeStaticMeshComponent();
+
 		writeEndActor();
 
 		return sbf.toString();
@@ -288,6 +296,7 @@ public class T3DStaticMesh extends T3DSound {
 
 	@Override
 	public boolean isValidWriting() {
-		return staticMesh != null || forcedStaticMesh != null;
+		// TODO remove test instancof decoration for testing purpose only
+		return this instanceof T3DDecoration || staticMesh != null || forcedStaticMesh != null;
 	}
 }

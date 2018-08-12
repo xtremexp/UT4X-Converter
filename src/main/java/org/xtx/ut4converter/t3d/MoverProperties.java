@@ -216,7 +216,7 @@ public class MoverProperties implements T3D {
 		// because it's impossible to know ("guess") if a mover is a lift or
 		// another kind of mover (button, door, ...)
 		// TODO use UBMover once UBMover blueprint done
-		sbf.append(IDT).append("Begin Actor Class=Generic_Lift_C Name=").append(mover.name).append("_Lift\n");
+		sbf.append(IDT).append("Begin Actor Class=UBMover_C Name=").append(mover.name).append("_Lift\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");

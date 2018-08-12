@@ -59,7 +59,7 @@ public class SpecialEvent extends T3DSound {
 	}
 
 	public String toString() {
-		sbf.append(IDT).append("Begin Actor Class=SpecialEvent_C Name=").append(name).append("\n");
+		sbf.append(IDT).append("Begin Actor Class=U1SpecialEvent_C Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
 		writeLocRotAndScale();

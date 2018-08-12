@@ -6,9 +6,11 @@
 
 package org.xtx.ut4converter.t3d;
 
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
 import java.text.DecimalFormat;
@@ -67,6 +69,10 @@ public class T3DUtils {
 	 */
 	public static Short getShort(String line) {
 		return Short.valueOf(line.split("\\=")[1]);
+	}
+
+	public static UPackageRessource getUPackageRessource(final MapConverter mapConverter, final String line, final T3DRessource.Type type) {
+		return mapConverter.getUPackageRessource(line.split("\'")[1], type);
 	}
 
 	/**

@@ -41,7 +41,7 @@ public abstract class T3DObject {
 	 */
 	protected final StringBuilder sbf;
 
-	private final List<T3DSimpleProperty> registeredProperties;
+	final List<T3DSimpleProperty> registeredProperties;
 
 	/**
 	 * Minimal indentation when writing t3d converted actor
@@ -154,15 +154,23 @@ public abstract class T3DObject {
 		}
 	}
 
-	public boolean parseSimpleProperty(final String line){
+	boolean parseSimpleProperty(final String line){
 
 		boolean propFound = false;
 
 		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
-			propFound |= simpleProperty.readPropertyFromT3dLine(line);
+			propFound |= simpleProperty.readPropertyFromT3dLine(line, mapConverter);
 		}
 
 		return propFound;
+	}
+
+	public void registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource){
+		this.registeredProperties.add(new T3DSimpleProperty(propertyName, typeRessource));
+	}
+
+	public void registerSimpleProperty(final String propertyName, final Object classType){
+		registerSimpleProperty(propertyName, classType, null);
 	}
 
 	/**
@@ -177,7 +185,7 @@ public abstract class T3DObject {
 
 	void writeSimpleProperties(){
 		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
-			simpleProperty.writeProperty(sbf);
+			simpleProperty.writeProperty(sbf, mapConverter);
 		}
 	}
 }

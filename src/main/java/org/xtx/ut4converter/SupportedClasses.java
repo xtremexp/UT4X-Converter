@@ -147,6 +147,7 @@ public class SupportedClasses {
 
 		// SPECIFIC Unreal 1 conversion test
 		if(mapConverter.isFrom(UnrealEngine.UE1) && useUbClasses) {
+			registerUClass(T3DDecoration.class, "Tree5", "Plant6");
 			registerUClass(T3DDispatcher.class, "Dispatcher");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
 			registerUClass(T3DMusicEvent.class, "MusicEvent");

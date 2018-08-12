@@ -8,7 +8,9 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
+import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue4.SceneComponent;
 
 import javax.vecmath.Vector3d;
@@ -571,6 +573,20 @@ public abstract class T3DActor extends T3DObject {
 				child.convert();
 			}
 		});
+
+		for(final T3DSimpleProperty simpleProperty : registeredProperties){
+			if(simpleProperty.getPropertyValue() instanceof UPackageRessource){
+				final UPackageRessource packageRessource = (UPackageRessource) simpleProperty.getPropertyValue();
+
+				if(simpleProperty.getRessourceType() == T3DRessource.Type.SOUND && mapConverter.convertSounds()){
+					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+				} else if(simpleProperty.getRessourceType() == T3DRessource.Type.TEXTURE && mapConverter.convertTextures()){
+					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+				} else if(simpleProperty.getRessourceType() == T3DRessource.Type.STATICMESH && mapConverter.convertStaticMeshes()){
+					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+				}
+			}
+		}
 	}
 
 	/**
