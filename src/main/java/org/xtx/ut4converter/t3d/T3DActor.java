@@ -483,6 +483,10 @@ public abstract class T3DActor extends T3DObject {
 		return this.mapConverter;
 	}
 
+	public void setLocation(Vector3d location) {
+		this.location = location;
+	}
+
 	/**
      *
      */

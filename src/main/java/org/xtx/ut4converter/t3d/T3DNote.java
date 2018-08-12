@@ -59,6 +59,10 @@ public class T3DNote extends T3DActor {
 		return true;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+	}
+
 	/**
 	 *
 	 * @return

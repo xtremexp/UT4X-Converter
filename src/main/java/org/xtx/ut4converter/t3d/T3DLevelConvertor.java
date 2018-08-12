@@ -205,12 +205,36 @@ public class T3DLevelConvertor extends Task<Object> {
 			fixUt3BrushOrder(mapConverter.getIntT3dUt3Editor());
 		}
 
+		if(mapConverter.getFilteredClasses() == null || mapConverter.getFilteredClasses().length == 0) {
+			addMapConversionNotesInfo();
+		}
+
 		// Write to file
 		updateMessage("Writing actors");
 		writeActors();
 
 		updateProgress(100, 100);
 		updateMessage("All done!");
+	}
+
+	/**
+	 * Write info about original converted map
+	 * and the scale ratior applied.
+	 * Might be usefull if need to re-import actors
+	 * to converted map, knowing which was the original scale.
+	 */
+	private void addMapConversionNotesInfo(){
+		final T3DNote note = new T3DNote(mapConverter);
+		note.setLocation(new Vector3d(0d, 200d, 0d));
+		note.setName("NoteConvertedMap");
+		note.setText("Converted Map: " + mapConverter.getInMap().getName());
+		convertedActors.add(note);
+
+		final T3DNote noteScale = new T3DNote(mapConverter);
+		noteScale.setLocation(new Vector3d(0d, 300d, 0d));
+		noteScale.setName("NoteScale");
+		noteScale.setText("Scale: " + mapConverter.getScale());
+		convertedActors.add(noteScale);
 	}
 
 	/**
