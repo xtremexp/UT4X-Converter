@@ -218,7 +218,13 @@ public class SupportedClasses {
 		putUtClass(HeightFog.class, "HeightFog");
 
 		putUtClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
-		putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
+
+		if(useUbClasses) {
+			putUtClass(T3DSound.class, "AmbientSound", "AmbientSoundSimple");
+			putUtClass(T3DDynamicAmbientSound.class, "DynamicAmbientSound");
+		} else {
+			putUtClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
+		}
 		putUtClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
 		putUtClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
 

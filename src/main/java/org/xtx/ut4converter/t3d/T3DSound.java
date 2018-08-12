@@ -344,6 +344,31 @@ public class T3DSound extends T3DActor {
 		super.convert();
 	}
 
+	void writeAudioComponent(){
+		sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"AudioComponent0\"\n");
+		sbf.append(IDT).append("\tEnd Object\n");
+
+		sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
+
+		sbf.append(IDT).append("\t\tbOverrideAttenuation=True\n");
+		sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
+
+		if (ambientSound != null) {
+			sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
+		}
+
+		if (soundVolume != null) {
+			sbf.append(IDT).append("\t\tVolumeMultiplier=").append(soundVolume).append("\n");
+		}
+
+		if (soundPitch != null) {
+			sbf.append(IDT).append("\t\tPitchMultiplier=").append(soundPitch).append("\n");
+		}
+
+		writeLocRotAndScale();
+		sbf.append(IDT).append("\tEnd Object\n");
+	}
+
 	/**
 	 *
 	 * @return
@@ -362,27 +387,8 @@ public class T3DSound extends T3DActor {
 			}
 
 			sbf.append(IDT).append("Begin Actor Class=").append(soundClass).append(" Name=").append(name).append("\n");
-			sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"AudioComponent0\"\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
 
-			sbf.append(IDT).append("\t\tbOverrideAttenuation=True\n");
-			sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
-
-			if (ambientSound != null) {
-				sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
-			}
-
-			if (soundVolume != null) {
-				sbf.append(IDT).append("\t\tVolumeMultiplier=").append(soundVolume).append("\n");
-			}
-
-			if (soundPitch != null) {
-				sbf.append(IDT).append("\t\tPitchMultiplier=").append(soundPitch).append("\n");
-			}
-
-			writeLocRotAndScale();
-			sbf.append(IDT).append("\tEnd Object\n");
+			writeAudioComponent();
 			sbf.append(IDT).append("\tAudioComponent=AudioComponent0\n");
 			sbf.append(IDT).append("\tRootComponent=AudioComponent0\n");
 			writeEndActor();
