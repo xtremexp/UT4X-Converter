@@ -25,7 +25,6 @@ import org.xtx.ut4converter.tools.Installation;
 import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -86,17 +85,17 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
-	static final BigDecimal DEFAULT_SCALE_FACTOR_UE1_UE4 = new BigDecimal("2.4");
+	static final String DEFAULT_SCALE_FACTOR_UE1_UE4 = "2.4";
 	
 	/**
 	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
 	 */
-	static final BigDecimal DEFAULT_SCALE_FACTOR_UE2_UE4 = new BigDecimal("2.2");
+	static final String DEFAULT_SCALE_FACTOR_UE2_UE4 = "2.2";
 	
 	/**
 	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
 	 */
-	static final BigDecimal DEFAULT_SCALE_FACTOR_UE3_UE4 = new BigDecimal("2.2");
+	static final String DEFAULT_SCALE_FACTOR_UE3_UE4 = "2.2";
 	
 	@FXML
 	private ComboBox<String> scaleFactorList;
@@ -176,15 +175,19 @@ public class ConversionSettingsController implements Initializable {
 		
 		switch(mapConverter.getInputGame().engine.version){
 			case 1:
-			scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE1_UE4));
+				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
+				break;
 			case 2:
-				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE2_UE4));
+				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+				break;
 			case 3:
-				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+				break;
 			case 4:
-				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+				break;
 			default:
-				scaleFactorList.getSelectionModel().select(String.valueOf(DEFAULT_SCALE_FACTOR_UE3_UE4));
+				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
 		}
 
 		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
