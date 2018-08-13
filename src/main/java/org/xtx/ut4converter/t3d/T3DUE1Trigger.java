@@ -11,6 +11,11 @@ public class T3DUE1Trigger extends T3DSound {
 
     private TriggerType triggerType;
 
+    /**
+     * Default is "NormalTrigger"
+     */
+    private InitialState initialState;
+
     public T3DUE1Trigger(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
@@ -27,11 +32,17 @@ public class T3DUE1Trigger extends T3DSound {
         TT_PlayerProximity, TT_PawnProximity, TT_ClassProximity, TT_AnyProximity, TT_Shoot
     }
 
+    enum InitialState{
+        None, OtherTriggerTurnsOff, OtherTriggerTurnsOn, OtherTriggerToggles, NormalTrigger
+    }
+
     @Override
     public boolean analyseT3DData(String line) {
 
         if (line.startsWith("TriggerType=")) {
             this.triggerType = TriggerType.valueOf(T3DUtils.getString(line));
+        } else if (line.startsWith("InitialState=")) {
+            this.initialState = InitialState.valueOf(T3DUtils.getString(line));
         } else {
             return super.analyseT3DData(line);
         }
@@ -63,6 +74,10 @@ public class T3DUE1Trigger extends T3DSound {
 
         if(this.triggerType != null){
             sbf.append(IDT).append("\tTriggerType=NewEnumerator").append(this.triggerType.ordinal()).append("\n");
+        }
+
+        if(this.initialState != null){
+            sbf.append(IDT).append("\tInitialState=NewEnumerator").append(this.initialState.ordinal()).append("\n");
         }
 
         writeSimpleProperties();
