@@ -607,7 +607,7 @@ public class T3DLight extends T3DSound {
 	@Override
 	public boolean isValidWriting() {
 
-		if (brightness == 0 || lightEffect == UE12_LightEffect.LE_None) {
+		if (brightness == 0) {
 			return false;
 		} else {
 			return super.isValidWriting();
