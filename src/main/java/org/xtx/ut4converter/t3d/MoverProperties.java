@@ -367,6 +367,13 @@ public class MoverProperties implements T3D {
 				T3DUtils.convertRotatorTo360Format(rotator);
 			}
 		}
+
+		// as see, with Dig (Unreal 1 map)
+		// if movetime = 0, then mover won't move at all
+		// so need to force to some tiny value
+		if(moveTime != null && moveTime == 0d){
+			moveTime = 0.1d;
+		}
 	}
 
 	@Override
