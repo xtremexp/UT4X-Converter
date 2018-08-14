@@ -71,7 +71,7 @@ public class T3DNote extends T3DActor {
 	public String toString() {
 
 		if (isUnconvertedInfo) {
-			logger.warning("Unconverted " + name);
+			//logger.warning("Unconverted " + name);
 		}
 
 		sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");

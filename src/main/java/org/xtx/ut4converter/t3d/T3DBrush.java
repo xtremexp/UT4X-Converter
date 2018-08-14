@@ -376,7 +376,7 @@ public class T3DBrush extends T3DVolume {
 		if (mapConverter.fromUE123ToUE4()) {
 			// do not convert invisible brushes such as portals and so on
 			if (BrushPolyflag.hasInvisibleFlag(polyflags)) {
-				logger.warning("Skipped invisible brush " + name);
+				//logger.warning("Skipped invisible brush " + name);
 				valid = false;
 			}
 
