@@ -579,7 +579,7 @@ public class T3DLevelConvertor extends Task<Object> {
 						uta.analyseT3DData(line);
 						convertedActors.add(uta);
 					} else {
-						logger.warning("Unconverted " + currentClass);
+						//logger.warning("Unconverted " + currentClass);
 						banalyseline = false;
 					}
 				}
