@@ -6,15 +6,6 @@
 
 package org.xtx.ut4converter.t3d;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
@@ -23,6 +14,14 @@ import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue1.UnMath.ESheerAxis;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FVector;
+
+import javax.vecmath.Vector3d;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
@@ -419,13 +418,22 @@ public class T3DBrush extends T3DVolume {
 			// if 2 polygons and sheetbrush not a portal
 			if (isUnsupportedUE4Brush()) {
 
-				valid = false;
+				// keep brushes of flat brushes
+				// because they are intended to be replaced as staticmesh
+				// which does not cause bsp hole
+				if(this instanceof T3DMover){
+					//valid = false;
+					logger.warning(name + " will cause bsp holes. Convert it to staticmesh once imported in UT4 Editor and before building geometry.");
+				} else {
+					valid = false;
 
-				// only notify if this brush could not be replaced by another
-				// actor
-				if (children.isEmpty()) {
-					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
+					// only notify if this brush could not be replaced by another
+					// actor
+					//if (children.isEmpty()) {
+					//	logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
+					//}
 				}
+
 			}
 			/*
 			 * else if (willCauseBspHoles()) { bspHoleCausing = true; brushClass
@@ -783,7 +791,10 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		// Replace Sheet Brush with Sheet StaticMesh
-		if (isSheetBrush()) {
+		// only if it is not a mover
+		// will cause bdp hole first, but since movers are then converted to staticmeshes
+		// in UT4 editor, won't cause bsphole
+		if (isSheetBrush() && !(this instanceof T3DMover)) {
 			T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
 			children.add(sheetStaticMesh);
 		}
