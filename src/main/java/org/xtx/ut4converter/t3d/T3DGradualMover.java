@@ -20,4 +20,11 @@ public class T3DGradualMover extends T3DMover {
         registerSimpleArrayProperty("OpenTimes", Float.class);
         registerSimpleArrayProperty("Tags", String.class);
     }
+
+    @Override
+    public void convert() {
+        super.convert();
+
+        this.t3dClass = "UBGradualMover_C";
+    }
 }
