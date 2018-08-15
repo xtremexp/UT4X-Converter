@@ -78,6 +78,8 @@ public class MoverProperties implements T3D {
 	 */
 	private InitialState initialState;
 
+	private T3DGradualMover.InitialState initialStateGradualMover;
+
 	private BumpType bumpType;
 
 	private MoverEncroachType moverEncroachType;
@@ -181,7 +183,11 @@ public class MoverProperties implements T3D {
 		}
 
 		else if (line.contains("InitialState=")) {
-			this.initialState = InitialState.valueOf(T3DUtils.getString(line));
+			if(mover instanceof T3DGradualMover){
+				this.initialStateGradualMover = T3DGradualMover.InitialState.valueOf(T3DUtils.getString(line));
+			} else {
+				this.initialState = InitialState.valueOf(T3DUtils.getString(line));
+			}
 		}
 
 		else if (line.contains("BumpType=")) {
@@ -293,6 +299,10 @@ public class MoverProperties implements T3D {
 
 		if (initialState != null) {
 			sbf.append(IDT).append("\tInitialState=").append("NewEnumerator").append(initialState.ordinal()).append("\n");
+		}
+
+		if (initialStateGradualMover != null) {
+			sbf.append(IDT).append("\tInitialState=").append("NewEnumerator").append(initialStateGradualMover.ordinal()).append("\n");
 		}
 
 		if (bumpType != null) {

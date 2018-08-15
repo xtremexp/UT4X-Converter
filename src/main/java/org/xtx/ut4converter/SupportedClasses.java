@@ -136,14 +136,21 @@ public class SupportedClasses {
             }
         }
 
-		registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
-				"LoopMover", "InterpActor");
+		// TODO args param only
+		final boolean useUbClasses = true;
+
+		if(useUbClasses) {
+			registerUClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "LoopMover", "InterpActor");
+			registerUClass(T3DGradualMover.class, "GradualMover");
+		} else {
+			registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
+					"LoopMover", "InterpActor");
+		}
 
 		//registerUClass()
 		registerUClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		registerUClass(T3DStaticMesh.class, "StaticMeshActor");
-		// TODO args param only
-		final boolean useUbClasses = true;
+
 
 		// SPECIFIC Unreal 1 conversion test
 		if(mapConverter.isFrom(UnrealEngine.UE1) && useUbClasses) {
