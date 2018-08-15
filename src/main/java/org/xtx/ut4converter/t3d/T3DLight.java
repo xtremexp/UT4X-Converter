@@ -466,8 +466,17 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\t\tMobility=").append(mobility.name()).append("\n");
 
 			writeLocRotAndScale();
-			writeSimpleProperties();
 			sbf.append(IDT).append("\tEnd Object\n");
+
+			writeSimpleProperties();
+
+			if(this instanceof T3DTriggerLight){
+				final T3DTriggerLight t3DTriggerLight = (T3DTriggerLight) this;
+
+				if(t3DTriggerLight.getInitialState() != null){
+					sbf.append(IDT).append("\tInitialState=NewEnumerator").append(t3DTriggerLight.getInitialState().ordinal()).append("\n");
+				}
+			}
 
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
             sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
