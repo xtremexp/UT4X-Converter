@@ -6,17 +6,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 public class T3DMusicEvent extends T3DActor {
 
-    private Boolean bAffectAllPlayers = Boolean.TRUE;
-
-    private Boolean bOnceOnly;
-
-    private Boolean bSilence;
-
-    private Short cdTrack;
-
     private UPackageRessource song;
-
-    private Short songSection;
 
     private MTran transition = MTran.MTRAN_Fade;
 
@@ -29,26 +19,17 @@ public class T3DMusicEvent extends T3DActor {
 
     public T3DMusicEvent(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
+
+        registerSimpleProperty("bAffectAllPlayers", Boolean.class, Boolean.TRUE);
+        registerSimpleProperty("bOnceOnly", Boolean.class, Boolean.FALSE);
+        registerSimpleProperty("bSilence", Boolean.class, Boolean.FALSE);
+        registerSimpleProperty("CdTrack", Short.class, 255);
+        registerSimpleProperty("SongSection", Short.class, 0);
     }
 
     @Override
     public boolean analyseT3DData(String line) {
-        if (line.startsWith("bAffectAllPlayers=")) {
-            this.bAffectAllPlayers = T3DUtils.getBoolean(line);
-        }
-        else if (line.startsWith("bOnceOnly=")) {
-            this.bOnceOnly = T3DUtils.getBoolean(line);
-        }
-        else if (line.startsWith("bSilence=")) {
-            this.bSilence = T3DUtils.getBoolean(line);
-        }
-        else if (line.startsWith("CdTrack=")) {
-            this.cdTrack = T3DUtils.getShort(line);
-        }
-        else if (line.startsWith("SongSection=")) {
-            this.songSection = T3DUtils.getShort(line);
-        }
-        else if (line.startsWith("Song=")) {
+        if (line.startsWith("Song=")) {
             this.song = mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.MUSIC);
         }
         else if (line.startsWith("Transition=")) {
@@ -77,31 +58,13 @@ public class T3DMusicEvent extends T3DActor {
 
         sbf.append(IDT).append("Begin Actor Class=MusicEvent_C \n");
 
-        sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
+        sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"LevelMusic\"\n");
         sbf.append(IDT).append("\tEnd Object\n");
 
-        sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
+        sbf.append(IDT).append("\tBegin Object Name=\"LevelMusic\"\n");
         writeLocRotAndScale();
         sbf.append(IDT).append("\tEnd Object\n");
 
-        sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
-
-
-        if(bAffectAllPlayers != null){
-            sbf.append(IDT).append("\tbAffectAllPlayers=").append(bAffectAllPlayers).append("\n");
-        }
-
-        if(bOnceOnly != null){
-            sbf.append(IDT).append("\tbOnceOnly=").append(bOnceOnly).append("\n");
-        }
-
-        if(bSilence != null){
-            sbf.append(IDT).append("\tbSilence=").append(bSilence).append("\n");
-        }
-
-        if(cdTrack != null){
-            sbf.append(IDT).append("\tCdTrack=").append(cdTrack).append("\n");
-        }
 
         if(song != null){
             sbf.append(IDT).append("\tSong=SoundCue'").append(song.getConvertedName(mapConverter)).append("'\n");
@@ -112,15 +75,14 @@ public class T3DMusicEvent extends T3DActor {
             sbf.append(IDT).append("\tSongOriginal=\"").append(song.getFullName()).append("\"\n");
         }
 
-        if(songSection != null){
-            sbf.append(IDT).append("\tSongSection=").append(songSection).append("\n");
-        }
-
         if(transition != null){
             sbf.append(IDT).append("\tTransition=NewEnumerator").append(transition.ordinal()).append("\n");
         }
 
-        sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
+        writeSimpleProperties();
+
+        sbf.append(IDT).append("\tLevelMusic=LevelMusic\n");
+        sbf.append(IDT).append("\tRootComponent=LevelMusic\n");
 
         writeEndActor();
 
