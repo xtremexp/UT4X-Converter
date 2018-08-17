@@ -203,6 +203,8 @@ public class T3DBrush extends T3DVolume {
 	 */
 	boolean bspHoleCausing;
 
+	boolean isSheetFlatHorizontallyBrush;
+
 	@Override
 	public boolean analyseT3DData(String line) {
 
@@ -407,7 +409,7 @@ public class T3DBrush extends T3DVolume {
 		if (mapConverter.fromUE123ToUE4()) {
 
 			if ("BlockAll".equals(t3dClass)) {
-				return true;
+				valid = true;
 			}
 
 			// BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly
@@ -421,33 +423,15 @@ public class T3DBrush extends T3DVolume {
 				// keep brushes of flat brushes
 				// because they are intended to be replaced as staticmesh
 				// which does not cause bsp hole
-				if(this instanceof T3DMover){
-					//valid = false;
-					logger.warning(name + " will cause bsp holes. Convert it to staticmesh once imported in UT4 Editor and before building geometry.");
+				if(isSheetFlatHorizontallyBrush){
+					logger.warning("Convert " + name + " to staticmesh prior first build else bsp holes will appear.");
 				} else {
 					valid = false;
-
-					// only notify if this brush could not be replaced by another
-					// actor
-					//if (children.isEmpty()) {
-					//	logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
-					//}
 				}
-
-			}
-			/*
-			 * else if (willCauseBspHoles()) { bspHoleCausing = true; brushClass
-			 * = BrushClass.BlockingVolume;
-			 * logger.warning("Replaced potential bsphole with " + name +
-			 * " to blockingvolume"); }
-			 */
-
-			if (!valid) {
-				return valid;
 			}
 		}
 
-		return super.isValidWriting();
+		return valid && super.isValidWriting();
 	}
 
 	/**
@@ -456,8 +440,20 @@ public class T3DBrush extends T3DVolume {
 	 * 
 	 * @return
 	 */
-	protected boolean isSheetBrush() {
+	private boolean isSheetBrush() {
 		return polyList.size() == 1 && polyList.get(0).vertices.size() == 4;
+	}
+
+
+
+	private boolean isHorizontallyFlatBrush(){
+		for(final T3DPolygon p : polyList){
+			if(p.getVertices().stream().map(Vertex::getZ).distinct().count() > 1){
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -794,9 +790,13 @@ public class T3DBrush extends T3DVolume {
 		// only if it is not a mover
 		// will cause bdp hole first, but since movers are then converted to staticmeshes
 		// in UT4 editor, won't cause bsphole
-		if (isSheetBrush() && !(this instanceof T3DMover)) {
-			T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
-			children.add(sheetStaticMesh);
+		if (isSheetBrush()) {
+			if(!isHorizontallyFlatBrush()) {
+				T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
+				children.add(sheetStaticMesh);
+			} else {
+				isSheetFlatHorizontallyBrush = true;
+			}
 		}
 
 		if (mapConverter.isTo(UnrealEngine.UE4)) {

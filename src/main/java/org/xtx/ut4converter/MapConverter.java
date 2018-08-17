@@ -113,6 +113,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	Double scale;
 
 	/**
+	 * Light map resolution
+	 */
+	Double lightMapResolution;
+
+	/**
 	 * Quick converter of actor name. E.G: "Mover" (U1/UT99) -> "InterpActor"
 	 * (UT3)
 	 */
@@ -247,6 +252,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	public Double getScale() {
 		return scale;
+	}
+
+	public Double getLightMapResolution() {
+		return lightMapResolution;
+	}
+
+	public void setLightMapResolution(Double lightMapResolution) {
+		this.lightMapResolution = lightMapResolution;
 	}
 
 	/**

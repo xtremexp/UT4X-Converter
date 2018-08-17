@@ -83,6 +83,16 @@ public class ConversionSettingsController implements Initializable {
 	private CheckBox convMusicCheckBox;
 
 	/**
+	 * Default light map resolution applied to brushes from Unreal Engine 1/2 converted maps
+	 */
+	static final String DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2 = "128";
+
+	/**
+	 * Default light map resolution applied to brushes from Unreal Engine 3 converted maps.
+	 */
+	static final String DEFAULT_LIGHTMAP_RESOLUTION_UE3 = "32";
+
+	/**
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
 	static final String DEFAULT_SCALE_FACTOR_UE1_UE4 = "2.5";
@@ -96,7 +106,9 @@ public class ConversionSettingsController implements Initializable {
 	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
 	 */
 	static final String DEFAULT_SCALE_FACTOR_UE3_UE4 = "2.2";
-	
+
+	@FXML
+	private ComboBox<String> lightMapResolutionList;
 	@FXML
 	private ComboBox<String> scaleFactorList;
 	@FXML
@@ -176,18 +188,23 @@ public class ConversionSettingsController implements Initializable {
 		switch(mapConverter.getInputGame().engine.version){
 			case 1:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
+				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				break;
 			case 2:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				break;
 			case 3:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 				break;
 			case 4:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 				break;
 			default:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}
 
 		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
@@ -345,7 +362,8 @@ public class ConversionSettingsController implements Initializable {
 					return;
 				}
 			}
-			
+
+			mapConverter.setLightMapResolution(Double.valueOf(lightMapResolutionList.getSelectionModel().getSelectedItem()));
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
 			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
 			mapConverter.soundVolumeFactor = Float.valueOf(soundVolumeFactor.getSelectionModel().getSelectedItem());

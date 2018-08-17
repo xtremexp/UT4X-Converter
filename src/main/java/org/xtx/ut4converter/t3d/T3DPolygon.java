@@ -391,9 +391,7 @@ public class T3DPolygon {
 					if (texDimension != null) {
 
 						if (texture_u != null) {
-							if (texDimension != null) {
-								texture_u.scale(1 / (texDimension.width / 100d));
-							}
+							texture_u.scale(1 / (texDimension.width / 100d));
 						}
 
 						if (texture_v != null) {
@@ -425,8 +423,8 @@ public class T3DPolygon {
 		// originally UE1 had a low light resolution
 		// default is 32 in UE4
 		// 128 seems good enough
-		if(mapConverter != null && mapConverter.isFrom(UnrealEngine.UE1)){
-			lightMapScale = 128d;
+		if(mapConverter != null && mapConverter.getLightMapResolution() != null){
+			lightMapScale = mapConverter.getLightMapResolution();
 		}
 	}
 

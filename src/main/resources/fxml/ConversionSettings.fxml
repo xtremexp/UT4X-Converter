@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.collections.*?>
-
-
+<?import java.lang.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="ConversionSettings" prefHeight="480.0" prefWidth="700.0" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
     
     <BorderPane prefHeight="550.0" prefWidth="700.0">
@@ -87,9 +84,33 @@
         
             <TitledPane fx:id="advancedSettingsTitle" expanded="false" > 
                 <GridPane hgap="10" vgap="10" >
+
+                    <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Brush lightmap resolution:</Label>
+                    <ComboBox GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="lightMapResolutionList"  promptText="Lightmap resolution for brushes. The smaller, the bigger the map filesize will be!" >
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="16"/>
+                                <String fx:value="32"/>
+                                <String fx:value="48"/>
+                                <String fx:value="64"/>
+                                <String fx:value="96"/>
+                                <String fx:value="128"/>
+                                <String fx:value="144"/>
+                                <String fx:value="200"/>
+                                <String fx:value="256"/>
+                                <String fx:value="400"/>
+                                <String fx:value="512"/>
+                                <String fx:value="768"/>
+                                <String fx:value="800"/>
+                                <String fx:value="1024"/>
+                                <String fx:value="2048"/>
+                                <String fx:value="4096"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
                 
-                    <Label GridPane.rowIndex="0" GridPane.columnIndex="0">Lightning Brightness Factor:</Label>
-                    <ComboBox GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map">
+                    <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Lightning Brightness Factor:</Label>
+                    <ComboBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="0.6"/>
@@ -102,8 +123,8 @@
                         </items>
                     </ComboBox>
                 
-                    <Label GridPane.rowIndex="1" GridPane.columnIndex="0">Sound Volume Factor:</Label>
-                    <ComboBox GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="soundVolumeFactor"  promptText="changes volume of all sounds of map">
+                    <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Sound Volume Factor:</Label>
+                    <ComboBox GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="soundVolumeFactor"  promptText="changes volume of all sounds of map">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="0.6"/>
@@ -116,13 +137,13 @@
                         </items>
                     </ComboBox>
                     
-                    <Label GridPane.rowIndex="2" GridPane.columnIndex="0">Restrict conversion to these actor classes:</Label>
-                    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="classesNameFilter"  prefWidth="350.0" promptText="Restrict class conversion (e.g: 'Brush;PlayerStart;DefensePoint')"></TextField>
+                    <Label GridPane.rowIndex="3" GridPane.columnIndex="0">Restrict conversion to these actor classes:</Label>
+                    <TextField GridPane.rowIndex="3" GridPane.columnIndex="1" fx:id="classesNameFilter"  prefWidth="350.0" promptText="Restrict class conversion (e.g: 'Brush;PlayerStart;DefensePoint')"></TextField>
                     
-                    <Separator GridPane.rowIndex="3" GridPane.columnIndex="0"/>  
+                    <Separator GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                 
-                    <Label GridPane.rowIndex="4" GridPane.columnIndex="0">Detailled logs</Label>
-                    <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
+                    <Label GridPane.rowIndex="5" GridPane.columnIndex="0">Detailled logs</Label>
+                    <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
                 </GridPane>
             </TitledPane>
             </VBox>
