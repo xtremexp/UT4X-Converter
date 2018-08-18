@@ -17,11 +17,11 @@ public class SmokeGenerator extends Effects {
     @Override
     public void convert() {
         super.convert();
-        this.t3dClass = "UBExplosionChain_C";
+        this.t3dClass = "UBSmokeGenerator_C";
     }
 
     @Override
     public String toString() {
-        return writeSimpleActor("UBExplosionChain_C");
+        return writeSimpleActor("UBSmokeGenerator_C");
     }
 }
