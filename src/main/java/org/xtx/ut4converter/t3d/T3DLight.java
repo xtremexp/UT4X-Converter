@@ -9,6 +9,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.geom.Rotator;
+import org.xtx.ut4converter.t3d.ue1.UBLight;
 import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -28,15 +29,15 @@ public class T3DLight extends T3DSound {
 	 * Light Effect Used in unreal engine 1 / 2
 	 */
 	enum UE12_LightEffect {
-		LE_None, LE_TorchWaver, LE_FireWaver, LE_WateryShimmer, LE_Searchlight, LE_SlowWave, LE_FastWave, LE_CloudCast, LE_StaticSpot, LE_Shock, LE_Disco, LE_Warp, LE_Spotlight, LE_NonIncidence, LE_Shell, LE_OmniBumpMap, LE_Interference, LE_Cylinder, LE_Rotor, LE_Unused,
+		LE_None, LE_TorchWaver, LE_FireWaver, LE_WateryShimmer, LE_Searchlight, LE_SlowWave, LE_FastWave, LE_CloudCast, LE_StaticSpot, LE_Shock, LE_Disco, LE_Warp, LE_Spotlight, LE_NonIncidence, LE_Shell, LE_OmniBumpMap, LE_Interference, LE_Cylinder, LE_Rotor,
 		// Unreal Engine 2 new light effects
-		LE_Sunlight, LE_Spotlight2, LE_SquareSpotlight, LE_QuadraticNonIncidence
+		LE_Sunlight,  LE_Unused, LE_Spotlight2, LE_SquareSpotlight, LE_QuadraticNonIncidence
 	}
 
 	/**
 	 * Light Type UE 1 / 2
 	 */
-	enum UE12_LightType {
+	public enum UE12_LightType {
 		LT_None, LT_Steady, LT_Pulse, LT_Blink, LT_Flicker, LT_Strobe, LT_BackdropLight, LT_SubtlePulse, LT_TexturePaletteLoop, LT_TexturePaletteOnce
 	}
 
@@ -45,7 +46,7 @@ public class T3DLight extends T3DSound {
      */
 	enum UE4_Mobility {
 		Static, // don't move and don't change color
-		Stationary, // don't move but can change of color
+		Stationary, // don't move but can change of color and switch off/on
 		Movable // can move and change color
 	}
 
@@ -316,6 +317,10 @@ public class T3DLight extends T3DSound {
 		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equals(UE12_LightActors.Sunlight.name());
 	}
 
+	public UE12_LightType getLightType() {
+		return lightType;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -379,7 +384,9 @@ public class T3DLight extends T3DSound {
 
             if (t3dClass.equals(UE3_LightActor.PointLightMovable.name())) {
                 mobility = UE4_Mobility.Movable;
-            } else if (t3dClass.equals(UE3_LightActor.PointLightToggleable.name())) {
+            } else if (t3dClass.equals(UE3_LightActor.PointLightToggleable.name())
+					|| this instanceof T3DTriggerLight
+					|| (this instanceof UBLight && this.getLightType() != UE12_LightType.LT_Steady)) {
                 mobility = UE4_Mobility.Stationary;
             }
 
@@ -476,6 +483,15 @@ public class T3DLight extends T3DSound {
 				if(t3DTriggerLight.getInitialState() != null){
 					sbf.append(IDT).append("\tInitialState=NewEnumerator").append(t3DTriggerLight.getInitialState().ordinal()).append("\n");
 				}
+			}
+
+			// FOR UBLIGHT ONLY
+			if(this.lightEffect != null){
+				sbf.append(IDT).append("\tLightEffect=NewEnumerator").append(lightEffect.ordinal()).append("\n");
+			}
+
+			if(this.lightType != null){
+				sbf.append(IDT).append("\tLightType=NewEnumerator").append(lightType.ordinal()).append("\n");
 			}
 
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");

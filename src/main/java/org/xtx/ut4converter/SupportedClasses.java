@@ -8,6 +8,7 @@ package org.xtx.ut4converter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.ue1.ExplosionChain;
+import org.xtx.ut4converter.t3d.ue1.UBLight;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,8 +179,12 @@ public class SupportedClasses {
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			for (T3DLight.UE12_LightActors ut99LightActor : T3DLight.UE12_LightActors.values()) {
 
-				if(useUbClasses && ut99LightActor == T3DLight.UE12_LightActors.TriggerLight){
-					registerUClass(T3DTriggerLight.class, ut99LightActor.name());
+				if(useUbClasses ){
+					if(ut99LightActor == T3DLight.UE12_LightActors.TriggerLight) {
+						registerUClass(T3DTriggerLight.class, ut99LightActor.name());
+					} else {
+						registerUClass(UBLight.class, ut99LightActor.name());
+					}
 				} else {
 					registerUClass(T3DLight.class, ut99LightActor.name());
 				}
