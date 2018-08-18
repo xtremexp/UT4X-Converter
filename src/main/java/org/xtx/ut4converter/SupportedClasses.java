@@ -7,6 +7,7 @@ package org.xtx.ut4converter;
 
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.*;
+import org.xtx.ut4converter.t3d.ue1.ExplosionChain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,6 +164,7 @@ public class SupportedClasses {
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			registerUClass(T3DAlarmPoint.class, "AlarmPoint");
 			registerUClass(T3DCounter.class, "Counter");
+			registerUClass(ExplosionChain.class, "ExplosionChain");
 
 			registerUClass(T3DUE1Trigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");

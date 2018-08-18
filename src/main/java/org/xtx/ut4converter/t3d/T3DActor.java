@@ -741,7 +741,7 @@ public abstract class T3DActor extends T3DObject {
 		return t3dOriginClass;
 	}
 
-	String writeSimpleActor(final String actorClass){
+	protected String writeSimpleActor(final String actorClass){
 		sbf.append(IDT).append("Begin Actor Class=").append(actorClass).append(" \n");
 
 		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
