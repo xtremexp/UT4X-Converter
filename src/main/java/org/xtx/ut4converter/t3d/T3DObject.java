@@ -165,8 +165,10 @@ public abstract class T3DObject {
 		return propFound;
 	}
 
-	public void registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource){
-		this.registeredProperties.add(new T3DSimpleProperty(propertyName, typeRessource, false));
+	public T3DSimpleProperty registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource){
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, typeRessource, false);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
 	}
 
 	public void registerSimpleProperty(final String propertyName, final Object classType){

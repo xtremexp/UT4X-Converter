@@ -10,6 +10,6 @@ public abstract class Effects extends T3DSound {
 
         registerSimplePropertyRessource("EffectSound1", T3DRessource.Type.SOUND);
         registerSimplePropertyRessource("EffectSound2", T3DRessource.Type.SOUND);
-        registerSimpleProperty("bOnltTriggerable", Boolean.class);
+        registerSimpleProperty("bOnlyTriggerable", Boolean.class);
     }
 }

@@ -2,9 +2,9 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 
-abstract class T3DThingFactory extends T3DKeyPoint {
+public class T3DThingFactory extends T3DKeyPoint {
 
-    T3DThingFactory(MapConverter mc, String t3dClass) {
+    public T3DThingFactory(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
         // if bCovert = true and player could see monster being spawn
@@ -33,12 +33,17 @@ abstract class T3DThingFactory extends T3DKeyPoint {
         // tag of the monster spawned
         registerSimpleProperty("ItemTag", String.class, null);
         registerSimpleProperty("MaxItems", String.class, 1);
-        registerSimpleProperty("Prototype", String.class, null);
+        registerSimplePropertyRessource("Prototype", T3DRessource.Type.MESH).clonePropertyAs("PrototypeOriginal");
         registerSimpleProperty("TimeDistribution", String.class, TimeDistribution.DIST_Constant.name());
 
     }
 
     enum TimeDistribution {
         DIST_Constant, DIST_Uniform, DIST_Gaussian
+    }
+
+    @Override
+    public String toString() {
+        return writeSimpleActor("UBThingFactory_C");
     }
 }

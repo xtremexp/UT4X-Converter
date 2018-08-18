@@ -20,6 +20,12 @@ public class T3DSimpleProperty {
      */
     private String propertyNameConverted;
 
+    /**
+     * Used if we want to copy this property with another name.
+     * Used on write
+     */
+    private String clonePropertyName;
+
     private final Object propertyClass;
 
     /**
@@ -112,7 +118,8 @@ public class T3DSimpleProperty {
 
         if(value != null) {
             if (this.propertyValue instanceof List) {
-                ((List) propertyValue).add(value);
+                final List<Object> theList = (List<Object>) this.propertyValue;
+                theList.add(value);
             } else {
                 this.propertyValue = value;
             }
@@ -139,21 +146,30 @@ public class T3DSimpleProperty {
             } else {
                 sbf.append("\t\t").append(propertyNameConverted).append("=");
                 writeValueProperty(sbf, mapConverter, this.propertyValue);
+
+                if(clonePropertyName != null){
+                    sbf.append("\t\t").append(clonePropertyName).append("=");
+                    writeValueProperty(sbf, mapConverter, this.propertyValue.toString());
+                }
             }
         }
     }
 
     private void writeValueProperty(StringBuilder sbf, MapConverter mapConverter, Object value) {
-        if (this.propertyClass == String.class) {
+        if (value instanceof String) {
             sbf.append("\"").append(value).append("\"\n");
-        } else if (this.propertyClass == UPackageRessource.class) {
+        } else if (value instanceof UPackageRessource) {
+
+            final UPackageRessource packageRessource = (UPackageRessource) value;
 
             if(ressourceType == T3DRessource.Type.SOUND) {
-                sbf.append("SoundCue'").append(((UPackageRessource) value).getConvertedName(mapConverter)).append("'\n");
-            } else if(ressourceType == T3DRessource.Type.STATICMESH) {
-                sbf.append("StaticMesh'").append(((UPackageRessource) value).getConvertedName(mapConverter)).append("'\n");
+                sbf.append("SoundCue'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
+            }
+            // MESHES will be converted to staticmeshes
+            else if(ressourceType == T3DRessource.Type.STATICMESH || ressourceType == T3DRessource.Type.MESH) {
+                sbf.append("StaticMesh'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
             } else if(ressourceType == T3DRessource.Type.TEXTURE) {
-                sbf.append("Material'").append(((UPackageRessource) value).getConvertedName(mapConverter)).append("'\n");
+                sbf.append("Material'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
             }
         } else {
             sbf.append(value).append("\n");
@@ -174,5 +190,9 @@ public class T3DSimpleProperty {
 
     public void setPropertyNameConverted(String propertyNameConverted) {
         this.propertyNameConverted = propertyNameConverted;
+    }
+
+    public void clonePropertyAs(String clonePropertyName) {
+        this.clonePropertyName = clonePropertyName;
     }
 }

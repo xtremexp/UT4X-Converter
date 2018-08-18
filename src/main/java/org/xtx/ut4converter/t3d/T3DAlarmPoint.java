@@ -1,14 +1,13 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.ucore.UPackageRessource;
 
 public class T3DAlarmPoint extends T3DNavigationPoint {
     public T3DAlarmPoint(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
         registerSimpleProperty("AlarmAnim", String.class, "Bowing");
-        registerSimpleProperty("AlarmSound", UPackageRessource.class, null);
+        registerSimplePropertyRessource("AlarmSound", T3DRessource.Type.SOUND);
         registerSimpleProperty("bAttackWhilePaused", Boolean.class, Boolean.FALSE);
         registerSimpleProperty("bDestroyAlarmTriggerer", Boolean.class, Boolean.FALSE);
 
