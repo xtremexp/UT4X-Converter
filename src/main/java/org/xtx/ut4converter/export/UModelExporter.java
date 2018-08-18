@@ -108,7 +108,7 @@ public class UModelExporter extends UTPackageExtractor {
 		}
 
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
-		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nolightmap \"" + fileContainer + "\"";
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nolightmap -lods \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
@@ -209,6 +209,10 @@ public class UModelExporter extends UTPackageExtractor {
 			type = Type.STATICMESH;
 		}
 
+		else if (typeStr.toLowerCase().contains("vertmesh")) {
+			type = Type.MESH;
+		}
+
 		else if (typeStr.toLowerCase().contains("sound")) {
 			type = Type.SOUND;
 		}
@@ -237,6 +241,7 @@ public class UModelExporter extends UTPackageExtractor {
 			forceIsUsedInMap = true;
 		}
 
+		final List<File> exportedFiles = new ArrayList<>();
 		File exportedFile = null;
 		boolean isMaterial = false;
 
@@ -246,7 +251,15 @@ public class UModelExporter extends UTPackageExtractor {
 			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".tga");
+		} else if (type == Type.MESH) {
+			// how the mesh is scale and some other things ...
+			exportedFile = new File(BASE_EXPORT_FILE + ".uc");
+
+			// animation + geom mesh
+			exportedFiles.add(new File(BASE_EXPORT_FILE + "_d.3d"));
+			exportedFiles.add(new File(BASE_EXPORT_FILE + "_a.3d"));
 		}
+
 		// UMODEL does produce .mat files
 		// TODO handle .mat files for conversion
 		// either replace with Diffuse Texture or find out some library that can
@@ -268,6 +281,10 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 		}
 
+		if(exportedFile != null){
+			exportedFiles.add(exportedFile);
+		}
+
 		String ressourceName;
 
 		if (group != null) {
@@ -282,7 +299,7 @@ public class UModelExporter extends UTPackageExtractor {
 			if (isMaterial && uRessource.getMaterialInfo() == null) {
 				uRessource.setMaterialInfo(getMatInfo(uRessource, exportedFile));
 			}
-			uRessource.getExportInfo().setExportedFile(exportedFile);
+			uRessource.getExportInfo().addExportedFile(exportedFile);
 			uRessource.parseNameAndGroup(ressourceName); // for texture db that
 															// don't have group
 															// we retrieve the
@@ -292,7 +309,7 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 			uRessource.setType(type);
 		} else {
-			uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFile, this);
+			uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFiles, this);
 			uRessource.setType(type);
 
 			if (isMaterial) {
@@ -312,7 +329,7 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 		}
 
-		if (uRessource != null && forceIsUsedInMap) {
+		if (forceIsUsedInMap) {
 			uRessource.setIsUsedInMap(true);
 		}
 	}

@@ -1493,9 +1493,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public boolean canConvertStaticMeshes() {
 
 		// no staticmeshes for UE1 (UT99 + Unreal 1)
+		// commented because meshes will be converted to staticmeshes
+		/*
 		if (inputGame.engine == UnrealEngine.UE1) {
 			return false;
-		}
+		}*/
 
 		// note: can export with ucc for UT2003/UT2004 but .t3d mesh format
 		// not working for import with UE4

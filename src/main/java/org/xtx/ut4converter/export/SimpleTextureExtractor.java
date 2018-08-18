@@ -1,16 +1,17 @@
 package org.xtx.ut4converter.export;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * Simple texture extractor once i had done with UT3 converter probably compiled
@@ -83,7 +84,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 			// uRessource.parseNameAndGroup(ressourceName); // for texture db
 			// that don't have group we retrieve the group ...
 		} else {
-			new UPackageRessource(mapConverter, name, unrealPackage, exportedFile, this);
+			new UPackageRessource(mapConverter, name, unrealPackage, Collections.singletonList(exportedFile), this);
 		}
 	}
 

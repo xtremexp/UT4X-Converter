@@ -5,7 +5,16 @@
  */
 package org.xtx.ut4converter.ucore;
 
-import java.awt.Dimension;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.t3d.T3DRessource.Type;
+import org.xtx.ut4converter.tools.*;
+import org.xtx.ut4converter.tools.psk.Material;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,19 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.export.UCCExporter;
-import org.xtx.ut4converter.export.UTPackageExtractor;
-import org.xtx.ut4converter.t3d.T3DRessource.Type;
-import org.xtx.ut4converter.tools.FileUtils;
-import org.xtx.ut4converter.tools.ImageUtils;
-import org.xtx.ut4converter.tools.SoundConverter;
-import org.xtx.ut4converter.tools.TextureConverter;
-import org.xtx.ut4converter.tools.TextureFormat;
-import org.xtx.ut4converter.tools.psk.Material;
 
 /**
  * Some ressource such as texture, sound, ... embedded into some unreal package
@@ -128,6 +124,11 @@ public class UPackageRessource {
 			this.exportedFiles.add(exportedFile);
 			this.extractor = extractor;
 		}
+
+		public ExportInfo(List<File> exportedFiles, UTPackageExtractor extractor) {
+			this.exportedFiles = exportedFiles;
+			this.extractor = extractor;
+		}
 		
 		public void setExportedFile(File exportedFile){
 			this.exportedFiles = new ArrayList<>();
@@ -148,19 +149,20 @@ public class UPackageRessource {
 		 * @return Exported file with that extension else null
 		 */
 		public File getExportedFileByExtension(final String extension){
-			if(this.exportedFiles == null || extension == null){
-				return null;
+			if(this.exportedFiles != null && extension != null){
+				return this.exportedFiles.stream().filter(f -> f.getName().endsWith(extension)).findFirst().orElse(null);
 			}
-			
-			for(File exportedFile : exportedFiles){
-				if(exportedFile.getName().endsWith(extension)){
-					return exportedFile;
-				}
-			}
-			
+
 			return null;
 		}
-		
+
+		/**
+		 * Use getExportedFileByExtension
+		 * because very hasardous method if multiple exported files.
+		 * May not have the good file !!
+		 * @return
+		 */
+		@Deprecated
 		public File getFirstExportedFile(){
 			if(this.exportedFiles == null || this.exportedFiles.isEmpty()){
 				return null;
@@ -208,8 +210,7 @@ public class UPackageRessource {
 	 *            "AmbAncient.Looping.Stower51")
 	 * @param type
 	 *            Type of ressource (texture, sound, staticmesh, mesh, ...)
-	 * @param game
-	 *            UT game this ressource belongs to
+	 * @param mapConverter
 	 * @param isUsedInMap
 	 *            if <code>true</code> means ressource is being used
 	 */
@@ -242,7 +243,7 @@ public class UPackageRessource {
 	 *            Full name of ressource
 	 * @param uPackage
 	 *            Package this ressource belongs to
-	 * @param game
+	 * @param mapConverter
 	 * @param ressourceType
 	 *            Type of ressource (texture, sound, ...)
 	 * @param isUsedInMap
@@ -264,15 +265,15 @@ public class UPackageRessource {
 	 * @param fullName
 	 *            Full ressource name (e.g: "AmbAncient.Looping.Stower51")
 	 * @param uPackage
-	 * @param exportedFile
+	 * @param exportedFiles
 	 * @param extractor
 	 */
-	public UPackageRessource(MapConverter mapConverter, String fullName, UPackage uPackage, File exportedFile, UTPackageExtractor extractor) {
+	public UPackageRessource(MapConverter mapConverter, String fullName, UPackage uPackage, List<File> exportedFiles, UTPackageExtractor extractor) {
 
 		parseNameAndGroup(fullName);
 
 		this.mapConverter = mapConverter;
-		this.exportInfo = new ExportInfo(exportedFile, extractor);
+		this.exportInfo = new ExportInfo(exportedFiles, extractor);
 
 		this.unrealPackage = uPackage;
 		this.type = uPackage.type;
@@ -650,8 +651,16 @@ public class UPackageRessource {
 
 		// ucc exporter exports malformed .dds textures ...
 		// that can't be imported in UE4
-        return mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE && exportInfo.extractor != null && exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter);
+        if(mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE &&  exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)){
+        	return true;
+		}
 
+		// .3d meshes needs to be converted to staticmeshes
+		if(mc.isFromUE1UE2ToUE3UE4() && type == Type.MESH){
+			return true;
+		}
+
+		return false;
     }
 
 	/**
@@ -690,6 +699,22 @@ public class UPackageRessource {
 				return tempFile;
 			} catch (IOException ex) {
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
+			}
+		}
+		else if (type == Type.MESH) {
+			// TODO modelize
+			final File ucFile = exportInfo.getExportedFileByExtension(".uc");
+
+			if(ucFile.exists()){
+				// TODO parse .uc file data
+				// TODO convert .3d to staticmesh with good scale and origin !
+				/**
+				 * class ASMDPick extends Actor;
+				 * #exec MESH IMPORT MESH=ASMDPick ANIVFILE=ASMDPick_a.3d DATAFILE=ASMDPick_d.3d
+				 * #exec MESH ORIGIN MESH=ASMDPick X=0 Y=-10 Z=-13 YAW=-64 PITCH=0 ROLL=0
+				 * #exec MESH SEQUENCE MESH=ASMDPick SEQ=All        STARTFRAME=0  NUMFRAMES=6  RATE=30
+				 * #exec MESHMAP SCALE MESHMAP=ASMDPick X=0.1 Y=0.1 Z=0.2
+				 */
 			}
 		}
 

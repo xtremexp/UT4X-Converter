@@ -577,12 +577,16 @@ public abstract class T3DActor extends T3DObject {
 		for(final T3DSimpleProperty simpleProperty : registeredProperties){
 			if(simpleProperty.getPropertyValue() instanceof UPackageRessource){
 				final UPackageRessource packageRessource = (UPackageRessource) simpleProperty.getPropertyValue();
+				final T3DRessource.Type type = simpleProperty.getRessourceType();
 
-				if(simpleProperty.getRessourceType() == T3DRessource.Type.SOUND && mapConverter.convertSounds()){
+				if(type == T3DRessource.Type.SOUND && mapConverter.convertSounds()){
 					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
-				} else if(simpleProperty.getRessourceType() == T3DRessource.Type.TEXTURE && mapConverter.convertTextures()){
+				}
+				else if(type == T3DRessource.Type.TEXTURE && mapConverter.convertTextures()){
 					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
-				} else if(simpleProperty.getRessourceType() == T3DRessource.Type.STATICMESH && mapConverter.convertStaticMeshes()){
+				}
+				// MESHES have to be converted to staticmeshes
+				else if((type == T3DRessource.Type.STATICMESH  ||  type == T3DRessource.Type.MESH) && mapConverter.convertStaticMeshes()){
 					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
 				}
 			}
