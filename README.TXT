@@ -183,6 +183,13 @@ Then you will need to install one of these IDE.
 - Set "org.xtx.ut4converter.MainApp" as "Main class"
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
 
+## Package .jar project
+- Menu: "Run" -> "Edit configuration"
+- Click on "+" then select "Maven"
+- Set "Command line" parameter to "clean install -e"
+- Save "Apply"/"OK" and go to menu "Run" -> "Run.."
+- The .jar file can be found here "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
+
 ---
 ## Optional (UI editing):
 - Install "Java FX Scene Builder 2": http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-1x-archive-2199384.html

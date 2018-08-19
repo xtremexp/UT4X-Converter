@@ -50,7 +50,7 @@ Here is the conversion table for all ut games about what the program can convert
 * Music (Unreal Tournament 3 only)
 * All custom things (scripts and pickups)
 
---- 
+---
 
 # Requirements
 * Windows 7/8/10 - 64 Bit Operating System
@@ -74,14 +74,14 @@ Installation and first start
 * Double-click on UT4-Converter-<version>.jar, the program should be launching.
 
 If not, make sure you have installed latest Java technology version at www.java.com
-and create some "run.bat" batch file with notepad that you will save in the 
+and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
-"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it 
+"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
 as java program)
 Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 
-Detailed explanations about conversion is always displayed after each end of map conversion 
+Detailed explanations about conversion is always displayed after each end of map conversion
 in program.
 ---
 
@@ -139,7 +139,7 @@ Note:
 "sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
  The converter does remove most of them, but not all of them yet.
 
---- 
+---
 # Limitations / Issues / Troubleshooting
 - [UT99] Some textures may not be correctly aligned
 - Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
@@ -158,9 +158,9 @@ and remove them until bsp holes disapear)
 - You can edit/share source code as well as binaries
 always keeping original author credits
 
---- 
+---
 MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO 
+YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
 CONVERTED MAP.
 
 ---
@@ -182,6 +182,13 @@ Then you will need to install one of these IDE.
 - Click on "+" then select "Application"
 - Set "org.xtx.ut4converter.MainApp" as "Main class"
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
+
+## Package .jar project
+- Menu: "Run" -> "Edit configuration"
+- Click on "+" then select "Maven"
+- Set "Command line" parameter to "clean install -e"
+- Save "Apply"/"OK" and go to menu "Run" -> "Run.."
+- The .jar file can be found here "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
 
 ---
 ## Optional (UI editing):
@@ -209,7 +216,7 @@ Right click on project -> Team -> Pull
 - Download and install "Java IDE" version of Eclipse: https://www.eclipse.org/ide/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
-- Install "m2e-git" connect and click on finish. 
+- Install "m2e-git" connect and click on finish.
 - Restart again Eclipse for changes to apply and go back to "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click "Next"
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4X-Converter.git"
@@ -233,7 +240,7 @@ Right click on project -> "Git" -> "Remote" -> "Pull"
 Converter interfaces with these external tools:
 - Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
 - UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
---- 
+---
 
 # History
 - 0.9.0 - 19/08/2018
@@ -249,7 +256,7 @@ Converter interfaces with these external tools:
   * ut2003/4: VolumeTrigger, MessageTrigger, CrowdTrigger, UseTrigger, MusicTrigger, RedirectionTrigger,
   GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
   * ut2003/4: fixed lift actor property in lift exit actor not being set
-  * ut2003/4: added support for multiple skins (corona) with lights 
+  * ut2003/4: added support for multiple skins (corona) with lights
   * all: fixed some teamplayerstarts being converted as playerstart
   * all: fixed crash on UT4 editor import if trigger had either radius or height set to 0
   * unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
@@ -262,7 +269,7 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
   * ut3: now no longer loads lightmap when extracting textures from packages (=quicker conversion)
   * ui: updated welcome screen
   * u1/ut99: fixed mover using default sound if no sound was set originally
-  * ui: added option for lightmap resolution (default 128 for UE1/UE2 else 64)
+  * ui: added option for lightmap resolution (default 128 for UE1/UE2 else 32)
   * ui: progress bar now being update more often
   * ui: remove notification of unconverted actors
 
@@ -277,7 +284,7 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
 
 - 0.8.8 - 30/07/2017
   * ut3: fixed sounds not being converted
- 
+
 - 0.8.7 - 29/07/2017
   * all: fixed embedded sounds and staticmeshes in level package not being converted
   * ut3: fixed critical crash when DefensePoint actor is being converted
@@ -288,21 +295,21 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
   * ut2003/ut2004: added conversion of WaterVolume, NewWeaponBase, NewHealthCharger
   * ut2003/ut2004: fixed conversion failure of trigger with liveproximity and humanplayerproximity trigger type
   * u2/ut2003/ut2004/ut3: fixed bad description/tuto for converting staticmeshes
- 
+
 - 0.8.5 - 27/07/2017
   * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
  Now only need to import all .obj converted staticmeshes within the UE4 editor
- 
+
 - 0.8.4 - 19/07/2017
   * u1/u2/ut2003/ut2004: invisible brushes are no longer being converted. This might slightly reduce some bsp holes cases.
-  * ut99: fixed some textures not being converted with some specific packages (like with SGTech1.utx texture package) 
+  * ut99: fixed some textures not being converted with some specific packages (like with SGTech1.utx texture package)
 
 - 0.8.3 - 15/04/2017
   * all: fixed some cases where a few brushes had some textures not converted properly
 
 - 0.8.2 - 18/12/2016
   * all: fix partial conversion if a mover had ambient sound and opened sound set
-  
+
 - 0.8.1 - 13/11/2016
   * ut2003/4, ut3: fixed some staticmeshes with long material names could not be converted
   * ut3: fixed sniper weapon with weaponpickupfactory not converting properly
@@ -328,7 +335,7 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
   * misc: won't stop converting map resources if one fails to convert properly now.
   * misc: conversion processing is now saved in a conversion.log file
   * ui: slightly improved visibility in conversion settings
-  
+
 - 0.7.5 - 23/10/2016
   * Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
 can no longer directly import .t3d files
