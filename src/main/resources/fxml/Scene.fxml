@@ -36,7 +36,7 @@
             </Menu>
             <Menu text="?">
                 <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
-                <MenuItem text="Report bug" onAction="#openGitHubIssues" fx:id="reportIssue"/>
+                <!--<MenuItem text="Report bug" onAction="#openGitHubIssues" fx:id="reportIssue"/>-->
                 <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
             </Menu>
         </MenuBar>

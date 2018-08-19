@@ -260,10 +260,11 @@ public class MainSceneController implements Initializable {
 	}
 
 
+	/*
 	@FXML
 	private void openGitHubIssues(ActionEvent event){
 		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
-	}
+	}*/
 
 	private void openGitHubUrl(ActionEvent event) {
 		openUrl(URL_UTCONV_GITHUB, true, null);
