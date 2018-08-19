@@ -139,8 +139,7 @@ public class SupportedClasses {
             }
         }
 
-		// TODO args param only
-		final boolean useUbClasses = true;
+		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2);
 
 		if(useUbClasses) {
 			registerUClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "LoopMover", "InterpActor");
@@ -156,7 +155,7 @@ public class SupportedClasses {
 
 
 		// SPECIFIC Unreal 1 conversion test
-		if(mapConverter.isFrom(UnrealEngine.UE1) && useUbClasses) {
+		if(useUbClasses) {
 			registerUClass(T3DDecoration.class, "Tree5", "Plant6");
 			registerUClass(T3DDispatcher.class, "Dispatcher");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");

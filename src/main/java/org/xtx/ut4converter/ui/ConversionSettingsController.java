@@ -183,7 +183,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
-		
+		mapConverter.setUseUbClasses(mainApp.isUseUbClasses());
 		
 		switch(mapConverter.getInputGame().engine.version){
 			case 1:

@@ -54,6 +54,8 @@ public class MainApp extends Application {
 
 	}
 
+	private boolean useUbClasses;
+
 	Stage primaryStage;
 	BorderPane rootLayout;
 
@@ -65,6 +67,10 @@ public class MainApp extends Application {
 
 		// main scene with only menu
 		initRootLayout();
+
+		if(getParameters().getRaw().contains("-useubclasses")){
+			this.useUbClasses = true;
+		}
 
 		showWelcomeView();
 	}
@@ -169,4 +175,7 @@ public class MainApp extends Application {
 		return rootLayout;
 	}
 
+	public boolean isUseUbClasses() {
+		return useUbClasses;
+	}
 }
