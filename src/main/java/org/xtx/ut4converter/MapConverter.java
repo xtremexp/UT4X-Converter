@@ -708,11 +708,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		logger.log(Level.INFO, "Converted Map Import");
 		logger.log(Level.INFO, "Open the .t3d file " + getOutT3d() + " with a text editor.");
 		logger.log(Level.INFO, "Select all text into .t3d file and copy/paste it into main viewport of the editor.");
+        logger.log(Level.INFO, "Convert flat brushes that will cause bsp holes reported by the converter to staticmeshes (\"Create Staticmesh\" button)");
 		logger.log(Level.INFO, "'Save' the map");
 
 		if (isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-			logger.log(Level.INFO, "Optional: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.LIGHTMASS_IMP_VOL_NAME + " to fit with level");
-			logger.log(Level.INFO, "Optional: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.THE_BIG_BRUSH_NAME + " to fit with level");
+			logger.log(Level.INFO, "Highly recommended: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.LIGHTMASS_IMP_VOL_NAME + " to fit with level");
+			logger.log(Level.INFO, "Highly recommended: delete the 'Sky Brush' area and resize the " + T3DLevelConvertor.THE_BIG_BRUSH_NAME + " to fit with level");
 		}
 		logger.log(Level.INFO, "Build map");
 	}

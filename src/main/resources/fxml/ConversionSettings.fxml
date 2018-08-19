@@ -69,10 +69,10 @@
                         <Label GridPane.rowIndex="7" GridPane.columnIndex="2">Convert Sounds:</Label>
                         <CheckBox GridPane.rowIndex="7" GridPane.columnIndex="3" fx:id="convSndCheckBox" onAction="#toggleSndConversion"></CheckBox>
 
-                        <Label GridPane.rowIndex="8" GridPane.columnIndex="0">Export Music:</Label>
+                        <Label GridPane.rowIndex="8" GridPane.columnIndex="0">Convert Music:</Label>
                         <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="1" fx:id="convMusicCheckBox" onAction="#toggleMusicConversion"></CheckBox>
 
-                        <Label GridPane.rowIndex="8" GridPane.columnIndex="2">Export StaticMeshes (.psk):</Label>
+                        <Label GridPane.rowIndex="8" GridPane.columnIndex="2">Convert StaticMeshes (.obj):</Label>
                         <CheckBox GridPane.rowIndex="8" GridPane.columnIndex="3" fx:id="convSmCheckBox" onAction="#toggleSmConversion"></CheckBox>
                         
                         <Label fx:id="warningMessage" GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="6"></Label>
@@ -143,7 +143,7 @@
                     <Separator GridPane.rowIndex="4" GridPane.columnIndex="0"/>
                 
                     <Label GridPane.rowIndex="5" GridPane.columnIndex="0">Detailled logs</Label>
-                    <CheckBox GridPane.rowIndex="6" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
+                    <CheckBox GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="debugLogLevel" onAction="#toggleDebugLogLevel"></CheckBox>
                 </GridPane>
             </TitledPane>
             </VBox>

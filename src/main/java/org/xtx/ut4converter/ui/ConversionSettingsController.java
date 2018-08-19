@@ -90,7 +90,7 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Default light map resolution applied to brushes from Unreal Engine 3 converted maps.
 	 */
-	static final String DEFAULT_LIGHTMAP_RESOLUTION_UE3 = "32";
+	static final String DEFAULT_LIGHTMAP_RESOLUTION_UE3 = "64";
 
 	/**
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
@@ -342,9 +342,9 @@ public class ConversionSettingsController implements Initializable {
 
 			// FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
 			// because the UT3 commandlet is kinda in "alpha" stages
-			if (mapConverter.getInputGame() == UTGame.UT3) {
+			if (mapConverter.getInputGame() == UTGame.UT3 || mapConverter.getInputGame() == UTGame.UDK) {
 				FileChooser chooser = new FileChooser();
-				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from UT3 editor ");
+				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from "+ mapConverter.getInputGame().shortName + " editor ");
 
 				File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
 

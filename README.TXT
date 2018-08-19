@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.8.10
-* Release date: 18/07/2018
+* Version: 0.9.0
+* Release date: 19/08/2018
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -37,10 +37,11 @@ Here is the conversion table for all ut games about what the program can convert
 |                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
 |----------------|---------|-----------|--------|----------|--------|--------------|------------|:------------:|:-------:|
 | Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| Unreal 2       |    ++   |     ++    |   ++   |     +    |   N/A  |       +      |      No    |       -      |  MEDIUM |
+| Unreal 2       |    ++   |     +     |   ++   |     +    |   N/A  |       -      |      No    |       -      |   BAD   |
 | UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
 | UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |Yes(partial)|       +      |   GOOD  |
-| UT3            |    ++   |     +     |    +   |     +    |   N/A  |       +      |      No    |       +      |  MEDIUM |
+| UT3            |    ++   |     +     |    +   |     -    |   N/A  |       +      |      No    |       +      |  MEDIUM |
+| UDK            |    ++   |     +     |    +   |     +    |   N/A  |       +      |      No    |       +      |  MEDIUM |
 
 
 # What is NOT converted
@@ -49,16 +50,13 @@ Here is the conversion table for all ut games about what the program can convert
 * Music (Unreal Tournament 3 only)
 * All custom things (scripts and pickups)
 
-Note: staticmesh conversion is not fully automatic.
-You need to convert them manually using Blender software.
-Converter will do the job to get the right references and textures applied.
 ---
 
 # Requirements
 * Windows 7/8/10 - 64 Bit Operating System
 * Java 8 - https://www.java.com/fr/download/ (not yet compatible with Java 9+)
 * Unreal Tournament 4 (2015) Editor
-* One of the following previous UT games:
+* One of the following previous UT games (or UDK):
   ° Unreal 1
   ° Unreal 2
   ° Unreal Tournament
@@ -132,6 +130,7 @@ Note: this .t3d file is needed because the "ut3/udk.com batchexport" command to 
 - Import converted map
 -- Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)
 -- Select all text (Ctrl+A) and copy(Ctrl+C)/paste(Ctrl+V) it into the editor
+- Convert flat brushes that will cause bsp holes reported by the converter to staticmeshes ("Create Staticmesh" button)
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
 
@@ -237,8 +236,13 @@ Converter interfaces with these external tools:
 ---
 
 # History
-- 0.9.0 - XX/08/2018
-  * added support for UDK maps (conversion quality is like UT3)
+- 0.9.0 - 19/08/2018
+  * added support for UDK maps (conversion quality is like UT3 = medium)
+  * u1/ut99: default scale is now 2.5X
+  * u1/ut99: decreased light intensity from 60 to 35
+  * ut2003/4: decreased light intensity from 80 to 70
+  * ut2003/4: fixed staticmeshes skins not being correctly applied
+  * ut2003/4: handled uv2Mode, uv2Skin (thanks MoxNix for reporting)
   * ut2003/4/ut3: fixed some cases where some textures from staticmeshes where not converted
   * ut2003/4: added support for LadderVolume, PressureVolume, SnipingVolue, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
   HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
@@ -247,13 +251,20 @@ Converter interfaces with these external tools:
   * ut2003/4: fixed lift actor property in lift exit actor not being set
   * ut2003/4: added support for multiple skins (corona) with lights
   * all: fixed some teamplayerstarts being converted as playerstart
-  * all: fixed crash on UT4 editor import if trigger had either radius or hieght set to 0
+  * all: fixed crash on UT4 editor import if trigger had either radius or height set to 0
   * unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
-the conversion quality of resources is not optimal (staticmeshes with bad roration)
+the conversion quality of resources is not good yet (staticmeshes with bad roration and uv)
   * unreal 2: added support for Trigger TT_USE case
+  * all: movers forced to movetime=0.1s if their movetime is 0s (else won't move at all)
+  * all: tag property now being converted
+  * all: brushes/movers with flat horizontal shape are now being converted back (need convert them to staticmeshes
+  prior fisrt build)
+  * ut3: now no longer loads lightmap when extracting textures from packages (=quicker conversion)
   * ui: updated welcome screen
-  * ui: added menu to report issues/bugs
+  * u1/ut99: fixed mover using default sound if no sound was set originally
+  * ui: added option for lightmap resolution (default 128 for UE1/UE2 else 32)
   * ui: progress bar now being update more often
+  * ui: remove notification of unconverted actors
 
 - 0.8.10 - 18/07/2018
   * all: fixed low quality texture

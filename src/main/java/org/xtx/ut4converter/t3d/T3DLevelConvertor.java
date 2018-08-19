@@ -201,7 +201,8 @@ public class T3DLevelConvertor extends Task<Object> {
 		// resulting in some brushes not being displayed ...
 		// have to use the manual ".t3d" file from UT3 editor
 		// to set order
-		if (mapConverter.getInputGame() == UTGames.UTGame.UT3 && mapConverter.getInMap().getName().endsWith(".ut3")) {
+		if ((mapConverter.getInputGame() == UTGames.UTGame.UT3 && mapConverter.getInMap().getName().endsWith(".ut3"))
+		|| (mapConverter.getInputGame() == UTGames.UTGame.UDK && mapConverter.getInMap().getName().endsWith(".udk"))){
 			fixUt3BrushOrder(mapConverter.getIntT3dUt3Editor());
 		}
 
