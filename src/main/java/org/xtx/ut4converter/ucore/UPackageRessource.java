@@ -186,7 +186,13 @@ public class UPackageRessource {
 				this.exportedFiles.set(fileIdx, newExportedFile);
 			}
 		}
-		
+
+		public void addExportedFiles(List<File> exportedFiles){
+			for(final File file : exportedFiles){
+				addExportedFile(file);
+			}
+		}
+
 		public void addExportedFile(File exportedFile){
 			if(exportedFile == null){
 				return;
@@ -705,7 +711,7 @@ public class UPackageRessource {
 			// TODO modelize
 			final File ucFile = exportInfo.getExportedFileByExtension(".uc");
 
-			if(ucFile.exists()){
+			if(ucFile != null && ucFile.exists()){
 				// TODO parse .uc file data
 				// TODO convert .3d to staticmesh with good scale and origin !
 				/**
