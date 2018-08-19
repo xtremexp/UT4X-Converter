@@ -385,7 +385,11 @@ public class MoverProperties implements T3D {
 			moveTime = 0.1d;
 		}
 
-		mover.t3dClass = "UBMover_C";
+		if(mapConverter.isUseUbClasses()) {
+			mover.t3dClass = "UBMover_C";
+		} else {
+			mover.t3dClass = "Generic_Lift_C";
+		}
 	}
 
 	@Override
