@@ -8,10 +8,10 @@ import org.xtx.ut4converter.UTGames;
 /**
  * Testing t3d light
  */
-class T3DLightTest extends T3DActorBaseTest {
+public class T3DLightTest extends T3DActorBaseTest {
 
     @Before
-    private void setUp(){
+    public void setUp(){
         super.setUp(UTGames.UTGame.UT99);
     }
 
