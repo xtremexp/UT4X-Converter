@@ -22,7 +22,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -457,7 +460,9 @@ public final class UCCExporter extends UTPackageExtractor {
 																		// group
 																		// ...
 					} else {
-						new UPackageRessource(mapConverter, ressourceName, unrealPackage, Collections.singletonList(exportedFile), this);
+						final List<File> exportedFilesList = new ArrayList<>();
+						exportedFilesList.add(exportedFile);
+						new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFilesList, this);
 					}
 				}
 			}

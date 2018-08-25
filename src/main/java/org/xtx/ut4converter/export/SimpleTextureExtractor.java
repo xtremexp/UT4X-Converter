@@ -8,7 +8,6 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -84,7 +83,9 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 			// uRessource.parseNameAndGroup(ressourceName); // for texture db
 			// that don't have group we retrieve the group ...
 		} else {
-			new UPackageRessource(mapConverter, name, unrealPackage, Collections.singletonList(exportedFile), this);
+			final List<File> exportedFiles = new ArrayList<>();
+			exportedFiles.add(exportedFile);
+			new UPackageRessource(mapConverter, name, unrealPackage, exportedFiles, this);
 		}
 	}
 

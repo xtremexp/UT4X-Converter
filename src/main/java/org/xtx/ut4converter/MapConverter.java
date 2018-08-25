@@ -751,7 +751,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 
 				// .psk file (from umodel) or .t3d file (from ucc)
-				final File pskFile = ressource.getExportInfo().getExportedFileByExtension("psk");
+				File pskFile = ressource.getExportInfo().getExportedFileByExtension("psk");
+
+				if(pskFile == null){
+					pskFile = ressource.getExportInfo().getExportedFileByExtension("pskx");
+				}
 
 				if (pskFile != null && pskFile.exists()) {
 					try {
@@ -920,62 +924,63 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			for (UPackageRessource ressource : unrealPackage.getRessources()) {
 
-				try {
+				wasConverted = false;
+				List<File> exportedFiles = ressource.getExportedFiles();
 
-					wasConverted = false;
-					List<File> exportedFiles = ressource.getExportedFiles();
+				if (exportedFiles == null) {
+					continue;
+				}
 
-					if (exportedFiles == null) {
-						continue;
-					}
+				for (File exportedFile : exportedFiles) {
+					if (exportedFile != null && exportedFile.length() > 0) {
 
-					for (File exportedFile : exportedFiles) {
-						if (exportedFile != null && exportedFile.length() > 0) {
+						try {
+						// Renaming exported files (e.g: Stream2.wav ->
+						// AmbOutside_Looping_Stream2.wav)
+						// move them to non temporary folder
+						if (ressource.isUsedInMap()) {
 
-							// Renaming exported files (e.g: Stream2.wav ->
-							// AmbOutside_Looping_Stream2.wav)
-							// move them to non temporary folder
-							if (ressource.isUsedInMap()) {
+							// Some sounds and/or textures might need to be
+							// converted for correct import in UE4
+							if (ressource.needsConversion(this)) {
+								final File newExportedFile = ressource.convert(logger, userConfig);
 
-								// Some sounds and/or textures might need to be
-								// converted for correct import in UE4
-								if (ressource.needsConversion(this)) {
-									final File newExportedFile = ressource.convert(logger, userConfig);
-
-									if(newExportedFile != null) {
-										ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
-										exportedFile = newExportedFile;
-										wasConverted = true;
-									}
-								}
-
-								// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
-								File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
-								newFile.getParentFile().mkdirs();
-								newFile.createNewFile();
-
-								// sometimes it does not find the exported texture
-								// (?
-								// ... weird)
-								if (exportedFile.exists() && exportedFile.isFile()) {
-									Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-								}
-
-								if (exportedFile.delete()) {
-									logger.fine("Deleted " + exportedFile);
-								}
-
-								//exportedFile = newFile;
-								ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
-
-								if (wasConverted) {
-									logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+								if(newExportedFile != null) {
+									ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
+									exportedFile = newExportedFile;
+									wasConverted = true;
 								}
 							}
+
+							// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
+							File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
+							newFile.getParentFile().mkdirs();
+							newFile.createNewFile();
+
+							// sometimes it does not find the exported texture
+							// (?
+							// ... weird)
+							if (exportedFile.exists() && exportedFile.isFile()) {
+								Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+							}
+
+							if (exportedFile.delete()) {
+								logger.fine("Deleted " + exportedFile);
+							}
+
+							//exportedFile = newFile;
+							ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
+
+							if (wasConverted) {
+								logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+							}
+						}
+						} catch (Exception e) {
+							System.out.println("Error while converting ressource " + ressource.getFullName() + " with file " + exportedFile.getName());
+							e.printStackTrace();
+							logger.log(Level.SEVERE, e.getMessage(), e);
 						}
 					}
-				} catch (Exception e) {
-					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}
 		}

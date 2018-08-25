@@ -685,6 +685,7 @@ public class UPackageRessource {
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
 			} catch (IOException ex) {
+				ex.printStackTrace();
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
@@ -704,6 +705,7 @@ public class UPackageRessource {
 				tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
 				return tempFile;
 			} catch (IOException ex) {
+				ex.printStackTrace();
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
