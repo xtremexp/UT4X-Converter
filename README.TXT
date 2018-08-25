@@ -243,6 +243,9 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.1 - 25/08/2018
+ * all: fixed some unconverted resources
+
 - 0.9.0 - 19/08/2018
   * added support for UDK maps (conversion quality is like UT3 = medium)
   * u1/ut99: default scale is now 2.5X

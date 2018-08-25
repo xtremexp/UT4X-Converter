@@ -5,17 +5,16 @@
 
 package org.xtx.ut4converter.tools;
 
-import java.util.LinkedList;
-
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Vector3d;
-
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
+
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+import java.util.LinkedList;
 
 /**
  * Utility class for geometry operations TODO refactor a bit (some functions
@@ -361,49 +360,7 @@ public class Geometry {
 		// avoid values like 1000.00000001 -> 1000.0
 		updateDoubleZeroes(v);
 	}
-	
-	public static float FSheerSnap(float Sheer) {
-		if (Sheer < -0.65f)
-			return Sheer + 0.15f;
-		else if (Sheer > +0.65f)
-			return Sheer - 0.15f;
-		else if (Sheer < -0.55f)
-			return -0.50f;
-		else if (Sheer > +0.55f)
-			return 0.50f;
-		else if (Sheer < -0.05f)
-			return Sheer + 0.05f;
-		else if (Sheer > +0.05f)
-			return Sheer - 0.05f;
-		else
-			return 0.f;
-	}
 
-	/**
-	 * Null-safe operation to sum vectors
-	 * 
-	 * @param a
-	 * @param b
-	 * @return
-	 */
-	public static Vector3d sum(Vector3d a, Vector3d b) {
-
-		if (a == null && b == null) {
-			return new Vector3d(0d, 0d, 0d);
-		}
-
-		else if (a == null && b != null) {
-			return new Vector3d(b.x, b.y, b.z);
-		}
-
-		else if (a != null && b == null) {
-			return new Vector3d(a.x, a.y, a.z);
-		}
-
-		else {
-			return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z);
-		}
-	}
 
 	/**
 	 * Null-safe operation to subtract vectors
