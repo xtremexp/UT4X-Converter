@@ -319,7 +319,8 @@ public class T3DSound extends T3DActor {
 
 				// decreasing sound volume from UT2004 because seems "loudy" in
 				// UT4 ...
-				if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
+				// not needed for Unreal 2 even if they share same engine version ..
+				if (mapConverter.getInputGame() == UTGames.UTGame.UT2004) {
 					soundVolume *= 0.15;
 				}
 
