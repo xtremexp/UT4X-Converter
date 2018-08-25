@@ -29,7 +29,11 @@ public class T3DUE1Trigger extends T3DSound {
     }
 
     enum TriggerType{
-        TT_PlayerProximity, TT_PawnProximity, TT_ClassProximity, TT_AnyProximity, TT_Shoot
+        TT_PlayerProximity, TT_PawnProximity, TT_ClassProximity, TT_AnyProximity, TT_Shoot,
+        /**
+         * Unreal 2 specific - Triggered when pressing key 'E'
+         */
+        TT_Use
     }
 
     enum InitialState{
