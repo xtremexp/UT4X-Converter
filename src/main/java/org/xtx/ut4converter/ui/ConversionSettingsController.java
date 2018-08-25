@@ -96,6 +96,11 @@ public class ConversionSettingsController implements Initializable {
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
 	static final String DEFAULT_SCALE_FACTOR_UE1_UE4 = "2.5";
+
+	/**
+	 * Default scale when converting Unreal 2 map to UT4
+	 */
+	static final String DEFAULT_SCALE_UNREAL2_UE4 = "2.5";
 	
 	/**
 	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
@@ -191,7 +196,11 @@ public class ConversionSettingsController implements Initializable {
 				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				break;
 			case 2:
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+				if(inputGame == UTGame.U2){
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
+				} else {
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+				}
 				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				break;
 			case 3:
