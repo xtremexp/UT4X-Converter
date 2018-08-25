@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -289,6 +290,11 @@ public class T3DStaticMesh extends T3DSound {
 					}
 				}
 			}
+		}
+
+		// have to negate (= 180° rotation by X axis) else staticmeshes have bad rotation !
+		if(mapConverter.getInputGame() == UTGames.UTGame.U2 && this.scale3d != null){
+			this.scale3d.y *= -1;
 		}
 
 		super.convert();
