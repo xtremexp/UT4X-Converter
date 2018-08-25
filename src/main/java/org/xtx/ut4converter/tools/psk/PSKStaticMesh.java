@@ -1,10 +1,6 @@
 package org.xtx.ut4converter.tools.psk;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -17,6 +13,10 @@ import java.util.List;
  * @author XtremeXp
  */
 public class PSKStaticMesh {
+
+	public static final String FILE_EXTENSION_PSK = "psk";
+
+	public static final String FILE_EXTENSION_PSKX = "pskx";
 
 	/**
 	 * Order how bytes are read for .psk files

@@ -19,6 +19,10 @@ import java.util.List;
 
 public class ObjStaticMesh {
 
+    public static final String FILE_EXTENSION_OBJ = "obj";
+
+    public static final String FILE_EXTENSION_MTL = "mtl";
+
     private final List<ObjMaterial> materials;
 
     private final List<Vector3d> vertices;

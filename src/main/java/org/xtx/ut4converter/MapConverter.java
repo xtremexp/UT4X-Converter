@@ -751,43 +751,39 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 
 				// .psk file (from umodel) or .t3d file (from ucc)
-				File pskFile = ressource.getExportInfo().getExportedFileByExtension("psk");
+				final File staticMeshFile = ressource.getExportInfo().getExportedFileByExtension(PSKStaticMesh.FILE_EXTENSION_PSKX, PSKStaticMesh.FILE_EXTENSION_PSK, StaticMesh.FILE_EXTENSION_T3D);
 
-				if(pskFile == null){
-					pskFile = ressource.getExportInfo().getExportedFileByExtension("pskx");
-				}
-
-				if (pskFile != null && pskFile.exists()) {
+				if (staticMeshFile != null && staticMeshFile.exists()) {
 					try {
-						final File tempPskDir = new File(pskFile.getParent() + File.separator + "NEWPSK");
+						final File tempPskDir = new File(staticMeshFile.getParent() + File.separator + "NEWPSK");
 
 						if (!tempPskDir.exists()) {
 							tempPskDir.mkdirs();
 						}
 
 
-						File mtlObjFile = new File(tempPskDir.getAbsolutePath() + File.separator + pskFile.getName());
-						mtlObjFile = FileUtils.changeExtension(mtlObjFile, "mtl");
+						File mtlObjFile = new File(tempPskDir.getAbsolutePath() + File.separator + staticMeshFile.getName());
+						mtlObjFile = FileUtils.changeExtension(mtlObjFile, ObjStaticMesh.FILE_EXTENSION_MTL);
 						
-						final File objFile = FileUtils.changeExtension(mtlObjFile, "obj");
+						final File objFile = FileUtils.changeExtension(mtlObjFile, ObjStaticMesh.FILE_EXTENSION_OBJ);
 
-						final String fileExt = FilenameUtils.getExtension(pskFile.getName());
+						final String fileExt = FilenameUtils.getExtension(staticMeshFile.getName());
 
 						// list materials used in staticmesh
 						// and change their name to fix with <packagename>_<group>_<name>_mat convention
 
 						// static mesh exported by UModel
-						if("psk".equals(fileExt) || "pskx".equals(fileExt)) {
-							final PSKStaticMesh pskMesh = listAndRenameMaterialsForPsk(pskFile);
+						if(PSKStaticMesh.FILE_EXTENSION_PSK.equals(fileExt) || PSKStaticMesh.FILE_EXTENSION_PSKX.equals(fileExt)) {
+							final PSKStaticMesh pskMesh = listAndRenameMaterialsForPsk(staticMeshFile);
 							pskMesh.exportToObj(mtlObjFile, objFile);
 
 							ressource.addExportedFile(mtlObjFile);
 							ressource.addExportedFile(objFile);
 						}
 						// static mesh exported by UCC
-						else if("t3d".equals(fileExt)) {
+						else if(StaticMesh.FILE_EXTENSION_T3D.equals(fileExt)) {
 							// convert .t3d to .obj
-							final StaticMesh t3dMesh = new StaticMesh(pskFile);
+							final StaticMesh t3dMesh = new StaticMesh(staticMeshFile);
 
 							// analyse and rename material used in static mesh
 							final ObjStaticMesh objStaticMesh = listAndRenameMaterialsForT3d(t3dMesh);
@@ -801,7 +797,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						
 
 					} catch (Exception e) {
-						logger.log(Level.SEVERE, "Error while reading file " + pskFile, e);
+						logger.log(Level.SEVERE, "Error while reading file " + staticMeshFile, e);
 					}
 				}
 			}

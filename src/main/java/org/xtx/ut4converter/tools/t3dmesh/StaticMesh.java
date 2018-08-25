@@ -2,7 +2,10 @@ package org.xtx.ut4converter.tools.t3dmesh;
 
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +13,8 @@ import java.util.List;
  *
  */
 public class StaticMesh {
+
+    public static final String FILE_EXTENSION_T3D = "t3d";
 
     private final File t3dFile;
 

@@ -142,7 +142,21 @@ public class UPackageRessource {
 		public List<File> getExportedFiles() {
 			return exportedFiles;
 		}
-		
+
+		public File getExportedFileByExtension(final String... extensions){
+			if(this.exportedFiles != null && extensions != null){
+				for (String extension : extensions) {
+					final File fileMatch = this.exportedFiles.stream().filter(f -> f.getName().endsWith(extension)).findFirst().orElse(null);
+
+					if(fileMatch != null){
+						return fileMatch;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		/**
 		 * Get exported file by extension
 		 * @param extension Extension (e.g: "bmp")
