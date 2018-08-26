@@ -16,15 +16,20 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.export.SimpleTextureExtractor;
 
 import javax.xml.bind.JAXBException;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -77,6 +82,8 @@ public class MainSceneController implements Initializable {
 	public MainApp mainApp;
 	public Stage mainStage;
 
+	private UserConfig userConfig;
+
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		this.mainStage = mainApp.getPrimaryStage();
@@ -86,7 +93,7 @@ public class MainSceneController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 
 		try {
-			UserConfig userConfig = UserConfig.load();
+			this.userConfig = UserConfig.load();
 
 			if (userConfig.getIsFirstRun() == null || userConfig.getIsFirstRun()) {
 				userConfig.setIsFirstRun(Boolean.FALSE);
@@ -327,11 +334,21 @@ public class MainSceneController implements Initializable {
 
 	}
 
-	private boolean checkGamePathSet(UTGame inputGame, UTGame outputGame) throws JAXBException {
+	private boolean checkGamePathSet(UTGame... games) throws JAXBException {
 		UserConfig userConfig = UserConfig.load();
+		if(userConfig != null){
+			boolean gamePathSet = true;
 
-		return userConfig != null && userConfig.hasGamePathSet(inputGame) && userConfig.hasGamePathSet(outputGame);
+			for (UTGame game : games) {
+				gamePathSet &= userConfig.hasGamePathSet(game);
+			}
+
+			return gamePathSet;
+		}
+
+		return false;
 	}
+
 
 	@FXML
 	private void convertUt2004Map(ActionEvent event) {
@@ -357,6 +374,51 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private void convertU2Map(ActionEvent event) {
 		convertUtxMap(UTGame.U2);
+	}
+
+	/**
+	 * Allow extract textures from Unreal 2 package
+	 * @param event
+	 */
+	@FXML
+	private void extractTexturesFromU2Package(ActionEvent event){
+
+		final UTGame unreal2 = UTGame.U2;
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Select your " + unreal2.name + " texture package");
+
+		File texFolder = UTGames.getTexturesFolder(this.userConfig.getGameConfigByGame(UTGame.U2).getPath(), UTGame.U2);
+
+		if (texFolder.exists()) {
+			chooser.setInitialDirectory(texFolder);
+		}
+
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(unreal2.shortName + " texture package (*.utx)", "*.utx"));
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(unreal2.shortName + " texture package (*.u)", "*.u"));
+
+		File texturePackage = chooser.showOpenDialog(new Stage());
+
+		if(texturePackage != null){
+			final DirectoryChooser dcOutputFolder = new DirectoryChooser();
+			dcOutputFolder.setTitle("Select where you want to extract textures");
+
+			final File outputFolder = dcOutputFolder.showDialog(new Stage());
+			if(outputFolder != null){
+				try {
+					SimpleTextureExtractor.extractSimple(texturePackage, outputFolder);
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Texture package succesfully extracted !");
+					alert.setHeaderText("Texture package succesfully extracted !");
+					alert.showAndWait();
+				} catch (Exception e) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error while extracting texture package.");
+					alert.setHeaderText("Error while extracting texture package.");
+					alert.showAndWait();
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

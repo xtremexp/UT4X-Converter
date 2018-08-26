@@ -72,7 +72,11 @@ public class T3DUtils {
 	}
 
 	public static UPackageRessource getUPackageRessource(final MapConverter mapConverter, final String line, final T3DRessource.Type type) {
-		return mapConverter.getUPackageRessource(line.split("\'")[1], type);
+		if(line.endsWith("=None")){
+			return null;
+		} else {
+			return mapConverter.getUPackageRessource(line.split("\'")[1], type);
+		}
 	}
 
 	/**

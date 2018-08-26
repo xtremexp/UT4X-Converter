@@ -137,8 +137,13 @@ public class ObjStaticMesh {
             faces.add(face);
 
             for(final Vertex t3dVertex : t3dTriangle.getVertices()){
+                t3dVertex.getXyz().setY(t3dVertex.getXyz().getY() * -1d);
                 this.vertices.add(t3dVertex.getXyz());
-                // FIXME UV
+                // TODO only if unreal 2
+                // for unreal 2 for correct staticmesh alignement
+                // we do scale3d.y *= -1
+                // so we need to flip V
+                t3dVertex.getUv().setY(t3dVertex.getUv().getY() * -1d);
                 this.uvs.add(t3dVertex.getUv());
             }
         }

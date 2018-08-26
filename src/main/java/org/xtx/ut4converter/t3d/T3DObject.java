@@ -171,12 +171,14 @@ public abstract class T3DObject {
 		return simpleProperty;
 	}
 
-	public void registerSimpleProperty(final String propertyName, final Object classType){
-		registerSimpleProperty(propertyName, classType, null);
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Object classType){
+		return registerSimpleProperty(propertyName, classType, null);
 	}
 
-	public void registerSimpleArrayProperty(final String propertyName, final Object classType){
-		this.registeredProperties.add(new T3DSimpleProperty(propertyName, classType, null, true));
+	public T3DSimpleProperty registerSimpleArrayProperty(final String propertyName, final Object classType){
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, null, true);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
 	}
 
 	/**
@@ -185,8 +187,10 @@ public abstract class T3DObject {
 	 * @param classType Type of property (String, Float, or other)
 	 * @param defaultValue Default value for INPUT game
 	 */
-	public void registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
-		this.registeredProperties.add(new T3DSimpleProperty(propertyName, classType, defaultValue, false));
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, defaultValue, false);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
 	}
 
 	void writeSimpleProperties(){

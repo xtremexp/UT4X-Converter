@@ -12,6 +12,7 @@
                 </Menu>
                 <Menu text="Unreal 2">
                     <MenuItem text="Convert map to UT4 ..." onAction="#convertU2Map"/>
+                    <MenuItem text="Extract textures from package ..." onAction="#extractTexturesFromU2Package"/>
                 </Menu>
                 <Menu text="Unreal Tournament">
                     <MenuItem text="Convert map to UT4 ..." onAction="#handleConvert"/>

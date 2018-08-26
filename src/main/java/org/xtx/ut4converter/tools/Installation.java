@@ -10,6 +10,9 @@ package org.xtx.ut4converter.tools;
  * @author hyperion
  */
 
+import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.MapConverter;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +21,6 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
-import org.xtx.ut4converter.MainApp;
-import org.xtx.ut4converter.MapConverter;
 
 /**
  * Some core class that allows to know where program is running (path)
@@ -158,10 +159,9 @@ public class Installation {
 	 * Return full path of texture extractor (basic extractor once done for UT3
 	 * converter). The only one working for Unreal 2!
 	 * 
-	 * @param mapConverter
 	 * @return
 	 */
-	public static File getExtractTextures(MapConverter mapConverter) {
+	public static File getExtractTextures() {
 		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
 	}
 

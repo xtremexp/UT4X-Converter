@@ -7,6 +7,7 @@ import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,22 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		super(mapConverter);
 	}
 
+	/**
+	 * Extract all textures from given package
+	 * @param texturePackageFile
+	 * @param outputFolder
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public static void extractSimple(final File texturePackageFile, final File outputFolder) throws IOException, InterruptedException {
+		final List<String> logLines = new ArrayList<>();
+		Installation.executeProcess(getCommand(Installation.getExtractTextures(), texturePackageFile, outputFolder), logLines);
+	}
+
+	private static String getCommand(final File exporterPath, final File texturePackageFile, final File outputFolder){
+		return exporterPath + "  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
+	}
+
 	@Override
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
@@ -37,7 +54,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 			return null;
 		}
 
-		String command = getExporterPath() + "  \"" + ressource.getUnrealPackage().getFileContainer(mapConverter) + "\"";
+		String command = getCommand(getExporterPath(), ressource.getUnrealPackage().getFileContainer(mapConverter), mapConverter.getTempExportFolder());
 		command += " \"" + mapConverter.getTempExportFolder() + "\"";
 
 		List<String> logLines = new ArrayList<>();
@@ -91,7 +108,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 
 	@Override
 	public File getExporterPath() {
-		return Installation.getExtractTextures(mapConverter);
+		return Installation.getExtractTextures();
 	}
 
 	@Override

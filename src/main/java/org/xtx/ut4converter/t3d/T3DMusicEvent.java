@@ -25,6 +25,9 @@ public class T3DMusicEvent extends T3DActor {
         registerSimpleProperty("bSilence", Boolean.class, Boolean.FALSE);
         registerSimpleProperty("CdTrack", Short.class, 255);
         registerSimpleProperty("SongSection", Short.class, 0);
+
+        // for unreal 2 only
+        registerSimpleProperty("Script", String.class).clonePropertyAs("SongOriginal");
     }
 
     @Override

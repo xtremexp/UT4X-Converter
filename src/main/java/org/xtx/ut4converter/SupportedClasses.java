@@ -10,6 +10,7 @@ import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.ue1.ExplosionChain;
 import org.xtx.ut4converter.t3d.ue1.SmokeGenerator;
 import org.xtx.ut4converter.t3d.ue1.UBLight;
+import org.xtx.ut4converter.t3d.ue2.u2.AlarmTrigger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,12 +142,11 @@ public class SupportedClasses {
 
 		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2);
 
+		registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
+				"LoopMover", "InterpActor");
+
 		if(useUbClasses) {
-			registerUClass(T3DMover.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "LoopMover", "InterpActor");
 			registerUClass(T3DGradualMover.class, "GradualMover");
-		} else {
-			registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
-					"LoopMover", "InterpActor");
 		}
 
 		//registerUClass()
@@ -157,9 +157,9 @@ public class SupportedClasses {
 		// SPECIFIC Unreal 1 conversion test
 		if(useUbClasses) {
 			registerUClass(T3DDecoration.class, "Tree5", "Plant6");
-			registerUClass(T3DDispatcher.class, "Dispatcher");
+			registerUClass(T3DDispatcher.class, "Dispatcher", "U2Dispatcher");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
-			registerUClass(T3DMusicEvent.class, "MusicEvent");
+			registerUClass(T3DMusicEvent.class, "MusicEvent", "MusicScriptEvent");
 			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
@@ -171,6 +171,10 @@ public class SupportedClasses {
 
 			registerUClass(T3DUE1Trigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
+
+			if(mapConverter.getInputGame() == UTGames.UTGame.U2){
+				registerUClass(AlarmTrigger.class, "AlarmTrigger");
+			}
 		} else {
 			registerUClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");

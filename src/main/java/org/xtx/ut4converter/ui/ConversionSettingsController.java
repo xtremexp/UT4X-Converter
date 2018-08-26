@@ -188,7 +188,13 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
-		mapConverter.setUseUbClasses(mainApp.isUseUbClasses());
+
+		// games we are working on and testing and adding blueprints
+		if(inputGame == UTGame.U1 || inputGame == UTGame.U2) {
+			mapConverter.setUseUbClasses(mainApp.isUseUbClasses());
+		} else {
+			mapConverter.setUseUbClasses(false);
+		}
 		
 		switch(mapConverter.getInputGame().engine.version){
 			case 1:
