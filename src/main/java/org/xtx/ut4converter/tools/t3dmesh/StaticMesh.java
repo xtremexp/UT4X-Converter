@@ -64,7 +64,7 @@ public class StaticMesh {
     }
 
     public static void main(final String args[]){
-        final File t3dFile = new File("E:\\TEMP\\UT4X-Converter\\Converted\\DM-OSR-Cheops\\StaticMesh\\DM-OSR-Cheops_Floor_lift.obj");
+        final File t3dFile = new File("E:\\Boxnum2.t3d");
         final StaticMesh staticMesh = new StaticMesh(t3dFile);
 
         final File mtlFile = new File("E:\\TEMP\\test.mtl");

@@ -113,6 +113,7 @@ public class ObjStaticMesh {
         this.materials = new LinkedList<>();
 
         int globalVertexIdx = 0;
+        int globalUvIdx = 0;
 
         for(final Triangle t3dTriangle : t3dSm.getTriangles()){
 
@@ -128,6 +129,10 @@ public class ObjStaticMesh {
             face.setVertex2Idx(++globalVertexIdx);
             face.setVertex1Idx(++globalVertexIdx);
             face.setVertex0Idx(++globalVertexIdx);
+
+            face.setIdx5(++globalUvIdx);
+            face.setIdx3(++globalUvIdx);
+            face.setIdx1(++globalUvIdx);
 
             faces.add(face);
 
