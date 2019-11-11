@@ -6,16 +6,12 @@
 package org.xtx.ut4converter.config;
 
 import java.io.File;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.xtx.ut4converter.UTGames;
 
 /**
  * 
  * @author XtremeXp
  */
-@XmlRootElement
 public class UserGameConfig {
 
 	public UserGameConfig() {
@@ -40,7 +36,6 @@ public class UserGameConfig {
 		return id;
 	}
 
-	@XmlAttribute(required = true)
 	public void setId(UTGames.UTGame id) {
 		this.id = id;
 	}
@@ -54,7 +49,6 @@ public class UserGameConfig {
 		return path;
 	}
 
-	@XmlElement
 	public void setPath(File path) {
 		this.path = path;
 	}
@@ -64,7 +58,6 @@ public class UserGameConfig {
 	 * 
 	 * @return
 	 */
-	@XmlElement
 	public File getLastConverted() {
 		return lastConverted;
 	}

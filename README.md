@@ -243,6 +243,11 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.2 - MM/DD/YYYY
+  * install: program is now bundled as an Windows installer containing Java Runtime Environnement (JRE) which makes the filesize
+  * tech: migrated from Java 8 to Java 13 version
+  * tech: migrated to Java FX 13
+
 - 0.9.1 - 25/08/2018
  * all: fixed some unconverted resources 
  

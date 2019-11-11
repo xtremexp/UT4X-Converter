@@ -27,7 +27,6 @@ import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.TableRowLog;
 
 import javax.imageio.spi.IIORegistry;
-import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -426,7 +425,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			userConfig = UserConfig.load();
-		} catch (JAXBException | IOException ex) {
+		} catch (IOException ex) {
 			Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
 		}
 

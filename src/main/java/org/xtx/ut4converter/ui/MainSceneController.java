@@ -27,7 +27,6 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 
-import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -100,7 +99,7 @@ public class MainSceneController implements Initializable {
 				userConfig.saveFile();
 				showAlertFirstTime();
 			}
-		} catch (JAXBException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -327,14 +326,14 @@ public class MainSceneController implements Initializable {
 				alert.showAndWait();
 				showSettings();
 			}
-		} catch (IOException | JAXBException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			// TODO alert
 		}
 
 	}
 
-	private boolean checkGamePathSet(UTGame... games) throws JAXBException {
+	private boolean checkGamePathSet(UTGame... games) throws IOException {
 		UserConfig userConfig = UserConfig.load();
 		if(userConfig != null){
 			boolean gamePathSet = true;

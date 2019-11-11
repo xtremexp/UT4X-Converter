@@ -21,8 +21,8 @@ import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -166,9 +166,9 @@ public class SettingsSceneController implements Initializable {
 			try {
 				userConfig.saveFile();
 				settingsLog.setText(utGame.name + " folder saved to " + UserConfig.getUserConfigFile().getName());
-			} catch (JAXBException ex) {
+			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_XML_FILE + " : " + ex.getMessage());
+				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_JSON_FILE + " : " + ex.getMessage());
 			}
 		} else {
 			showErrorMessage(textFile.getText() + " is not valid folder");
@@ -233,7 +233,7 @@ public class SettingsSceneController implements Initializable {
 				}
 			}
 
-		} catch (JAXBException ex) {
+		} catch (IOException ex) {
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			showErrorMessage("An error occured while loading UserConfig file.");
 		}
@@ -295,7 +295,7 @@ public class SettingsSceneController implements Initializable {
 				userConfig.setUModelPath(umodelPathFile);
 				userConfig.saveFile();
 				uModelPath.setText(umodelPathFile.getAbsolutePath());
-			} catch (JAXBException ex) {
+			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
@@ -319,7 +319,7 @@ public class SettingsSceneController implements Initializable {
 				userConfig.setNConvertPath(nConvertPathFile);
 				userConfig.saveFile();
 				nconvertPath.setText(nConvertPathFile.getAbsolutePath());
-			} catch (JAXBException ex) {
+			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
