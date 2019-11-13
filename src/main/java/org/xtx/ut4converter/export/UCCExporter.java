@@ -10,7 +10,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;

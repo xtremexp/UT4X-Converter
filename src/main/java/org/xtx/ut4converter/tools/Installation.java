@@ -13,6 +13,7 @@ package org.xtx.ut4converter.tools;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -116,6 +117,14 @@ public class Installation {
 
 	public static File getG16ConvertFile() {
 		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + BINARIES_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
+	}
+
+	/**
+	 * Basically c:\Users\<user>\Documents
+	 * @return
+	 */
+	public static File getDocumentUserFolder(){
+		return new JFileChooser().getFileSystemView().getDefaultDirectory();
 	}
 	
 	

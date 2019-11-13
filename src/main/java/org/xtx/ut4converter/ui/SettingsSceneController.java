@@ -17,8 +17,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
 
 import java.io.File;
@@ -235,7 +235,7 @@ public class SettingsSceneController implements Initializable {
 
 		} catch (IOException ex) {
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-			showErrorMessage("An error occured while loading UserConfig file.");
+			showErrorMessage("An error occured while loading UserConfig file :" + ex.getMessage());
 		}
 	}
 

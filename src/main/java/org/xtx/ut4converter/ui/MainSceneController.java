@@ -24,7 +24,7 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 
 import java.awt.*;

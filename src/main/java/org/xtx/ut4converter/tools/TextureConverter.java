@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
 
 /**
  * Interface to use nconvert.exe external program to convert textures

@@ -7,7 +7,7 @@ package org.xtx.ut4converter.ucore;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
