@@ -16,6 +16,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<javafx.version>13</javafx.version>
 		<slf4j.version>1.7.29</slf4j.version>
+		<log4j.version>2.12.1</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
@@ -29,17 +30,6 @@
 
 	<build>
 		<plugins>
-			<!--
-			<plugin>
-				<groupId>com.zenjava</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>8.8.3</version>
-				<configuration>
-					<mainClass>org.xtx.ut4converter.MainApp</mainClass>
-				</configuration>
-			</plugin>
-			-->
-
 			<!-- COMPILE PROJECT -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -47,7 +37,9 @@
 				<version>3.8.1</version>
 				<configuration>
 					<release>13</release>
-				</configuration>
+                    <source>13</source>
+                    <target>13</target>
+                </configuration>
 			</plugin>
 
 
@@ -64,6 +56,77 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources1</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs/g16convert</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/g16convert</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources2</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs/sox</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/sox</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources3</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs/utxextractor</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/utxextractor</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources4</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/conf</outputDirectory>
+							<resources>
+								<resource>
+									<directory>conf</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 
@@ -177,6 +240,21 @@
 
 	<dependencies>
 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
 
 		<!-- LOGGING -->
 		<dependency>
