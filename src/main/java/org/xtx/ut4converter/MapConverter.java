@@ -1226,7 +1226,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return
 	 */
 	private static File getBaseConvertFolder() {
-		return new File(Installation.getProgramFolder().getAbsolutePath() + File.separator + CONV_PATH);
+		return new File(Installation.getDocumentProgramFolder() + File.separator + CONV_PATH);
 	}
 
 	/**

@@ -80,7 +80,7 @@ public class UserConfig {
 	}
 
 	public static File getUserConfigFile() {
-		return new File(Installation.getDocumentUserFolder().getAbsolutePath() + File.separator + "UT4X-Converter" + File.separator + UserConfig.USER_CONFIG_JSON_FILE);
+		return new File(Installation.getDocumentProgramFolder().getAbsolutePath() + File.separator + UserConfig.USER_CONFIG_JSON_FILE);
 	}
 
 	/**
