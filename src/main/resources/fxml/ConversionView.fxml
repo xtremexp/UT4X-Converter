@@ -2,25 +2,37 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
-    <children>
-        <!-- PROGRESS -->
-        <ProgressBar fx:id="progressBar" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" prefWidth="400"/>
-        <ProgressIndicator fx:id="progressIndicator" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" />
-        <Label fx:id="progressMessage" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        
-        <!-- PROGRESS DETAIL -->
-        <ProgressBar fx:id="progressBarDetail" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" prefWidth="400"/>
-        <ProgressIndicator fx:id="progressIndicatorDetail" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
-        <Label fx:id="progressMessageDetail" GridPane.columnIndex="2" GridPane.rowIndex="1" alignment="CENTER_LEFT" />
-        
-        
-        <TableView tableMenuButtonVisible="true" fx:id="convLogTableView"  GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" >
+
+<FlowPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
+    <GridPane xmlns:fx="http://javafx.com/fxml/1">
+        <children>
+            <!-- PROGRESS -->
+            <ProgressBar fx:id="progressBar" prefWidth="400" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+            <ProgressIndicator fx:id="progressIndicator" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+            <Label fx:id="progressMessage" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+            <!-- PROGRESS DETAIL -->
+            <ProgressBar fx:id="progressBarDetail" prefWidth="400" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+            <ProgressIndicator fx:id="progressIndicatorDetail" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+            <Label fx:id="progressMessageDetail" alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        </children>
+      <columnConstraints>
+         <ColumnConstraints />
+         <ColumnConstraints />
+         <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints />
+         <RowConstraints />
+      </rowConstraints>
+    </GridPane>
+    <Pane>
+        <TableView fx:id="convLogTableView" tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
             <columns>
-                <TableColumn text="Time" fx:id="logTime"></TableColumn>
-                <TableColumn text="Log Level" fx:id="logLevel"></TableColumn>
-                <TableColumn text="Message" fx:id="logMsg" prefWidth="650" ></TableColumn>
+                <TableColumn fx:id="logTime" text="Time" />
+                <TableColumn fx:id="logLevel" text="Log Level" />
+                <TableColumn fx:id="logMsg" prefWidth="650" text="Message" />
             </columns>
         </TableView>
-    </children>
-</GridPane>
+    </Pane>
+</FlowPane>
