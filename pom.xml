@@ -211,14 +211,26 @@
 								<argument>--description</argument>
 								<argument>Tool that helps converting maps from Unreal 1, Unreal 2, Unreal Tournament (1999), Unreal Tournament 2003/4, Unreal Tournament 3 to Unreal Tournament 4 (UT2005)</argument>
 
+								<!--  Prevents multiple instances of the application from launching -->
+								<argument>--singleton</argument>
+
 								<argument>--vendor</argument>
 								<argument>Thomas P.</argument>
 
 								<argument>--copyright</argument>
 								<argument>You are free to distribute and use with tool but with no commercial use</argument>
 
+								<argument>--identifier</argument>
+								<argument>org.xtx.ut4converter</argument>
+
 								<argument>--category</argument>
 								<argument>Tool</argument>
+
+								<argument>--win-registry-name</argument>
+								<argument>${project.artifactId}</argument>
+
+								<!-- FOR INSTALL, ONLY do it for current user and not all -->
+								<argument>--win-per-user</argument>
 
                                 <argument>--win-dir-chooser</argument>
 								<argument>--win-shortcut</argument>
@@ -229,7 +241,6 @@
 
 								<argument>--add-modules</argument>
 								<argument>java.base,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml</argument>
-								<argument>--strip-native-commands</argument>
 							</arguments>
 						</configuration>
 					</execution>
