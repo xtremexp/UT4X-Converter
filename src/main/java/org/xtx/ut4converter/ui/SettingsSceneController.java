@@ -20,6 +20,7 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.UIUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,14 +136,14 @@ public class SettingsSceneController implements Initializable {
 	private void gotoNConvertWebsite(ActionEvent event) {
 
 		final String nConvertUrl = "http://www.xnview.com/en/nconvert/";
-		MainSceneController.openUrl(nConvertUrl, false, "Press ok to go to nconvert website for download:\n" + nConvertUrl);
+		UIUtils.openUrl(nConvertUrl, false, "Press ok to go to nconvert website for download:\n" + nConvertUrl);
 	}
 
 	@FXML
 	private void gotoUModelWebsite(ActionEvent event) {
 
 		final String uModelUrl = "http://www.gildor.org/en/projects/umodel";
-		MainSceneController.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
+		UIUtils.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
 	}
 
 	/**
