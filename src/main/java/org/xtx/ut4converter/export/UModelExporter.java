@@ -177,8 +177,9 @@ public class UModelExporter extends UTPackageExtractor {
 		// bdr02BA
 		String name = split2[2];
 
-		// Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh
-		String exportFolder = split[1];
+		// since new umodel version it add filename at end of path
+		// Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh/trophy1
+		String exportFolder = split[1].substring(0, split[1].lastIndexOf("/"));
 
 		String packageName = split[1].substring(mapConverter.getTempExportFolder().getAbsolutePath().length() + 1).split("/")[0];
 
