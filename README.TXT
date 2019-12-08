@@ -70,15 +70,10 @@ Installation and first start
 ------------------------------
 * Install nconvert http://www.xnview.com/en/nconvert/
 * Install umodel http://www.gildor.org/en/projects/umodel
-* Decompress the ZIP archive to any folder of your choice.
-* Double-click on UT4-Converter-<version>.jar, the program should be launching.
-
-If not, make sure you have installed latest Java technology version at www.java.com
-and create some "run.bat" batch file with notepad that you will save in the
-program folder with this command line:
-"java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
-as java program)
-Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
+* Either install UT4X-Converter-X.Y.Z.exe file or decompress UT4X-Converter-X.Y.Z.zip file
+* Execute "UT4X-Converter.exe"
+* Set umodel path in Options -> Settings
+* Set nconvert path in Options -> Settings
 
 
 Detailed explanations about conversion is always displayed after each end of map conversion
@@ -166,7 +161,8 @@ CONVERTED MAP.
 ---
 
 # How to build and run latest version ?
-- Download and install latest Java 8 JDK: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+- Download and install JDK13 from: https://adoptopenjdk.net/
+- Download and decompress Java FX13 SDK and jmods from: https://gluonhq.com/products/javafx/
 Then you will need to install one of these IDE.
 - Note: UT4X converter cannot be built with JDK 9 for the moment.
 ---
@@ -192,7 +188,7 @@ Then you will need to install one of these IDE.
 
 ---
 ## Optional (UI editing):
-- Install "Java FX Scene Builder 2": http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-1x-archive-2199384.html
+- Download and install JavaFX "Scene Builder": https://gluonhq.com/products/scene-builder/
 - Select project then "File" -> "Project structure..." -> "Artifacts"
 - Click on "+" and add "Java FX application" artifact
 - Select UI file (.fxml) right click -> "Open in SceneBuilder"
@@ -243,6 +239,13 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.2 - 08/12/2019
+  * Hotfix: fixed no resources being identified / exported with newer version of UModel.
+  * install: Java Runtime Environment (JRE) is now embedded (which makes install file significantly larger)
+  * install: program is now a windows application (using new .msi install file)
+  * tech: migrated from Java 8 to Java 13 version
+  * tech: migrated to Java FX 13
+
 - 0.9.1 - 25/08/2018
  * all: fixed some unconverted resources
 
