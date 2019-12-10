@@ -43,7 +43,7 @@ public class T3DTeleporter extends T3DSound {
 	public String toString() {
 
 		// only write if we have data about linked teleporter
-		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4 && linkedTo != null && !linkedTo.isEmpty()) {
+		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
 
 			sbf.append(IDT).append("Begin Actor Class=BP_Teleporter_New_C Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"TriggerBox\"\n");
@@ -57,19 +57,26 @@ public class T3DTeleporter extends T3DSound {
 			sbf.append(IDT).append("\tEnd Object\n");
 			sbf.append(IDT).append("\tTriggerBox=TriggerBox\n");
 
-			// Note UT4 only support teleporting to one possible location
-			// unlike U1/UT99/? do support multiple destinations
-			T3DTeleporter linkedTel = (T3DTeleporter) linkedTo.get(0);
-			Vector3d t = Geometry.sub(linkedTel.location, this.location);
-			linkedTel.rotation = null;
+			if (linkedTo != null && !linkedTo.isEmpty()) {
+				// Note UT4 only support teleporting to one possible location
+				// unlike U1/UT99/? do support multiple destinations
+				T3DTeleporter linkedTel = (T3DTeleporter) linkedTo.get(0);
+				Vector3d t = Geometry.sub(linkedTel.location, this.location);
+				linkedTel.rotation = null;
 
-			sbf.append(IDT).append("\tTeleportTarget=(Translation=(X=").append(t.x).append(",Y=").append(t.y).append(",Z=").append(t.z).append("))\n");
-			sbf.append(IDT).append("\tRootComponent=TriggerBox\n");
-			writeEndActor();
+				sbf.append(IDT).append("\tTeleportTarget=(Translation=(X=").append(t.x).append(",Y=").append(t.y).append(",Z=").append(t.z).append("))\n");
 
-			linkedTo.clear(); // needs to remove linked teleporter or else loop
-								// on writting linked teleporter
-			return sbf.toString() + linkedTel.toString();
+				sbf.append(IDT).append("\tRootComponent=TriggerBox\n");
+				writeEndActor();
+
+				linkedTo.clear(); // needs to remove linked teleporter or else loop
+				// on writting linked teleporter
+				return sbf.toString() + linkedTel.toString();
+			} else {
+				sbf.append(IDT).append("\tRootComponent=TriggerBox\n");
+				writeEndActor();
+				return sbf.toString();
+			}
 		} else {
 			return "";
 		}
