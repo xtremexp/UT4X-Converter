@@ -420,13 +420,12 @@ public class T3DBrush extends T3DVolume {
 			// if 2 polygons and sheetbrush not a portal
 			if (isUnsupportedUE4Brush()) {
 
-				// keep brushes of flat brushes
-				// because they are intended to be replaced as staticmesh
-				// which does not cause bsp hole
-				if(isSheetFlatHorizontallyBrush){
-					logger.warning("Convert " + name + " to staticmesh prior first build else bsp holes will appear.");
-				} else {
-					valid = false;
+				valid = false;
+
+				// only notify if this brush could not be replaced by another
+				// actor
+				if (children.isEmpty()) {
+					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
 				}
 			}
 		}
