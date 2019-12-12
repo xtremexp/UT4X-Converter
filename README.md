@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.9.2
-* Release date: 08/12/2019
+* Version: 0.9.3
+* Release date: 12/12/2019
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -243,6 +243,9 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.3 - 12/12/2019
+  * Fix: skip sheet brushes to be converted causing BSP holes
+  
 - 0.9.2 - 08/12/2019
   * Hotfix: fixed no resources being identified / exported with newer version of UModel.
   
