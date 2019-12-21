@@ -89,7 +89,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Type of brush (regular, portal, semi-solid, ...) UE1/UE2 only
 	 */
-	List<BrushPolyflag> polyflags = new ArrayList<>();
+	private List<BrushPolyflag> polyflags = new ArrayList<>();
 
 	/**
 	 * UE1/2 property containing scale and sheer info
@@ -419,11 +419,10 @@ public class T3DBrush extends T3DVolume {
 			// if 2 polygons and sheetbrush not a portal
 			if (isUnsupportedUE4Brush()) {
 
-				valid = false;
-
 				// only notify if this brush could not be replaced by another
 				// actor
 				if (children.isEmpty()) {
+					valid = false;
 					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
 				}
 			}
@@ -464,7 +463,7 @@ public class T3DBrush extends T3DVolume {
 	 */
 	protected boolean isUnsupportedUE4Brush() {
 
-		return polyList.size() <= 4;
+		return polyList.size() <= 4 && !this.polyflags.contains(BrushPolyflag.SEMI_SOLID) && !this.polyflags.contains(BrushPolyflag.NON_SOLID);
 		// FIXME all sheet brushes are well deleted but some (a very few)
 		// normal brushes are detected as sheet ones (eg.: stairs / test
 		// AS-HighSpeed)
@@ -570,6 +569,12 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
+
+		if (this.polyflags.contains(BrushPolyflag.SEMI_SOLID)) {
+			sbf.append(IDT).append("\tPolyFlags=").append(BrushPolyflag.SEMI_SOLID.getPow()).append("\n");
+		} else if (this.polyflags.contains(BrushPolyflag.NON_SOLID)) {
+			sbf.append(IDT).append("\tPolyFlags=").append(BrushPolyflag.NON_SOLID.getPow()).append("\n");
+		}
 
 		// UE3 only CullDistanceVolume
 		if (brushClass == BrushClass.CullDistanceVolume && cullDistances != null) {
@@ -784,7 +789,7 @@ public class T3DBrush extends T3DVolume {
 		// only if it is not a mover
 		// will cause bdp hole first, but since movers are then converted to staticmeshes
 		// in UT4 editor, won't cause bsphole
-		if (isSheetBrush()) {
+		if (isSheetBrush() && !this.polyflags.contains(BrushPolyflag.SEMI_SOLID) && !this.polyflags.contains(BrushPolyflag.NON_SOLID)) {
 			if(!isHorizontallyFlatBrush()) {
 				T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
 				children.add(sheetStaticMesh);
@@ -919,6 +924,7 @@ public class T3DBrush extends T3DVolume {
 		return polyList;
 	}
 
-
-
+	public List<BrushPolyflag> getPolyflags() {
+		return polyflags;
+	}
 }
