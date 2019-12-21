@@ -295,8 +295,8 @@ public class T3DBrush extends T3DVolume {
 
 		// Pan U=381 V=-7
 		else if (line.contains(" Pan ")) {
-			polyList.getLast().pan_u = Double.valueOf(line.split("U=")[1].split("\\ ")[0]);
-			polyList.getLast().pan_v = Double.valueOf(line.split("V=")[1].split("\\ ")[0]);
+			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split("\\ ")[0]);
+			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split("\\ ")[0]);
 		}
 
 		// Hack, normally analysed in T3DActor but needed
@@ -355,8 +355,7 @@ public class T3DBrush extends T3DVolume {
 			return false;
 		}
 
-		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone")
-				|| t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name()) || t3dBrushClass.equals(BrushClass.LavaVolume.name())) {
+		else if (t3dBrushClass.equals("LavaZone") || t3dBrushClass.equals("SlimeZone") || t3dBrushClass.equals("VaccuumZone") || t3dBrushClass.equals("NitrogenZone") || t3dBrushClass.equals(BrushClass.UTSlimeVolume.name()) || t3dBrushClass.equals(BrushClass.UTLavaVolume.name()) || t3dBrushClass.equals(BrushClass.LavaVolume.name())) {
 			brushClass = BrushClass.UTPainVolume;
 			this.damagePerSec = 20f;
 			return true;
@@ -642,20 +641,15 @@ public class T3DBrush extends T3DVolume {
 
 			if (null != t3dClass)
 				switch (t3dClass) {
-				case "SlimeZone":
-					// slimy ppv copied/pasted from DM-DeckTest (UT4)
-					postProcessVolume.forcedWrittenLines
-							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
-					break;
-					
-				case "UTSlimeVolume":
-					// slimy ppv copied/pasted from DM-DeckTest (UT4)
-					postProcessVolume.forcedWrittenLines
-							.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
-					break;
-				case "WaterZone":
-					postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
-					break;
+					case "SlimeZone":
+					case "UTSlimeVolume":
+						// slimy ppv copied/pasted from DM-DeckTest (UT4)
+						postProcessVolume.forcedWrittenLines
+								.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+						break;
+					case "WaterZone":
+						postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
+						break;
 				}
 
 			sbf.append(postProcessVolume.toString());
@@ -751,14 +745,15 @@ public class T3DBrush extends T3DVolume {
 		// maybe add a super-class T3DVolume?
 		// UTSlimeVolume does not exists in UT4
 		else if (brushClass == BrushClass.UTSlimeVolume || brushClass == BrushClass.UTLavaVolume || brushClass == BrushClass.LavaVolume || brushClass == BrushClass.PressureVolume) {
+
+			if(brushClass == BrushClass.PressureVolume){
+				this.physicsVolumeebWaterVolume = Boolean.FALSE;
+			}
+
 			brushClass = BrushClass.UTPainVolume;
 
 			if(this.damagePerSec == null){
 				this.damagePerSec = 20f;
-			}
-
-			if(brushClass == BrushClass.PressureVolume){
-				this.physicsVolumeebWaterVolume = Boolean.FALSE;
 			}
 		}
 
@@ -924,52 +919,6 @@ public class T3DBrush extends T3DVolume {
 		return polyList;
 	}
 
-	private int curIdx = 0;
 
-	/**
-	 * Give and index for each vertex having same coordinate
-	 */
-	public void calcVerticeIndices() {
-
-		for (T3DPolygon polygon : polyList) {
-
-			for (Vertex v : polygon.vertices) {
-
-				if (v.getVertexPolyIdx() == null) {
-					getVerticeWithCoordinate(v.getCoordinates(), SMALL_NUMBER);
-					curIdx++;
-				}
-			}
-		}
-	}
-
-	private final double SMALL_NUMBER = 0.001d;
-
-	/**
-	 * Get the vertices with same coordinates
-	 * 
-	 * @param coordinates
-	 * @param delta
-	 * @return List of vertices having same coordinates
-	 */
-	private List<Vertex> getVerticeWithCoordinate(Vector3d coordinates, double delta) {
-
-		List<Vertex> vertices = new ArrayList<>();
-
-		for (T3DPolygon polygon : polyList) {
-
-			for (Vertex v : polygon.vertices) {
-
-				Double distance = Geometry.getDistance(v.getCoordinates(), coordinates);
-
-				if (distance <= delta) {
-					v.setVertexPolyIdx(curIdx);
-					vertices.add(v);
-				}
-			}
-		}
-
-		return vertices;
-	}
 
 }
