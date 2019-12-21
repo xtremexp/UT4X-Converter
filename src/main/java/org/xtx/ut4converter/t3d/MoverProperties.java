@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
@@ -12,9 +13,7 @@ import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.xtx.ut4converter.t3d.T3DObject.IDT;
 
@@ -39,13 +38,20 @@ public class MoverProperties implements T3D {
 	private List<Vector3d> savedPositions = new ArrayList<>();
 
 	/**
+	 * Map of [NumKey, Position]
+	 *
 	 * List of positions where mover moves UTUE4: Lift
 	 * Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several
 	 * nav localisations unlike UE1/2) UT99: KeyPos(1)=(Y=72.000000)
 	 */
-	private List<Vector3d> positions = new LinkedList<>();
+	private Map<Integer, Vector3d> positions = new LinkedHashMap<>();
 
-	private List<Vector3d> rotations = new LinkedList<>();
+	/**
+	 * Map of [NumKey, Rotation]
+	 */
+	private Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
+
+	private int numKeys;
 
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
@@ -147,6 +153,11 @@ public class MoverProperties implements T3D {
 			delayTime = T3DUtils.getDouble(line);
 		}
 
+		// UE1 -> 'Num Keys' (UB mod)
+		else if (line.contains("NumKeys")) {
+			numKeys = T3DUtils.getInteger(line);
+		}
+
 		// UE1 -> 'CloseStartSound' ? (UE4)
 		else if (line.startsWith("ClosedSound=")) {
 			closedSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
@@ -203,12 +214,15 @@ public class MoverProperties implements T3D {
 		}
 
 		else if(line.startsWith("KeyRot")){
-			rotations.add(T3DUtils.getVector3dRot(line.split("\\)=")[1]));
+
+			final Pair<Integer, String> arrayEntry = T3DUtils.getArrayEntry(line);
+			rotations.put(arrayEntry.getKey(), T3DUtils.getVector3dRot(arrayEntry.getValue()));
 		}
 
 		// UE1 -> 'Saved Positions' (UE12)
 		else if (line.contains("KeyPos")) {
-			positions.add(T3DUtils.getVector3d(line.split("\\)=")[1], 0D));
+			final Pair<Integer, String> arrayEntry = T3DUtils.getArrayEntry(line);
+			positions.put(arrayEntry.getKey(), T3DUtils.getVector3d(arrayEntry.getValue(), 0d));
 		} else {
 			return mover.parseSimpleProperty(line);
 		}
@@ -236,28 +250,44 @@ public class MoverProperties implements T3D {
 		// TODO handle multi position / rotation later
 		// because we use last position but there might more than one position !
 		if (!positions.isEmpty()) {
-			final Vector3d v = new Vector3d();
+			Vector3d lastPosition = new Vector3d();
 
 			// all positions are relative to previous one
 			// since then need to sum them all
 			// TODO remove this when blueprint handle multi-position
-			for(final Vector3d position : positions){
-				v.add(position);
+			for (int numKey = 0; numKey < numKeys; numKey++) {
+
+				if (positions.containsKey(numKey)) {
+					final Vector3d position = positions.get(numKey);
+					lastPosition = position;
+
+					// for Unreal Beta mod only
+					sbf.append(IDT).append("\tKeyPos(").append(numKey).append(")=").append(T3DUtils.toStringVec(position)).append("\n");
+				}
 			}
 
-			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(v.x)).append(",Y=").append(T3DActor.fmt(v.y)).append(",Z=").append(T3DActor.fmt(v.z)).append(")\n");
+			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(lastPosition.x)).append(",Y=").append(T3DActor.fmt(lastPosition.y)).append(",Z=").append(T3DActor.fmt(lastPosition.z)).append(")\n");
 		}
 
 		if(!rotations.isEmpty()){
-			final Vector3d v = new Vector3d();
+			Vector3d lastRot = new Vector3d();
 
 			// same comment as above
-			for(final Vector3d rotation : rotations){
-				v.add(rotation);
+			for (int numKey = 0; numKey < numKeys; numKey++) {
+
+				if (rotations.containsKey(numKey)) {
+					final Vector3d rotation = rotations.get(numKey);
+					lastRot = rotation;
+
+					// for Unreal Beta mod only
+					sbf.append(IDT).append("\tKeyRot(").append(numKey).append(")=(Pitch=").append(T3DActor.fmt(rotation.x)).append(",Yaw=").append(T3DActor.fmt(rotation.y)).append(",Roll=").append(T3DActor.fmt(rotation.z)).append(")\n");
+				}
 			}
 
-			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(v.x)).append(",Yaw=").append(T3DActor.fmt(v.y)).append(",Roll=").append(T3DActor.fmt(v.z)).append(")\n");
+			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(lastRot.x)).append(",Yaw=").append(T3DActor.fmt(lastRot.y)).append(",Roll=").append(T3DActor.fmt(lastRot.z)).append(")\n");
 		}
+
+		sbf.append(IDT).append("\tNumKeys=)").append(numKeys).append("\n");
 
 		if (openingSound != null) {
 			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("'\n");
@@ -346,7 +376,8 @@ public class MoverProperties implements T3D {
 		// so we don't want to have the default 200 Z axis offset
 		// by adding a 0 destination position
 		if(this.positions.isEmpty()){
-			this.positions.add(new Vector3d(0, 0, 0));
+			// TODO test this commented
+			//this.positions.add(new Vector3d(0, 0, 0));
 		}
 
 		if(mapConverter.convertSounds()) {
@@ -371,7 +402,7 @@ public class MoverProperties implements T3D {
 			}
 		}
 
-		for(Vector3d rotator : rotations){
+		for(Vector3d rotator : rotations.values()){
 			// convert 65536 rotator old range to UE4 range
 			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE3, UnrealEngine.UE3)){
 				T3DUtils.convertRotatorTo360Format(rotator);
@@ -395,7 +426,7 @@ public class MoverProperties implements T3D {
 	@Override
 	public void scale(Double newScale) {
 
-		for( Vector3d position : positions ) { 
+		for( Vector3d position : positions.values() ) {
 			position.scale(newScale); 
 		}
 	}

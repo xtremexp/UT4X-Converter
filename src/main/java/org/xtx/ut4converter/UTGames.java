@@ -115,6 +115,11 @@ public class UTGames {
 		UT4("Unreal Tournament 4", "UT4", UnrealEngine.UE4, "umap"),
 
 		/**
+		 * Unreal Engine 4.23+ game
+		 */
+		UE4Game("UE4 Game", "UE4Game", UnrealEngine.UE4, "umap"),
+
+		/**
 		 * Unreal 1
 		 */
 		U1("Unreal 1", "U1", UnrealEngine.UE1, "unr"),

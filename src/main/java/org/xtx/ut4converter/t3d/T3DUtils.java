@@ -6,6 +6,7 @@
 
 package org.xtx.ut4converter.t3d;
 
+import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.tools.HSVColor;
@@ -180,6 +181,18 @@ public class T3DUtils {
 	public static String toPolyStringVector3d(Vector3d v, DecimalFormat df) {
 
 		return df.format(v.x) + "," + df.format(v.y) + "," + df.format(v.z);
+	}
+
+	/**
+	 * KeyRot(2)=(Yaw=-16384)
+	 * @param line
+	 * @return [2, "(Yaw=-16384)"]
+	 */
+	public static Pair<Integer, String> getArrayEntry(String line){
+
+		final Integer index = Integer.valueOf(line.split("\\)")[0].split("\\(")[1]);
+
+		return new Pair<>(index, line.substring(line.indexOf("=") + 1));
 	}
 
 	/**

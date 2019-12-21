@@ -1,8 +1,10 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
+import javax.vecmath.Vector3d;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -110,6 +112,12 @@ public class T3DSimpleProperty {
             }
             else if(propertyClass == Double.class){
                 value = T3DUtils.getDouble(line);
+            }
+            else if(propertyClass == Vector3d.class){
+                value = T3DUtils.getVector3d(line, 0d);
+            }
+            else if(propertyClass == Rotator.class){
+                value = T3DUtils.getVector3dRot(line);
             }
             else if(propertyClass == UPackageRessource.class){
                 value = T3DUtils.getUPackageRessource(mapConverter, line, this.ressourceType);
