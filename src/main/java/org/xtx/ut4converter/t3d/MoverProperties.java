@@ -287,7 +287,7 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(lastRot.x)).append(",Yaw=").append(T3DActor.fmt(lastRot.y)).append(",Roll=").append(T3DActor.fmt(lastRot.z)).append(")\n");
 		}
 
-		sbf.append(IDT).append("\tNumKeys=)").append(numKeys).append("\n");
+		sbf.append(IDT).append("\tNumKeys=").append(numKeys).append("\n");
 
 		if (openingSound != null) {
 			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("'\n");
