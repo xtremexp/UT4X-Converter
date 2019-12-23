@@ -51,7 +51,6 @@ public class MoverProperties implements T3D {
 	 */
 	private Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
 
-	private int numKeys;
 
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
@@ -113,6 +112,8 @@ public class MoverProperties implements T3D {
 		mover.registerSimpleProperty("EncroachDamage", Float.class, 0f);
 		mover.registerSimpleProperty("OtherTime", Float.class, 0f);
 		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
+		mover.registerSimpleProperty("AttachTag", String.class);
+		mover.registerSimpleProperty("NumKeys", Integer.class, 1);
 	}
 
 	enum BumpType {
@@ -151,11 +152,6 @@ public class MoverProperties implements T3D {
 		// UE1 -> 'Retrigger Delay' (UE4)
 		else if (line.contains("DelayTime")) {
 			delayTime = T3DUtils.getDouble(line);
-		}
-
-		// UE1 -> 'Num Keys' (UB mod)
-		else if (line.contains("NumKeys")) {
-			numKeys = T3DUtils.getInteger(line);
 		}
 
 		// UE1 -> 'CloseStartSound' ? (UE4)
@@ -255,15 +251,13 @@ public class MoverProperties implements T3D {
 			// all positions are relative to previous one
 			// since then need to sum them all
 			// TODO remove this when blueprint handle multi-position
-			for (int numKey = 0; numKey < numKeys; numKey++) {
+			for(Map.Entry<Integer, Vector3d> posEntry : positions.entrySet()){
 
-				if (positions.containsKey(numKey)) {
-					final Vector3d position = positions.get(numKey);
-					lastPosition = position;
+				// KeyPos(1)=(X=-96.000000)
+				lastPosition = posEntry.getValue();
 
-					// for Unreal Beta mod only
-					sbf.append(IDT).append("\tKeyPos(").append(numKey).append(")=").append(T3DUtils.toStringVec(position)).append("\n");
-				}
+				// for Unreal Beta mod only
+				sbf.append(IDT).append("\tKeyPos(").append(posEntry.getKey()).append(")=").append(T3DUtils.toStringVec(posEntry.getValue())).append("\n");
 			}
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(lastPosition.x)).append(",Y=").append(T3DActor.fmt(lastPosition.y)).append(",Z=").append(T3DActor.fmt(lastPosition.z)).append(")\n");
@@ -273,21 +267,16 @@ public class MoverProperties implements T3D {
 			Vector3d lastRot = new Vector3d();
 
 			// same comment as above
-			for (int numKey = 0; numKey < numKeys; numKey++) {
+			for(Map.Entry<Integer, Vector3d> rotEntry : rotations.entrySet()){
 
-				if (rotations.containsKey(numKey)) {
-					final Vector3d rotation = rotations.get(numKey);
-					lastRot = rotation;
+				lastRot = rotEntry.getValue();
 
-					// for Unreal Beta mod only
-					sbf.append(IDT).append("\tKeyRot(").append(numKey).append(")=(Pitch=").append(T3DActor.fmt(rotation.x)).append(",Yaw=").append(T3DActor.fmt(rotation.y)).append(",Roll=").append(T3DActor.fmt(rotation.z)).append(")\n");
-				}
+				// for Unreal Beta mod only
+				sbf.append(IDT).append("\tKeyRot(").append(rotEntry.getKey()).append(")=(Pitch=").append(T3DActor.fmt(rotEntry.getValue().x)).append(",Yaw=").append(T3DActor.fmt(rotEntry.getValue().y)).append(",Roll=").append(T3DActor.fmt(rotEntry.getValue().z)).append(")\n");
 			}
 
 			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(lastRot.x)).append(",Yaw=").append(T3DActor.fmt(lastRot.y)).append(",Roll=").append(T3DActor.fmt(lastRot.z)).append(")\n");
 		}
-
-		sbf.append(IDT).append("\tNumKeys=").append(numKeys).append("\n");
 
 		if (openingSound != null) {
 			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("'\n");
