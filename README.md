@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.9.3
-* Release date: 12/12/2019
+* Version: 0.9.4
+* Release date: 02/01/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -243,6 +243,10 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.4 - 02/01/2020
+  * all: added support for semi-solid and non-solid brushes (e.g: water sheet, ...)
+  * u1/ut99: fixed bad lift destination / rotation for movers with multi positions
+  
 - 0.9.3 - 12/12/2019
   * Fix: skip sheet brushes to be converted causing BSP holes
   
