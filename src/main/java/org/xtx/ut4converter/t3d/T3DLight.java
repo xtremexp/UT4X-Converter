@@ -160,7 +160,11 @@ public class T3DLight extends T3DSound {
 	 */
 	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 22;
 
-	private Double intensity;
+	/**
+	 * Intensity.
+	 * Equals to brightness from UE3
+	 */
+	private Float intensity;
 
 	/**
 	 * UE4 Only
@@ -197,10 +201,10 @@ public class T3DLight extends T3DSound {
 
 			if (mc.isFrom(UnrealEngine.UE1)) {
 				this.lightFalloffExponent = 2.4d;
-				this.intensity = 35d;
+				this.intensity = 35f;
 			} else if (mc.isFrom(UnrealEngine.UE2)) {
 				this.lightFalloffExponent = 1.9d;
-				this.intensity = 70d;
+				this.intensity = 70f;
 			}
 		}
 		// Default Values when u put some light in UE4 editor
@@ -213,7 +217,7 @@ public class T3DLight extends T3DSound {
 			this.green = 255;
 			this.alpha = 0;
 			this.lightFalloffExponent = 2d;
-			this.intensity = 10d;
+			this.intensity = 10f;
 		}
 
 	}
@@ -526,7 +530,7 @@ public class T3DLight extends T3DSound {
 		// e.g: brightness of 1000 --> brightness = 255 and intensity = 60 +
 		// log(1000) * 6 = 60 + 3 * 6 = 78
 		if (brightness > 255) {
-			intensity += Math.log(brightness - 255) * 6; // using log because
+			intensity += Double.valueOf(Math.log(brightness - 255f) * 6f).floatValue(); // using log because
 															// brightness can be
 															// nearly infinite
 		}
@@ -540,6 +544,8 @@ public class T3DLight extends T3DSound {
 			if (isCorona) {
 				radius = 0;
 			}
+		} else if(mapConverter.isFrom(UnrealEngine.UE3)){
+			this.intensity =  this.brightness;
 		}
 
 		// TODO handle UT3 brightness correctly
