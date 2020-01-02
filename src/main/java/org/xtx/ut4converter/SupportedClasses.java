@@ -154,7 +154,8 @@ public class SupportedClasses {
 
 		// SPECIFIC Unreal 1 conversion test
 		if(useUbClasses) {
-			registerUClass(T3DDecoration.class, "Tree5", "Plant6");
+			registerUClass(T3DDecoration.class, "Seaweed", "Tree1","Tree2","Tree3","Tree4","Tree5","Tree6","Tree7", "Tree8", "Tree9", "Tree10", "Tree11", "Plant1","Plant2","Plant3","Plant4", "Plant5", "Plant6", "Plant7");
+			registerUClass(Barrel.class, "Barrel");
 			registerUClass(T3DDispatcher.class, "Dispatcher", "U2Dispatcher");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
 			registerUClass(T3DMusicEvent.class, "MusicEvent", "MusicScriptEvent");

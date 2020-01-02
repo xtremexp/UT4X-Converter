@@ -448,4 +448,8 @@ public class T3DPolygon {
 	public LinkedList<Vertex> getVertices() {
 		return vertices;
 	}
+
+	public UPackageRessource getTexture() {
+		return texture;
+	}
 }

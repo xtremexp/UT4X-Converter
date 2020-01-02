@@ -16,6 +16,7 @@ import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -145,9 +146,6 @@ public class T3DStaticMesh extends T3DSound {
 	 */
 	T3DStaticMesh(MapConverter mc, T3DBrush sheetBrush) {
 		super(mc, "StaticMesh");
-		// Temp material
-		// TODO use original texture from brush
-		overiddeMaterials.add(UT4_SHEET_SM_MAT_WATER);
 
 		this.parent = sheetBrush;
 		this.location = sheetBrush.location;
@@ -168,8 +166,20 @@ public class T3DStaticMesh extends T3DSound {
 		bodyInstance = new BodyInstance();
 		bodyInstance.scale3D = this.scale3d;
 
+		// set material from original brush
+		//final T3DPolygon polyWithMat = sheetBrush.getPolyList().stream().filter(e -> e.getTexture() != null).findAny().orElse(null);
+
+		/*
+		if (polyWithMat != null) {
+			this.overiddeMaterials.add(polyWithMat.getTexture().getConvertedName(this.mapConverter));
+		}
+		// none found, use default glass material
+		else {*/
+			this.overiddeMaterials.add(UT4_SHEET_SM_MAT_WATER);
+		//}
+
 		// Set no colission if originally not a solid brush
-		if (BrushPolyflag.isNonSolid(sheetBrush.polyflags)) {
+		if (BrushPolyflag.isNonSolid(sheetBrush.getPolyflags())) {
 			bodyInstance.setCollisionEnabled(BodyInstance.CollisionEnabled.NoCollision);
 		}
 	}

@@ -746,20 +746,31 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	protected String writeSimpleActor(final String actorClass){
+		return writeSimpleActor(actorClass, "SceneComponent");
+	}
+
+	protected String writeSimpleActor(final String actorClass, final String componentType){
+
+		final String rootComponentName = componentType + "0";
+
 		sbf.append(IDT).append("Begin Actor Class=").append(actorClass).append(" \n");
 
-		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
+		sbf.append(IDT).append("\tBegin Object Class=\"").append(componentType).append("\" Name=\"").append(rootComponentName).append("\"\n");
 		sbf.append(IDT).append("\tEnd Object\n");
 
-		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
+		sbf.append(IDT).append("\tBegin Object Name=\"").append(rootComponentName).append("\"\n");
 		writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
 
-		sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
+		if ("SceneComponent".equals(componentType)) {
+			sbf.append(IDT).append("\tDefaultSceneRoot=").append(rootComponentName).append("\n");
+		} else if ("StaticMeshComponent".equals(componentType)) {
+			sbf.append(IDT).append("\tStaticMeshComponent=").append(rootComponentName).append("\n");
+		}
 
 		writeSimpleProperties();
 
-		sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
+		sbf.append(IDT).append("\tRootComponent=").append(rootComponentName).append("\n");
 
 		writeEndActor();
 

@@ -21,6 +21,9 @@ public class T3DDecoration extends T3DStaticMesh {
     @Override
     public void convert() {
         // TODO extract mesh and convert them to staticmesh
+
+        this.name += "_Type_" + t3dClass;
+
         super.convert();
     }
 

@@ -80,7 +80,7 @@ public class VertMesh {
 	public static void main(String args[]) {
 
 		//File f = new File("E:\\TEMP\\bandage_d.3d");
-		File f = new File("D:\\TEMP\\AAA\\UnrealShare\\VertMesh");
+		File f = new File("E:\\");
 
 
 		for(final File ff : f.listFiles()) {
@@ -95,9 +95,13 @@ public class VertMesh {
 				// test VertMesh to .obj conversion
 				final ObjStaticMesh objStaticMesh = new ObjStaticMesh(vm);
 				final String baseName = FilenameUtils.getBaseName(ff.getName());
-				final File mtlFile = new File("D:\\TEMP\\XXX\\"+baseName+".mtl");
-				final File objFile = new File("D:\\TEMP\\XXX\\"+baseName+".obj");
+
+				final File outputFolder = new File(f.getAbsolutePath() + "\\Test\\");
+
+				final File mtlFile = new File(outputFolder + baseName+".mtl");
+				final File objFile = new File(outputFolder + baseName+".obj");
 				objStaticMesh.export(mtlFile, objFile);
+				System.out.println("Created " + objFile);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
