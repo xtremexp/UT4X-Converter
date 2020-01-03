@@ -129,7 +129,15 @@ public class MoverProperties implements T3D {
 	}
 
 	enum InitialState {
-		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed, None
+		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed,
+		/**
+		 * UT2004
+		 */
+		TriggerAdvance,
+		/**
+		 *
+		 */
+		RotatingMover, LoopMove, LeadInOutMover, None
 	}
 
 	@Override
