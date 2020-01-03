@@ -75,6 +75,29 @@ public class T3DStaticMesh extends T3DSound {
 	 */
 	private UPackageRessource uv2Texture;
 
+	/**
+	 * Unreal Engine 2: bCollideActors
+	 * Unreal Engine 3: CollideActors
+	 */
+	private Boolean collideActors;
+
+	/**
+	 * Unreal Engine 3
+	 * Default collision type for static meshes in ut3/ue3
+	 */
+	private UE3CollisionType collisionType = UE3CollisionType.COLLIDE_BlockAll;
+
+	public enum UE3CollisionType {
+		COLLIDE_CustomDefault,
+		COLLIDE_NoCollision,
+		COLLIDE_BlockAll,
+		COLLIDE_BlockWeapons,
+		COLLIDE_TouchAll,
+		COLLIDE_TouchWeapons,
+		COLLIDE_BlockAllButWeapons,
+		COLLIDE_TouchAllButWeapons
+	}
+
 	public enum UV2Mode {
 		UVM_MacroTexture,
 		UVM_LightMap,
@@ -113,6 +136,13 @@ public class T3DStaticMesh extends T3DSound {
 		}
 		else if(line.startsWith("UV2Mode=")){
 			this.uv2Mode = UV2Mode.valueOf(T3DUtils.getString(line));
+		}
+		else if(line.startsWith("bCollideActors=") || line.startsWith("CollideActors")){
+			this.collideActors = T3DUtils.getBoolean(line);
+		}
+		// UE3
+		else if(line.startsWith("CollisionType=")){
+			this.collisionType = UE3CollisionType.valueOf(T3DUtils.getString(line));
 		}
 		// UT2003/4 - Skins(0)=Texture'ArboreaTerrain.ground.flr02ar'
 		// UT3      - Materials(0)=MaterialInstanceConstant'HU_Deck.SM.Materials.M_HU_Deck_SM_BioPot_Goo'
@@ -201,6 +231,12 @@ public class T3DStaticMesh extends T3DSound {
 		if (overriddenLightMapRes != null) {
 			sbf.append(IDT).append("\t\tbOverrideLightMapRes=True\n");
 			sbf.append(IDT).append("\t\tOverriddenLightMapRes=").append(overriddenLightMapRes).append("\n");
+		}
+
+		// TODO handle other collisionType
+		if (UE3CollisionType.COLLIDE_NoCollision == collisionType || Boolean.FALSE == collideActors) {
+			sbf.append(IDT).append("\t\tbUseDefaultCollision=False\n");
+			sbf.append(IDT).append("\t\tBodyInstance=(CollisionProfileName=\"NoCollision\",CollisionEnabled=NoCollision)\n");
 		}
 
 		// TODO REFACTOR (was originally for quick set texture for sheet
