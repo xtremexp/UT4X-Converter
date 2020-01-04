@@ -12,7 +12,7 @@ public class Camera extends T3DActor {
 
     private Float aspectRatio;
 
-    private String ue4CameraClass = "Camera";
+    private String ue4CameraClass = "CameraActor";
 
     public Camera(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
