@@ -150,6 +150,7 @@ public class SupportedClasses {
 		//registerUClass()
 		registerUClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
 		registerUClass(T3DStaticMesh.class, "StaticMeshActor");
+		registerUClass(Camera.class, "CameraActor", "SpectatorCam", "AttractCamera");
 
 
 		// SPECIFIC Unreal 1 conversion test
