@@ -1,8 +1,8 @@
 
 # UT4 Converter Readme file
 
-* Version: 0.9.4
-* Release date: 02/01/2020
+* Version: 0.9.5
+* Release date: 04/01/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
@@ -243,19 +243,24 @@ Converter interfaces with these external tools:
 ---
 
 # History
+- 0.9.5 - 04/01/2020
+ * ut2003/4, ut3: added support for CameraActor, SpectatorCam, AttractCamera
+ * ut2003/4, ut3: handled no collision properties for staticmeshes
+ * ut3: fixed light intensity of all lights (some locations were ever too dark or too bright)
+
 - 0.9.4 - 02/01/2020
   * all: added support for semi-solid and non-solid brushes (e.g: water sheet, ...)
   * u1/ut99: fixed bad lift destination / rotation for movers with multi positions
-  
+
 - 0.9.3 - 12/12/2019
   * Fix: skip sheet brushes to be converted causing BSP holes
-  
+
 - 0.9.2 - 08/12/2019
   * Hotfix: fixed no resources being identified / exported with newer version of UModel.
-  
+
 - 0.9.1 - 25/08/2018
- * all: fixed some unconverted resources 
- 
+ * all: fixed some unconverted resources
+
 - 0.9.0 - 19/08/2018
   * added support for UDK maps (conversion quality is like UT3 = medium)
   * u1/ut99: default scale is now 2.5X
