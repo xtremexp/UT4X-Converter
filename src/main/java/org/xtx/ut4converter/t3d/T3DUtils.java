@@ -25,9 +25,11 @@ import java.util.Map;
  */
 public class T3DUtils {
 
+	final static String EQUAL = "=";
+
 	/**
 	 * // Begin Polygon Item=Rise Texture=r-plates-g Link=0
-	 * 
+	 *
 	 * @param line
 	 * @param split
 	 * @return
@@ -37,9 +39,8 @@ public class T3DUtils {
 		if (!line.contains(split)) {
 			return null;
 		}
-		return line.split(split + "=")[1].split("\\ ")[0];
+		return line.split(split + "=")[1].split(" ")[0];
 	}
-
 
 	/**
 	 *
@@ -51,7 +52,7 @@ public class T3DUtils {
 		if (!line.contains(split)) {
 			return null;
 		}
-		return Integer.valueOf(line.split(split + "=")[1].split("\\ ")[0]);
+		return Integer.valueOf(line.split(split + "=")[1].split(" ")[0]);
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static Integer getInteger(String line) {
-		return Integer.valueOf(line.split("\\=")[1]);
+		return Integer.valueOf(line.split("=")[1]);
 	}
 
 	/**
@@ -69,14 +70,14 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static Short getShort(String line) {
-		return Short.valueOf(line.split("\\=")[1]);
+		return Short.valueOf(line.split("=")[1]);
 	}
 
 	public static UPackageRessource getUPackageRessource(final MapConverter mapConverter, final String line, final T3DRessource.Type type) {
 		if(line.endsWith("=None")){
 			return null;
 		} else {
-			return mapConverter.getUPackageRessource(line.split("\'")[1], type);
+			return mapConverter.getUPackageRessource(line.split("'")[1], type);
 		}
 	}
 
@@ -86,20 +87,20 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static Double getDouble(String line) {
-		return Double.valueOf(line.split("\\=")[1]);
+		return Double.valueOf(line.split("=")[1]);
 	}
-
+	
 	/**
 	 *
 	 * @param line
 	 * @return
 	 */
 	public static Float getFloat(String line) {
-		return Float.valueOf(line.split("\\=")[1]);
+		return Float.valueOf(line.split("=")[1]);
 	}
 	
 	/**
-	 * 
+	 *
 	 * @param line
 	 * @param property
 	 * @return
@@ -107,7 +108,7 @@ public class T3DUtils {
 	public static Float getFloat(String line, String property) {
 		return Float.valueOf(getPropValue(line, property, null));
 	}
-	
+
 	private static String getPropValue(String line, String property, String nextFieldSeparator) {
 		if (nextFieldSeparator != null) {
 			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0].split(nextFieldSeparator)[0];
@@ -115,16 +116,15 @@ public class T3DUtils {
 			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0];
 		}
 	}
-
+	
 	public static String getString(String line) {
-		return line.split("\\=")[1].replaceAll("\"", "").replaceAll("\\)", "");
+		return line.split("=")[1].replaceAll("\"", "").replaceAll("\\)", "");
 	}
 	
 	public static String getString(String line, String property, String nextFieldSeparator) {
 		return getPropValue(line, property, nextFieldSeparator);
 	}
-	
-	
+
 	public static String getString(String line, String property) {
 		return getPropValue(line, property, null);
 	}
@@ -141,7 +141,7 @@ public class T3DUtils {
 
 	/**
 	 * Remove double whitespaces and trim to t3d line
-	 * 
+	 *
 	 * @param t3dLine
 	 * @return
 	 */
@@ -152,7 +152,7 @@ public class T3DUtils {
 	/**
 	 * Transform polygon data into vector E.G:
 	 * "Normal   -00001.000000,+00000.000000,+00000.000000"
-	 * 
+	 *
 	 * @param t3dPolyLine
 	 * @param polyParam
 	 * @return
@@ -160,20 +160,20 @@ public class T3DUtils {
 	public static Vector3d getPolyVector3d(String t3dPolyLine, String polyParam) {
 		t3dPolyLine = clean(t3dPolyLine);
 		String tmp = t3dPolyLine.split(polyParam + " ")[1];
-		String tmp2[] = tmp.split("\\,");
+		String[] tmp2 = tmp.split(",");
 
 		Vector3d v = new Vector3d();
 
-		v.x = Double.valueOf(tmp2[0]);
-		v.y = Double.valueOf(tmp2[1]);
-		v.z = Double.valueOf(tmp2[2]);
+		v.x = Double.parseDouble(tmp2[0]);
+		v.y = Double.parseDouble(tmp2[1]);
+		v.z = Double.parseDouble(tmp2[2]);
 
 		return v;
 	}
 
 	/**
 	 * Convert 3d vector of poly data to t3d string format
-	 * 
+	 *
 	 * @param v
 	 * @param df
 	 * @return // +00001.000000,+00000.000000,+00000.000000
@@ -198,7 +198,7 @@ public class T3DUtils {
 	/**
 	 * Get vector3d from rotation data in t3d format E.G:
 	 * "Rotation=(Pitch=848,Yaw=-12928,Roll=1208)"
-	 * 
+	 *
 	 * @param line
 	 * @return
 	 */
@@ -210,7 +210,7 @@ public class T3DUtils {
 	 * Get Vector3d from line E.G:
 	 * " Location=(X=3864.000000,Y=-5920.000000,Z=-15776.000000)" E.G:
 	 * "Rotation=(Yaw=8160)"
-	 * 
+	 *
 	 * @param line
 	 *            Current line of T3D Level file being analyzed containing
 	 *            Location info
@@ -233,37 +233,38 @@ public class T3DUtils {
 		line = line.split("\\)")[0];
 		// line = line.replaceAll("\\)","");
 
-		String fields[] = line.split(",");
+		String[] fields = line.split(",");
+
 		if (fields.length == 3) {
-			v.x = Double.valueOf(fields[0].split("\\=")[1]);
-			v.y = Double.valueOf(fields[1].split("\\=")[1]);
-			v.z = Double.valueOf(fields[2].split("\\=")[1]);
+			v.x = Double.parseDouble(fields[0].split("=")[1]);
+			v.y = Double.parseDouble(fields[1].split("=")[1]);
+			v.z = Double.parseDouble(fields[2].split("=")[1]);
 		} else if (fields.length == 2) {
 			// Location=(X=1280.000000,Y=2944.000000)
 			if (line.contains(s[0]) && line.contains(s[1])) {
-				v.x = Double.valueOf(fields[0].split("\\=")[1]);
-				v.y = Double.valueOf(fields[1].split("\\=")[1]);
+				v.x = Double.parseDouble(fields[0].split("=")[1]);
+				v.y = Double.parseDouble(fields[1].split("=")[1]);
 				v.z = defaut;
 			}
 			// Location=(X=1280.000000,Y=2944.000000)
 			else if (line.contains(s[0]) && line.contains(s[2])) {
-				v.x = Double.valueOf(fields[0].split("\\=")[1]);
+				v.x = Double.parseDouble(fields[0].split("=")[1]);
 				v.y = defaut;
-				v.z = Double.valueOf(fields[1].split("\\=")[1]);
+				v.z = Double.parseDouble(fields[1].split("=")[1]);
 			} else if (line.contains(s[1]) && line.contains(s[2])) {
 				v.x = defaut;
-				v.y = Double.valueOf(fields[0].split("\\=")[1]);
-				v.z = Double.valueOf(fields[1].split("\\=")[1]);
+				v.y = Double.parseDouble(fields[0].split("=")[1]);
+				v.z = Double.parseDouble(fields[1].split("=")[1]);
 			}
 		} else if (fields.length == 1) {
 			if (line.contains(s[0])) {
-				v.x = Double.valueOf(fields[0].split("\\=")[1]);
+				v.x = Double.parseDouble(fields[0].split("=")[1]);
 			}
 			// Location=(X=1280.000000,Y=2944.000000)
 			else if (line.contains(s[1])) {
-				v.y = Double.valueOf(fields[0].split("\\=")[1]);
+				v.y = Double.parseDouble(fields[0].split("=")[1]);
 			} else if (line.contains(s[2])) {
-				v.z = Double.valueOf(fields[0].split("\\=")[1]);
+				v.z = Double.parseDouble(fields[0].split("=")[1]);
 			}
 		}
 
@@ -272,13 +273,13 @@ public class T3DUtils {
 
 	/**
 	 * Remove bad chars from string (basically unsupported chars for UE4 editor)
-	 * 
+	 *
 	 * @param mapName
 	 * @return
 	 */
 	public static String filterName(String mapName) {
 
-		String s = "";
+		StringBuilder s = new StringBuilder();
 
 		for (char x : mapName.toCharArray()) {
 
@@ -288,16 +289,16 @@ public class T3DUtils {
 					|| (48 <= val && val <= 57) // 0 -> 9
 					|| (65 <= val && val <= 90) // A -> Z
 					|| (97 <= val && val <= 125)) { // a -> z
-				s += (char) val;
+				s.append((char) val);
 			}
 		}
 
-		return s;
+		return s.toString();
 	}
 
 	/**
 	 * null-safe vector scaling
-	 * 
+	 *
 	 * @param v
 	 *            Vector
 	 * @param scale
@@ -311,7 +312,7 @@ public class T3DUtils {
 
 	/**
 	 * null-safe double scaling
-	 * 
+	 *
 	 * @param d
 	 * @param scale
 	 * @return
@@ -359,7 +360,7 @@ public class T3DUtils {
 
 	/**
 	 * Convert vector to string
-	 * 
+	 *
 	 * @param v
 	 * @return
 	 */
@@ -374,7 +375,7 @@ public class T3DUtils {
 
 	/**
 	 * ¨Get rgb values
-	 * 
+	 *
 	 * @param line
 	 *            t3d line
 	 * @return RGB values
@@ -384,24 +385,24 @@ public class T3DUtils {
 		RGBColor rgbColor = new RGBColor();
 		String s = line.split("\\(")[1].split("\\)")[0];
 
-		String s2[] = s.split("\\,");
+		String[] s2 = s.split(",");
 
 		for (int i = 0; i < s2.length; i++) {
 
-			String s3[] = s2[i].split("\\=");
+			String[] s3 = s2[i].split("=");
 
 			switch (s3[0]) {
 			case "A":
-				rgbColor.A = Float.valueOf(s3[1]);
+				rgbColor.A = Float.parseFloat(s3[1]);
 				break;
 			case "R":
-				rgbColor.R = Float.valueOf(s3[1]);
+				rgbColor.R = Float.parseFloat(s3[1]);
 				break;
 			case "G":
-				rgbColor.G = Float.valueOf(s3[1]);
+				rgbColor.G = Float.parseFloat(s3[1]);
 				break;
 			case "B":
-				rgbColor.B = Float.valueOf(s3[1]);
+				rgbColor.B = Float.parseFloat(s3[1]);
 				break;
 			default:
 				break;
@@ -413,14 +414,12 @@ public class T3DUtils {
 
 	public static Boolean getBoolean(String line) {
 
-		if ("true".equals(line.split("\\=")[1].toLowerCase())) {
+		if ("true".equals(line.split("=")[1].toLowerCase())) {
 			return Boolean.TRUE;
 		} else {
 			return Boolean.FALSE;
 		}
 	}
-
-	final static String EQUAL = "=";
 
 	public static boolean write(StringBuilder sb, String propName, Object propValue) {
 		return write(sb, propName, propValue, null);
@@ -590,15 +589,15 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static Map<String, String> getProperties(String line) {
-		String s = new String(line);
+		String s = line;
 		s = s.split("\\(")[1].split("\\)")[0];
 
-		String ss[] = s.split("\\,");
+		String[] ss = s.split(",");
 
 		Map<String, String> props = new HashMap<>();
 
 		for (String sss : ss) {
-			String x[] = sss.split("\\=");
+			String[] x = sss.split("=");
 			props.put(x[0], x[1]);
 		}
 
