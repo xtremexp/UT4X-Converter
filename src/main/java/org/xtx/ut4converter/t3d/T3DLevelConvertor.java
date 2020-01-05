@@ -86,7 +86,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Unconverted properties
 	 */
-	private HashMap<String, Set<String>> unconvertedProperties;
+	private Map<String, Set<String>> unconvertedProperties = new HashMap<>();
 
 	/**
 	 * Set objective order from DefaultPriority UT99 prop from FortStandard
@@ -187,7 +187,6 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
-		unconvertedProperties = new HashMap<>();
 
 		// Read actor data from file
 		updateMessage("Reading actors");
@@ -773,7 +772,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	
 	
 	
-	public HashMap<String, Set<String>> getUnconvertedProperties() {
+	public Map<String, Set<String>> getUnconvertedProperties() {
 		return unconvertedProperties;
 	}
 

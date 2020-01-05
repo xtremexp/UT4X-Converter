@@ -5,11 +5,11 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
+
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 /**
  *
@@ -174,7 +174,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		for (int x = 0; x < heightData.length; x++) {
 
 			for (int y = 0; y < heightData[0].length; y++) {
-				sb.append(" " + Integer.toHexString(heightData[x][y]));
+				sb.append(" ").append(Integer.toHexString(heightData[x][y]));
 			}
 		}
 

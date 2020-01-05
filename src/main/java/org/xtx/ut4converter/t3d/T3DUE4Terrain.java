@@ -5,15 +5,16 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Very basic implementation of Unreal Engine 4 terrain
@@ -40,13 +41,91 @@ public class T3DUE4Terrain extends T3DActor {
 	boolean bUsedForNavigation;
 	short maxPaintedLayersPerComponent;
 
-	LandscapeCollisionComponent collisionComponents[][];
+	private LandscapeCollisionComponent[][] collisionComponents;
 
-	LandscapeComponent landscapeComponents[][];
+	private LandscapeComponent[][] landscapeComponents;
 
 	public T3DUE4Terrain(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
 		initialise();
+	}
+
+	/**
+	 * Creates an Unreal Engine 4 terrain from Unreal Engine 3 terrain
+	 *
+	 * @param ue3Terrain Unreal Engine 4 terrain
+	 */
+	public T3DUE4Terrain(final T3DUE3Terrain ue3Terrain) {
+		super(ue3Terrain.getMapConverter(), ue3Terrain.t3dClass);
+
+		initialise();
+
+		this.name = ue3Terrain.name;
+		this.location = ue3Terrain.location;
+		this.scale3d = ue3Terrain.scale3d;
+
+
+		// computing the size of landscapecomponents
+		// e.g: SectionBaseX values: (0) 16 32 48 64, means sectionSize is 16
+		final T3DUE3Terrain.TerrainComponent terMinBaseX = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseX() > 0).min(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseX)).orElse(null);
+		final T3DUE3Terrain.TerrainComponent terMaxBaseX = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseX() > 0).max(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseX)).orElse(null);
+
+		// e.g: SectionBaseY values: (0) 16 32 48 64, means sectionSize is 16
+		final T3DUE3Terrain.TerrainComponent terMinBaseY = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseY() > 0).min(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseY)).orElse(null);
+		final T3DUE3Terrain.TerrainComponent terMaxBaseY = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseY() > 0).max(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseY)).orElse(null);
+
+		assert terMaxBaseX != null;
+		assert terMinBaseX != null;
+
+		// 64 / 16 = 4 -> +1 = 5 (0, 16, 32, 48, 64)
+		int compSizeX = terMinBaseX.getSectionBaseX(); // 16
+		int nbCompX = 1 + (terMaxBaseX.getSectionBaseX() / compSizeX);
+
+		assert terMinBaseY != null;
+		assert terMaxBaseY != null;
+
+		// 64 / 16 = 4 .... + 1 = 5
+		int compSizeY = terMinBaseY.getSectionBaseY(); // 16
+		int nbCompY = 1 + (terMaxBaseY.getSectionBaseY() / compSizeY);
+
+		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
+		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
+
+
+		int colCompIndex = 0;
+
+		// initialise collision compoents
+		for(T3DUE3Terrain.TerrainComponent terrainComponent : ue3Terrain.getTerrainComponents()){
+			final LandscapeCollisionComponent collisionComponent = new LandscapeCollisionComponent(this.mapConverter, colCompIndex, compSizeX);
+
+			collisionComponent.setSectionBaseX(terrainComponent.getSectionBaseX());
+			collisionComponent.setSectionBaseY(terrainComponent.getSectionBaseY());
+
+			collisionComponents[colCompIndex%nbCompX][colCompIndex%nbCompY] = collisionComponent;
+
+			colCompIndex ++;
+		}
+
+
+		int hmIdx = 0;
+
+		// height map in UE3 is all flat, so need to split values between the collisionComponents
+		// E.G: we have 6561 values in a terrain (VCTF-Sandstorm terrain)
+		// there are 25 terrain components a square by 5X5
+		// --- 5 ---
+		// |
+		// |
+		// 5
+		// |
+		// |
+		// ___ 5 __
+		// each terrain component has 16x16 = 256 values (see trueSectionSizeX and trueSectionSizeY)
+		for (int hmValue : ue3Terrain.getTerrainHeight().getHeightMap()) {
+
+			// compute for which collisionComponent this heightmap value belongs to
+
+			hmIdx ++;
+		}
 	}
 
 	/**
@@ -79,7 +158,7 @@ public class T3DUE4Terrain extends T3DActor {
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-		int localHeightCollisionData[][];
+		int[][] localHeightCollisionData;
 
 		// Local HeightMap idx in component
 		int localHmXIdx = 0;
@@ -89,7 +168,7 @@ public class T3DUE4Terrain extends T3DActor {
 		int compIdxX = 0;
 		int compIdxY = 0;
 
-		int heightMap[][] = new int[ue2Terrain.getHeightMap().length][ue2Terrain.getHeightMap()[0].length];
+		int[][] heightMap = new int[ue2Terrain.getHeightMap().length][ue2Terrain.getHeightMap()[0].length];
 
 		// flip x/y
 		// all these loops quite crappy but don't want rework the big loop yet
@@ -214,16 +293,16 @@ public class T3DUE4Terrain extends T3DActor {
 
 		if (ue2Terrain.getQuadVisibilityBitmaps() == null || !ue2Terrain.getQuadVisibilityBitmaps().isEmpty()) {
 
-			String tmpRadix;
+			StringBuilder tmpRadix;
 			Map<Integer, Long> visMap = ue2Terrain.getQuadVisibilityBitmaps();
 
 			for (int i = 0; i < ue2Terrain.getTotalSquares() / 32; i++) {
 
-				if (visMap.containsKey(i)) {
+				if (visMap != null && visMap.containsKey(i)) {
 
 					Long visibility = visMap.get(i);
 
-					tmpRadix = "";
+					tmpRadix = new StringBuilder();
 
 					// -1 means 32 squares are rendered
 					if (visibility == -1) {
@@ -241,7 +320,7 @@ public class T3DUE4Terrain extends T3DActor {
 						radix = radix.replaceAll("-", "");
 
 						for (int k = 0; k < (32 - radix.length()); k++) {
-							tmpRadix += "0";
+							tmpRadix.append("0");
 						}
 
 						radix = tmpRadix + radix;
@@ -368,12 +447,12 @@ public class T3DUE4Terrain extends T3DActor {
 		return sbf.toString();
 	}
 
-	public static void main(String args[]) {
 
-		Long x = -65540L;
-		x++;
-
-		System.out.println(Long.toString(x, 2));
+	public LandscapeCollisionComponent[][] getCollisionComponents() {
+		return collisionComponents;
 	}
 
+	public LandscapeComponent[][] getLandscapeComponents() {
+		return landscapeComponents;
+	}
 }
