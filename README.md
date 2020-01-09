@@ -4,7 +4,7 @@
 * Version: 0.9.5
 * Release date: 04/01/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-* Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
+* Download latest released version at: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
 ---
 
