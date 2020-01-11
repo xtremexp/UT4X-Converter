@@ -10,6 +10,8 @@ import org.xtx.ut4converter.t3d.iface.T3D;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -57,14 +59,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		this.colisionComponent = colComp;
 		this.subsectionSizeQuads = colComp.getSizeQuads();
-		this.heightData = new int[colComp.getHeightData().length][colComp.getHeightData()[0].length];
-
-		for (int x = 0; x < heightData.length; x++) {
-
-			for (int y = 0; y < heightData[0].length; y++) {
-				this.heightData[x][y] = colComp.getHeightData()[x][y];
-			}
-		}
+		this.setHeightData(colComp.getHeightData());
 
 		// this.heightData = colComp.getHeightData();
 		this.sectionBaseX = colComp.getSectionBaseX();
@@ -180,11 +175,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		sb.append(base).append("\tCustomProperties LandscapeHeightData");
 
-		for (int x = 0; x < heightData.length; x++) {
-
-			for (int y = 0; y < heightData[0].length; y++) {
-				sb.append(" ").append(Integer.toHexString(heightData[x][y]));
-			}
+		for (final int height : getHeightData()) {
+			sb.append(" ").append(Integer.toHexString(height));
 		}
 
 		sb.append(" LayerNum=0\n");
@@ -205,14 +197,14 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	 */
 	public void convertUe2ToUe4HeightMap() {
 
-		// for(Integer height : landscapeHeightData){
-		for (int x = 0; x < heightData.length; x++) {
+		final List<Integer> convertedHeightData = new LinkedList<>();
 
-			for (int y = 0; y < heightData[0].length; y++) {
-				heightData[x][y] = convertToUe4Height(heightData[x][y]);
-			}
+		// for(Integer height : landscapeHeightData){
+		for (int height : getHeightData()) {
+			convertedHeightData.add(convertToUe4Height(height));
 		}
 
+		this.setHeightData(convertedHeightData);
 	}
 
 }

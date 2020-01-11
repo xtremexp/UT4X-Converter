@@ -105,17 +105,13 @@ public class T3DUE4Terrain extends T3DActor {
 				lcc.setSectionBaseX(compIdxX * compQuadSize);
 				lcc.setSectionBaseY(compIdxY * compQuadSize);
 
-				int heightSizeX = compQuadSize + 1;
-				int heightSizeY = compQuadSize + 1;
-
-				lcc.setHeightData(new int[heightSizeX][heightSizeY]);
+				// test on FR-Loh (UT4) there are 3971 values = (62 + 1) * (62 + 1) +2 = 63*63 + 2 = 3969 + 2
+				// the extra "2" is hard to explain ....
+				int heightDataSize = (compQuadSize + 1) * (compQuadSize + 1) + 2;
 
 				// fill up heighdata for this component
-				for (int hmIdxX = 0; hmIdxX < heightSizeX; hmIdxX++) {
-					for (int hmIdxY = 0; hmIdxY < heightSizeY; hmIdxY++) {
-						// initialize with default value
-						lcc.getHeightData()[hmIdxX][hmIdxY] = 32768;
-					}
+				for (int i = 0; i < heightDataSize; i++) {
+					lcc.getHeightData().add(32768);
 				}
 
 				collisionComponents[compIdxX][compIdxY] = lcc;
@@ -240,7 +236,7 @@ public class T3DUE4Terrain extends T3DActor {
 					collisionComponent.setSectionBaseX(compIdxX);
 					collisionComponent.setSectionBaseY(compIdxY);
 
-					collisionComponent.setHeightData(localHeightCollisionData);
+					//collisionComponent.setHeightData(localHeightCollisionData);
 					collisionComponents[compIdxX][compIdxY] = collisionComponent;
 				}
 
@@ -256,7 +252,10 @@ public class T3DUE4Terrain extends T3DActor {
 					heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
 				}
 
-				collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 2;
+				//collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 2;
+
+				// TODO CHECK TEST UE2 Terrain Conversion prob no longer works
+				collisionComponent.getHeightData().add(heightMapVal / 2);
 
 				if (hmYIdx % componentSizeQuads == 0) {
 					if (hmYIdx > 0) {

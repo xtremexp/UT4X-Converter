@@ -4,6 +4,9 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	int sectionBaseX;
@@ -11,7 +14,7 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	int sizeQuads;
 
-	int[][] heightData;
+	private List<Integer> heightData = new LinkedList<>();
 
 	int numComponent;
 
@@ -38,11 +41,11 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 		this.sectionBaseY = sectionBaseY;
 	}
 
-	public int[][] getHeightData() {
+	public List<Integer> getHeightData() {
 		return heightData;
 	}
 
-	public void setHeightData(int[][] heightData) {
+	public void setHeightData(List<Integer> heightData) {
 		this.heightData = heightData;
 	}
 
