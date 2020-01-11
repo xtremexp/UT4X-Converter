@@ -95,7 +95,7 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	protected String getT3dRelativeLocation() {
 
-		return "RelativeLocation=(X=" + getSectionBaseX() * sizeQuads + ",Y=" + getSectionBaseY() * sizeQuads + ",Z=0.000000)";
+		return "RelativeLocation=(X=" + getSectionBaseX()  + ",Y=" + getSectionBaseY()  + ",Z=0.000000)";
 	}
 
 }
