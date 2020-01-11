@@ -26,17 +26,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	 * List of boolean for each square of the section saying if it's rendered or
 	 * not
 	 */
-	List<Boolean> visibilityData;
-
-	/**
-	 * X position of this component
-	 */
-	private int sectionBaseX;
-
-	/**
-	 * Y position of this component
-	 */
-	private int sectionBaseY;
+	private List<Boolean> visibilityData;
 
 	private float collisionScale = 1f;
 
@@ -118,11 +108,11 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 		sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
 
 		if (sectionBaseX > 0) {
-			sb.append(base).append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+			sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
 		}
 
 		if (sectionBaseY > 0) {
-			sb.append(base).append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+			sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 		}
 
 		sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
