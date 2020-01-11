@@ -17,8 +17,7 @@ public class T3DUE3TerrainTest {
     @Test
     public void testUe3TerrainReadAndConvert() throws ReflectiveOperationException, IOException {
 
-        // read ue3TerrainData
-        //final T3DActor actor2 = TestUtils.parseFromT3d(UTGames.UTGame.UT3, "TerrainActor", T3DUE3Terrain.class, "C:\\dev\\terrainsuspense.t3d");
+        // terrain sample is from VCTF-Sandstorm reduced to 20X20 numpatches
 
         // read ue3TerrainData
         final T3DActor actor = TestUtils.parseFromT3d(UTGames.UTGame.UT3, "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTest.class.getResource("/t3d/ue3/UT3-Terrain.t3d").getPath());
@@ -29,11 +28,11 @@ public class T3DUE3TerrainTest {
         final T3DUE3Terrain ter = (T3DUE3Terrain) actor;
 
         // test properties read
-        Assert.assertEquals(25, ter.getTerrainComponents().size());
-        Assert.assertEquals(6561, ter.getTerrainHeight().getCount());
-        Assert.assertEquals(81, ter.getTerrainHeight().getWidth());
-        Assert.assertEquals(81, ter.getTerrainHeight().getHeight());
-        Assert.assertEquals(6561, ter.getTerrainHeight().getHeightMap().size());
+        Assert.assertEquals(4, ter.getTerrainComponents().size());
+        Assert.assertEquals(441, ter.getTerrainHeight().getCount());
+        Assert.assertEquals(21, ter.getTerrainHeight().getWidth());
+        Assert.assertEquals(21, ter.getTerrainHeight().getHeight());
+        Assert.assertEquals(441, ter.getTerrainHeight().getHeightMap().size());
 
         // converts to UE4 Terrain
         final T3DUE4Terrain ue4Terrrain = new T3DUE4Terrain(ter);
