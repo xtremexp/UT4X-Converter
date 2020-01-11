@@ -10,6 +10,7 @@ import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import javax.vecmath.Vector3d;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	 * List of boolean for each square of the section saying if it's rendered or
 	 * not
 	 */
-	private List<Boolean> visibilityData;
+	private List<Boolean> visibilityData = new LinkedList<>();
 
 	private float collisionScale = 1f;
 
@@ -107,13 +108,8 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 		sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
 
-		if (sectionBaseX > 0) {
-			sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
-		}
-
-		if (sectionBaseY > 0) {
-			sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
-		}
+		sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
+		sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 
 		sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
 		sb.append(base).append("\tCollisionScale=").append(collisionScale).append("\n");

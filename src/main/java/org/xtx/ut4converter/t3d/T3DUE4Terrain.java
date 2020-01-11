@@ -77,7 +77,22 @@ public class T3DUE4Terrain extends T3DActor {
 		 * In UE3 a component size could have height and width different (SectionSizeX and SectionSizeY properties)
 		 * in UE4 these properties have been replaced by ComponentSizeQuads so it's always a square so we need to compute the number of components needed for UE4 terrain
 		 */
+		// in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or 255*255
 		int compQuadSize = ue3Terrain.getTerrainActorMembers().getMaxComponentSize() * ue3Terrain.getTerrainActorMembers().getMaxTesselationLevel();
+
+		// we fit to the best UE4 quadSize
+		if (compQuadSize <= 7) {
+			compQuadSize = 7;
+		} else if (compQuadSize <= 15) {
+			compQuadSize = 15;
+		} else if (compQuadSize <= 31) {
+			compQuadSize = 31;
+		} else if (compQuadSize <= 127) {
+			compQuadSize = 127;
+		} else if (compQuadSize <= 255) {
+			compQuadSize = 255;
+		}
+
 
 		// since collision data and landscape data are the same compSize and subSectionSize are the same
 		this.componentSizeQuads = compQuadSize;
@@ -105,13 +120,18 @@ public class T3DUE4Terrain extends T3DActor {
 				lcc.setSectionBaseX(compIdxX * compQuadSize);
 				lcc.setSectionBaseY(compIdxY * compQuadSize);
 
-				// test on FR-Loh (UT4) there are 3971 values = (62 + 1) * (62 + 1) +2 = 63*63 + 2 = 3969 + 2
-				// the extra "2" is hard to explain ....
-				int heightDataSize = (compQuadSize + 1) * (compQuadSize + 1) + 2;
+				int heightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
 
 				// fill up heighdata for this component
 				for (int i = 0; i < heightDataSize; i++) {
-					lcc.getHeightData().add(32768);
+
+					final Integer heightMatch = getHeightFrom(ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, i);
+
+					if (heightMatch != null) {
+						lcc.getHeightData().add(heightMatch);
+					} else {
+						lcc.getHeightData().add(32768);
+					}
 				}
 
 				collisionComponents[compIdxX][compIdxY] = lcc;
@@ -125,6 +145,18 @@ public class T3DUE4Terrain extends T3DActor {
 			}
 		}
 
+	}
+
+	private Integer getHeightFrom(final List<Integer> heightData, int compQuadSize, int compIdxX, int compIdxY, int compHeightIdx) {
+
+		// TODO FIXME not working since the component size might be different from UE3 one
+		int heightDataIdx = compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx;
+
+		if (heightDataIdx < heightData.size()) {
+			return heightData.get(heightDataIdx);
+		} else {
+			return null;
+		}
 	}
 
 	/**
