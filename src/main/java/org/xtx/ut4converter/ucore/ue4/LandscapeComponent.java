@@ -59,7 +59,12 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		this.colisionComponent = colComp;
 		this.subsectionSizeQuads = colComp.getSizeQuads();
-		this.setHeightData(colComp.getHeightData());
+
+		// resolution for landscape component is much higher then collision component height resolution
+		for (final Integer height : colComp.getHeightData()) {
+			// HeightMap[Landscape] = (HeightMap[Collision] + 128) * 65536
+			this.getHeightData().add((128 + height) * 65536);
+		}
 
 		// this.heightData = colComp.getHeightData();
 		this.sectionBaseX = colComp.getSectionBaseX();
@@ -154,13 +159,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
 
-		if (sectionBaseX > 0) {
-			sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
-		}
-
-		if (sectionBaseY > 0) {
-			sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
-		}
+		sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
+		sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 
 		sb.append(base).append("\tComponentSizeQuads=").append(sizeQuads).append("\n");
 		sb.append(base).append("\tSubsectionSizeQuads=").append(subsectionSizeQuads).append("\n");
