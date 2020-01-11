@@ -19,4 +19,18 @@ public class T3DUtilsTest {
         Assert.assertEquals("(Yaw=-16384)", result.getValue());
     }
 
+
+    /**
+     * Test generating random GUID in Unreal Engine format (e.g: 6818E3CE496079535E50108034423FA2)
+     */
+    @Test
+    public void testRandomGuid() {
+
+        final String result = T3DUtils.randomGuid();
+        Assert.assertNotNull(result);
+        Assert.assertEquals(32, result.length());
+
+        Assert.assertNotEquals(T3DUtils.randomGuid(), result);
+    }
+
 }

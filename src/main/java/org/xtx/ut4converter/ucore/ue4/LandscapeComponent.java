@@ -43,17 +43,26 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		initialise();
 	}
 
+	/**
+	 * Creates a landscape component from collision component.
+	 * Prior to UE4 there were no collision component specificaly so it's easy to create landscape component
+	 *
+	 * @param mc
+	 * @param colComp Collision component
+	 * @param isNotUe4Scale
+	 */
 	public LandscapeComponent(MapConverter mc, LandscapeCollisionComponent colComp, boolean isNotUe4Scale) {
 
 		super(mc, colComp.numComponent, colComp.getSizeQuads());
 
+		this.colisionComponent = colComp;
 		this.subsectionSizeQuads = colComp.getSizeQuads();
 		this.heightData = new int[colComp.getHeightData().length][colComp.getHeightData()[0].length];
 
 		for (int x = 0; x < heightData.length; x++) {
 
 			for (int y = 0; y < heightData[0].length; y++) {
-				this.heightData[x][y] = new Integer(colComp.getHeightData()[x][y]);
+				this.heightData[x][y] = colComp.getHeightData()[x][y];
 			}
 		}
 
@@ -151,11 +160,11 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
 
 		if (sectionBaseX > 0) {
-			sb.append(base).append("\t\tSectionBaseX=").append(sectionBaseX).append("\n");
+			sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
 		}
 
 		if (sectionBaseY > 0) {
-			sb.append(base).append("\t\tSectionBaseY=").append(sectionBaseY).append("\n");
+			sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 		}
 
 		sb.append(base).append("\tComponentSizeQuads=").append(sizeQuads).append("\n");

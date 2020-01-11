@@ -39,6 +39,8 @@ public class T3DUE3TerrainTest {
 
         Assert.assertNotNull(ue4Terrrain);
 
+        System.out.println(ue4Terrrain.toT3d());
+
         // UE4 terrain must have the same number of components as the UE3 one
         Assert.assertEquals(ter.getTerrainComponents().size(), ue4Terrrain.getCollisionComponents().length * ue4Terrrain.getCollisionComponents()[0].length);
     }

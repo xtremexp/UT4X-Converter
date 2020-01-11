@@ -11,8 +11,8 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 
+import javax.vecmath.Point2d;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +22,8 @@ import java.util.Map;
  * @author XtremeXp
  */
 public class T3DUE4Terrain extends T3DActor {
+
+	private final static String DEFAULT_LANDSCAPE_HOLE_MATERIAL = "/Game/RestrictedAssets/Maps/WIP/CTF-Maul-UT2004/Terrain_Vis_Mat.Terrain_Vis_Mat";
 
 	UPackageRessource landscapeMaterial;
 
@@ -65,67 +67,107 @@ public class T3DUE4Terrain extends T3DActor {
 		this.scale3d = ue3Terrain.scale3d;
 
 
-		// computing the size of landscapecomponents
-		// e.g: SectionBaseX values: (0) 16 32 48 64, means sectionSize is 16
-		final T3DUE3Terrain.TerrainComponent terMinBaseX = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseX() > 0).min(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseX)).orElse(null);
-		final T3DUE3Terrain.TerrainComponent terMaxBaseX = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseX() > 0).max(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseX)).orElse(null);
+		// compute the number of collision components from terrain size and max component size
+		/**
+		 * In our example:
+		 * NumPatchesX=20
+		 * NumPatchesY=20
+		 * MaxComponentSize=4
+		 *
+		 * In UE3 a component size could have height and width different (SectionSizeX and SectionSizeY properties)
+		 * in UE4 these properties have been replaced by ComponentSizeQuads so it's always a square so we need to compute the number of components needed for UE4 terrain
+		 */
+		int compQuadSize = ue3Terrain.getTerrainActorMembers().getMaxComponentSize() * ue3Terrain.getTerrainActorMembers().getMaxTesselationLevel();
 
-		// e.g: SectionBaseY values: (0) 16 32 48 64, means sectionSize is 16
-		final T3DUE3Terrain.TerrainComponent terMinBaseY = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseY() > 0).min(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseY)).orElse(null);
-		final T3DUE3Terrain.TerrainComponent terMaxBaseY = ue3Terrain.getTerrainComponents().stream().filter(e -> e.getSectionBaseY() > 0).max(Comparator.comparing(T3DUE3Terrain.TerrainComponent::getSectionBaseY)).orElse(null);
+		// since collision data and landscape data are the same compSize and subSectionSize are the same
+		this.componentSizeQuads = compQuadSize;
+		this.subsectionSizeQuads = compQuadSize;
+		this.numSubsections = 1;
 
-		assert terMaxBaseX != null;
-		assert terMinBaseX != null;
+		// Ceil(20 / (4*4)) = Ceil(1.25) = 2
+		int nbCompX = (int) Math.ceil(ue3Terrain.getTerrainActorMembers().getNumPatchesX() * 1f / compQuadSize);
 
-		// 64 / 16 = 4 -> +1 = 5 (0, 16, 32, 48, 64)
-		int compSizeX = terMinBaseX.getSectionBaseX(); // 16
-		int nbCompX = 1 + (terMaxBaseX.getSectionBaseX() / compSizeX);
-
-		assert terMinBaseY != null;
-		assert terMaxBaseY != null;
-
-		// 64 / 16 = 4 .... + 1 = 5
-		int compSizeY = terMinBaseY.getSectionBaseY(); // 16
-		int nbCompY = 1 + (terMaxBaseY.getSectionBaseY() / compSizeY);
+		// Ceil(20 / (4*4)) = Ceil(1.25) = 2
+		int nbCompY = (int) Math.ceil(ue3Terrain.getTerrainActorMembers().getNumPatchesY() * 1f / compQuadSize);
 
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
+		int compIdx = 0;
 
-		int colCompIndex = 0;
+		for (int compIdxX = 0; compIdxX < nbCompX; compIdxX++) {
 
-		// initialise collision compoents
-		for(T3DUE3Terrain.TerrainComponent terrainComponent : ue3Terrain.getTerrainComponents()){
-			final LandscapeCollisionComponent collisionComponent = new LandscapeCollisionComponent(this.mapConverter, colCompIndex, compSizeX);
+			for (int compIdxY = 0; compIdxY < nbCompY; compIdxY++) {
 
-			collisionComponent.setSectionBaseX(terrainComponent.getSectionBaseX());
-			collisionComponent.setSectionBaseY(terrainComponent.getSectionBaseY());
+				// create component
+				final LandscapeCollisionComponent lcc = new LandscapeCollisionComponent(mapConverter, compIdx, compQuadSize);
 
-			collisionComponents[colCompIndex%nbCompX][colCompIndex%nbCompY] = collisionComponent;
+				lcc.setSectionBaseX(compIdxX * compQuadSize);
+				lcc.setSectionBaseY(compIdxY * compQuadSize);
 
-			colCompIndex ++;
+				int heightSizeX = compQuadSize + 1;
+				int heightSizeY = compQuadSize + 1;
+
+				lcc.setHeightData(new int[heightSizeX][heightSizeY]);
+
+				// fill up heighdata for this component
+				for (int hmIdxX = 0; hmIdxX < heightSizeX; hmIdxX++) {
+					for (int hmIdxY = 0; hmIdxY < heightSizeY; hmIdxY++) {
+						// initialize with default value
+						lcc.getHeightData()[hmIdxX][hmIdxY] = 32768;
+					}
+				}
+
+				collisionComponents[compIdxX][compIdxY] = lcc;
+				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc, false);
+				lc.setName("LC_" + compIdx);
+				landscapeComponents[compIdxX][compIdxY] = lc;
+
+				lcc.setRenderComponent(lc);
+
+				compIdx ++;
+			}
 		}
 
+	}
 
-		int hmIdx = 0;
+	/**
+	 * Given a square with width size, compute from a global index it's coordinates
+	 * E.G: a square with widh = 10
+	 * Coord(28) = (8, 2)
+	 * // --- X --->
+	 *  // - - - - - - - - - - (9)
+	 *  // - - - - - - - - - - (19)
+	 *  // - - - - - - - - * - (29)  (x = 8, y = 2)
+	 *  // - - - - - - - - - - (39)
+	 *  // - - - - - - - - - - (49)
+	 *
+	 * @param globalIndex
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	public static Point2d getCoordinatesForIndexInSquareSize(final int globalIndex, final int width, final int height) {
 
-		// height map in UE3 is all flat, so need to split values between the collisionComponents
-		// E.G: we have 6561 values in a terrain (VCTF-Sandstorm terrain)
-		// there are 25 terrain components a square by 5X5
-		// --- 5 ---
-		// |
-		// |
-		// 5
-		// |
-		// |
-		// ___ 5 __
-		// each terrain component has 16x16 = 256 values (see trueSectionSizeX and trueSectionSizeY)
-		for (int hmValue : ue3Terrain.getTerrainHeight().getHeightMap()) {
+		return new Point2d(globalIndex % width, (int) Math.floor(globalIndex / width));
+	}
 
-			// compute for which collisionComponent this heightmap value belongs to
+	public static LandscapeCollisionComponent getCollisionComponentFromHeightMapIndex(final int hmIdx, final T3DUE3Terrain.TerrainHeight heightInfo, final List<LandscapeCollisionComponent> collisionComponentList){
 
-			hmIdx ++;
-		}
+		// imagine we have  a 51(width) X 81(height) heightmap (4131 values)
+		// let's say we are looking at collisioncompoent which has the 1465th heightmap value (index)
+
+
+		// global coordinates of this heightmap
+		final Point2d globalCoord = getCoordinatesForIndexInSquareSize(hmIdx, heightInfo.getWidth(), heightInfo.getHeight());
+
+		// so we are at row 1465/81 = 18
+		int hmCoordX = hmIdx / heightInfo.getHeight();
+
+		//and column 1465%81 = 7
+		int hmCoordY = hmIdx%heightInfo.getHeight();
+
+		return null;
 	}
 
 	/**
@@ -367,6 +409,10 @@ public class T3DUE4Terrain extends T3DActor {
 
 	@Override
 	public String toString() {
+		return toT3d();
+	}
+
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Landscape Name=").append(name).append("\n");
 
@@ -405,8 +451,7 @@ public class T3DUE4Terrain extends T3DActor {
 		sbf.append(IDT).append("\tEnd Object\n");
 
 		// needs a guid or else would crash on import
-		// TODO guid generator
-		sbf.append(IDT).append("\tLandscapeGuid=51DF72704471DE2EA0AA68AE47B62710\n");
+		sbf.append(IDT).append("\tLandscapeGuid=").append(T3DUtils.randomGuid()).append("\n");
 
 		if (landscapeMaterial != null) {
 			sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
@@ -416,7 +461,7 @@ public class T3DUE4Terrain extends T3DActor {
 		if (collisionComponents[0][0].getVisibilityData() != null) {
 			// sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
 			// TEMP thingy
-			sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'/Game/RestrictedAssets/Maps/WIP/CTF-Maul-UT2004/Terrain_Vis_Mat.Terrain_Vis_Mat'\n");
+			sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'").append(DEFAULT_LANDSCAPE_HOLE_MATERIAL).append("'\n");
 		}
 
 		int idx = 0;

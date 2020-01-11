@@ -5,12 +5,12 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
-import java.util.List;
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DUtils;
+import org.xtx.ut4converter.t3d.iface.T3D;
 
 import javax.vecmath.Vector3d;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.t3d.iface.T3D;
+import java.util.List;
 
 /**
  *
@@ -20,7 +20,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 	final String BASE_NAME = "LandscapeHeightfieldCollisionComponent";
 
-	LandscapeComponent renderComponent;
+	private LandscapeComponent renderComponent;
 
 	/**
 	 * List of boolean for each square of the section saying if it's rendered or
@@ -28,17 +28,28 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	 */
 	List<Boolean> visibilityData;
 
-	int sectionBaseX;
-	int sectionBaseY;
+	/**
+	 * X position of this component
+	 */
+	private int sectionBaseX;
 
-	float collisionScale;
+	/**
+	 * Y position of this component
+	 */
+	private int sectionBaseY;
 
-	Vector3d relativeLocation;
+	private float collisionScale = 1f;
 
+	private Vector3d relativeLocation;
+
+	/**
+	 *
+	 * @param mc
+	 * @param numComponent
+	 * @param sizeQuads
+	 */
 	public LandscapeCollisionComponent(MapConverter mc, int numComponent, int sizeQuads) {
-
 		super(mc, numComponent, sizeQuads);
-		collisionScale = 1f;
 	}
 
 	@Override
@@ -117,8 +128,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 		sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
 		sb.append(base).append("\tCollisionScale=").append(collisionScale).append("\n");
 
-		// needed for not crashing TODO GUID generator
-		sb.append(base).append("\tHeightfieldGuid=EC3963244F511FA86677C79295D9B2F3\n");
+		sb.append(base).append("\tHeightfieldGuid=").append(T3DUtils.randomGuid()).append("\n");
 
 		sb.append(base).append("\tRenderComponent=LandscapeComponent'").append(renderComponent.getName()).append("'\n");
 		sb.append(base).append("\tAttachParent=RootComponent0\n");
@@ -132,7 +142,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 		for (int x = 0; x < heightData.length; x++) {
 
 			for (int y = 0; y < heightData[0].length; y++) {
-				sb.append(" " + heightData[x][y]);
+				sb.append(" ").append(heightData[x][y]);
 			}
 		}
 

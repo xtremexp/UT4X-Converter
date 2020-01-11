@@ -54,11 +54,47 @@ public class T3DUE3Terrain extends T3DActor {
 	 *             LightingChannels=5
 	 */
 	static class TerrainActorMembers {
-		private int numPatchesX;
-		private int numPatchesY;
-		private int maxComponentSize;
+
+		/**
+		 * Default num patches X in UE3
+		 */
+		private int numPatchesX = 1;
+
+		/**
+		 * Default num patches Y in UE3
+		 */
+		private int numPatchesY = 1;
+
+		/**
+		 * Default component size in UE3
+		 */
+		private int maxComponentSize = 16;
+
 		private int staticLightingResolution;
+
 		private boolean bCastShadow;
+
+		private boolean bMorphingEnabled;
+		/**
+		 * Default tesselation level for unreal engine 3 terrains
+		 */
+		private int maxTesselationLevel = 4;
+
+		public int getNumPatchesX() {
+			return numPatchesX;
+		}
+
+		public int getNumPatchesY() {
+			return numPatchesY;
+		}
+
+		public int getMaxComponentSize() {
+			return maxComponentSize;
+		}
+
+		public int getMaxTesselationLevel() {
+			return maxTesselationLevel;
+		}
 	}
 
 	static class TerrainComponent {
@@ -70,6 +106,30 @@ public class T3DUE3Terrain extends T3DActor {
 		private int trueSectionSizeY;
 		private boolean bCastDynamicShadow;
 		private boolean bForceDirectLightMap;
+
+		public void setSectionBaseX(int sectionBaseX) {
+			this.sectionBaseX = sectionBaseX;
+		}
+
+		public void setSectionBaseY(int sectionBaseY) {
+			this.sectionBaseY = sectionBaseY;
+		}
+
+		public void setSectionSizeX(int sectionSizeX) {
+			this.sectionSizeX = sectionSizeX;
+		}
+
+		public void setSectionSizeY(int sectionSizeY) {
+			this.sectionSizeY = sectionSizeY;
+		}
+
+		public void setTrueSectionSizeX(int trueSectionSizeX) {
+			this.trueSectionSizeX = trueSectionSizeX;
+		}
+
+		public void setTrueSectionSizeY(int trueSectionSizeY) {
+			this.trueSectionSizeY = trueSectionSizeY;
+		}
 
 		public int getSectionBaseX() {
 			return sectionBaseX;
@@ -242,6 +302,8 @@ public class T3DUE3Terrain extends T3DActor {
 				this.terrainActorMembers.staticLightingResolution = T3DUtils.getInteger(line);
 			} else if (line.startsWith("bCastShadow")) {
 				this.terrainActorMembers.bCastShadow = T3DUtils.getBoolean(line);
+			} else if(line.startsWith("MaxTesselationLevel")){
+				this.terrainActorMembers.maxTesselationLevel = T3DUtils.getInteger(line);
 			}
 		}  else {
 			return super.analyseT3DData(line);
@@ -260,5 +322,9 @@ public class T3DUE3Terrain extends T3DActor {
 
 	public List<TerrainComponent> getTerrainComponents() {
 		return terrainComponents;
+	}
+
+	public TerrainActorMembers getTerrainActorMembers() {
+		return terrainActorMembers;
 	}
 }
