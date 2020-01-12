@@ -110,6 +110,10 @@ public class T3DUE4Terrain extends T3DActor {
 
 		int compIdx = 0;
 
+		// size of heightmap values for components
+		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
+		int avgTerrainHeight = (int) ue3Terrain.getTerrainHeight().getHeightMap().stream().mapToInt(a -> a).average().orElse(32768d);
+
 		for (int compIdxX = 0; compIdxX < nbCompX; compIdxX++) {
 
 			for (int compIdxY = 0; compIdxY < nbCompY; compIdxY++) {
@@ -120,12 +124,10 @@ public class T3DUE4Terrain extends T3DActor {
 				lcc.setSectionBaseX(compIdxX * compQuadSize);
 				lcc.setSectionBaseY(compIdxY * compQuadSize);
 
-				int heightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
-
 				// fill up heighdata for this component
-				for (int i = 0; i < heightDataSize; i++) {
+				for (int i = 0; i < compHeightDataSize; i++) {
 
-					final Integer heightMatch = getHeightFrom(ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, i);
+					final Integer heightMatch = getHeightForComponentHeightIndex(i, ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, ue3Terrain.getTerrainHeight().getWidth(), ue3Terrain.getTerrainHeight().getHeight(), avgTerrainHeight);
 
 					if (heightMatch != null) {
 						lcc.getHeightData().add(heightMatch);
@@ -147,15 +149,38 @@ public class T3DUE4Terrain extends T3DActor {
 
 	}
 
-	private Integer getHeightFrom(final List<Integer> heightData, int compQuadSize, int compIdxX, int compIdxY, int compHeightIdx) {
+	/**
+	 * Given a component height index and the height data of original UE3 terrain, return the height
+	 * related to this index within the UE4 terrain
+	 *
+	 * @param compHeightIdx Component height index
+	 * @param ue3GlobalHeightData Global height data from UE3 terrain
+	 * @param compQuadSize Quad Size for UE4 terrain
+	 * @param compIdxX UE4 terrain component X coordinate
+	 * @param compIdxY UE4 terrain component Y coordinate
+	 * @param ue3GlobalWidth UE3 terrain width (might be different from the new UE4 terrain width due to QuadSize list restrictions)
+	 * @param avgTerrainHeight Average UE3 terrain height
+	 * @return
+	 */
+	private Integer getHeightForComponentHeightIndex(int compHeightIdx, final List<Integer> ue3GlobalHeightData, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight, int avgTerrainHeight) {
 
 		// TODO FIXME not working since the component size might be different from UE3 one
-		int heightDataIdx = compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx;
+		// let's say in UE3 our terrain was a 21x21 square (ue3GlobalWidth)
+		// and our UE4 converted terrain a 31*31 square
+		// some heightvalues will be out of the UE3 terrain and will be needed to be set to default value (32768)
 
-		if (heightDataIdx < heightData.size()) {
-			return heightData.get(heightDataIdx);
+		// local coordinates within the UE4 component of height index
+		final Point2d compHeightIdxCoord = getCoordinatesForIndexInSquareSize(compHeightIdx, (compQuadSize + 1), 0);
+
+		// global coordinates within the UE4 terrain of this height index
+		final Point2d compHeightIdxGlobalCoord = new Point2d(compIdxX * (compQuadSize + 1) + compHeightIdxCoord.x, compIdxY * (compQuadSize + 1) + compHeightIdxCoord.y);
+
+		// this point is outside the original UE3 square, set height map value to terrain average height
+		if (compHeightIdxGlobalCoord.x > (ue3GlobalWidth - 1) || compHeightIdxGlobalCoord.y > (ue3GlobalHeight - 1)) {
+			return avgTerrainHeight;
 		} else {
-			return null;
+			int globalHeightDataIdx = compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx - (int)(compHeightIdxGlobalCoord.y * (compQuadSize - ue3GlobalWidth + 1));
+			return ue3GlobalHeightData.get(globalHeightDataIdx);
 		}
 	}
 
@@ -177,7 +202,7 @@ public class T3DUE4Terrain extends T3DActor {
 	 */
 	public static Point2d getCoordinatesForIndexInSquareSize(final int globalIndex, final int width, final int height) {
 
-		return new Point2d(globalIndex % width, (int) Math.floor(globalIndex / width));
+		return new Point2d(globalIndex % width, (int) Math.floor((globalIndex * 1f) / width));
 	}
 
 	public static LandscapeCollisionComponent getCollisionComponentFromHeightMapIndex(final int hmIdx, final T3DUE3Terrain.TerrainHeight heightInfo, final List<LandscapeCollisionComponent> collisionComponentList){
