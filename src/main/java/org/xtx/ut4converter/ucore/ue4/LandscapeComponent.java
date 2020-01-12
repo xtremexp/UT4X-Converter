@@ -62,8 +62,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		// resolution for landscape component is much higher then collision component height resolution
 		for (final Integer height : colComp.getHeightData()) {
-			// HeightMap[Landscape] = (HeightMap[Collision] + 128) * 65536
-			this.getHeightData().add((128 + height) * 65536);
+			// HeightMap[Landscape] = HeightMap[Collision]  * 256
+			this.getHeightData().add(height * 256);
 		}
 
 		// this.heightData = colComp.getHeightData();
