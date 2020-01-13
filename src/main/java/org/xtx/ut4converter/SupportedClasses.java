@@ -220,6 +220,8 @@ public class SupportedClasses {
 		// terrain conversion disabled until working good
 		if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
 			registerUClass(T3DUE2Terrain.class, "TerrainInfo");
+		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+			registerUClass(T3DUE3Terrain.class, "Terrain");
 		}
 
 		for (T3DLight.UE4_LightActor ue34LightActor : T3DLight.UE4_LightActor.values()) {

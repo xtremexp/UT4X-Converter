@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -37,22 +38,7 @@ public class T3DUE3Terrain extends T3DActor {
 	private final List<TerrainComponent> terrainComponents = new LinkedList<>();
 
 
-	/**
-	 *             MaxTesselationLevel=4
-	 *             TesselationDistanceScale=4.000000
-	 *             CollisionTesselationLevel=4
-	 *             NumPatchesX=128
-	 *             NumPatchesY=128
-	 *             MaxComponentSize=6
-	 *             StaticLightingResolution=2
-	 *             bIsOverridingLightResolution=0
-	 *             bCastShadow=1
-	 *             bForceDirectLightMap=1
-	 *             bCastDynamicShadow=0
-	 *             bBlockRigidBody=1
-	 *             bAcceptsDynamicLights=1
-	 *             LightingChannels=5
-	 */
+
 	static class TerrainActorMembers {
 
 		/**
@@ -97,6 +83,9 @@ public class T3DUE3Terrain extends T3DActor {
 		}
 	}
 
+	/**
+	 * Terrain is composed of X components by Y components
+	 */
 	static class TerrainComponent {
 		private int sectionBaseX;
 		private int sectionBaseY;
@@ -173,8 +162,19 @@ public class T3DUE3Terrain extends T3DActor {
 	}
 
 	static class TerrainHeight {
+		/**
+		 * Height data count
+		 */
 		int count;
+
+		/**
+		 * Height data count for X
+		 */
 		short width;
+
+		/**
+		 * Height data count for Y
+		 */
 		short height;
 
 		private final List<Integer> heightMap = new ArrayList<>();
@@ -326,5 +326,14 @@ public class T3DUE3Terrain extends T3DActor {
 
 	public TerrainActorMembers getTerrainActorMembers() {
 		return terrainActorMembers;
+	}
+
+	@Override
+	public void convert() {
+
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+			T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
+			replaceWith(ue4Terrain);
+		}
 	}
 }
