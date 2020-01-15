@@ -78,7 +78,9 @@ public class T3DUE4Terrain extends T3DActor {
 		 * in UE4 these properties have been replaced by ComponentSizeQuads so it's always a square so we need to compute the number of components needed for UE4 terrain
 		 */
 		// in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or 255*255
-		int compQuadSize = ue3Terrain.getTerrainActorMembers().getMaxComponentSize() * ue3Terrain.getTerrainActorMembers().getMaxTesselationLevel();
+		//int compQuadSize = ue3Terrain.getTerrainActorMembers().getMaxComponentSize() * ue3Terrain.getTerrainActorMembers().getMaxTesselationLevel();
+		// FIXME global, UE3Terrain conversion buggy with multi component so as a temp fix we do only one big component that fits the whole square
+		int compQuadSize = Math.max(ue3Terrain.getTerrainHeight().getHeight(), ue3Terrain.getTerrainHeight().getWidth());
 
 		// we fit to the best UE4 quadSize
 		if (compQuadSize <= 7) {
@@ -89,7 +91,8 @@ public class T3DUE4Terrain extends T3DActor {
 			compQuadSize = 31;
 		} else if (compQuadSize <= 127) {
 			compQuadSize = 127;
-		} else if (compQuadSize <= 255) {
+		} else {
+			// TODO 1 component only of this size not supported, need split into multi components
 			compQuadSize = 255;
 		}
 
@@ -112,7 +115,8 @@ public class T3DUE4Terrain extends T3DActor {
 
 		// size of heightmap values for components
 		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
-		int avgTerrainHeight = (int) ue3Terrain.getTerrainHeight().getHeightMap().stream().mapToInt(a -> a).average().orElse(32768d);
+		// min terrain height will become the default value
+		int minTerrainHeight = ue3Terrain.getTerrainHeight().getHeightMap().stream().mapToInt(a -> a).min().orElse(32768);
 
 		for (int compIdxX = 0; compIdxX < nbCompX; compIdxX++) {
 
@@ -127,7 +131,7 @@ public class T3DUE4Terrain extends T3DActor {
 				// fill up heighdata for this component
 				for (int i = 0; i < compHeightDataSize; i++) {
 
-					final Integer heightMatch = getHeightForComponentHeightIndex(i, ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, ue3Terrain.getTerrainHeight().getWidth(), ue3Terrain.getTerrainHeight().getHeight(), avgTerrainHeight);
+					final Integer heightMatch = getHeightForComponentHeightIndex(i, ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, ue3Terrain.getTerrainHeight().getWidth(), ue3Terrain.getTerrainHeight().getHeight(), minTerrainHeight);
 
 					if (heightMatch != null) {
 						lcc.getHeightData().add(heightMatch);
@@ -159,10 +163,10 @@ public class T3DUE4Terrain extends T3DActor {
 	 * @param compIdxX UE4 terrain component X coordinate
 	 * @param compIdxY UE4 terrain component Y coordinate
 	 * @param ue3GlobalWidth UE3 terrain width (might be different from the new UE4 terrain width due to QuadSize list restrictions)
-	 * @param avgTerrainHeight Average UE3 terrain height
+	 * @param defaultTerrainHeight Default terrain height to set
 	 * @return
 	 */
-	private Integer getHeightForComponentHeightIndex(int compHeightIdx, final List<Integer> ue3GlobalHeightData, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight, int avgTerrainHeight) {
+	private Integer getHeightForComponentHeightIndex(int compHeightIdx, final List<Integer> ue3GlobalHeightData, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight, int defaultTerrainHeight) {
 
 		// TODO FIXME not working since the component size might be different from UE3 one
 		// let's say in UE3 our terrain was a 21x21 square (ue3GlobalWidth)
@@ -175,9 +179,9 @@ public class T3DUE4Terrain extends T3DActor {
 		// global coordinates within the UE4 terrain of this height index
 		final Point2d compHeightIdxGlobalCoord = new Point2d(compIdxX * (compQuadSize + 1) + compHeightIdxCoord.x, compIdxY * (compQuadSize + 1) + compHeightIdxCoord.y);
 
-		// this point is outside the original UE3 square, set height map value to terrain average height
+		// this point is outside the original UE3 square, set height map value to default terrain height
 		if (compHeightIdxGlobalCoord.x > (ue3GlobalWidth - 1) || compHeightIdxGlobalCoord.y > (ue3GlobalHeight - 1)) {
-			return avgTerrainHeight;
+			return defaultTerrainHeight;
 		} else {
 			int globalHeightDataIdx = compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx - (int)(compHeightIdxGlobalCoord.y * (compQuadSize - ue3GlobalWidth + 1));
 			return ue3GlobalHeightData.get(globalHeightDataIdx);
