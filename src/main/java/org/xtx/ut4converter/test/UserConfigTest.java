@@ -5,14 +5,15 @@
  */
 package org.xtx.ut4converter.test;
 
-import java.io.File;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.config.UserConfig;
+import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.t3d.T3DActor;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.UserGameConfig;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.t3d.T3DActor;
+import java.io.File;
 
 /**
  * 
@@ -23,13 +24,8 @@ public class UserConfigTest {
 	public static void test() {
 		UserConfig user = new UserConfig();
 
-		UserGameConfig gc = new UserGameConfig();
-		gc.setId(UTGames.UTGame.UT99);
-		gc.setPath(new File("C:\\Program Files\\Steam"));
-
-		UserGameConfig gc3 = new UserGameConfig();
-		gc3.setId(UTGames.UTGame.UT2004);
-		gc3.setPath(new File("C:\\Program Files\\Steam\\UT2004"));
+		UserGameConfig gc = new UserGameConfig(UTGames.UTGame.UT99, new File("C:\\Program Files\\Steam"));
+		UserGameConfig gc3 = new UserGameConfig(UTGames.UTGame.UT2004, new File("C:\\Program Files\\Steam\\UT2004"));
 		gc3.setLastConverted(new File("Z:\\aaaa.t3d"));
 
 		user.getGame().add(gc);

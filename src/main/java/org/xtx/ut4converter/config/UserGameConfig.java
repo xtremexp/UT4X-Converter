@@ -5,11 +5,12 @@
  */
 package org.xtx.ut4converter.config;
 
-import java.io.File;
+import org.xtx.ut4converter.UTGames;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.xtx.ut4converter.UTGames;
+import java.io.File;
 
 /**
  * 
@@ -18,7 +19,7 @@ import org.xtx.ut4converter.UTGames;
 @XmlRootElement
 public class UserGameConfig {
 
-	public UserGameConfig() {
+	private UserGameConfig() {
 
 	}
 

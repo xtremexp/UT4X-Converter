@@ -1634,4 +1634,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public void setUseUbClasses(boolean useUbClasses) {
 		this.useUbClasses = useUbClasses;
 	}
+
+	public void setUserConfig(UserConfig userConfig) {
+		this.userConfig = userConfig;
+	}
+
+
 }
