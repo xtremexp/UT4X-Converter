@@ -14,8 +14,15 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool{
         super(UTGames.UTGame.UT2004, null);
     }
 
+
+    /**
+     * Test conversion of Unreal Engine 2 terrain to Unreal Engine 4
+     * @throws ReflectiveOperationException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Test
-    public void testUe3TerrainReadAndConvert() throws ReflectiveOperationException, IOException {
+    public void testUe2TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         // read ue3TerrainData
         this.setMapFile("DM-1on1-Serpentine.ut2");
@@ -26,9 +33,11 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool{
 
         final T3DUE2Terrain ue2Terrain = (T3DUE2Terrain) actor;
 
-        // export heightmap texture and so on..
-        ue2Terrain.convert();
+        // export and read heightmap from map package
+        ue2Terrain.loadTerrainData();
 
-        Assert.assertNotNull(ue2Terrain);
+        // convert UE2 terrain to UE4 terrain
+        final T3DUE4Terrain t3DUE4Terrain = new T3DUE4Terrain(ue2Terrain);
+        Assert.assertNotNull(t3DUE4Terrain);
     }
 }

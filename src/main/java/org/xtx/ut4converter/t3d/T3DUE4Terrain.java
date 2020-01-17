@@ -80,22 +80,7 @@ public class T3DUE4Terrain extends T3DActor {
 		// in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or 255*255
 		//int compQuadSize = ue3Terrain.getTerrainActorMembers().getMaxComponentSize() * ue3Terrain.getTerrainActorMembers().getMaxTesselationLevel();
 		// FIXME global, UE3Terrain conversion buggy with multi component so as a temp fix we do only one big component that fits the whole square
-		int compQuadSize = Math.max(ue3Terrain.getTerrainHeight().getHeight(), ue3Terrain.getTerrainHeight().getWidth());
-
-		// we fit to the best UE4 quadSize
-		if (compQuadSize <= 7) {
-			compQuadSize = 7;
-		} else if (compQuadSize <= 15) {
-			compQuadSize = 15;
-		} else if (compQuadSize <= 31) {
-			compQuadSize = 31;
-		} else if (compQuadSize <= 127) {
-			compQuadSize = 127;
-		} else {
-			// TODO 1 component only of this size not supported, need split into multi components
-			compQuadSize = 255;
-		}
-
+		int compQuadSize = computeQuadSize(ue3Terrain.getTerrainHeight().getHeight(), ue3Terrain.getTerrainHeight().getWidth());
 
 		// since collision data and landscape data are the same compSize and subSectionSize are the same
 		this.componentSizeQuads = compQuadSize;
@@ -111,12 +96,50 @@ public class T3DUE4Terrain extends T3DActor {
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-		int compIdx = 0;
+
+
+		final List<Integer> heightMap = ue3Terrain.getTerrainHeight().getHeightMap();
+		final short terrainWidth = ue3Terrain.getTerrainHeight().getWidth();
+		final short terrainHeight = ue3Terrain.getTerrainHeight().getHeight();
+
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, terrainWidth, terrainHeight);
+	}
+
+	/**
+	 * Compute quadsize of UE4 terrain.
+	 * in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or (255*255) TODO CHECK
+	 *
+	 * @param terrainHeight
+	 * @param terrainWidth
+	 * @return
+	 */
+	private int computeQuadSize(final int terrainHeight, final int terrainWidth) {
+		int compQuadSize = Math.max(terrainHeight, terrainWidth);
+
+		// we fit to the best UE4 quadSize
+		if (compQuadSize <= 7) {
+			compQuadSize = 7;
+		} else if (compQuadSize <= 15) {
+			compQuadSize = 15;
+		} else if (compQuadSize <= 31) {
+			compQuadSize = 31;
+		} else if (compQuadSize <= 127) {
+			compQuadSize = 127;
+		} else {
+			// TODO 1 component only of this size not supported, need split into multi components
+			compQuadSize = 255;
+		}
+		return compQuadSize;
+	}
+
+	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, short terrainWidth, short terrainHeight) {
 
 		// size of heightmap values for components
 		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
+
+		int compIdx = 0;
 		// min terrain height will become the default value
-		int minTerrainHeight = ue3Terrain.getTerrainHeight().getHeightMap().stream().mapToInt(a -> a).min().orElse(32768);
+		int minTerrainHeight = heightMap.stream().mapToInt(a -> a).min().orElse(32768);
 
 		for (int compIdxX = 0; compIdxX < nbCompX; compIdxX++) {
 
@@ -131,7 +154,7 @@ public class T3DUE4Terrain extends T3DActor {
 				// fill up heighdata for this component
 				for (int i = 0; i < compHeightDataSize; i++) {
 
-					final Integer heightMatch = getHeightForComponentHeightIndex(i, ue3Terrain.getTerrainHeight().getHeightMap(), compQuadSize, compIdxX, compIdxY, ue3Terrain.getTerrainHeight().getWidth(), ue3Terrain.getTerrainHeight().getHeight(), minTerrainHeight);
+					final Integer heightMatch = getHeightForComponentHeightIndex(i, heightMap, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight, minTerrainHeight);
 
 					if (heightMatch != null) {
 						lcc.getHeightData().add(heightMatch);
@@ -150,7 +173,6 @@ public class T3DUE4Terrain extends T3DActor {
 				compIdx ++;
 			}
 		}
-
 	}
 
 	/**
@@ -209,24 +231,6 @@ public class T3DUE4Terrain extends T3DActor {
 		return new Point2d(globalIndex % width, (int) Math.floor((globalIndex * 1f) / width));
 	}
 
-	public static LandscapeCollisionComponent getCollisionComponentFromHeightMapIndex(final int hmIdx, final T3DUE3Terrain.TerrainHeight heightInfo, final List<LandscapeCollisionComponent> collisionComponentList){
-
-		// imagine we have  a 51(width) X 81(height) heightmap (4131 values)
-		// let's say we are looking at collisioncompoent which has the 1465th heightmap value (index)
-
-
-		// global coordinates of this heightmap
-		final Point2d globalCoord = getCoordinatesForIndexInSquareSize(hmIdx, heightInfo.getWidth(), heightInfo.getHeight());
-
-		// so we are at row 1465/81 = 18
-		int hmCoordX = hmIdx / heightInfo.getHeight();
-
-		//and column 1465%81 = 7
-		int hmCoordY = hmIdx%heightInfo.getHeight();
-
-		return null;
-	}
-
 	/**
 	 * Creates t3d ue4 terrain from unreal engine 2 terrain
 	 * 
@@ -239,126 +243,35 @@ public class T3DUE4Terrain extends T3DActor {
 
 		this.name = ue2Terrain.name;
 		this.location = ue2Terrain.location;
-		this.scale3d = ue2Terrain.terrainScale;
+		this.scale3d = ue2Terrain.getTerrainScale();
 
-		if (!ue2Terrain.layers.isEmpty()) {
-			landscapeMaterial = ue2Terrain.layers.get(0).getTexture();
+		if (!ue2Terrain.getLayers().isEmpty()) {
+			landscapeMaterial = ue2Terrain.getLayers().get(0).getTexture();
 		}
 
-		int numComponent = 0;
-
-		this.componentSizeQuads = Math.min(Math.min(ue2Terrain.heightMapTextureDimensions.width, ue2Terrain.heightMapTextureDimensions.height - 1), maxComponentSize);
+		// TODO CHECK
+		this.componentSizeQuads = Math.min(Math.min(ue2Terrain.getHeightMapTextureDimensions().width, ue2Terrain.getHeightMapTextureDimensions().height - 1), maxComponentSize);
 		this.subsectionSizeQuads = this.componentSizeQuads;
 
-		int nbCompX = ue2Terrain.heightMapTextureDimensions.width / (componentSizeQuads + 1);
-		int nbCompY = ue2Terrain.heightMapTextureDimensions.height / (componentSizeQuads + 1);
+		int nbCompX = ue2Terrain.getHeightMapTextureDimensions().width / (componentSizeQuads + 1);
+		int nbCompY = ue2Terrain.getHeightMapTextureDimensions().height / (componentSizeQuads + 1);
 
-		LandscapeCollisionComponent collisionComponent = null;
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-		int[][] localHeightCollisionData;
+		short ue4TerrainWidth = (short) (ue2Terrain.getHeightMapTextureDimensions().width);
+		short ue4TerrainHeight = (short) (ue2Terrain.getHeightMapTextureDimensions().height);
+		int compQuadSize = computeQuadSize(ue4TerrainHeight, ue4TerrainWidth);
 
-		// Local HeightMap idx in component
-		int localHmXIdx = 0;
-		int localHmYIdx = 0;
+		// TODO remove some heightmap values since a 128X128 UE2 terrain should convert to a 127X127 UE4 terrain
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), ue4TerrainWidth, ue4TerrainHeight);
 
-		// Index of component
-		int compIdxX = 0;
-		int compIdxY = 0;
-
-		int[][] heightMap = new int[ue2Terrain.getHeightMap().length][ue2Terrain.getHeightMap()[0].length];
-
-		// flip x/y
-		// all these loops quite crappy but don't want rework the big loop yet
-		for (int hmXIdx = 0; hmXIdx < ue2Terrain.getHeightMap().length; hmXIdx++) {
-
-			for (int hmYIdx = 0; hmYIdx < ue2Terrain.getHeightMap()[0].length; hmYIdx++) {
-				heightMap[hmXIdx][hmYIdx] = ue2Terrain.getHeightMap()[hmYIdx][hmXIdx];
-			}
-		}
-
-		ue2Terrain.setHeightMap(heightMap);
-
-		for (int hmXIdx = 0; hmXIdx < ue2Terrain.getHeightMap().length; hmXIdx++) {
-
-			compIdxY = 0;
-
-			for (int hmYIdx = 0; hmYIdx < ue2Terrain.getHeightMap()[0].length; hmYIdx++) {
-
-				if (hmXIdx % componentSizeQuads == 0 && hmYIdx % componentSizeQuads == 0 && hmXIdx < componentSizeQuads && hmYIdx < componentSizeQuads) {
-
-					localHmXIdx = 0;
-					localHmYIdx = 0;
-
-					collisionComponent = new LandscapeCollisionComponent(mapConverter, numComponent, componentSizeQuads);
-					localHeightCollisionData = new int[componentSizeQuads + 1][componentSizeQuads + 1];
-
-					collisionComponent.setSectionBaseX(compIdxX);
-					collisionComponent.setSectionBaseY(compIdxY);
-
-					//collisionComponent.setHeightData(localHeightCollisionData);
-					collisionComponents[compIdxX][compIdxY] = collisionComponent;
-				}
-
-				collisionComponent = collisionComponents[compIdxX][compIdxY];
-
-				int heightMapVal = 0;
-
-				if (hmXIdx % (componentSizeQuads + 1) == 0 && hmXIdx > 0) {
-					heightMapVal = ue2Terrain.getHeightMap()[hmXIdx - 1][hmYIdx];
-				} else if (hmYIdx % (componentSizeQuads + 1) == 0 && hmYIdx > 0) {
-					heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx - 1];
-				} else {
-					heightMapVal = ue2Terrain.getHeightMap()[hmXIdx][hmYIdx];
-				}
-
-				//collisionComponent.getHeightData()[localHmXIdx][localHmYIdx] = heightMapVal / 2;
-
-				// TODO CHECK TEST UE2 Terrain Conversion prob no longer works
-				collisionComponent.getHeightData().add(heightMapVal / 2);
-
-				if (hmYIdx % componentSizeQuads == 0) {
-					if (hmYIdx > 0) {
-						compIdxY++;
-					}
-					localHmYIdx = 0;
-				}
-
-				localHmYIdx++;
-
-			}
-
-			if (hmXIdx % componentSizeQuads == 0) {
-				if (hmXIdx > 0) {
-					compIdxX++;
-				}
-				localHmXIdx = 0;
-			}
-
-			localHmXIdx++;
-		}
-
-		// convert visibility data
-		List<Boolean> visibilityData = convertUe2Visibility(ue2Terrain);
-
-		// TODO put visibility data to right component if multiple ones
-		collisionComponents[0][0].setVisibilityData(visibilityData);
-
-		// create default landscape components from heightmap components
-		for (int x = 0; x < collisionComponents.length; x++) {
-
-			for (int y = 0; y < collisionComponents[0].length; y++) {
-				LandscapeCollisionComponent colComponent = collisionComponents[x][y];
-				landscapeComponents[x][y] = new LandscapeComponent(mapConverter, colComponent, true);
-
-				colComponent.setRenderComponent(landscapeComponents[x][y]);
-				landscapeComponents[x][y].setColisionComponent(colComponent);
-			}
-		}
+		// TODO alpha maps
+		// TODO visibility data
 
 		// In Unreal Engine 2, terrain pivot is "centered"
 		// unlike UE3/4, so need update location
+		// TODO check and externalize
 		if (this.location != null && this.scale3d != null) {
 
 			double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;

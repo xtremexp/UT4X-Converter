@@ -5,20 +5,20 @@
  */
 package org.xtx.ut4converter.ucore.ue2;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.imageio.ImageIO;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -50,13 +50,10 @@ public class TerrainLayer implements T3D {
 	 * List of alpha map values if alphaMapTexture set and values read from
 	 * texture file
 	 */
-	List<Integer> alphaMap;
+	private final List<Integer> alphaMap = new LinkedList<>();
 
-	Float kFriction;
-	Float kRestitution;
-	Rotator layerRotation;
 	UPackageRessource texture;
-	TextureMapAxis textureMapAxis;
+	private TextureMapAxis textureMapAxis = TextureMapAxis.TEXMAPAXIS_XY;
 	Float textureRotation;
 	Float uPan, vPan;
 	Float uScale, vScale;
@@ -65,13 +62,8 @@ public class TerrainLayer implements T3D {
 
 	public TerrainLayer(MapConverter mapConverter) {
 		this.mapConverter = mapConverter;
-		initialise();
 	}
 
-	private void initialise() {
-		textureMapAxis = TextureMapAxis.TEXMAPAXIS_XY;
-		alphaMap = new ArrayList<>();
-	}
 
 	@Override
 	public void convert() {
@@ -162,29 +154,16 @@ public class TerrainLayer implements T3D {
 		uccExporter.setForceSetNotExported(true);
 		alphaMapTexture.export(uccExporter, true);
 
-		Color color;
-		int value;
-		final int DEFAULT_ALPHA = 128;
+		int alphaValue;
+		final BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
 
-		BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
+		for (int x = 0; x < img.getWidth(); x++) {
+			for (int y = 0; x < img.getWidth(); x++) {
 
-		for (int y = (img.getWidth() - 1); y >= 0; y--) {
-			for (int x = 0; x < img.getWidth(); x++) {
-				value = img.getRGB(x, y);
-				color = new Color(value, true);
-				value = color.getAlpha();
-				alphaMap.add(value);
-
-				if (x == (img.getWidth() - 1)) {
-					alphaMap.add(DEFAULT_ALPHA);
-				}
+				alphaValue = new Color(img.getRGB(x, y), true).getAlpha();
+				alphaMap.add(alphaValue);
 			}
 		}
-
-		for (int x = 0; x < (img.getWidth() + 1); x++) {
-			alphaMap.add(DEFAULT_ALPHA);
-		}
-
 	}
 
 	@Override

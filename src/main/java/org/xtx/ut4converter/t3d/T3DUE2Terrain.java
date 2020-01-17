@@ -5,20 +5,6 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javax.imageio.ImageIO;
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UCCExporter;
@@ -27,48 +13,44 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue2.TerrainDecoLayer;
 import org.xtx.ut4converter.ucore.ue2.TerrainLayer;
 
+import javax.imageio.ImageIO;
+import javax.vecmath.Vector3d;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
+
 /**
  *
  * @author XtremeXp
  */
 public class T3DUE2Terrain extends T3DActor {
 
-	boolean bKCollisionHalfRes;
-	double decoLayerOffset;
+	private List<TerrainDecoLayer> decoLayers = new LinkedList<>();
 
-	List<TerrainDecoLayer> decoLayers;
-	boolean inverted;
-
-	List<TerrainLayer> layers;
+	private List<TerrainLayer> layers = new LinkedList<>();;
 
 	/**
 	 * TerrainMap
 	 */
-	UPackageRessource heightMapTexture;
-	Dimension heightMapTextureDimensions;
+	private UPackageRessource heightMapTexture;
+	private Dimension heightMapTextureDimensions;
 
-	int[][] heightMap;
+	private final List<Integer> heightMap = new LinkedList<>();
 
-	Vector3d terrainScale;
-	short terrainSectorSize;
-
-	UPackageRessource vertexLightMap;
+	private Vector3d terrainScale;
 
 	/**
 	 * Invisible pieces of terrain
 	 */
-	Map<Integer, Long> quadVisibilityBitmaps;
+	private Map<Integer, Long> quadVisibilityBitmaps = new HashMap<>();
 
 	public T3DUE2Terrain(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
-
-		initialise();
-	}
-
-	private void initialise() {
-		decoLayers = new ArrayList<>();
-		layers = new ArrayList<>();
-		quadVisibilityBitmaps = new HashMap<>();
 	}
 
 	@Override
@@ -132,14 +114,14 @@ public class T3DUE2Terrain extends T3DActor {
 		}
 	}
 
-	public int[][] getHeightMap() {
+	public List<Integer> getHeightMap() {
 		return heightMap;
 	}
 
 	/**
 	 * Loads terrain heightmap and layers data from textures
 	 */
-	private void loadTerrainData() throws InterruptedException, IOException {
+	public void loadTerrainData() throws InterruptedException, IOException {
 
 		for (TerrainLayer layer : layers) {
 			layer.load();
@@ -165,9 +147,10 @@ public class T3DUE2Terrain extends T3DActor {
 		if (heightMapTexture != null) {
 
 			// Export heightmap texture to .bmp
-			UCCExporter uccExporter = new UCCExporter(mapConverter);
+			final UCCExporter uccExporter = new UCCExporter(mapConverter);
 			uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_BMP);
-			File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator + heightMapTexture.getUnrealPackage().getName() + File.separator);
+
+			final File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator + heightMapTexture.getUnrealPackage().getName() + File.separator);
 			uccExporter.setForcedExportFolder(exportFolder);
 			uccExporter.setForceSetNotExported(true);
 			heightMapTexture.export(uccExporter, true, true);
@@ -185,16 +168,16 @@ public class T3DUE2Terrain extends T3DActor {
 
 				Installation.executeProcess(command, logs);
 
-				BufferedImage image = ImageIO.read(tiffHeightMap);
+				// reads heightmap data from image file
+				final BufferedImage image = ImageIO.read(tiffHeightMap);
 				heightMapTextureDimensions = new Dimension(image.getWidth(), image.getHeight());
 				Raster rs = image.getTile(0, 0);
 
 				int a[] = null;
-				heightMap = new int[image.getWidth()][image.getHeight()];
 
 				for (int y = 0; y < rs.getWidth(); y++) {
 					for (int x = 0; x < rs.getHeight(); x++) {
-						heightMap[x][y] = rs.getPixel(x, y, a)[0];
+						heightMap.add(rs.getPixel(x, y, a)[0]);
 					}
 				}
 			} else {
@@ -214,10 +197,6 @@ public class T3DUE2Terrain extends T3DActor {
 		}
 	}
 
-	public void setHeightMap(int[][] heightMap) {
-		this.heightMap = heightMap;
-	}
-
 	public Map<Integer, Long> getQuadVisibilityBitmaps() {
 		return quadVisibilityBitmaps;
 	}
@@ -231,4 +210,19 @@ public class T3DUE2Terrain extends T3DActor {
 		return heightMapTextureDimensions.height * heightMapTextureDimensions.width;
 	}
 
+	public Dimension getHeightMapTextureDimensions() {
+		return heightMapTextureDimensions;
+	}
+
+	public List<TerrainDecoLayer> getDecoLayers() {
+		return decoLayers;
+	}
+
+	public List<TerrainLayer> getLayers() {
+		return layers;
+	}
+
+	public Vector3d getTerrainScale() {
+		return terrainScale;
+	}
 }
