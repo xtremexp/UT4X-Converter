@@ -1386,6 +1386,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			// need to create one (unreal package info is auto-created)
 			UPackageRessource upRessource = new UPackageRessource(this, fullRessourceName, type, true);
+
+			// need force package name since it might not be the same (e.g: myLevel <-> MyMapName)
+			upRessource.getUnrealPackage().setName(packageName);
 			mapPackages.put(packageName, upRessource.getUnrealPackage());
 			return upRessource;
 		}
