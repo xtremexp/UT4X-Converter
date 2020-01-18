@@ -21,7 +21,10 @@ public abstract class T3DBaseTestTool {
 
 
     public T3DBaseTestTool(final UTGames.UTGame inputGame, final String mapFile) {
+        initForInputGame(inputGame, mapFile);
+    }
 
+    protected void initForInputGame(final UTGames.UTGame inputGame, final String mapFile){
         mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
 
         final UserConfig uc = loadUserConfig();
@@ -30,7 +33,7 @@ public abstract class T3DBaseTestTool {
         mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
 
         if (mapFile != null) {
-            mc.setInMap(UTGames.getMapsFolder(uc.getGameConfigByGame(inputGame).getPath(), inputGame));
+            mc.setInMap(new File(UTGames.getMapsFolder(uc.getGameConfigByGame(inputGame).getPath(), inputGame) + "/" + mapFile));
         } else {
             mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
         }
