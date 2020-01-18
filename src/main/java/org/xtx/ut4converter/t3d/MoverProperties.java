@@ -121,7 +121,7 @@ public class MoverProperties implements T3D {
 	}
 
 	enum MoverEncroachType {
-		ME_StopWhenEncroach, ME_ReturnWhenEncroach, ME_CrushWhenEncroach, ME_IgnoreWhenEncroach
+		ME_StopWhenEncroach, ME_ReturnWhenEncroach, ME_CrushWhenEncroach, ME_IgnoreWhenEncroach, ME_LiftWhenEncroach
 	}
 
 	enum MoverGlideType {
