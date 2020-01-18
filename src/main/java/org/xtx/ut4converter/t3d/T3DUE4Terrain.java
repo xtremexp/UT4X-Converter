@@ -100,7 +100,8 @@ public class T3DUE4Terrain extends T3DActor {
 		final short terrainWidth = ue3Terrain.getTerrainHeight().getWidth();
 		final short terrainHeight = ue3Terrain.getTerrainHeight().getHeight();
 
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, terrainWidth, terrainHeight);
+		// TODO handle visibility data (not visible terrain parts)
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, null, terrainWidth, terrainHeight);
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class T3DUE4Terrain extends T3DActor {
 	}
 
 
-	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, short terrainWidth, short terrainHeight) {
+	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, final List<Boolean> visibilityData, short terrainWidth, short terrainHeight) {
 
 		// size of heightmap values for components
 		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
@@ -156,12 +157,30 @@ public class T3DUE4Terrain extends T3DActor {
 				// fill up heighdata for this component
 				for (int i = 0; i < compHeightDataSize; i++) {
 
-					final Integer heightMatch = getHeightForComponentHeightIndex(i, heightMap, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight, minTerrainHeight);
+					final Integer heightMatchIdx = getDataIndexForComponentHeightIndex(i, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 
-					if (heightMatch != null) {
-						lcc.getHeightData().add(heightMatch);
-					} else {
-						lcc.getHeightData().add(32768);
+					if (heightMatchIdx != -1) {
+						lcc.getHeightData().add(heightMap.get(heightMatchIdx));
+					}
+					// outside of original UE2/3 terrain square set default value
+					else {
+						lcc.getHeightData().add(minTerrainHeight);
+					}
+				}
+
+				// fill up visibility data for this component
+				if (visibilityData != null) {
+					for (int i = 0; i < compHeightDataSize; i++) {
+
+						final Integer visibilityMatchIdx = getDataIndexForComponentHeightIndex(i, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
+
+						if (visibilityMatchIdx != -1) {
+							lcc.getVisibilityData().add(visibilityData.get(visibilityMatchIdx));
+						}
+						// outside of original UE2/3 terrain square set to not rendering
+						else {
+							lcc.getVisibilityData().add(Boolean.FALSE);
+						}
 					}
 				}
 
@@ -182,15 +201,13 @@ public class T3DUE4Terrain extends T3DActor {
 	 * related to this index within the UE4 terrain
 	 *
 	 * @param compHeightIdx Component height index
-	 * @param ue3GlobalHeightData Global height data from UE3 terrain
 	 * @param compQuadSize Quad Size for UE4 terrain
 	 * @param compIdxX UE4 terrain component X coordinate
 	 * @param compIdxY UE4 terrain component Y coordinate
 	 * @param ue3GlobalWidth UE3 terrain width (might be different from the new UE4 terrain width due to QuadSize list restrictions)
-	 * @param defaultTerrainHeight Default terrain height to set
 	 * @return
 	 */
-	private Integer getHeightForComponentHeightIndex(int compHeightIdx, final List<Integer> ue3GlobalHeightData, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight, int defaultTerrainHeight) {
+	private Integer getDataIndexForComponentHeightIndex(int compHeightIdx, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight) {
 
 		// TODO FIXME not working since the component size might be different from UE3 one
 		// let's say in UE3 our terrain was a 21x21 square (ue3GlobalWidth)
@@ -203,12 +220,11 @@ public class T3DUE4Terrain extends T3DActor {
 		// global coordinates within the UE4 terrain of this height index
 		final Point2d compHeightIdxGlobalCoord = new Point2d(compIdxX * (compQuadSize + 1) + compHeightIdxCoord.x, compIdxY * (compQuadSize + 1) + compHeightIdxCoord.y);
 
-		// this point is outside the original UE3 square, set height map value to default terrain height
+		// this point is outside the original UE3 square return -1
 		if (compHeightIdxGlobalCoord.x > (ue3GlobalWidth - 1) || compHeightIdxGlobalCoord.y > (ue3GlobalHeight - 1)) {
-			return defaultTerrainHeight;
+			return -1;
 		} else {
-			int globalHeightDataIdx = compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx - (int)(compHeightIdxGlobalCoord.y * (compQuadSize - ue3GlobalWidth + 1));
-			return ue3GlobalHeightData.get(globalHeightDataIdx);
+			return compIdxX * (compQuadSize + 1) + compIdxY * (compQuadSize + 1) + compHeightIdx - (int)(compHeightIdxGlobalCoord.y * (compQuadSize - ue3GlobalWidth + 1));
 		}
 	}
 
@@ -267,10 +283,12 @@ public class T3DUE4Terrain extends T3DActor {
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), ue2TerrainWidth, ue2TerrainHeight);
+		// FIXME visibility data seems not working
+		final List<Boolean> visibilityData = convertUe2Visibility(ue2Terrain);
+
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
 		// TODO alpha maps
-		// TODO visibility data
 
 		// In Unreal Engine 2, terrain pivot is "centered"
 		// unlike UE3/4, so need update location
