@@ -36,8 +36,13 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool{
         // export and read heightmap from map package
         ue2Terrain.loadTerrainData();
 
+        // default UT2004 -> UT4 scale
+        ue2Terrain.scale(2.2d);
+
         // convert UE2 terrain to UE4 terrain
         final T3DUE4Terrain t3DUE4Terrain = new T3DUE4Terrain(ue2Terrain);
         Assert.assertNotNull(t3DUE4Terrain);
+
+        System.out.println(t3DUE4Terrain.toT3d());
     }
 }

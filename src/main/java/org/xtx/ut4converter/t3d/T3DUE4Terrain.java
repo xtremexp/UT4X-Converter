@@ -96,8 +96,6 @@ public class T3DUE4Terrain extends T3DActor {
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-
-
 		final List<Integer> heightMap = ue3Terrain.getTerrainHeight().getHeightMap();
 		final short terrainWidth = ue3Terrain.getTerrainHeight().getWidth();
 		final short terrainHeight = ue3Terrain.getTerrainHeight().getHeight();
@@ -107,7 +105,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 	/**
 	 * Compute quadsize of UE4 terrain.
-	 * in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or (255*255) TODO CHECK
+	 * in UE4 compQuadSize is always either 7x7 or 15x15 or 31x31 or 63x63 or 127*127 or 255*255
 	 *
 	 * @param terrainHeight
 	 * @param terrainWidth
@@ -125,12 +123,16 @@ public class T3DUE4Terrain extends T3DActor {
 			compQuadSize = 31;
 		} else if (compQuadSize <= 127) {
 			compQuadSize = 127;
+		} else if (compQuadSize <= 255) {
+			compQuadSize = 255;
 		} else {
-			// TODO 1 component only of this size not supported, need split into multi components
+			// not supported
 			compQuadSize = 255;
 		}
+
 		return compQuadSize;
 	}
+
 
 	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, short terrainWidth, short terrainHeight) {
 
@@ -164,7 +166,7 @@ public class T3DUE4Terrain extends T3DActor {
 				}
 
 				collisionComponents[compIdxX][compIdxY] = lcc;
-				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc, false);
+				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc);
 				lc.setName("LC_" + compIdx);
 				landscapeComponents[compIdxX][compIdxY] = lc;
 
@@ -236,7 +238,7 @@ public class T3DUE4Terrain extends T3DActor {
 	 * 
 	 * @param ue2Terrain
 	 */
-	public T3DUE4Terrain(T3DUE2Terrain ue2Terrain) {
+	public T3DUE4Terrain(final T3DUE2Terrain ue2Terrain) {
 		super(ue2Terrain.getMapConverter(), ue2Terrain.t3dClass);
 
 		initialise();
@@ -249,29 +251,30 @@ public class T3DUE4Terrain extends T3DActor {
 			landscapeMaterial = ue2Terrain.getLayers().get(0).getTexture();
 		}
 
-		// TODO CHECK
-		this.componentSizeQuads = Math.min(Math.min(ue2Terrain.getHeightMapTextureDimensions().width, ue2Terrain.getHeightMapTextureDimensions().height - 1), maxComponentSize);
-		this.subsectionSizeQuads = this.componentSizeQuads;
+		short ue2TerrainWidth = (short) (ue2Terrain.getHeightMapTextureDimensions().width);
+		short ue2TerrainHeight = (short) (ue2Terrain.getHeightMapTextureDimensions().height);
 
+		// E.G: 128X128 -> 127
+		int compQuadSize = computeQuadSize(ue2TerrainHeight -1, ue2TerrainWidth - 1);
+		this.componentSizeQuads = compQuadSize;
+		this.subsectionSizeQuads = this.componentSizeQuads;
+		this.numSubsections = 1;
+
+		// E.G: 128 / (127 + 1) = 1
 		int nbCompX = ue2Terrain.getHeightMapTextureDimensions().width / (componentSizeQuads + 1);
 		int nbCompY = ue2Terrain.getHeightMapTextureDimensions().height / (componentSizeQuads + 1);
 
 		collisionComponents = new LandscapeCollisionComponent[nbCompX][nbCompY];
 		landscapeComponents = new LandscapeComponent[nbCompX][nbCompY];
 
-		short ue4TerrainWidth = (short) (ue2Terrain.getHeightMapTextureDimensions().width);
-		short ue4TerrainHeight = (short) (ue2Terrain.getHeightMapTextureDimensions().height);
-		int compQuadSize = computeQuadSize(ue4TerrainHeight, ue4TerrainWidth);
-
-		// TODO remove some heightmap values since a 128X128 UE2 terrain should convert to a 127X127 UE4 terrain
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), ue4TerrainWidth, ue4TerrainHeight);
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), ue2TerrainWidth, ue2TerrainHeight);
 
 		// TODO alpha maps
 		// TODO visibility data
 
 		// In Unreal Engine 2, terrain pivot is "centered"
 		// unlike UE3/4, so need update location
-		// TODO check and externalize
+		// FIXME location too high !
 		if (this.location != null && this.scale3d != null) {
 
 			double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;

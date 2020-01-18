@@ -9,9 +9,6 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -19,21 +16,16 @@ import java.util.List;
  */
 public class LandscapeComponent extends TerrainComponent implements T3D {
 
-	LandscapeCollisionComponent colisionComponent;
+	/**
+	 * Collision component attached to this component
+	 */
+	private LandscapeCollisionComponent colisionComponent;
 
-	int subsectionSizeQuads;
-
-	Vector4d weightmapScaleBias;
-
-	float weightmapSubsectionOffset;
-
-	Vector4d heightmapScaleBias;
+	private int subsectionSizeQuads;
 
 	short collisionMipLevel;
 
-	short numSubsections;
-
-	Vector3d relativeLocation;
+	private Vector3d relativeLocation;
 
 	/**
 	 * Hexadecimal values. Much more accurate than collision height map 32768 ->
@@ -42,7 +34,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 	public LandscapeComponent(MapConverter mc, int numComponent, int sizeQuads) {
 		super(mc, numComponent, sizeQuads);
-		initialise();
 	}
 
 	/**
@@ -51,9 +42,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	 *
 	 * @param mc
 	 * @param colComp Collision component
-	 * @param isNotUe4Scale
 	 */
-	public LandscapeComponent(MapConverter mc, LandscapeCollisionComponent colComp, boolean isNotUe4Scale) {
+	public LandscapeComponent(MapConverter mc, LandscapeCollisionComponent colComp) {
 
 		super(mc, colComp.numComponent, colComp.getSizeQuads());
 
@@ -69,18 +59,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		// this.heightData = colComp.getHeightData();
 		this.sectionBaseX = colComp.getSectionBaseX();
 		this.sectionBaseY = colComp.getSectionBaseY();
-
-		initialise();
-
-		if (isNotUe4Scale) {
-			convertUe2ToUe4HeightMap();
-		}
 	}
 
-	private void initialise() {
-		numSubsections = 1;
-		weightmapSubsectionOffset = 1;
-	}
 
 	public void setColisionComponent(LandscapeCollisionComponent colisionComponent) {
 		this.colisionComponent = colisionComponent;
@@ -88,18 +68,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 	public void setSubsectionSizeQuads(int subsectionSizeQuads) {
 		this.subsectionSizeQuads = subsectionSizeQuads;
-	}
-
-	public void setWeightmapScaleBias(Vector4d weightmapScaleBias) {
-		this.weightmapScaleBias = weightmapScaleBias;
-	}
-
-	public void setWeightmapSubsectionOffset(float weightmapSubsectionOffset) {
-		this.weightmapSubsectionOffset = weightmapSubsectionOffset;
-	}
-
-	public void setHeightmapScaleBias(Vector4d heightmapScaleBias) {
-		this.heightmapScaleBias = heightmapScaleBias;
 	}
 
 	public void setCollisionMipLevel(short collisionMipLevel) {
@@ -164,6 +132,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		sb.append(base).append("\tComponentSizeQuads=").append(sizeQuads).append("\n");
 		sb.append(base).append("\tSubsectionSizeQuads=").append(subsectionSizeQuads).append("\n");
+		short numSubsections = 1;
 		sb.append(base).append("\tNumSubsections=").append(numSubsections).append("\n");
 
 		sb.append(base).append("\tCollisionComponent=LandscapeHeightfieldCollisionComponent'").append(colisionComponent.getName()).append("'\n");
@@ -186,25 +155,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	@Override
 	public String getName() {
 		return "LandscapeComponent_" + numComponent;
-	}
-
-	public static int convertToUe4Height(int height) {
-		return height * 256;
-	}
-
-	/**
-	 * Convert heightmap ue2 data to ue4
-	 */
-	public void convertUe2ToUe4HeightMap() {
-
-		final List<Integer> convertedHeightData = new LinkedList<>();
-
-		// for(Integer height : landscapeHeightData){
-		for (int height : getHeightData()) {
-			convertedHeightData.add(convertToUe4Height(height));
-		}
-
-		this.setHeightData(convertedHeightData);
 	}
 
 }
