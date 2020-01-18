@@ -156,6 +156,10 @@ public class T3DUE3Terrain extends T3DActor {
 	static class TerrainInfoData {
 		private final List<Integer> data = new ArrayList<>();
 
+		public List<Integer> getData() {
+			return data;
+		}
+
 		public void addValue(final Integer value){
 			this.data.add(value);
 		}

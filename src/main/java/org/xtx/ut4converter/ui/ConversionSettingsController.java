@@ -95,17 +95,17 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
-	static final String DEFAULT_SCALE_FACTOR_UE1_UE4 = "2.5";
+	public static final String DEFAULT_SCALE_FACTOR_UE1_UE4 = "2.5";
 
 	/**
 	 * Default scale when converting Unreal 2 map to UT4
 	 */
-	static final String DEFAULT_SCALE_UNREAL2_UE4 = "2.5";
+	public static final String DEFAULT_SCALE_UNREAL2_UE4 = "2.5";
 	
 	/**
 	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
 	 */
-	static final String DEFAULT_SCALE_FACTOR_UE2_UE4 = "2.2";
+	public static final String DEFAULT_SCALE_FACTOR_UE2_UE4 = "2.2";
 	
 	/**
 	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4

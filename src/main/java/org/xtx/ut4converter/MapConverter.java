@@ -1428,6 +1428,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.outPath = null;
 		packageExtractors.clear();
 		this.mapName = null;
+		initialise();
 	}
 
 	public Path getOutPath() {

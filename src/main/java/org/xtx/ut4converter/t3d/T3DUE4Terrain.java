@@ -13,6 +13,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 
 import javax.vecmath.Point2d;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -101,7 +102,20 @@ public class T3DUE4Terrain extends T3DActor {
 		final short terrainHeight = ue3Terrain.getTerrainHeight().getHeight();
 
 		// TODO handle visibility data (not visible terrain parts)
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, null, terrainWidth, terrainHeight);
+
+
+		final List<Boolean> visData = new LinkedList<>();
+
+		// vis data in UT3 is 0 1 0 0 0 0 1 1
+		for (final Integer vis : ue3Terrain.getTerrainInfoData().getData()) {
+			if (vis == 0) {
+				visData.add(Boolean.FALSE);
+			} else {
+				visData.add(Boolean.TRUE);
+			}
+		}
+
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, visData, terrainWidth, terrainHeight);
 	}
 
 	/**

@@ -109,5 +109,7 @@ public abstract class T3DBaseTestTool {
         mc.setInMap(new File(UTGames.getMapsFolder(mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath(), mc.getInputGame())  + "/" + inMap));
     }
 
-
+    public MapConverter getMc() {
+        return mc;
+    }
 }

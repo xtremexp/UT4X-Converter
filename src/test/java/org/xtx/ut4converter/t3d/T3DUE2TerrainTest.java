@@ -3,11 +3,12 @@ package org.xtx.ut4converter.t3d;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ui.ConversionSettingsController;
 
 import java.io.IOException;
 
 
-public class T3DUE2TerrainTest extends T3DBaseTestTool{
+public class T3DUE2TerrainTest extends T3DBaseTestTool {
 
 
     public T3DUE2TerrainTest() {
@@ -29,7 +30,11 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool{
         ue2Terrain.loadTerrainData();
 
         // default UT2004 -> UT4 scale
-        ue2Terrain.scale(2.2d);
+        if (getMc().getInputGame() == UTGames.UTGame.U2) {
+            ue2Terrain.scale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
+        } else {
+            ue2Terrain.scale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4));
+        }
 
         // convert UE2 terrain to UE4 terrain
         return new T3DUE4Terrain(ue2Terrain);
