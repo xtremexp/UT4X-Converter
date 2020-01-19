@@ -2,12 +2,18 @@ package org.xtx.ut4converter.ucore.ue4;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DObject;
+import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class TerrainComponent extends T3DObject implements T3D {
+
+	/**
+	 * Terrain this landscape component belongs to
+	 */
+	private T3DUE4Terrain t3DUE4Terrain;
 
 	int sectionBaseX;
 	int sectionBaseY;
@@ -18,9 +24,10 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	int numComponent;
 
-	public TerrainComponent(MapConverter mc, int numComponent, int sizeQuads) {
+	public TerrainComponent(MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, int numComponent, int sizeQuads) {
 		super(mc);
 
+		this.t3DUE4Terrain = t3DUE4Terrain;
 		this.numComponent = numComponent;
 		this.sizeQuads = sizeQuads;
 	}

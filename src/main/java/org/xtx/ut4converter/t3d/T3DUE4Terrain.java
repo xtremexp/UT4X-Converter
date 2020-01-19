@@ -14,10 +14,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +43,11 @@ public class T3DUE4Terrain extends T3DActor {
 	short numSubsections;
 	boolean bUsedForNavigation;
 	short maxPaintedLayersPerComponent;
+
+	/**
+	 * Num layer to layer info
+	 */
+	private final Map<Integer, String> layerNumToLayerInfo = new HashMap<>();
 
 	private LandscapeCollisionComponent[][] collisionComponents;
 
@@ -118,7 +120,32 @@ public class T3DUE4Terrain extends T3DActor {
 			}
 		}
 
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, new LinkedList<>(), visData, terrainWidth, terrainHeight);
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, ue3Terrain.getAlphaLayers(), visData, terrainWidth, terrainHeight);
+	}
+
+	private void initLayerInfoForLayers(final List<TerrainLayer> terrainLayers) {
+
+
+		layerNumToLayerInfo.put(0, landscapeMaterial.getConvertedName(this.mapConverter));
+
+		int layerIdx = 1;
+
+		for(final TerrainLayer terrainLayer : terrainLayers){
+			layerNumToLayerInfo.put(layerIdx, terrainLayer.getTexture().getConvertedName(this.mapConverter));
+			layerIdx ++;
+		}
+
+		for(final String xxx : layerNumToLayerInfo.values()){
+			System.out.println(xxx);
+		}
+
+		// LayerNum=2 LayerInfo=/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo 0 0 0 0 ff ff 0 0
+		final String LI_1_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
+		final String LI_2_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/FortRun/FortRun_Dirt_LayerInfo.FortRun_Dirt_LayerInfo";
+		final String LI_3_ROCK = "/Game/RestrictedAssets/Environments/Tuba/Landscape/Rock_2_LayerInfo.Rock_2_LayerInfo";
+		final String LI_4_SAND1 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand01_LayerInfo";
+		final String LI_5_SAND2 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand02_LayerInfo";
+		final String LI_6_SAND3 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand03_LayerInfo";
 	}
 
 	/**
@@ -177,7 +204,7 @@ public class T3DUE4Terrain extends T3DActor {
 			for (int compIdxY = 0; compIdxY < nbCompY; compIdxY++) {
 
 				// create component
-				final LandscapeCollisionComponent lcc = new LandscapeCollisionComponent(mapConverter, compIdx, compQuadSize);
+				final LandscapeCollisionComponent lcc = new LandscapeCollisionComponent(mapConverter, this, compIdx, compQuadSize);
 
 				lcc.setSectionBaseX(compIdxX * compQuadSize);
 				lcc.setSectionBaseY(compIdxY * compQuadSize);
@@ -239,7 +266,7 @@ public class T3DUE4Terrain extends T3DActor {
 				}
 
 				collisionComponents[compIdxX][compIdxY] = lcc;
-				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc, alphaLayers);
+				final LandscapeComponent lc = new LandscapeComponent(mapConverter, this, lcc, alphaLayers);
 				lc.setName("LC_" + compIdx);
 				landscapeComponents[compIdxX][compIdxY] = lc;
 
@@ -342,7 +369,11 @@ public class T3DUE4Terrain extends T3DActor {
 
 		final List<List<Integer>> alphaLayers = ue2Terrain.getLayers().stream().map(TerrainLayer::getAlphaMap).collect(Collectors.toList());
 
-		// FIXME alpha layers conversion not working (but at least not crashing !)
+		// FIXME we don't use alpha layers for the moment since its not working
+		//alphaLayers.clear();
+
+		//initLayerInfoForLayers(ue2Terrain.getLayers());
+
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
 
@@ -549,5 +580,9 @@ public class T3DUE4Terrain extends T3DActor {
 
 	public LandscapeComponent[][] getLandscapeComponents() {
 		return landscapeComponents;
+	}
+
+	public Map<Integer, String> getLayerNumToLayerInfo() {
+		return layerNumToLayerInfo;
 	}
 }

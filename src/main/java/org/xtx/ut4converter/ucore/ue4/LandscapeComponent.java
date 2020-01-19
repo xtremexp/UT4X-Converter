@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.ucore.ue4;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import java.util.HashMap;
@@ -33,24 +34,15 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 
 	/**
-	 * Hexadecimal values. Much more accurate than collision height map 32768 ->
-	 * 80800080x = 2155872384 = 256 + (32768 * 65536)
-	 */
-
-	public LandscapeComponent(MapConverter mc, int numComponent, int sizeQuads) {
-		super(mc, numComponent, sizeQuads);
-	}
-
-	/**
 	 * Creates a landscape component from collision component.
 	 * Prior to UE4 there were no collision component specificaly so it's easy to create landscape component
 	 *
 	 * @param mc
 	 * @param colComp Collision component
 	 */
-	public LandscapeComponent(final MapConverter mc, final LandscapeCollisionComponent colComp, final List<LandscapeComponentAlphaLayer> alphaLayers) {
+	public LandscapeComponent(final MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, final LandscapeCollisionComponent colComp, final List<LandscapeComponentAlphaLayer> alphaLayers) {
 
-		super(mc, colComp.numComponent, colComp.getSizeQuads());
+		super(mc, t3DUE4Terrain, colComp.numComponent, colComp.getSizeQuads());
 
 		this.alphaLayers = alphaLayers;
 		this.colisionComponent = colComp;
@@ -65,6 +57,12 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		// this.heightData = colComp.getHeightData();
 		this.sectionBaseX = colComp.getSectionBaseX();
 		this.sectionBaseY = colComp.getSectionBaseY();
+
+		/*
+		for (final LandscapeComponentAlphaLayer alphaLayer : alphaLayers) {
+			final int layerNum = alphaLayer.getLayerNum();
+			alphaLayer.setLayerInfo(t3DUE4Terrain.getLayerNumToLayerInfo().get(layerNum));
+		}*/
 
 		initLayerInfoForLayers();
 	}

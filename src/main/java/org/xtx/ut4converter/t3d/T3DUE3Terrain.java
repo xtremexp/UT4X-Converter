@@ -9,8 +9,10 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -36,6 +38,8 @@ public class T3DUE3Terrain extends T3DActor {
 	 * Seems similar to landscape components
 	 */
 	private final List<TerrainComponent> terrainComponents = new LinkedList<>();
+
+	private final List<List<Integer>> alphaLayers = new LinkedList<>();
 
 
 
@@ -240,6 +244,26 @@ public class T3DUE3Terrain extends T3DActor {
 			terrainActorMembers = new TerrainActorMembers();
 			isReading = "TerrainActorMembers";
 		}
+		/**
+		 *             Count=3
+		 *             Begin AlphaMap Index=0 Count=441
+		 *                219	255	255	255	255	234	121	255
+		 */
+		else if(line.startsWith("Begin TerrainAlphaMapData")){
+			isReading = "TerrainAlphaMapData";
+		}
+		else if ("TerrainAlphaMapData".equals(isReading)) {
+
+			if (line.startsWith("Begin")) {
+				alphaLayers.add(new LinkedList<>());
+			}
+
+			if(!line.startsWith("Count") && !line.startsWith("Begin")){
+				// 219	255	255	255	255	234	121	255
+				final List<Integer> alphaValues = alphaLayers.get(alphaLayers.size() -1);
+				alphaValues.addAll(Arrays.stream(line.replaceAll(" ", "").split("\t")).map(Integer::valueOf).collect(Collectors.toList()));
+			}
+		}
 		else if ("TerrainHeight".equals(isReading)) {
 
 			//             Count=29469	Width=209	Height=141
@@ -339,5 +363,9 @@ public class T3DUE3Terrain extends T3DActor {
 			T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
 			replaceWith(ue4Terrain);
 		}
+	}
+
+	public List<List<Integer>> getAlphaLayers() {
+		return alphaLayers;
 	}
 }

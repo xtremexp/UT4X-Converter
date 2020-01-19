@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.ucore.ue4;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
@@ -39,8 +40,8 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	 * @param numComponent
 	 * @param sizeQuads
 	 */
-	public LandscapeCollisionComponent(MapConverter mc, int numComponent, int sizeQuads) {
-		super(mc, numComponent, sizeQuads);
+	public LandscapeCollisionComponent(MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, int numComponent, int sizeQuads) {
+		super(mc, t3DUE4Terrain, numComponent, sizeQuads);
 	}
 
 	@Override

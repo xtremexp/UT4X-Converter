@@ -25,7 +25,7 @@ public class T3DUE3TerrainTest extends T3DBaseTestTool{
         // terrain sample is from VCTF-Sandstorm reduced to 20X20 numpatches
 
         // read ue3TerrainData
-        final T3DActor actor = parseFromT3d( "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTest.class.getResource("/t3d/ue3/UT3-Suspense-Terrain.t3d").getPath());
+        final T3DActor actor = parseFromT3d( "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTest.class.getResource("/t3d/ue3/UT3-Terrain.t3d").getPath());
 
         Assert.assertNotNull(actor);
         Assert.assertTrue(actor instanceof T3DUE3Terrain);
@@ -41,7 +41,5 @@ public class T3DUE3TerrainTest extends T3DBaseTestTool{
         try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
             fw.write(ue4Terrrain.toT3d());
         }
-
-        //System.out.println(ue4Terrrain.toT3d());
     }
 }
