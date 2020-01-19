@@ -8,14 +8,17 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.ue2.TerrainLayer;
 import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
+import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Very basic implementation of Unreal Engine 4 terrain
@@ -24,7 +27,7 @@ import java.util.Map;
  */
 public class T3DUE4Terrain extends T3DActor {
 
-	private final static String DEFAULT_LANDSCAPE_HOLE_MATERIAL = "/Game/RestrictedAssets/Maps/WIP/CTF-Maul-UT2004/Terrain_Vis_Mat.Terrain_Vis_Mat";
+	private final static String DEFAULT_LANDSCAPE_HOLE_MATERIAL = "/Game/RestrictedAssets/Environments/Tuba/Landscape/M_LandscapeHole.M_LandscapeHole";
 
 	UPackageRessource landscapeMaterial;
 
@@ -115,7 +118,7 @@ public class T3DUE4Terrain extends T3DActor {
 			}
 		}
 
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, visData, terrainWidth, terrainHeight);
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, new LinkedList<>(), visData, terrainWidth, terrainHeight);
 	}
 
 	/**
@@ -149,7 +152,18 @@ public class T3DUE4Terrain extends T3DActor {
 	}
 
 
-	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, final List<Boolean> visibilityData, short terrainWidth, short terrainHeight) {
+	/**
+	 * Build landscape collision and heigh components
+	 * @param compQuadSize
+	 * @param nbCompX
+	 * @param nbCompY
+	 * @param heightMap
+	 * @param alphaLayersData
+	 * @param visibilityData
+	 * @param terrainWidth
+	 * @param terrainHeight
+	 */
+	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, final List<List<Integer>> alphaLayersData, final List<Boolean> visibilityData,  short terrainWidth, short terrainHeight) {
 
 		// size of heightmap values for components
 		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
@@ -198,8 +212,34 @@ public class T3DUE4Terrain extends T3DActor {
 					}
 				}
 
+
+				// fill up alpha layers for this component
+				final List<LandscapeComponentAlphaLayer> alphaLayers = new LinkedList<>();
+
+				for (int layerNum = 0; layerNum < alphaLayersData.size(); layerNum++) {
+
+					// increment the layer num since the first layer (0) is used by heightmap
+					final LandscapeComponentAlphaLayer landscapeComponentAlphaLayer = new LandscapeComponentAlphaLayer(layerNum + 1);
+
+					for (int alphaIdx = 0; alphaIdx < alphaLayersData.get(layerNum).size(); alphaIdx++) {
+
+						final List<Integer> alphaData = alphaLayersData.get(layerNum);
+						final Integer alphaMatchIdx = getDataIndexForComponentHeightIndex(alphaIdx, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
+
+						if (alphaMatchIdx != -1) {
+							landscapeComponentAlphaLayer.getAlphaData().add(alphaData.get(alphaMatchIdx));
+						}
+						// outside of original UE2/3 terrain square set to not rendering
+						else {
+							landscapeComponentAlphaLayer.getAlphaData().add(0);
+						}
+					}
+
+					alphaLayers.add(landscapeComponentAlphaLayer);
+				}
+
 				collisionComponents[compIdxX][compIdxY] = lcc;
-				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc);
+				final LandscapeComponent lc = new LandscapeComponent(mapConverter, lcc, alphaLayers);
 				lc.setName("LC_" + compIdx);
 				landscapeComponents[compIdxX][compIdxY] = lc;
 
@@ -300,9 +340,14 @@ public class T3DUE4Terrain extends T3DActor {
 		// FIXME visibility data seems not working
 		final List<Boolean> visibilityData = convertUe2Visibility(ue2Terrain);
 
-		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), visibilityData, ue2TerrainWidth, ue2TerrainHeight);
+		final List<List<Integer>> alphaLayers = ue2Terrain.getLayers().stream().map(TerrainLayer::getAlphaMap).collect(Collectors.toList());
 
-		// TODO alpha maps
+		// TEMP alpha layers conversion not working, even make crash UT4 editor
+		// TODO remove once working
+		alphaLayers.clear();
+
+		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
+
 
 		// In Unreal Engine 2, terrain pivot is "centered"
 		// unlike UE3/4, so need update location

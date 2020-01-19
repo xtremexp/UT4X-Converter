@@ -108,6 +108,15 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 		sb.append(base).append("Begin Object Name=\"").append(getName()).append("\"\n");
 
+
+		int layerIdx = 0;
+
+		//  ComponentLayerInfos(0)=LandscapeLayerInfoObject'/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Dirt_LayerInfo.Dirt_LayerInfo'
+		for (final LandscapeComponentAlphaLayer alphaLayer : this.renderComponent.getAlphaLayers()) {
+			sb.append(base).append("\tComponentLayerInfos(").append(layerIdx).append(")=LandscapeLayerInfoObject'").append(alphaLayer.getLayerInfo()).append("'\n");
+			layerIdx++;
+		}
+
 		sb.append(base).append("\tSectionBaseX=").append(sectionBaseX).append("\n");
 		sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 

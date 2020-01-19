@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.ui.ConversionSettingsController;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 
@@ -69,6 +71,8 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool {
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("mm_waterfront.un2", "U2-WaterFront-TerrainInfo.t3d");
         Assert.assertNotNull(t3DUE4Terrain);
 
-        System.out.println(t3DUE4Terrain.toT3d());
+        try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
+            fw.write(t3DUE4Terrain.toT3d());
+        }
     }
 }

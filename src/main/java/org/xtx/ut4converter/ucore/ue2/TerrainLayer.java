@@ -48,7 +48,8 @@ public class TerrainLayer implements T3D {
 
 	/**
 	 * List of alpha map values if alphaMapTexture set and values read from
-	 * texture file
+	 * texture file.
+	 * Range is 0-255
 	 */
 	private final List<Integer> alphaMap = new LinkedList<>();
 
@@ -146,19 +147,23 @@ public class TerrainLayer implements T3D {
 	private void loadAlphaTextureMap() throws IOException {
 
 		// Export heightmap texture to .tga
-		UCCExporter uccExporter = new UCCExporter(mapConverter);
+		final UCCExporter uccExporter = new UCCExporter(mapConverter);
 		uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
-		File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator);
+
+		final File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator);
 		exportFolder.mkdirs();
 		uccExporter.setForcedExportFolder(exportFolder);
 		uccExporter.setForceSetNotExported(true);
+
+		// export alpha texture from unreal package
 		alphaMapTexture.export(uccExporter, true);
 
 		int alphaValue;
 		final BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
 
+		// read alpha data values for heightmap alpha texture
 		for (int x = 0; x < img.getWidth(); x++) {
-			for (int y = 0; x < img.getWidth(); x++) {
+			for (int y = 0; y < img.getWidth(); y++) {
 
 				alphaValue = new Color(img.getRGB(x, y), true).getAlpha();
 				alphaMap.add(alphaValue);
@@ -184,4 +189,7 @@ public class TerrainLayer implements T3D {
 		return texture;
 	}
 
+	public List<Integer> getAlphaMap() {
+		return alphaMap;
+	}
 }
