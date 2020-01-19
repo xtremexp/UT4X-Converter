@@ -219,7 +219,7 @@ public class T3DUE4Terrain extends T3DActor {
 				for (int layerNum = 0; layerNum < alphaLayersData.size(); layerNum++) {
 
 					// increment the layer num since the first layer (0) is used by heightmap
-					final LandscapeComponentAlphaLayer landscapeComponentAlphaLayer = new LandscapeComponentAlphaLayer(layerNum + 1);
+					final LandscapeComponentAlphaLayer landscapeComponentAlphaLayer = new LandscapeComponentAlphaLayer(layerNum);
 
 					for (int alphaIdx = 0; alphaIdx < alphaLayersData.get(layerNum).size(); alphaIdx++) {
 
@@ -342,10 +342,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 		final List<List<Integer>> alphaLayers = ue2Terrain.getLayers().stream().map(TerrainLayer::getAlphaMap).collect(Collectors.toList());
 
-		// TEMP alpha layers conversion not working, even make crash UT4 editor
-		// TODO remove once working
-		alphaLayers.clear();
-
+		// FIXME alpha layers conversion not working (but at least not crashing !)
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
 
