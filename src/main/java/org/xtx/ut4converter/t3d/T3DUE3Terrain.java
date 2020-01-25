@@ -227,7 +227,7 @@ public class T3DUE3Terrain extends T3DActor {
 	public boolean analyseT3DData(String line) {
 
 		// TerrainMap=Texture'myLevel.Package0.TowerHeightMap'
-		if (line.startsWith("End " + isReading)) {
+		if (line.startsWith("End " + isReading) || line.startsWith("End Object")) {
 
 			if ("TerrainComponent".equals(isReading)) {
 				this.terrainComponents.add(terrainComponent);
