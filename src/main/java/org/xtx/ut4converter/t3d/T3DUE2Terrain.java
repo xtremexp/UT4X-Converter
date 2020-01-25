@@ -42,7 +42,10 @@ public class T3DUE2Terrain extends T3DActor {
 
 	private final List<Integer> heightMap = new LinkedList<>();
 
-	private Vector3d terrainScale;
+	/**
+	 * Default terrain scale in UE2
+	 */
+	private Vector3d terrainScale = new Vector3d(64d, 64d, 64d);
 
 	/**
 	 * Invisible pieces of terrain
@@ -62,12 +65,7 @@ public class T3DUE2Terrain extends T3DActor {
 		}
 		// TerrainScale=(X=15.000000,Y=15.000000,Z=2.000000)
 		else if (line.startsWith("TerrainScale")) {
-			terrainScale = T3DUtils.getVector3d(line, 1d);
-
-			// Z scale might not show if default value '64'
-			if (!line.contains("Z=")) {
-				terrainScale.z = 64d;
-			}
+			terrainScale = T3DUtils.getVector3d(line, 64d);
 		}
 
 		else if (line.startsWith("Layers(") && line.contains("AlphaMap=")) {
