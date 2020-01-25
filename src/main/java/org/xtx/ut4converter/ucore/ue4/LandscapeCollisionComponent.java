@@ -135,7 +135,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 		sb.append(base).append("\tCustomProperties CollisionHeightData");
 
-		for (final Integer hmValue  : getHeightData()) {
+		for (final Long hmValue  : getHeightData()) {
 			sb.append(" ").append(hmValue);
 		}
 

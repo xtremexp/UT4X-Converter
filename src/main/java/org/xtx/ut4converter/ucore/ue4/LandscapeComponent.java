@@ -49,9 +49,11 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		this.subsectionSizeQuads = colComp.getSizeQuads();
 
 		// resolution for landscape component is much higher then collision component height resolution
-		for (final Integer height : colComp.getHeightData()) {
-			// HeightMap[Landscape] = HeightMap[Collision]  * 256
-			this.getHeightData().add(height * 256);
+		// tested formula between heigh of collision component and height of landscape component
+		// 34010 gives 8084da80 which is 34010 * 256 + 128 + 2147483648 = 8084da80 (in hexa)
+		for (final Long height : colComp.getHeightData()) {
+			// HeightMap[Landscape] = HeightMap[Collision]  * 256 + 128 (80x) + 2147483648L (80000000x)
+			this.getHeightData().add(height * 256L + 128L + 2147483648L);
 		}
 
 		// this.heightData = colComp.getHeightData();
@@ -70,8 +72,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	private void initLayerInfoForLayers() {
 
 		// LayerNum=2 LayerInfo=/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo 0 0 0 0 ff ff 0 0
-		final String LI_1_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
-		final String LI_2_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/FortRun/FortRun_Dirt_LayerInfo.FortRun_Dirt_LayerInfo";
+		final String LI_1_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Dirt_LayerInfo.Dirt_LayerInfo";
+		final String LI_2_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
 		final String LI_3_ROCK = "/Game/RestrictedAssets/Environments/Tuba/Landscape/Rock_2_LayerInfo.Rock_2_LayerInfo";
 		final String LI_4_SAND1 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand01_LayerInfo";
 		final String LI_5_SAND2 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand02_LayerInfo";
@@ -84,8 +86,8 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		// so have to randomly set a layer info
 		final Map<Integer, String> layerNumToLayerInfo = new HashMap<>();
 
-		layerNumToLayerInfo.put(1, LI_1_GRASS);
-		layerNumToLayerInfo.put(2, LI_2_DIRT);
+		layerNumToLayerInfo.put(1, LI_1_DIRT);
+		layerNumToLayerInfo.put(2, LI_2_GRASS);
 		layerNumToLayerInfo.put(3, LI_3_ROCK);
 		layerNumToLayerInfo.put(4, LI_4_SAND1);
 		layerNumToLayerInfo.put(5, LI_5_SAND2);
@@ -94,7 +96,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		for (final LandscapeComponentAlphaLayer alphaLayer : alphaLayers) {
 			final int layerNum = alphaLayer.getLayerNum();
 
-			alphaLayer.setLayerInfo(layerNumToLayerInfo.getOrDefault(layerNum, LI_3_ROCK));
+			alphaLayer.setLayerInfo(layerNumToLayerInfo.getOrDefault(layerNum, LI_1_DIRT));
 		}
 	}
 
@@ -181,24 +183,22 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 
 		sb.append(base).append("\tCustomProperties LandscapeHeightData");
 
-		for (final int height : getHeightData()) {
-			sb.append(" ").append(Integer.toHexString(height));
+		for (final long height : getHeightData()) {
+			sb.append(" ").append(Long.toHexString(height));
 		}
 
 		sb.append(" ");
 
+		sb.append("LayerNum=").append(alphaLayers.size()).append(" ");
+
 		// write alpha layers data
-		if (alphaLayers.isEmpty()) {
-			sb.append("LayerNum=0 ");
-		} else {
-			for (final LandscapeComponentAlphaLayer alphaLayer : alphaLayers) {
+		for (final LandscapeComponentAlphaLayer alphaLayer : alphaLayers) {
 
-				sb.append("LayerNum=").append(alphaLayer.getLayerNum()).append(" LayerInfo=").append(alphaLayer.getLayerInfo()).append(" ");
+			sb.append(" LayerInfo=").append(alphaLayer.getLayerInfo()).append(" ");
 
-				// UE4 terrain has values in hexa (range: 0-> 255 - 0 -> FF)
-				for (final Integer alphaValue : alphaLayer.getAlphaData()) {
-					sb.append(Integer.toHexString(alphaValue)).append(" ");
-				}
+			// UE4 terrain has values in hexa (range: 0-> 255 - 0 -> FF)
+			for (final Integer alphaValue : alphaLayer.getAlphaData()) {
+				sb.append(Integer.toHexString(alphaValue)).append(" ");
 			}
 		}
 

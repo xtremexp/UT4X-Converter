@@ -110,7 +110,7 @@ public class TerrainLayer implements T3D {
 		}
 
 		if (line.contains("VScale")) {
-			vScale = Float.valueOf(line.split("VScale=")[1].split("\\,")[0]);
+			vScale = Float.valueOf(line.split("VScale=")[1].replaceAll("\\)","").split(",")[0]);
 		}
 
 		if (line.contains("UPan")) {

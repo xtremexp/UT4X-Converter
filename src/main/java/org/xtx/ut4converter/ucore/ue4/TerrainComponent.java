@@ -20,7 +20,7 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 
 	int sizeQuads;
 
-	private List<Integer> heightData = new LinkedList<>();
+	private List<Long> heightData = new LinkedList<>();
 
 	int numComponent;
 
@@ -48,11 +48,11 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 		this.sectionBaseY = sectionBaseY;
 	}
 
-	public List<Integer> getHeightData() {
+	public List<Long> getHeightData() {
 		return heightData;
 	}
 
-	public void setHeightData(List<Integer> heightData) {
+	public void setHeightData(List<Long> heightData) {
 		this.heightData = heightData;
 	}
 

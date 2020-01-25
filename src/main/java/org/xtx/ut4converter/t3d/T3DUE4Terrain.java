@@ -197,7 +197,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 		int compIdx = 0;
 		// min terrain height will become the default value
-		int minTerrainHeight = heightMap.stream().mapToInt(a -> a).min().orElse(32768);
+		long minTerrainHeight = heightMap.stream().mapToInt(a -> a).min().orElse(32768);
 
 		for (int compIdxX = 0; compIdxX < nbCompX; compIdxX++) {
 
@@ -215,7 +215,7 @@ public class T3DUE4Terrain extends T3DActor {
 					final Integer heightMatchIdx = getDataIndexForComponentHeightIndex(i, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 
 					if (heightMatchIdx != -1) {
-						lcc.getHeightData().add(heightMap.get(heightMatchIdx));
+						lcc.getHeightData().add(heightMap.get(heightMatchIdx).longValue());
 					}
 					// outside of original UE2/3 terrain square set default value
 					else {
