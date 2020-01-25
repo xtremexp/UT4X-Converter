@@ -217,10 +217,10 @@ public class T3DUE4Terrain extends T3DActor {
 
 					// increment the layer num since the first layer (0) is used by heightmap
 					final LandscapeComponentAlphaLayer landscapeComponentAlphaLayer = new LandscapeComponentAlphaLayer(layerNum);
+					final List<Integer> alphaData = alphaLayersData.get(layerNum);
 
-					for (int alphaIdx = 0; alphaIdx < alphaLayersData.get(layerNum).size(); alphaIdx++) {
+					for (int alphaIdx = 0; alphaIdx < compHeightDataSize; alphaIdx++) {
 
-						final List<Integer> alphaData = alphaLayersData.get(layerNum);
 						final Integer alphaMatchIdx = getDataIndexForComponentHeightIndex(alphaIdx, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 
 						if (alphaMatchIdx != -1) {
