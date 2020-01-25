@@ -8,6 +8,7 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -217,6 +218,9 @@ public class T3DUE3Terrain extends T3DActor {
 
 	public T3DUE3Terrain(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
+
+		// Default UE3 terrain scale within editor
+		this.scale3d = new Vector3d(256d, 256d, 256d);
 	}
 
 	@Override
