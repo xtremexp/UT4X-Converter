@@ -223,7 +223,7 @@ public class T3DUE3Terrain extends T3DActor {
 	public boolean analyseT3DData(String line) {
 
 		// TerrainMap=Texture'myLevel.Package0.TowerHeightMap'
-		if (line.startsWith("End")) {
+		if (line.startsWith("End " + isReading)) {
 
 			if ("TerrainComponent".equals(isReading)) {
 				this.terrainComponents.add(terrainComponent);
@@ -258,7 +258,7 @@ public class T3DUE3Terrain extends T3DActor {
 				alphaLayers.add(new LinkedList<>());
 			}
 
-			if(!line.startsWith("Count") && !line.startsWith("Begin")){
+			if(!line.startsWith("Count") && !line.startsWith("Begin") && !line.startsWith("End")){
 				// 219	255	255	255	255	234	121	255
 				final List<Integer> alphaValues = alphaLayers.get(alphaLayers.size() -1);
 				alphaValues.addAll(Arrays.stream(line.replaceAll(" ", "").split("\t")).map(Integer::valueOf).collect(Collectors.toList()));
