@@ -5,8 +5,8 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.ue2.TerrainLayer;
 import org.xtx.ut4converter.ucore.ue4.LandscapeCollisionComponent;
@@ -14,7 +14,10 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,19 +47,9 @@ public class T3DUE4Terrain extends T3DActor {
 	boolean bUsedForNavigation;
 	short maxPaintedLayersPerComponent;
 
-	/**
-	 * Num layer to layer info
-	 */
-	private final Map<Integer, String> layerNumToLayerInfo = new HashMap<>();
-
 	private LandscapeCollisionComponent[][] collisionComponents;
 
 	private LandscapeComponent[][] landscapeComponents;
-
-	public T3DUE4Terrain(MapConverter mc, String t3dClass) {
-		super(mc, t3dClass);
-		initialise();
-	}
 
 	/**
 	 * Creates an Unreal Engine 4 terrain from Unreal Engine 3 terrain
@@ -70,6 +63,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 		this.name = ue3Terrain.name;
 		this.location = ue3Terrain.location;
+		this.rotation = Geometry.UE123ToUE4Rotation(ue3Terrain.rotation);
 		this.scale3d = ue3Terrain.scale3d;
 
 
@@ -123,30 +117,6 @@ public class T3DUE4Terrain extends T3DActor {
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, ue3Terrain.getAlphaLayers(), visData, terrainWidth, terrainHeight);
 	}
 
-	private void initLayerInfoForLayers(final List<TerrainLayer> terrainLayers) {
-
-
-		layerNumToLayerInfo.put(0, landscapeMaterial.getConvertedName(this.mapConverter));
-
-		int layerIdx = 1;
-
-		for(final TerrainLayer terrainLayer : terrainLayers){
-			layerNumToLayerInfo.put(layerIdx, terrainLayer.getTexture().getConvertedName(this.mapConverter));
-			layerIdx ++;
-		}
-
-		for(final String xxx : layerNumToLayerInfo.values()){
-			System.out.println(xxx);
-		}
-
-		// LayerNum=2 LayerInfo=/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo 0 0 0 0 ff ff 0 0
-		final String LI_1_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
-		final String LI_2_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/FortRun/FortRun_Dirt_LayerInfo.FortRun_Dirt_LayerInfo";
-		final String LI_3_ROCK = "/Game/RestrictedAssets/Environments/Tuba/Landscape/Rock_2_LayerInfo.Rock_2_LayerInfo";
-		final String LI_4_SAND1 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand01_LayerInfo";
-		final String LI_5_SAND2 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand02_LayerInfo";
-		final String LI_6_SAND3 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand03_LayerInfo";
-	}
 
 	/**
 	 * Compute quadsize of UE4 terrain.
@@ -342,6 +312,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 		this.name = ue2Terrain.name;
 		this.location = ue2Terrain.location;
+		this.rotation = Geometry.UE123ToUE4Rotation(ue2Terrain.rotation);
 		this.scale3d = ue2Terrain.getTerrainScale();
 
 		if (!ue2Terrain.getLayers().isEmpty()) {
@@ -486,6 +457,8 @@ public class T3DUE4Terrain extends T3DActor {
 		if (landscapeHoleMaterial != null) {
 			landscapeHoleMaterial.export(UTPackageExtractor.getExtractor(mapConverter, landscapeHoleMaterial));
 		}
+
+		super.convert();
 	}
 
 	@Override
@@ -534,9 +507,14 @@ public class T3DUE4Terrain extends T3DActor {
 		// needs a guid or else would crash on import
 		sbf.append(IDT).append("\tLandscapeGuid=").append(T3DUtils.randomGuid()).append("\n");
 
+		/*
 		if (landscapeMaterial != null) {
 			sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
-		}
+		}*/
+
+		// LandscapeMaterial=Material'/Game/UT4X/Converter/UT4X_LandscapeMat.UT4X_LandscapeMat'
+		// TODO use copy this custom landscape to converted map folder within UT4 editor
+		sbf.append(IDT).append("\tLandscapeMaterial=Material'/Game/UT4X/Converter/UT4X_LandscapeMat.UT4X_LandscapeMat'\n");
 
 		// TODO test for all col components at least one with vis data
 		if (collisionComponents[0][0].getVisibilityData() != null) {
@@ -580,9 +558,5 @@ public class T3DUE4Terrain extends T3DActor {
 
 	public LandscapeComponent[][] getLandscapeComponents() {
 		return landscapeComponents;
-	}
-
-	public Map<Integer, String> getLayerNumToLayerInfo() {
-		return layerNumToLayerInfo;
 	}
 }

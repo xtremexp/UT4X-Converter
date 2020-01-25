@@ -637,4 +637,19 @@ public class Geometry {
 
 		return false;
 	}
+
+	/**
+	 * Converts an Unreal Engine 1/2/3 rotation vector to UE4 rotation vector.
+	 * UE123 rotation is within 0-> 65536 range while UE4 is within 0-360 range
+	 *
+	 * @param rotation
+	 */
+	public static Vector3d UE123ToUE4Rotation(final Vector3d rotation) {
+
+		if (rotation != null) {
+			rotation.scale(360d / 65536d);
+		}
+
+		return rotation;
+	}
 }
