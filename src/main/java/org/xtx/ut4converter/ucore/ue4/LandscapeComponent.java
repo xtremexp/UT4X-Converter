@@ -72,12 +72,13 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	private void initLayerInfoForLayers() {
 
 		// LayerNum=2 LayerInfo=/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo 0 0 0 0 ff ff 0 0
-		final String LI_1_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Dirt_LayerInfo.Dirt_LayerInfo";
-		final String LI_2_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
-		final String LI_3_ROCK = "/Game/RestrictedAssets/Environments/Tuba/Landscape/Rock_2_LayerInfo.Rock_2_LayerInfo";
-		final String LI_4_SAND1 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand01_LayerInfo";
-		final String LI_5_SAND2 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand02_LayerInfo";
-		final String LI_6_SAND3 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand03_LayerInfo";
+		final String LI_DIRT = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Dirt_LayerInfo.Dirt_LayerInfo";
+		final String LI_GRASS = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Grass_LayerInfo.Grass_LayerInfo";
+		final String LI_RUBBLE = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Loh/Rubble_LayerInfo.Rubble_LayerInfo";
+		final String LI_ROCK = "/Game/RestrictedAssets/Environments/Tuba/Landscape/Rock_2_LayerInfo.Rock_2_LayerInfo";
+		final String LI_SAND1 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand01_LayerInfo";
+		final String LI_SAND2 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand02_LayerInfo";
+		final String LI_SAND3 = "/Game/RestrictedAssets/Environments/Fort/LandscapeLayers/Sand02_LayerInfo.Sand03_LayerInfo";
 
 		// TODO add more layer info (some terrain has many alpha layers !)
 
@@ -86,17 +87,18 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 		// so have to randomly set a layer info
 		final Map<Integer, String> layerNumToLayerInfo = new HashMap<>();
 
-		layerNumToLayerInfo.put(1, LI_1_DIRT);
-		layerNumToLayerInfo.put(2, LI_2_GRASS);
-		layerNumToLayerInfo.put(3, LI_3_ROCK);
-		layerNumToLayerInfo.put(4, LI_4_SAND1);
-		layerNumToLayerInfo.put(5, LI_5_SAND2);
-		layerNumToLayerInfo.put(6, LI_6_SAND3);
+		layerNumToLayerInfo.put(0, LI_DIRT);
+		layerNumToLayerInfo.put(1, LI_GRASS);
+		layerNumToLayerInfo.put(2, LI_RUBBLE);
+		layerNumToLayerInfo.put(3, LI_ROCK);
+		layerNumToLayerInfo.put(4, LI_SAND2);
+		layerNumToLayerInfo.put(5, LI_SAND3);
 
 		for (final LandscapeComponentAlphaLayer alphaLayer : alphaLayers) {
 			final int layerNum = alphaLayer.getLayerNum();
 
-			alphaLayer.setLayerInfo(layerNumToLayerInfo.getOrDefault(layerNum, LI_1_DIRT));
+			alphaLayer.setLayerInfo(layerNumToLayerInfo.getOrDefault(layerNum, LI_DIRT));
+			System.out.println(alphaLayer.getLayerInfo());
 		}
 	}
 

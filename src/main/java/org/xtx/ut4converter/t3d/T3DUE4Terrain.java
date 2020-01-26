@@ -14,10 +14,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -114,6 +111,17 @@ public class T3DUE4Terrain extends T3DActor {
 			}
 		}
 
+		// in UT3 the first layer is always 100% rendered that why we need to force alpha values to 255 else we might see areas in ue4 terrain "black"
+		final org.xtx.ut4converter.ucore.ue3.TerrainLayer firstTerrainLayer = ue3Terrain.getTerrainLayers().stream().filter(tl -> tl.getIndex() == 0).findFirst().orElse(null);
+
+		if (firstTerrainLayer != null) {
+			final List<Integer> newValues = new ArrayList<>(Collections.nCopies(ue3Terrain.getAlphaLayers().get(0).size(), 255));
+			ue3Terrain.getAlphaLayers().remove(firstTerrainLayer.getAlphaMapIndex());
+
+			// set first terrain layer to be in first position
+			ue3Terrain.getAlphaLayers().add(newValues);
+		}
+
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, ue3Terrain.getAlphaLayers(), visData, terrainWidth, terrainHeight);
 	}
 
@@ -163,7 +171,7 @@ public class T3DUE4Terrain extends T3DActor {
 	private void buildLandscapeAndCollisionComponents(int compQuadSize, int nbCompX, int nbCompY, final List<Integer> heightMap, final List<List<Integer>> alphaLayersData, final List<Boolean> visibilityData,  short terrainWidth, short terrainHeight) {
 
 		// size of heightmap values for components
-		int compHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
+		int ue4CompHeightDataSize = (compQuadSize + 1) * (compQuadSize + 1);
 
 		int compIdx = 0;
 		// min terrain height will become the default value
@@ -180,7 +188,7 @@ public class T3DUE4Terrain extends T3DActor {
 				lcc.setSectionBaseY(compIdxY * compQuadSize);
 
 				// fill up heighdata for this component
-				for (int i = 0; i < compHeightDataSize; i++) {
+				for (int i = 0; i < ue4CompHeightDataSize; i++) {
 
 					final Integer heightMatchIdx = getDataIndexForComponentHeightIndex(i, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 
@@ -195,7 +203,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 				// fill up visibility data for this component
 				if (visibilityData != null) {
-					for (int i = 0; i < compHeightDataSize; i++) {
+					for (int i = 0; i < ue4CompHeightDataSize; i++) {
 
 						final Integer visibilityMatchIdx = getDataIndexForComponentHeightIndex(i, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 
@@ -219,7 +227,7 @@ public class T3DUE4Terrain extends T3DActor {
 					final LandscapeComponentAlphaLayer landscapeComponentAlphaLayer = new LandscapeComponentAlphaLayer(layerNum);
 					final List<Integer> alphaData = alphaLayersData.get(layerNum);
 
-					for (int alphaIdx = 0; alphaIdx < compHeightDataSize; alphaIdx++) {
+					for (int alphaIdx = 0; alphaIdx < ue4CompHeightDataSize; alphaIdx++) {
 
 						final Integer alphaMatchIdx = getDataIndexForComponentHeightIndex(alphaIdx, compQuadSize, compIdxX, compIdxY, terrainWidth, terrainHeight);
 

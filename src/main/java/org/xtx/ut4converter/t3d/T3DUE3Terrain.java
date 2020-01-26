@@ -7,6 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.ue3.TerrainLayer;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class T3DUE3Terrain extends T3DActor {
 
 	private final List<List<Integer>> alphaLayers = new LinkedList<>();
 
+	private final List<TerrainLayer> terrainLayers = new LinkedList<>();
 
 
 	static class TerrainActorMembers {
@@ -256,8 +258,20 @@ public class T3DUE3Terrain extends T3DActor {
 		else if(line.startsWith("Begin TerrainAlphaMapData")){
 			isReading = "TerrainAlphaMapData";
 		}
+		//  Begin TerrainLayer Index=0 Name=BaseDirtSand
+		else if(line.startsWith("Begin TerrainLayer ")){
+			isReading = "TerrainLayer";
+
+			final TerrainLayer tl = new TerrainLayer(mapConverter);
+			tl.setName(T3DUtils.getString(line, "Name"));
+			tl.setIndex(Integer.parseInt(T3DUtils.getString(line, "Index", " ")));
+			terrainLayers.add(tl);
+		} else if ("TerrainLayer".equals(isReading) && line.startsWith("AlphaMapIndex")) {
+			terrainLayers.get(terrainLayers.size() - 1).setAlphaMapIndex(T3DUtils.getInteger(line));
+		}
 		else if ("TerrainAlphaMapData".equals(isReading)) {
 
+			// Begin AlphaMap Index=0 Count=6561
 			if (line.startsWith("Begin")) {
 				alphaLayers.add(new LinkedList<>());
 			}
@@ -371,5 +385,9 @@ public class T3DUE3Terrain extends T3DActor {
 
 	public List<List<Integer>> getAlphaLayers() {
 		return alphaLayers;
+	}
+
+	public List<TerrainLayer> getTerrainLayers() {
+		return terrainLayers;
 	}
 }

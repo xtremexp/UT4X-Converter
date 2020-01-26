@@ -19,13 +19,37 @@ public class TerrainLayer extends T3DObject {
 		// TODO Auto-generated constructor stub
 	}
 
-	String name;
+	private int index;
+
+	private int alphaMapIndex;
+
 
 	/**
 	 * Impossible to get more data about TLS with t3d file
 	 */
-	String terrainLayerSetup;
-	boolean highlighted;
-	boolean wireframeHighlighted;
+	private String terrainLayerSetupName;
 
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getAlphaMapIndex() {
+		return alphaMapIndex;
+	}
+
+	public void setAlphaMapIndex(int alphaMapIndex) {
+		this.alphaMapIndex = alphaMapIndex;
+	}
+
+	public String getTerrainLayerSetupName() {
+		return terrainLayerSetupName;
+	}
+
+	public void setTerrainLayerSetupName(String terrainLayerSetupName) {
+		this.terrainLayerSetupName = terrainLayerSetupName;
+	}
 }
