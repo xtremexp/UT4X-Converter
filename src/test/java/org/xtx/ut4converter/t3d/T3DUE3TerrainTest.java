@@ -31,6 +31,8 @@ public class T3DUE3TerrainTest extends T3DBaseTestTool{
         Assert.assertTrue(actor instanceof T3DUE3Terrain);
 
         final T3DUE3Terrain ter = (T3DUE3Terrain) actor;
+        // default scale factor for UT3 -> UT4 conversion
+        ter.scale(2.2);
 
 
         // converts to UE4 Terrain
