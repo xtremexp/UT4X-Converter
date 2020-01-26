@@ -250,12 +250,13 @@ public class SupportedClasses {
 		} else {
 			registerUClass(T3DSound.class, "AmbientSound", "DynamicAmbientSound", "AmbientSoundSimple");
 		}
-		registerUClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit");
+		registerUClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit", "LiftCenter");
 		registerUClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
 
 		addMatches(mapConverter);
 
 		uneededActors.add("PathNode");
+		uneededActors.add("VolumePathNode");
 		uneededActors.add("InventorySpot");
 		uneededActors.add("TranslocDest");
 		uneededActors.add("AntiPortalActor"); // ut2004
