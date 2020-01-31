@@ -357,6 +357,7 @@ public class PSKStaticMesh {
 
 			fw.write("# Faces\n");
 			String currentMat = null;
+			Integer currentSmoothingGroup = null;
 			
 			for (Face fc : this.getFaces()) {
 				Material mat = this.getMaterials().get(fc.getMatIndex());
@@ -365,7 +366,12 @@ public class PSKStaticMesh {
 					fw.write("usemtl " + mat.getMaterialName() + "\n");
 					currentMat = mat.getMaterialName();
 				}
-				
+
+				if (currentSmoothingGroup == null || fc.getSmoothingGroups() != currentSmoothingGroup) {
+					currentSmoothingGroup = fc.getSmoothingGroups();
+					fw.write("s " + currentSmoothingGroup + "\n");
+				}
+
 				fw.write("f ");
 				fw.write((this.getWedges().get(fc.getWedge2()).getPointIndex() + 1) + "/" + (fc.getWedge2() + 1) + " ");
 				fw.write((this.getWedges().get(fc.getWedge1()).getPointIndex() + 1) + "/" + (fc.getWedge1() + 1) + " ");
