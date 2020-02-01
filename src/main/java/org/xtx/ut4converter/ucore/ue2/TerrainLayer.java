@@ -40,7 +40,7 @@ public class TerrainLayer implements T3D {
 																		// Templates.
 	}
 
-	enum TextureMapAxis {
+	public enum TextureMapAxis {
 		TEXMAPAXIS_XY, TEXMAPAXIS_XS, TEXMAPAXIS_YZ,
 	}
 
@@ -54,7 +54,12 @@ public class TerrainLayer implements T3D {
 	private final List<Integer> alphaMap = new LinkedList<>();
 
 	UPackageRessource texture;
+
+	/**
+	 * Default texture axis
+	 */
 	private TextureMapAxis textureMapAxis = TextureMapAxis.TEXMAPAXIS_XY;
+
 	Float textureRotation;
 	Float uPan, vPan;
 	Float uScale, vScale;
@@ -99,6 +104,10 @@ public class TerrainLayer implements T3D {
 		// all data in same line
 		if (line.contains("AlphaMap=")) {
 			alphaMapTexture = mapConverter.getUPackageRessource(line.split("AlphaMap=")[1].split("\\'")[1], T3DRessource.Type.TEXTURE);
+		}
+
+		if (line.contains("TextureMapAxis=")) {
+			textureMapAxis = TextureMapAxis.valueOf(line.split("TextureMapAxis=")[1].split("\\,")[0]);
 		}
 
 		if (line.contains("Texture=")) {
@@ -162,8 +171,10 @@ public class TerrainLayer implements T3D {
 		final BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
 
 		// read alpha data values for heightmap alpha texture
-		for (int x = 0; x < img.getWidth(); x++) {
-			for (int y = 0; y < img.getWidth(); y++) {
+
+		// TODO check this works only for TextureMapAxis=XY, need find formula for other axis !
+		for (int y = 0; y < img.getWidth(); y++) {
+			for (int x = 0; x < img.getHeight(); x ++) {
 
 				alphaValue = new Color(img.getRGB(x, y), true).getAlpha();
 				alphaMap.add(alphaValue);

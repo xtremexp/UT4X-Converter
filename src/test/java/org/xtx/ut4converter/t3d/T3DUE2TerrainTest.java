@@ -3,7 +3,6 @@ package org.xtx.ut4converter.t3d;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.ui.ConversionSettingsController;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +19,7 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool {
 
     private T3DUE4Terrain testUE2TerrainReadAndConvert(final String mapFile, final String t3dFile) throws IOException, ReflectiveOperationException, InterruptedException {
 
+        // TODO conversion should be done exactly like in T3DLevelConvertor
         this.setMapFile(mapFile);
         final T3DActor actor = parseFromT3d( "TerrainInfo", T3DUE2Terrain.class, T3DUE2Terrain.class.getResource("/t3d/ue2/" + t3dFile).getPath());
 
@@ -31,12 +31,7 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool {
         // export and read heightmap from map package
         ue2Terrain.loadTerrainData();
 
-        // default UT2004 -> UT4 scale
-        if (getMc().getInputGame() == UTGames.UTGame.U2) {
-            ue2Terrain.scale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
-        } else {
-            ue2Terrain.scale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4));
-        }
+        ue2Terrain.scale(this.getMc().getScale());
 
         // convert UE2 terrain to UE4 terrain
         return new T3DUE4Terrain(ue2Terrain);
@@ -51,7 +46,7 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool {
     @Test
     public void testUT2004TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
-        final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("DM-1on1-Serpentine.ut2", "UT2004-TerrainInfo.t3d");
+        final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("DM-1on1-Serpentine.ut2", "UT2004-Serpentine-TerrainInfo.t3d");
         Assert.assertNotNull(t3DUE4Terrain);
 
         System.out.println(t3DUE4Terrain.toT3d());

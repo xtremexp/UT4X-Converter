@@ -348,32 +348,20 @@ public class T3DUE4Terrain extends T3DActor {
 
 		final List<List<Integer>> alphaLayers = ue2Terrain.getLayers().stream().map(TerrainLayer::getAlphaMap).collect(Collectors.toList());
 
-		// FIXME we don't use alpha layers for the moment since its not working
-		//alphaLayers.clear();
-
-		//initLayerInfoForLayers(ue2Terrain.getLayers());
-
+		// FIXME make visible first alpha layer
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
 
 		// In Unreal Engine 2, terrain pivot is "centered"
 		// unlike UE3/4, so need update location
-		// FIXME location too high !
 		if (this.location != null && this.scale3d != null) {
 
 			double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;
 			double offsetY = (nbCompY * this.scale3d.y * this.componentSizeQuads) / 2;
-			double offsetZ = this.scale3d.z * 128;
-
-			if (mapConverter.getScale() != null) {
-				offsetX *= mapConverter.getScale();
-				offsetY *= mapConverter.getScale();
-				offsetZ *= mapConverter.getScale();
-			}
 
 			this.location.x -= (offsetX + 100);
 			this.location.y -= (offsetY + 100);
-			this.location.z += offsetZ;
+			this.location.z *= mapConverter.getScale();
 		}
 	}
 

@@ -110,7 +110,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Scale factor applied to converted level.
 	 */
-	Double scale;
+	Double scale = 1d;
 
 	/**
 	 * Light map resolution
@@ -386,7 +386,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		IIORegistry registry = IIORegistry.getDefaultInstance();
 		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 
-		scale = 1d;
 
 		try {
 

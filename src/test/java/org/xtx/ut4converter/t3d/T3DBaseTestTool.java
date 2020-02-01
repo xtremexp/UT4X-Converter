@@ -4,6 +4,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.UserConfig;
 import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.ui.ConversionSettingsController;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -26,6 +27,12 @@ public abstract class T3DBaseTestTool {
 
     protected void initForInputGame(final UTGames.UTGame inputGame, final String mapFile){
         mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
+
+        if (inputGame == UTGames.UTGame.U2) {
+            mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
+        } else {
+            mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4));
+        }
 
         final UserConfig uc = loadUserConfig();
         mc.setUserConfig(uc);
