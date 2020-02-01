@@ -13,20 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public abstract class T3DBaseTestTool {
+public class BaseTest {
+
 
     /**
-     *
+     * Initialise
+     * @param inputGame
+     * @return
      */
-    private MapConverter mc;
-
-
-    public T3DBaseTestTool(final UTGames.UTGame inputGame, final String mapFile) {
-        initForInputGame(inputGame, mapFile);
-    }
-
-    protected void initForInputGame(final UTGames.UTGame inputGame, final String mapFile){
-        mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame){
+        final MapConverter mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
 
         if (inputGame == UTGames.UTGame.U2) {
             mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
@@ -39,13 +35,11 @@ public abstract class T3DBaseTestTool {
 
         mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
 
-        if (mapFile != null) {
-            mc.setInMap(new File(UTGames.getMapsFolder(uc.getGameConfigByGame(inputGame).getPath(), inputGame) + "/" + mapFile));
-        } else {
-            mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
-        }
+        mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
 
         mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc));
+
+        return mc;
     }
 
     /**
@@ -53,14 +47,14 @@ public abstract class T3DBaseTestTool {
      *
      * @return
      */
-    private UserConfig loadUserConfig() {
+    private static UserConfig loadUserConfig() {
         final UserConfig uc = new UserConfig();
         uc.setIsFirstRun(false);
 
 
         final List<UserGameConfig> userGameConfigs = new ArrayList<>();
 
-        try (final InputStream input = this.getClass().getResourceAsStream("/application.properties")) {
+        try (final InputStream input = BaseTest.class.getResourceAsStream("/application.properties")) {
 
             final Properties prop = new Properties();
             prop.load(input);
@@ -91,7 +85,7 @@ public abstract class T3DBaseTestTool {
      * @throws InvocationTargetException
      * @throws InstantiationException
      */
-    protected T3DActor parseFromT3d(final String inputClassName, final Class<? extends T3DActor> utActorClass, final String t3dFilePath) throws ReflectiveOperationException, IOException {
+    public static T3DActor parseFromT3d(final MapConverter mc, final String inputClassName, final Class<? extends T3DActor> utActorClass, final String t3dFilePath) throws ReflectiveOperationException, IOException {
 
         final Constructor<? extends T3DActor> cons = utActorClass.getConstructor(MapConverter.class, String.class);
         final T3DActor uta = cons.newInstance(mc, inputClassName);
@@ -111,11 +105,7 @@ public abstract class T3DBaseTestTool {
         return uta;
     }
 
-    public void setMapFile(final String inMap){
+    public static void setMapFile(final MapConverter mc, final String inMap){
         mc.setInMap(new File(UTGames.getMapsFolder(mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath(), mc.getInputGame())  + "/" + inMap));
-    }
-
-    public MapConverter getMc() {
-        return mc;
     }
 }

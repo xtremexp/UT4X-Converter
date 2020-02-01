@@ -1,7 +1,9 @@
 package org.xtx.ut4converter.t3d;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
 import java.io.File;
@@ -9,11 +11,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class T3DUE3TerrainTest extends T3DBaseTestTool{
+public class T3DUE3TerrainTestTest {
 
 
-    public T3DUE3TerrainTest() {
-        super(UTGames.UTGame.UT3, null);
+    private MapConverter mc;
+
+    @Before
+    public void setUp(){
+        this.mc = BaseTest.getMapConverterInstance(UTGames.UTGame.UT3);
     }
 
     /**
@@ -25,7 +30,7 @@ public class T3DUE3TerrainTest extends T3DBaseTestTool{
         // terrain sample is from VCTF-Sandstorm reduced to 20X20 numpatches
 
         // read ue3TerrainData
-        final T3DActor actor = parseFromT3d( "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTest.class.getResource("/t3d/ue3/UT3-Terrain.t3d").getPath());
+        final T3DActor actor = BaseTest.parseFromT3d(this.mc, "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTestTest.class.getResource("/t3d/ue3/UT3-Terrain.t3d").getPath());
 
         Assert.assertNotNull(actor);
         Assert.assertTrue(actor instanceof T3DUE3Terrain);
