@@ -778,6 +778,10 @@ public abstract class T3DActor extends T3DObject {
 
 		writeSimpleProperties();
 
+		if (this.bHidden != null) {
+			sbf.append(IDT).append("\tbHidden=").append(this.bHidden).append("\n");
+		}
+
 		sbf.append(IDT).append("\tRootComponent=").append(rootComponentName).append("\n");
 
 		writeEndActor();
