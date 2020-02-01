@@ -344,4 +344,13 @@ public class T3DStaticMesh extends T3DSound {
 		// TODO remove test instancof decoration for testing purpose only
 		return this instanceof T3DDecoration || staticMesh != null || forcedStaticMesh != null;
 	}
+
+
+	/**
+	 * Do not convert this staticmesh if it's hidden
+	 * @return
+	 */
+	public boolean isValidConverting(){
+		return (this.isHidden() == null || Boolean.FALSE == this.isHidden()) && super.isValidConverting();
+	}
 }

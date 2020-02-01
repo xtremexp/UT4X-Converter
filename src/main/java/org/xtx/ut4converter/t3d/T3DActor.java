@@ -58,6 +58,11 @@ public abstract class T3DActor extends T3DObject {
 	protected String event;
 
 	/**
+	 * If true actor should be hidden in-game
+	 */
+	private Boolean bHidden;
+
+	/**
 	 * Location of actor (if null means 0 location)
 	 */
 	protected Vector3d location;
@@ -243,6 +248,9 @@ public abstract class T3DActor extends T3DObject {
 
 		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
 			coLocation = T3DUtils.getVector3d(line, 0D);
+		}
+		else if (line.startsWith("bHidden=")) {
+			bHidden = T3DUtils.getBoolean(line);
 		}
 
 		else if (line.startsWith("DrawScale3D")) {
@@ -775,6 +783,10 @@ public abstract class T3DActor extends T3DObject {
 		writeEndActor();
 
 		return sbf.toString();
+	}
+
+	public Boolean isHidden(){
+		return this.bHidden;
 	}
 
 }
