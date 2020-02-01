@@ -131,12 +131,6 @@ public class SettingsSceneController implements Initializable {
 		setUTxFolder(UTGame.U2, u2Path);
 	}
 
-	@FXML
-	private void gotoNConvertWebsite(ActionEvent event) {
-
-		final String nConvertUrl = "http://www.xnview.com/en/nconvert/";
-		MainSceneController.openUrl(nConvertUrl, false, "Press ok to go to nconvert website for download:\n" + nConvertUrl);
-	}
 
 	@FXML
 	private void gotoUModelWebsite(ActionEvent event) {
@@ -195,9 +189,6 @@ public class SettingsSceneController implements Initializable {
 				uModelPath.setText(userConfig.getUModelPath().getAbsolutePath());
 			}
 
-			if (userConfig.getNConvertPath() != null) {
-				nconvertPath.setText(userConfig.getNConvertPath().getAbsolutePath());
-			}
 
 			for (UserGameConfig game : userConfig.getGame()) {
 
@@ -295,30 +286,6 @@ public class SettingsSceneController implements Initializable {
 				userConfig.setUModelPath(umodelPathFile);
 				userConfig.saveFile();
 				uModelPath.setText(umodelPathFile.getAbsolutePath());
-			} catch (JAXBException ex) {
-				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
-
-	@FXML
-	private void setNConvertPath(ActionEvent event) {
-
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select nconvert file");
-
-		// TODO strict filter on filename
-		if (Installation.isWindows()) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("nconvert.exe", "*.exe"));
-		}
-
-		File nConvertPathFile = chooser.showOpenDialog(new Stage());
-
-		if (nConvertPathFile != null) {
-			try {
-				userConfig.setNConvertPath(nConvertPathFile);
-				userConfig.saveFile();
-				nconvertPath.setText(nConvertPathFile.getAbsolutePath());
 			} catch (JAXBException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}

@@ -63,12 +63,10 @@ Here is the conversion table for all ut games about what the program can convert
   ° Unreal Tournament 2003
   ° Unreal Tournament 2004
   ° Unreal Tournament 3
-* NConvert texture conversion program: http://www.xnview.com/en/nconvert/
 * UModel Unreal resource program extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
-* Install nconvert http://www.xnview.com/en/nconvert/
 * Install umodel http://www.gildor.org/en/projects/umodel
 * Decompress the ZIP archive to any folder of your choice.
 * Double-click on UT4-Converter-<version>.jar, the program should be launching.
@@ -78,7 +76,7 @@ and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
 as java program)
-Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
+Go to Settings and set the unreal games folders as well as umodel path.
 
 
 Detailed explanations about conversion is always displayed after each end of map conversion
@@ -237,8 +235,7 @@ Right click on project -> "Git" -> "Remote" -> "Pull"
 - Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
 - Sound Exchange (Sox) - 14.4.1 - http://sox.sourceforge.net/
 
-Converter interfaces with these external tools:
-- Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
+Converter interfaces with this external tool:
 - UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
 ---
 

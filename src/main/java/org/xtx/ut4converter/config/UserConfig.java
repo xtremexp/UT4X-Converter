@@ -5,20 +5,21 @@
  */
 package org.xtx.ut4converter.config;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ui.SettingsSceneController;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.xtx.ut4converter.ui.SettingsSceneController;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.tools.Installation;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -34,10 +35,7 @@ public class UserConfig {
 	 */
 	File uModelPath;
 
-	/**
-	 * Nconvert path
-	 */
-	File nConvertPath;
+
 
 	/**
 	 * true if program running for the first time. If so should display some
@@ -65,14 +63,6 @@ public class UserConfig {
 		this.isFirstRun = isFirstRun;
 	}
 
-	@XmlElement
-	public File getNConvertPath() {
-		return nConvertPath;
-	}
-
-	public void setNConvertPath(File nConvertPath) {
-		this.nConvertPath = nConvertPath;
-	}
 
 	@XmlElement
 	public List<UserGameConfig> getGame() {

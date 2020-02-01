@@ -118,7 +118,6 @@ public class MainSceneController implements Initializable {
 		msg += "In order to fully use the converter you need to set: \n";
 		msg += "- the unreal game(s) path(s)\n";
 		msg += "- download and set the umodel program file path (download at: http://www.gildor.org/en/projects/umodel ) \n";
-		msg += "- download and set the nconvert program file path (download at: http://www.xnview.com/en/nconvert/ ) \n";
 		msg += "\nPress OK to go to the settings panel";
 
 		alert.setContentText(msg);
@@ -318,7 +317,16 @@ public class MainSceneController implements Initializable {
 
 				// Show the dialog and wait until the user closes it
 				dialogStage.showAndWait();
-			} else {
+			} else if(this.userConfig.getUModelPath() == null || !this.userConfig.getUModelPath().exists()){
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("umodel.exe path not set or invalid.");
+				alert.setHeaderText("Need to set umodel.exe path");
+				alert.setContentText("See umodel.exe path in settings and start again.");
+
+				alert.showAndWait();
+				showSettings();
+			}
+			else {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Game paths not set");
 				alert.setHeaderText("Need to set game path");

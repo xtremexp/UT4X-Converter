@@ -8,17 +8,15 @@ package org.xtx.ut4converter.ucore;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
-import org.xtx.ut4converter.tools.*;
+import org.xtx.ut4converter.tools.ImageUtils;
+import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.psk.Material;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -671,9 +669,11 @@ public class UPackageRessource {
 
 		// ucc exporter exports malformed .dds textures ...
 		// that can't be imported in UE4
+		//  01022020 disabled since umodel does not export to .dss
+		/*
         if(mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE &&  exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)){
         	return true;
-		}
+		}*/
 
 		// .3d meshes needs to be converted to staticmeshes
 		if(mc.isFromUE1UE2ToUE3UE4() && type == Type.MESH){
@@ -697,26 +697,6 @@ public class UPackageRessource {
 			try {
 				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
-				return tempFile;
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				mapConverter.getLogger().log(Level.SEVERE, null, ex);
-			}
-		}
-
-		else if (type == Type.TEXTURE) {
-			TextureConverter texConverter = new TextureConverter(logger, userConfig);
-
-			if (!texConverter.isNConvertAvailable()) {
-				logger.log(Level.WARNING, "Impossible to convert " + name + " texture: nconvert path not set in settings");
-				return exportInfo.getExportedFiles().get(0);
-			}
-
-			try {
-				File tempFile = File.createTempFile(getFullNameWithoutDots(), "." + FileUtils.getExtension(exportInfo.getFirstExportedFile()));
-				Files.copy(exportInfo.getFirstExportedFile().toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-				texConverter.convert(tempFile, TextureFormat.tga);
-				tempFile = FileUtils.changeExtension(tempFile, TextureFormat.tga.name());
 				return tempFile;
 			} catch (IOException ex) {
 				ex.printStackTrace();

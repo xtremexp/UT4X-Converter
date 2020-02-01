@@ -83,11 +83,6 @@
                                     <Hyperlink onAction="#gotoUModelWebsite" text="UModel Path:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                                     <TextField fx:id="uModelPath" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\umodel_win32\umodel.exe" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                                     <Button onAction="#setUModelPath" GridPane.columnIndex="2" GridPane.rowIndex="0">Select</Button>
-                                    
-                                    <!-- NCONVERT - Texture Conversion -->
-                                    <Hyperlink onAction="#gotoNConvertWebsite" text="NConvert Path:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                                    <TextField fx:id="nconvertPath" editable="false" prefWidth="450.0" promptText="e.g: C:\Program Files (x86)\XnView\nconvert.exe" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Button onAction="#setNConvertPath" GridPane.columnIndex="2" GridPane.rowIndex="1">Select</Button>
                                 </children>
                            <columnConstraints>
                               <ColumnConstraints />

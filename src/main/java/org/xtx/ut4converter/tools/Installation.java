@@ -141,19 +141,7 @@ public class Installation {
 		return null;
 	}
 
-	/**
-	 * Return full path of texture converter
-	 * 
-	 * @param mapConverter
-	 * @return
-	 */
-	public static File getNConvertPath(MapConverter mapConverter) {
-		if (mapConverter.getUserConfig() != null) {
-			return mapConverter.getUserConfig().getNConvertPath();
-		}
 
-		return null;
-	}
 
 	/**
 	 * Return full path of texture extractor (basic extractor once done for UT3

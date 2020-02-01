@@ -58,7 +58,6 @@ public abstract class T3DBaseTestTool {
             final Properties prop = new Properties();
             prop.load(input);
 
-            uc.setNConvertPath(new File(prop.getProperty("umodel.path")));
             userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U1, new File(prop.getProperty("u1.path"))));
             userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U2, new File(prop.getProperty("u2.path"))));
             userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2003, new File(prop.getProperty("ut2003.path"))));
