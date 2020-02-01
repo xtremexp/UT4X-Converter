@@ -57,6 +57,17 @@ public class T3DUE2TerrainTest extends T3DBaseTestTool {
         System.out.println(t3DUE4Terrain.toT3d());
     }
 
+    @Test
+    public void testUT2004DriaTerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
+
+        final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("ONS-Dria.ut2", "UT2004-Dria-TerrainInfo.t3d");
+        Assert.assertNotNull(t3DUE4Terrain);
+
+        try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
+            fw.write(t3DUE4Terrain.toT3d());
+        }
+    }
+
     /**
      * Test Unreal 2 to Unreal Tournament 4 terrain conversion
      *
