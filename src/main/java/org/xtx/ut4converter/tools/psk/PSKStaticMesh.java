@@ -23,20 +23,20 @@ public class PSKStaticMesh {
 	 */
 	private static final ByteOrder BYTE_ORDER_LE = ByteOrder.LITTLE_ENDIAN;
 
-	private List<Point> points;
-	private List<Wedge> wedges;
-	private List<Face> faces;
+	private final List<Point> points = new ArrayList<>();
+	private final List<Wedge> wedges = new ArrayList<>();
+	private final List<Face> faces = new ArrayList<>();
 
 	/**
 	 * Means faces are using wedges as integer rather than short type
 	 */
 	private boolean usingFace32;
-	private List<Material> materials;
-	private List<Skeleton> skeletons;
-	private List<RawWeight> rawWeights;
-	private List<ExtraUv> extraUv0s;
-	private List<ExtraUv> extraUv1s;
-	private List<ExtraUv> extraUv2s;
+	private final List<Material> materials = new ArrayList<>();
+	private final List<Skeleton> skeletons = new ArrayList<>();
+	private final List<RawWeight> rawWeights = new ArrayList<>();
+	private final List<ExtraUv> extraUv0s = new ArrayList<>();
+	private final List<ExtraUv> extraUv1s = new ArrayList<>();
+	private final List<ExtraUv> extraUv2s = new ArrayList<>();
 
 	private static final String CHUNK_HEADER_HEAD_ID = "ACTRHEAD";
 
@@ -76,24 +76,9 @@ public class PSKStaticMesh {
 	 */
 	public PSKStaticMesh(File pskFile) throws Exception {
 		this.pskFile = pskFile;
-		initialise();
 		read();
 	}
 
-	/**
-	 * 
-	 */
-	private void initialise() {
-		points = new ArrayList<>();
-		wedges = new ArrayList<>();
-		faces = new ArrayList<>();
-		materials = new ArrayList<>();
-		skeletons = new ArrayList<>();
-		rawWeights = new ArrayList<>();
-		extraUv0s = new ArrayList<>();
-		extraUv1s = new ArrayList<>();
-		extraUv2s = new ArrayList<>();
-	}
 
 	public interface BinReadWrite {
 		void write(FileOutputStream bos) throws IOException;
@@ -379,56 +364,6 @@ public class PSKStaticMesh {
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String args[]) {
-
-		System.out.println("OK");
-
-		try {
-
-			File meshFolder = new File("D:\\test");
-			File reWriteFolder = new File("D:\\test\\out");
-
-			if (!reWriteFolder.exists()) {
-				reWriteFolder.mkdirs();
-			}
-
-			for (File pskFile : meshFolder.listFiles()) {
-				if (!(pskFile.getName().endsWith(".psk") || pskFile.getName().endsWith(".pskx"))) {
-					continue;
-				}
-
-				System.out.print("Loading " + pskFile.getName() + " ... ");
-
-				PSKStaticMesh mesh = null;
-
-				try {
-					mesh = new PSKStaticMesh(pskFile);
-					System.out.println(" OK ! Size: " + pskFile.length());
-				} catch (Exception e) {
-					System.out.println(" ERROR ! Size: " + pskFile.length());
-					e.printStackTrace();
-					continue;
-				}
-
-				File out = new File(reWriteFolder + File.separator + pskFile.getName());
-
-				try {
-					System.out.print("Wrtting " + pskFile.getName() + " ... ");
-					mesh.write(out);
-					System.out.println(" OK ! ");
-				} catch (Exception e) {
-					System.out.println(" ERROR ! ");
-					e.printStackTrace();
-				}
-			}
-
-			// mesh.write(newFile);
-		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

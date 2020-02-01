@@ -1,7 +1,5 @@
 package org.xtx.ut4converter.tools.t3dmesh;
 
-import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -61,16 +59,5 @@ public class StaticMesh {
 
     public List<Triangle> getTriangles() {
         return triangles;
-    }
-
-    public static void main(final String args[]){
-        final File t3dFile = new File("E:\\Boxnum2.t3d");
-        final StaticMesh staticMesh = new StaticMesh(t3dFile);
-
-        final File mtlFile = new File("E:\\TEMP\\test.mtl");
-        final File objFile = new File("E:\\TEMP\\test.obj");
-
-        final ObjStaticMesh objStaticMesh = new ObjStaticMesh(staticMesh);
-        objStaticMesh.export(mtlFile, objFile);
     }
 }

@@ -7,6 +7,8 @@ public class ObjFace {
      */
     private ObjMaterial material;
 
+    private int smoothingGroup;
+
     /**
      *
      */
@@ -66,5 +68,13 @@ public class ObjFace {
 
     public void setIdx5(int idx5) {
         this.idx5 = idx5;
+    }
+
+    public int getSmoothingGroup() {
+        return smoothingGroup;
+    }
+
+    public void setSmoothingGroup(int smoothingGroup) {
+        this.smoothingGroup = smoothingGroup;
     }
 }

@@ -23,7 +23,7 @@ public class BinUtils {
 	private static final ByteOrder BYTE_ORDER_LE = ByteOrder.LITTLE_ENDIAN;
 
 	public static void writeInt(FileOutputStream bos, int someInt) throws IOException {
-		byte[] bytes = ByteBuffer.allocate(Float.SIZE / Byte.SIZE).order(BYTE_ORDER_LE).putInt(someInt).array();
+		byte[] bytes = ByteBuffer.allocate(Integer.SIZE / Byte.SIZE).order(BYTE_ORDER_LE).putInt(someInt).array();
 		bos.write(bytes);
 	}
 

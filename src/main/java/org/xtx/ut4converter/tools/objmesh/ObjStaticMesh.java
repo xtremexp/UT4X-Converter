@@ -50,9 +50,10 @@ public class ObjStaticMesh {
     /**
      * Creates an .obj staticmesh from vertmesh .3d
      * (used in unreal 1 engine)
+     *
      * @param vertMesh
      */
-    public ObjStaticMesh(final VertMesh vertMesh){
+    public ObjStaticMesh(final VertMesh vertMesh) {
         this.vertices = new LinkedList<>();
         this.uvs = new LinkedList<>();
         this.faces = new LinkedList<>();
@@ -60,7 +61,7 @@ public class ObjStaticMesh {
 
         int globalVertexIdx = 0;
 
-        for(final FJSMeshTri faceVm : vertMesh.getFaces()){
+        for (final FJSMeshTri faceVm : vertMesh.getFaces()) {
             final ObjFace face = new ObjFace();
 
             // TODO get real texture name
@@ -68,7 +69,7 @@ public class ObjStaticMesh {
             final ObjMaterial material = materials.stream().filter(e -> e.getMaterialName().equals(matName)).findAny().orElse(new ObjMaterial(matName));
             face.setMaterial(material);
 
-            if(!this.materials.contains(material)){
+            if (!this.materials.contains(material)) {
                 materials.add(material);
             }
 
@@ -84,7 +85,7 @@ public class ObjStaticMesh {
         }
     }
 
-    public ObjStaticMesh(final PSKStaticMesh pskStaticMesh){
+    public ObjStaticMesh(final PSKStaticMesh pskStaticMesh) {
         this.vertices = new LinkedList<>();
         this.uvs = new LinkedList<>();
         this.faces = new LinkedList<>();
@@ -104,9 +105,10 @@ public class ObjStaticMesh {
 
     /**
      * Creates an .obj staticmesh from .td3 staticmesh
+     *
      * @param t3dSm
      */
-    public ObjStaticMesh(final StaticMesh t3dSm){
+    public ObjStaticMesh(final StaticMesh t3dSm) {
         this.vertices = new LinkedList<>();
         this.uvs = new LinkedList<>();
         this.faces = new LinkedList<>();
@@ -115,41 +117,41 @@ public class ObjStaticMesh {
         int globalVertexIdx = 0;
         int globalUvIdx = 0;
 
-        for(final Triangle t3dTriangle : t3dSm.getTriangles()){
+        for (final Triangle t3dTriangle : t3dSm.getTriangles()) {
 
             final ObjFace face = new ObjFace();
 
             final ObjMaterial material = materials.stream().filter(e -> e.getMaterialName().equals(t3dTriangle.getTexture())).findAny().orElse(new ObjMaterial(t3dTriangle.getTexture()));
             face.setMaterial(material);
+            face.setSmoothingGroup(t3dTriangle.getSmoothingMask());
 
-            if(!this.materials.contains(material)){
+            if (!this.materials.contains(material)) {
                 materials.add(material);
             }
 
-            face.setVertex2Idx(++globalVertexIdx);
-            face.setVertex1Idx(++globalVertexIdx);
             face.setVertex0Idx(++globalVertexIdx);
+            face.setVertex1Idx(++globalVertexIdx);
+            face.setVertex2Idx(++globalVertexIdx);
 
-            face.setIdx5(++globalUvIdx);
-            face.setIdx3(++globalUvIdx);
+            // FIXME good mesh rendering but bad UV !
             face.setIdx1(++globalUvIdx);
+            face.setIdx3(++globalUvIdx);
+            face.setIdx5(++globalUvIdx);
+
 
             faces.add(face);
 
-            for(final Vertex t3dVertex : t3dTriangle.getVertices()){
+            for (final Vertex t3dVertex : t3dTriangle.getVertices()) {
+                // it seems we need to flip
                 t3dVertex.getXyz().setY(t3dVertex.getXyz().getY() * -1d);
                 this.vertices.add(t3dVertex.getXyz());
-                // TODO only if unreal 2
-                // for unreal 2 for correct staticmesh alignement
-                // we do scale3d.y *= -1
-                // so we need to flip V
-                t3dVertex.getUv().setY(t3dVertex.getUv().getY() * -1d);
+                t3dVertex.getUv().negate();
                 this.uvs.add(t3dVertex.getUv());
             }
         }
     }
 
-    public void export(final File mtlFile, final File objFile){
+    public void export(final File mtlFile, final File objFile) {
         writeMtlObjFile(mtlFile);
         writeObjFile(objFile, mtlFile);
     }
@@ -159,8 +161,8 @@ public class ObjStaticMesh {
         try (FileWriter fw = new FileWriter(mtlFile)) {
 
             fw.write("# UT4 Converter MTL File:\n");
-            for(final ObjMaterial mat : this.getMaterials()){
-                fw.write("newmtl "+ mat.getMaterialName()+ " \n");
+            for (final ObjMaterial mat : this.getMaterials()) {
+                fw.write("newmtl " + mat.getMaterialName() + " \n");
                 fw.write("Ns 96.078431\n");
                 fw.write("Ka 1.000000 1.000000 1.000000\n");
                 fw.write("Kd 0.640000 0.640000 0.640000\n");
@@ -180,7 +182,7 @@ public class ObjStaticMesh {
 
         try (FileWriter fw = new FileWriter(objFile)) {
 
-            if(mtlFile != null && !this.getMaterials().isEmpty()){
+            if (mtlFile != null && !this.getMaterials().isEmpty()) {
                 fw.write("mtllib " + mtlFile.getName() + "\n");
             }
 
@@ -196,12 +198,19 @@ public class ObjStaticMesh {
 
             fw.write("# Faces\n");
             String currentMat = null;
+            Integer currentSmoothingGroup = null;
 
             for (final ObjFace fc : this.getFaces()) {
 
-                if(currentMat == null || !currentMat.equals(fc.getMaterial().getMaterialName())){
+                if (currentMat == null || !currentMat.equals(fc.getMaterial().getMaterialName())) {
                     fw.write("usemtl " + fc.getMaterial().getMaterialName() + "\n");
                     currentMat = fc.getMaterial().getMaterialName();
+                }
+
+
+                if (currentSmoothingGroup == null || fc.getSmoothingGroup() != currentSmoothingGroup) {
+                    currentSmoothingGroup = fc.getSmoothingGroup();
+                    fw.write("s " + currentSmoothingGroup + "\n");
                 }
 
                 fw.write("f ");

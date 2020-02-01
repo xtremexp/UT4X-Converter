@@ -33,7 +33,7 @@ public class Triangle {
             vertex.parseLine(line);
             this.vertices.add(vertex);
         } else if(line.startsWith("SmoothingMask")){
-            this.smoothingMask = Integer.valueOf(line.split(" ")[1]);
+            this.smoothingMask = Integer.parseInt(line.split(" ")[1]);
         }
     }
 
