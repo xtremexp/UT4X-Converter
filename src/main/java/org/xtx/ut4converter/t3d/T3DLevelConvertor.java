@@ -16,7 +16,6 @@ import org.xtx.ut4converter.ui.ConversionViewController;
 import javax.vecmath.Vector3d;
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +81,8 @@ public class T3DLevelConvertor extends Task<Object> {
 	private Vector3d boundBoxLocalisation;
 
 	private int actorCount;
+
+	private boolean noUi;
 	
 	/**
 	 * Unconverted properties
@@ -189,11 +190,15 @@ public class T3DLevelConvertor extends Task<Object> {
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
 
 		// Read actor data from file
-		updateMessage("Reading actors");
+		if(!noUi) {
+			updateMessage("Reading actors");
+		}
 		readActors();
 
 		// Convert actors
-		updateMessage("Converting actors");
+		if(!noUi) {
+			updateMessage("Converting actors");
+		}
 		convertActors();
 
 		// UT3 batchexport command is bugged and brush order is messed up
@@ -210,11 +215,15 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		// Write to file
-		updateMessage("Writing actors");
+		if(!noUi) {
+			updateMessage("Writing actors");
+		}
 		writeActors();
 
-		updateProgress(100, 100);
-		updateMessage("All done!");
+		if(!noUi) {
+			updateProgress(100, 100);
+			updateMessage("All done!");
+		}
 	}
 
 	/**
@@ -341,7 +350,10 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			String buffer;
 
-			updateProgress(0, convertedActors.size());
+			if(!noUi) {
+				updateProgress(0, convertedActors.size());
+			}
+
 			long actorsWriten = 0;
 
 			for (T3DActor actor : convertedActors) {
@@ -371,7 +383,9 @@ public class T3DLevelConvertor extends Task<Object> {
 					logger.log(Level.SEVERE, "Error while writting actor " + actor.getName() + ":", e);
 				}
 
-				updateProgress(++ actorsWriten, convertedActors.size());
+				if(!noUi) {
+					updateProgress(++actorsWriten, convertedActors.size());
+				}
 			}
 
 			writeFooter();
@@ -391,7 +405,9 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		int convertedActorsCount = 0;
 		long xx = 80 - MapConverter.PROGRESS_BEFORE_CONVERT;
-		updateProgress(0, convertedActors.size());
+		if(!noUi) {
+			updateProgress(0, convertedActors.size());
+		}
 
 		for (T3DActor uta : convertedActors) {
 			if (uta != null) {
@@ -400,7 +416,9 @@ public class T3DLevelConvertor extends Task<Object> {
 					if (uta.isValidConverting()) {
 						// we might want to only re-scale map
 						if (uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()) {
-							updateMessage("Converting " + uta.name);
+							if(!noUi) {
+								updateMessage("Converting " + uta.name);
+							}
 							uta.convert();
 						}
 						// rescale if needed
@@ -417,7 +435,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			convertedActorsCount ++;
 
 			// update global conversion
-			if(convertedActorsCount % 5 == 0){
+			if(convertedActorsCount % 5 == 0 && !noUi){
 				float pcDone = ((float) convertedActorsCount) / convertedActors.size();
 				long newProgress = (long) (MapConverter.PROGRESS_BEFORE_CONVERT + xx * pcDone);
 				mapConverter.updateMapConverterProgress(newProgress, 100);
@@ -546,7 +564,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	private void analyzeLine(String line) throws IOException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
+	private void analyzeLine(String line) throws Exception {
 
 		line = line.trim();
 
@@ -589,8 +607,9 @@ public class T3DLevelConvertor extends Task<Object> {
 		// Actor End - We write converted data to t3d file
 		else if (isEndActor(line)) {
 
-			updateProgress(actorsReadCount, actorCount);
-
+			if(!noUi) {
+				updateProgress(actorsReadCount, actorCount);
+			}
 			// Reset
 			banalyseline = false;
 			utActorClass = null;
@@ -846,5 +865,9 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	public LinkedList<T3DActor> getConvertedActors() {
 		return convertedActors;
+	}
+
+	public void setNoUi(boolean noUi) {
+		this.noUi = noUi;
 	}
 }

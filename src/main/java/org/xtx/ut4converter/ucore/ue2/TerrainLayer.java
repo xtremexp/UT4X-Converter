@@ -41,7 +41,7 @@ public class TerrainLayer implements T3D {
 	}
 
 	public enum TextureMapAxis {
-		TEXMAPAXIS_XY, TEXMAPAXIS_XS, TEXMAPAXIS_YZ,
+		TEXMAPAXIS_XY, TEXMAPAXIS_XZ, TEXMAPAXIS_YZ,
 	}
 
 	UPackageRessource alphaMapTexture;

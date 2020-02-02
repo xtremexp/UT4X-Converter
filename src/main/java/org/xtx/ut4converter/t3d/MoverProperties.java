@@ -129,7 +129,7 @@ public class MoverProperties implements T3D {
 	}
 
 	enum InitialState {
-		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed,
+		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed, GradualTriggerOpenTimed, GradualTriggerToggle,
 		/**
 		 * UT2004
 		 */
@@ -197,7 +197,8 @@ public class MoverProperties implements T3D {
 			savedRotations.add(T3DUtils.getVector3dRot(line.split("SavedRot")[1]));
 		}
 
-		else if (line.contains("InitialState=")) {
+		// empty value as seen in some maps ("InitialState=")
+		else if (line.contains("InitialState=") && !line.endsWith("=")) {
 			if(mover instanceof T3DGradualMover){
 				this.initialStateGradualMover = T3DGradualMover.InitialState.valueOf(T3DUtils.getString(line));
 			} else {

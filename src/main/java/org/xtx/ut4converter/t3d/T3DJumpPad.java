@@ -5,12 +5,12 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import javax.vecmath.Vector3d;
 
 /**
  * Checked: U1, U2, UT99, UT2004, UT3 Tested: UT99
@@ -79,8 +79,9 @@ public class T3DJumpPad extends T3DSound {
 		}
 
 		// UT3: JumpSound, U2: KickSound
-		else if (line.contains("JumpSound") || line.contains("KickSound")) {
-			jumpSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+		// Note for U2 there are also KickSoundPitch, KickSoundRadius and KickSoundVolume properties
+		else if (line.contains("JumpSound=") || line.contains("KickSound=")) {
+			jumpSound = mapConverter.getUPackageRessource(T3DUtils.getResourceName(line), T3DRessource.Type.SOUND);
 		}
 		else {
 			return super.analyseT3DData(line);

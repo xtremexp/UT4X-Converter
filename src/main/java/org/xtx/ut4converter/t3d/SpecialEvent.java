@@ -51,7 +51,7 @@ public class SpecialEvent extends T3DSound {
 	@Override
 	public void convert() {
 
-		if (sound != null) {
+		if (sound != null && this.mapConverter.convertSounds()) {
 			sound.export(UTPackageExtractor.getExtractor(mapConverter, sound));
 		}
 		

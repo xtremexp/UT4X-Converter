@@ -99,13 +99,13 @@ public class T3DUE2Terrain extends T3DActor {
 	public void convert() {
 
 		try {
-			// TODO terrain data from heightmap, layer/decolayer textures
-			loadTerrainData();
+			if(this.getMapConverter().convertTextures()) {
+				loadTerrainData();
 
-			// TODO convert to UT4
-			if (mapConverter.isTo(UnrealEngine.UE4)) {
-				T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
-				replaceWith(ue4Terrain);
+				if (mapConverter.isTo(UnrealEngine.UE4)) {
+					T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
+					replaceWith(ue4Terrain);
+				}
 			}
 		} catch (InterruptedException | IOException ex) {
 			mapConverter.getLogger().log(Level.SEVERE, "Could not load terrain data", ex);

@@ -117,7 +117,20 @@ public class T3DUtils {
 			return line.split(property.concat("="))[1].split(",")[0].split("\\)")[0];
 		}
 	}
-	
+
+	/**
+	 * Extra utility function to return null for resource if ends with "=None"
+	 * @param line
+	 * @return
+	 */
+	public static String getResourceName(String line) {
+		if(line.endsWith("=None")){
+			return null;
+		} else {
+			return getString(line);
+		}
+	}
+
 	public static String getString(String line) {
 		return line.split("=")[1].replaceAll("\"", "").replaceAll("\\)", "");
 	}
@@ -137,7 +150,7 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static Vector3d getVector3d(String line, Double defaut) {
-		return getVector3d(line, new String[] { "X", "Y", "Z" }, defaut);
+		return getVector3d(clean(line), new String[] { "X", "Y", "Z" }, defaut);
 	}
 
 	/**
@@ -147,7 +160,8 @@ public class T3DUtils {
 	 * @return
 	 */
 	public static String clean(String t3dLine) {
-		return t3dLine.replaceAll("\\s+", " ").trim();
+		// as seen in a few maps values like "-00001.#IND00"
+		return t3dLine.replaceAll("\\s+", " ").replaceAll("#IND00", "0").trim();
 	}
 
 	/**

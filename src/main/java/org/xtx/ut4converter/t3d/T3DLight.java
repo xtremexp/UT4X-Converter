@@ -29,7 +29,7 @@ public class T3DLight extends T3DSound {
 	 * Light Effect Used in unreal engine 1 / 2
 	 */
 	enum UE12_LightEffect {
-		LE_None, LE_TorchWaver, LE_FireWaver, LE_WateryShimmer, LE_Searchlight, LE_SlowWave, LE_FastWave, LE_CloudCast, LE_StaticSpot, LE_Shock, LE_Disco, LE_Warp, LE_Spotlight, LE_NonIncidence, LE_Shell, LE_OmniBumpMap, LE_Interference, LE_Cylinder, LE_Rotor,
+		LE_None, LE_TorchWaver, LE_FireWaver, LE_Negative, LE_WateryShimmer, LE_Searchlight, LE_SlowWave, LE_FastWave, LE_CloudCast, LE_StaticSpot, LE_Shock, LE_Disco, LE_Warp, LE_Spotlight, LE_NonIncidence, LE_Shell, LE_OmniBumpMap, LE_Interference, LE_Cylinder, LE_Rotor,
 		// Unreal Engine 2 new light effects
 		LE_Sunlight,  LE_Unused, LE_Spotlight2, LE_SquareSpotlight, LE_QuadraticNonIncidence
 	}
