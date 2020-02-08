@@ -1,6 +1,9 @@
 
 # UT4 Converter Readme file
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
+
+
 * Version: 0.9.5
 * Release date: 04/01/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
