@@ -1,4 +1,4 @@
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/298c62980fe94f6cb313798568133bc7)](https://www.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=xtremexp/UT4X-Converter&amp;utm_campaign=Badge_Grade)
 # UT4 Converter Readme file
 
 * Version: 0.9.5
