@@ -5,20 +5,15 @@
  */
 package org.xtx.ut4converter.tools;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
+import javax.sound.sampled.AudioSystem;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.sound.sampled.AudioFileFormat.Type;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 
 // openjdk visibility limation
 //import com.sun.media.sound.WaveFileWriter;
@@ -115,7 +110,7 @@ public class SoundConverter {
 	 */
 	private synchronized void convertTo16BitSampleSizeUsingCoreApi(File inWaveFile, File outWaveFile){
 		// TODO use other lib (if existing) since OPENJDK can't use WaveFileWriter
-		throw new UnsupportedOperationException("OPENJDK 11 does not support this operation");
+		throw new UnsupportedOperationException("OPENJDK 11+ does not support this operation");
 
 		/*
 		AudioInputStream audioInputStream = null;

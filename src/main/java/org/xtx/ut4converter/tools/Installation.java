@@ -33,7 +33,7 @@ public class Installation {
 	/**
 	 * Where all "external" programs should be for converting/extracting stuff
 	 */
-	private static final String LIBS_FOLDER = "libs";
+	private static final String LIBS_FOLDER = "app";
 
 	/**
 	 * Test is the current running program is installed. <br>

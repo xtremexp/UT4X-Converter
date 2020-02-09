@@ -79,7 +79,7 @@
 							<outputDirectory>${project.build.directory}/libs/g16convert</outputDirectory>
 							<resources>
 								<resource>
-									<directory>libs/g16convert</directory>
+									<directory>app/g16convert</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
@@ -95,7 +95,7 @@
 							<outputDirectory>${project.build.directory}/libs/sox</outputDirectory>
 							<resources>
 								<resource>
-									<directory>libs/sox</directory>
+									<directory>app/sox</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
@@ -111,7 +111,7 @@
 							<outputDirectory>${project.build.directory}/libs/utxextractor</outputDirectory>
 							<resources>
 								<resource>
-									<directory>libs/utxextractor</directory>
+									<directory>app/utxextractor</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
