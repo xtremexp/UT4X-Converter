@@ -12,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -27,16 +26,10 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.xtx.ut4converter.tools.UIUtils.openUrl;
 
@@ -48,10 +41,6 @@ import static org.xtx.ut4converter.tools.UIUtils.openUrl;
 @SuppressWarnings("restriction")
 public class MainSceneController implements Initializable {
 
-	/**
-	 * Link to UT3 Converter topic (at old ut forums)
-	 */
-	final String URL_UT3CONV_FORUM = "http://utforums.epicgames.com/showthread.php?p=25131566";
 
 	/**
 	 * Link to UT4 Converter topic
@@ -113,10 +102,7 @@ public class MainSceneController implements Initializable {
 		alert.setTitle("Welcome!");
 		alert.setHeaderText("Welcome to UT4 Converter");
 
-		String msg = "Note that since staticmesh and terrain conversion is not yet supported \n";
-		msg += "conversion of some maps from Unreal 2/UT2003/UT2004/UT3 might be pretty bad\n\n";
-
-		msg += "In order to fully use the converter you need to set: \n";
+		String msg = "In order to fully use the converter you need to set: \n";
 		msg += "- the unreal game(s) path(s)\n";
 		msg += "- download and set the umodel program file path (download at: http://www.gildor.org/en/projects/umodel ) \n";
 		msg += "\nPress OK to go to the settings panel";
@@ -150,7 +136,7 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Show credits about program TODO history, library used, licence
 	 * 
-	 * @param event
+	 * @param event Event
 	 */
 	@FXML
 	private void handleAbout(ActionEvent event) {
@@ -209,11 +195,10 @@ public class MainSceneController implements Initializable {
 	}
 
 
-	/*
 	@FXML
 	private void openGitHubIssues(ActionEvent event){
 		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
-	}*/
+	}
 
 	private void openGitHubUrl(ActionEvent event) {
 		openUrl(URL_UTCONV_GITHUB, true, null);
