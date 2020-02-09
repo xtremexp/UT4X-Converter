@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 
 /**
  * Test class for testing all conversion of all UT99 stock maps.

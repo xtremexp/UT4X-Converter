@@ -17,14 +17,14 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -170,7 +170,7 @@ public class ConversionSettingsController implements Initializable {
 		this.mainApp = mainApp;
 	}
 
-	public void load() throws JAXBException {
+	public void load() throws IOException {
 
 		inputGameLbl.setText(inputGame.name);
 		outputGameLbl.setText(outputGame.name);

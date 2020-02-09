@@ -1,9 +1,10 @@
+
 # UT4 Converter Readme file
 
-* Version: 0.9.5
-* Release date: 04/01/2020
+* Version: 0.9.1
+* Release date: 25/08/2018
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-* Download latest released version at: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
+* Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
 ---
 
@@ -62,10 +63,12 @@ Here is the conversion table for all ut games about what the program can convert
   ° Unreal Tournament 2003
   ° Unreal Tournament 2004
   ° Unreal Tournament 3
+* NConvert texture conversion program: http://www.xnview.com/en/nconvert/
 * UModel Unreal resource program extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
+* Install nconvert http://www.xnview.com/en/nconvert/
 * Install umodel http://www.gildor.org/en/projects/umodel
 * Decompress the ZIP archive to any folder of your choice.
 * Double-click on UT4-Converter-<version>.jar, the program should be launching.
@@ -75,7 +78,7 @@ and create some "run.bat" batch file with notepad that you will save in the
 program folder with this command line:
 "java -jar UT4-Converter-<version>.jar" (will force launching this file associating it
 as java program)
-Go to Settings and set the unreal games folders as well as umodel path.
+Go to Settings and set the unreal games folders as well as umodel and nconvert program paths
 
 
 Detailed explanations about conversion is always displayed after each end of map conversion
@@ -239,6 +242,12 @@ Converter interfaces with this external tool:
 ---
 
 # History
+- 1.0.0 - MM/DD/2020
+  * TODO LIST
+  * install: program is now bundled as an Windows installer containing Java Runtime Environnement (JRE) which makes the filesize
+  * tech: migrated from Java 8 to Java 13 version
+  * tech: migrated to Java FX 13
+  
 - 0.9.5 - 04/01/2020
  * ut2003/4, ut3: added support for CameraActor, SpectatorCam, AttractCamera
  * ut2003/4, ut3: handled no collision properties for staticmeshes
@@ -255,8 +264,8 @@ Converter interfaces with this external tool:
   * Hotfix: fixed no resources being identified / exported with newer version of UModel.
 
 - 0.9.1 - 25/08/2018
- * all: fixed some unconverted resources
-
+ * all: fixed some unconverted resources 
+ 
 - 0.9.0 - 19/08/2018
   * added support for UDK maps (conversion quality is like UT3 = medium)
   * u1/ut99: default scale is now 2.5X

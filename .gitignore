@@ -1,6 +1,7 @@
 /Converted
 /target
-/UserConfig.xml
+/UserConfig.json
 .classpath
 .project
+*.iml
 /.idea

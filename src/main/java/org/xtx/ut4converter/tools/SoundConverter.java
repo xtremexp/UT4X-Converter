@@ -20,7 +20,8 @@ import javax.sound.sampled.AudioFormat.Encoding;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-import com.sun.media.sound.WaveFileWriter;
+// openjdk visibility limation
+//import com.sun.media.sound.WaveFileWriter;
 
 /**
  * 
@@ -113,6 +114,10 @@ public class SoundConverter {
 	 * @param outWaveFile Converted 16 bit sound file
 	 */
 	private synchronized void convertTo16BitSampleSizeUsingCoreApi(File inWaveFile, File outWaveFile){
+		// TODO use other lib (if existing) since OPENJDK can't use WaveFileWriter
+		throw new UnsupportedOperationException("OPENJDK 11 does not support this operation");
+
+		/*
 		AudioInputStream audioInputStream = null;
 		AudioInputStream convertedIn = null;
 
@@ -163,6 +168,6 @@ public class SoundConverter {
 					logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
 				}
 			}
-		}
+		}*/
 	}
 }

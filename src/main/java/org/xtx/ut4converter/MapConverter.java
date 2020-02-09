@@ -5,8 +5,8 @@ import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.*;
 import org.xtx.ut4converter.t3d.T3DLevelConvertor;
 import org.xtx.ut4converter.t3d.T3DMatch;
@@ -27,7 +27,6 @@ import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.TableRowLog;
 
 import javax.imageio.spi.IIORegistry;
-import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -425,7 +424,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			userConfig = UserConfig.load();
-		} catch (JAXBException | IOException ex) {
+		} catch (IOException ex) {
 			Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
@@ -1225,7 +1224,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return
 	 */
 	private static File getBaseConvertFolder() {
-		return new File(Installation.getProgramFolder().getAbsolutePath() + File.separator + CONV_PATH);
+		return new File(Installation.getDocumentProgramFolder() + File.separator + CONV_PATH);
 	}
 
 	/**

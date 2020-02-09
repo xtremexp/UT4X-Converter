@@ -5,7 +5,6 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
-import com.sun.istack.internal.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import javax.vecmath.Vector3d;
@@ -21,7 +20,6 @@ public class BodyInstance {
 	/**
 	 * TODO check other collision profiles
 	 */
-	@NotNull
 	public String collisionProfileName = "Custom";
 
 	public Vector3d scale3D = new Vector3d(1d, 1d, 1d);

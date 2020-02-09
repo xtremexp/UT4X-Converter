@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.MainSceneController;
 
@@ -19,6 +21,8 @@ import java.io.IOException;
  */
 @SuppressWarnings("restriction")
 public class MainApp extends Application {
+
+	private Logger logger = LoggerFactory.getLogger(MainApp.class);
 
 	/**
 	 * Program Name
@@ -114,6 +118,7 @@ public class MainApp extends Application {
 	 */
 	public void showWelcomeView() {
 		showView(FXMLoc.WELCOME.path);
+		logger.info(PROGRAM_NAME + " " + VERSION + " started");
 	}
 
 	/**

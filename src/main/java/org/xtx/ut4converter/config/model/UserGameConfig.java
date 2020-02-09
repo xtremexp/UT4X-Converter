@@ -3,20 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter.config;
+package org.xtx.ut4converter.config.model;
 
-import org.xtx.ut4converter.UTGames;
-
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
+import org.xtx.ut4converter.UTGames;
 
 /**
  * 
  * @author XtremeXp
  */
-@XmlRootElement
 public class UserGameConfig {
 
 	private UserGameConfig() {
@@ -41,7 +36,6 @@ public class UserGameConfig {
 		return id;
 	}
 
-	@XmlAttribute(required = true)
 	public void setId(UTGames.UTGame id) {
 		this.id = id;
 	}
@@ -55,7 +49,6 @@ public class UserGameConfig {
 		return path;
 	}
 
-	@XmlElement
 	public void setPath(File path) {
 		this.path = path;
 	}
@@ -65,7 +58,6 @@ public class UserGameConfig {
 	 * 
 	 * @return
 	 */
-	@XmlElement
 	public File getLastConverted() {
 		return lastConverted;
 	}

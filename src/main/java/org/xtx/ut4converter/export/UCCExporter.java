@@ -5,12 +5,12 @@
  */
 package org.xtx.ut4converter.export;
 
-import com.sun.istack.internal.logging.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
@@ -249,7 +249,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	public static File exportLevelToT3d(MapConverter mapConverter, File unrealMap) throws Exception {
 
 		if (unrealMap == null || !unrealMap.exists()) {
-			Logger.getLogger(UCCExporter.class).warning("Impossible to export");
+			LoggerFactory.getLogger(UCCExporter.class).warn("Impossible to export");
 			return null;
 		}
 

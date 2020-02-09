@@ -3,49 +3,46 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter.config;
+package org.xtx.ut4converter.config.model;
 
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.ui.SettingsSceneController;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.xtx.ut4converter.ui.SettingsSceneController;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.tools.Installation;
+
 /**
  * 
  * @author XtremeXp
  */
-@XmlRootElement
 public class UserConfig {
 
-	public final static String USER_CONFIG_XML_FILE = "UserConfig.xml";
+	private static ObjectMapper objectMapper = new ObjectMapper();
+
+	public final static String USER_CONFIG_JSON_FILE = "UserConfig.json";
 
 	/**
 	 * umodel.exe path set by user in settings
 	 */
-	File uModelPath;
-
+	private File uModelPath;
 
 
 	/**
 	 * true if program running for the first time. If so should display some
 	 * pop-up information to redirect user to settings panel
 	 */
-	Boolean isFirstRun;
+	private Boolean isFirstRun;
 
 	List<UserGameConfig> games = new ArrayList<>();
 
-	@XmlElement
 	public File getUModelPath() {
 		return uModelPath;
 	}
@@ -54,7 +51,6 @@ public class UserConfig {
 		this.uModelPath = uModelPath;
 	}
 
-	@XmlElement
 	public Boolean getIsFirstRun() {
 		return isFirstRun;
 	}
@@ -64,7 +60,6 @@ public class UserConfig {
 	}
 
 
-	@XmlElement
 	public List<UserGameConfig> getGame() {
 		return games;
 	}
@@ -74,7 +69,7 @@ public class UserConfig {
 	}
 
 	public static File getUserConfigFile() {
-		return new File(Installation.getProgramFolder().getAbsolutePath() + File.separator + UserConfig.USER_CONFIG_XML_FILE);
+		return new File(Installation.getDocumentProgramFolder().getAbsolutePath() + File.separator + UserConfig.USER_CONFIG_JSON_FILE);
 	}
 
 	/**
@@ -114,23 +109,15 @@ public class UserConfig {
 
 	/**
 	 * Save user configuration to XML file
-	 * 
-	 * @throws JAXBException
+	 *
 	 */
-	public void saveFile() throws JAXBException {
-		File configFile;
+	public void saveFile() throws IOException {
+		File configFile = getUserConfigFile();;
+		configFile.getParentFile().mkdirs();
 
-		try {
-			configFile = getUserConfigFile();
-			JAXBContext jaxbContext = JAXBContext.newInstance(UserConfig.class);
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-			// output pretty printed
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-			jaxbMarshaller.marshal(this, configFile);
-			jaxbMarshaller.marshal(this, System.out);
-		} catch (JAXBException e) {
+		try (final FileWriter fw = new FileWriter(configFile)) {
+			objectMapper.writeValue(fw, this);
+		} catch (IOException e) {
 			throw e;
 		}
 	}
@@ -138,9 +125,8 @@ public class UserConfig {
 	/**
 	 * 
 	 * @return
-	 * @throws JAXBException
 	 */
-	public static UserConfig load() throws JAXBException {
+	public static UserConfig load() throws  IOException {
 		try {
 			File file = UserConfig.getUserConfigFile();
 
@@ -150,40 +136,11 @@ public class UserConfig {
 				userConfig.saveFile();
 				return userConfig;
 			}
-			JAXBContext jaxbContext = JAXBContext.newInstance(UserConfig.class);
 
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-			UserConfig userConfig = (UserConfig) jaxbUnmarshaller.unmarshal(UserConfig.getUserConfigFile());
-
-			userConfig.checkGameConfigPaths();
-
-			return userConfig;
-		} catch (JAXBException ex) {
+			return objectMapper.readValue(file, UserConfig.class);
+		} catch (IOException ex) {
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			throw ex;
-		}
-	}
-
-	/**
-	 * Checks that user game configuration paths does exits. If not existing,
-	 * the paths are set to "null" and the user config file is saved.
-	 * 
-	 * @throws javax.xml.bind.JAXBException
-	 */
-	public void checkGameConfigPaths() throws JAXBException {
-
-		boolean saveConfig = false;
-
-		for (UserGameConfig userGameConfig : games) {
-
-			if (userGameConfig.getPath() != null && !userGameConfig.getPath().exists()) {
-				userGameConfig.setPath(null);
-				saveConfig = true;
-			}
-		}
-
-		if (saveConfig) {
-			saveFile();
 		}
 	}
 

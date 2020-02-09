@@ -17,12 +17,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.UserConfig;
-import org.xtx.ut4converter.config.UserGameConfig;
+import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.UIUtils;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -136,7 +137,7 @@ public class SettingsSceneController implements Initializable {
 	private void gotoUModelWebsite(ActionEvent event) {
 
 		final String uModelUrl = "http://www.gildor.org/en/projects/umodel";
-		MainSceneController.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
+		UIUtils.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
 	}
 
 	/**
@@ -160,9 +161,9 @@ public class SettingsSceneController implements Initializable {
 			try {
 				userConfig.saveFile();
 				settingsLog.setText(utGame.name + " folder saved to " + UserConfig.getUserConfigFile().getName());
-			} catch (JAXBException ex) {
+			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_XML_FILE + " : " + ex.getMessage());
+				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_JSON_FILE + " : " + ex.getMessage());
 			}
 		} else {
 			showErrorMessage(textFile.getText() + " is not valid folder");
@@ -224,9 +225,9 @@ public class SettingsSceneController implements Initializable {
 				}
 			}
 
-		} catch (JAXBException ex) {
+		} catch (IOException ex) {
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-			showErrorMessage("An error occured while loading UserConfig file.");
+			showErrorMessage("An error occured while loading UserConfig file :" + ex.getMessage());
 		}
 	}
 
@@ -286,7 +287,7 @@ public class SettingsSceneController implements Initializable {
 				userConfig.setUModelPath(umodelPathFile);
 				userConfig.saveFile();
 				uModelPath.setText(umodelPathFile.getAbsolutePath());
-			} catch (JAXBException ex) {
+			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}

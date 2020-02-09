@@ -5,12 +5,19 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT4X-Converter</artifactId>
-	<version>0.9.5</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>UT4 Converter</name>
 
 	<properties>
+		<java.version>13</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<javafx.version>13</javafx.version>
+		<slf4j.version>1.7.29</slf4j.version>
+		<log4j.version>2.12.1</log4j.version>
+		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
 		<junit.version>5.2.0</junit.version>
@@ -23,91 +30,256 @@
 
 	<build>
 		<plugins>
+			<!-- COMPILE PROJECT -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.0.2</version>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>13</release>
+                    <source>13</source>
+                    <target>13</target>
+                </configuration>
+			</plugin>
+
+
+			<!-- creates UT4X-Converter jar file into /libs folder -->
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<outputDirectory>${project.build.directory}/libs</outputDirectory>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>org.xtx.ut4converter.MainApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
-						<id>unpack-dependencies</id>
-						<phase>package</phase>
+						<id>copy-resources1</id>
+						<phase>validate</phase>
 						<goals>
-							<goal>unpack-dependencies</goal>
+							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<excludeScope>system</excludeScope>
-							<excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
+							<outputDirectory>${project.build.directory}/libs/g16convert</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/g16convert</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources2</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs/sox</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/sox</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources3</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs/utxextractor</outputDirectory>
+							<resources>
+								<resource>
+									<directory>libs/utxextractor</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources4</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/conf</outputDirectory>
+							<resources>
+								<resource>
+									<directory>conf</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy-libs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/libs</outputDirectory>
+							<includeScope>runtime</includeScope>
+							<excludeGroupIds>org.openjfx</excludeGroupIds>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-modules</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/mods</outputDirectory>
+							<includeScope>runtime</includeScope>
+							<includeGroupIds>org.openjfx</includeGroupIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- CREATES AN INSTALLER FOR UT4 CONVERTER -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
 				<executions>
 					<execution>
-						<id>unpack-dependencies</id>
-
+						<id>create-package</id>
 						<phase>package</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>${java.home}/../bin/javapackager</executable>
+							<executable>${java.home}/bin/jpackager</executable>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<longModulepath>false</longModulepath>
+							<environmentVariables>
+								<JAVA_HOME>${java.home}</JAVA_HOME>
+							</environmentVariables>
 							<arguments>
-								<argument>-createjar</argument>
-								<argument>-nocss2bin</argument>
-								<argument>-appclass</argument>
-								<argument>${mainClass}</argument>
-								<argument>-srcdir</argument>
-								<argument>${project.build.directory}/classes</argument>
-								<argument>-outdir</argument>
-								<argument>${project.build.directory}</argument>
-								<argument>-outfile</argument>
-								<argument>${project.build.finalName}.jar</argument>
+								<!-- packager arguments -->
+								<!-- <argument>create-image</argument> -->
+								<argument>create-installer</argument>
+								<argument>--verbose</argument>
+								<argument>--echo-mode</argument>
+								<argument>--input</argument>
+								<argument>${project.build.directory}/libs</argument>
+
+								<argument>--class</argument>
+								<argument>org.xtx.ut4converter.MainApp</argument>
+
+								<argument>--main-jar</argument>
+								<argument>./${project.artifactId}-${project.version}.jar</argument>
+
+								<argument>--output</argument>
+								<argument>package</argument>
+
+								<argument>--identifier</argument>
+								<argument>org.xtx.ut4converter</argument>
+
+								<argument>--version</argument>
+								<argument>${project.version}</argument>
+
+								<argument>--name</argument>
+								<argument>${project.artifactId}</argument>
+
+								<argument>--description</argument>
+								<argument>Tool that helps converting maps from Unreal 1, Unreal 2, Unreal Tournament (1999), Unreal Tournament 2003/4, Unreal Tournament 3 to Unreal Tournament 4 (UT2005)</argument>
+
+								<!--  Prevents multiple instances of the application from launching -->
+								<argument>--singleton</argument>
+
+								<argument>--vendor</argument>
+								<argument>Thomas P.</argument>
+
+								<argument>--copyright</argument>
+								<argument>You are free to distribute and use with tool but with no commercial use</argument>
+
+								<argument>--identifier</argument>
+								<argument>org.xtx.ut4converter</argument>
+
+								<argument>--category</argument>
+								<argument>Tool</argument>
+
+								<argument>--win-registry-name</argument>
+								<argument>${project.artifactId}</argument>
+
+								<!-- FOR INSTALL, ONLY do it for current user and not all -->
+								<argument>--win-per-user</argument>
+
+                                <argument>--win-dir-chooser</argument>
+								<argument>--win-shortcut</argument>
+
+								<!-- jlink arguments -->
+								<argument>--module-path</argument>
+								<argument>${project.build.directory}/mods</argument>
+
+								<argument>--add-modules</argument>
+								<argument>java.base,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml</argument>
 							</arguments>
 						</configuration>
 					</execution>
-					<execution>
-						<id>default-cli</id>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${java.home}/bin/java</executable>
-							<commandlineArgs>${runfx.args}</commandlineArgs>
-						</configuration>
-					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<compilerArguments>
-						<bootclasspath>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
-					</compilerArguments>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.21.0</version>
-				<configuration>
-					<additionalClasspathElements>
-						<additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
-					</additionalClasspathElements>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.vecmath</groupId>
 			<artifactId>vecmath</artifactId>
@@ -141,6 +313,29 @@
 
 
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+
+
+		<!-- JAVA FX  -->
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+
+
+		<!-- TESTING -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -148,7 +343,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -156,7 +350,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.junit.vintage/junit-vintage-engine -->
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
@@ -165,4 +358,5 @@
 		</dependency>
 	</dependencies>
 	<description>Converter for Unreal Tournament 4 (UT2015) game</description>
+
 </project>
