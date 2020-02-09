@@ -33,7 +33,7 @@ public class Installation {
 	/**
 	 * Where all "external" programs should be for converting/extracting stuff
 	 */
-	private static final String LIBS_FOLDER = "app";
+	public static final String APP_FOLDER = "app";
 
 	/**
 	 * Test is the current running program is installed. <br>
@@ -121,7 +121,7 @@ public class Installation {
 	}
 
 	public static File getG16ConvertFile() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + LIBS_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Installation {
 	 * @return Sox converter binary file
 	 */
 	public static File getSox() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + LIBS_FOLDER + File.separator + "sox" + File.separator + "sox.exe");
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "sox" + File.separator + "sox.exe");
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class Installation {
 	 * @return
 	 */
 	public static File getExtractTextures() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + LIBS_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
 	}
 
 	private static final String OS = System.getProperty("os.name").toLowerCase();

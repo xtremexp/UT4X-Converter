@@ -124,10 +124,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${project.build.directory}/conf</outputDirectory>
+							<outputDirectory>${project.build.directory}/libs/conf</outputDirectory>
 							<resources>
 								<resource>
-									<directory>conf</directory>
+									<directory>app/conf</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>
