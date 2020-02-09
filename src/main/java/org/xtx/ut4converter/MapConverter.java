@@ -556,7 +556,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
 			logger.log(Level.INFO, "Scale Factor: " + scale);
 			logger.log(Level.WARNING, "Shader materials are not yet converted");
-			logger.log(Level.WARNING, "Terrains are not yet converted");
 
 			if (filteredClasses != null && filteredClasses.length > 0) {
 				getSupportedActorClasses().setConvertOnly(filteredClasses);

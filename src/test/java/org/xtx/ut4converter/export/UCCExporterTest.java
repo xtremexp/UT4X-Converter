@@ -64,6 +64,16 @@ public class UCCExporterTest {
         exportAllUTXLevels(UTGames.UTGame.UT2004);
     }
 
+    /**
+     * Exports all UT3 maps to .t3d level file
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExportAllUT3Levels() throws Exception {
+        exportAllUTXLevels(UTGames.UTGame.UT3);
+    }
+
     private void exportAllUTXLevels(final UTGames.UTGame inputGame) throws Exception {
         final MapConverter mc = BaseTest.getMapConverterInstance(inputGame);
 
