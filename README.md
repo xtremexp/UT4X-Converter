@@ -2,14 +2,13 @@
 
 ## Description
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
+
+
 * Version: 1.0.0
-
 * Release date: XX/02/2020
-
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-
 * Download: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
-
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
 
   
