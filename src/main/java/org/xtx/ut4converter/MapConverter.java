@@ -1,5 +1,6 @@
 package org.xtx.ut4converter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
@@ -15,6 +16,7 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.TextureNameToPackageGenerator;
 import org.xtx.ut4converter.tools.UIUtils;
 import org.xtx.ut4converter.tools.objmesh.ObjMaterial;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
@@ -27,7 +29,10 @@ import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.TableRowLog;
 
 import javax.imageio.spi.IIORegistry;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.logging.Handler;
@@ -36,7 +41,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
@@ -61,8 +66,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Input map. Can be either a map (.unr, ...) or unreal text map (.t3d)
 	 */
 	private File inMap;
-	
-	
+
+
 	/**
 	 * File for logging all events during conversion process
 	 */
@@ -72,7 +77,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * file writer of logfile
 	 */
 	private FileWriter logFileWriter;
-	
+
 	/**
 	 * Buffered writer of logfile
 	 */
@@ -86,14 +91,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Relative subfolder from: <UT4Folder>/UnrealTournament/Content path
-	 * 
+	 *
 	 * E.g: "MyMaps" would give /UnrealTournament/Content/MyMaps path
-	 * 
+	 *
 	 * but /Game/MyMaps for .t3d actor path
-	 * 
+	 *
 	 */
 	String relativeUtMapPath;
-	
+
 	/**
 	 * getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator
 	 */
@@ -224,7 +229,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Original UT game the map comes from
-	 * 
+	 *
 	 * @return
 	 */
 	public UTGame getInputGame() {
@@ -233,7 +238,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * UT game the map will be converted to
-	 * 
+	 *
 	 * @return
 	 */
 	public UTGame getOutputGame() {
@@ -243,7 +248,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Input map that will be converted (Unreal Map (.unr, .ut2) or Unreal Text
 	 * Map file (.t3d)
-	 * 
+	 *
 	 * @return
 	 */
 	public File getInMap() {
@@ -252,7 +257,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Scale factor applied when converting
-	 * 
+	 *
 	 * @return
 	 */
 	public Double getScale() {
@@ -268,7 +273,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputGame
 	 *            Input UT Game
 	 * @param outputGame
@@ -281,7 +286,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputGame
 	 *            Input game the map originally comes from
 	 * @param outputGame
@@ -306,7 +311,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Indicates that gametype is team based
-	 * 
+	 *
 	 * @return true is gametype is team based
 	 */
 	public Boolean isTeamGameType() {
@@ -323,7 +328,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Tried to find property converted to some other game ...
-	 * 
+	 *
 	 * @param name
 	 * @param withT3dClass
 	 * @param properties
@@ -351,30 +356,30 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			mapName = T3DUtils.filterName(mapName);
 		}
 	}
-	
+
 	public void initConvertedResourcesFolder(){
 		initOutMapName();
 		this.ut4ReferenceBaseFolder = UTGames.UE4_FOLDER_MAP + "/" + this.getOutMapName();
 	}
-	
+
 	public void setUt4ReferenceBaseFolder (String folder){
 		this.ut4ReferenceBaseFolder = folder;
 	}
-	
+
 	public String getUt4ReferenceBaseFolder (){
 		return this.ut4ReferenceBaseFolder;
 	}
-	
+
 	public File getUt4ReferenceBaseFolderFile (){
-		
+
 		// e.g: ut4ReferenceBaseFolder = '/Game/RestrictedAssets/Map/DM-MyMap'
 		String xx = ut4ReferenceBaseFolder;
 		xx = xx.replace("/Game", "/Content");
 		UserGameConfig config = userConfig.getGameConfigByGame(outputGame);
-		
+
 		return new File(config.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
 	}
-	
+
 	private void initialise() {
 
 		if (this.outPath == null && inMap != null) {
@@ -444,7 +449,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void addLoggerHandlers() {
 
-		
+
 		if (conversionViewController == null || conversionViewController.getConvLogTableView() == null) {
 			return;
 		}
@@ -509,7 +514,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Gets file container from .upk file
-	 * 
+	 *
 	 * @param packageName
 	 *            Package Name (HU_Deco)
 	 * @return File container of package (e.g: HU_Deco.upk)
@@ -530,25 +535,25 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Converts level
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void convert() throws Exception {
 
-		
+
 		try {
-			
+
 			logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
-			
+
 			if (logFile.exists()) {
 				logFile.delete();
 			}
-			
+
 			logFile.getParentFile().mkdirs();
 
 			logFileWriter = new FileWriter(logFile);
 			logBuffWriter = new BufferedWriter(logFileWriter);
-			
+
 			logger.log(Level.INFO, "Writting log file " + logFile);
 
 			logger.log(Level.INFO, "*****************************************");
@@ -628,7 +633,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Log to file all unconverted actors and properties of all actors from
 	 * original map
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void writeUnconvertedActorsPropertiesToLogFile() throws IOException {
@@ -651,7 +656,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			logBuffWriter.write("\n");
 		}
 	}
-	
+
 	/**
 	 * Add log info message to guide user converting the map properly TODO add
 	 * some pics like in UT3 converter
@@ -716,7 +721,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean hasConvertedRessources() {
@@ -726,7 +731,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Reads used textures from .psk staticmeshes files generated by umodel
 	 * then convert the staticmeshes to .obj wavefront format
-	 * 
+	 *
 	 */
 	private void findTexturesAndConvertStaticMeshes() {
 
@@ -761,7 +766,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 						File mtlObjFile = new File(tempPskDir.getAbsolutePath() + File.separator + staticMeshFile.getName());
 						mtlObjFile = FileUtils.changeExtension(mtlObjFile, ObjStaticMesh.FILE_EXTENSION_MTL);
-						
+
 						final File objFile = FileUtils.changeExtension(mtlObjFile, ObjStaticMesh.FILE_EXTENSION_OBJ);
 
 						final String fileExt = FilenameUtils.getExtension(staticMeshFile.getName());
@@ -791,7 +796,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							ressource.addExportedFile(mtlObjFile);
 							ressource.addExportedFile(objFile);
 						}
-						
+
 
 					} catch (Exception e) {
 						logger.log(Level.SEVERE, "Error while reading file " + staticMeshFile, e);
@@ -902,7 +907,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Delete unused files and convert them to good format if needed. (e.g:
 	 * convert staticmeshes to .ase or .fbx format for import in UE4)
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void cleanAndConvertRessources() throws Exception {
@@ -1004,7 +1009,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// TEMP thingy use custom one if user changed it
 			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
 			File wipConvertedMapFolder = getUt4ReferenceBaseFolderFile();
-			
+
 			wipConvertedMapFolder.mkdirs();
 
 			logger.log(Level.FINE, "Creating " + wipConvertedMapFolder);
@@ -1050,7 +1055,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Current user configuration such as program path for UT99 and so on ...
-	 * 
+	 *
 	 * @return
 	 */
 	public UserConfig getUserConfig() {
@@ -1058,7 +1063,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return <code>true</code> if the output game is using unreal engine 4
 	 */
 	public boolean toUnrealEngine4() {
@@ -1076,7 +1081,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Indicated if converting from UT using Unreal Engine 1 or Unreal Engine 2
 	 * (basically Unreal1, UT99, Unreal 2, UT2003 and UT2004)
-	 * 
+	 *
 	 * @return true if converting from Unreal Engine 1 or 2 UTx game
 	 * @deprecated Use isFrom
 	 */
@@ -1118,7 +1123,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Indicated if converting to UT using Unreal Engine 1 or Unreal Engine 2
 	 * (basically Unreal1, UT99, Unreal 2, UT2003 and UT2004)
-	 * 
+	 *
 	 * @return true if converting to Unreal Engine 1 or 2 UTx game
 	 * @deprecated Use isFrom
 	 */
@@ -1129,7 +1134,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Indicates games being converted from some UT game in unreal engine 3 or 4
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean fromUE1orUE2OrUE3() {
@@ -1138,7 +1143,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Indicates games being converted from some UT game in unreal engine 3 or 4
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean fromUE3OrUE4() {
@@ -1147,7 +1152,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Indicates games being converted to some UT game in unreal engine 3 or 4
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean toUE3OrUE4() {
@@ -1157,7 +1162,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Indicated game being converted to Unreal Engine 3 game (basically only
 	 * UT3)
-	 * 
+	 *
 	 * @return
 	 * @deprecated Use isTo
 	 */
@@ -1169,7 +1174,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Tells if converting UT game using Unreal Engine 1 or 2 is being converted
 	 * to some other UT game using Unreal Engine 3 or 4.
-	 * 
+	 *
 	 * @return true if converting UT game using Unreal Engine 1 or 2 to UT game
 	 *         using Unreal Engine 3 or 4
 	 */
@@ -1197,7 +1202,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Tells if converting UT game using Unreal Engine 1 or 2 is being converted
 	 * to some other UT game using Unreal Engine 3 or 4.
-	 * 
+	 *
 	 * @return true if converting UT game using Unreal Engine 1 or 2 to UT game
 	 *         using Unreal Engine 3 or 4
 	 */
@@ -1220,7 +1225,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * <UT4ConverterFolder>/Converted
-	 * 
+	 *
 	 * @return
 	 */
 	private static File getBaseConvertFolder() {
@@ -1229,7 +1234,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * <UT4ConverterFolder>/Converted/<MapName>
-	 * 
+	 *
 	 * @return
 	 */
 	public File getMapConvertFolder() {
@@ -1238,29 +1243,23 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * <UT4ConverterFolder>/Converted/<MapName>/Temp
-	 * 
+	 *
 	 * @return
 	 */
 	public File getTempExportFolder() {
 		return new File(getMapConvertFolder() + File.separator + "Temp");
 	}
 
-	Map<String, String> nameToPackage = new HashMap<>();
+	List<TextureNameToPackageGenerator.TextureInfo> ut99TexInfo;
 
 	private void loadNameToPackage() throws IOException {
 
-		File dbFile = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf" + File.separator + inputGame.shortName + "TexNameToPackage.txt");
+		File dbFile = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf" + File.separator + TextureNameToPackageGenerator.UT99_TEXNAME_TO_PACKAGE_FILENAME);
 
 		if (dbFile.exists()) {
-			try (FileReader fr = new FileReader(dbFile); BufferedReader bfr = new BufferedReader(fr)) {
+			final ObjectMapper om = new ObjectMapper();
+			ut99TexInfo = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
 
-				String line;
-
-				while ((line = bfr.readLine()) != null) {
-					String[] sp = line.split("\\:");
-					nameToPackage.put(sp[0], sp[1]);
-				}
-			}
 		} else {
 			logger.log(Level.WARNING, "Texture db file " + dbFile + " not found !");
 		}
@@ -1268,7 +1267,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Find package ressource by simple name
-	 * 
+	 *
 	 * @param name
 	 *            Simple name (e.g: 'bas05bHA')
 	 * @param resType
@@ -1300,7 +1299,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * T3D actor properties which are ressources (basically sounds, music,
 	 * textures, ...)
-	 * 
+	 *
 	 * @param fullRessourceName
 	 *            Full name of ressource (e.g: AmbModern.Looping.comp1 )
 	 * @param type
@@ -1330,9 +1329,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				// for ut99 polygon data does not give package info
 				if (type == T3DRessource.Type.TEXTURE && inputGame == UTGame.UT99) {
 					String name = split[0];
-					packageName = nameToPackage.get(name.toLowerCase());
-					fullRessourceName = packageName + "." + name;
 
+					final TextureNameToPackageGenerator.TextureInfo ti = ut99TexInfo.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+
+					if (ti != null) {
+						packageName = ti.getPackageName();
+
+						if (ti.getGroup() != null) {
+							fullRessourceName = packageName + "." + ti.getGroup() + "." + name;
+						} else {
+							fullRessourceName = packageName + "." + name;
+						}
+					} else {
+						fullRessourceName = packageName + "." + name;
+					}
 				}
 				// assuming it's from map
 				// as seen in CTF-Turbo for staticmeshes from map package
@@ -1440,7 +1450,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Says if program can convert/export textures. For unreal engine <= 2 we
 	 * can still user the stock "ucc.exe" one except for Unreal 2 which always
 	 * produces "0" bytes file size but for UUE3/4 need umodel program
-	 * 
+	 *
 	 * @return <code>true</code> if it's possible to convert texture otherwise
 	 *         false
 	 */
@@ -1461,7 +1471,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Says if program can convert/export sounds.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean canConvertSounds() {
@@ -1498,7 +1508,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Says if program can export staticmeshes
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean canConvertStaticMeshes() {
@@ -1544,7 +1554,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * relativeUtMapPath
-	 * 
+	 *
 	 * @return /Game/Maps/<mapname>/<mapname>
 	 */
 	public String getRelativeUtMapPath() {
@@ -1553,7 +1563,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * From map file return map package name E.g: DM-Ranking.ut2 -> DM-Ranking
-	 * 
+	 *
 	 * @return
 	 */
 	public String getMapPackageName() {
@@ -1562,7 +1572,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Find package used in map by name
-	 * 
+	 *
 	 * @param name
 	 *            Name of package (not case sensitive)
 	 * @return
@@ -1585,7 +1595,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * If true for each unconverted actor will create a "Note" actor in
 	 * converted level
-	 * 
+	 *
 	 * @param createNoteForUnconvertedActors
 	 *            <code>true</code> Will create note for unconverted actors else
 	 *            no
@@ -1604,7 +1614,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Return ut class filter during conversion if any.
-	 * 
+	 *
 	 * @return Filtered classes
 	 */
 	public String[] getFilteredClasses() {
@@ -1614,7 +1624,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Set a filter to UT classes that will be converted. If no filter is set
 	 * then all classes that can be converted will be converted.
-	 * 
+	 *
 	 * @param filteredClasses
 	 *            Classes that will be converted (e.g:
 	 *            ['Brush','Light','DefensePoint', ...]

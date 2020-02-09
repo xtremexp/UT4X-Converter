@@ -167,6 +167,10 @@ public class Installation {
 		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
 	}
 
+	public static File getUtxAnalyser() {
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "UtxAnalyser.exe");
+	}
+
 	private static final String OS = System.getProperty("os.name").toLowerCase();
 
 	/**
