@@ -5,15 +5,11 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+
+import java.util.*;
 
 /**
  * Base class to match or replace "basic" actor such as pickups, weapons and so
@@ -279,7 +275,7 @@ public class T3DMatch {
 	}
 
 	/**
-	 * TODO handle UT3 WeaponLocker and WeaponPickupFactory
+	 *
 	 * 
 	 * @param inputGame
 	 */

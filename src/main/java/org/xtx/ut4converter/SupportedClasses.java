@@ -252,6 +252,7 @@ public class SupportedClasses {
 		}
 		registerUClass(T3DLiftExit.class, "LiftExit", "UTJumpLiftExit", "LiftCenter");
 		registerUClass(T3DJumpPad.class, "Kicker", "Jumper", "BaseJumpPad_C", "U2Kicker", "U2KickReflector", "xKicker", "UTJumppad");
+		registerUClass(WeaponLocker.class, "WeaponLocker", "UTWeaponLocker_Content");
 
 		addMatches(mapConverter);
 
