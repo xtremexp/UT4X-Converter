@@ -242,6 +242,15 @@ public class MoverProperties implements T3D {
 		// another kind of mover (button, door, ...)
 		// TODO use UBMover once UBMover blueprint done
 		sbf.append(IDT).append("Begin Actor Class=").append(mover.t3dClass).append(" Name=").append(mover.name).append("_Lift\n");
+
+		// if scale 3D set need to use Mesh Scale property and set scale3d to null
+		// else scale within game is not good at all !
+		if (mover.scale3d != null) {
+			// Mesh Scale=(X=2.000000,Y=2.000000,Z=2.000000)
+			sbf.append(IDT).append("\tMesh Scale=(X=").append(T3DActor.fmt(mover.scale3d.x)).append(",Y=").append(T3DActor.fmt(mover.scale3d.y)).append(",Z=").append(T3DActor.fmt(mover.scale3d.z)).append(")\n");
+			mover.scale3d = null;
+		}
+
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
