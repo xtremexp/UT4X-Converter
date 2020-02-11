@@ -503,21 +503,9 @@ public class T3DUE4Terrain extends T3DActor {
 		// needs a guid or else would crash on import
 		sbf.append(IDT).append("\tLandscapeGuid=").append(T3DUtils.randomGuid()).append("\n");
 
-		/*
-		if (landscapeMaterial != null) {
-			sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
-		}*/
 
-		// LandscapeMaterial=Material'/Game/UT4X/Converter/UT4X_LandscapeMat.UT4X_LandscapeMat'
-		// TODO use copy this custom landscape to converted map folder within UT4 editor
-		sbf.append(IDT).append("\tLandscapeMaterial=Material'/Game/UT4X/Converter/UT4X_LandscapeMat.UT4X_LandscapeMat'\n");
-
-		// TODO test for all col components at least one with vis data
-		if (collisionComponents[0][0].getVisibilityData() != null) {
-			// sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'").append(landscapeMaterial.getConvertedName(mapConverter)).append("'\n");
-			// TEMP thingy
-			sbf.append(IDT).append("\tLandscapeHoleMaterial=Material'").append(DEFAULT_LANDSCAPE_HOLE_MATERIAL).append("'\n");
-		}
+		// use the UT4X landscape material (UT4X_LandscapeMat.uasset)
+		sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(mapConverter.getUt4ReferenceBaseFolder()).append("/UT4X_LandscapeMat.UT4X_LandscapeMat'\n");
 
 		int idx = 0;
 

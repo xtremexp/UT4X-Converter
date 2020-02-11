@@ -9,11 +9,8 @@ import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.*;
-import org.xtx.ut4converter.t3d.T3DLevelConvertor;
-import org.xtx.ut4converter.t3d.T3DMatch;
-import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
-import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.TextureNameToPackageGenerator;
@@ -1022,6 +1019,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (!uassetCopy.exists()) {
 				Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
+
+			// some terrain was converted we copy the UT4X landscape material to output folder
+			if (this.getT3dLvlConvertor().getConvertedActors().stream().anyMatch(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE4Terrain)) {
+				final File landscapeMat = new File(Installation.getContentFolder() + File.separator + "UT4X_LandscapeMat.uasset");
+				final File landscapeMatCopy = new File(wipConvertedMapFolder + File.separator + "UT4X_LandscapeMat.uasset");
+
+				if (!landscapeMatCopy.exists()) {
+					Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+
 		}
 	}
 

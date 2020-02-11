@@ -121,6 +121,14 @@ public class Installation {
 		return getProgramFolder().getAbsolutePath();
 	}
 
+	public static File getAppFolder(){
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER);
+	}
+
+	public static File getContentFolder(){
+		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "conf");
+	}
+
 	public static File getG16ConvertFile() {
 		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
 	}
