@@ -5,13 +5,13 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-
-import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Class for handling logs that will be redirected to table log in user

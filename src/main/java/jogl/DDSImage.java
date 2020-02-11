@@ -40,8 +40,9 @@
 package jogl;
 
 import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
 
 /**
  * A reader and writer for DirectDraw Surface (.dds) files, which are used to

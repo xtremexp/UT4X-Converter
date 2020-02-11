@@ -5,6 +5,11 @@
  */
 package org.xtx.ut4converter.config.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ui.SettingsSceneController;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,12 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.xtx.ut4converter.ui.SettingsSceneController;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.tools.Installation;
 
 /**
  * 

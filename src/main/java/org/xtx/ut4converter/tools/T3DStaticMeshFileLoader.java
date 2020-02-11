@@ -5,13 +5,6 @@
  */
 package org.xtx.ut4converter.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.LinkedList;
-import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
@@ -20,6 +13,13 @@ import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DStaticMesh;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+
+import javax.vecmath.Vector3d;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * Converts t3d static mesh files (generated with

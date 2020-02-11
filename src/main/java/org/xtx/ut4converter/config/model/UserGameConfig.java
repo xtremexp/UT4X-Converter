@@ -5,8 +5,9 @@
  */
 package org.xtx.ut4converter.config.model;
 
-import java.io.File;
 import org.xtx.ut4converter.UTGames;
+
+import java.io.File;
 
 /**
  * 

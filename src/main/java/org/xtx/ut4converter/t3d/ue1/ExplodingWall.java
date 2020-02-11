@@ -2,7 +2,6 @@ package org.xtx.ut4converter.t3d.ue1;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.ucore.UPackageRessource;
 
 public class ExplodingWall extends  Effects {
 

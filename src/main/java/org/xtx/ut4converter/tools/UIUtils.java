@@ -5,7 +5,12 @@
  */
 package org.xtx.ut4converter.tools;
 
-import java.awt.Desktop;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import org.xtx.ut4converter.ui.MainSceneController;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -13,10 +18,6 @@ import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import org.xtx.ut4converter.ui.MainSceneController;
 
 /**
  *

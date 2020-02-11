@@ -7,12 +7,11 @@ package com.realityinteractive.imageio.tga;
  * Created on Sep 26, 2003
  */
 
-import java.io.IOException;
-import java.util.Locale;
-
 import javax.imageio.ImageReader;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.ImageInputStream;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * <p>

@@ -5,10 +5,11 @@
  */
 package org.xtx.ut4converter.ucore.ue4;
 
+import org.xtx.ut4converter.t3d.T3DUtils;
+
+import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
-import javax.vecmath.Vector3d;
-import org.xtx.ut4converter.t3d.T3DUtils;
 
 /**
  * Unreal Engine 4 (UE3 as well ?) very 'light' implementation of body instance

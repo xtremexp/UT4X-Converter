@@ -5,8 +5,9 @@
  */
 package org.xtx.ut4converter.geom;
 
-import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.t3d.T3DPolygon;
+
+import javax.vecmath.Vector3d;
 
 /**
  *

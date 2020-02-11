@@ -1,11 +1,11 @@
 package org.xtx.ut4converter.t3d;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance.ECollisionResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Based on properties of UT4 Assault mod v1.6.1 Only UT99 support for the

@@ -5,10 +5,11 @@
  */
 package org.xtx.ut4converter.t3d;
 
-import javax.vecmath.Vector3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.Geometry;
+
+import javax.vecmath.Vector3d;
 
 /**
  * Base class for teleporters

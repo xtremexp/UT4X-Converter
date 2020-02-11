@@ -1,12 +1,12 @@
 package org.xtx.ut4converter.tools.psk;
 
+import org.xtx.ut4converter.tools.BinUtils;
+import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
-
-import org.xtx.ut4converter.tools.BinUtils;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 
 /**
  * 

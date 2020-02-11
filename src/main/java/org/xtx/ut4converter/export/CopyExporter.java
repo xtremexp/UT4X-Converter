@@ -5,18 +5,18 @@
  */
 package org.xtx.ut4converter.export;
 
+import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.ucore.UPackageRessource;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  * A simple "copy" of file Used for copying music .ogg files

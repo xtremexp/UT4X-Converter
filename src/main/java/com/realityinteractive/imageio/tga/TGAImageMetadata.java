@@ -7,12 +7,12 @@ package com.realityinteractive.imageio.tga;
  * Created on Sep 27, 2003
  */
 
+import org.w3c.dom.Node;
+
 import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataFormat;
 import javax.imageio.metadata.IIOMetadataNode;
-
-import org.w3c.dom.Node;
 
 /**
  * <p>

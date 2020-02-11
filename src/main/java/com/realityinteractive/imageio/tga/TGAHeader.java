@@ -7,9 +7,8 @@ package com.realityinteractive.imageio.tga;
  * Created on Sep 26, 2003
  */
 
-import java.io.IOException;
-
 import javax.imageio.stream.ImageInputStream;
+import java.io.IOException;
 
 /**
  * <p>

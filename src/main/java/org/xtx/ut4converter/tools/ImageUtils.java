@@ -5,13 +5,14 @@
  */
 package org.xtx.ut4converter.tools;
 
-import java.awt.Dimension;
+import jogl.DDSImage;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import javax.imageio.ImageIO;
-import jogl.DDSImage;
 
 /**
  * Utility class related to image (such as extracting data from textures, ...)

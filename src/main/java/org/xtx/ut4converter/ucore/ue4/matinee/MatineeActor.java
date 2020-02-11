@@ -1,15 +1,14 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
-import java.util.List;
-
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.t3d.MoverProperties;
 import org.xtx.ut4converter.t3d.T3DActor;
 import org.xtx.ut4converter.t3d.T3DMover;
 import org.xtx.ut4converter.t3d.T3DUtils;
+
+import javax.vecmath.Vector3d;
+import java.util.List;
 
 public class MatineeActor extends T3DActor {
 

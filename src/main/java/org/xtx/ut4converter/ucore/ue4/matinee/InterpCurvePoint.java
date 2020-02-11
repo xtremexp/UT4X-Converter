@@ -1,9 +1,9 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
+
+import javax.vecmath.Vector3d;
 
 /**
  * 

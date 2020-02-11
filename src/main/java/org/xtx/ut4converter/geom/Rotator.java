@@ -5,9 +5,9 @@
  */
 package org.xtx.ut4converter.geom;
 
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.UTGames.UnrealEngine;
+
+import javax.vecmath.Vector3d;
 
 /**
  *

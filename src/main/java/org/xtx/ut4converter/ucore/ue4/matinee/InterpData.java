@@ -1,12 +1,12 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InterpData extends T3DObject implements T3D {
 

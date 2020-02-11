@@ -1,9 +1,9 @@
 package org.xtx.ut4converter.ucore.ue4;
 
-import javax.vecmath.Vector3d;
-
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DObject;
+
+import javax.vecmath.Vector3d;
 
 /**
  * Only for UE4 (UE3 also?) Not detailled for the moment Should contains
