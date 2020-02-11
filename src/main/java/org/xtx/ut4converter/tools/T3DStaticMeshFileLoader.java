@@ -143,7 +143,7 @@ public class T3DStaticMeshFileLoader {
 				// "Vertex 0 -2.313340 -48.702381 16.483009 -0.004290 0.000590"
 				else if (line.startsWith("Vertex")) {
 
-					String s[] = line.split("\\ ");
+					String[] s = line.split("\\ ");
 
 					Double x = Double.valueOf(s[2]);
 					Double y = Double.valueOf(s[3]);

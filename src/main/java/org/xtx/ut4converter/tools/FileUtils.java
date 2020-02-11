@@ -19,7 +19,7 @@ public class FileUtils {
 			return null;
 		}
 
-		String s[] = file.getName().split("\\.");
+		String[] s = file.getName().split("\\.");
 
 		return s[s.length - 1];
 	}

@@ -343,7 +343,7 @@ public class T3DUtils {
 
 	public static String getT3DLine(Map<String, Object> props) {
 
-		StringBuilder s = new StringBuilder("");
+		StringBuilder s = new StringBuilder();
 		int count = 0;
 
 		for (String name : props.keySet()) {

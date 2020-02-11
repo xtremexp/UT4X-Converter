@@ -33,7 +33,7 @@ public class T3DMusicEvent extends T3DActor {
     @Override
     public boolean analyseT3DData(String line) {
         if (line.startsWith("Song=")) {
-            this.song = mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.MUSIC);
+            this.song = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.MUSIC);
         }
         else if (line.startsWith("Transition=")) {
             this.transition = MTran.valueOf(T3DUtils.getString(line));

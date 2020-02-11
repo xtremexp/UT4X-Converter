@@ -77,7 +77,7 @@ public class VertMesh {
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 
 		//File f = new File("E:\\TEMP\\bandage_d.3d");
 		File f = new File("E:\\");

@@ -67,10 +67,10 @@ public class ImageUtils {
 		float HDiv60_Floor = (float) Math.floor(HDiv60);
 		float HDiv60_Fraction = HDiv60 - HDiv60_Floor;
 
-		float RGBValues[];
+		float[] RGBValues;
 		RGBValues = new float[] { Value, Value * (1.0f - Saturation), Value * (1.0f - (HDiv60_Fraction * Saturation)), Value * (1.0f - ((1.0f - HDiv60_Fraction) * Saturation)), };
 
-		int RGBMatrix[][];
+		int[][] RGBMatrix;
 
 		RGBMatrix = new int[][] { { 0, 3, 1 }, { 2, 0, 1 }, { 1, 0, 3 }, { 1, 2, 0 }, { 3, 1, 0 }, { 0, 1, 2 }, };
 

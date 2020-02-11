@@ -166,7 +166,7 @@ public class Geometry {
 		double rot_z = ((yaw) / 360D) * 2D * Math.PI; // Yaw=Axis Z with Unreal
 														// Editor
 
-		double tmp[] = new double[] { v.x, v.y, v.z, 1D };
+		double[] tmp = new double[] { v.x, v.y, v.z, 1D };
 		Matrix4d m4d = getGlobalRotationMatrix(rot_x, rot_y, rot_z);
 
 		tmp = getRot(tmp, m4d);
@@ -227,7 +227,7 @@ public class Geometry {
 	 * @param d
 	 * @return
 	 */
-	public static double[] updateDoubleZeroes(double d[]) {
+	public static double[] updateDoubleZeroes(double[] d) {
 		for (int i = 0; i < d.length; i++) {
 			if (Math.abs(d[i]) < 0.001D) {
 				d[i] = 0D;
@@ -278,7 +278,7 @@ public class Geometry {
 	}
 
 	private static double[] getRot(double[] d2, Matrix4d m4d) {
-		double d[] = new double[] { d2[0], d2[1], d2[2], 1D };
+		double[] d = new double[] { d2[0], d2[1], d2[2], 1D };
 
 		double dx = m4d.m00 * d[0] + m4d.m10 * d[1] + m4d.m20 * d[2] + m4d.m30 * d[3];
 
@@ -534,7 +534,7 @@ public class Geometry {
 		return polyList;
 	}
 
-	public static void test(String args[]) {
+	public static void test(String[] args) {
 		Vector3d n = new Vector3d(0, 0, 1);
 		Vector3d r = getRotationInRadian(n);
 		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);

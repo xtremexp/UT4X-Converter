@@ -130,7 +130,7 @@ public class T3DStaticMesh extends T3DSound {
 			prePivot = T3DUtils.getVector3d(line, 0d);
 		}
 		else if(line.startsWith("UV2Texture=")){
-			this.uv2Texture = mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.TEXTURE);
+			this.uv2Texture = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE);
 		}
 		else if(line.startsWith("UV2Mode=")){
 			this.uv2Mode = UV2Mode.valueOf(T3DUtils.getString(line));

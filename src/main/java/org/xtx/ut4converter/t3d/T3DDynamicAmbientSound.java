@@ -27,7 +27,7 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
     @Override
     public boolean analyseT3DData(String line) {
         if (line.startsWith("Sounds(")) {
-            sounds.add(mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND));
+            sounds.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND));
         } else {
             return super.analyseT3DData(line);
         }

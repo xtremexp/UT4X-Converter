@@ -20,7 +20,7 @@ public class FJSMeshTri implements BinReadWrite {
 	 * BYTE Flags; // Unreal mesh flags (currently unused).
 	 */
 
-	private short iVertex[]; // 3
+	private short[] iVertex; // 3
 	private byte type;
 	private byte color;
 	private FMeshByteUV[] tex; // 3

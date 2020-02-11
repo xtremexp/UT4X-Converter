@@ -153,7 +153,7 @@ public class UPackage {
 	 */
 	public UPackageRessource findRessourceByName(String name) {
 
-		String s[] = name.split("\\.");
+		String[] s = name.split("\\.");
 		String fullNameWithoutGroup = null;
 		String group = null;
 
@@ -196,7 +196,7 @@ public class UPackage {
 	 */
 	public UPackageRessource findRessource(String fullName, boolean perfectMatchOnly) {
 
-		String s[] = fullName.split("\\.");
+		String[] s = fullName.split("\\.");
 		String fullNameWithoutGroup = null;
 		String group = null;
 

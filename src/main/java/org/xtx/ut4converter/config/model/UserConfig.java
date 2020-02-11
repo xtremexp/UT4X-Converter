@@ -112,8 +112,8 @@ public class UserConfig {
 	 *
 	 */
 	public void saveFile() throws IOException {
-		File configFile = getUserConfigFile();;
-		configFile.getParentFile().mkdirs();
+		File configFile = getUserConfigFile();
+        configFile.getParentFile().mkdirs();
 
 		try (final FileWriter fw = new FileWriter(configFile)) {
 			objectMapper.writeValue(fw, this);

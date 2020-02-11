@@ -29,7 +29,7 @@ public class T3DTranslatorEvent extends T3DActor {
     @Override
     public boolean analyseT3DData(String line) {
         if (line.startsWith("NewMessageSound=")) {
-            this.newMessageSound = mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+            this.newMessageSound = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
         }
         else {
             return super.analyseT3DData(line);

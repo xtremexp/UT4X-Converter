@@ -236,7 +236,7 @@ public class UPackageRessource {
 	public UPackageRessource(MapConverter mapConverter, String fullName, Type type, boolean isUsedInMap) {
 
 		this.mapConverter = mapConverter;
-		String s[] = fullName.split("\\.");
+		String[] s = fullName.split("\\.");
 
 		// TODO handle brush polygon texture info
 		// which only have "name" info
@@ -345,7 +345,7 @@ public class UPackageRessource {
 	 *            Full ressource name (e.g: "AmbAncient.Looping.Stower51")
 	 */
 	public void parseNameAndGroup(String fullName) {
-		String s[] = fullName.split("\\.");
+		String[] s = fullName.split("\\.");
 
 		// TODO handle brush polygon texture info
 		// which only have "name" info
@@ -508,7 +508,7 @@ public class UPackageRessource {
 			return exportedFile.getName();
 		}
 		
-		String s[] = exportedFile.getName().split("\\.");
+		String[] s = exportedFile.getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
 
 		// umodel does export staticmeshes as .pskx or .psk
@@ -532,7 +532,7 @@ public class UPackageRessource {
 	 * @return
 	 */
 	public String getConvertedFileName() {
-		String s[] = exportInfo.getExportedFiles().get(0).getName().split("\\.");
+		String[] s = exportInfo.getExportedFiles().get(0).getName().split("\\.");
 		String currentFileExt = s[s.length - 1];
 
 		// umodel does export staticmeshes as .pskx or .psk
@@ -677,11 +677,7 @@ public class UPackageRessource {
 		}*/
 
 		// .3d meshes needs to be converted to staticmeshes
-		if(mc.isFromUE1UE2ToUE3UE4() && type == Type.MESH){
-			return true;
-		}
-
-		return false;
+        return mc.isFromUE1UE2ToUE3UE4() && type == Type.MESH;
     }
 
 	/**

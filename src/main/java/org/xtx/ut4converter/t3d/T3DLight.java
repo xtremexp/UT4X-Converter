@@ -287,7 +287,7 @@ public class T3DLight extends T3DSound {
 				this.skins = new ArrayList<>();
 			}
 
-			this.skins.add(mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.TEXTURE));
+			this.skins.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
 		}
 
 		// seen in ut2004 overrides spot light type ?

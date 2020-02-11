@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class Installation {
 
 				URL jarUrl = jarCon.getJarFileURL();
 
-				File jarFile = new File(URLDecoder.decode(jarUrl.getPath(), "UTF-8"));
+				File jarFile = new File(URLDecoder.decode(jarUrl.getPath(), StandardCharsets.UTF_8));
 
 				return jarFile.getParentFile();
 			} catch (Exception ex) {

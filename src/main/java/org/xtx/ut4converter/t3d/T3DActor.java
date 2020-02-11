@@ -234,7 +234,7 @@ public abstract class T3DActor extends T3DObject {
 
 		// BlockAll hack overide
 		if ((!(this instanceof T3DBrush) || "BlockAll".equals(t3dClass)) && equalsIdx != -1) {
-			properties.put(line.substring(0, equalsIdx).trim(), line.substring(equalsIdx + 1, line.length()));
+			properties.put(line.substring(0, equalsIdx).trim(), line.substring(equalsIdx + 1));
 		}
 
 		if (line.startsWith("Location=") || line.contains("\tLocation=")) {

@@ -164,27 +164,27 @@ public class MoverProperties implements T3D {
 
 		// UE1 -> 'CloseStartSound' ? (UE4)
 		else if (line.startsWith("ClosedSound=")) {
-			closedSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+			closedSound = mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'CloseStopSound' ? (UE4)
 		else if (line.startsWith("ClosingSound=") || line.startsWith("ClosingAmbientSound=")) {
-			closingSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+			closingSound = mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStartSound' ? (UE4)
 		else if (line.startsWith("OpeningSound=") || line.startsWith("OpeningAmbientSound=")) {
-			openingSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+			openingSound = mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'OpenStopSound' ? (UE4)
 		else if (line.startsWith("OpenedSound=")) {
-			openedSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+			openedSound = mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Closed Sound' (UE4)
 		else if (line.startsWith("MoveAmbientSound=") || line.startsWith("OpenSound=")) {
-			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("\'")[1], T3DRessource.Type.SOUND);
+			moveAmbientSound = mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		}
 
 		// UE1 -> 'Lift Destination' (UE12)

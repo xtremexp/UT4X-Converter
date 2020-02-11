@@ -32,9 +32,9 @@ public class T3DUE2Terrain extends T3DActor {
 
 	private List<TerrainDecoLayer> decoLayers = new LinkedList<>();
 
-	private List<TerrainLayer> layers = new LinkedList<>();;
+	private List<TerrainLayer> layers = new LinkedList<>();
 
-	/**
+    /**
 	 * TerrainMap
 	 */
 	private UPackageRessource heightMapTexture;
@@ -171,7 +171,7 @@ public class T3DUE2Terrain extends T3DActor {
 				heightMapTextureDimensions = new Dimension(image.getWidth(), image.getHeight());
 				Raster rs = image.getTile(0, 0);
 
-				int a[] = null;
+				int[] a = null;
 
 				for (int y = 0; y < rs.getWidth(); y++) {
 					for (int x = 0; x < rs.getHeight(); x++) {

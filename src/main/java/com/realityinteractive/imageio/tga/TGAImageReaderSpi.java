@@ -216,14 +216,10 @@ public class TGAImageReaderSpi extends ImageReaderSpi {
 
 			inputStream.skipBytes(8);
 			int bits = inputStream.readUnsignedByte(); // Offset 16
-			if (bits != 8 && bits != 16 && bits != 24 && bits != 32) {
-				return false;
-			}
+            return bits == 8 || bits == 16 || bits == 24 || bits == 32;
 
 			/* else -- it's *possible* (though not known) that this is a TGA */
-
-			return true;
-		} finally {
+        } finally {
 			// reset so that the ImageInputStream is put back where it was
 			inputStream.reset();
 		}

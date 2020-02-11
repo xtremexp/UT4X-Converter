@@ -165,8 +165,8 @@ public class UModelExporter extends UTPackageExtractor {
 		// Exporting StaticMesh trophy1 to
 		// Z:\\TEMP\\umodel_win32/UmodelExport/2k4Trophies/AllTrophies
 
-		String split[] = logLine.split(" to ");
-		String split2[] = split[0].split("\\ "); // Exporting Texture bdr02BA
+		String[] split = logLine.split(" to ");
+		String[] split2 = split[0].split("\\ "); // Exporting Texture bdr02BA
 
 		// for resources that have been exported by umodel
 		// with package != original package (staticmesh package -> texture (in
@@ -192,7 +192,7 @@ public class UModelExporter extends UTPackageExtractor {
 			// sometimes umodel export other files then in original package
 			// Exporting Texture detail40 to C:/Users/XXX/workspace/UT4
 			// Converter/Converted/DM-Rankin/Temp/UCGeneric/DetailTextures
-			group = exportFolder.substring(startIdxGroup, exportFolder.length());
+			group = exportFolder.substring(startIdxGroup);
 
 			// BSP/Materials -> BSP.Materials
 			group = group.replaceAll("\\/", ".");
@@ -374,7 +374,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 			while ((line = bfr.readLine()) != null) {
 
-				String spl[] = line.split("\\=");
+				String[] spl = line.split("\\=");
 
 				// Diffuse
 				String type = spl[0];
@@ -458,7 +458,7 @@ public class UModelExporter extends UTPackageExtractor {
 		return new UnrealEngine[] { UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3, UnrealEngine.UE4 };
 	}
 	
-	public static void main(final String args[]){
+	public static void main(final String[] args){
 		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
 		mc.setConvertTextures(true);
 		UModelExporter export = new UModelExporter(mc);
