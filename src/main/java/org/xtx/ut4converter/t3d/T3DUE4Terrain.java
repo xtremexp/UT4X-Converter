@@ -16,6 +16,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 import javax.vecmath.Point2d;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -622,7 +623,19 @@ public class T3DUE4Terrain extends T3DActor {
 
 
 		// use the UT4X landscape material (UT4X_LandscapeMat.uasset)
-		sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(mapConverter.getUt4ReferenceBaseFolder()).append("/UT4X_LandscapeMat.UT4X_LandscapeMat'\n");
+		AtomicInteger terrainIdx = new AtomicInteger();
+
+		// compute index of this terrain in map
+		mapConverter.getT3dLvlConvertor().getConvertedActors().forEach(e -> {
+			if (e.getChildren() != null && !e.getChildren().isEmpty() && e.getChildren().get(0) instanceof T3DUE4Terrain) {
+				if (e.getChildren().get(0) == this) {
+					return;
+				}
+				terrainIdx.getAndIncrement();
+			}
+		});
+
+		sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(mapConverter.getUt4ReferenceBaseFolder()).append("/UT4X_LandscapeMat_").append(terrainIdx.getAcquire()).append(".UT4X_LandscapeMat_").append(terrainIdx.getAcquire()).append("'\n");
 
 		int idx = 0;
 
