@@ -1,21 +1,25 @@
+# UT4X Converter Readme file
 
-# UT4 Converter Readme file
+## Description
 
-* Version: 0.9.1
-* Release date: 25/08/2018
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
+
+
+* Version: 1.0.0
+* Release date: 22/02/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-* Download latest released version at: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
+* Download: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
----
 
-# Description
+  
 
-UT4 Converter helps converting maps from Unreal (Tournament) previous games
+UT4X Converter is a program that helps converting maps from Unreal (Tournament) previous games
 to Unreal Tournament 4.
----
 
 
-# UT games supported
+
+## UT games supported
+
 * Unreal 1
 * Unreal 2
 * Unreal Tournament (1999)
@@ -23,38 +27,57 @@ to Unreal Tournament 4.
 * Unreal Tournament 3
 * UDK
 
-Event if all unreal games are supported, since program is in early stages,
-conversion quality for unreal tournament 2003/2004 and unreal tournament 3
-might be pretty bad.
+Event if all unreal games are supported, since program is in early stages, conversion quality for unreal tournament 2003/2004 and unreal tournament 3 might be pretty bad.
 
-If you want to convert UT games to Unreal Tournament 3,
-download and use UT3 Converter program instead of UT4 Converter.
+If you want to convert UT games to Unreal Tournament 3, download and use UT3 Converter program instead of UT4 Converter.
+
+## What is converted
+
+Overall conversion quality for games.
+
+|                | Brushes | Lightning | Sounds | Textures | Meshes            | Static Meshes | Terrain | Base Pickups | Overall |
+| -------------- | ------- | --------- | ------ | -------- | ----------------- | ------------- | ------- | :----------: | :-----: |
+| Unreal 1       | ++      | ++        | ++     | ++       | Not supported yet | N/A           | N/A     |      ++      |  GOOD   |
+| Unreal 2       | ++      | +         | ++     | +        | N/A               | + (2)         | +       |      -       | MEDIUM  |
+| UT99           | ++      | ++        | ++     | ++ (1)   | Not supported yet | N/A           | N/A     |      ++      |  GOOD   |
+| UT2003/ UT2004 | ++      | ++        | ++     | +        | N/A               | ++            | +       |      +       |  GOOD   |
+| UT3            | ++      | +         | +      | -        | N/A               | +             | ++      |      +       | MEDIUM  |
+| UDK            | ++      | +         | +      | +        | N/A               | +             | ++      |      +       | MEDIUM  |
+
+Notes:
+
+1: Custom textures not supported (due to .t3d files not having package information)
+
+2: Unreal 2 staticmeshes have bad UV texturing
+
+## What is NOT converted / limitations
+
+- Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
+  containing these actors (UE4-side bug)
+- Level may appear too dark sometimes. In this case add a "PostProcessVolume", "Unbound" it
+  and set a cube ambient map texture.
+- Movers are replaced with lift actor which may not suit for all kind of movers (such as doors, switches, ...)
+  You may use the "Door" actor or "Matinee" actor to fit with your needs.
+
+| Game     | #1                                     | #2                                                     |
+| -------- | -------------------------------------- | ------------------------------------------------------ |
+| Any      | Shader materials not converted (1)     | Custom scripts and pickups                             |
+| Unreal 1 | Meshes / models not converted          | Bad texture alignment when texture originally rotated. |
+| Unreal 2 | Bad texture alignment for staticmeshes |                                                        |
+| UT99     | Meshes / models not converted          | Bad texture alignment when texture originally rotated. |
+| UT2003/4 |                                        |                                                        |
+| UT3      | Music not converted                    |                                                        |
+| UDK      | Music not converted                    |                                                        |
+
+1: Shader materials replaced with original material if possible which can lead to some scaling material issues on surfaces.
+
+
+
 ---
 
-# What is converted
-Here is the conversion table for all ut games about what the program can convert.
+## Requirements
 
-|                | Brushes | Lightning | Sounds | Textures | Meshes | StaticMeshes | Terrain    | Base Pickups | Overall |
-|----------------|---------|-----------|--------|----------|--------|--------------|------------|:------------:|:-------:|
-| Unreal 1       |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| Unreal 2       |    ++   |     +     |   ++   |     +    |   N/A  |       -      |      No    |       -      |   BAD   |
-| UT99           |    ++   |     ++    |   ++   |    ++    |   No   |      N/A     |     N/A    |      ++      |   GOOD  |
-| UT2003/ UT2004 |    ++   |     ++    |   ++   |     +    |   N/A  |      ++      |Yes(partial)|       +      |   GOOD  |
-| UT3            |    ++   |     +     |    +   |     -    |   N/A  |       +      |      No    |       +      |  MEDIUM |
-| UDK            |    ++   |     +     |    +   |     +    |   N/A  |       +      |      No    |       +      |  MEDIUM |
-
-
-# What is NOT converted
-* Models
-* Terrain (UT2004 has partial support only)
-* Music (Unreal Tournament 3 only)
-* All custom things (scripts and pickups)
-
----
-
-# Requirements
 * Windows 7/8/10 - 64 Bit Operating System
-* Java 8 - https://www.java.com/fr/download/ (not yet compatible with Java 9+)
 * Unreal Tournament 4 (2015) Editor
 * One of the following previous UT games (or UDK):
   ° Unreal 1
@@ -63,28 +86,28 @@ Here is the conversion table for all ut games about what the program can convert
   ° Unreal Tournament 2003
   ° Unreal Tournament 2004
   ° Unreal Tournament 3
-* NConvert texture conversion program: http://www.xnview.com/en/nconvert/
-* UModel Unreal resource program extractor: http://www.gildor.org/en/projects/umodel
+* UModel Unreal Engine package extractor: http://www.gildor.org/en/projects/umodel
 
 Installation and first start
 ------------------------------
-* Install nconvert http://www.xnview.com/en/nconvert/
+
 * Install umodel http://www.gildor.org/en/projects/umodel
-* Either install UT4X-Converter-X.Y.Z.exe file or decompress UT4X-Converter-X.Y.Z.zip file
-* Execute "UT4X-Converter.exe"
-* Set umodel path in Options -> Settings
-* Set nconvert path in Options -> Settings
+* Decompress the ZIP archive to any folder of your choice.
+* Double-click on UT4-Converter-<version>.jar, the program should be launching.
+
+Go to Settings and set the unreal games folders as well as umodel program paths
 
 
 Detailed explanations about conversion is always displayed after each end of map conversion
-in program.
----
 
-# How to convert map?
+in program.
+
+## How to convert a map?
 
 Make sure you are allowed to convert the original map (if you are not the original author for example)
 
 For UT3/UDK maps only:
+
 - Open a text editor (notepad for example)
 - Open map with the UT3 or UDK editor.
 - In menu go to "Edit" -> "Select all"
@@ -95,120 +118,122 @@ Note: this .t3d file is needed because the "ut3/udk.com batchexport" command to 
 .ut3 level to .t3d file messes up the brush order unlike the copy/paste from editor.
 
 ---
-# In UT4 Converter:
+
+<u>In UT4 Converter:</u>
+
 - Launch UT4 Converter
 - Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
 - In the conversion settings, press "Select" and choose the map
 - for ut3 only: select the .t3d file you previously created manually (see For UT3 maps only section)
 - Press ok and wait while the conversion is running (it might takes several minutes)
 
-# In UT4 Editor:
+<u>In UT4 Editor:</u>
+
 - Open the UT4 Editor
 - Create new level ("File -> New level ...") and select "Empty level"
 
 - Import sounds
--- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
--- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
--- After import, right click on all sounds imported in editor and choose "create cue"
--- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
-(e.g:  "AmbOutside_Looping_waves4")
+  -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+  -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
+  -- After import, right click on all sounds imported in editor and choose "create cue"
+  -- Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
+  (e.g:  "AmbOutside_Looping_waves4")
 
 - Import Textures
--- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
--- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Textures
--- After import, right click on all texture in editor and choose "create material"
+  -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+  -- Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Textures
+  -- After import, right click on all texture in editor and choose "create material"
 
 - Import StaticMeshes
--- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
--- Click on "Import" and select converted staticmeshes .obj files from <UT4ConverterPath>/Converted/<MapName>/StaticMeshes
+  -- Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
+  -- Click on "Import" and select converted staticmeshes .obj files from <UT4ConverterPath>/Converted/<MapName>/StaticMeshes
 
 - Import converted map
--- Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)
--- Select all text (Ctrl+A) and copy(Ctrl+C)/paste(Ctrl+V) it into the editor
+  -- Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)
+  -- Select all text (Ctrl+A) and copy(Ctrl+C)/paste(Ctrl+V) it into the editor
 - Convert flat brushes that will cause bsp holes reported by the converter to staticmeshes ("Create Staticmesh" button)
 - Rebuid Geometry ("Build" -> "Build Geometry")
 
 
 Note:
+
 - If after conversion your map got some bsp holes, remove all
-"sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
- The converter does remove most of them, but not all of them yet.
+  "sheet" brushes (e.g: flat lava/water surface, they are generally colored in "green" color in UT/U1 editor).
+   The converter does remove most of them, but not all of them yet.
 
----
-# Limitations / Issues / Troubleshooting
-- [UT99] Some textures may not be correctly aligned
-- Flag bases/Teleporters do not import correctly if you do not have loaded previously a map
-containing these actors (UE4-side bug)
-- Level may appear too dark sometimes. In this case add a "PostProcessVolume", "Unbound" it
-and set a cube ambient map texture.
-- Extraction of sound resources only works with Windows
-- Movers are replaced with lift actor which may not suit for all kind of movers (such as doors, switches, ...)
-You may use the "Door" actor or "Matinee" actor (not auto-converted yet)
-- Since Unreal Engine 4 does not support sheet brushes (e.g: flat lava/water surface, ...) , and as the converter
-does not remove all of them, some "bsp holes" may appear (in that case try to find out all these brushes
-and remove them until bsp holes disapear)
 
-# License
+
+## License
+
 - No commercial use allowed
 - You can edit/share source code as well as binaries
-always keeping original author credits
+  always keeping original author credits
+- MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
+  YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
+  CONVERTED MAP.
 
 ---
-MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
-CONVERTED MAP.
 
----
+## How to build and run latest version ?
 
-# How to build and run latest version ?
-- Download and install JDK13 from: https://adoptopenjdk.net/
-- Download and decompress Java FX13 SDK and jmods from: https://gluonhq.com/products/javafx/
-Then you will need to install one of these IDE.
-- Note: UT4X converter cannot be built with JDK 9 for the moment.
----
+- Download and install OpenJDK13: 
 
-# With [IntelliJ IDEA](https://www.jetbrains.com/idea/) (not-free):
-## Retrieve project
+- Download and install JavaFX SDK: https://gluonhq.com/products/javafx/
+
+  
+
+### With [IntelliJ IDEA](https://www.jetbrains.com/idea/) (not-free):
+
+Retrieve project :
+
 - File -> New -> Project from Version Control -> Git
 - Set "Git Repository URL" to: "https://github.com/xtremexp/UT4X-Converter"
 - Click on "Clone"
 
-## Build and Run
+Build and Run :
+
 - Menu: "Run" -> "Edit configuration"
 - Click on "+" then select "Application"
 - Set "org.xtx.ut4converter.MainApp" as "Main class"
+- Set "VM Options" parameter to "--module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml"
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
 
-## Package .jar project
+Package .jar project :
+
 - Menu: "Run" -> "Edit configuration"
 - Click on "+" then select "Maven"
 - Set "Command line" parameter to "clean install -e"
 - Save "Apply"/"OK" and go to menu "Run" -> "Run.."
 - The .jar file can be found here "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
 
----
-## Optional (UI editing):
-- Download and install JavaFX "Scene Builder": https://gluonhq.com/products/scene-builder/
+
+
+Optional (UI editing) :
+
+- Install "Java FX Scene Builder 2": http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-1x-archive-2199384.html
 - Select project then "File" -> "Project structure..." -> "Artifacts"
 - Click on "+" and add "Java FX application" artifact
 - Select UI file (.fxml) right click -> "Open in SceneBuilder"
 
----
 
-# With [Netbeans IDE](https://netbeans.org/downloads/) (free, embedded UI editing tool):
+
+### With [Netbeans IDE](https://netbeans.org/downloads/) (free, embedded UI editing tool):
+
 - Download and install Netbeans IDE: https://netbeans.org/downloads/ ("Java SE" version works but you can download full version)
 - Open Netbeans and in Menu, go to "Team -> Git -> Clone.."
 - Set "Repository URL" = https://github.com/xtremexp/UT4Converter
 - Click "Next" and select "Master" to get latest code (you may select other branches if you want to)
 - Click "Finish" and wait while project is being imported.
-Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
+  Project will be saved by default in C:\Documents and Settings\<username>\My Documents\NetbeansProject\UT4Converter
 - Right-Click on project and press "Run". At first time it might take several minutes to download required libraries.
-Note:
-Once project has been imported to keep the project updated:
-Right click on project -> Team -> Pull
----
+  Note:
+  Once project has been imported to keep the project updated:
+  Right click on project -> Team -> Pull
 
-# With [Eclipse IDE](https://www.eclipse.org/ide/) (free):
+
+
+### With [Eclipse IDE](https://www.eclipse.org/ide/) (free):
+
 - Download and install "Java IDE" version of Eclipse: https://www.eclipse.org/ide/
 - Open "Eclipse" Right-click in "Package Explorer" view then "New -> Project..", "Maven" -> "check out Maven projects from SCM"
 - Click on "m2e marketplace" link
@@ -218,37 +243,63 @@ Right click on project -> Team -> Pull
 - Set "SCM Url" to: "https://github.com/xtremexp/UT4X-Converter.git"
 - Click "Finish"
 - Right click on "UT4-Converter" project then "Run as" -> "Java application"
-Note:
-Once project has been imported to keep the project updated:
-Right click on project -> "Git" -> "Remote" -> "Pull"
+  Note:
+  Once project has been imported to keep the project updated:
+  Right click on project -> "Git" -> "Remote" -> "Pull"
+
+## Libraries / Technologies used
+
+| Library / Program                         | Description                        | Author                                    | Website                                         |
+| ----------------------------------------- | ---------------------------------- | ----------------------------------------- | ----------------------------------------------- |
+| Java JDK 13                               | Java Development Kit               | Oracle + community                        | https://openjdk.java.net/                       |
+| Java Image IO                             | Java texture image reading library |                                           | https://github.com/jai-imageio/jai-imageio-core |
+| Java Vecmath library                      | Java geometry operations library   |                                           | https://java.net/projects/vecmath               |
+| Jackson                                   | Java JSON library                  |                                           | https://github.com/FasterXML/jackson            |
+| Apache commons IO                         | Java read/write library            |                                           | https://commons.apache.org/proper/commons-io/   |
+| Java Targa image reader                   | .tga image reader java library     | Rob Grzywinski / Reality Interactive, Inc |                                                 |
+| SLF4J                                     | Logging interface for java.        |                                           | http://www.slf4j.org/                           |
+| Texture Toolkit                           | Unreal terrain bitmap conversion   | Alex Stewart                              | http://www.foogod.com/UEdTexKit/                |
+| Sox - Sound eXchange                      | Sound conversion format            |                                           | http://sox.sourceforge.net/                     |
+| UModel <u>(not embedded with program)</u> | Unreal package extractor           | Konstantin Nosov                          | http://www.gildor.org/en/projects/umodel        |
+
+
+
 ---
 
-# Libraries / Technologies used
-------------------------------
-- Java 8 - http://www.java.com
-- Java Vecmath library - 1.5.2 - https://java.net/projects/vecmath
-- Java Image IO - 1.4.0 - https://github.com/jai-imageio/jai-imageio-core
-- Apache commons IO - 2.6 - https://commons.apache.org/proper/commons-io/
-- Texture Toolkit for UnrealEd by Alex Stewart - 1.0 - http://www.foogod.com/UEdTexKit/
-- Java Targa image reader by Rob Grzywinski / Reality Interactive, Inc.
-- Sound Exchange (Sox) - 14.4.1 - http://sox.sourceforge.net/
+## History
 
-Converter interfaces with these external tools:
-- Nconvert by Pierre-E Gougelet  - http://www.xnview.com/en/nconvert/
-- UModel by Konstantin Nosov - http://www.gildor.org/en/projects/umodel
----
-
-# History
-- 0.9.2 - 08/12/2019
-  * Hotfix: fixed no resources being identified / exported with newer version of UModel.
-  * install: Java Runtime Environment (JRE) is now embedded (which makes install file significantly larger)
-  * install: program is now a windows application (using new .msi install file)
+- 1.0.0 - 22/02/2020
+  * ut3: added support for terrain conversion
+  * unreal 2: added support for terrain conversion
+  * ut2004: enhanced terrain conversion with alpha layers conversion
+  * ut2004, u2, ut3: fixed 3d scale for movers with 3d scale != 1
+  * ut2004, ut3: added support for WeaponLocker and UTWeaponLocker
+  * install: program is now bundled as an Windows installer containing Java Runtime Environnement (JRE) which makes the filesize significantly larger while embedding Java 13 runtime binaries.
   * tech: migrated from Java 8 to Java 13 version
   * tech: migrated to Java FX 13
+  * all: smoothing group information is now correctly converted for staticmeshes
+  * all: added support for bHidden property
+  * all: fixed rare case where resources where not converted from map package
+  * ui: xnview is no longer needed for conversion
+
+- 0.9.5 - 04/01/2020
+  * ut2003/4, ut3: added support for CameraActor, SpectatorCam, AttractCamera
+  * ut2003/4, ut3: handled no collision properties for staticmeshes
+  * ut3: fixed light intensity of all lights (some locations were ever too dark or too bright)
+
+- 0.9.4 - 02/01/2020
+  * all: added support for semi-solid and non-solid brushes (e.g: water sheet, ...)
+  * u1/ut99: fixed bad lift destination / rotation for movers with multi positions
+
+- 0.9.3 - 12/12/2019
+  * Fix: skip sheet brushes to be converted causing BSP holes
+
+- 0.9.2 - 08/12/2019
+  * Hotfix: fixed no resources being identified / exported with newer version of UModel.
 
 - 0.9.1 - 25/08/2018
- * all: fixed some unconverted resources 
- 
+  * all: fixed some unconverted resources 
+
 - 0.9.0 - 19/08/2018
   * added support for UDK maps (conversion quality is like UT3 = medium)
   * u1/ut99: default scale is now 2.5X
@@ -258,20 +309,20 @@ Converter interfaces with these external tools:
   * ut2003/4: handled uv2Mode, uv2Skin (thanks MoxNix for reporting)
   * ut2003/4/ut3: fixed some cases where some textures from staticmeshes where not converted
   * ut2003/4: added support for LadderVolume, PressureVolume, SnipingVolue, ConvoyPhysicsVolume, xFallingVolume, IonCannonKillVolume,
-  HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
+    HitScanBlockingVolume, ASCriticalObjectiveVolume, LeavingBattleFieldVolume, xFallingVolume
   * ut2003/4: VolumeTrigger, MessageTrigger, CrowdTrigger, UseTrigger, MusicTrigger, RedirectionTrigger,
-  GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
+    GravityTrigger, MaterialTrigger, TriggeredCondition, ScriptedTrigger now converted to TriggerVolume
   * ut2003/4: fixed lift actor property in lift exit actor not being set
   * ut2003/4: added support for multiple skins (corona) with lights
   * all: fixed some teamplayerstarts being converted as playerstart
   * all: fixed crash on UT4 editor import if trigger had either radius or height set to 0
   * unreal 2: fixed no staticmeshes or textures being converted. Since umodel does not support the game
-the conversion quality of resources is not good yet (staticmeshes with bad roration and uv)
+    the conversion quality of resources is not good yet (staticmeshes with bad roration and uv)
   * unreal 2: added support for Trigger TT_USE case
   * all: movers forced to movetime=0.1s if their movetime is 0s (else won't move at all)
   * all: tag property now being converted
   * all: brushes/movers with flat horizontal shape are now being converted back (need convert them to staticmeshes
-  prior fisrt build)
+    prior fisrt build)
   * ut3: now no longer loads lightmap when extracting textures from packages (=quicker conversion)
   * ui: updated welcome screen
   * u1/ut99: fixed mover using default sound if no sound was set originally
@@ -304,7 +355,7 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
 
 - 0.8.5 - 27/07/2017
   * u1/u2/ut2003/ut2004: blender manual conversion one by one of each staticmeshes is no longer needed.
- Now only need to import all .obj converted staticmeshes within the UE4 editor
+    Now only need to import all .obj converted staticmeshes within the UE4 editor
 
 - 0.8.4 - 19/07/2017
   * u1/u2/ut2003/ut2004: invisible brushes are no longer being converted. This might slightly reduce some bsp holes cases.
@@ -344,7 +395,7 @@ the conversion quality of resources is not good yet (staticmeshes with bad rorat
 
 - 0.7.5 - 23/10/2016
   * Changes instructions for import .t3d converted file since UnrealEngine editor 4.13
-can no longer directly import .t3d files
+    can no longer directly import .t3d files
 
 - 0.7.4 - 21/09/2016:
   * Fixed some classes not being converted (like pickups, weapons) when class name was lowercase
@@ -362,24 +413,24 @@ can no longer directly import .t3d files
 
 - 0.7.1 - 12/10/2015:
   * Fixed polygon for normal brushes with shader texture not replaced with diffuse texture
-  
+
 - 0.7 - 11/10/2015:
   * ut2003/ut2004: staticmeshes are now textured (note: shader textures are not fully converted,
-  possibly replaced with diffuse texture)
+    possibly replaced with diffuse texture)
   * ut2003/ut2004: lifts got their original staticmesh set now
-  Note: you need to update original python script file 'io_import_scene_unreal_psa_psk.py'
-  in C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
-  with this one (which provide fixes for .psk staticmesh import in blender)
-  by Befzz from https://github.com/Befzz/blender3d_import_psk
+    Note: you need to update original python script file 'io_import_scene_unreal_psa_psk.py'
+    in C:\\Program Files\\Blender Foundation\\Blender\\<VERSION>\\scripts\\addons
+    with this one (which provide fixes for .psk staticmesh import in blender)
+    by Befzz from https://github.com/Befzz/blender3d_import_psk
 
 - 0.6 - 27/09/2015:
   * u2, ut2003, ut2004, ut3: added option to export staticmeshes used in map
-  (partial conversion, need to convert .psk file format to.fbx using 3d modeler (like Blender))
+    (partial conversion, need to convert .psk file format to.fbx using 3d modeler (like Blender))
   * UI: added information about how to convert map after conversion
   * ut3: added TriggerVolume, DynamicTriggerVolume, Note, UTTeamPlayerStart, UTTeamWarfarePlayerStart,
-  PointLightMovable, PointLightToggleable, SkyLightToggleable, SpotLightMovable, SpotLightToggleable,
-  AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
-  actors for conversion
+    PointLightMovable, PointLightToggleable, SkyLightToggleable, SpotLightMovable, SpotLightToggleable,
+    AmbientSoundSimple, AmbientSoundNonLoop, AmbientSoundSimpleToggleable
+    actors for conversion
   * u2, ut2003, ut2004, ut3: fixed crash when staticmesh actor has no staticmesh set
   * ut3: added partial conversion of ReverbVolume, PhysicsVolume
   * ut3: fixed sometimes a crash when exporting level to t3d file
@@ -391,25 +442,25 @@ can no longer directly import .t3d files
   * ut2003, ut2004, ut3: fixed lift destination (since new UT4 version automatically scales it with 3d scale of lift mesh)
   * ut2004: increased light brightness and radius
   * ut3: removed useless warnings for actors ModelComponent, ForcedReachSpec
-  
+
 - 0.5 - 05/09/2015:
   * [UT99] Added partial support for conversion of UT99 assault maps with UTA resurgence mod
-(https://trello.com/b/Jtvc23S1/uta-resurgence)
+    (https://trello.com/b/Jtvc23S1/uta-resurgence)
   * [UT99] Replaced SmokeGenerator with Blueprint_Effect_Smoke_C blueprint actor
   * Added 2.1875 scale factor in conversion settings
   * Fixed never-ending (stuck) conversion in some rare-cases
   * Fixed brush of movers no longer being converted (<actorname>_brush actors)
   * Fixed duplicated mover actors
   * Now need to create Cue assets for sounds to be working
-(after sound files import select them in UE4 Editor asset browser then "Create CUE").
+    (after sound files import select them in UE4 Editor asset browser then "Create CUE").
 
 - 0.4.1 - 07/06/2015:
   * Fixed untextured surfaces if texture coming from level package
 
 - 0.4.0 - 06/06/2015:
   * Added support for Unreal Tournament 2003 / 2004, Unreal 2, Unreal Tournament 3
-  (note Unreal 2/UT2003/UT2004/UT3 conversion is pretty bad for some maps
-  since staticmesh conversion is not yet available)
+    (note Unreal 2/UT2003/UT2004/UT3 conversion is pretty bad for some maps
+    since staticmesh conversion is not yet available)
   * Added conversion for textures (note: material textures are not yet converted)
   * Automatically extract music now
   * [UI] Added advanced conversion settings
@@ -438,18 +489,16 @@ can no longer directly import .t3d files
   * Improved mover conversion (moving good now)
   * Added LavaZone, SlimeZone, WaterZone conversion
   * Added missing weapons conversion for
-  "FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
-"ImpactHammer", "ASMD", "Rifle", "Minigun", "SuperShockRifle" (instagib)
+    "FlakCannon", "AutoMag", "Enforcer","doubleenforcer",
+    "ImpactHammer", "ASMD", "Rifle", "Minigun", "SuperShockRifle" (instagib)
   * Added teleporter conversion
   * Added conversion for powerup "invisibility", "ut_invisibility",
- "ut_stealth", "nalifruit" (replaced with normal health),
- "bandages" (replaced with healthvial), "PowerBelt"
+    "ut_stealth", "nalifruit" (replaced with normal health),
+     "bandages" (replaced with healthvial), "PowerBelt"
   * Added conversion for ammo "Sludge", "EClip", "FlakShellAmmo", "ASMDAmmo",
- "RifleAmmo", "RifleRound", "RifleShell", "Minigun", "SuperShockRifle" (instagib)
+    "RifleAmmo", "RifleRound", "RifleShell", "Minigun", "SuperShockRifle" (instagib)
   * Removed unecessary auto-created notes for unconverted actor
-for PathNodes, InventorySpot, TranslocDest
-...
+    for PathNodes, InventorySpot, TranslocDest
 
 - 0.1.0 - 13/04/2015: 
   * First version with basic brush, lights and pickups conversion
-
