@@ -253,7 +253,7 @@ public class T3DUE2Terrain extends T3DActor {
 
 		if (heightMapTextureDimensions == null) {
 			return false;
-		} else if (Math.max(heightMapTextureDimensions.getHeight(), heightMapTextureDimensions.getWidth()) > 255) {
+		} else if (Math.max(heightMapTextureDimensions.getHeight(), heightMapTextureDimensions.getWidth()) > 256) {
 			mapConverter.getLogger().log(Level.SEVERE, "Terrain conversion with size greater than 256X256 not supported");
 			return false;
 		} else {
