@@ -1659,13 +1659,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.createNoteForUnconvertedActors = createNoteForUnconvertedActors;
 	}
 
-	public File getIntT3dUt3Editor() {
-		return intT3dUt3Editor;
+	public File getInT3d() {
+		return inT3d;
 	}
 
-	public void setIntT3dUt3Editor(File intT3dUt3Editor) {
-		this.intT3dUt3Editor = intT3dUt3Editor;
+	public void setInT3d(File inT3d) {
+		this.inT3d = inT3d;
 	}
+
 
 	/**
 	 * Return ut class filter during conversion if any.

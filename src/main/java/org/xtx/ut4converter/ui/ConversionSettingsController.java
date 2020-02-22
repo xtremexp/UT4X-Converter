@@ -39,9 +39,18 @@ import java.util.logging.Logger;
 @SuppressWarnings("restriction")
 public class ConversionSettingsController implements Initializable {
 	@FXML
+	public Label inputMapT3dLbl;
+
+	@FXML
+	public Button selectInputT3dMap;
+
+	@FXML
+	public Label t3dLabel;
+
+	@FXML
 	private AnchorPane ConversionSettings;
 
-	Stage dialogStage;
+	private Stage dialogStage;
 
 	@FXML
 	private Label inputGameLbl;
@@ -59,16 +68,16 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private Label ut4BaseReferencePath;
 
-	MainApp mainApp;
+	private MainApp mainApp;
 
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
-	UTGames.UTGame inputGame;
-	UTGames.UTGame outputGame;
+	private UTGames.UTGame inputGame;
+	private UTGames.UTGame outputGame;
 
-	UserConfig userConfig;
-	UserGameConfig userInputGameConfig;
-	UserGameConfig userOutputGameConfig;
+	private UserConfig userConfig;
+	private UserGameConfig userInputGameConfig;
+	private UserGameConfig userOutputGameConfig;
 	@FXML
 	private TitledPane advancedSettingsTitle;
 	@FXML
@@ -195,6 +204,16 @@ public class ConversionSettingsController implements Initializable {
 		} else {
 			mapConverter.setUseUbClasses(false);
 		}
+
+		if (inputGame == UTGame.UT3) {
+			inputMapT3dLbl.setDisable(false);
+			selectInputT3dMap.setDisable(false);
+			t3dLabel.setDisable(false);
+		} else {
+			inputMapT3dLbl.setDisable(true);
+			selectInputT3dMap.setDisable(true);
+			t3dLabel.setDisable(true);
+		}
 		
 		switch(mapConverter.getInputGame().engine.version){
 			case 1:
@@ -208,10 +227,6 @@ public class ConversionSettingsController implements Initializable {
 					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
 				}
 				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-				break;
-			case 3:
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 				break;
 			case 4:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
@@ -355,29 +370,6 @@ public class ConversionSettingsController implements Initializable {
 
 			dialogStage.close();
 
-			// FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
-			// because the UT3 commandlet is kinda in "alpha" stages
-			if (mapConverter.getInputGame() == UTGame.UT3 || mapConverter.getInputGame() == UTGame.UDK) {
-				FileChooser chooser = new FileChooser();
-				chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from "+ mapConverter.getInputGame().shortName + " editor ");
-
-				File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
-
-				if (mapFolder.exists()) {
-					chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
-				}
-
-				chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Editor Map (*.t3d)", "*.t3d"));
-
-				File t3dUt3EditorFile = chooser.showOpenDialog(new Stage());
-
-				if (t3dUt3EditorFile != null) {
-					mapConverter.setIntT3dUt3Editor(t3dUt3EditorFile);
-				} else {
-					return;
-				}
-			}
-
 			mapConverter.setLightMapResolution(Double.valueOf(lightMapResolutionList.getSelectionModel().getSelectedItem()));
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
 			mapConverter.brightnessFactor = Float.valueOf(lightningBrightnessFactor.getSelectionModel().getSelectedItem());
@@ -404,6 +396,18 @@ public class ConversionSettingsController implements Initializable {
 			alert.setTitle("Input map not set");
 			alert.setHeaderText("Input map not set");
 			alert.setContentText("Select your " + inputGame.name + " input map");
+
+			alert.showAndWait();
+			return false;
+		}
+
+		// FOR UT3 need to have .t3d file created from UT3 editor
+		// because the ut3.com batchexport command is buggy and messes up actors !
+		if (mapConverter.getInputGame() == UTGame.UT3 && mapConverter.getInT3d() == null) {
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Input .t3d map not set");
+			alert.setHeaderText("Input map not set");
+			alert.setContentText("Within UT3 editor, select all actors, copy and paste in a new .t3d file");
 
 			alert.showAndWait();
 			return false;
@@ -513,4 +517,29 @@ public class ConversionSettingsController implements Initializable {
 		mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
 	}
 
+	/**
+	 * // FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
+	 * // because the UT3 commandlet is kinda in "alpha" stages
+	 *
+	 * @param actionEvent
+	 */
+	public void selectInputT3dMap(ActionEvent actionEvent) {
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from " + mapConverter.getInputGame().shortName + " editor ");
+
+		File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+
+		if (mapFolder.exists()) {
+			chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+		}
+
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Editor Map (*.t3d)", "*.t3d"));
+
+		File t3dUt3EditorFile = chooser.showOpenDialog(new Stage());
+
+		// UT3 commandlet export too buggy and messed .t3d file so need to use the exported one from UT3 editor
+		if (t3dUt3EditorFile != null) {
+			mapConverter.setInT3d(t3dUt3EditorFile);
+		}
+	}
 }
