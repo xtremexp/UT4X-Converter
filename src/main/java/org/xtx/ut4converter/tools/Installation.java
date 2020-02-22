@@ -62,9 +62,11 @@ public class Installation {
 	/**
 	 * Get the directory where the current running program is installed, i.e.
 	 * the location of the jar file the given class is contained in. <br>
-	 * If it is not installed (see {@link #isInstalled()}) the <em>current
+	 * If it is not installed (see {@link #isInstalled(Class)}}) the <em>current
 	 * user working directory</em> (as denoted by the system property
 	 * <code>user.dir<code>) is returned instead.
+	 *
+	 * The install directory should be normally "C:\Program Files\UT4X-Converter\app"
 	 * 
 	 * @param clazz
 	 *            class to check for installation
@@ -122,15 +124,29 @@ public class Installation {
 	}
 
 	public static File getAppFolder(){
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER);
+		return new File(String.valueOf(Installation.getInstallDirectory(MainApp.class)));
 	}
 
 	public static File getContentFolder(){
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "conf");
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "conf");
+
+		if(file.exists()){
+			return file;
+		}
+		// install directory is app folder if using the .exe UT4X converter file
+		else {
+			return new File(Installation.getInstallDirectory(MainApp.class)  + File.separator + "conf");
+		}
 	}
 
 	public static File getG16ConvertFile() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "g16convert" + File.separator + "g16convert.exe");
+
+		if (file.exists()) {
+			return file;
+		} else {
+			return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + "g16convert" + File.separator + "g16convert.exe");
+		}
 	}
 
 	/**
@@ -147,7 +163,13 @@ public class Installation {
 	 * @return Sox converter binary file
 	 */
 	public static File getSox() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "sox" + File.separator + "sox.exe");
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "sox" + File.separator + "sox.exe");
+
+		if (file.exists()) {
+			return file;
+		} else {
+			return new File(Installation.getInstallDirectory(MainApp.class) + File.separator  + "sox" + File.separator + "sox.exe");
+		}
 	}
 
 	/**
@@ -173,11 +195,23 @@ public class Installation {
 	 * @return
 	 */
 	public static File getExtractTextures() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
+
+		if (file.exists()) {
+			return file;
+		} else {
+			return new File(Installation.getInstallDirectory(MainApp.class) +  File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
+		}
 	}
 
 	public static File getUtxAnalyser() {
-		return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "UtxAnalyser.exe");
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "UtxAnalyser.exe");
+
+		if (file.exists()) {
+			return file;
+		} else {
+			return new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "UtxAnalyser.exe");
+		}
 	}
 
 	private static final String OS = System.getProperty("os.name").toLowerCase();
