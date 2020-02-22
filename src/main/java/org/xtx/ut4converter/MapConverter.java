@@ -585,9 +585,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				packageFilesCache.add(inMap);
 				updateMessage("Exporting map to unreal text file");
 				inT3d = UCCExporter.exportLevelToT3d(this, inMap);
-				updateProgress(PROGRESS_BEFORE_CONVERT, 100);
 			}
 
+			updateProgress(PROGRESS_BEFORE_CONVERT, 100);
 			outT3d = new File(outPath.toFile().getAbsolutePath() + File.separator + mapName + ".t3d");
 
 			// t3d ever exported or directly converting from t3d file, then skip

@@ -10,7 +10,6 @@ import javafx.concurrent.Task;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
 
 import javax.vecmath.Vector3d;
@@ -448,10 +447,11 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private boolean isBeginActor(String line) {
 
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-			return line.contains("Begin Actor");
-		}
+		//if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+			return line.contains("Begin Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.startsWith("Begin Terrain "));
+		//}
 
+		/*
 		// Any actor/sub-class begins with "Begin Object"
 		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
@@ -465,14 +465,17 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		return false;
+		*/
 	}
 
 	private boolean isEndActor(String line) {
 
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-			return line.contains("End Actor");
-		}
+		// Terrain actor does not begins with "Begin Actor Class=Terrain"
+		//if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+			return line.contains("End Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.endsWith("End Terrain"));
+		//}
 
+		/*
 		// Any actor begin with "Begin Object"
 		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
@@ -485,6 +488,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		return false;
+		*/
 	}
 
 	private int actorsReadCount;
@@ -504,7 +508,13 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		if (isBeginActor(line)) {
 			actorsReadCount++;
-			currentClass = getActorClass(line);
+
+			// UT3 terrain is not an actor
+			if (line.startsWith("Begin Terrain ")) {
+				currentClass = "Terrain";
+			} else {
+				currentClass = getActorClass(line);
+			}
 
 			if (mapConverter.getSupportedActorClasses().canBeConverted(currentClass)) {
 				utActorClass = mapConverter.getSupportedActorClasses().getConvertActorClass(currentClass);
@@ -512,7 +522,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 				if (utActorClass != null) {
 					Constructor<? extends T3DActor> cons = utActorClass.getConstructor(MapConverter.class, String.class);
-					uta = cons.newInstance(mapConverter, getActorClass(line));
+					uta = cons.newInstance(mapConverter, currentClass);
 					uta.setT3dOriginClass(currentClass);
 					convertedActors.add(uta);
 					uta.analyseT3DData(line);
