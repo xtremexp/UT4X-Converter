@@ -6,15 +6,14 @@
 
 
 * Version: 1.0.0
-* Release date: XX/02/2020
+* Release date: 22/02/2020
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-* Download: [UT Forums](https://forums.unrealtournament.com/showthread.php?18198)
+* Download: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
 
   
 
 UT4X Converter is a program that helps converting maps from Unreal (Tournament) previous games
-
 to Unreal Tournament 4.
 
 
@@ -269,10 +268,12 @@ Optional (UI editing) :
 
 ## History
 
-- 1.0.0 - XX/02/2020
+- 1.0.0 - 22/02/2020
   * ut3: added support for terrain conversion
   * unreal 2: added support for terrain conversion
   * ut2004: enhanced terrain conversion with alpha layers conversion
+  * ut2004, u2, ut3: fixed 3d scale for movers with 3d scale != 1
+  * ut2004, ut3: added support for WeaponLocker and UTWeaponLocker
   * install: program is now bundled as an Windows installer containing Java Runtime Environnement (JRE) which makes the filesize significantly larger while embedding Java 13 runtime binaries.
   * tech: migrated from Java 8 to Java 13 version
   * tech: migrated to Java FX 13
@@ -282,10 +283,9 @@ Optional (UI editing) :
   * ui: xnview is no longer needed for conversion
 
 - 0.9.5 - 04/01/2020
-
- * ut2003/4, ut3: added support for CameraActor, SpectatorCam, AttractCamera
- * ut2003/4, ut3: handled no collision properties for staticmeshes
- * ut3: fixed light intensity of all lights (some locations were ever too dark or too bright)
+  * ut2003/4, ut3: added support for CameraActor, SpectatorCam, AttractCamera
+  * ut2003/4, ut3: handled no collision properties for staticmeshes
+  * ut3: fixed light intensity of all lights (some locations were ever too dark or too bright)
 
 - 0.9.4 - 02/01/2020
   * all: added support for semi-solid and non-solid brushes (e.g: water sheet, ...)
@@ -298,8 +298,7 @@ Optional (UI editing) :
   * Hotfix: fixed no resources being identified / exported with newer version of UModel.
 
 - 0.9.1 - 25/08/2018
-
- * all: fixed some unconverted resources 
+  * all: fixed some unconverted resources 
 
 - 0.9.0 - 19/08/2018
   * added support for UDK maps (conversion quality is like UT3 = medium)

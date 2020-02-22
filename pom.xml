@@ -80,7 +80,7 @@
 							<resources>
 								<resource>
 									<directory>app/g16convert</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>
@@ -96,7 +96,7 @@
 							<resources>
 								<resource>
 									<directory>app/sox</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>
@@ -112,7 +112,7 @@
 							<resources>
 								<resource>
 									<directory>app/utxextractor</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>
@@ -128,7 +128,7 @@
 							<resources>
 								<resource>
 									<directory>app/conf</directory>
-									<filtering>true</filtering>
+									<filtering>false</filtering>
 								</resource>
 							</resources>
 						</configuration>

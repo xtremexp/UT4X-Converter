@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class T3DUE3TerrainTestTest {
+public class T3DUE3TerrainTest {
 
 
     private MapConverter mc;
@@ -30,7 +30,7 @@ public class T3DUE3TerrainTestTest {
         // terrain sample is from VCTF-Sandstorm reduced to 20X20 numpatches
 
         // read ue3TerrainData
-        final T3DActor actor = BaseTest.parseFromT3d(this.mc, "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTestTest.class.getResource("/t3d/ue3/UT3-Terrain.t3d").getPath());
+        final T3DActor actor = BaseTest.parseFromT3d(this.mc, "TerrainActor", T3DUE3Terrain.class, T3DUE3TerrainTest.class.getResource("/t3d/ue3/UT3-Terrain-Sandstorm.t3d").getPath());
 
         Assert.assertNotNull(actor);
         Assert.assertTrue(actor instanceof T3DUE3Terrain);

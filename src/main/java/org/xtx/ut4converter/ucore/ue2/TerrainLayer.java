@@ -51,7 +51,7 @@ public class TerrainLayer implements T3D {
 	 * texture file.
 	 * Range is 0-255
 	 */
-	private final List<Integer> alphaMap = new LinkedList<>();
+	private List<Integer> alphaMap = new LinkedList<>();
 
 	UPackageRessource texture;
 
@@ -202,5 +202,9 @@ public class TerrainLayer implements T3D {
 
 	public List<Integer> getAlphaMap() {
 		return alphaMap;
+	}
+
+	public void setAlphaMap(List<Integer> alphaMap) {
+		this.alphaMap = alphaMap;
 	}
 }

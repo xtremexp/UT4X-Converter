@@ -412,7 +412,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			// Program did not work as expected
 			// some ressources may have been partially extracted
 			if (exitValue != 0) {
-				logger.log(Level.SEVERE, "Full export for " + unrealPackage.getFileContainer(mapConverter).getName() + " failed with ucc.exe batchexport");
+				logger.log(Level.SEVERE, "Full export for " + unrealPackage.getFileContainer(mapConverter).getName() + " failed with ucc.exe batchexport :");
 			}
 
 			if (!isForceSetNotExported()) {
@@ -421,10 +421,15 @@ public final class UCCExporter extends UTPackageExtractor {
 
 			for (String logLine : logLines) {
 
-				logger.log(Level.FINE, logLine);
+				// always display export logs on error
+				if (exitValue != 0) {
+					logger.log(Level.SEVERE, logLine);
+				} else {
+					logger.log(Level.FINE, logLine);
+				}
 
 				if (logLine.contains("Failed") && !logLine.contains("Warning")) {
-					String missingpackage = logLine.split("\\'")[2];
+					String missingpackage = logLine.split("'")[2];
 					logger.log(Level.SEVERE, "Impossible to export. Unreal Package " + missingpackage + " missing");
 					return exportedFiles;
 				}

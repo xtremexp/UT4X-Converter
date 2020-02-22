@@ -89,7 +89,7 @@ public class SoundConverter {
 	 */
 	private synchronized void convertTo16BitSampleSizeUsingSox(File inWaveFile, File outWaveFile){
 		
-		final String cmd = soxConverter.getAbsolutePath() + " \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 -b 16 \"" + outWaveFile.getAbsolutePath() + "\"";
+		final String cmd = "\"" + soxConverter.getAbsolutePath() + "\" \"" + inWaveFile.getAbsolutePath() + "\" -r 44100 -b 16 \"" + outWaveFile.getAbsolutePath() + "\"";
 		
 		logger.info("Converting "+inWaveFile.getName()+" sound to 44.1 Khz / 16 bit");
 		List<String> logLines  = new ArrayList<>();

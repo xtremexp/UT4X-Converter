@@ -14,35 +14,36 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
+import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
  * Very basic implementation of Unreal Engine 4 terrain
- * 
+ *
  * @author XtremeXp
  */
 public class T3DUE4Terrain extends T3DActor {
 
-	private final static String DEFAULT_LANDSCAPE_HOLE_MATERIAL = "/Game/RestrictedAssets/Environments/Tuba/Landscape/M_LandscapeHole.M_LandscapeHole";
+	private File landscapeMatFile;
 
-	UPackageRessource landscapeMaterial;
+	private UPackageRessource landscapeMaterial;
 
-	UPackageRessource landscapeHoleMaterial;
+	private UPackageRessource landscapeHoleMaterial;
 
-	int collisionMipLevel;
-	int collisionThickness;
+	private int collisionMipLevel;
+	private int collisionThickness = 16;
 
 	/**
 	 * Max component size
 	 */
-	final int maxComponentSize = 255;
+	private final int maxComponentSize = 255;
 
-	int componentSizeQuads;
-	int subsectionSizeQuads;
-	short numSubsections;
-	boolean bUsedForNavigation;
-	short maxPaintedLayersPerComponent;
+	private int componentSizeQuads;
+	private int subsectionSizeQuads;
+	private short numSubsections;
+	private boolean bUsedForNavigation;
 
 	private LandscapeCollisionComponent[][] collisionComponents;
 
@@ -98,8 +99,6 @@ public class T3DUE4Terrain extends T3DActor {
 		final short terrainHeight = ue3Terrain.getTerrainHeight().getHeight();
 
 		// TODO handle visibility data (not visible terrain parts)
-
-
 		final List<Boolean> visData = new LinkedList<>();
 
 		// vis data in UT3 is 0 1 0 0 0 0 1 1
@@ -111,18 +110,83 @@ public class T3DUE4Terrain extends T3DActor {
 			}
 		}
 
-		// in UT3 the first layer is always 100% rendered that why we need to force alpha values to 255 else we might see areas in ue4 terrain "black"
-		final org.xtx.ut4converter.ucore.ue3.TerrainLayer firstTerrainLayer = ue3Terrain.getTerrainLayers().stream().filter(tl -> tl.getIndex() == 0).findFirst().orElse(null);
+		// compute new alpha values for all alpha layers to fit the sum = 255
+		final Map<Integer, List<Integer>> newAlphaValueLayersByTerrainLayerIdx = fixAlphaLayersValuesByTerrainLayerIndex(ue3Terrain);
 
-		if (firstTerrainLayer != null) {
-			final List<Integer> newValues = new ArrayList<>(Collections.nCopies(ue3Terrain.getAlphaLayers().get(0).size(), 255));
-			ue3Terrain.getAlphaLayers().remove(firstTerrainLayer.getAlphaMapIndex());
 
-			// set first terrain layer to be in first position
-			ue3Terrain.getAlphaLayers().add(newValues);
+		for (org.xtx.ut4converter.ucore.ue3.TerrainLayer terrainLayer : ue3Terrain.getTerrainLayers()) {
+			ue3Terrain.getAlphaLayers().set(terrainLayer.getAlphaMapIndex(), newAlphaValueLayersByTerrainLayerIdx.get(terrainLayer.getIndex()));
 		}
 
+
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, heightMap, ue3Terrain.getAlphaLayers(), visData, terrainWidth, terrainHeight);
+	}
+
+
+	/**
+	 * // IN Unreal Engine 4 the sum of all alpha values given an alpha index is always 255 (FF in hexa)
+	 * 		// as such we have to modify the current alpha values for UE3 so the sum of all alpha values for all layers given an alpha index is 255
+	 * 		// e.g: AlphaValue(L1, X) = 64
+	 * 		// e.g: AlphaValue(L2, X) = 200
+	 * 		// e.g: AlphaValue(L3, X) = 240
+	 * 		// Sum of all layers in UT4 must equals to
+	 * 		// AlphaValueNEW(L1, X) = 255 * ((AlphaValue(L1, X) / (AlphaValue(L1, X) +AlphaValue(L2, X) +AlphaValue(L3, X))) = 32.38 -> 32
+	 * 		// AlphaValueNEW(L1, X) = 255 * (64 / (64 +200 +240)) = 32.38 -> 32
+	 * @param ue3Terrain
+	 * @return
+	 */
+	private Map<Integer, List<Integer>> fixAlphaLayersValuesByTerrainLayerIndex(T3DUE3Terrain ue3Terrain) {
+
+		// FIXME better alpha values but not yet perfect
+		final Map<Integer, List<Integer>> newAlphaValueLayersByTerrainLayerIdx = new HashMap<>();
+
+		final List<Integer> allLayersAlphaValueSum = new LinkedList<>();
+
+		// precompute sum of all alphalayers given an alpha value index
+		for (int alphaValueIdx = 0; alphaValueIdx < ue3Terrain.getAlphaLayers().get(0).size(); alphaValueIdx++) {
+			for (int i = 0; i < ue3Terrain.getTerrainLayers().size(); i++) {
+				allLayersAlphaValueSum.add(ue3Terrain.getAlphaLayers().get(i).get(alphaValueIdx));
+			}
+		}
+
+		for (int terrainLayerIdx = 0; terrainLayerIdx < ue3Terrain.getTerrainLayers().size(); terrainLayerIdx++) {
+
+			final org.xtx.ut4converter.ucore.ue3.TerrainLayer terrainLayer = ue3Terrain.getTerrainLayers().get(terrainLayerIdx);
+			final List<Integer> alphaValues = ue3Terrain.getAlphaLayers().get(terrainLayer.getAlphaMapIndex());
+			final List<Integer> newAlphaValues = new ArrayList<>();
+
+			for (int alphaValueIdx = 0; alphaValueIdx < alphaValues.size(); alphaValueIdx++) {
+
+				int alphaValueAllLayersSum = allLayersAlphaValueSum.get(alphaValueIdx);
+
+				Integer oldAlphaValue = alphaValues.get(alphaValueIdx);
+				int alphaValueOtherLayersSum = alphaValueAllLayersSum - oldAlphaValue;
+				int newAlphaValue;
+
+				// first alpha layer in UT4 is always rendered
+				if (terrainLayer.getAlphaMapIndex() == 0) {
+
+					// AlphaLayer 1: 240
+					// AlphaLayer 2: 20
+					// AlphaLayer 3: 40
+					int newOldAlphaValue = 255 * ue3Terrain.getTerrainLayers().size() - alphaValueOtherLayersSum;
+					alphaValueAllLayersSum += (newOldAlphaValue - oldAlphaValue);
+					oldAlphaValue = newOldAlphaValue;
+
+
+					alphaValueAllLayersSum += (255 - oldAlphaValue);
+					oldAlphaValue = 255;
+				}
+
+				newAlphaValue = (int) (255f * ((oldAlphaValue * 1f) / (alphaValueAllLayersSum * 1f)));
+
+
+				newAlphaValues.add(newAlphaValue);
+			}
+
+			newAlphaValueLayersByTerrainLayerIdx.put(terrainLayer.getIndex(), newAlphaValues);
+		}
+		return newAlphaValueLayersByTerrainLayerIdx;
 	}
 
 
@@ -259,6 +323,8 @@ public class T3DUE4Terrain extends T3DActor {
 	 * Given a component height index and the height data of original UE3 terrain, return the height
 	 * related to this index within the UE4 terrain
 	 *
+	 * FIXME only works if there is only one component for whole terrain else would give bad index (if compIdxX > 0 or compIdxY > 0)
+	 *
 	 * @param compHeightIdx Component height index
 	 * @param compQuadSize Quad Size for UE4 terrain
 	 * @param compIdxX UE4 terrain component X coordinate
@@ -268,7 +334,6 @@ public class T3DUE4Terrain extends T3DActor {
 	 */
 	private Integer getDataIndexForComponentHeightIndex(int compHeightIdx, int compQuadSize, int compIdxX, int compIdxY, int ue3GlobalWidth, int ue3GlobalHeight) {
 
-		// TODO FIXME not working since the component size might be different from UE3 one
 		// let's say in UE3 our terrain was a 21x21 square (ue3GlobalWidth)
 		// and our UE4 converted terrain a 31*31 square
 		// some heightvalues will be out of the UE3 terrain and will be needed to be set to default value (32768)
@@ -310,7 +375,7 @@ public class T3DUE4Terrain extends T3DActor {
 
 	/**
 	 * Creates t3d ue4 terrain from unreal engine 2 terrain
-	 * 
+	 *
 	 * @param ue2Terrain
 	 */
 	public T3DUE4Terrain(final T3DUE2Terrain ue2Terrain) {
@@ -348,7 +413,61 @@ public class T3DUE4Terrain extends T3DActor {
 
 		final List<List<Integer>> alphaLayers = ue2Terrain.getLayers().stream().map(TerrainLayer::getAlphaMap).collect(Collectors.toList());
 
-		// FIXME make visible first alpha layer
+
+		final Map<Integer, List<Integer>> newAlphaValuesByLayerIdx = new HashMap<>();
+
+		final List<Integer> allLayersAlphaValueSum = new LinkedList<>();
+
+		// precompute sum of all alphalayers given an alpha value index
+		for (int alphaValueIdx = 0; alphaValueIdx < ue2Terrain.getLayers().get(0).getAlphaMap().size(); alphaValueIdx++) {
+			for (int i = 0; i < ue2Terrain.getLayers().size(); i++) {
+				allLayersAlphaValueSum.add(ue2Terrain.getLayers().get(i).getAlphaMap().get(alphaValueIdx));
+			}
+		}
+
+		int layerIdx = 0;
+
+		for (final TerrainLayer terrainLayer : ue2Terrain.getLayers()) {
+
+			final List<Integer> newAlphaValues = new ArrayList<>();
+
+			for (int alphaValueIdx = 0; alphaValueIdx < terrainLayer.getAlphaMap().size(); alphaValueIdx++) {
+
+				int newAlphaValue = 0;
+				int alphaValueAllLayersSum = allLayersAlphaValueSum.get(alphaValueIdx);
+				int oldAlphaValue = terrainLayer.getAlphaMap().get(alphaValueIdx);
+				int alphaValueOtherLayersSum = alphaValueAllLayersSum - oldAlphaValue;
+
+				// first alpha layer in UT4 is always rendered
+				if (layerIdx == 0) {
+
+					// AlphaLayer 1: 240
+					// AlphaLayer 2: 20
+					// AlphaLayer 3: 40
+					int newOldAlphaValue = 255 * ue2Terrain.getLayers().size() - alphaValueOtherLayersSum;
+					alphaValueAllLayersSum += (newOldAlphaValue - oldAlphaValue);
+					oldAlphaValue = newOldAlphaValue;
+
+
+					alphaValueAllLayersSum += (255 - oldAlphaValue);
+					oldAlphaValue = 255;
+				}
+
+				newAlphaValue = (int) (255f * ((oldAlphaValue * 1f) / (alphaValueAllLayersSum * 1f)));
+
+
+				newAlphaValues.add(newAlphaValue);
+			}
+
+			newAlphaValuesByLayerIdx.put(layerIdx, newAlphaValues);
+			layerIdx++;
+		}
+
+		// replace alpha values with new ones
+		newAlphaValuesByLayerIdx.forEach((layerIdx2, newAlphaMapValues) -> {
+			ue2Terrain.getLayers().get(layerIdx2).setAlphaMap(newAlphaMapValues);
+		});
+
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
 
@@ -368,11 +487,11 @@ public class T3DUE4Terrain extends T3DActor {
 	/**
 	 * Convert visibility data from unreal engine 2 terrain. Adapted code from
 	 * UT3 converter
-	 * 
+	 *
 	 * e.g (UE2):
 	 * "QuadVisibilityBitmap(0)=-65540, QuadVisibilityBitmap(0)=-1, ..." e.g:
 	 * (UE4): "CustomProperties DominantLayerData fffffffffff...."
-	 * 
+	 *
 	 * @param ue2Terrain
 	 *            Terrain from unreal engine 2 ut game (ut2003, ut2004 or unreal
 	 *            2)
@@ -432,7 +551,6 @@ public class T3DUE4Terrain extends T3DActor {
 	}
 
 	private void initialise() {
-		collisionThickness = 16;
 		numSubsections = 1;
 		bUsedForNavigation = true;
 	}
@@ -505,7 +623,19 @@ public class T3DUE4Terrain extends T3DActor {
 
 
 		// use the UT4X landscape material (UT4X_LandscapeMat.uasset)
-		sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(mapConverter.getUt4ReferenceBaseFolder()).append("/UT4X_LandscapeMat.UT4X_LandscapeMat'\n");
+		AtomicInteger terrainIdx = new AtomicInteger();
+
+		// compute index of this terrain in map
+		mapConverter.getT3dLvlConvertor().getConvertedActors().forEach(e -> {
+			if (e.getChildren() != null && !e.getChildren().isEmpty() && e.getChildren().get(0) instanceof T3DUE4Terrain) {
+				if (e.getChildren().get(0) == this) {
+					return;
+				}
+				terrainIdx.getAndIncrement();
+			}
+		});
+
+		sbf.append(IDT).append("\tLandscapeMaterial=Material'").append(mapConverter.getUt4ReferenceBaseFolder()).append("/UT4X_LandscapeMat_").append(terrainIdx.getAcquire()).append(".UT4X_LandscapeMat_").append(terrainIdx.getAcquire()).append("'\n");
 
 		int idx = 0;
 
@@ -542,5 +672,13 @@ public class T3DUE4Terrain extends T3DActor {
 
 	public LandscapeComponent[][] getLandscapeComponents() {
 		return landscapeComponents;
+	}
+
+	public File getLandscapeMatFile() {
+		return landscapeMatFile;
+	}
+
+	public void setLandscapeMatFile(File landscapeMatFile) {
+		this.landscapeMatFile = landscapeMatFile;
 	}
 }

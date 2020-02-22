@@ -43,7 +43,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	}
 
 	private static String getCommand(final File exporterPath, final File texturePackageFile, final File outputFolder){
-		return exporterPath + "  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
+		return "\"" + exporterPath + "\"  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
 	}
 
 	@Override
