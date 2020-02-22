@@ -75,7 +75,7 @@ public class UModelExporter extends UTPackageExtractor {
 		
 		for(final File texFile : texFolder.listFiles()){
 			if(texFile.isFile() && (texFile.getName().endsWith(".utx") || texFile.getName().endsWith(".u"))){
-				String command = getExporterPath() + " -export -sounds -groups \"" + texFile.getAbsolutePath() + "\"";
+				String command = "\"" + getExporterPath() + "\" -export -sounds -groups \"" + texFile.getAbsolutePath() + "\"";
 				command += " -out=\"D:\\TEMP\"";
 				command += " -path=\"" + ut99GameConfig.getPath() + "\"";
 				
