@@ -272,6 +272,8 @@ Optional (UI editing) :
   * ut3: added support for terrain conversion
   * unreal 2: added support for terrain conversion
   * ut2004: enhanced terrain conversion with alpha layers conversion
+  * ut2004, u2, ut3: fixed 3d scale for movers with 3d scale != 1
+  * ut2004, ut3: added support for WeaponLocker and UTWeaponLocker
   * install: program is now bundled as an Windows installer containing Java Runtime Environnement (JRE) which makes the filesize significantly larger while embedding Java 13 runtime binaries.
   * tech: migrated from Java 8 to Java 13 version
   * tech: migrated to Java FX 13
