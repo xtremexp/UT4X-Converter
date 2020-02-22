@@ -45,7 +45,7 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Link to UT4 Converter topic
 	 */
-	private final String URL_UT4CONV_FORUM = "https://forums.unrealtournament.com/showthread.php?18198";
+	private final String URL_UT4CONV_FORUM = "https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285";
 
 	/**
 	 * Url to git hub for source code
