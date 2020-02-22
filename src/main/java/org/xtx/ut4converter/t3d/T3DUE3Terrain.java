@@ -42,8 +42,14 @@ public class T3DUE3Terrain extends T3DActor {
 	 */
 	private final List<TerrainComponent> terrainComponents = new LinkedList<>();
 
+	/**
+	 * Alpha layers
+	 */
 	private final List<List<Integer>> alphaLayers = new LinkedList<>();
 
+	/**
+	 * Terrain layers
+	 */
 	private final List<TerrainLayer> terrainLayers = new LinkedList<>();
 
 
@@ -267,8 +273,14 @@ public class T3DUE3Terrain extends T3DActor {
 			tl.setName(T3DUtils.getString(line, "Name"));
 			tl.setIndex(Integer.parseInt(T3DUtils.getString(line, "Index", " ")));
 			terrainLayers.add(tl);
-		} else if ("TerrainLayer".equals(isReading) && line.startsWith("AlphaMapIndex")) {
-			terrainLayers.get(terrainLayers.size() - 1).setAlphaMapIndex(T3DUtils.getInteger(line));
+		} else if ("TerrainLayer".equals(isReading)) {
+			if(line.startsWith("AlphaMapIndex")) {
+				terrainLayers.get(terrainLayers.size() - 1).setAlphaMapIndex(T3DUtils.getInteger(line));
+			}
+			// Begin TerrainLayerSetup Name=UN_Terrain2.Sandstorm.TLS_UN_Terrain_SandStorm_Ground
+			else if (line.startsWith("Begin TerrainLayerSetup")) {
+				terrainLayers.get(terrainLayers.size() - 1).setTerrainLayerSetupName(line.split("Name=")[1]);
+			}
 		}
 		else if ("TerrainAlphaMapData".equals(isReading)) {
 

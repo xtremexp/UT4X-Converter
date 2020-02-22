@@ -793,4 +793,7 @@ public abstract class T3DActor extends T3DObject {
 		return this.bHidden;
 	}
 
+	public List<T3DActor> getChildren() {
+		return children;
+	}
 }

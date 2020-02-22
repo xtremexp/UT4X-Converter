@@ -32,10 +32,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -701,6 +703,33 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
 			}
 
+			// Unreal Engine 2 terrain information
+			t3dLvlConvertor.getConvertedActors().stream().filter(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE3Terrain).collect(Collectors.toList()).forEach(actor -> {
+
+				logger.log(Level.INFO, "For terrain " + actor.getName());
+
+				if (actor instanceof T3DUE2Terrain) {
+					final T3DUE2Terrain ue2Terrain = (T3DUE2Terrain) actor;
+					logger.log(Level.INFO, "Assign materials to landscape material in this order :");
+
+					ue2Terrain.getLayers().forEach(terrainLayer -> {
+						if (terrainLayer.getTexture() != null) {
+							logger.log(Level.INFO, "Open " + terrainLayer.getTexture().getConvertedName(this));
+						}
+					});
+				}
+				// Terrain Layer Setups for UT3 editor
+				else if (actor instanceof T3DUE3Terrain) {
+					final T3DUE3Terrain ue3Terrain = (T3DUE3Terrain) actor;
+					logger.log(Level.INFO, "Assign materials to landscape material from TerrainLayerSetups in UT3 editor :");
+
+					ue3Terrain.getTerrainLayers().forEach(terrainLayer -> {
+						logger.log(Level.INFO, terrainLayer.getTerrainLayerSetupName());
+					});
+				}
+
+			});
+
 			logger.log(Level.INFO, "* * * * ");
 		}
 
@@ -1020,15 +1049,33 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
 
-			// some terrain was converted we copy the UT4X landscape material to output folder
-			if (this.getT3dLvlConvertor().getConvertedActors().stream().anyMatch(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE4Terrain)) {
-				final File landscapeMat = new File(Installation.getContentFolder() + File.separator + "UT4X_LandscapeMat.uasset");
-				final File landscapeMatCopy = new File(wipConvertedMapFolder + File.separator + "UT4X_LandscapeMat.uasset");
+			// for each terrain converted copy the UT4X landscape material to output folder
+			AtomicInteger landscapeMatIdx = new AtomicInteger();
 
-				if (!landscapeMatCopy.exists()) {
-					Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			this.getT3dLvlConvertor().getConvertedActors().stream().filter(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE3Terrain).forEach(terrain -> {
+
+				// only support 3 terrains
+				if (landscapeMatIdx.getAcquire() < 3) {
+					if (terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof T3DUE4Terrain) {
+						final T3DUE4Terrain ue4Terrain = (T3DUE4Terrain) terrain.getChildren().get(0);
+						final String landscapeMatFilename = "UT4X_LandscapeMat_" + landscapeMatIdx.getAcquire() + ".uasset";
+
+						final File landscapeMat = new File(Installation.getContentFolder() + File.separator + landscapeMatFilename);
+						final File landscapeMatCopy = new File(wipConvertedMapFolder + File.separator + landscapeMatFilename);
+
+						if (!landscapeMatCopy.exists()) {
+							try {
+								Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								ue4Terrain.setLandscapeMatFile(landscapeMatCopy);
+							} catch (IOException e) {
+								logger.log(Level.SEVERE, "Error while copying landscapemap file " + landscapeMat);
+							}
+						}
+					}
 				}
-			}
+
+				landscapeMatIdx.getAndIncrement();
+			});
 
 		}
 	}

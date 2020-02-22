@@ -30,6 +30,7 @@ import java.util.logging.Level;
  */
 public class T3DUE2Terrain extends T3DActor {
 
+
 	/**
 	 * Decolayers - Not used since UE4 do not have such thing
 	 */
@@ -95,7 +96,7 @@ public class T3DUE2Terrain extends T3DActor {
 		// QuadVisibilityBitmap(0)=-65540
 		else if (line.startsWith("QuadVisibilityBitmap")) {
 			Long val = Long.valueOf(line.split("\\=")[1]);
-			int key = Integer.valueOf(line.split("\\(")[1].split("\\)")[0]);
+			int key = Integer.parseInt(line.split("\\(")[1].split("\\)")[0]);
 
 			quadVisibilityBitmaps.put(key, val);
 		} else {

@@ -14,6 +14,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,25 +25,24 @@ import java.util.stream.Collectors;
  */
 public class T3DUE4Terrain extends T3DActor {
 
-	private final static String DEFAULT_LANDSCAPE_HOLE_MATERIAL = "/Game/RestrictedAssets/Environments/Tuba/Landscape/M_LandscapeHole.M_LandscapeHole";
+	private File landscapeMatFile;
 
-	UPackageRessource landscapeMaterial;
+	private UPackageRessource landscapeMaterial;
 
-	UPackageRessource landscapeHoleMaterial;
+	private UPackageRessource landscapeHoleMaterial;
 
-	int collisionMipLevel;
-	int collisionThickness;
+	private int collisionMipLevel;
+	private int collisionThickness = 16;
 
 	/**
 	 * Max component size
 	 */
-	final int maxComponentSize = 255;
+	private final int maxComponentSize = 255;
 
-	int componentSizeQuads;
-	int subsectionSizeQuads;
-	short numSubsections;
-	boolean bUsedForNavigation;
-	short maxPaintedLayersPerComponent;
+	private int componentSizeQuads;
+	private int subsectionSizeQuads;
+	private short numSubsections;
+	private boolean bUsedForNavigation;
 
 	private LandscapeCollisionComponent[][] collisionComponents;
 
@@ -550,7 +550,6 @@ public class T3DUE4Terrain extends T3DActor {
 	}
 
 	private void initialise() {
-		collisionThickness = 16;
 		numSubsections = 1;
 		bUsedForNavigation = true;
 	}
@@ -660,5 +659,13 @@ public class T3DUE4Terrain extends T3DActor {
 
 	public LandscapeComponent[][] getLandscapeComponents() {
 		return landscapeComponents;
+	}
+
+	public File getLandscapeMatFile() {
+		return landscapeMatFile;
+	}
+
+	public void setLandscapeMatFile(File landscapeMatFile) {
+		this.landscapeMatFile = landscapeMatFile;
 	}
 }
