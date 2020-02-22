@@ -30,6 +30,9 @@ import java.util.logging.Level;
  */
 public class T3DUE2Terrain extends T3DActor {
 
+	/**
+	 * Decolayers - Not used since UE4 do not have such thing
+	 */
 	private List<TerrainDecoLayer> decoLayers = new LinkedList<>();
 
 	private List<TerrainLayer> layers = new LinkedList<>();
@@ -38,8 +41,15 @@ public class T3DUE2Terrain extends T3DActor {
 	 * TerrainMap
 	 */
 	private UPackageRessource heightMapTexture;
+
+	/**
+	 * Dimensions of heightmap texture
+	 */
 	private Dimension heightMapTextureDimensions;
 
+	/**
+	 * Heightmap values of terrain
+	 */
 	private final List<Integer> heightMap = new LinkedList<>();
 
 	/**
@@ -142,7 +152,7 @@ public class T3DUE2Terrain extends T3DActor {
 	private void loadHeightMap() throws InterruptedException, IOException {
 
 		// extract texture
-		if (heightMapTexture != null) {
+		if (heightMapTexture != null && heightMapTextureDimensions == null) {
 
 			// Export heightmap texture to .bmp
 			final UCCExporter uccExporter = new UCCExporter(mapConverter);
@@ -223,5 +233,30 @@ public class T3DUE2Terrain extends T3DActor {
 
 	public Vector3d getTerrainScale() {
 		return terrainScale;
+	}
+
+	/**
+	 * Converter does not support yet terrain sizes > 256X256
+	 *
+	 * @return
+	 */
+	@Override
+	public boolean isValidConverting() {
+
+		try {
+			// extract heightmap texture to get terrain size
+			loadHeightMap();
+		} catch (InterruptedException | IOException e) {
+			mapConverter.getLogger().log(Level.SEVERE, "Error while extracting heightmap", e);
+		}
+
+		if (heightMapTextureDimensions == null) {
+			return false;
+		} else if (Math.max(heightMapTextureDimensions.getHeight(), heightMapTextureDimensions.getWidth()) > 255) {
+			mapConverter.getLogger().log(Level.SEVERE, "Terrain conversion with size greater than 256X256 not supported");
+			return false;
+		} else {
+			return super.isValidConverting();
+		}
 	}
 }

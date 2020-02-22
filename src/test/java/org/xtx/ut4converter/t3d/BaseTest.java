@@ -47,7 +47,7 @@ public class BaseTest {
      *
      * @return
      */
-    private static UserConfig loadUserConfig() {
+    public static UserConfig loadUserConfig() {
         final UserConfig uc = new UserConfig();
         uc.setIsFirstRun(false);
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.xtx.ut4converter.t3d.BaseTest.parseFromT3d;
 
 
-public class T3DUE2TerrainTestTest  {
+public class T3DUE2TerrainTest {
 
     private MapConverter mc;
 

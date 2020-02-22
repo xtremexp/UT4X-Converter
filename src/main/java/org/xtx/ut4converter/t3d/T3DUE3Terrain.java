@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -389,5 +390,16 @@ public class T3DUE3Terrain extends T3DActor {
 
 	public List<TerrainLayer> getTerrainLayers() {
 		return terrainLayers;
+	}
+
+	@Override
+	public boolean isValidConverting() {
+		// FIXME converter does not support yet large terrain size
+		if (Math.max(this.getTerrainHeight().getHeight(), this.getTerrainHeight().getWidth()) > 255) {
+			mapConverter.getLogger().log(Level.SEVERE, "Terrain conversion with size greater than 256X256 not supported");
+			return false;
+		} else {
+			return super.isValidConverting();
+		}
 	}
 }
