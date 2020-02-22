@@ -1311,6 +1311,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		File dbFile = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf" + File.separator + TextureNameToPackageGenerator.UT99_TEXNAME_TO_PACKAGE_FILENAME);
 
+		if (!dbFile.exists()) {
+			dbFile = new File(Installation.getProgramFolder() + File.separator + "conf" + File.separator + TextureNameToPackageGenerator.UT99_TEXNAME_TO_PACKAGE_FILENAME);
+		}
+
 		if (dbFile.exists()) {
 			final ObjectMapper om = new ObjectMapper();
 			ut99TexInfo = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
