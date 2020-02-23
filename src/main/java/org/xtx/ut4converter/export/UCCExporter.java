@@ -435,11 +435,7 @@ public final class UCCExporter extends UTPackageExtractor {
 				}
 
 				else if (logLine.contains("Commandlet batchexport not found")) {
-					if (mapConverter.getInputGame() == UTGame.U1) {
-						logger.log(Level.SEVERE, logLine + ". Make sure you have installed latest Unreal Patch from https://www.oldunreal.com/");
-					} else {
-						logger.log(Level.SEVERE, logLine);
-					}
+					logger.log(Level.SEVERE, logLine);
 					return exportedFiles;
 				}
 
