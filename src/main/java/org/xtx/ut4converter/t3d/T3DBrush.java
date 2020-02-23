@@ -104,22 +104,22 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Used by Unreal Engine 1
 	 */
-	Vector3d tempScale;
+	private Vector3d tempScale;
 
 	/**
 	 * Pre-Pivot used for brushes Changed the relative origin of brush
 	 */
-	Vector3d prePivot;
+	private Vector3d prePivot;
 
 	/**
 	 * Polygons of the brush
 	 */
-	LinkedList<T3DPolygon> polyList = new LinkedList<>();
+	private LinkedList<T3DPolygon> polyList = new LinkedList<>();
 
 	/**
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
-	String modelName;
+	private String modelName;
 
 	/**
 	 * Damage par sec for pain causing volumes (lava, slime ...)
@@ -146,7 +146,7 @@ public class T3DBrush extends T3DVolume {
 	 * Used for cull distances volumes only
 	 *
 	 */
-	class CullDistance {
+	static class CullDistance {
 		private Double size;
 		private Double distance;
 
@@ -211,7 +211,7 @@ public class T3DBrush extends T3DVolume {
 		// CsgOper=CSG_Subtract
 		// BrushType=Brush_Subtract
 		if (line.contains("CsgOper")) {
-			brushType = line.split("\\=")[1];
+			brushType = line.split("=")[1];
 		}
 
 		// MainScale=(Scale=(Y=-1.000000),SheerAxis=SHEER_ZX)
@@ -295,8 +295,8 @@ public class T3DBrush extends T3DVolume {
 
 		// Pan U=381 V=-7
 		else if (line.contains(" Pan ")) {
-			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split("\\ ")[0]);
-			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split("\\ ")[0]);
+			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split(" ")[0]);
+			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split(" ")[0]);
 		}
 
 		// Hack, normally analysed in T3DActor but needed
@@ -323,11 +323,11 @@ public class T3DBrush extends T3DVolume {
 
 			CullDistance cullDistance = new CullDistance();
 			if (line.contains("Size=")) {
-				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split("\\,")[0]);
+				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split(",")[0]);
 			}
 
 			if (line.contains("CullDistance=")) {
-				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split("\\,")[0]);
+				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split(",")[0]);
 			}
 
 			cullDistances.add(cullDistance);
@@ -686,7 +686,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Force brush to be a box
 	 * 
-	 * @param size
+	 * @param size Size
 	 */
 	public void forceToBox(Double size) {
 		polyList.clear();
@@ -914,7 +914,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Sets polygons to this brush
 	 * 
-	 * @param polyList
+	 * @param polyList Polygon list
 	 */
 	public void setPolyList(LinkedList<T3DPolygon> polyList) {
 		this.polyList = polyList;

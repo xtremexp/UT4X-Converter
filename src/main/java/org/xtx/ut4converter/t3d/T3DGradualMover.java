@@ -9,8 +9,8 @@ public class T3DGradualMover extends T3DMover {
     }
 
     /**
-     * @param mc
-     * @param t3dClass
+     * @param mc Map converter instance
+     * @param t3dClass T3d class
      */
     public T3DGradualMover(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);

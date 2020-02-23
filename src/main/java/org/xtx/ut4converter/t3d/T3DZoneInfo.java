@@ -19,25 +19,25 @@ import org.xtx.ut4converter.ucore.ue1.ZoneEffect;
  */
 public class T3DZoneInfo extends T3DActor {
 
-	HSVColor ambientColor;
+	private HSVColor ambientColor;
 
-	String locationName;
-	String zoneTag;
+	private String locationName;
+	private String zoneTag;
 
-	Boolean bClearToFogColor;
-	Boolean bTerrainZone;
-	Boolean bDistanceFog;
-	Boolean bFogZone;
+	private Boolean bClearToFogColor;
+	private Boolean bTerrainZone;
+	private Boolean bDistanceFog;
+	private Boolean bFogZone;
 
-	RGBColor distanceFogColor;
-	Double distanceFogStart;
-	Double distanceFogEnd;
-	Double distanceFogBlend;
-	Double killZ;
+	private RGBColor distanceFogColor;
+	private Double distanceFogStart;
+	private Double distanceFogEnd;
+	private Double distanceFogBlend;
+	private Double killZ;
 
-	ZoneEffect zoneEffect;
+	private ZoneEffect zoneEffect;
 
-	KillZType killzType = KillZType.KILLZ_None;
+	private KillZType killzType = KillZType.KILLZ_None;
 
 	public T3DZoneInfo(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -140,4 +140,11 @@ public class T3DZoneInfo extends T3DActor {
 		return null;
 	}
 
+	public HSVColor getAmbientColor() {
+		return ambientColor;
+	}
+
+	public RGBColor getDistanceFogColor() {
+		return distanceFogColor;
+	}
 }

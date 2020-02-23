@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
@@ -60,11 +59,6 @@ public final class UCCExporter extends UTPackageExtractor {
 	@Override
 	public String getName() {
 		return "UCC";
-	}
-
-	@Override
-	public UnrealEngine[] getSupportedEngines() {
-		return new UnrealEngine[] { UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2 };
 	}
 
 	/**
@@ -485,23 +479,6 @@ public final class UCCExporter extends UTPackageExtractor {
 		return exportedFiles;
 	}
 
-	/**
-	 * For testing export of map to t3d unreal text map ...
-	 */
-	public static void test() {
-
-		File unrealMap = new File("Z:\\TEMP\\UT99Maps\\AS-Mazon.unr");
-
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, unrealMap, null);
-
-		try {
-			UCCExporter.exportLevelToT3d(mc, unrealMap);
-		} catch (Exception e) {
-			System.exit(-1);
-		}
-
-		System.exit(0);
-	}
 
 	/**
 	 * Force ucc option. Might be used to force export to .tga (for terrain

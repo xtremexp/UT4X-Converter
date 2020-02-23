@@ -47,7 +47,7 @@ public class T3DTrigger extends T3DBrush {
 			collisionRadius = 40d;
 		}
 
-		polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
+		setPolyList(Geometry.createCylinder(collisionRadius, collisionHeight, 8));
 
 		super.convert();
 	}

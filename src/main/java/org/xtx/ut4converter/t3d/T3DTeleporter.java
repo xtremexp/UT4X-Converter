@@ -92,7 +92,7 @@ public class T3DTeleporter extends T3DSound {
 		if (linkedTo == null || linkedTo.isEmpty()) {
 			T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
 
-			for (T3DActor actor : tlc.convertedActors) {
+			for (T3DActor actor : tlc.getConvertedActors()) {
 				if (actor instanceof T3DTeleporter) {
 
 					if (actor.tag != null && this.url != null && this.url.equals("\"" + actor.tag + "\"")) {

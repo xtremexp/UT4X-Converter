@@ -116,7 +116,7 @@ public class T3DLiftExit extends T3DSound {
 		if (linkedTo == null || linkedTo.isEmpty()) {
 			T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
 
-			for (T3DActor actor : tlc.convertedActors) {
+			for (T3DActor actor : tlc.getConvertedActors()) {
 
 				// Note in previous UTs lifttag could be link to actor not
 				// necessarly movers (e.g: SpecialEvents)

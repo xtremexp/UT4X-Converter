@@ -6,7 +6,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 public class T3DTranslatorEvent extends T3DActor {
 
-    private final String defaultNewMessageSound = "UnrealShare.Pickups.TransA3";
+    private final static String DEFAULT_NEW_MESSAGE_SOUND = "UnrealShare.Pickups.TransA3";
 
     private UPackageRessource newMessageSound;
 
@@ -51,7 +51,7 @@ public class T3DTranslatorEvent extends T3DActor {
         }
 
         if(newMessageSound == null){
-            newMessageSound = mapConverter.getUPackageRessource(defaultNewMessageSound, T3DRessource.Type.SOUND);
+            newMessageSound = mapConverter.getUPackageRessource(DEFAULT_NEW_MESSAGE_SOUND, T3DRessource.Type.SOUND);
         }
 
         if (mapConverter.convertSounds()) {

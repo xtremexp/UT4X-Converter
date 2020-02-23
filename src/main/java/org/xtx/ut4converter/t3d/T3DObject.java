@@ -113,8 +113,8 @@ public abstract class T3DObject {
 	 * Write sub-objects of this object if not-null and of class T3DObject
 	 * (unreal objects). Only write "public" fields in class not null
 	 * 
-	 * @param sbf
-	 * @param prefix
+	 * @param sbf String builder instance
+	 * @param prefix Prefix (normally a tab \t )
 	 */
 	public void writeObjDefinition(StringBuilder sbf, String prefix) {
 
@@ -135,7 +135,7 @@ public abstract class T3DObject {
 				} else if (obj instanceof List) {
 					List objList = (List) obj;
 
-					if (objList != null && !objList.isEmpty()) {
+					if (!objList.isEmpty()) {
 						if (objList.get(0) != null && objList.get(0) instanceof T3DObject) {
 							t3dObj = (T3DObject) objList.get(0);
 						}
@@ -175,10 +175,9 @@ public abstract class T3DObject {
 		return registerSimpleProperty(propertyName, classType, null);
 	}
 
-	public T3DSimpleProperty registerSimpleArrayProperty(final String propertyName, final Object classType){
+	public void registerSimpleArrayProperty(final String propertyName, final Object classType){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, null, true);
 		this.registeredProperties.add(simpleProperty);
-		return simpleProperty;
 	}
 
 	/**

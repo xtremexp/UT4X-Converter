@@ -83,7 +83,7 @@ public class T3DPickup extends T3DSound {
 
 		if (t3dClass != null) {
 
-			match = mapConverter.getMatchFor(t3dClass, false, properties);
+			match = mapConverter.getMatchFor(t3dClass, properties);
 
 			if (match != null) {
 				convertedPickupClass = match.actorClass.get(0);

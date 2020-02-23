@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class T3DMatch {
 
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
 	/**
 	 * Conversion property. Must always be checked when using 1.0x scaling! TODO
@@ -89,7 +89,7 @@ public class T3DMatch {
 	}
 
 	/**
-	 * @param inputGame
+	 * @param mapConverter Map converter instance
 	 *
 	 */
 	public T3DMatch(MapConverter mapConverter) {
@@ -100,9 +100,7 @@ public class T3DMatch {
 
 	/**
 	 * 
-	 * 
-	 * @param inputGame
-	 *            Input game for converting
+	 *
 	 */
 	private void initialise() {
 		list = new ArrayList<>();
@@ -144,7 +142,7 @@ public class T3DMatch {
 	
 	/**
 	 * Initialise health pickups
-	 * @param inputGame
+	 * @param inputGame Input game
 	 */
 	private void initialiseHealthPickups(UTGame inputGame) {
 
@@ -172,7 +170,7 @@ public class T3DMatch {
 
 	/**
 	 * Add actor matches for power ups
-	 * @param Input game
+	 * @param inputGame Input game
 	 */
 	private void initialisePowerUps(UTGame inputGame) {
 
@@ -277,7 +275,7 @@ public class T3DMatch {
 	/**
 	 *
 	 * 
-	 * @param inputGame
+	 * @param inputGame Input game
 	 */
 	private void initialiseWeapons(UTGame inputGame) {
 
@@ -394,7 +392,7 @@ public class T3DMatch {
 
 		/**
 		 *
-		 * @param matches
+		 * @param matches Matches
 		 */
 		public GlobalMatch(List<Match> matches) {
 			this.matches = matches;
@@ -402,10 +400,10 @@ public class T3DMatch {
 
 		/**
 		 *
-		 * @param property
-		 * @param value
-		 * @param game
-		 * @return
+		 * @param property Property
+		 * @param value Value
+		 * @param game Game
+		 * @return Global match
 		 */
 		public GlobalMatch withP(UTGames.UTGame game, String property, String value) {
 
@@ -597,7 +595,6 @@ public class T3DMatch {
 	 */
 	public HashMap<String, Match> getActorClassMatch(UTGames.UTGame inputGame, UTGames.UTGame outputGame) {
 
-		boolean goodList = true;
 		List<String> inputClasses = new ArrayList<>();
 		HashMap<String, Match> hm = new HashMap<>();
 
@@ -605,21 +602,18 @@ public class T3DMatch {
 
 			for (Match matchForName : matchesForName.matches) {
 				if (matchForName.game == inputGame && matchForName.t3dClass != null) {
-					goodList = true;
 					inputClasses = matchForName.actorClass;
 					break;
 				}
 			}
 
-			if (goodList) {
-				for (Match matchForName : matchesForName.matches) {
-					if (matchForName.game == outputGame) {
+			for (Match matchForName : matchesForName.matches) {
+				if (matchForName.game == outputGame) {
 
-						for (String inputClass : inputClasses) {
-							hm.put(inputClass, matchForName);
-						}
-						break;
+					for (String inputClass : inputClasses) {
+						hm.put(inputClass, matchForName);
 					}
+					break;
 				}
 			}
 		}
@@ -636,11 +630,10 @@ public class T3DMatch {
 	 *            Input game map is being converted from
 	 * @param outputGame
 	 *            Output game map is being converted to
-	 * @param withT3dClass
 	 * @param inActorProps
 	 * @return
 	 */
-	public Match getMatchFor(final String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, boolean withT3dClass, Map<String, String> inActorProps) {
+	public Match getMatchFor(final String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, Map<String, String> inActorProps) {
 
 
 		Match m = null;

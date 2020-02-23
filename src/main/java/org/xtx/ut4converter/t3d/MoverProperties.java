@@ -357,8 +357,8 @@ public class MoverProperties implements T3D {
 		if (mover instanceof T3DMoverSM) {
 			T3DMoverSM moverSm = (T3DMoverSM) mover;
 
-			if (moverSm.staticMesh != null && moverSm.getMapConverter().convertStaticMeshes()) {
-				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.staticMesh.getConvertedName(moverSm.getMapConverter())).append("'\n");
+			if (moverSm.getStaticMesh() != null && moverSm.getMapConverter().convertStaticMeshes()) {
+				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName(moverSm.getMapConverter())).append("'\n");
 			}
 		}
 
@@ -379,13 +379,6 @@ public class MoverProperties implements T3D {
 			stayOpenTime = 4d;
 		}
 
-		// mover might be rotated only
-		// so we don't want to have the default 200 Z axis offset
-		// by adding a 0 destination position
-		if(this.positions.isEmpty()){
-			// TODO test this commented
-			//this.positions.add(new Vector3d(0, 0, 0));
-		}
 
 		if(mapConverter.convertSounds()) {
 			if (openingSound != null) {

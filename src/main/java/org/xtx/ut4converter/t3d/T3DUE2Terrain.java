@@ -72,7 +72,7 @@ public class T3DUE2Terrain extends T3DActor {
 
 		// TerrainMap=Texture'myLevel.Package0.TowerHeightMap'
 		if (line.startsWith("TerrainMap=")) {
-			heightMapTexture = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
+			heightMapTexture = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE);
 		}
 		// TerrainScale=(X=15.000000,Y=15.000000,Z=2.000000)
 		else if (line.startsWith("TerrainScale")) {
@@ -95,7 +95,7 @@ public class T3DUE2Terrain extends T3DActor {
 
 		// QuadVisibilityBitmap(0)=-65540
 		else if (line.startsWith("QuadVisibilityBitmap")) {
-			Long val = Long.valueOf(line.split("\\=")[1]);
+			Long val = Long.valueOf(line.split("=")[1]);
 			int key = Integer.parseInt(line.split("\\(")[1].split("\\)")[0]);
 
 			quadVisibilityBitmaps.put(key, val);
@@ -147,8 +147,8 @@ public class T3DUE2Terrain extends T3DActor {
 	 * Loads heightmap data from heightmap texture. Code adapted refactored from
 	 * good old ut3 converter
 	 * 
-	 * @throws InterruptedException
-	 * @throws IOException
+	 * @throws InterruptedException Exception thrown
+	 * @throws IOException Exception thrown
 	 */
 	private void loadHeightMap() throws InterruptedException, IOException {
 
@@ -224,10 +224,6 @@ public class T3DUE2Terrain extends T3DActor {
 		return heightMapTextureDimensions;
 	}
 
-	public List<TerrainDecoLayer> getDecoLayers() {
-		return decoLayers;
-	}
-
 	public List<TerrainLayer> getLayers() {
 		return layers;
 	}
@@ -239,7 +235,7 @@ public class T3DUE2Terrain extends T3DActor {
 	/**
 	 * Converter does not support yet terrain sizes > 256X256
 	 *
-	 * @return
+	 * @return <code>true</code> if terrain is valid for conversion
 	 */
 	@Override
 	public boolean isValidConverting() {

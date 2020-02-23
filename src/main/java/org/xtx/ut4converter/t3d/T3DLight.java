@@ -186,8 +186,8 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass T3d class
 	 */
 	public T3DLight(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -247,11 +247,11 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("LightEffect")) {
-			lightEffect = UE12_LightEffect.valueOf(line.split("\\=")[1]);
+			lightEffect = UE12_LightEffect.valueOf(line.split("=")[1]);
 		}
 
 		else if (line.startsWith("LightType")) {
-			lightType = UE12_LightType.valueOf(line.split("\\=")[1]);
+			lightType = UE12_LightType.valueOf(line.split("=")[1]);
 		}
 
 		else if (line.startsWith("InnerConeAngle")) {
@@ -263,7 +263,7 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("bCorona=")) {
-			isCorona = "true".equals(line.split("\\=")[1].toLowerCase());
+			isCorona = "true".equals(line.split("=")[1].toLowerCase());
 		}
 
 		// UT3
@@ -305,7 +305,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Tell if this light is spotlight or not
 	 * 
-	 * @return
+	 * @return <code>true</code> if light is a spot light
 	 */
 	private boolean isSpotLight() {
 		return t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_Spotlight || lightEffect == UE12_LightEffect.LE_StaticSpot
@@ -315,7 +315,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Tells if current light is sunlight if true
 	 * 
-	 * @return
+	 * @return <code>true</code> if light is a sun light
 	 */
 	private boolean isSunLight() {
 		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equals(UE12_LightActors.Sunlight.name());
@@ -326,8 +326,7 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Converts mobility class
 	 */
 	private void convertClassAndMobility() {
 
@@ -364,7 +363,7 @@ public class T3DLight extends T3DSound {
 
 
 		// disabled for the moment for perf issues
-		/**
+		/*
          * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
          * UE12_LightEffect.LE_StaticSpot || lightEffect ==
          * UE12_LightEffect.LE_Unused || lightEffect ==
@@ -469,7 +468,7 @@ public class T3DLight extends T3DSound {
 			if (isSpotLight()) {
 				// 128 is default angle for UE1/2 (in 0 -> 255 range) = 90 in (0
 				// -> 180° range)
-				Double angle = outerConeAngle != null ? outerConeAngle : 90d;
+				double angle = outerConeAngle != null ? outerConeAngle : 90d;
 				sbf.append(IDT).append("\t\tInnerConeAngle=").append((angle / 2)).append("\n");
 				sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
 			}
@@ -627,10 +626,6 @@ public class T3DLight extends T3DSound {
 
 		attenuationRadius *= newScale;
 		radius *= newScale;
-
-		if (intensity != null) {
-			// intensity *= newScale;
-		}
 
 		super.scale(newScale);
 	}

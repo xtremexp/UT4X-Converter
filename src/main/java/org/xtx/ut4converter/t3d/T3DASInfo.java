@@ -10,12 +10,12 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DASInfo extends T3DActor {
 
-	String mapDescription;
+	private String mapDescription;
 
 	/**
 	 * Map time limit (in seconds)
 	 */
-	int mapTimeLimit;
+	private int mapTimeLimit;
 
 	public T3DASInfo(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);

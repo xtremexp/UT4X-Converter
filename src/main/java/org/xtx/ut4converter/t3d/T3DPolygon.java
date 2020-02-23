@@ -28,7 +28,7 @@ public class T3DPolygon {
 	/**
 	 * Original texture or material applied to the polygon
 	 */
-	UPackageRessource texture;
+	private UPackageRessource texture;
 
 	/**
      *
@@ -43,20 +43,20 @@ public class T3DPolygon {
 	/**
 	 * How points are regrouped for polygon?
 	 */
-	Integer link;
+	private Integer link;
 
 	/**
 	 * Some flag about how the polygon should be rendered such as istranslucent,
 	 * ismirror, is two-sided and so on. This value is a sum of values that are
 	 * powers of two Flags=217890775
 	 */
-	Integer flag;
+	private Integer flag;
 
 	/**
 	 * LightMapScale=64.000000 UE1: None UE2: ? UE3: ? UE4: Light Map
 	 * resolution.
 	 */
-	Double lightMapScale;
+	private Double lightMapScale;
 
 	/**
 	 * Only in UE1/UE2 Basically changes the origin
@@ -73,18 +73,18 @@ public class T3DPolygon {
 	 * "A mask used to determine which smoothing groups this polygon is in" No
 	 * idea what it does.
 	 */
-	Integer smoothingMask;
+	private Integer smoothingMask;
 
-	Vector3d original_tex_u, original_tex_v;
+	private Vector3d original_tex_u, original_tex_v;
 
-	Vector3d texture_u, texture_v;
+	private Vector3d texture_u, texture_v;
 
 	/**
      *
      */
 	public LinkedList<Vertex> vertices = new LinkedList<>();
 
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
 	/**
      *
@@ -96,8 +96,8 @@ public class T3DPolygon {
 
 	/**
 	 *
-	 * @param t3dLine
-	 * @param mapConverter
+	 * @param t3dLine t3d line value
+	 * @param mapConverter Map converter instance
 	 */
 	public T3DPolygon(String t3dLine, MapConverter mapConverter) {
 		// Begin Polygon Texture=Rockwal4 Flags=32768 Link=322
@@ -110,18 +110,15 @@ public class T3DPolygon {
 	/**
 	 * Scales the polygon
 	 * 
-	 * @param newScale
+	 * @param newScale New scale
 	 */
 	public void scale(Double newScale) {
 
 		this.origin.scale(newScale);
 		scaleUV(newScale, false);
 
-		if (newScale != null) {
-
-			for (Vertex vertex : vertices) {
-				vertex.scale(newScale);
-			}
+		for (Vertex vertex : vertices) {
+			vertex.scale(newScale);
 		}
 	}
 
@@ -154,9 +151,9 @@ public class T3DPolygon {
 	 * Transform permanently the polygon as like in Unreal 1/2 editor
 	 * "Transform permanently" when selecting brush
 	 * 
-	 * @param mainScale
-	 * @param rotation
-	 * @param postScale
+	 * @param mainScale Main scale
+	 * @param rotation Rotation
+	 * @param postScale Post scale
 	 */
 	public void transformPermanently(FScale mainScale, Vector3d rotation, FScale postScale) {
 
@@ -196,14 +193,14 @@ public class T3DPolygon {
 
 	/**
 	 * 
-	 * @param sb
+	 * @param sb String builder
 	 * @param df
 	 *            Default Decimal format (not creating one each time for perf
 	 *            issues)
-	 * @param prefix
-	 * @param numPoly
+	 * @param prefix Prefix
+	 * @param polyIndex Polygon index
 	 */
-	public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int numPoly) {
+	public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int polyIndex) {
 
 		prefix += "\t\t\t";
 
@@ -217,7 +214,7 @@ public class T3DPolygon {
 			sb.append(" LightMapScale=").append(lightMapScale);
 		}
 
-		sb.append(" Link=").append(numPoly);
+		sb.append(" Link=").append(polyIndex);
 
 		sb.append("\n");
 
@@ -303,9 +300,9 @@ public class T3DPolygon {
 	
 	/**
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x X
+	 * @param y Y
+	 * @param z Z
 	 */
 	public void setTextureU(Double x, Double y, Double z) {
 		this.texture_u = new Vector3d(x, y, z);
@@ -317,9 +314,9 @@ public class T3DPolygon {
 
 	/**
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x X
+	 * @param y Y
+	 * @param z Z
 	 * @deprecated Use setTextureU
 	 */
 	@Deprecated
@@ -329,9 +326,9 @@ public class T3DPolygon {
 
 	/**
 	 * 
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param x X
+	 * @param y Y
+	 * @param z Z
 	 * @deprecated Use setTextureV
 	 */
 	@Deprecated
@@ -380,7 +377,7 @@ public class T3DPolygon {
 					// the right UV scaling
 					texture.readTextureDimensions();
 
-					Dimension texDimension = null;
+					Dimension texDimension;
 
 					if (texture.getReplacement() != null) {
 						texDimension = texture.getReplacement().getTextureDimensions();
@@ -439,7 +436,7 @@ public class T3DPolygon {
 	/**
 	 * Set the smoothing mask (?)
 	 * 
-	 * @param smoothingMask
+	 * @param smoothingMask Smoothing mask
 	 */
 	public void setSmoothingMask(Integer smoothingMask) {
 		this.smoothingMask = smoothingMask;
@@ -451,5 +448,9 @@ public class T3DPolygon {
 
 	public UPackageRessource getTexture() {
 		return texture;
+	}
+
+	public void setLightMapScale(Double lightMapScale) {
+		this.lightMapScale = lightMapScale;
 	}
 }

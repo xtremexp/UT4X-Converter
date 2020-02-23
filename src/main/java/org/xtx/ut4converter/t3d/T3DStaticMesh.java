@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class T3DStaticMesh extends T3DSound {
 
-	private final String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
-	private final String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
+	private final static String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
+	private final static String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
 
 	private List<String> overiddeMaterials = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class T3DStaticMesh extends T3DSound {
 	 * "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500"
 	 * e.g/ StaticMesh=StaticMesh'BarrenHardware-epic.Decos.rec-lift'
 	 */
-	UPackageRessource staticMesh;
+	private UPackageRessource staticMesh;
 
 	/**
 	 * Temp hack
@@ -104,8 +104,8 @@ public class T3DStaticMesh extends T3DSound {
 
 	/**
 	 * 
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass T3d actor class
 	 */
 	public T3DStaticMesh(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -123,7 +123,7 @@ public class T3DStaticMesh extends T3DSound {
 	public boolean analyseT3DData(String line) {
 
 		if (line.contains("StaticMesh=")) {
-			staticMesh = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.STATICMESH);
+			staticMesh = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.STATICMESH);
 		}
 		// PrePivot=(X=280.000000,Y=0.000000,Z=0.000000)
 		else if(line.startsWith("PrePivot=")){
@@ -151,7 +151,7 @@ public class T3DStaticMesh extends T3DSound {
 			}
 			// can be Materials(0)=None as seen in VCTF-Kargo
 			if (line.contains("\\'")) {
-				skins.add(mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE));
+				skins.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
 			} else {
 				skins.add(null); // simulating 'None'
 			}
@@ -179,7 +179,7 @@ public class T3DStaticMesh extends T3DSound {
 		this.location = sheetBrush.location;
 		// at this stage actor not yet converted so rotation should be in range
 		// of the input engine
-		this.rotation = Geometry.getRotation(sheetBrush.polyList.get(0).normal, mc.getInputGame().engine);
+		this.rotation = Geometry.getRotation(sheetBrush.getPolyList().get(0).normal, mc.getInputGame().engine);
 		this.tag = sheetBrush.tag + "_SM";
 		this.name = sheetBrush.name + "_SM";
 		this.forcedStaticMesh = UT4_SHEET_SM;
@@ -345,4 +345,7 @@ public class T3DStaticMesh extends T3DSound {
 		return this instanceof T3DDecoration || staticMesh != null || forcedStaticMesh != null;
 	}
 
+	public UPackageRessource getStaticMesh() {
+		return staticMesh;
+	}
 }

@@ -25,15 +25,15 @@ public class T3DPostProcessVolume extends T3DBrush {
 	/**
 	 * If true will apply post process effects to whole level
 	 */
-	Boolean bUnbound = Boolean.FALSE;
-	Film film;
-	DepthOfField dof;
-	AutoExposure autoExposure;
+	private Boolean bUnbound = Boolean.FALSE;
+	private Film film;
+	private DepthOfField dof;
+	private AutoExposure autoExposure;
 	/**
 	 * Color in post process volume
 	 */
-	HSVColor ambientCubemapTint;
-	String ambientCubemap;
+	private HSVColor ambientCubemapTint;
+	private String ambientCubemap;
 
 	class Film {
 
@@ -77,18 +77,18 @@ public class T3DPostProcessVolume extends T3DBrush {
 		forceToBox(400d);
 
 		ambientCubemap = DEFAULT_AMBIENT_CUBEMAP;
-		if (zoneInfo.distanceFogColor != null) {
-			film.tint = zoneInfo.distanceFogColor;
+		if (zoneInfo.getDistanceFogColor() != null) {
+			film.tint = zoneInfo.getDistanceFogColor();
 		}
 
-		if (zoneInfo.ambientColor != null && zoneInfo.ambientColor.V > 0) {
+		if (zoneInfo.getAmbientColor() != null && zoneInfo.getAmbientColor().V > 0) {
 			
 			// saturation 'reversed' in UE1/UE2
-			zoneInfo.ambientColor.S = Math.abs(zoneInfo.ambientColor.S - 255);
-			zoneInfo.ambientColor.V += 16;
+			zoneInfo.getAmbientColor().S = Math.abs(zoneInfo.getAmbientColor().S - 255);
+			zoneInfo.getAmbientColor().V += 16;
 			
-			ambientCubemapTint = zoneInfo.ambientColor;
-			autoExposure.minBrightness = zoneInfo.ambientColor.V / 255;
+			ambientCubemapTint = zoneInfo.getAmbientColor();
+			autoExposure.minBrightness = zoneInfo.getAmbientColor().V / 255;
 		}
 	}
 

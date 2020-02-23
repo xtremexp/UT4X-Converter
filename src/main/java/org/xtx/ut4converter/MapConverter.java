@@ -329,12 +329,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Tried to find property converted to some other game ...
 	 *
 	 * @param name
-	 * @param withT3dClass
 	 * @param properties
 	 * @return
 	 */
-	public T3DMatch.Match getMatchFor(String name, boolean withT3dClass, Map<String, String> properties) {
-		return tm.getMatchFor(name, inputGame, outputGame, withT3dClass, properties);
+	public T3DMatch.Match getMatchFor(String name, Map<String, String> properties) {
+		return tm.getMatchFor(name, inputGame, outputGame, properties);
 	}
 
 	/**

@@ -272,7 +272,7 @@ public class T3DASObjective extends T3DSound {
 		}
 
 		// TODO move out ('quick code')
-		mapConverter.getT3dLvlConvertor().objectives.put(Integer.valueOf(this.defensePriority), this);
+		mapConverter.getT3dLvlConvertor().getObjectives().put(Integer.valueOf(this.defensePriority), this);
 
 		super.convert();
 	}

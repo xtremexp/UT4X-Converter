@@ -123,7 +123,7 @@ public class UserConfig {
 
 	/**
 	 * 
-	 * @return
+	 * @return User configuration
 	 */
 	public static UserConfig load() throws  IOException {
 		try {

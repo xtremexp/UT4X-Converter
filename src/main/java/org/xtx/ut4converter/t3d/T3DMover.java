@@ -18,7 +18,7 @@ public class T3DMover extends T3DBrush {
 	/**
 	 * Common properties of basic mover
 	 */
-	MoverProperties moverProperties;
+	private MoverProperties moverProperties;
 
 	/**
 	 *
@@ -33,9 +33,7 @@ public class T3DMover extends T3DBrush {
 	@Override
 	public boolean analyseT3DData(String line) {
 
-		if (moverProperties.analyseT3DData(line)) {
-
-		} else {
+		if (!moverProperties.analyseT3DData(line)) {
 			return super.analyseT3DData(line);
 		}
 
@@ -52,7 +50,7 @@ public class T3DMover extends T3DBrush {
 
 	/**
 	 *
-	 * @return
+	 * @return String value
 	 */
 	@Override
 	public String toString() {

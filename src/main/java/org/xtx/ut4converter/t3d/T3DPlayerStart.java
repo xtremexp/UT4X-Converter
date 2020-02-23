@@ -19,16 +19,16 @@ public class T3DPlayerStart extends T3DSound {
 	/**
 	 * If not null then it's a team player start else not
 	 */
-	Integer teamNum;
+	private Integer teamNum;
 
-	boolean isTeamPlayerStart;
+	private boolean isTeamPlayerStart;
 
-	String teamPlayerStartClass = "UTTeamPlayerStart";
+	private String teamPlayerStartClass = "UTTeamPlayerStart";
 
 	/**
 	 * Indicate this player start is team player start
 	 * 
-	 * @param mc
+	 * @param mc Map converter instance
 	 */
 	public T3DPlayerStart(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -74,7 +74,7 @@ public class T3DPlayerStart extends T3DSound {
 
 	/**
 	 *
-	 * @return
+	 * @return T3d actor value
 	 */
 	@Override
 	public String toString() {

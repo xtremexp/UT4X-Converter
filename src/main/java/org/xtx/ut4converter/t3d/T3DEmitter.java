@@ -18,11 +18,11 @@ public class T3DEmitter extends T3DSound {
 	 */
 	private static final String TEMPLATE_LENSFLARE = "/Game/RestrictedAssets/Effects/Atmos/Flares/Particles/P_LensFlare.P_LensFlare";
 
-	String template;
+	private String template;
 
-	Double minDrawDistance;
+	private Double minDrawDistance;
 
-	Double lDMaxDrawDistance;
+	private Double lDMaxDrawDistance;
 
 	public T3DEmitter(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);

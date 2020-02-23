@@ -31,7 +31,7 @@ public class UserGameConfig {
 	/**
 	 * Short name of UT game
 	 * 
-	 * @return
+	 * @return Id of game
 	 */
 	public UTGames.UTGame getId() {
 		return id;
@@ -43,8 +43,8 @@ public class UserGameConfig {
 
 	/**
 	 * Where this game is installed
-	 * 
-	 * @return
+	 *
+	 * @return Installation path of game
 	 */
 	public File getPath() {
 		return path;

@@ -12,8 +12,8 @@ public class T3DTriggerLight extends T3DLight {
     }
 
     /**
-     * @param mc
-     * @param t3dClass
+     * @param mc Map converter instance
+     * @param t3dClass T3d class
      */
     public T3DTriggerLight(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
