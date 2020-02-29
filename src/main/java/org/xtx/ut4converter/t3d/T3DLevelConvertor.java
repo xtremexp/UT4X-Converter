@@ -98,7 +98,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		int order = objectives.size() - 1;
 
 		for (T3DASObjective obj : objectives.values()) {
-			obj.order = order;
+			obj.setOrder(order);
 			order--;
 		}
 	}

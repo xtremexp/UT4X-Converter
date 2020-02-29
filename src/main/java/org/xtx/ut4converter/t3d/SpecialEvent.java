@@ -14,10 +14,6 @@ public class SpecialEvent extends T3DSound {
 
 	private String damageString;
 
-	private String damageType;
-
-	private String message;
-
 	private UPackageRessource sound;
 
 	public SpecialEvent(MapConverter mc, String t3dClass) {
@@ -56,7 +52,7 @@ public class SpecialEvent extends T3DSound {
 		super.convert();
 	}
 
-	public String toT3D() {
+	public String toT3d() {
 		sbf.append(IDT).append("Begin Actor Class=U1SpecialEvent_C Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");

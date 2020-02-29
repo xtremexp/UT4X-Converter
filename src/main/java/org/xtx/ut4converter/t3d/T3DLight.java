@@ -102,10 +102,6 @@ public class T3DLight extends T3DSound {
 	 */
 	private List<UPackageRessource> skins;
 
-	/**
-	 * For spot lights UE3 only default 0
-	 */
-	private Double innerConeAngle;
 
 	/**
 	 * UE1/2: LightCone - default 128 UE4: OuterConeAngle - default 44
@@ -252,10 +248,6 @@ public class T3DLight extends T3DSound {
 
 		else if (line.startsWith("LightType")) {
 			lightType = UE12_LightType.valueOf(line.split("=")[1]);
-		}
-
-		else if (line.startsWith("InnerConeAngle")) {
-			innerConeAngle = T3DUtils.getDouble(line);
 		}
 
 		else if (line.startsWith("LightCone") || line.startsWith("OuterConeAngle")) {
@@ -412,11 +404,6 @@ public class T3DLight extends T3DSound {
         }
 	}
 
-	/**
-	 * Default light source lenght for converted UE1/2 light with cylinder light
-	 * effect
-	 */
-	final int lightEffectCylinderSourceLength = 100;
 
 	/**
 	 *

@@ -105,7 +105,6 @@ public abstract class T3DActor extends T3DObject {
 
 	protected String otherdata = "";
 
-	boolean usecolocation = false;
 
 	/**
 	 * Used to add extra Z location (for converting pickup for exemple not
@@ -739,7 +738,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Export current actor to unreal text format.
-	 * @return
+	 * @return Actor exported in unreal text format
 	 */
 	public abstract String toT3d();
 }

@@ -152,7 +152,7 @@ public class T3DStaticMeshFileLoader {
 					Float u = Float.valueOf(s[5]);
 					Float v = Float.valueOf(s[6]);
 
-					Vertex vertex = new Vertex(x, y, z, u, v, p);
+					Vertex vertex = new Vertex(x, y, z, u, v);
 
 					if (p != null) {
 						// Temp texU/texV until figuring out the formula

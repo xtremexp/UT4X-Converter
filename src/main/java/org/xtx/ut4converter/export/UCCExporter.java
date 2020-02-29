@@ -186,21 +186,6 @@ public final class UCCExporter extends UTPackageExtractor {
 		uccExporterPath = getExporterPath();
 	}
 
-	/**
-	 * 
-	 * @param mapConverter
-	 * @return
-	 */
-	public static UCCExporter getInstance(MapConverter mapConverter) {
-
-		UserGameConfig userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
-
-		if (userGameConfig == null) {
-			return null;
-		} else {
-			return new UCCExporter(mapConverter);
-		}
-	}
 
 	@Override
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
@@ -353,7 +338,7 @@ public final class UCCExporter extends UTPackageExtractor {
 
 	/**
 	 * 
-	 * @param unrealPackage
+	 * @param unrealPackage Unreal package to export
 	 * @return Exported file for the ressource. If null means that ucc exported
 	 *         was not able to export the ressource.
 	 * @throws IOException
@@ -363,7 +348,6 @@ public final class UCCExporter extends UTPackageExtractor {
 
 		File unrealMapCopy = null;
 		File u1Batch = null;
-		File gamePath = userGameConfig.getPath();
 		Set<File> exportedFiles = new HashSet<>();
 
 		boolean noDelete = false;
@@ -484,7 +468,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	 * Force ucc option. Might be used to force export to .tga (for terrain
 	 * alpha map for example)
 	 * 
-	 * @param forcedUccOption
+	 * @param forcedUccOption forced UCC options
 	 */
 	public void setForcedUccOption(UccOptions forcedUccOption) {
 		this.forcedUccOption = forcedUccOption;

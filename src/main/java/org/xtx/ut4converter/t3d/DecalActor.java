@@ -27,7 +27,7 @@ public class DecalActor extends T3DActor {
 
 		// UE3
 		if (line.startsWith("DecalMaterial")) {
-			decalMaterial = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.TEXTURE);
+			decalMaterial = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE);
 		} else if (line.startsWith("Width=")) {
 			decalSize.y = T3DUtils.getDouble(line);
 		} else if (line.startsWith("Height=")) {

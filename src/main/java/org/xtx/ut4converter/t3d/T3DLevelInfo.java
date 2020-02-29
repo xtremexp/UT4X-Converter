@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -35,10 +34,6 @@ public class T3DLevelInfo extends T3DActor {
 	 */
 	private String idealPlayerCount;
 
-	/**
-	 * Default game mode. Overrides the one
-	 */
-	private String defaultGameMode;
 
 	/**
 	 * UE1: "Song=Music'Foregone.Foregone'" UE2: "Song="KR-Chemical-Burn"" UE3:
@@ -56,13 +51,13 @@ public class T3DLevelInfo extends T3DActor {
 	public boolean analyseT3DData(String line) {
 
 		if (line.startsWith("Author=")) {
-			author = line.split("=")[0];
+			author = T3DUtils.getString(line);
 		} else if (line.startsWith("Title=")) {
-			title = line.split("=")[0];
+			title = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("IdealPlayerCount=")) {
-			title = line.split("=")[0];
+			idealPlayerCount = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("Song=")) {
@@ -101,10 +96,6 @@ public class T3DLevelInfo extends T3DActor {
 
 		if (idealPlayerCount != null) {
 			text += "IdealPlayerCount: " + idealPlayerCount;
-		}
-
-		if (UTGameTypes.isUt99Assault(mapConverter)) {
-			defaultGameMode = UTGameTypes.UT4_ASSAULT_CLASS;
 		}
 
 		note.setText(text);

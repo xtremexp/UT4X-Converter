@@ -69,7 +69,7 @@ public class DefensePoint extends T3DSound {
 
 	}
 
-	public String toT3D() {
+	public String toT3d() {
 		sbf.append(IDT).append("Begin Actor Class=UTDefensePoint Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Icon\"\n");
 		writeLocRotAndScale();
@@ -77,7 +77,6 @@ public class DefensePoint extends T3DSound {
 
 		if (bSniperSpot != null && bSniperSpot == Boolean.TRUE) {
 			sbf.append(IDT).append("\tbSniperSpot=True\n");
-
 		}
 
 		if (basePriority != null) {

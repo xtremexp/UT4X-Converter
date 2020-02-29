@@ -13,7 +13,7 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DPickup extends T3DSound {
 
-	String convertedPickupClass;
+	private String convertedPickupClass;
 
 	/**
 	 *

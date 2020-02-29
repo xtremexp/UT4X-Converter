@@ -286,7 +286,7 @@ public class T3DBrush extends T3DVolume {
 
 		else if (line.contains("Vertex ")) {
 			Vector3d coordinates = T3DUtils.getPolyVector3d(line, "Vertex");
-			polyList.getLast().vertices.add(new Vertex(coordinates, polyList.getLast()));
+			polyList.getLast().vertices.add(new Vertex(coordinates));
 		}
 
 		// Pan U=381 V=-7

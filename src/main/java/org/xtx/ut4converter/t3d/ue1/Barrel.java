@@ -23,7 +23,7 @@ public class Barrel extends T3DDecoration {
         this.scale3d = null;
     }
 
-    public String toT3D() {
+    public String toT3d() {
         return writeSimpleActor("U1Barrel_C", "StaticMeshComponent");
     }
 }

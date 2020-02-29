@@ -255,7 +255,7 @@ public class T3DPolygon {
 
 	public T3DPolygon addVertex(Double x, Double y, Double z) {
 
-		vertices.add(new Vertex(new Vector3d(x, y, z), this));
+		vertices.add(new Vertex(new Vector3d(x, y, z)));
 		return this;
 	}
 

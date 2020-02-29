@@ -30,7 +30,7 @@ public abstract class T3DObject {
 	 * Current game compatibility state for actor. Should automatically change
 	 * after convert
 	 */
-	UTGame game = UTGame.NONE;
+	private UTGame game = UTGame.NONE;
 
 	protected Logger logger;
 

@@ -31,7 +31,7 @@ public class Camera extends T3DActor {
     }
 
     /**
-     * @return
+     * @return T3d
      */
     public String toT3d() {
 

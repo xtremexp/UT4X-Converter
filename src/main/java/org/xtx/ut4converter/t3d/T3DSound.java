@@ -30,7 +30,7 @@ public class T3DSound extends T3DActor {
 	 */
 	private UPackageRessource ambientSound;
 
-	private String soundClass = "AmbientSound";
+	private static final String soundClass = "AmbientSound";
 
 	private AttenuationSettings attenuation = new AttenuationSettings();
 
@@ -79,12 +79,8 @@ public class T3DSound extends T3DActor {
 	/**
 	 * UE4: TODO move out to ucore package ?
 	 */
-	class AttenuationSettings {
+	static class AttenuationSettings {
 
-		/**
-		 * UE3/UE4: default true
-		 */
-		Boolean bAttenuate;
 
 		/**
 		 * UE3/UE4: default true

@@ -142,7 +142,7 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public boolean analyseT3DData(String line) {
-		/**
+		/*
 		 * OpenSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
          OpenedSound=SoundCue'A_Movers.Movers.Elevator01_StopCue'
          CloseSound=SoundCue'A_Movers.Movers.Elevator01_StartCue'
@@ -436,9 +436,6 @@ public class MoverProperties implements T3D {
 		return mover.name;
 	}
 
-	public T3DActor getMover() {
-		return mover;
-	}
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {

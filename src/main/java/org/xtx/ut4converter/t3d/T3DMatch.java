@@ -440,7 +440,7 @@ public class T3DMatch {
 	/**
      *
      */
-	public class Match {
+	public static class Match {
 
 		/**
          * 
@@ -451,7 +451,7 @@ public class T3DMatch {
 		 * Match available for this engine. Might be useful for convert between
 		 * games with same engine or very close (eg.: UT3/UT4)
 		 */
-		UTGames.UnrealEngine engine = UTGames.UnrealEngine.NONE;
+		UTGames.UnrealEngine engine;
 
 		/**
          *
@@ -508,27 +508,6 @@ public class T3DMatch {
 
 		/**
 		 *
-		 * @param names
-		 * @param game
-		 */
-		public Match(String[] names, UTGames.UTGame game) {
-			this.actorClass.addAll(Arrays.asList(names));
-			this.game = game;
-			this.engine = game.engine;
-		}
-
-		/**
-		 *
-		 * @param names
-		 * @param engine
-		 */
-		public Match(String names, UTGames.UnrealEngine engine) {
-			this.actorClass.addAll(Arrays.asList(names));
-			this.engine = engine;
-		}
-
-		/**
-		 *
 		 * @param property
 		 * @param value
 		 * @return
@@ -557,31 +536,31 @@ public class T3DMatch {
 		List<Match> matches = new ArrayList<>();
 
 		if (u1Class != null && isFromOrTo(UTGames.UTGame.U1)) {
-			matches.add(new Match(u1Class, UTGames.UTGame.U1, t3dClass, convertProp));
+			matches.add(new Match(u1Class, UTGame.U1, t3dClass, convertProp));
 		}
 
 		if (u2Class != null && isFromOrTo(UTGames.UTGame.U2)) {
-			matches.add(new Match(u2Class, UTGames.UTGame.U2, t3dClass, convertProp));
+			matches.add(new Match(u2Class, UTGame.U2, t3dClass, convertProp));
 		}
 
 		if (ut99Class != null && isFromOrTo(UTGames.UTGame.UT99)) {
-			matches.add(new Match(ut99Class, UTGames.UTGame.UT99, t3dClass, convertProp));
+			matches.add(new Match(ut99Class, UTGame.UT99, t3dClass, convertProp));
 		}
 
 		if (ut2003Class != null && isFromOrTo(UTGames.UTGame.UT2003)) {
-			matches.add(new Match(ut2003Class, UTGames.UTGame.UT2003, t3dClass, convertProp));
+			matches.add(new Match(ut2003Class, UTGame.UT2003, t3dClass, convertProp));
 		}
 
 		if (ut2004Class != null && isFromOrTo(UTGames.UTGame.UT2004)) {
-			matches.add(new Match(ut2004Class, UTGames.UTGame.UT2004, t3dClass, convertProp));
+			matches.add(new Match(ut2004Class, UTGame.UT2004, t3dClass, convertProp));
 		}
 
 		if (ut3Class != null && isFromOrTo(UTGames.UTGame.UT3)) {
-			matches.add(new Match(ut3Class, UTGames.UTGame.UT3, t3dClass, convertProp));
+			matches.add(new Match(ut3Class, UTGame.UT3, t3dClass, convertProp));
 		}
 
 		if (ut4Class != null && isFromOrTo(UTGames.UTGame.UT4)) {
-			matches.add(new Match(ut4Class, UTGames.UTGame.UT4, t3dClass, convertProp));
+			matches.add(new Match(ut4Class, UTGame.UT4, t3dClass, convertProp));
 		}
 
 		return new GlobalMatch(matches);

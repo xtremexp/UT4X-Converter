@@ -21,7 +21,7 @@ public class T3DTeleporter extends T3DSound {
 	/**
 	 * Unreal 1 property refering to
 	 */
-	String url;
+	private String url;
 
 	public T3DTeleporter(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
