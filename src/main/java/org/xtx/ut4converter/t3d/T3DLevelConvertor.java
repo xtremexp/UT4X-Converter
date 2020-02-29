@@ -293,7 +293,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					// write parent actor
 					// actor not valid for conversion should not be written as well!
 					if (actor.isValidWriting() && actor.isValidConverting()) {
-						buffer = actor.toString();
+						buffer = actor.toT3d();
 
 						if (buffer != null) {
 							bwr.write(buffer);
@@ -303,7 +303,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					// write replacement actors
 					for (T3DActor repActor : actor.children) {
 						if (repActor.isValidWriting()) {
-							bwr.write(repActor.toString());
+							bwr.write(repActor.toT3d());
 						}
 					}
 				} catch (Exception e) {
@@ -553,7 +553,7 @@ public class T3DLevelConvertor extends Task<Object> {
 				p.setLightMapScale( 2048d);
 			}
 
-			bwr.write(additiveBrush.toString());
+			bwr.write(additiveBrush.toT3d());
 		}
 	}
 
@@ -629,7 +629,7 @@ public class T3DLevelConvertor extends Task<Object> {
 				lightMassVolume.location = boundBoxLocalisation;
 				lightMassVolume.name = LIGHTMASS_IMP_VOL_NAME;
 				lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
-				bwr.write(lightMassVolume.toString());
+				bwr.write(lightMassVolume.toT3d());
 			}
 
 			// Automatically add a navigation volume

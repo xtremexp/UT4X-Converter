@@ -278,8 +278,7 @@ public class T3DStaticMesh extends T3DSound {
 		sbf.append(IDT).append("\tRootComponent=StaticMeshComponent0\n");
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=StaticMeshActor").append(" Name=").append(name).append("\n");
 

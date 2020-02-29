@@ -56,7 +56,7 @@ public class SpecialEvent extends T3DSound {
 		super.convert();
 	}
 
-	public String toString() {
+	public String toT3D() {
 		sbf.append(IDT).append("Begin Actor Class=U1SpecialEvent_C Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");

@@ -52,8 +52,7 @@ public class T3DMover extends T3DBrush {
 	 *
 	 * @return String value
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
 

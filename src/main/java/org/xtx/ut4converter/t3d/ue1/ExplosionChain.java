@@ -20,8 +20,7 @@ public class ExplosionChain extends Effects {
         this.t3dClass = "UBExplosionChain_C";
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBExplosionChain_C");
     }
 }

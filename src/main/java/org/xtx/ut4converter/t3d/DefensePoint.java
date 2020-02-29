@@ -69,7 +69,7 @@ public class DefensePoint extends T3DSound {
 
 	}
 
-	public String toString() {
+	public String toT3D() {
 		sbf.append(IDT).append("Begin Actor Class=UTDefensePoint Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"Icon\"\n");
 		writeLocRotAndScale();

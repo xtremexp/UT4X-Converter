@@ -23,8 +23,7 @@ public class T3DCreatureFactory extends T3DThingFactory {
         registerSimpleProperty("OrderTag", String.class, null);
     }
 
-    @Override
-    public String toString() {
+    public String toT3D() {
         return writeSimpleActor("UBCreatureFactory_C");
     }
 }

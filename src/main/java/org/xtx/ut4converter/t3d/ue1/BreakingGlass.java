@@ -16,8 +16,7 @@ public class BreakingGlass extends ExplodingWall {
         this.t3dClass = "UBBreakingGlass_C";
     }
 
-    @Override
-    public String toString() {
+    public String toT3D() {
         return writeSimpleActor("UBBreakingGlass_C");
     }
 }

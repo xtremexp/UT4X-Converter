@@ -57,7 +57,7 @@ public class HeightFog extends T3DActor {
 	}
 
 	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUnrealEngine4()) {
 			sbf.append(IDT).append("Begin Actor Class=AtmosphericFog Name=").append(name).append("\n");

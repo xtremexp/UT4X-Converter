@@ -77,6 +77,9 @@ public class T3DPolygon {
 
 	private Vector3d original_tex_u, original_tex_v;
 
+	/**
+	 * UV texture align
+	 */
 	private Vector3d texture_u, texture_v;
 
 	/**
@@ -452,5 +455,13 @@ public class T3DPolygon {
 
 	public void setLightMapScale(Double lightMapScale) {
 		this.lightMapScale = lightMapScale;
+	}
+
+	public void setTexture_u(Vector3d texture_u) {
+		this.texture_u = texture_u;
+	}
+
+	public void setTexture_v(Vector3d texture_v) {
+		this.texture_v = texture_v;
 	}
 }

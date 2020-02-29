@@ -28,8 +28,7 @@ public class T3DAlarmPoint extends T3DNavigationPoint {
         registerSimpleProperty("ShootTarget", String.class, null);
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBAlarmPoint_C");
     }
 }

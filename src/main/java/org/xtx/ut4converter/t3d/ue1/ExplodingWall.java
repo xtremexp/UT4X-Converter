@@ -32,8 +32,7 @@ public class ExplodingWall extends  Effects {
         this.t3dClass = "UBExplodingWall_C";
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBExplodingWall_C");
     }
 

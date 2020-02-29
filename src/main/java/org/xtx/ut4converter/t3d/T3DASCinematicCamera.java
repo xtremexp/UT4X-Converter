@@ -15,8 +15,7 @@ public class T3DASCinematicCamera extends T3DActor {
 	}
 
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 		
 		writeBeginObj(sbf, IDT);
 		

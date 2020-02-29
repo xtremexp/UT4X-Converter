@@ -66,8 +66,7 @@ public class DecalActor extends T3DActor {
 		super.convert();
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUnrealEngine4()) {
 			sbf.append(IDT).append("Begin Actor Class=DecalActor Name=").append(name).append("\n");

@@ -126,8 +126,7 @@ public class T3DJumpPad extends T3DSound {
 		super.convert();
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUT4()) {
 			sbf.append(IDT).append("Begin Actor Class=BaseJumpPad_C name=").append(name).append("\n");

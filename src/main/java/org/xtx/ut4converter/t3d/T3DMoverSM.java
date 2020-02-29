@@ -45,8 +45,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3D() {
 
 		moverProperties.writeMoverProperties(sbf);
 		return sbf.toString();

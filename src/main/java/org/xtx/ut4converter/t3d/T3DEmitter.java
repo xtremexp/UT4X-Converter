@@ -50,8 +50,7 @@ public class T3DEmitter extends T3DSound {
 		return emitter;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Emitter Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"ParticleSystemComponent0\"\n");

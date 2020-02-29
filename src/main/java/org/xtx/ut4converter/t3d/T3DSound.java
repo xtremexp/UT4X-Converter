@@ -374,8 +374,7 @@ public class T3DSound extends T3DActor {
 	 *
 	 * @return T3d value
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (ambientSound == null) {
 			return super.toString();

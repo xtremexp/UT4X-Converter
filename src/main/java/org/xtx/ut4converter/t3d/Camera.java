@@ -33,8 +33,7 @@ public class Camera extends T3DActor {
     /**
      * @return
      */
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=").append(ue4CameraClass).append(" Name=").append(name).append("\n");
 

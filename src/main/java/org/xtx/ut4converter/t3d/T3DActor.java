@@ -736,4 +736,10 @@ public abstract class T3DActor extends T3DObject {
 	public List<T3DActor> getChildren() {
 		return children;
 	}
+
+	/**
+	 * Export current actor to unreal text format.
+	 * @return
+	 */
+	public abstract String toT3d();
 }

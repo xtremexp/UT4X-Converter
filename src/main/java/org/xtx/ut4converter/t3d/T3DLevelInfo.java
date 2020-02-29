@@ -107,7 +107,7 @@ public class T3DLevelInfo extends T3DActor {
 			defaultGameMode = UTGameTypes.UT4_ASSAULT_CLASS;
 		}
 
-		note.text = text;
+		note.setText(text);
 
 		children.add(note);
 
@@ -126,7 +126,7 @@ public class T3DLevelInfo extends T3DActor {
 	}
 
 	@Override
-	public String toString() {
+	public String toT3d() {
 
 		/*
 		 * writeBeginActor();

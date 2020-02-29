@@ -27,8 +27,7 @@ public class T3DDecoration extends T3DStaticMesh {
         super.convert();
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=UBDecoration_C").append(" Name=").append(name).append("\n");
 

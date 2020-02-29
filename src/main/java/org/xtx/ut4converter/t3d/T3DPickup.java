@@ -28,8 +28,7 @@ public class T3DPickup extends T3DSound {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (convertedPickupClass == null) {
 			return "";

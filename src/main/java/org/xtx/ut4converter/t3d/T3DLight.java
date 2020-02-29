@@ -422,8 +422,7 @@ public class T3DLight extends T3DSound {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUnrealEngine4()) {
 			String componentLightClass;

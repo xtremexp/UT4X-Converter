@@ -414,4 +414,9 @@ public class T3DUE3Terrain extends T3DActor {
 			return super.isValidConverting();
 		}
 	}
+
+	@Override
+	public String toT3d() {
+		return null;
+	}
 }

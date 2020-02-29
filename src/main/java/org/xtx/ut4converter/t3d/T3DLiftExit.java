@@ -69,8 +69,7 @@ public class T3DLiftExit extends T3DSound {
 		return true;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 		sbf.append(IDT).append("Begin Actor Class=UTLiftExit Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Class=BillboardComponent Name=\"Icon\" Archetype=BillboardComponent'/Script/UnrealTournament.Default__UTLiftExit:Icon'\n");

@@ -19,8 +19,7 @@ public class T3DSpecialEvent extends T3DActor {
         registerSimplePropertyRessource("Sound", T3DRessource.Type.SOUND);
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=Dispatcher_C \n");
 

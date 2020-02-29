@@ -76,8 +76,7 @@ public class T3DPlayerStart extends T3DSound {
 	 *
 	 * @return T3d actor value
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(isTeamPlayerStart ? teamPlayerStartClass : "PlayerStart").append(" Name=").append(name).append("\n");
 

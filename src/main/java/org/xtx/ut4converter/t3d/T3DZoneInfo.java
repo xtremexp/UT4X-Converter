@@ -133,8 +133,7 @@ public class T3DZoneInfo extends T3DActor {
 		super.scale(newScale);
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		// replaced with postprocessvolume
 		return null;

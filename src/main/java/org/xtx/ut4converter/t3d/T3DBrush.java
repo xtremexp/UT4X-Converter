@@ -198,10 +198,6 @@ public class T3DBrush extends T3DVolume {
 	 */
 	boolean reverseVertexOrder = false;
 
-	/**
-	 * If true this brush might create bsp holes and should not be written
-	 */
-	boolean bspHoleCausing;
 
 	boolean isSheetFlatHorizontallyBrush;
 
@@ -281,11 +277,11 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (line.contains("TextureU ")) {
-			polyList.getLast().texture_u = T3DUtils.getPolyVector3d(line, "TextureU");
+			polyList.getLast().setTexture_u(T3DUtils.getPolyVector3d(line, "TextureU"));
 		}
 
 		else if (line.contains("TextureV ")) {
-			polyList.getLast().texture_v = T3DUtils.getPolyVector3d(line, "TextureV");
+			polyList.getLast().setTexture_v(T3DUtils.getPolyVector3d(line, "TextureV"));
 		}
 
 		else if (line.contains("Vertex ")) {
@@ -546,8 +542,7 @@ public class T3DBrush extends T3DVolume {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(brushClass.name()).append(" Name=").append(name).append("\n");
 

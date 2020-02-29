@@ -51,6 +51,7 @@ public class T3DNote extends T3DActor {
 		return true;
 	}
 
+
 	public void setText(String text) {
 		this.text = text;
 	}
@@ -60,7 +61,7 @@ public class T3DNote extends T3DActor {
 	 * @return T3d value
 	 */
 	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");

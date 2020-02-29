@@ -575,11 +575,6 @@ public class T3DUE4Terrain extends T3DActor {
 		super.convert();
 	}
 
-	@Override
-	public String toString() {
-		return toT3d();
-	}
-
 	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Landscape Name=").append(name).append("\n");

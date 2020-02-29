@@ -40,8 +40,7 @@ public class T3DTeleporter extends T3DSound {
 		return true;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		// only write if we have data about linked teleporter
 		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {

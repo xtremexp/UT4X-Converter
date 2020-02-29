@@ -21,7 +21,6 @@ public class MatineeActor extends T3DActor {
 	 * Builds a matinee actor from a UE1/UE2 mover actor
 	 * 
 	 * @param mc
-	 * @param t3dClass
 	 * @param mover
 	 */
 	public MatineeActor(MapConverter mc, T3DMover mover) {
@@ -71,7 +70,7 @@ public class MatineeActor extends T3DActor {
 	}
 
 	@Override
-	public String toString() {
+	public String toT3d() {
 
 		final String prefix = "\t\t";
 

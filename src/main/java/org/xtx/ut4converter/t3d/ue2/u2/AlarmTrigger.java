@@ -16,8 +16,7 @@ public class AlarmTrigger extends T3DSound {
         registerSimpleProperty("bToggeable", Boolean.class, Boolean.TRUE);
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("U2AlarmTrigger_C");
     }
 }

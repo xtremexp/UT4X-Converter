@@ -256,4 +256,8 @@ public class T3DUE2Terrain extends T3DActor {
 			return super.isValidConverting();
 		}
 	}
+
+	public String toT3d(){
+		throw new UnsupportedOperationException();
+	}
 }

@@ -61,8 +61,7 @@ public class T3DTranslatorEvent extends T3DActor {
         super.convert();
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=TranslatorEvent_C \n");
 
