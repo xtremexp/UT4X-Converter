@@ -548,7 +548,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		// Notify actor was converted
-		game = mapConverter.getOutputGame();
+		setGame(mapConverter.getOutputGame());
 
 		// Converts all child actors as well
 		children.forEach((child) -> {
@@ -654,7 +654,7 @@ public abstract class T3DActor extends T3DObject {
 	 * @return <code>true</code>> If actor needs to be converted
 	 */
 	private boolean needsConverting() {
-		return game != mapConverter.getOutputGame();
+		return getGame() != mapConverter.getOutputGame();
 	}
 
 	public void setName(String name) {

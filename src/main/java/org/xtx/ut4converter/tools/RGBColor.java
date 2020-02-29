@@ -23,21 +23,6 @@ public class RGBColor {
 	}
 
 	/**
-	 *
-	 * @param R
-	 *            Red value (0->1.0f)
-	 * @param G
-	 *            Green (0->1.0f)
-	 * @param B
-	 *            Blue (0->1.0f)
-	 */
-	public RGBColor(float R, float G, float B) {
-		this.R = R;
-		this.G = G;
-		this.B = B;
-	}
-
-	/**
 	 * Change values from 0-255(UE1/2) range to 0-1 (for UE3/4)
 	 */
 	public void toOneRange() {

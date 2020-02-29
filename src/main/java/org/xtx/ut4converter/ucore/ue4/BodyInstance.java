@@ -25,9 +25,9 @@ public class BodyInstance {
 
 	public Vector3d scale3D = new Vector3d(1d, 1d, 1d);
 
-	List<CollisionResponse> collisionResponses = new ArrayList<>();
+	private List<CollisionResponse> collisionResponses = new ArrayList<>();
 
-	CollisionEnabled collisionEnabled = CollisionEnabled.QueryAndPhysics;
+	private CollisionEnabled collisionEnabled = CollisionEnabled.QueryAndPhysics;
 
 	public void setCollisionEnabled(CollisionEnabled collisionEnabled) {
 		this.collisionEnabled = collisionEnabled;
@@ -68,7 +68,7 @@ public class BodyInstance {
 		collisionResponses.add(cre);
 	}
 
-	class ResponseChannel {
+	static class ResponseChannel {
 		ECollisionChannel channel;
 		ECollisionResponse response;
 
@@ -82,12 +82,12 @@ public class BodyInstance {
 		}
 	}
 
-	class CollisionResponse {
+	static class CollisionResponse {
 		List<ResponseChannel> responseArray = new ArrayList<>();
 
 		public void toT3d(StringBuilder sb) {
 
-			responseArray.stream().forEach((rc) -> {
+			responseArray.forEach((rc) -> {
 				sb.append("(");
 				rc.toT3d(sb);
 				sb.append("),");
@@ -97,7 +97,7 @@ public class BodyInstance {
 		}
 
 		public void setCollisionResponse(ECollisionResponse cr) {
-			responseArray.stream().forEach((rc) -> {
+			responseArray.forEach((rc) -> {
 				rc.response = cr;
 			});
 		}
@@ -113,7 +113,7 @@ public class BodyInstance {
 
 		collisionProfileName = "Custom";
 
-		collisionResponses.stream().forEach((cre) -> {
+		collisionResponses.forEach((cre) -> {
 			cre.setCollisionResponse(cr);
 		});
 	}
@@ -140,7 +140,7 @@ public class BodyInstance {
 			if (!collisionResponses.isEmpty()) {
 				sb.append("CollisionResponses=(ResponseArray=(");
 
-				collisionResponses.stream().forEach((cr) -> {
+				collisionResponses.forEach((cr) -> {
 					cr.toT3d(sb);
 				});
 

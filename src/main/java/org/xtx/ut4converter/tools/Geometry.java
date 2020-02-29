@@ -24,53 +24,6 @@ import java.util.LinkedList;
  */
 public class Geometry {
 
-	/**
-	 *
-	 * @param v
-	 * @return
-	 */
-	public static double[] toVectorDouble(Vector3d v) {
-		return new double[] { v.x, v.y, v.z };
-	}
-
-	/**
-	 *
-	 * @param d
-	 * @return
-	 */
-	public static Vector3d toVector3d(double[] d) {
-		return new Vector3d(d[0], d[1], d[2]);
-	}
-
-	private static double radToDegree(double radian) {
-		return radian * 360D / (2 * Math.PI);
-	}
-
-	/**
-	 *
-	 * @param va
-	 * @param vb
-	 * @return
-	 */
-	public static double[] getAngles2(Vector3d va, Vector3d vb) {
-		double cosx;
-
-		double tmp;
-		double tmp2;
-
-		// (2,3,4)
-		// cos a = (XaXb+YaYb+ZaZb) / sqrt((Xa²+Ya²+Za²)(Xb²+Yb²+Zb² ))
-
-		tmp = va.x * vb.x + va.y * vb.y + va.z * vb.z;
-		tmp2 = Math.sqrt((Math.pow(va.x, 2) + Math.pow(va.y, 2) + Math.pow(va.z, 2)) * (Math.pow(vb.x, 2) + Math.pow(vb.y, 2) + Math.pow(vb.z, 2)));
-		cosx = tmp / tmp2;
-
-		System.out.println("X: " + cosx);
-		System.out.println("X: " + radToDegree(Math.acos(cosx)));
-
-		return new double[] { cosx };
-	}
-
 	public static Vector3d getRotation(Vector3d normal, UTGames.UnrealEngine engine) {
 
 		Vector3d r = getRotationInRadian(normal);
@@ -143,13 +96,13 @@ public class Geometry {
 	 * +00576.000000,+01088.000000,+00192.000000 ->
 	 * -00192.000000,+00064.000000,+00192.000000
 	 * 
-	 * @param v
+	 * @param v Vector
 	 * @param pitch
 	 *            Pitch in Unreal Value (65536 u.v. = 360°)
 	 * @param yaw
 	 *            Yaw
-	 * @param roll
-	 * @return
+	 * @param roll Roll
+	 * @return Rotated vector
 	 */
 	public static Vector3d rotate(Vector3d v, double pitch, double yaw, double roll) {
 
@@ -179,10 +132,10 @@ public class Geometry {
 
 	/**
 	 * 
-	 * @param rot_x
-	 * @param rot_y
-	 * @param rot_z
-	 * @return
+	 * @param rot_x X axis rotation value
+	 * @param rot_y Y axis rotation value
+	 * @param rot_z Z axis rotation value
+	 * @return Rotation matrix
 	 */
 	private static Matrix4d getGlobalRotationMatrix(double rot_x, double rot_y, double rot_z) {
 		Matrix4d m4d;
@@ -195,9 +148,9 @@ public class Geometry {
 
 		// Checked
 		Matrix4d m4d_z = new Matrix4d(Math.cos(rot_z), Math.sin(rot_z), 0D, 0D, -Math.sin(rot_z), Math.cos(rot_z), 0D, 0D, 0D, 0D, 1D, 0D, 0D, 0D, 0D, 1D);
-		m4d_x = updateMatrix(m4d_x);
-		m4d_y = updateMatrix(m4d_y);
-		m4d_z = updateMatrix(m4d_z);
+		updateMatrix(m4d_x);
+		updateMatrix(m4d_y);
+		updateMatrix(m4d_z);
 
 		m4d = m4d_x;
 		m4d.mul(m4d_y);
@@ -207,9 +160,9 @@ public class Geometry {
 	}
 
 	/**
-	 *
-	 * @param v
-	 * @return
+	 * Replaces low values near zero with zero
+	 * @param v Vector
+	 * @return Updated vector
 	 */
 	public static Vector3d updateDoubleZeroes(Vector3d v) {
 		if (Math.abs(v.x) < 0.001D)
@@ -223,27 +176,13 @@ public class Geometry {
 	}
 
 	/**
-	 *
-	 * @param d
-	 * @return
-	 */
-	public static double[] updateDoubleZeroes(double[] d) {
-		for (int i = 0; i < d.length; i++) {
-			if (Math.abs(d[i]) < 0.001D) {
-				d[i] = 0D;
-			}
-		}
-		return d;
-	}
-
-	/**
 	 * Replaces low values in matrix by zeroes.
 	 * 
 	 * @param m4d
 	 *            Input 4x4 matrix
 	 * @return Filtered matrix.
 	 */
-	private static Matrix4d updateMatrix(Matrix4d m4d) {
+	private static void updateMatrix(Matrix4d m4d) {
 		double tmp;
 
 		for (int i = 0; i < 4; i++) {
@@ -254,7 +193,6 @@ public class Geometry {
 				}
 			}
 		}
-		return m4d;
 	}
 
 	/**
@@ -314,9 +252,7 @@ public class Geometry {
 	 *            Post Scale only available for Unreal Engine 1 UT ...
 	 * @param isUV
 	 *            if true then vector is TextureU or TextureV data (T3D Brush)
-	 * 
-	 * @param sheerAxis
-	 * @param sheerRate
+	 *
 	 */
 	public static void transformPermanently(Vector3d v, FScale mainScale, Vector3d rotation, FScale postScale, boolean isUV) {
 
@@ -365,8 +301,8 @@ public class Geometry {
 	/**
 	 * Null-safe operation to subtract vectors
 	 * 
-	 * @param a
-	 * @param b
+	 * @param a First vector
+	 * @param b Second vector
 	 * @return Vector a - Vector b
 	 */
 	public static Vector3d sub(Vector3d a, Vector3d b) {
@@ -375,11 +311,11 @@ public class Geometry {
 			return new Vector3d(0d, 0d, 0d);
 		}
 
-		else if (a == null && b != null) {
+		else if (a == null) {
 			return new Vector3d(-b.x, -b.y, -b.z);
 		}
 
-		else if (a != null && b == null) {
+		else if (b == null) {
 			return new Vector3d(a.x, a.y, a.z);
 		}
 
@@ -391,10 +327,10 @@ public class Geometry {
 	/**
 	 * Create poly data for creating a box brush
 	 * 
-	 * @param width
-	 * @param length
-	 * @param height
-	 * @return
+	 * @param width Box width
+	 * @param length Box length
+	 * @param height Box hiehgt
+	 * @return List of polygons for a box
 	 */
 	public static LinkedList<T3DPolygon> createBox(Double width, Double length, Double height) {
 		LinkedList<T3DPolygon> polyList = new LinkedList<>();
@@ -451,8 +387,8 @@ public class Geometry {
 	/**
 	 * Creates a cylinder
 	 * 
-	 * @param radius
-	 * @param height
+	 * @param radius Cylinder radius
+	 * @param height Cylinder height
 	 * @param sides
 	 *            Number of sides
 	 * @return List of polygons that make a cylinder brush
@@ -463,9 +399,9 @@ public class Geometry {
 
 		Double h = height / 2;
 
-		Double angle = 2 * Math.PI / sides;
-		Double a = angle / 2d;
-		Double r = radius / (Math.cos(a)); // Circle radius
+		double angle = 2 * Math.PI / sides;
+		double a = angle / 2d;
+		double r = radius / (Math.cos(a)); // Circle radius
 
 		// Sides polygons
 		for (int i = 0; i < sides; i++) {
@@ -534,54 +470,11 @@ public class Geometry {
 		return polyList;
 	}
 
-	public static void test(String[] args) {
-		Vector3d n = new Vector3d(0, 0, 1);
-		Vector3d r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		n = new Vector3d(0, 1, 0);
-		r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		n = new Vector3d(1, 0, 0);
-		r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		n = new Vector3d(-1, 0, 0);
-		r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		n = new Vector3d(0, -1, 0);
-		r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		n = new Vector3d(0, 0, -1);
-		r = getRotationInRadian(n);
-		System.out.println("Normal:" + n + " -> Rotation: X:" + r.z + " Y:" + r.x + " Z:" + r.y);
-
-		System.exit(0);
-	}
-
-	/**
-	 * Gets distance between 2 vectors
-	 * 
-	 * @param v
-	 * @param w
-	 * @return
-	 */
-	public static double getDistance(Vector3d v, Vector3d w) {
-
-		final double dx = v.x - w.x;
-		final double dy = v.y - w.y;
-		final double dz = v.z - w.z;
-
-		return Math.sqrt(dx * dx + dy * dy + dz * dz);
-	}
 
 	/**
 	 * Converts a "stadard" java vector to apache one
 	 * 
-	 * @param v
+	 * @param v Vector
 	 * @return
 	 */
 	public static Vector3D getApacheVector3D(Vector3d v) {
@@ -611,7 +504,7 @@ public class Geometry {
 	 *            Polygon
 	 * @param v
 	 *            Vertex
-	 * @return
+	 * @return <code>true</code> if vertex belongs to polygon
 	 */
 	public static boolean vertexInOtherPolyEdge(T3DPolygon polygon, Vertex v) {
 
@@ -629,10 +522,6 @@ public class Geometry {
 			if (line.distance(getApacheVector3D(v.getCoordinates())) < 0.001d) {
 				return true;
 			}
-			/*
-			 * if (line.contains(getApacheVector3D(v.getCoordinates()))) {
-			 * return true; }
-			 */
 		}
 
 		return false;
@@ -642,7 +531,7 @@ public class Geometry {
 	 * Converts an Unreal Engine 1/2/3 rotation vector to UE4 rotation vector.
 	 * UE123 rotation is within 0-> 65536 range while UE4 is within 0-360 range
 	 *
-	 * @param rotation
+	 * @param rotation Rotation vector
 	 */
 	public static Vector3d UE123ToUE4Rotation(final Vector3d rotation) {
 

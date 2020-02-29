@@ -25,6 +25,9 @@ public class TextureNameToPackageGenerator {
         String packageName;
         String textureType;
 
+        /**
+         * Needed for JSON
+         */
         public TextureInfo() {
 
         }

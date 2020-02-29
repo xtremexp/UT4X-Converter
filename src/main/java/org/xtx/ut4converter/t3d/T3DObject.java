@@ -197,4 +197,12 @@ public abstract class T3DObject {
 			simpleProperty.writeProperty(sbf, mapConverter);
 		}
 	}
+
+	public UTGame getGame() {
+		return game;
+	}
+
+	public void setGame(UTGame game) {
+		this.game = game;
+	}
 }

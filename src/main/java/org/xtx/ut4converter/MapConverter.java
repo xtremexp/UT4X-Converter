@@ -966,7 +966,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							// Some sounds and/or textures might need to be
 							// converted for correct import in UE4
 							if (ressource.needsConversion(this)) {
-								final File newExportedFile = ressource.convert(logger, userConfig);
+								final File newExportedFile = ressource.convert(logger);
 
 								if(newExportedFile != null) {
 									ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);

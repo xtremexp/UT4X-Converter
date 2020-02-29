@@ -41,7 +41,7 @@ public class Installation {
 	 * This method assumes that an installed java program is contained in a jar
 	 * file.
 	 * 
-	 * @param clazz
+	 * @param clazz Class
 	 * @return <code>true</code> if installed
 	 */
 	public static boolean isInstalled(Class clazz) {
@@ -68,7 +68,7 @@ public class Installation {
 	 *
 	 * The install directory should be normally "C:\Program Files\UT4X-Converter\app"
 	 * 
-	 * @param clazz
+	 * @param clazz Class
 	 *            class to check for installation
 	 * @return the installation directory
 	 * @see
@@ -113,18 +113,6 @@ public class Installation {
 
 	public static File getDocumentProgramFolder(){
 		return new File(Installation.getDocumentUserFolder().getAbsolutePath() + File.separator + "UT4X-Converter");
-	}
-	
-	/**
-	 * Return where UT4 converter run
-	 * @return
-	 */
-	public static String getProgramFolderPath(){
-		return getProgramFolder().getAbsolutePath();
-	}
-
-	public static File getAppFolder(){
-		return new File(String.valueOf(Installation.getInstallDirectory(MainApp.class)));
 	}
 
 	public static File getContentFolder(){
@@ -281,9 +269,8 @@ public class Installation {
 			}
 
 			pp.waitFor();
-			int exitVal = pp.exitValue();
 
-			return exitVal;
+			return pp.exitValue();
 		} finally {
 
 			if (pp != null) {

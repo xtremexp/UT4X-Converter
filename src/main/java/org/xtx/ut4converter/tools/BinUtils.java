@@ -95,22 +95,20 @@ public class BinUtils {
 
 	public static String readString(ByteBuffer bf, int length) {
 
-		String s = "";
+		StringBuilder s = new StringBuilder();
 
 		for (int i = 0; i < length; i++) {
 			if (bf.hasRemaining()) {
-				s += (char) bf.get();
-			} else {
-				s += "";
+				s.append((char) bf.get());
 			}
 		}
 
-		return s;
+		return s.toString();
 	}
 
 	public static void writeString(FileOutputStream bos, String s, int length) throws IOException {
 
-		int count = 0;
+		int count;
 
 		if (s == null) {
 

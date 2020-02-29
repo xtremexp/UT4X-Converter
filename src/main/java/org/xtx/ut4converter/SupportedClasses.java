@@ -22,7 +22,7 @@ import java.util.List;
 public class SupportedClasses {
 
 	private static final boolean USE_CUSTOM = true;
-	
+
 	MapConverter mapConverter;
 
 	/**
@@ -106,19 +106,6 @@ public class SupportedClasses {
 		for (String c : hm.keySet()) {
 			registerUClass(hm.get(c).t3dClass, c);
 		}
-	}
-
-	/**
-	 * For testing purposes only. Converts only one actor so it's easier to
-	 * import it in map being converted
-	 * 
-	 * @param actor
-	 * @param t3dClass
-	 */
-	public void setConvertOnly(String actor, Class<? extends T3DActor> t3dClass) {
-		classToUtActor.clear();
-		classToUtActor.put(actor.toLowerCase(), t3dClass);
-		mapConverter.setCreateNoteForUnconvertedActors(false);
 	}
 
 	/**

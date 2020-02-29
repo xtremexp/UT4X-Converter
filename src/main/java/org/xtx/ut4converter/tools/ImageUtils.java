@@ -99,7 +99,7 @@ public class ImageUtils {
 	 * @param ftex
 	 *            Texture file
 	 * @return Texture dimensions
-	 * @throws IOException
+	 * @throws IOException IO exception
 	 */
 	public static Dimension getTextureDimensions(File ftex) throws IOException {
 		if (ftex == null || !ftex.exists() || ftex.isDirectory() || Files.size(ftex.toPath()) == 0) {
