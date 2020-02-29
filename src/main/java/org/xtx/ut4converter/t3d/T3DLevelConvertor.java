@@ -707,34 +707,6 @@ public class T3DLevelConvertor extends Task<Object> {
 		return unconvertedActors;
 	}
 
-	/**
-	 * Test map conversion
-	 */
-	public static void test() {
-
-		try {
-
-			File t3dFile = new File("Z:\\TEMP\\UT99Maps\\Test\\DM-UT99-MoverTest.t3d");
-			MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, "Z:\\Temp");
-
-			// ((SupU1UT99ToUT4Classes)
-			// mc.getSupportedActorClasses()).setConvertOnly("AmbientSound",
-			// T3DSound.class);
-			mc.setScale(2.5d);
-			mc.convert();
-
-			System.out.println("Unconverted classes:");
-
-			for (String className : mc.getT3dLvlConvertor().unconvertedActors) {
-				System.out.println(className);
-			}
-		} catch (Exception ex) {
-			Logger.getLogger(T3DLevelConvertor.class.getName()).log(Level.SEVERE, null, ex);
-			System.exit(1);
-		}
-
-		System.exit(0);
-	}
 
 	@Override
 	protected Object call() throws Exception {

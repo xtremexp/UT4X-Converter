@@ -135,9 +135,7 @@ public class BodyInstance {
 		sb.append("CollisionProfileName=\"").append(collisionProfileName).append("\",");
 		sb.append("CollisionEnabled=\"").append(collisionEnabled.name()).append("\",");
 
-		if (collisionProfileName.equals("Custom")) {
-
-			if (!collisionResponses.isEmpty()) {
+		if (collisionProfileName.equals("Custom") && !collisionResponses.isEmpty()) {
 				sb.append("CollisionResponses=(ResponseArray=(");
 
 				collisionResponses.forEach((cr) -> {
@@ -145,7 +143,6 @@ public class BodyInstance {
 				});
 
 				sb.append("))");
-			}
 		}
 
 		sb.append(")");

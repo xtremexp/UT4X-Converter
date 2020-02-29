@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.tools;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
@@ -161,19 +160,5 @@ public class T3DStaticMeshFileLoader {
 		brush.setPolyList(polygons);
 	}
 
-	public static void test() {
-
-		File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar.t3d");
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
-
-		try {
-			T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, f);
-			System.out.println(smLoader.brush.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		System.exit(0);
-	}
 
 }

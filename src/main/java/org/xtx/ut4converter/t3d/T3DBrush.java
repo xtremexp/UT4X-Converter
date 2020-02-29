@@ -403,9 +403,6 @@ public class T3DBrush extends T3DVolume {
 
 		if (mapConverter.fromUE123ToUE4()) {
 
-			if ("BlockAll".equals(t3dClass)) {
-				valid = true;
-			}
 
 			// BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly
 			// coming from UE1/UE2 ...
@@ -413,14 +410,11 @@ public class T3DBrush extends T3DVolume {
 			// TODO add note? (some sheet brushes are movers ...)
 			// TODO replace sheetbrush with sheet staticmesh
 			// if 2 polygons and sheetbrush not a portal
-			if (isUnsupportedUE4Brush()) {
-
-				// only notify if this brush could not be replaced by another
-				// actor
-				if (children.isEmpty()) {
-					valid = false;
-					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
-				}
+			// only notify if this brush could not be replaced by another
+			// actor
+			if (isUnsupportedUE4Brush() && children.isEmpty()) {
+				valid = false;
+				logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
 			}
 		}
 

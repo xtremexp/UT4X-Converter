@@ -228,16 +228,12 @@ public class ConversionSettingsController implements Initializable {
 				}
 				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				break;
-			case 4:
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
-				break;
 			default:
 				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
 				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
+				break;
 		}
 
-		// relativeUtMapPathLbl.setText(mapConverter.getRelativeUtMapPath());
 		disableConversionType();
 
 		initConvCheckBoxes();
