@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane id="AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
+<GridPane id="AnchorPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
     <children>
         <!-- PROGRESS -->
         <ProgressBar fx:id="progressBar" prefWidth="400" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
@@ -15,7 +15,7 @@
         <Label fx:id="progressMessageDetail" alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
 
-        <TableView fx:id="convLogTableView" tableMenuButtonVisible="true" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+        <TableView fx:id="convLogTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="logTime" text="Time" />
                 <TableColumn fx:id="logLevel" text="Log Level" />

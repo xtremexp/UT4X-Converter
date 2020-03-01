@@ -101,7 +101,11 @@
            </center>
            
            <bottom>
-               <Button onAction="#closeDialog">Close</Button>
+            <HBox alignment="CENTER" style="-fx-padding: 10px;">
+               <children>
+                     <Button onAction="#closeDialog">Close</Button>
+               </children>
+            </HBox>
            </bottom>
        </BorderPane>
    </children>
