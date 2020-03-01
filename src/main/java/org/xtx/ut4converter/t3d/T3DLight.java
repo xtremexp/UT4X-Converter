@@ -555,8 +555,7 @@ public class T3DLight extends T3DSound {
 
 		// UE4 does not care about negative scale for lights
 		// so need to change rotation (for directional lights)
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-			if (scale3d != null) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && scale3d != null) {
 
 				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
 					rotation = new Vector3d();
@@ -582,7 +581,6 @@ public class T3DLight extends T3DSound {
 					rotation.y += DEFAULT_PI_UE_HALF;
 					scale3d.z = Math.abs(scale3d.z);
 				}
-			}
 		}
 
 		convertClassAndMobility();
