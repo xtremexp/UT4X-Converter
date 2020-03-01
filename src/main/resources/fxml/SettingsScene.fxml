@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="650.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="650.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
     <stylesheets>
         <URL value="@/styles/Styles.css" />
     </stylesheets>

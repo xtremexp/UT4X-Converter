@@ -2,43 +2,43 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="AnchorPane" prefHeight="600" prefWidth="800" fx:controller="org.xtx.ut4converter.ui.MainSceneController" >
+<BorderPane id="AnchorPane" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
     <!-- MENU BAR -->
     <top>
         <MenuBar>
             <Menu text="File">
                 <Menu text="Unreal 1">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#handleConvertU1Map"/>
+                    <MenuItem onAction="#handleConvertU1Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal 2">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#convertU2Map"/>
-                    <MenuItem text="Extract textures from package ..." onAction="#extractTexturesFromU2Package"/>
+                    <MenuItem onAction="#convertU2Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#extractTexturesFromU2Package" text="Extract textures from package ..." />
                 </Menu>
                 <Menu text="Unreal Tournament">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#handleConvert"/>
+                    <MenuItem onAction="#handleConvert" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2003">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt2003Map"/>
+                    <MenuItem onAction="#convertUt2003Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2004">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt2004Map"/>
+                    <MenuItem onAction="#convertUt2004Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 3">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUt3Map"/>
+                    <MenuItem onAction="#convertUt3Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="UDK">
-                    <MenuItem text="Convert map to UT4 ..." onAction="#convertUdkMap"/>
+                    <MenuItem onAction="#convertUdkMap" text="Convert map to UT4 ..." />
                 </Menu>
-                <SeparatorMenuItem/>
-                <MenuItem text="Exit" onAction="#handleExit" fx:id="menuExit"/>
+                <SeparatorMenuItem />
+                <MenuItem fx:id="menuExit" onAction="#handleExit" text="Exit" />
             </Menu>
-            <Menu text="Options" fx:id="menuOptions">
-                <MenuItem text="Settings" onAction="#handleSettings" fx:id="menuSettings"/>
+            <Menu fx:id="menuOptions" text="Options">
+                <MenuItem fx:id="menuSettings" onAction="#handleSettings" text="Settings" />
             </Menu>
             <Menu text="?">
-                <MenuItem text="Check for updates" onAction="#openUtTopicUrl" fx:id="menuCheckForUpdates"/>
+                <MenuItem fx:id="menuCheckForUpdates" onAction="#openUtTopicUrl" text="Check for updates" />
                 <!--<MenuItem text="Report bug" onAction="#openGitHubIssues" fx:id="reportIssue"/>-->
-                <MenuItem text="About" onAction="#handleAbout" fx:id="menuItemAbout"/>
+                <MenuItem fx:id="menuItemAbout" onAction="#handleAbout" text="About" />
             </Menu>
         </MenuBar>
     </top>
