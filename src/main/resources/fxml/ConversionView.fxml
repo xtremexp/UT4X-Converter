@@ -2,35 +2,41 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane id="AnchorPane" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
-    <children>
-        <!-- PROGRESS -->
-        <ProgressBar fx:id="progressBar" prefWidth="400" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
-        <ProgressIndicator fx:id="progressIndicator" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
-        <Label fx:id="progressMessage" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+<BorderPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionViewController">
+   <top>
+      <GridPane id="AnchorPane" BorderPane.alignment="CENTER">
+          <children>
+              <!-- PROGRESS -->
+              <ProgressBar fx:id="progressBar" prefWidth="550.0" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+              <ProgressIndicator fx:id="progressIndicator" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+              <Label fx:id="progressMessage" style="-fx-padding: 10px;" text="In Progress" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+      
+              <!-- PROGRESS DETAIL -->
+              <ProgressBar fx:id="progressBarDetail" prefWidth="550.0" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+              <ProgressIndicator fx:id="progressIndicatorDetail" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+              <Label fx:id="progressMessageDetail" alignment="CENTER" contentDisplay="CENTER" style="-fx-padding: 10px;" text="In Progress" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+          </children>
+         <columnConstraints>
+            <ColumnConstraints percentWidth="60.0" />
+            <ColumnConstraints halignment="CENTER" percentWidth="10.0" />
+            <ColumnConstraints halignment="CENTER" percentWidth="30.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+      </GridPane>
+   </top>
+   <center>
 
-        <!-- PROGRESS DETAIL -->
-        <ProgressBar fx:id="progressBarDetail" prefWidth="400" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
-        <ProgressIndicator fx:id="progressIndicatorDetail" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
-        <Label fx:id="progressMessageDetail" alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-
-
-        <TableView fx:id="convLogTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+      
+              <TableView fx:id="convLogTableView" BorderPane.alignment="CENTER">
             <columns>
                 <TableColumn fx:id="logTime" text="Time" />
                 <TableColumn fx:id="logLevel" text="Log Level" />
                 <TableColumn fx:id="logMsg" prefWidth="650" text="Message" />
             </columns>
         </TableView>
-    </children>
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
-</GridPane>
+   </center>
+</BorderPane>
