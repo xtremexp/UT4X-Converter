@@ -14,7 +14,7 @@ public class MaterialInfo {
 	/**
 	 * Diffuse texture or material
 	 */
-	UPackageRessource diffuse;
+	private UPackageRessource diffuse;
 
 	/**
 	 * 
@@ -24,35 +24,35 @@ public class MaterialInfo {
 	/**
 	 * Normal texture or material
 	 */
-	UPackageRessource normal;
+	private UPackageRessource normal;
 
 	private String normalName;
 
 	/**
 	 * Specular texture or material
 	 */
-	UPackageRessource specular;
+	private UPackageRessource specular;
 
 	private String specularName;
 
 	/**
 	 * Emissive texture or material
 	 */
-	UPackageRessource emissive;
+	private UPackageRessource emissive;
 
 	private String emissiveName;
 
 	/**
 	 * Spec power
 	 */
-	UPackageRessource specPower;
+	private UPackageRessource specPower;
 
 	private String specPowerName;
 
 	/**
 	 * Opacity
 	 */
-	UPackageRessource opacity;
+	private UPackageRessource opacity;
 
 	private String opacityName;
 
@@ -62,22 +62,6 @@ public class MaterialInfo {
 
 	public UPackageRessource getNormal() {
 		return normal;
-	}
-
-	public UPackageRessource getSpecular() {
-		return specular;
-	}
-
-	public UPackageRessource getEmissive() {
-		return emissive;
-	}
-
-	public UPackageRessource getSpecPower() {
-		return specPower;
-	}
-
-	public UPackageRessource getOpacity() {
-		return opacity;
 	}
 
 	public void setDiffuseName(String diffuseName) {
