@@ -668,22 +668,7 @@ public class UPackageRessource {
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
-		else if (type == Type.MESH) {
-			// TODO modelize
-			final File ucFile = exportInfo.getExportedFileByExtension(".uc");
-
-			if(ucFile != null && ucFile.exists()){
-				// TODO parse .uc file data
-				// TODO convert .3d to staticmesh with good scale and origin !
-				/**
-				 * class ASMDPick extends Actor;
-				 * #exec MESH IMPORT MESH=ASMDPick ANIVFILE=ASMDPick_a.3d DATAFILE=ASMDPick_d.3d
-				 * #exec MESH ORIGIN MESH=ASMDPick X=0 Y=-10 Z=-13 YAW=-64 PITCH=0 ROLL=0
-				 * #exec MESH SEQUENCE MESH=ASMDPick SEQ=All        STARTFRAME=0  NUMFRAMES=6  RATE=30
-				 * #exec MESHMAP SCALE MESHMAP=ASMDPick X=0.1 Y=0.1 Z=0.2
-				 */
-			}
-		}
+		// TODO handle type MESH
 
 		return null;
 	}

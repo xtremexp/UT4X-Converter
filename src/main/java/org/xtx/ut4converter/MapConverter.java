@@ -68,11 +68,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 
 	/**
-	 * File for logging all events during conversion process
-	 */
-	private File logFile;
-
-	/**
 	 * file writer of logfile
 	 */
 	private FileWriter logFileWriter;
@@ -541,7 +536,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		try {
 
-			logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
+			/**
+			 * File for logging all events during conversion process
+			 */
+			File logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
 
 			if (logFile.exists()) {
 				logFile.delete();
@@ -957,52 +955,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				for (File exportedFile : exportedFiles) {
 					if (exportedFile != null && exportedFile.length() > 0) {
 
-						try {
-						// Renaming exported files (e.g: Stream2.wav ->
-						// AmbOutside_Looping_Stream2.wav)
-						// move them to non temporary folder
-						if (ressource.isUsedInMap()) {
-
-							// Some sounds and/or textures might need to be
-							// converted for correct import in UE4
-							if (ressource.needsConversion(this)) {
-								final File newExportedFile = ressource.convert(logger);
-
-								if(newExportedFile != null) {
-									ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
-									exportedFile = newExportedFile;
-									wasConverted = true;
-								}
-							}
-
-							// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
-							File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
-							newFile.getParentFile().mkdirs();
-							newFile.createNewFile();
-
-							// sometimes it does not find the exported texture
-							// (?
-							// ... weird)
-							if (exportedFile.exists() && exportedFile.isFile()) {
-								Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-							}
-
-							if (exportedFile.delete()) {
-								logger.fine("Deleted " + exportedFile);
-							}
-
-							//exportedFile = newFile;
-							ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
-
-							if (wasConverted) {
-								logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
-							}
-						}
-						} catch (Exception e) {
-							System.out.println("Error while converting ressource " + ressource.getFullName() + " with file " + exportedFile.getName());
-							e.printStackTrace();
-							logger.log(Level.SEVERE, e.getMessage(), e);
-						}
+						wasConverted = cleanAndConvertRessource(wasConverted, ressource, exportedFile);
 					}
 				}
 			}
@@ -1054,8 +1007,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			this.getT3dLvlConvertor().getConvertedActors().stream().filter(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE3Terrain).forEach(terrain -> {
 
 				// only support 3 terrains
-				if (landscapeMatIdx.getAcquire() < 3) {
-					if (terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof T3DUE4Terrain) {
+				if (landscapeMatIdx.getAcquire() < 3&& terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof T3DUE4Terrain) {
 						final T3DUE4Terrain ue4Terrain = (T3DUE4Terrain) terrain.getChildren().get(0);
 						final String landscapeMatFilename = "UT4X_LandscapeMat_" + landscapeMatIdx.getAcquire() + ".uasset";
 
@@ -1070,13 +1022,62 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 								logger.log(Level.SEVERE, "Error while copying landscapemap file " + landscapeMat);
 							}
 						}
-					}
 				}
 
 				landscapeMatIdx.getAndIncrement();
 			});
 
 		}
+	}
+
+	private boolean cleanAndConvertRessource(boolean wasConverted, UPackageRessource ressource, File exportedFile) {
+		try {
+		// Renaming exported files (e.g: Stream2.wav ->
+		// AmbOutside_Looping_Stream2.wav)
+		// move them to non temporary folder
+		if (ressource.isUsedInMap()) {
+
+			// Some sounds and/or textures might need to be
+			// converted for correct import in UE4
+			if (ressource.needsConversion(this)) {
+				final File newExportedFile = ressource.convert(logger);
+
+				if(newExportedFile != null) {
+					ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
+					exportedFile = newExportedFile;
+					wasConverted = true;
+				}
+			}
+
+			// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
+			File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
+			newFile.getParentFile().mkdirs();
+			newFile.createNewFile();
+
+			// sometimes it does not find the exported texture
+			// (?
+			// ... weird)
+			if (exportedFile.exists() && exportedFile.isFile()) {
+				Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+
+			if (exportedFile.delete()) {
+				logger.fine("Deleted " + exportedFile);
+			}
+
+			//exportedFile = newFile;
+			ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
+
+			if (wasConverted) {
+				logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+			}
+		}
+		} catch (Exception e) {
+			System.out.println("Error while converting ressource " + ressource.getFullName() + " with file " + exportedFile.getName());
+			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		}
+		return wasConverted;
 	}
 
 	/**
@@ -1340,7 +1341,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		for (UPackage pack : mapPackages.values()) {
 
 			for (UPackageRessource pakRes : pack.getRessources()) {
-				if (pakRes.getType() == resType && pakRes.getName().toLowerCase().equals(name)) {
+				if (pakRes.getType() == resType && pakRes.getName().equalsIgnoreCase(name)) {
 					ressource = pakRes;
 					break;
 				}

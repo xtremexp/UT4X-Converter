@@ -112,14 +112,11 @@ public class T3DLiftExit extends T3DSound {
 
 				// Note in previous UTs lifttag could be link to actor not
 				// necessarly movers (e.g: SpecialEvents)
-				if (actor instanceof T3DMover || actor instanceof T3DMoverSM) {
-
-					if (this.liftTag != null && this.liftTag.equals(actor.tag)) {
-						this.linkedTo.add(actor);
-						actor.linkedTo.add(this);
-						this.linkedLift = actor;
-						break;
-					}
+				if ((actor instanceof T3DMover || actor instanceof T3DMoverSM) && this.liftTag != null && this.liftTag.equals(actor.tag)) {
+					this.linkedTo.add(actor);
+					actor.linkedTo.add(this);
+					this.linkedLift = actor;
+					break;
 				}
 			}
 		}

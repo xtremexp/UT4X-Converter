@@ -499,11 +499,9 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		// Actor data being analyzed
 		else {
-			if (banalyseline) {
-				if (uta != null) {
-					uta.preAnalyse(line);
-					uta.analyseT3DData(line);
-				}
+			if (banalyseline && uta != null) {
+				uta.preAnalyse(line);
+				uta.analyseT3DData(line);
 			}
 		}
 	}

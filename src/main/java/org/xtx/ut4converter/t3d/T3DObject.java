@@ -135,10 +135,8 @@ public abstract class T3DObject {
 				} else if (obj instanceof List) {
 					List objList = (List) obj;
 
-					if (!objList.isEmpty()) {
-						if (objList.get(0) != null && objList.get(0) instanceof T3DObject) {
-							t3dObj = (T3DObject) objList.get(0);
-						}
+					if (!objList.isEmpty() && (objList.get(0) != null && objList.get(0) instanceof T3DObject)) {
+						t3dObj = (T3DObject) objList.get(0);
 					}
 				}
 

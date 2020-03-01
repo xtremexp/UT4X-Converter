@@ -486,13 +486,11 @@ public class T3DBrush extends T3DVolume {
 				// vertex only linked with 2 or less other vertices
 				// might be candidate for bsp hole
 				// however need to do some extra checks
-				if (getPolyCountWithVertexCoordinate(v) < 3) {
+				if (getPolyCountWithVertexCoordinate(v) < 3 && !Geometry.vertexInOtherPoly(polyList, poly, v)) {
 
 					// if this vertex is belonging to edge
 					// of another polygon
-					if (!Geometry.vertexInOtherPoly(polyList, poly, v)) {
-						return true;
-					}
+					return true;
 				}
 			}
 		}

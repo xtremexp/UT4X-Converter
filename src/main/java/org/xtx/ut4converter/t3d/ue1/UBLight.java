@@ -19,13 +19,11 @@ public class UBLight extends T3DLight {
     public void convert() {
         super.convert();
 
-        if(this.getLightType() != null && this.getLightType() != UE12_LightType.LT_Steady) {
+        if(this.getLightType() != null && this.getLightType() != UE12_LightType.LT_Steady && UE4_LightActor.PointLight.name().equals(this.t3dClass)) {
             // only apply special light if point light
             // because UBPointLight extends PointLight
             // TODO handle spotlight
-            if (UE4_LightActor.PointLight.name().equals(this.t3dClass)) {
-                this.t3dClass = "UBPointLight_C";
-            }
+            this.t3dClass = "UBPointLight_C";
         }
     }
 }
