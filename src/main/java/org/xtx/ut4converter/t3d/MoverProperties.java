@@ -91,6 +91,8 @@ public class MoverProperties implements T3D {
 
 	private MoverGlideType moverGlideType;
 
+	private int numKeys = 1;
+
 	/**
 	 * Reference to converter
 	 */
@@ -106,14 +108,15 @@ public class MoverProperties implements T3D {
 		mover.registerSimpleProperty("bDirectionalPushoff", Boolean.class, Boolean.FALSE);
 		mover.registerSimpleProperty("bSlave", Boolean.class, Boolean.FALSE);
 		mover.registerSimpleProperty("bTriggerOnceOnly", Boolean.class, Boolean.FALSE);
+		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
+		mover.registerSimpleProperty("DelayTime", Float.class, null);
 		mover.registerSimpleProperty("BumpEvent", String.class, null);
 		mover.registerSimpleProperty("bUseTriggered", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("DamageTreshold", Float.class, 0f);
+		mover.registerSimpleProperty("DamageThreshold", Float.class, 0f);
 		mover.registerSimpleProperty("EncroachDamage", Float.class, 0f);
 		mover.registerSimpleProperty("OtherTime", Float.class, 0f);
 		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
 		mover.registerSimpleProperty("AttachTag", String.class);
-		mover.registerSimpleProperty("NumKeys", Integer.class, 1);
 	}
 
 	enum BumpType {
@@ -150,6 +153,10 @@ public class MoverProperties implements T3D {
 		// UE1 -> 'Wait at top time' (UE4)
 		if (line.contains("StayOpenTime")) {
 			stayOpenTime = T3DUtils.getDouble(line);
+		}
+
+		else if(line.contains("NumKeys=")){
+			numKeys = T3DUtils.getInteger(line);
 		}
 
 		// UE1 -> 'Lift Time' (UE4)
@@ -269,13 +276,18 @@ public class MoverProperties implements T3D {
 			// all positions are relative to previous one
 			// since then need to sum them all
 			// TODO remove this when blueprint handle multi-position
-			for(Map.Entry<Integer, Vector3d> posEntry : positions.entrySet()){
+			// the first position is always 0
+
+			for (int numKey = 0; numKey < numKeys; numKey++) {
+
+				final Vector3d vec = positions.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
 
 				// KeyPos(1)=(X=-96.000000)
-				lastPosition = posEntry.getValue();
+				lastPosition = vec;
 
 				// for Unreal Beta mod only
-				sbf.append(IDT).append("\tKeyPos(").append(posEntry.getKey()).append(")=").append(T3DUtils.toStringVec(posEntry.getValue())).append("\n");
+				// have to start positions from 0
+				sbf.append(IDT).append("\tKeyPos(").append(numKey).append(")=").append(T3DUtils.toStringVec(vec)).append("\n");
 			}
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(lastPosition.x)).append(",Y=").append(T3DActor.fmt(lastPosition.y)).append(",Z=").append(T3DActor.fmt(lastPosition.z)).append(")\n");
@@ -285,12 +297,14 @@ public class MoverProperties implements T3D {
 			Vector3d lastRot = new Vector3d();
 
 			// same comment as above
-			for(Map.Entry<Integer, Vector3d> rotEntry : rotations.entrySet()){
+			for (int numKey = 0; numKey < numKeys; numKey++) {
 
-				lastRot = rotEntry.getValue();
+				final Vector3d rot = rotations.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
+
+				lastRot = rot;
 
 				// for Unreal Beta mod only
-				sbf.append(IDT).append("\tKeyRot(").append(rotEntry.getKey()).append(")=(Pitch=").append(T3DActor.fmt(rotEntry.getValue().x)).append(",Yaw=").append(T3DActor.fmt(rotEntry.getValue().y)).append(",Roll=").append(T3DActor.fmt(rotEntry.getValue().z)).append(")\n");
+				sbf.append(IDT).append("\tKeyRot(").append(numKey).append(")=(Pitch=").append(T3DActor.fmt(rot.x)).append(",Yaw=").append(T3DActor.fmt(rot.y)).append(",Roll=").append(T3DActor.fmt(rot.z)).append(")\n");
 			}
 
 			sbf.append(IDT).append("\tLift Destination Rot=(Pitch=").append(T3DActor.fmt(lastRot.x)).append(",Yaw=").append(T3DActor.fmt(lastRot.y)).append(",Roll=").append(T3DActor.fmt(lastRot.z)).append(")\n");
@@ -333,6 +347,8 @@ public class MoverProperties implements T3D {
 		if (delayTime != null) {
 			sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
 		}
+
+		sbf.append(IDT).append("\tNumKeys=").append(numKeys).append("\n");
 
 		if (initialState != null) {
 			sbf.append(IDT).append("\tInitialState=").append("NewEnumerator").append(initialState.ordinal()).append("\n");

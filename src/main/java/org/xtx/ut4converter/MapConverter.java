@@ -217,6 +217,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	private File intT3dUt3Editor;
 
 	/**
+	 * Prefered texture extractor for non Unreal 2 game
+	 * If null will use the default one (umodel)
+	 */
+	private Class<? extends UTPackageExtractor> preferedTextureExtractorClass;
+
+	/**
 	 * Global logger
 	 */
 	static final Logger logger = Logger.getLogger("MapConverter");
@@ -1709,5 +1715,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.userConfig = userConfig;
 	}
 
+	public void setPreferedTextureExtractorClass(Class<? extends UTPackageExtractor> preferedTextureExtractorClass) {
+		this.preferedTextureExtractorClass = preferedTextureExtractorClass;
+	}
 
+	public Class<? extends UTPackageExtractor> getPreferedTextureExtractorClass() {
+		return preferedTextureExtractorClass;
+	}
 }

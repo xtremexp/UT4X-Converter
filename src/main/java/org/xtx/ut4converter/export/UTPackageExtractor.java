@@ -129,7 +129,11 @@ public abstract class UTPackageExtractor {
 			}
 		}
 		else {
-			return getUtPackageExtractor(mapConverter, UModelExporter.class);
+			if (mapConverter.getPreferedTextureExtractorClass() != null) {
+				return getUtPackageExtractor(mapConverter, mapConverter.getPreferedTextureExtractorClass());
+			} else {
+				return getUtPackageExtractor(mapConverter, UModelExporter.class);
+			}
 		}
 	}
 

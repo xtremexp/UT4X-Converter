@@ -109,7 +109,7 @@ public class UModelExporter extends UTPackageExtractor {
 		}
 
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
-		String command = getExporterPath() + " -export -sounds -groups -notgacomp -png -nolightmap -lods -uc \"" + fileContainer + "\"";
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nolightmap -lods -uc \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
@@ -251,7 +251,7 @@ public class UModelExporter extends UTPackageExtractor {
 		if (type == Type.STATICMESH) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
-			exportedFile = new File(BASE_EXPORT_FILE + ".png");
+			exportedFile = new File(BASE_EXPORT_FILE + ".tga");
 		} else if (type == Type.MESH) {
 			// how the mesh is scale and some other things ...
 			exportedFile = new File(BASE_EXPORT_FILE + ".uc");

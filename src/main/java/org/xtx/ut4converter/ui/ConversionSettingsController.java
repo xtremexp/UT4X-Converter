@@ -19,6 +19,9 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
+import org.xtx.ut4converter.export.SimpleTextureExtractor;
+import org.xtx.ut4converter.export.UCCExporter;
+import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 
@@ -91,6 +94,9 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private CheckBox convMusicCheckBox;
 
+	@FXML
+	private ComboBox<String> texExtractorChoiceBox;
+
 	/**
 	 * Default light map resolution applied to brushes from Unreal Engine 1/2 converted maps
 	 */
@@ -161,6 +167,7 @@ public class ConversionSettingsController implements Initializable {
 
 		lightningBrightnessFactor.getSelectionModel().select("1");
 		soundVolumeFactor.getSelectionModel().select("1");
+		texExtractorChoiceBox.getSelectionModel().select("umodel");
 	}
 
 	public void setDialogStage(Stage dialogStage) {
@@ -365,6 +372,18 @@ public class ConversionSettingsController implements Initializable {
 		if (checkConversionSettings()) {
 
 			dialogStage.close();
+
+			if (inputGame != UTGame.U2) {
+				if ("umodel".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
+					mapConverter.setPreferedTextureExtractorClass(UModelExporter.class);
+				} else if ("UCC".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
+					mapConverter.setPreferedTextureExtractorClass(UCCExporter.class);
+				} else if ("Simple Texture Extractor".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
+					mapConverter.setPreferedTextureExtractorClass(SimpleTextureExtractor.class);
+				} else {
+					mapConverter.setPreferedTextureExtractorClass(UModelExporter.class);
+				}
+			}
 
 			mapConverter.setLightMapResolution(Double.valueOf(lightMapResolutionList.getSelectionModel().getSelectedItem()));
 			mapConverter.setScale(Double.valueOf(scaleFactorList.getSelectionModel().getSelectedItem()));
