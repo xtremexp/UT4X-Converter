@@ -506,7 +506,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 
 		if(utGameFolder != null) {
-			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
+			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK, "ut3"}, true);
 			logger.info("Scanned " + packageFilesCache.size() + " .upk files");
 		}
 	}
