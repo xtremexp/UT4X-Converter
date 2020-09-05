@@ -34,6 +34,10 @@ import java.util.logging.Level;
 public class UModelExporter extends UTPackageExtractor {
 
 	public static final String program = "umodel.exe";
+	/**
+	 * Caches temporary folder path length for perf fix issue
+	 */
+	int tempFolderPathLength;
 
 	public UModelExporter(MapConverter mapConverter) {
 		super(mapConverter);
@@ -132,6 +136,12 @@ public class UModelExporter extends UTPackageExtractor {
 		
 		ressource.getUnrealPackage().setExported(true);
 
+
+		// FIXES SLOWLYNESS
+		// have to cache this since this lasts for 40ms which cause slowlyness if 100 ressources to analyse ...
+		// for some unknow reason this operation is quite slow ...
+		tempFolderPathLength = mapConverter.getTempExportFolder().getAbsolutePath().length();
+
 		for (String logLine : logLines) {
 
 			logger.log(Level.FINE, logLine);
@@ -182,10 +192,10 @@ public class UModelExporter extends UTPackageExtractor {
 		// Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh/trophy1
 		String exportFolder = split[1].substring(0, split[1].lastIndexOf("/"));
 
-		String packageName = split[1].substring(mapConverter.getTempExportFolder().getAbsolutePath().length() + 1).split("/")[0];
+		String packageName = split[1].substring(tempFolderPathLength + 1).split("/")[0];
 
 		String group = null;
-		int startIdxGroup = exportFolder.indexOf(packageName, mapConverter.getTempExportFolder().getAbsolutePath().length()) + packageName.length() + 1;
+		int startIdxGroup = exportFolder.indexOf(packageName, tempFolderPathLength) + packageName.length() + 1;
 
 		// Some ressources does not have group info
 		if (startIdxGroup < exportFolder.length()) {
