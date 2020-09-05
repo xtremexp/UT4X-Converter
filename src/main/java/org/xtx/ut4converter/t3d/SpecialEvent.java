@@ -14,10 +14,6 @@ public class SpecialEvent extends T3DSound {
 
 	private String damageString;
 
-	private String damageType;
-
-	private String message;
-
 	private UPackageRessource sound;
 
 	public SpecialEvent(MapConverter mc, String t3dClass) {
@@ -37,10 +33,8 @@ public class SpecialEvent extends T3DSound {
 			bPlayerViewRot = T3DUtils.getBoolean(line);
 		} else if (line.startsWith("damage=")) {
 			damage = T3DUtils.getFloat(line);
-		} else if (line.startsWith("bBroadcast=")) {
-			damageType = T3DUtils.getString(line);
 		} else if (line.startsWith("Sound=")) {
-			sound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			sound = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		} else {
 			return super.analyseT3DData(line);
 		}
@@ -58,7 +52,7 @@ public class SpecialEvent extends T3DSound {
 		super.convert();
 	}
 
-	public String toString() {
+	public String toT3d() {
 		sbf.append(IDT).append("Begin Actor Class=U1SpecialEvent_C Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");

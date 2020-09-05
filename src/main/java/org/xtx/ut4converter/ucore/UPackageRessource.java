@@ -7,7 +7,6 @@ package org.xtx.ut4converter.ucore;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UnrealEngine;
-import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.ImageUtils;
@@ -33,25 +32,25 @@ public class UPackageRessource {
 	 * Reference to map converter to know if this ressource should be converted
 	 * or not ...
 	 */
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
 	/**
 	 * Unreal Package this ressource belongs to
 	 */
-	UPackage unrealPackage;
+	private UPackage unrealPackage;
 
 	/**
 	 * Where this ressource have been exported. TODO handle multi export file
 	 * (for textures we might need export as .bmp and .tga as well) If it's null
 	 * and exportFailed is false the we should try to export it
 	 */
-	ExportInfo exportInfo = new ExportInfo();
+	private ExportInfo exportInfo = new ExportInfo();
 
 	/**
 	 * If true means export of this ressource failed and we must not try to
 	 * export it again
 	 */
-	boolean exportFailed;
+	private boolean exportFailed;
 
 	/**
 	 * Means this ressource is used in map being converted. If used the exported
@@ -77,23 +76,23 @@ public class UPackageRessource {
 	/**
 	 * Type of ressource (texture, sounds, staticmesh, mesh, ...)
 	 */
-	Type type;
+	private Type type;
 
 	/**
 	 * Texture dimension if type of ressource is texture
 	 */
-	Dimension textureDimensions;
+	private Dimension textureDimensions;
 
 	/**
 	 * Only for material package ressources
 	 */
-	MaterialInfo materialInfo;
+	private MaterialInfo materialInfo;
 	/**
 	 * Use this ressource as replacement. Might be used for material ressources
 	 * which are replaced with diffuse texture (until we can manage properly
 	 * materials)
 	 */
-	UPackageRessource replacement;
+	private UPackageRessource replacement;
 	
 
 	private String forcedFileName;
@@ -101,7 +100,7 @@ public class UPackageRessource {
 	/**
      * 
      */
-	public class ExportInfo {
+	public static class ExportInfo {
 
 		/**
 		 * Exported files, there might be several ones for same ressource (e.g:
@@ -115,12 +114,6 @@ public class UPackageRessource {
 		UTPackageExtractor extractor;
 
 		public ExportInfo() {
-		}
-
-		public ExportInfo(File exportedFile, UTPackageExtractor extractor) {
-			this.exportedFiles = new ArrayList<>();
-			this.exportedFiles.add(exportedFile);
-			this.extractor = extractor;
 		}
 
 		public ExportInfo(List<File> exportedFiles, UTPackageExtractor extractor) {
@@ -525,30 +518,6 @@ public class UPackageRessource {
 	}
 
 	/**
-	 * Sometimes we need to change name of exported file to have info about from
-	 * which package this file comes from
-	 * 
-	 * @return
-	 */
-	public String getConvertedFileName() {
-		String[] s = exportInfo.getExportedFiles().get(0).getName().split("\\.");
-		String currentFileExt = s[s.length - 1];
-
-		// umodel does export staticmeshes as .pskx or .psk
-		// therefore UT4 converter convert them to .obj
-		if (getType() == Type.STATICMESH && "pskx".equals(currentFileExt)) {
-			currentFileExt = "obj";
-		}
-
-		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
-		if (forcedFileName != null) {
-			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
-		} else {
-			return getFullNameWithoutDots() + "." + currentFileExt;
-		}
-	}
-
-	/**
 	 * Return the full name of package ressource
 	 * 
 	 * @return <packagename>.<group>.<name>
@@ -685,7 +654,7 @@ public class UPackageRessource {
 	 * @param logger
 	 * @return
 	 */
-	public File convert(Logger logger, UserConfig userConfig) {
+	public File convert(Logger logger) {
 
 		if (type == Type.SOUND) {
 			SoundConverter scs = new SoundConverter(logger);
@@ -699,22 +668,7 @@ public class UPackageRessource {
 				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
 		}
-		else if (type == Type.MESH) {
-			// TODO modelize
-			final File ucFile = exportInfo.getExportedFileByExtension(".uc");
-
-			if(ucFile != null && ucFile.exists()){
-				// TODO parse .uc file data
-				// TODO convert .3d to staticmesh with good scale and origin !
-				/**
-				 * class ASMDPick extends Actor;
-				 * #exec MESH IMPORT MESH=ASMDPick ANIVFILE=ASMDPick_a.3d DATAFILE=ASMDPick_d.3d
-				 * #exec MESH ORIGIN MESH=ASMDPick X=0 Y=-10 Z=-13 YAW=-64 PITCH=0 ROLL=0
-				 * #exec MESH SEQUENCE MESH=ASMDPick SEQ=All        STARTFRAME=0  NUMFRAMES=6  RATE=30
-				 * #exec MESHMAP SCALE MESHMAP=ASMDPick X=0.1 Y=0.1 Z=0.2
-				 */
-			}
-		}
+		// TODO handle type MESH
 
 		return null;
 	}

@@ -18,11 +18,7 @@ public class T3DEmitter extends T3DSound {
 	 */
 	private static final String TEMPLATE_LENSFLARE = "/Game/RestrictedAssets/Effects/Atmos/Flares/Particles/P_LensFlare.P_LensFlare";
 
-	String template;
-
-	Double minDrawDistance;
-
-	Double lDMaxDrawDistance;
+	private String template;
 
 	public T3DEmitter(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -50,20 +46,11 @@ public class T3DEmitter extends T3DSound {
 		return emitter;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Emitter Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Name=\"ParticleSystemComponent0\"\n");
 		sbf.append(IDT).append("\t\tTemplate=ParticleSystem'").append(template).append("'\n");
-
-		if (minDrawDistance != null) {
-			sbf.append(IDT).append("\t\tMinDrawDistance=").append(minDrawDistance).append("\n");
-		}
-
-		if (lDMaxDrawDistance != null) {
-			sbf.append(IDT).append("\t\tLDMaxDrawDistance=").append(lDMaxDrawDistance).append("\n");
-		}
 
 		writeLocRotAndScale();
 

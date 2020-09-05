@@ -5,9 +5,6 @@
  */
 package org.xtx.ut4converter.tools;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.sound.sampled.AudioSystem;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,28 +32,6 @@ public class SoundConverter {
 	public SoundConverter(Logger logger) {
 		this.logger = logger;
 		this.soxConverter = Installation.getSox();
-	}
-
-	/**
-	 * Get possible format allowed to convert to 16 bits
-	 * 
-	 * @param srcAudioFormat
-	 *            Audio format of source wave file that need to be converted to
-	 *            16 bits
-	 * @return
-	 */
-	private synchronized AudioFormat getAudioFormat16bit(AudioFormat srcAudioFormat) {
-
-		for (Encoding encoding : AudioSystem.getTargetEncodings(srcAudioFormat.getEncoding())) {
-
-			for (AudioFormat audioFormat : AudioSystem.getTargetFormats(encoding, srcAudioFormat)) {
-				if (audioFormat.getSampleSizeInBits() == 16) {
-					return audioFormat;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**

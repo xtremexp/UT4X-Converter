@@ -42,8 +42,7 @@ public class T3DThingFactory extends T3DKeyPoint {
         DIST_Constant, DIST_Uniform, DIST_Gaussian
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBThingFactory_C");
     }
 }

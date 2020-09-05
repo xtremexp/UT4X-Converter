@@ -126,63 +126,6 @@ public class UPackage {
 		ressources.add(ressource);
 	}
 
-	/**
-	 * List all ressources of packages that have been exported
-	 * 
-	 * @return List of exported ressources
-	 */
-	public Set<File> getExportedFiles() {
-
-		Set<File> exportedFiles = new HashSet<>();
-
-		for (UPackageRessource upr : ressources) {
-			if (upr.getExportedFiles() != null) {
-				exportedFiles.addAll(upr.getExportedFiles());
-			}
-		}
-
-		return exportedFiles;
-	}
-
-	/**
-	 * Returns ressource package by name without package info
-	 * 
-	 * @param fullName
-	 *            Ressource name (e.g: "Looping.Stower51")
-	 * @return ressource with same full name
-	 */
-	public UPackageRessource findRessourceByName(String name) {
-
-		String[] s = name.split("\\.");
-		String fullNameWithoutGroup = null;
-		String group = null;
-
-		if (s.length == 3) {
-			fullNameWithoutGroup = s[0] + "." + s[2];
-			group = s[1];
-		}
-
-		for (UPackageRessource packageRessource : ressources) {
-
-			if (name.equals(packageRessource.getFullName()) || name.equals(packageRessource.getFullNameWithoutGroup())) {
-				return packageRessource;
-			}
-
-			// Package ressource was created without group info
-			// since we have this info now, update the ressource and return it
-			else if (packageRessource.getFullNameWithoutGroup().equals(fullNameWithoutGroup)) {
-
-				if (group != null) {
-					packageRessource.group = s[2];
-				}
-
-				return packageRessource;
-			}
-		}
-
-		return null;
-	}
-	
 	public UPackageRessource findRessource(String fullName){
 		return findRessource(fullName, true);
 	}
@@ -213,24 +156,24 @@ public class UPackage {
 		for (UPackageRessource packageRessource : ressources) {
 
 			// matching "pakname.groupname.name"
-			if (fullName.equals(packageRessource.getFullName().toLowerCase()) || fullName.equals(packageRessource.getFullNameWithoutGroup().toLowerCase())) {
+			if (fullName.equals(packageRessource.getFullName().toLowerCase()) || fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutGroup())) {
 				return packageRessource;
 			}
 
 			// matching "pakname_groupname_name"
-			else if (fullName.equals(packageRessource.getFullNameWithoutDots().toLowerCase())) {
+			else if (fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutDots())) {
 				return packageRessource;
 			}
 
 			// matching "groupname_name"
-			else if (fullName.equals(packageRessource.getGroupAndNameWithoutDots().toLowerCase())) {
+			else if (fullName.equalsIgnoreCase(packageRessource.getGroupAndNameWithoutDots())) {
 				return packageRessource;
 			}
 
 			// Package ressource was created without group info
 			// since we have this info now, update the ressource and return it
 			// matching "pakname.name"
-			else if (fullNameWithoutGroup != null && packageRessource.getFullNameWithoutGroup().toLowerCase().equals(fullNameWithoutGroup.toLowerCase())) {
+			else if (fullNameWithoutGroup != null && packageRessource.getFullNameWithoutGroup().equalsIgnoreCase(fullNameWithoutGroup)) {
 
 				if (group != null) {
 					packageRessource.group = s[2];

@@ -18,12 +18,12 @@ public class T3DMover extends T3DBrush {
 	/**
 	 * Common properties of basic mover
 	 */
-	MoverProperties moverProperties;
+	private MoverProperties moverProperties;
 
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass t3dClass
 	 */
 	public T3DMover(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -33,9 +33,7 @@ public class T3DMover extends T3DBrush {
 	@Override
 	public boolean analyseT3DData(String line) {
 
-		if (moverProperties.analyseT3DData(line)) {
-
-		} else {
+		if (!moverProperties.analyseT3DData(line)) {
 			return super.analyseT3DData(line);
 		}
 
@@ -52,10 +50,9 @@ public class T3DMover extends T3DBrush {
 
 	/**
 	 *
-	 * @return
+	 * @return String value
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
 

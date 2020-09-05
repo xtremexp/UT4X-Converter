@@ -31,8 +31,8 @@ public class T3DUtils {
 	/**
 	 * // Begin Polygon Item=Rise Texture=r-plates-g Link=0
 	 *
-	 * @param line
-	 * @param split
+	 * @param line Line
+	 * @param split Split char
 	 * @return
 	 * @deprecated DELETE AND MERGE WITH getString
 	 */
@@ -57,8 +57,8 @@ public class T3DUtils {
 	}
 
 	/**
-	 *
-	 * @param line
+	 * Parses integer from t3d line
+	 * @param line Line
 	 * @return
 	 */
 	public static Integer getInteger(String line) {
@@ -67,7 +67,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line t3d line
 	 * @return
 	 */
 	public static Short getShort(String line) {

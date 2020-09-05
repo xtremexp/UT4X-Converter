@@ -113,7 +113,7 @@ public class UTGameTypes {
 		}
 
 		if (mapName.contains("-")) {
-			String prefix = mapName.split("\\-")[0];
+			String prefix = mapName.split("-")[0];
 			GameType gameType = getGameType(prefix);
 
 			if (gameType != null) {
@@ -125,7 +125,7 @@ public class UTGameTypes {
 	}
 
 	public static boolean isUt99Assault(MapConverter mc) {
-		return mc.getInputGame() == UTGame.UT99 && getGameType(mc.getInMap().getName().split("\\-")[0]) == GameType.ASSAULT;
+		return mc.getInputGame() == UTGame.UT99 && getGameType(mc.getInMap().getName().split("-")[0]) == GameType.ASSAULT;
 	}
 
 	public static GameType getGameType(String prefix) {

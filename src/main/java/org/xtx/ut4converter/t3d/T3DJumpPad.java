@@ -11,6 +11,7 @@ import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
+import java.util.Objects;
 
 /**
  * Checked: U1, U2, UT99, UT2004, UT3 Tested: UT99
@@ -28,17 +29,17 @@ public class T3DJumpPad extends T3DSound {
 	 * "xKicker" Unreal 2 for actor class "U2Kicker" UT3 for actor class
 	 * "UT_JumpPad"
 	 */
-	Vector3d jumpVelocity;
+	private Vector3d jumpVelocity;
 
 	/**
 	 * UT99 for actor class "Jumper"
 	 */
-	Double jumpZ;
+	private Double jumpZ;
 
 	/**
 	 * UE4/UT4
 	 */
-	Vector3d jumpTarget;
+	private Vector3d jumpTarget;
 
 	/**
 	 * UT3: JumpSound=SoundCue
@@ -48,12 +49,12 @@ public class T3DJumpPad extends T3DSound {
 	 * '/Game/RestrictedAssets/Audio/Gameplay/A_Gameplay_JumpPadJump01_Cue.A_Gameplay_JumpPadJump01_Cue
 	 * '
 	 */
-	UPackageRessource jumpSound;
+	private UPackageRessource jumpSound;
 
 	/**
 	 * UT3/UT4
 	 */
-	Double jumpTime = 1.5d;
+	private Double jumpTime = 1.5d;
 
 	public T3DJumpPad(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -118,19 +119,14 @@ public class T3DJumpPad extends T3DSound {
 			} else {
 
 				// TODO convert properly velocity to target
-				if (jumpVelocity != null) {
-					jumpTarget = jumpVelocity;
-				} else {
-					jumpTarget = new Vector3d(0d, 0d, 250d);
-				}
+				jumpTarget = Objects.requireNonNullElseGet(jumpVelocity, () -> new Vector3d(0d, 0d, 250d));
 			}
 		}
 
 		super.convert();
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUT4()) {
 			sbf.append(IDT).append("Begin Actor Class=BaseJumpPad_C name=").append(name).append("\n");

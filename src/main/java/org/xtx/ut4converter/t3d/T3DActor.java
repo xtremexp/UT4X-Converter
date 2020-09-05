@@ -103,15 +103,14 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	protected Double collisionHeight;
 
-	String otherdata = "";
+	protected String otherdata = "";
 
-	boolean usecolocation = false;
 
 	/**
 	 * Used to add extra Z location (for converting pickup for exemple not
 	 * having same 'origin')solar
 	 */
-	Double offsetZLocation = 0D;
+	protected Double offsetZLocation = 0D;
 
 	/**
      *
@@ -138,7 +137,7 @@ public abstract class T3DActor extends T3DObject {
 	 * If this actor has been created from another one. This property should be
 	 * not null
 	 */
-	T3DActor parent;
+	protected T3DActor parent;
 
 	/**
 	 * If not empty current actor will be replaced by these ones when writing
@@ -168,7 +167,7 @@ public abstract class T3DActor extends T3DObject {
 		// ObjName=DistributionFloatUniform
 		if (line.startsWith("Begin Object")) {
 			currentSubObjectClass = line.split("Class=")[1].split(" Name=")[0];
-			currentSubObjectName = line.split("Name=")[1].split("\\ ")[0];
+			currentSubObjectName = line.split("Name=")[1].split(" ")[0];
 		} else if (line.startsWith("End Object")) {
 			currentSubObjectClass = null;
 			currentSubObjectName = null;
@@ -178,7 +177,7 @@ public abstract class T3DActor extends T3DObject {
 	/**
 	 * Read line of t3d file to parse data about current t3d actor being read
 	 * 
-	 * @param line
+	 * @param line Line
 	 * @return true if data has been extracted from line false else (useful to
 	 *         check which data has not been parsed)
 	 */
@@ -195,8 +194,8 @@ public abstract class T3DActor extends T3DObject {
 	
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass T3d class
 	 * @param actor
 	 *            If not null will copy some basic properties like location to
 	 *            this actor
@@ -316,7 +315,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("Event=")) {
-			event = line.split("\\=")[1].replaceAll("\\\"", "");
+			event = line.split("=")[1].replaceAll("\"", "");
 		}
 
 		else {
@@ -342,11 +341,11 @@ public abstract class T3DActor extends T3DObject {
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 * 
-	 * @param sbf
-	 * @param outEngine
-	 * @param location
-	 * @param rotation
-	 * @param scale3d
+	 * @param sbf String builder
+	 * @param outEngine Unreal Engine out
+	 * @param location Location
+	 * @param rotation Rotation
+	 * @param scale3d Scale 3D
 	 */
 	public static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
 
@@ -387,7 +386,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * 
-	 * @param newScale
+	 * @param newScale New scale
 	 */
 	public void scale(Double newScale) {
 
@@ -415,26 +414,19 @@ public abstract class T3DActor extends T3DObject {
 		this.otherdata += somedata + "\n";
 	}
 
-	/**
-	 *
-	 * @param otherdata
-	 */
-	public void setOtherdata(String otherdata) {
-		this.otherdata = otherdata;
-	}
 
 	/**
 	 *
-	 * @return
+	 * @return Location of actor
 	 */
 	public Vector3d getLocation() {
 		return location;
 	}
 
 	/**
-	 *
-	 * @param value
-	 * @return
+	 * Format a double to string unreal engine format
+	 * @param value Double
+	 * @return Formatted double string
 	 */
 	public static String fmt(double value) {
 		return formatValue(value);
@@ -442,8 +434,8 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 *
-	 * @param value
-	 * @return
+	 * @param value Double
+	 * @return Formatted double string
 	 */
 	public static String formatValue(double value) {
 		DecimalFormat df = new DecimalFormat("0.000000", new DecimalFormatSymbols(Locale.US));
@@ -451,18 +443,9 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
-	 *
-	 * @param line
-	 * @return
-	 */
-	public static String getActorClass(String line) {
-		return (line.split("=")[1]).split(" ")[0];
-	}
-
-	/**
 	 * Get the input game this actor come from
 	 * 
-	 * @return
+	 * @return Input game
 	 */
 	protected UTGames.UTGame getInputGame() {
 		return mapConverter.getInputGame();
@@ -471,7 +454,7 @@ public abstract class T3DActor extends T3DObject {
 	/**
 	 * Get the output game to which it must be converted
 	 * 
-	 * @return
+	 * @return Output game
 	 */
 	protected UTGames.UTGame getOutputGame() {
 		return mapConverter.getOutputGame();
@@ -479,15 +462,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 *
-	 * @param offsetZLocation
-	 */
-	public void setOffsetZLocation(Double offsetZLocation) {
-		this.offsetZLocation = offsetZLocation;
-	}
-
-	/**
-	 *
-	 * @return
+	 * @return Map converter instance
 	 */
 	protected MapConverter getMapConverter() {
 		return this.mapConverter;
@@ -555,7 +530,7 @@ public abstract class T3DActor extends T3DObject {
 		// Brush name need to be the original one to fix ut3 brushes order (based on actor name)
 		if (this.name != null && !(this instanceof T3DBrush && this.mapConverter.isFrom(UnrealEngine.UE3))) {
 
-			final String[] namePrefixSp = this.name.split("\\_");
+			final String[] namePrefixSp = this.name.split("_");
 			String namePrefix = null;
 			if (namePrefixSp.length == 2) {
 				namePrefix = namePrefixSp[0];
@@ -573,10 +548,10 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		// Notify actor was converted
-		game = mapConverter.getOutputGame();
+		setGame(mapConverter.getOutputGame());
 
 		// Converts all child actors as well
-		children.stream().forEach((child) -> {
+		children.forEach((child) -> {
 			if (child.needsConverting()) {
 				child.convert();
 			}
@@ -662,14 +637,10 @@ public abstract class T3DActor extends T3DObject {
 	 * convert(auto-create sheet static mesh) isValidConverting() --> convert()
 	 * -> isValidWritting() -> write(actor.writeMoverProperties())
 	 * 
-	 * @return
+	 * @return <code>true</code> if this actor should be written in converted .t3d file
 	 */
 	public boolean isValidWriting() {
 		return validWriting;
-	}
-
-	public void setValidWriting(boolean validWriting) {
-		this.validWriting = validWriting;
 	}
 
 	@Override
@@ -678,27 +649,12 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
-	 * Null-safe property getter
-	 * 
-	 * @param name
-	 * @return
-	 */
-	protected String getProperty(String name) {
-
-		if (properties.containsKey(name)) {
-			return properties.get(name);
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Indicates if this actor needs to be converted
 	 * 
 	 * @return <code>true</code>> If actor needs to be converted
 	 */
 	private boolean needsConverting() {
-		return game != mapConverter.getOutputGame();
+		return getGame() != mapConverter.getOutputGame();
 	}
 
 	public void setName(String name) {
@@ -727,7 +683,7 @@ public abstract class T3DActor extends T3DObject {
 	 * Returns the reference of this actor in level E.G: Generic_Lift_C
 	 * '/Game/Maps/AS-Mazon/AS-Mazon-V01.AS-Mazon-V01:PersistentLevel.Mover4'
 	 * 
-	 * @return
+	 * @return Level reference
 	 */
 	public String getLevelReference() {
 
@@ -738,19 +694,6 @@ public abstract class T3DActor extends T3DObject {
 		// UE4
 		// TODO check <=UE3 getLevelReference
 		return t3dClass + "'" + mapConverter.getRelativeUtMapPath() + "." + mapConverter.getOutMapName() + ":PersistentLevel." + name;
-	}
-
-	public SceneComponent getSceneComponent() {
-		return sceneComponent;
-	}
-
-	/**
-	 * Get original class of actor
-	 * 
-	 * @return
-	 */
-	public String getT3dOriginClass() {
-		return t3dOriginClass;
 	}
 
 	protected String writeSimpleActor(final String actorClass){
@@ -789,11 +732,13 @@ public abstract class T3DActor extends T3DObject {
 		return sbf.toString();
 	}
 
-	public Boolean isHidden(){
-		return this.bHidden;
-	}
-
 	public List<T3DActor> getChildren() {
 		return children;
 	}
+
+	/**
+	 * Export current actor to unreal text format.
+	 * @return Actor exported in unreal text format
+	 */
+	public abstract String toT3d();
 }

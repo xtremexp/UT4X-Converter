@@ -62,7 +62,7 @@ public abstract class UTPackageExtractor {
 	 * 
 	 * @param type
 	 *            Type of ressource to export
-	 * @return
+	 * @return Returns the export folder of resource depending on it's type
 	 */
 	protected File getExportFolder(T3DRessource.Type type) {
 
@@ -77,8 +77,8 @@ public abstract class UTPackageExtractor {
 	 * Extract ressource, generally some package that contains multiple files
 	 * (ressources)
 	 * 
-	 * @param ressource
-	 * @param forceExport
+	 * @param ressource Unreal package resource
+	 * @param forceExport If true will force export no matter if resource is not used in map
 	 * @return List of files exported
 	 * @throws java.lang.Exception
 	 *             If anythings goes wrong when exporting this ressource
@@ -88,14 +88,6 @@ public abstract class UTPackageExtractor {
 	public abstract File getExporterPath();
 
 	public abstract String getName();
-
-	/**
-	 * Supported Unreal Engines for extractor e.g: ucc extractor only for
-	 * UE1/UE2 but umodel extractor for all Unreal Engines
-	 * 
-	 * @return
-	 */
-	public abstract UnrealEngine[] getSupportedEngines();
 
 	/**
 	 * Says if this extractor support linux.
@@ -108,9 +100,9 @@ public abstract class UTPackageExtractor {
 	 * Returns and start an instance of an extractor. This depends of unreal
 	 * engine version as well as game.
 	 * 
-	 * @param mapConverter
-	 * @param ressource
-	 * @return
+	 * @param mapConverter Map converter
+	 * @param ressource Unreal package resource
+	 * @return Package resources extractor for the resource
 	 */
 	public static UTPackageExtractor getExtractor(final MapConverter mapConverter, final UPackageRessource ressource) {
 
@@ -137,17 +129,21 @@ public abstract class UTPackageExtractor {
 			}
 		}
 		else {
-			return getUtPackageExtractor(mapConverter, UModelExporter.class);
+			if (mapConverter.getPreferedTextureExtractorClass() != null) {
+				return getUtPackageExtractor(mapConverter, mapConverter.getPreferedTextureExtractorClass());
+			} else {
+				return getUtPackageExtractor(mapConverter, UModelExporter.class);
+			}
 		}
 	}
 
 	/**
 	 * Automatically get package extractor if it does exists or auto create one
-	 * 
-	 * @param mapConverter
-	 * @param extractorClass
-	 * @return
-	 * @throws Exception
+	 * TODO factory
+	 *
+	 * @param mapConverter Map converter
+	 * @param extractorClass Extractor class
+	 * @return Return package extractor instance
 	 */
 	private static UTPackageExtractor getUtPackageExtractor(MapConverter mapConverter, Class<? extends UTPackageExtractor> extractorClass) {
 
@@ -164,7 +160,7 @@ public abstract class UTPackageExtractor {
 	 * Force ut package to be exported to this folder rather than the default
 	 * one /UT4Converter/<mapname>/Temp
 	 * 
-	 * @param forcedExportFolder
+	 * @param forcedExportFolder Force export to this folder rathen than default
 	 */
 	public void setForcedExportFolder(File forcedExportFolder) {
 		this.forcedExportFolder = forcedExportFolder;

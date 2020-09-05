@@ -16,7 +16,7 @@ import org.xtx.ut4converter.export.UTPackageExtractor;
  */
 public class T3DMoverSM extends T3DStaticMesh {
 
-	MoverProperties moverProperties;
+	private MoverProperties moverProperties;
 
 	public T3DMoverSM(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -26,9 +26,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 	@Override
 	public boolean analyseT3DData(String line) {
 
-		if (moverProperties.analyseT3DData(line)) {
-
-		} else {
+		if (!moverProperties.analyseT3DData(line)) {
 			return super.analyseT3DData(line);
 		}
 
@@ -47,8 +45,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		moverProperties.writeMoverProperties(sbf);
 		return sbf.toString();
@@ -61,8 +58,8 @@ public class T3DMoverSM extends T3DStaticMesh {
 			moverProperties.convert();
 		}
 
-		if (staticMesh != null && mapConverter.convertStaticMeshes()) {
-			staticMesh.export(UTPackageExtractor.getExtractor(mapConverter, staticMesh));
+		if (getStaticMesh() != null && mapConverter.convertStaticMeshes()) {
+			getStaticMesh().export(UTPackageExtractor.getExtractor(mapConverter, getStaticMesh()));
 		}
 		super.convert();
 	}

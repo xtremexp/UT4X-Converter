@@ -1,13 +1,11 @@
 package org.xtx.ut4converter;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.ui.ConversionViewController;
@@ -32,7 +30,7 @@ public class MainApp extends Application {
 	/**
 	 * Version of UT4 Converter
 	 */
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.0.1";
 
 	/**
 	 * Author
@@ -95,15 +93,12 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent t) {
-					try {
-						stop();
-					} catch (Exception e) {
-					}
-                    System.exit(0);
+			primaryStage.setOnCloseRequest(t -> {
+				try {
+					stop();
+				} catch (Exception e) {
 				}
+				System.exit(0);
 			});
 
 			MainSceneController controller = loader.getController();

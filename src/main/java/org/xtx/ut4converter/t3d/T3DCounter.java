@@ -12,8 +12,7 @@ public class T3DCounter extends T3DSound{
         registerSimpleProperty("NumToCount", Integer.class, 0);
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBCounter_C");
     }
 }

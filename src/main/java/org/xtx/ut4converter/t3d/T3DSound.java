@@ -28,21 +28,21 @@ public class T3DSound extends T3DActor {
 	/**
 	 * UE1, UE4
 	 */
-	UPackageRessource ambientSound;
+	private UPackageRessource ambientSound;
 
-	private String soundClass = "AmbientSound";
+	private static final String soundClass = "AmbientSound";
 
-	AttenuationSettings attenuation = new AttenuationSettings();
+	private AttenuationSettings attenuation = new AttenuationSettings();
 
 	/**
 	 * UE1/2: (default: 190 max 255) UE3: UE4:
 	 */
-	Double soundVolume;
+	private Double soundVolume;
 
 	/**
 	 * UE1/2: default 64 UE3: default 1 UE4: "Pitch Multiplier" default 1
 	 */
-	Double soundPitch;
+	private Double soundPitch;
 
 	/**
 	 * UE3/4
@@ -79,12 +79,8 @@ public class T3DSound extends T3DActor {
 	/**
 	 * UE4: TODO move out to ucore package ?
 	 */
-	class AttenuationSettings {
+	static class AttenuationSettings {
 
-		/**
-		 * UE3/UE4: default true
-		 */
-		Boolean bAttenuate;
 
 		/**
 		 * UE3/UE4: default true
@@ -189,8 +185,8 @@ public class T3DSound extends T3DActor {
 
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass T3d class
 	 */
 	public T3DSound(MapConverter mc, String t3dClass, T3DActor actor) {
 		super(mc, t3dClass, actor);
@@ -230,7 +226,7 @@ public class T3DSound extends T3DActor {
 		}
 
 		else if (line.startsWith("DistanceModel")) {
-			attenuation.distanceAlgorithm = DistanceAlgorithm.valueOf(line.split("\\=")[1]);
+			attenuation.distanceAlgorithm = DistanceAlgorithm.valueOf(line.split("=")[1]);
 		}
 
 		// UE3
@@ -276,7 +272,7 @@ public class T3DSound extends T3DActor {
 		// UE1/2: AmbientSound=Sound'AmbAncient.Looping.Stower51'
 		// UE3: Wave=SoundNodeWave'A_Ambient_Loops.Water.water_drain01'
 		else if (line.startsWith("AmbientSound=") || line.startsWith("Wave=")) {
-			ambientSound = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.SOUND);
+			ambientSound = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
 		} else {
 			return super.analyseT3DData(line);
 		}
@@ -372,10 +368,9 @@ public class T3DSound extends T3DActor {
 
 	/**
 	 *
-	 * @return
+	 * @return T3d value
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (ambientSound == null) {
 			return super.toString();

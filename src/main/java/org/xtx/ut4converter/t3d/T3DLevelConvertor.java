@@ -53,23 +53,17 @@ public class T3DLevelConvertor extends Task<Object> {
 	private BufferedWriter bwr;
 
 	/**
-	 * String cache for converted t3d actors. Converted actor is sent to the
-	 * writer.
-	 */
-	private StringBuilder sbf;
-
-	/**
 	 * Actors that were not converted.
 	 */
 	private SortedSet<String> unconvertedActors = new TreeSet<>();
 
-	LinkedList<T3DActor> convertedActors = new LinkedList<>();
+	private LinkedList<T3DActor> convertedActors = new LinkedList<>();
 
 	/**
 	 * Assault objectives. Declared here so we can set out the good "order"
 	 * prop. TODO move out to proper class
 	 */
-	SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
+	private SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
 
 	private boolean createNoteWhenUnconverted = true;
 
@@ -89,6 +83,13 @@ public class T3DLevelConvertor extends Task<Object> {
 	private Map<String, Set<String>> unconvertedProperties = new HashMap<>();
 
 	/**
+	 * If true means we don't analyze t3d lines of current actor being parsed
+	 */
+	boolean banalyseline = false;
+
+	private T3DActor uta = null;
+
+	/**
 	 * Set objective order from DefaultPriority UT99 prop from FortStandard
 	 * actors
 	 */
@@ -97,7 +98,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		int order = objectives.size() - 1;
 
 		for (T3DASObjective obj : objectives.values()) {
-			obj.order = order;
+			obj.setOrder(order);
 			order--;
 		}
 	}
@@ -146,6 +147,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	private void countTotalActors() throws Exception {
 
 		if (inT3dFile == null || !inT3dFile.exists()) {
+			assert inT3dFile != null;
 			throw new Exception("File " + inT3dFile.getAbsolutePath() + " does not exists!");
 		}
 
@@ -160,8 +162,8 @@ public class T3DLevelConvertor extends Task<Object> {
 					actorCount++;
 				}
 				// for ut3 triggering "End Object" thingy ...
-				else if (isEndActor(line)) {
-
+				else {
+					isEndActor(line);
 				}
 			}
 		} finally {
@@ -173,17 +175,19 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Converts t3d file for final game
 	 * 
-	 * @throws Exception
+	 * @throws Exception Exception thrown
 	 */
 	public void readConvertAndWrite() throws Exception {
 
 		if (inT3dFile == null || !inT3dFile.exists()) {
+			assert inT3dFile != null;
 			throw new Exception("File " + inT3dFile.getAbsolutePath() + " does not exists!");
 		}
 
 		try {
 			countTotalActors();
 		} catch (Exception e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
@@ -241,8 +245,8 @@ public class T3DLevelConvertor extends Task<Object> {
 	
 	/**
 	 * Find an actor by name
-	 * @param actorName
-	 * @return
+	 * @param actorName Actor name
+	 * @return Actor found if any
 	 */
 	public T3DActor findActorByName(String actorName) {
 		for (T3DActor uta : convertedActors) {
@@ -254,20 +258,10 @@ public class T3DLevelConvertor extends Task<Object> {
 		return null;
 	}
 
-	private T3DBrush findBrushByName(String actorname) {
-		for (T3DActor uta : convertedActors) {
-			if (uta != null && uta instanceof T3DBrush && uta.getName() != null && uta.getName().equals(actorname)) {
-				return (T3DBrush) uta;
-			}
-		}
-
-		return null;
-	}
-
 	/**
 	 * Write actors to .t3d file
 	 * 
-	 * @throws IOException
+	 * @throws IOException Exception thrown
 	 */
 	private void writeActors() throws IOException {
 		try {
@@ -299,7 +293,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					// write parent actor
 					// actor not valid for conversion should not be written as well!
 					if (actor.isValidWriting() && actor.isValidConverting()) {
-						buffer = actor.toString();
+						buffer = actor.toT3d();
 
 						if (buffer != null) {
 							bwr.write(buffer);
@@ -309,7 +303,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					// write replacement actors
 					for (T3DActor repActor : actor.children) {
 						if (repActor.isValidWriting()) {
-							bwr.write(repActor.toString());
+							bwr.write(repActor.toT3d());
 						}
 					}
 				} catch (Exception e) {
@@ -383,8 +377,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Read actor data from original t3d level file
 	 * 
-	 * @return
-	 * @throws IOException
+	 * @throws IOException Exception thrown
 	 */
 	private void readActors() throws IOException {
 
@@ -393,9 +386,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			bfr = new BufferedReader(new FileReader(inT3dFile));
 
 			String line;
-			/**
-			 * Current line of T3D File being analyzed
-			 */
+			// Current line of T3D File being analyzed
 			int linenumber = 1;
 
 			// Read input t3d file and convert actors
@@ -420,75 +411,21 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 	}
 
-	/**
-	 * If true means we don't analyze t3d lines of current actor being parsed
-	 */
-	boolean banalyseline = false;
-	String currentClass = "";
 
-	/**
-	 * Current actor class
-	 */
-	Class<? extends T3DActor> utActorClass = null;
-	T3DActor uta = null;
-
-	private final int LEVEL_OBJECT_LEVEL = 1;
-
-	/**
-	 * Begin Object Class=Level
-	 */
-	private int deepObjectLevel = LEVEL_OBJECT_LEVEL - 1;
 
 	/**
 	 * Says if current line is data for new actor
 	 * 
-	 * @param line
-	 * @return
+	 * @param line t3d data line
+	 * @return <code>true</code> if lines describe a new actor
 	 */
 	private boolean isBeginActor(String line) {
-
-		//if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-			return line.contains("Begin Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.startsWith("Begin Terrain "));
-		//}
-
-		/*
-		// Any actor/sub-class begins with "Begin Object"
-		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
-
-			if (mapConverter.getInMap().getName().endsWith(".t3d")) {
-				return line.contains("Begin Actor");
-			} else if (line.trim().startsWith("Begin Object")) {
-
-				deepObjectLevel++;
-				return (deepObjectLevel == (LEVEL_OBJECT_LEVEL + 1));
-			}
-		}
-
-		return false;
-		*/
+		return line.contains("Begin Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.startsWith("Begin Terrain "));
 	}
 
 	private boolean isEndActor(String line) {
-
 		// Terrain actor does not begins with "Begin Actor Class=Terrain"
-		//if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-			return line.contains("End Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.endsWith("End Terrain"));
-		//}
-
-		/*
-		// Any actor begin with "Begin Object"
-		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
-
-			if (mapConverter.getInMap().getName().endsWith(".t3d")) {
-				return line.contains("End Actor");
-			} else if (line.trim().startsWith("End Object")) {
-				deepObjectLevel--;
-				return (deepObjectLevel == LEVEL_OBJECT_LEVEL);
-			}
-		}
-
-		return false;
-		*/
+		return line.contains("End Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.endsWith("End Terrain"));
 	}
 
 	private int actorsReadCount;
@@ -498,18 +435,20 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * 
 	 * @param line
 	 *            current T3D line being read
-	 * @throws IOException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
+	 * @throws Exception Exception thrown
 	 */
 	private void analyzeLine(String line) throws Exception {
 
 		line = line.trim();
 
+		// Current actor class
+		Class<? extends T3DActor> utActorClass;
+
 		if (isBeginActor(line)) {
 			actorsReadCount++;
 
 			// UT3 terrain is not an actor
+			String currentClass;
 			if (line.startsWith("Begin Terrain ")) {
 				currentClass = "Terrain";
 			} else {
@@ -535,8 +474,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 					if (createNoteWhenUnconverted) {
 						banalyseline = true;
-						utActorClass = T3DNote.class;
-						uta = new T3DNote(mapConverter, "Unconverted: " + currentClass, true);
+						uta = new T3DNote(mapConverter, "Unconverted: " + currentClass);
 						uta.setT3dOriginClass(currentClass);
 						uta.analyseT3DData(line);
 						convertedActors.add(uta);
@@ -556,17 +494,14 @@ public class T3DLevelConvertor extends Task<Object> {
 			}
 			// Reset
 			banalyseline = false;
-			utActorClass = null;
 			uta = null;
 		}
 
 		// Actor data being analyzed
 		else {
-			if (banalyseline) {
-				if (uta != null) {
-					uta.preAnalyse(line);
-					uta.analyseT3DData(line);
-				}
+			if (banalyseline && uta != null) {
+				uta.preAnalyse(line);
+				uta.analyseT3DData(line);
 			}
 		}
 	}
@@ -590,7 +525,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Write header of T3D file TODO check for UE1/UE2
 	 * 
-	 * @throws IOException
+	 * @throws IOException Exception thrown
 	 */
 	private void writeHeader() throws IOException {
 
@@ -602,7 +537,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		// ...)
 		if (mapConverter.isFromUE1UE2ToUE3UE4() && !mapConverter.hasClassFilter()) {
 
-			Double offset = 200d;
+			double offset = 200d;
 			Vector3d boundBox = getLevelDimensions();
 
 			T3DBrush additiveBrush = T3DBrush.createBox(mapConverter, boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
@@ -612,17 +547,17 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			// no need accurate light map resolution on this brush since it will
 			// be never seen by player
-			for (T3DPolygon p : additiveBrush.polyList) {
-				p.lightMapScale = 2048d;
+			for (T3DPolygon p : additiveBrush.getPolyList()) {
+				p.setLightMapScale( 2048d);
 			}
 
-			bwr.write(additiveBrush.toString());
+			bwr.write(additiveBrush.toT3d());
 		}
 	}
 
 	/**
 	 * 
-	 * @return
+	 * @return Level dimensions
 	 */
 	private Vector3d getLevelDimensions() {
 
@@ -677,14 +612,14 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * Name=/Game/RestrictedAssets/Maps/WIP/DM-SolarTest // Begin Level
 	 * NAME=PersistentLevel TODO check for UE1/UE2
 	 * 
-	 * @throws IOException
+	 * @throws IOException Exception thrown
 	 */
 	private void writeFooter() throws IOException {
 
 		if (mapConverter.toUnrealEngine4()) {
 
 			Vector3d boundBox = getLevelDimensions();
-			Double offset = 100d;
+			double offset = 100d;
 
 			if (!mapConverter.hasClassFilter()) {
 				// Automatically add a lightMassVolume around the whole level
@@ -692,10 +627,8 @@ public class T3DLevelConvertor extends Task<Object> {
 				lightMassVolume.location = boundBoxLocalisation;
 				lightMassVolume.name = LIGHTMASS_IMP_VOL_NAME;
 				lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
-				bwr.write(lightMassVolume.toString());
+				bwr.write(lightMassVolume.toT3d());
 			}
-
-			offset = 150d;
 
 			// Automatically add a navigation volume
 			// FIXME UED4 editor crashes for unknown reason
@@ -727,7 +660,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 *
-	 * @param createNoteWhenUnconverted
+	 * @param createNoteWhenUnconverted If true will create not within converted map for unconverted actors
 	 */
 	public void setCreateNoteWhenUnconverted(boolean createNoteWhenUnconverted) {
 		this.createNoteWhenUnconverted = createNoteWhenUnconverted;
@@ -772,34 +705,6 @@ public class T3DLevelConvertor extends Task<Object> {
 		return unconvertedActors;
 	}
 
-	/**
-	 * Test map conversion
-	 */
-	public static void test() {
-
-		try {
-
-			File t3dFile = new File("Z:\\TEMP\\UT99Maps\\Test\\DM-UT99-MoverTest.t3d");
-			MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGames.UTGame.UT4, t3dFile, "Z:\\Temp");
-
-			// ((SupU1UT99ToUT4Classes)
-			// mc.getSupportedActorClasses()).setConvertOnly("AmbientSound",
-			// T3DSound.class);
-			mc.setScale(2.5d);
-			mc.convert();
-
-			System.out.println("Unconverted classes:");
-
-			for (String className : mc.getT3dLvlConvertor().unconvertedActors) {
-				System.out.println(className);
-			}
-		} catch (Exception ex) {
-			Logger.getLogger(T3DLevelConvertor.class.getName()).log(Level.SEVERE, null, ex);
-			System.exit(1);
-		}
-
-		System.exit(0);
-	}
 
 	@Override
 	protected Object call() throws Exception {
@@ -813,5 +718,9 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	public void setNoUi(boolean noUi) {
 		this.noUi = noUi;
+	}
+
+	public SortedMap<Integer, T3DASObjective> getObjectives() {
+		return objectives;
 	}
 }

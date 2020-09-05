@@ -54,8 +54,7 @@ public class T3DUE1Trigger extends T3DSound {
         return false;
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=UBTrigger_C \n");
 

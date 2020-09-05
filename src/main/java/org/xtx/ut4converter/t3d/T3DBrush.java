@@ -104,22 +104,22 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Used by Unreal Engine 1
 	 */
-	Vector3d tempScale;
+	private Vector3d tempScale;
 
 	/**
 	 * Pre-Pivot used for brushes Changed the relative origin of brush
 	 */
-	Vector3d prePivot;
+	private Vector3d prePivot;
 
 	/**
 	 * Polygons of the brush
 	 */
-	LinkedList<T3DPolygon> polyList = new LinkedList<>();
+	private LinkedList<T3DPolygon> polyList = new LinkedList<>();
 
 	/**
 	 * E.G: "Begin Brush Name=TestLev_S787"
 	 */
-	String modelName;
+	private String modelName;
 
 	/**
 	 * Damage par sec for pain causing volumes (lava, slime ...)
@@ -146,7 +146,7 @@ public class T3DBrush extends T3DVolume {
 	 * Used for cull distances volumes only
 	 *
 	 */
-	class CullDistance {
+	static class CullDistance {
 		private Double size;
 		private Double distance;
 
@@ -198,10 +198,6 @@ public class T3DBrush extends T3DVolume {
 	 */
 	boolean reverseVertexOrder = false;
 
-	/**
-	 * If true this brush might create bsp holes and should not be written
-	 */
-	boolean bspHoleCausing;
 
 	boolean isSheetFlatHorizontallyBrush;
 
@@ -211,7 +207,7 @@ public class T3DBrush extends T3DVolume {
 		// CsgOper=CSG_Subtract
 		// BrushType=Brush_Subtract
 		if (line.contains("CsgOper")) {
-			brushType = line.split("\\=")[1];
+			brushType = line.split("=")[1];
 		}
 
 		// MainScale=(Scale=(Y=-1.000000),SheerAxis=SHEER_ZX)
@@ -281,22 +277,22 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (line.contains("TextureU ")) {
-			polyList.getLast().texture_u = T3DUtils.getPolyVector3d(line, "TextureU");
+			polyList.getLast().setTexture_u(T3DUtils.getPolyVector3d(line, "TextureU"));
 		}
 
 		else if (line.contains("TextureV ")) {
-			polyList.getLast().texture_v = T3DUtils.getPolyVector3d(line, "TextureV");
+			polyList.getLast().setTexture_v(T3DUtils.getPolyVector3d(line, "TextureV"));
 		}
 
 		else if (line.contains("Vertex ")) {
 			Vector3d coordinates = T3DUtils.getPolyVector3d(line, "Vertex");
-			polyList.getLast().vertices.add(new Vertex(coordinates, polyList.getLast()));
+			polyList.getLast().vertices.add(new Vertex(coordinates));
 		}
 
 		// Pan U=381 V=-7
 		else if (line.contains(" Pan ")) {
-			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split("\\ ")[0]);
-			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split("\\ ")[0]);
+			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split(" ")[0]);
+			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split(" ")[0]);
 		}
 
 		// Hack, normally analysed in T3DActor but needed
@@ -323,11 +319,11 @@ public class T3DBrush extends T3DVolume {
 
 			CullDistance cullDistance = new CullDistance();
 			if (line.contains("Size=")) {
-				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split("\\,")[0]);
+				cullDistance.size = Double.valueOf(line.split("Size=")[1].split("\\)")[0].split(",")[0]);
 			}
 
 			if (line.contains("CullDistance=")) {
-				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split("\\,")[0]);
+				cullDistance.distance = Double.valueOf(line.split("CullDistance=")[1].split("\\)")[0].split(",")[0]);
 			}
 
 			cullDistances.add(cullDistance);
@@ -407,9 +403,6 @@ public class T3DBrush extends T3DVolume {
 
 		if (mapConverter.fromUE123ToUE4()) {
 
-			if ("BlockAll".equals(t3dClass)) {
-				valid = true;
-			}
 
 			// BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly
 			// coming from UE1/UE2 ...
@@ -417,14 +410,11 @@ public class T3DBrush extends T3DVolume {
 			// TODO add note? (some sheet brushes are movers ...)
 			// TODO replace sheetbrush with sheet staticmesh
 			// if 2 polygons and sheetbrush not a portal
-			if (isUnsupportedUE4Brush()) {
-
-				// only notify if this brush could not be replaced by another
-				// actor
-				if (children.isEmpty()) {
-					valid = false;
-					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
-				}
+			// only notify if this brush could not be replaced by another
+			// actor
+			if (isUnsupportedUE4Brush() && children.isEmpty()) {
+				valid = false;
+				logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
 			}
 		}
 
@@ -496,13 +486,11 @@ public class T3DBrush extends T3DVolume {
 				// vertex only linked with 2 or less other vertices
 				// might be candidate for bsp hole
 				// however need to do some extra checks
-				if (getPolyCountWithVertexCoordinate(v) < 3) {
+				if (getPolyCountWithVertexCoordinate(v) < 3 && !Geometry.vertexInOtherPoly(polyList, poly, v)) {
 
 					// if this vertex is belonging to edge
 					// of another polygon
-					if (!Geometry.vertexInOtherPoly(polyList, poly, v)) {
-						return true;
-					}
+					return true;
 				}
 			}
 		}
@@ -546,8 +534,7 @@ public class T3DBrush extends T3DVolume {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(brushClass.name()).append(" Name=").append(name).append("\n");
 
@@ -686,7 +673,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Force brush to be a box
 	 * 
-	 * @param size
+	 * @param size Size
 	 */
 	public void forceToBox(Double size) {
 		polyList.clear();
@@ -914,7 +901,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Sets polygons to this brush
 	 * 
-	 * @param polyList
+	 * @param polyList Polygon list
 	 */
 	public void setPolyList(LinkedList<T3DPolygon> polyList) {
 		this.polyList = polyList;

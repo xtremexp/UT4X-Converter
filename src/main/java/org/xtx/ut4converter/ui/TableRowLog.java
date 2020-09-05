@@ -54,7 +54,7 @@ public class TableRowLog {
 
 		this.time = new SimpleStringProperty(sdf.format(new Date(logRecord.getMillis())));
 	}
-	
+
 	public static String getMessageFormatted(LogRecord logRecord){
 		if(logRecord.getThrown() != null){
 			return MessageFormat.format(logRecord.getMessage(), logRecord.getParameters()) + " " + logRecord.getThrown().getMessage();

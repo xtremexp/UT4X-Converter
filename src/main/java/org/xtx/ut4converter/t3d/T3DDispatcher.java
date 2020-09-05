@@ -45,8 +45,7 @@ public class T3DDispatcher extends T3DActor {
         return true;
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=Dispatcher_C \n");
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");

@@ -193,8 +193,7 @@ public class SettingsSceneController implements Initializable {
 
 			for (UserGameConfig game : userConfig.getGame()) {
 
-				if (game.getPath() != null) {
-					if (null != game.getId())
+				if (game.getPath() != null && null != game.getId()) {
 						switch (game.getId()) {
 						case UT99:
 							ut99Path.setText(game.getPath().getAbsolutePath());

@@ -6,8 +6,6 @@
 package org.xtx.ut4converter.export;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -62,11 +60,6 @@ public class CopyExporter extends UTPackageExtractor {
 	@Override
 	public String getName() {
 		return "File Copier";
-	}
-
-	@Override
-	public UnrealEngine[] getSupportedEngines() {
-		return new UnrealEngine[] { UTGames.UnrealEngine.UE1, UTGames.UnrealEngine.UE2, UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4 };
 	}
 
 }

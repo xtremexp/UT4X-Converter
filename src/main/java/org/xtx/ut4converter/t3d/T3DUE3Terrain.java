@@ -334,9 +334,7 @@ public class T3DUE3Terrain extends T3DActor {
 			}
 
 		} else if ("TerrainInfoData".equals(isReading)) {
-			if (line.startsWith("Count")) {
-
-			} else {
+			if (!line.startsWith("Count")) {
 				//                   0	  0	  0	  0	  1	  1	  1	  1
 				final String[] vals = line.replaceAll(" ", "").split("\t");
 				for (final String val : vals) {
@@ -413,5 +411,10 @@ public class T3DUE3Terrain extends T3DActor {
 		} else {
 			return super.isValidConverting();
 		}
+	}
+
+	@Override
+	public String toT3d() {
+		return null;
 	}
 }

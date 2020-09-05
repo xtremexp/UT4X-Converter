@@ -15,13 +15,7 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DNote extends T3DActor {
 
-	String text;
-
-	/**
-	 * If true means this actor provides info about some unconverted actor so
-	 * logger should display actor info
-	 */
-	boolean isUnconvertedInfo;
+	private String text;
 
 	/**
 	 *
@@ -30,21 +24,19 @@ public class T3DNote extends T3DActor {
 	public T3DNote(MapConverter mc) {
 		super(mc, "Note");
 	}
-	
-	public T3DNote(MapConverter mc, String t3dClass) {
-		super(mc, t3dClass);
-	}
 
 	/**
 	 *
-	 * @param mc
-	 * @param text
-	 * @param isUnconvertedInfo
+	 * @param mc Map converter instance
+	 * @param text Text in note
 	 */
-	public T3DNote(MapConverter mc, String text, boolean isUnconvertedInfo) {
+	public T3DNote(MapConverter mc, String text) {
 		super(mc, "Note");
 		this.text = text;
-		this.isUnconvertedInfo = isUnconvertedInfo;
+		/**
+		 * If true means this actor provides info about some unconverted actor so
+		 * logger should display actor info
+		 */
 	}
 
 	@Override
@@ -59,20 +51,17 @@ public class T3DNote extends T3DActor {
 		return true;
 	}
 
+
 	public void setText(String text) {
 		this.text = text;
 	}
 
 	/**
 	 *
-	 * @return
+	 * @return T3d value
 	 */
 	@Override
-	public String toString() {
-
-		if (isUnconvertedInfo) {
-			//logger.warning("Unconverted " + name);
-		}
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");

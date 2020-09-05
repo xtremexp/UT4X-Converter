@@ -96,8 +96,7 @@ public class WeaponLocker extends T3DActor {
         super.convert();
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
 
         sbf.append(IDT).append("Begin Actor Class=BP_WeaponLocker_C Name=").append(name).append(" Archetype=BP_WeaponLocker_C'/Game/RestrictedAssets/Pickups/BP_WeaponLocker.Default__BP_WeaponLocker_C'\n");

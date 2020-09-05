@@ -20,8 +20,7 @@ public class SmokeGenerator extends Effects {
         this.t3dClass = "UBSmokeGenerator_C";
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
         return writeSimpleActor("UBSmokeGenerator_C");
     }
 }

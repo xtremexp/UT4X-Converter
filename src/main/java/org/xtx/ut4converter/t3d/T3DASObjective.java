@@ -17,79 +17,80 @@ import java.util.List;
 public class T3DASObjective extends T3DSound {
 
 	/**
+	 * Default pawn health. Used for objectives that can be damaged
+	 */
+	final double DEFAULT_PAWN_HEALTH = 100;
+
+	/**
+	 * Default message for objective completed in UT99
+	 */
+	final String DEFAULT_COMPLETED_OBJ_UT99 = "was destroyed!";
+
+	/**
 	 * If critical means this objective has to be completed to finish the map
 	 * else this is a secondary/optional objective
 	 */
-	boolean isCritical = true;
+	private boolean isCritical = true;
 
 	/**
 	 * Means this objective is completed by touching it UT99: Default is false
 	 * UT4 MOD: default is true
 	 */
-	boolean byTouch;
+	private boolean byTouch;
 
 	/**
 	 * Means this objective is completed by destroying it UT99: Default is true
 	 * UT4 MOD: default is false
 	 */
-	boolean byDamage = true;
+	private boolean byDamage = true;
 
 	/**
 	 * Objective health
 	 */
-	Double objectiveHealth = 100d;
+	private Double objectiveHealth = 100d;
 
 	/**
 	 * Objective description
 	 */
-	String objectiveDesc;
+	private String objectiveDesc;
 
 	/**
 	 * Message displayed to players once objective completed
 	 */
-	String completedText;
+	private String completedText;
 
 	/**
 	 * UT4 AS Mod - Objective order Linked with defense priority
 	 */
-	int order = 0;
+	private int order = 0;
 
 	/**
 	 * UT99 - The lower the value is the further the objective is (generally 0
 	 * means last objective)
 	 */
-	int defensePriority;
+	private int defensePriority;
 
 	/**
 	 * UT4 AS Mod - Objective text displayed in hud (i guess ...)
 	 */
-	String objectiveListText;
+	private String objectiveListText;
 
 	// properties not handled by UT4 mod yet
 
 	/**
 	 * UT99 - For each step triggers this event
 	 */
-	List<String> damageEvent;
+	private List<String> damageEvent;
 
 	/**
 	 * UT99 - For each damage level triggers events defined in "damageEvent"
 	 */
-	List<String> damageEventThreshold;
+	private List<String> damageEventThreshold;
 
-	/**
-	 * Tells whether this objective should 'flash' until completion
-	 */
-	boolean bFlashing;
 
-	/**
-	 * UT99 - End cam tag
-	 */
-	String endCamTag;
 
 	public T3DASObjective(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -138,21 +139,6 @@ public class T3DASObjective extends T3DSound {
 			byDamage = !byTouch;
 		}
 
-		// not handled yet by UT4 mod
-		else if (line.startsWith("bFlashing")) {
-			bFlashing = T3DUtils.getBoolean(line);
-		}
-
-		// not handled yet by UT4 mod
-		else if (line.startsWith("EndCamTag")) {
-			endCamTag = T3DUtils.getString(line);
-		}
-
-		// dunno how to handle that (means order = 10000 ?)
-		else if (line.startsWith("bFinalFort")) {
-
-		}
-
 		// Pawn Property - Default is 100 (UT99)
 		else if (line.startsWith("Health=")) {
 			objectiveHealth = T3DUtils.getDouble(line);
@@ -165,18 +151,9 @@ public class T3DASObjective extends T3DSound {
 		return true;
 	}
 
-	/**
-	 * Default pawn health. Used for objectives that can be damaged
-	 */
-	final double DEFAULT_PAWN_HEALTH = 100;
 
-	/**
-	 * Default message for objective completed in UT99
-	 */
-	final String DEFAULT_COMPLETED_OBJ_UT99 = "was destroyed!";
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=UTASObjective_C Name=").append(name).append("\n");
 		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
@@ -253,6 +230,7 @@ public class T3DASObjective extends T3DSound {
 		return sbf.toString();
 	}
 
+
 	@Override
 	public void convert() {
 
@@ -272,9 +250,12 @@ public class T3DASObjective extends T3DSound {
 		}
 
 		// TODO move out ('quick code')
-		mapConverter.getT3dLvlConvertor().objectives.put(Integer.valueOf(this.defensePriority), this);
+		mapConverter.getT3dLvlConvertor().getObjectives().put(this.defensePriority, this);
 
 		super.convert();
 	}
 
+	public void setOrder(int order) {
+		this.order = order;
+	}
 }

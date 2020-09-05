@@ -46,11 +46,6 @@ public class T3DLiftExit extends T3DSound {
 			liftTag = T3DUtils.getString(line);
 		}
 
-		// UT3: MyLiftCenter=LiftCenter'LiftCenter_5'
-		else if (line.contains("MyLiftCenter")) {
-			// liftTag = line.split("\\'")[1];
-			// UT4 does not have UTLift_Center actor
-		}
 
 		// UT2003/4
 		else if(line.startsWith("bLiftJumpExit")){
@@ -60,8 +55,6 @@ public class T3DLiftExit extends T3DSound {
 		// UT3
 		else if (line.contains("bExitOnly=")) {
 			bLiftExit = T3DUtils.getBoolean(line);
-		} else if (line.contains("LiftTag=")) {
-			liftTag = line.split("\\=")[1];
 		} else {
 			return super.analyseT3DData(line);
 		}
@@ -69,8 +62,7 @@ public class T3DLiftExit extends T3DSound {
 		return true;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 		sbf.append(IDT).append("Begin Actor Class=UTLiftExit Name=").append(name).append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Class=BillboardComponent Name=\"Icon\" Archetype=BillboardComponent'/Script/UnrealTournament.Default__UTLiftExit:Icon'\n");
@@ -116,18 +108,15 @@ public class T3DLiftExit extends T3DSound {
 		if (linkedTo == null || linkedTo.isEmpty()) {
 			T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
 
-			for (T3DActor actor : tlc.convertedActors) {
+			for (T3DActor actor : tlc.getConvertedActors()) {
 
 				// Note in previous UTs lifttag could be link to actor not
 				// necessarly movers (e.g: SpecialEvents)
-				if (actor instanceof T3DMover || actor instanceof T3DMoverSM) {
-
-					if (actor.tag != null && this.liftTag != null && this.liftTag.equals(actor.tag)) {
-						this.linkedTo.add(actor);
-						actor.linkedTo.add(this);
-						this.linkedLift = actor;
-						break;
-					}
+				if ((actor instanceof T3DMover || actor instanceof T3DMoverSM) && this.liftTag != null && this.liftTag.equals(actor.tag)) {
+					this.linkedTo.add(actor);
+					actor.linkedTo.add(this);
+					this.linkedLift = actor;
+					break;
 				}
 			}
 		}

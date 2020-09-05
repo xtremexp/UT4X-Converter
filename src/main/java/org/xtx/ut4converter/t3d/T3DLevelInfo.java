@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -22,31 +21,27 @@ public class T3DLevelInfo extends T3DActor {
 	/**
 	 * Creator of map
 	 */
-	String author;
+	private String author;
 
 	/**
 	 * Title of map
 	 */
-	String title;
+	private String title;
 
 	/**
 	 * UE1: "IdealPlayerCount="4 - 8 "" UE2: split prop with
 	 * "IdealPlayerCountMin" and "IdealPlayerCountMax" UE3: ?
 	 */
-	String idealPlayerCount;
+	private String idealPlayerCount;
 
-	/**
-	 * Default game mode. Overrides the one
-	 */
-	String defaultGameMode;
 
 	/**
 	 * UE1: "Song=Music'Foregone.Foregone'" UE2: "Song="KR-Chemical-Burn"" UE3:
 	 * ?
 	 */
-	UPackageRessource music;
+	private UPackageRessource music;
 
-	Double killZ;
+	private Double killZ;
 
 	public T3DLevelInfo(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -56,19 +51,19 @@ public class T3DLevelInfo extends T3DActor {
 	public boolean analyseT3DData(String line) {
 
 		if (line.startsWith("Author=")) {
-			author = line.split("\\=")[0];
+			author = T3DUtils.getString(line);
 		} else if (line.startsWith("Title=")) {
-			title = line.split("\\=")[0];
+			title = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("IdealPlayerCount=")) {
-			title = line.split("\\=")[0];
+			idealPlayerCount = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("Song=")) {
 
 			if (mapConverter.isFrom(UTGames.UnrealEngine.UE1)) {
-				music = mapConverter.getUPackageRessource(line.split("\\'")[1], T3DRessource.Type.MUSIC);
+				music = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.MUSIC);
 			} else if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
 				music = mapConverter.getUPackageRessource(line.split("\"")[1], T3DRessource.Type.MUSIC);
 			}
@@ -103,11 +98,7 @@ public class T3DLevelInfo extends T3DActor {
 			text += "IdealPlayerCount: " + idealPlayerCount;
 		}
 
-		if (UTGameTypes.isUt99Assault(mapConverter)) {
-			defaultGameMode = UTGameTypes.UT4_ASSAULT_CLASS;
-		}
-
-		note.text = text;
+		note.setText(text);
 
 		children.add(note);
 
@@ -126,7 +117,7 @@ public class T3DLevelInfo extends T3DActor {
 	}
 
 	@Override
-	public String toString() {
+	public String toT3d() {
 
 		/*
 		 * writeBeginActor();

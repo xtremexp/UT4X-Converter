@@ -21,7 +21,7 @@ public class T3DTeleporter extends T3DSound {
 	/**
 	 * Unreal 1 property refering to
 	 */
-	String url;
+	private String url;
 
 	public T3DTeleporter(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -40,8 +40,7 @@ public class T3DTeleporter extends T3DSound {
 		return true;
 	}
 
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		// only write if we have data about linked teleporter
 		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
@@ -92,7 +91,7 @@ public class T3DTeleporter extends T3DSound {
 		if (linkedTo == null || linkedTo.isEmpty()) {
 			T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
 
-			for (T3DActor actor : tlc.convertedActors) {
+			for (T3DActor actor : tlc.getConvertedActors()) {
 				if (actor instanceof T3DTeleporter) {
 
 					if (actor.tag != null && this.url != null && this.url.equals("\"" + actor.tag + "\"")) {

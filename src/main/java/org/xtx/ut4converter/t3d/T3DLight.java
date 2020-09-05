@@ -102,10 +102,6 @@ public class T3DLight extends T3DSound {
 	 */
 	private List<UPackageRessource> skins;
 
-	/**
-	 * For spot lights UE3 only default 0
-	 */
-	private Double innerConeAngle;
 
 	/**
 	 * UE1/2: LightCone - default 128 UE4: OuterConeAngle - default 44
@@ -186,8 +182,8 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter instance
+	 * @param t3dClass T3d class
 	 */
 	public T3DLight(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -247,15 +243,11 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("LightEffect")) {
-			lightEffect = UE12_LightEffect.valueOf(line.split("\\=")[1]);
+			lightEffect = UE12_LightEffect.valueOf(line.split("=")[1]);
 		}
 
 		else if (line.startsWith("LightType")) {
-			lightType = UE12_LightType.valueOf(line.split("\\=")[1]);
-		}
-
-		else if (line.startsWith("InnerConeAngle")) {
-			innerConeAngle = T3DUtils.getDouble(line);
+			lightType = UE12_LightType.valueOf(line.split("=")[1]);
 		}
 
 		else if (line.startsWith("LightCone") || line.startsWith("OuterConeAngle")) {
@@ -263,7 +255,7 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("bCorona=")) {
-			isCorona = "true".equals(line.split("\\=")[1].toLowerCase());
+			isCorona = "true".equals(line.split("=")[1].toLowerCase());
 		}
 
 		// UT3
@@ -305,7 +297,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Tell if this light is spotlight or not
 	 * 
-	 * @return
+	 * @return <code>true</code> if light is a spot light
 	 */
 	private boolean isSpotLight() {
 		return t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_Spotlight || lightEffect == UE12_LightEffect.LE_StaticSpot
@@ -315,7 +307,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Tells if current light is sunlight if true
 	 * 
-	 * @return
+	 * @return <code>true</code> if light is a sun light
 	 */
 	private boolean isSunLight() {
 		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equals(UE12_LightActors.Sunlight.name());
@@ -326,8 +318,7 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Converts mobility class
 	 */
 	private void convertClassAndMobility() {
 
@@ -364,7 +355,7 @@ public class T3DLight extends T3DSound {
 
 
 		// disabled for the moment for perf issues
-		/**
+		/*
          * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
          * UE12_LightEffect.LE_StaticSpot || lightEffect ==
          * UE12_LightEffect.LE_Unused || lightEffect ==
@@ -413,18 +404,12 @@ public class T3DLight extends T3DSound {
         }
 	}
 
-	/**
-	 * Default light source lenght for converted UE1/2 light with cylinder light
-	 * effect
-	 */
-	final int lightEffectCylinderSourceLength = 100;
 
 	/**
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (mapConverter.toUnrealEngine4()) {
 			String componentLightClass;
@@ -469,7 +454,7 @@ public class T3DLight extends T3DSound {
 			if (isSpotLight()) {
 				// 128 is default angle for UE1/2 (in 0 -> 255 range) = 90 in (0
 				// -> 180° range)
-				Double angle = outerConeAngle != null ? outerConeAngle : 90d;
+				double angle = outerConeAngle != null ? outerConeAngle : 90d;
 				sbf.append(IDT).append("\t\tInnerConeAngle=").append((angle / 2)).append("\n");
 				sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
 			}
@@ -570,8 +555,7 @@ public class T3DLight extends T3DSound {
 
 		// UE4 does not care about negative scale for lights
 		// so need to change rotation (for directional lights)
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
-			if (scale3d != null) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && scale3d != null) {
 
 				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
 					rotation = new Vector3d();
@@ -597,7 +581,6 @@ public class T3DLight extends T3DSound {
 					rotation.y += DEFAULT_PI_UE_HALF;
 					scale3d.z = Math.abs(scale3d.z);
 				}
-			}
 		}
 
 		convertClassAndMobility();
@@ -627,10 +610,6 @@ public class T3DLight extends T3DSound {
 
 		attenuationRadius *= newScale;
 		radius *= newScale;
-
-		if (intensity != null) {
-			// intensity *= newScale;
-		}
 
 		super.scale(newScale);
 	}

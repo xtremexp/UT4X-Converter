@@ -13,7 +13,7 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DPickup extends T3DSound {
 
-	String convertedPickupClass;
+	private String convertedPickupClass;
 
 	/**
 	 *
@@ -28,8 +28,7 @@ public class T3DPickup extends T3DSound {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		if (convertedPickupClass == null) {
 			return "";
@@ -83,7 +82,7 @@ public class T3DPickup extends T3DSound {
 
 		if (t3dClass != null) {
 
-			match = mapConverter.getMatchFor(t3dClass, false, properties);
+			match = mapConverter.getMatchFor(t3dClass, properties);
 
 			if (match != null) {
 				convertedPickupClass = match.actorClass.get(0);

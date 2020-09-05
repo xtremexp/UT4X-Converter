@@ -41,7 +41,7 @@ public class TerrainDecoLayer extends T3DObject {
 		}
 	}
 
-	class StaticMeshComponentFactory {
+	static class StaticMeshComponentFactory {
 
 		UPackageRessource staticmesh;
 		List<UPackageRessource> materials;

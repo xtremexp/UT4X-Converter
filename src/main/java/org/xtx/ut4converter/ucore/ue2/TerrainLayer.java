@@ -44,7 +44,7 @@ public class TerrainLayer implements T3D {
 		TEXMAPAXIS_XY, TEXMAPAXIS_XZ, TEXMAPAXIS_YZ,
 	}
 
-	UPackageRessource alphaMapTexture;
+	private UPackageRessource alphaMapTexture;
 
 	/**
 	 * List of alpha map values if alphaMapTexture set and values read from
@@ -53,18 +53,18 @@ public class TerrainLayer implements T3D {
 	 */
 	private List<Integer> alphaMap = new LinkedList<>();
 
-	UPackageRessource texture;
+	private UPackageRessource texture;
 
 	/**
 	 * Default texture axis
 	 */
 	private TextureMapAxis textureMapAxis = TextureMapAxis.TEXMAPAXIS_XY;
 
-	Float textureRotation;
-	Float uPan, vPan;
-	Float uScale, vScale;
+	private Float textureRotation;
+	private Float uPan, vPan;
+	private Float uScale, vScale;
 
-	MapConverter mapConverter;
+	private MapConverter mapConverter;
 
 	public TerrainLayer(MapConverter mapConverter) {
 		this.mapConverter = mapConverter;
@@ -103,19 +103,19 @@ public class TerrainLayer implements T3D {
 	public boolean analyseT3DData(String line) {
 		// all data in same line
 		if (line.contains("AlphaMap=")) {
-			alphaMapTexture = mapConverter.getUPackageRessource(line.split("AlphaMap=")[1].split("\\'")[1], T3DRessource.Type.TEXTURE);
+			alphaMapTexture = mapConverter.getUPackageRessource(line.split("AlphaMap=")[1].split("'")[1], T3DRessource.Type.TEXTURE);
 		}
 
 		if (line.contains("TextureMapAxis=")) {
-			textureMapAxis = TextureMapAxis.valueOf(line.split("TextureMapAxis=")[1].split("\\,")[0]);
+			textureMapAxis = TextureMapAxis.valueOf(line.split("TextureMapAxis=")[1].split(",")[0]);
 		}
 
 		if (line.contains("Texture=")) {
-			texture = mapConverter.getUPackageRessource(line.split("Texture=")[1].split("\\'")[1], T3DRessource.Type.TEXTURE);
+			texture = mapConverter.getUPackageRessource(line.split("Texture=")[1].split("'")[1], T3DRessource.Type.TEXTURE);
 		}
 
 		if (line.contains("UScale")) {
-			uScale = Float.valueOf(line.split("UScale=")[1].split("\\,")[0]);
+			uScale = Float.valueOf(line.split("UScale=")[1].split(",")[0]);
 		}
 
 		if (line.contains("VScale")) {
@@ -123,15 +123,15 @@ public class TerrainLayer implements T3D {
 		}
 
 		if (line.contains("UPan")) {
-			uPan = Float.valueOf(line.split("UPan=")[1].split("\\,")[0]);
+			uPan = Float.valueOf(line.split("UPan=")[1].split(",")[0]);
 		}
 
 		if (line.contains("VPan")) {
-			vPan = Float.valueOf(line.split("VPan=")[1].split("\\,")[0]);
+			vPan = Float.valueOf(line.split("VPan=")[1].split(",")[0]);
 		}
 
 		if (line.contains("TextureRotation")) {
-			textureRotation = Float.valueOf(line.split("TextureRotation=")[1].split("\\,")[0]);
+			textureRotation = Float.valueOf(line.split("TextureRotation=")[1].split(",")[0]);
 		}
 
 		return true;

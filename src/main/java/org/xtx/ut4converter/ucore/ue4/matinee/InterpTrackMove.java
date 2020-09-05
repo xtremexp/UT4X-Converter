@@ -25,7 +25,7 @@ public class InterpTrackMove extends InterpTrack {
 		 * LookAtGroupName
 		 */
 		IMR_LookAtGroup,
-		/**
+		/*
 		 * Should look along the direction of the translation path, with Z
 		 * always up.
 		 */
@@ -40,35 +40,35 @@ public class InterpTrackMove extends InterpTrack {
 		ETAC_GoreEnabled, ETAC_GoreDisabled, ETAC_Always
 	}
 
-	ActiveCondition activeCondition = ActiveCondition.ETAC_Always;
+	private ActiveCondition activeCondition = ActiveCondition.ETAC_Always;
 
-	RotMode rotMode = RotMode.IMR_Keyframed;
+	private RotMode rotMode = RotMode.IMR_Keyframed;
 
 	/**
 	 * Default null
 	 */
-	String lookAtGroupName;
+	private String lookAtGroupName;
 
 	/**
 	 * Default 0
 	 */
-	Double linCurveTension, angCurveTension;
+	private Double linCurveTension, angCurveTension;
 
 	/**
 	 * Default false
 	 */
-	Boolean bUseQuatInterpolation, bShowArrowAtKeys, bDisableMovement, bShowRotationOnCurveEd, bHide3DTrack;
+	private Boolean bUseQuatInterpolation, bShowArrowAtKeys, bDisableMovement, bShowRotationOnCurveEd, bHide3DTrack;
 
 	/**
 	 * Default true
 	 */
-	Boolean bShowTranslationOnCurveEd = Boolean.TRUE;
+	private Boolean bShowTranslationOnCurveEd = Boolean.TRUE;
 
-	InterpCurve posTrack;
+	private InterpCurve posTrack;
 
-	InterpCurve eulerTrack;
+	private InterpCurve eulerTrack;
 
-	InterpCurve lookupTrack;
+	private InterpCurve lookupTrack;
 
 	@Override
 	public void convert() {
@@ -120,14 +120,5 @@ public class InterpTrackMove extends InterpTrack {
 		this.posTrack = posTrack;
 	}
 
-	public void setEulerTrack(InterpCurve eulerTrack) {
-		this.eulerTrack = eulerTrack;
-	}
 
-	public void setLookupTrack(InterpCurve lookupTrack) {
-		this.lookupTrack = lookupTrack;
-	}
-	
-	
-	
 }

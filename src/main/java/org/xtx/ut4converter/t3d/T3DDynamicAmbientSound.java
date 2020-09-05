@@ -47,8 +47,7 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
         super.convert();
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=UBDynamicAmbientSound_C  \n");
 

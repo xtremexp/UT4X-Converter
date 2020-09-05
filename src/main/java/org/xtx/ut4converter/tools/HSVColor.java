@@ -18,17 +18,10 @@ public class HSVColor {
 	public float H, S, V, A = 1.f;
 
 	/**
-    *
-    */
-	public HSVColor() {
-
-	}
-
-	/**
 	 *
-	 * @param H
-	 * @param S
-	 * @param V
+	 * @param H Hue
+	 * @param S Saturation
+	 * @param V Brightness
 	 */
 	public HSVColor(float H, float S, float V) {
 		this.H = H;
@@ -39,7 +32,7 @@ public class HSVColor {
 	/**
 	 * Converts to RGB color
 	 * 
-	 * @return
+	 * @return RGB color
 	 */
 	public RGBColor toRGBColor(boolean zeroOneScale) {
 		return ImageUtils.HSVToLinearRGB(this, zeroOneScale);

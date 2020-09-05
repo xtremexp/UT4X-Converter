@@ -6,12 +6,10 @@
 package org.xtx.ut4converter.tools;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.t3d.T3DStaticMesh;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
@@ -44,10 +42,10 @@ public class T3DStaticMeshFileLoader {
 		T3D // Unreal Engine 2 internal format (this one)
 	}
 
-	File t3dStaticMeshFile;
-	MapConverter mapConverter;
-	T3DBrush brush;
-	ExportFormat exportFormat;
+	private File t3dStaticMeshFile;
+	private MapConverter mapConverter;
+	private T3DBrush brush;
+	private ExportFormat exportFormat;
 
 	/**
 	 *
@@ -70,28 +68,6 @@ public class T3DStaticMeshFileLoader {
 		}
 
 		loadBrush();
-	}
-
-	/**
-	 * Converts .t3d staticmesh file into a t3d brush then convert it into a
-	 * .fbx file that can be imported into unreal editor 4
-	 * 
-	 * @return
-	 * @throws IOException
-	 */
-	public T3DStaticMesh convertToStaticMesh() throws IOException {
-
-		// TODO brush to .fbx converter
-		if (exportFormat == ExportFormat.FBX) {
-
-		}
-
-		// TODO put "refactored" ut3 converter code here
-		else if (exportFormat == ExportFormat.ASE) {
-
-		}
-
-		return null;
 	}
 
 	/**
@@ -143,16 +119,16 @@ public class T3DStaticMeshFileLoader {
 				// "Vertex 0 -2.313340 -48.702381 16.483009 -0.004290 0.000590"
 				else if (line.startsWith("Vertex")) {
 
-					String[] s = line.split("\\ ");
+					String[] s = line.split(" ");
 
 					Double x = Double.valueOf(s[2]);
 					Double y = Double.valueOf(s[3]);
 					Double z = Double.valueOf(s[4]);
 
-					Float u = Float.valueOf(s[5]);
-					Float v = Float.valueOf(s[6]);
+					float u = Float.parseFloat(s[5]);
+					float v = Float.parseFloat(s[6]);
 
-					Vertex vertex = new Vertex(x, y, z, u, v, p);
+					Vertex vertex = new Vertex(x, y, z, u, v);
 
 					if (p != null) {
 						// Temp texU/texV until figuring out the formula
@@ -175,7 +151,7 @@ public class T3DStaticMeshFileLoader {
 
 				else if (line.startsWith("Begin StaticMesh")) {
 
-					String name = line.split("\\=")[1];
+					String name = line.split("=")[1];
 					brush.setName(name + "_SMBrush");
 				}
 			}
@@ -184,19 +160,5 @@ public class T3DStaticMeshFileLoader {
 		brush.setPolyList(polygons);
 	}
 
-	public static void test() {
-
-		File f = new File("Y:\\UT4Converter\\Converted\\DM-Phobos2\\StaticMesh\\epic_phobos_Meshes_phobosradar.t3d");
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT2003, UTGames.UTGame.UT4, new File("fakemap.t3d"), null);
-
-		try {
-			T3DStaticMeshFileLoader smLoader = new T3DStaticMeshFileLoader(mc, f);
-			System.out.println(smLoader.brush.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		System.exit(0);
-	}
 
 }

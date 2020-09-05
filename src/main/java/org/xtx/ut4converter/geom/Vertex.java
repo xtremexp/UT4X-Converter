@@ -5,7 +5,6 @@
  */
 package org.xtx.ut4converter.geom;
 
-import org.xtx.ut4converter.t3d.T3DPolygon;
 
 import javax.vecmath.Vector3d;
 
@@ -18,84 +17,40 @@ public class Vertex {
 	/**
      * 
      */
-	Vector3d coordinates;
+	private Vector3d coordinates;
 
 	/**
 	 * Texture U
 	 */
-	float u;
+	private float u;
 
 	/**
 	 * Texture v
 	 */
-	float v;
-
-	/**
-	 * Vertex index in polygon this point belongs to
-	 */
-	Integer vertexPolyIdx;
-
-	/**
-	 * Reference to the polygon this vertex belongs too Can be null
-	 */
-	T3DPolygon polygon;
+	private float v;
 
 	/**
 	 * 
 	 * @param coordinates
 	 *            Vector coordinates
-	 * @param polygon
-	 *            Polygon this vertex belongs too
 	 */
-	public Vertex(Vector3d coordinates, T3DPolygon polygon) {
-
+	public Vertex(Vector3d coordinates) {
 		this.coordinates = coordinates;
-		this.polygon = polygon;
-
-		calcPolyIdx();
 	}
+
 
 	/**
 	 * 
-	 * @param x
-	 *            X coordinate
-	 * @param y
-	 *            Y coordinate
-	 * @param z
-	 *            Z coordinate
-	 * @param polygon
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param u U tex align
+	 * @param v V tex align
 	 */
-	public Vertex(Double x, Double y, Double z, T3DPolygon polygon) {
-		this.coordinates = new Vector3d(x, y, z);
-	}
-
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param u
-	 * @param v
-	 * @param polygon
-	 */
-	public Vertex(Double x, Double y, Double z, float u, float v, T3DPolygon polygon) {
+	public Vertex(Double x, Double y, Double z, float u, float v) {
 		this.coordinates = new Vector3d(x, y, z);
 		this.u = u;
 		this.v = v;
-	}
-
-	private void calcPolyIdx() {
-
-		if (vertexPolyIdx != null) {
-			return;
-		}
-
-		// TODO
-	}
-
-	public void setPolygon(T3DPolygon polygon) {
-		this.polygon = polygon;
-		calcPolyIdx();
 	}
 
 	public Double getX() {
@@ -130,13 +85,6 @@ public class Vertex {
 		this.v = v;
 	}
 
-	public Integer getVertexPolyIdx() {
-		return vertexPolyIdx;
-	}
-
-	public void setVertexPolyIdx(Integer vertexPolyIdx) {
-		this.vertexPolyIdx = vertexPolyIdx;
-	}
 
 	/**
 	 * Scales this vertex

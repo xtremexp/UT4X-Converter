@@ -7,7 +7,6 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.HSVColor;
-import org.xtx.ut4converter.tools.RGBColor;
 
 /**
  *
@@ -20,54 +19,18 @@ public class T3DPostProcessVolume extends T3DBrush {
 	 */
 	final String DEFAULT_AMBIENT_CUBEMAP = "TextureCube'/Game/RestrictedAssets/Environments/Liandri/Materials/LightFunctions/Cubemap_DappledLight01.Cubemap_DappledLight01'";
 
-	final String ZONE_INFO_CLASS = "ZoneInfo";
 
 	/**
 	 * If true will apply post process effects to whole level
 	 */
-	Boolean bUnbound = Boolean.FALSE;
-	Film film;
-	DepthOfField dof;
-	AutoExposure autoExposure;
+	private Boolean bUnbound = Boolean.FALSE;
+
 	/**
 	 * Color in post process volume
 	 */
-	HSVColor ambientCubemapTint;
-	String ambientCubemap;
+	private HSVColor ambientCubemapTint;
+	private String ambientCubemap;
 
-	class Film {
-
-		RGBColor tint;
-		Double saturation;
-		Double contrast;
-		RGBColor tintShadow;
-		Double tintShadowBlind;
-		Double tintShadowAmount;
-		Double crushShadows;
-
-	}
-
-	class DepthOfField {
-		DOFMethod method;
-		Double focalDistance;
-		Double focalRegion;
-		Double nearTransitionRegion;
-		Double farTransitionRegion;
-		Double scale;
-		Double maxBokehZise;
-		Double nearBlurSize;
-		Double farBlurSize;
-	}
-
-	class AutoExposure {
-		Float minBrightness;
-		Float maxBrightness;
-		Float exposureBias;
-	}
-
-	enum DOFMethod {
-		Gaussian, BokedDOH
-	}
 
 
 	public T3DPostProcessVolume(MapConverter mapConverter, T3DZoneInfo zoneInfo) {
@@ -77,26 +40,20 @@ public class T3DPostProcessVolume extends T3DBrush {
 		forceToBox(400d);
 
 		ambientCubemap = DEFAULT_AMBIENT_CUBEMAP;
-		if (zoneInfo.distanceFogColor != null) {
-			film.tint = zoneInfo.distanceFogColor;
-		}
 
-		if (zoneInfo.ambientColor != null && zoneInfo.ambientColor.V > 0) {
+
+		if (zoneInfo.getAmbientColor() != null && zoneInfo.getAmbientColor().V > 0) {
 			
 			// saturation 'reversed' in UE1/UE2
-			zoneInfo.ambientColor.S = Math.abs(zoneInfo.ambientColor.S - 255);
-			zoneInfo.ambientColor.V += 16;
+			zoneInfo.getAmbientColor().S = Math.abs(zoneInfo.getAmbientColor().S - 255);
+			zoneInfo.getAmbientColor().V += 16;
 			
-			ambientCubemapTint = zoneInfo.ambientColor;
-			autoExposure.minBrightness = zoneInfo.ambientColor.V / 255;
+			ambientCubemapTint = zoneInfo.getAmbientColor();
 		}
 	}
 
 	private void initialise() {
 		brushClass = BrushClass.PostProcessVolume;
-		film = new Film();
-		dof = new DepthOfField();
-		autoExposure = new AutoExposure();
 	}
 
 	public void writeProps() {

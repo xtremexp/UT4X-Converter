@@ -8,7 +8,6 @@ package org.xtx.ut4converter.export;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -35,6 +34,10 @@ import java.util.logging.Level;
 public class UModelExporter extends UTPackageExtractor {
 
 	public static final String program = "umodel.exe";
+	/**
+	 * Caches temporary folder path length for perf fix issue
+	 */
+	int tempFolderPathLength;
 
 	public UModelExporter(MapConverter mapConverter) {
 		super(mapConverter);
@@ -42,9 +45,9 @@ public class UModelExporter extends UTPackageExtractor {
 	
 	/**
 	 * Builds the /conf/
-	 * @return
-	 * @throws IOException 
-	 * @throws InterruptedException 
+	 *
+	 * @throws IOException Exception thrown
+	 * @throws InterruptedException Exception thrown
 	 */
 	public void buildUT99TexToPackageFile() throws InterruptedException, IOException{
 		
@@ -56,9 +59,11 @@ public class UModelExporter extends UTPackageExtractor {
 			
 			if(ut99GameConfig != null){
 				final File texFolder = UTGames.getTexturesFolder(ut99GameConfig.getPath(), UTGame.UT99);
+				assert texFolder != null;
 				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, texFolder));
 				
 				final File sysFolder = UTGames.getSystemFolder(ut99GameConfig.getPath(), UTGame.UT99);
+				assert sysFolder != null;
 				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, sysFolder));
 				
 				// copy paste result of this in the .txt file
@@ -73,7 +78,7 @@ public class UModelExporter extends UTPackageExtractor {
 		
 		Map<String, String> texToPac = new HashMap<>();
 		
-		for(final File texFile : texFolder.listFiles()){
+		for(final File texFile : Objects.requireNonNull(texFolder.listFiles())){
 			if(texFile.isFile() && (texFile.getName().endsWith(".utx") || texFile.getName().endsWith(".u"))){
 				String command = "\"" + getExporterPath() + "\" -export -sounds -groups \"" + texFile.getAbsolutePath() + "\"";
 				command += " -out=\"D:\\TEMP\"";
@@ -131,6 +136,12 @@ public class UModelExporter extends UTPackageExtractor {
 		
 		ressource.getUnrealPackage().setExported(true);
 
+
+		// FIXES SLOWLYNESS
+		// have to cache this since this lasts for 40ms which cause slowlyness if 100 ressources to analyse ...
+		// for some unknow reason this operation is quite slow ...
+		tempFolderPathLength = mapConverter.getTempExportFolder().getAbsolutePath().length();
+
 		for (String logLine : logLines) {
 
 			logger.log(Level.FINE, logLine);
@@ -166,7 +177,7 @@ public class UModelExporter extends UTPackageExtractor {
 		// Z:\\TEMP\\umodel_win32/UmodelExport/2k4Trophies/AllTrophies
 
 		String[] split = logLine.split(" to ");
-		String[] split2 = split[0].split("\\ "); // Exporting Texture bdr02BA
+		String[] split2 = split[0].split(" "); // Exporting Texture bdr02BA
 
 		// for resources that have been exported by umodel
 		// with package != original package (staticmesh package -> texture (in
@@ -181,10 +192,10 @@ public class UModelExporter extends UTPackageExtractor {
 		// Z:\\TEMP\\umodel_win32\\UmodelExport/ASC_Arch2/SM/Mesh/trophy1
 		String exportFolder = split[1].substring(0, split[1].lastIndexOf("/"));
 
-		String packageName = split[1].substring(mapConverter.getTempExportFolder().getAbsolutePath().length() + 1).split("/")[0];
+		String packageName = split[1].substring(tempFolderPathLength + 1).split("/")[0];
 
 		String group = null;
-		int startIdxGroup = exportFolder.indexOf(packageName, mapConverter.getTempExportFolder().getAbsolutePath().length()) + packageName.length() + 1;
+		int startIdxGroup = exportFolder.indexOf(packageName, tempFolderPathLength) + packageName.length() + 1;
 
 		// Some ressources does not have group info
 		if (startIdxGroup < exportFolder.length()) {
@@ -195,7 +206,7 @@ public class UModelExporter extends UTPackageExtractor {
 			group = exportFolder.substring(startIdxGroup);
 
 			// BSP/Materials -> BSP.Materials
-			group = group.replaceAll("\\/", ".");
+			group = group.replaceAll("/", ".");
 		}
 
 		// StaticMesh3
@@ -221,7 +232,7 @@ public class UModelExporter extends UTPackageExtractor {
 		// sometimes umodel exports other files from other package (e.g:
 		// HumanoidArchitecture.utx from ut2004)
 		// "Exporting Texture detail40 to C:/Users/XXX/workspace/UT4 Converter/Converted/DM-Rankin/Temp/UCGeneric/DetailTextures"
-		if (!packageName.toLowerCase().equals(unrealPackage.getName().toLowerCase())) {
+		if (!packageName.equalsIgnoreCase(unrealPackage.getName())) {
 			unrealPackage = mapConverter.findPackageByName(packageName);
 
 			if (unrealPackage == null) {
@@ -235,10 +246,9 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 		}
 		
-		/**
-		 * If package = map then force resource as being used in map
-		 */
-		if(packageName.toLowerCase().equals(this.mapConverter.getMapPackageName().toLowerCase())){
+
+		// If package = map then force resource as being used in map
+		if (packageName.equalsIgnoreCase(this.mapConverter.getMapPackageName())) {
 			forceIsUsedInMap = true;
 		}
 
@@ -361,7 +371,7 @@ public class UModelExporter extends UTPackageExtractor {
 	private MaterialInfo getMatInfo(UPackageRessource parentRessource, File matFile) {
 
 		MaterialInfo mi = new MaterialInfo();
-		/**
+		/*
 		 * Diffuse=T_HU_Deco_SM_Machinery04Alt_D
 		 * Normal=T_HU_Deco_SM_Machinery04Alt_N
 		 * Specular=T_HU_Deco_SM_Machinery04Alt_S
@@ -370,11 +380,11 @@ public class UModelExporter extends UTPackageExtractor {
 
 		try (FileReader fr = new FileReader(matFile); BufferedReader bfr = new BufferedReader(fr)) {
 
-			String line = null;
+			String line;
 
 			while ((line = bfr.readLine()) != null) {
 
-				String[] spl = line.split("\\=");
+				String[] spl = line.split("=");
 
 				// Diffuse
 				String type = spl[0];
@@ -453,11 +463,6 @@ public class UModelExporter extends UTPackageExtractor {
 		return "umodel";
 	}
 
-	@Override
-	public UnrealEngine[] getSupportedEngines() {
-		return new UnrealEngine[] { UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3, UnrealEngine.UE4 };
-	}
-	
 	public static void main(final String[] args){
 		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
 		mc.setConvertTextures(true);

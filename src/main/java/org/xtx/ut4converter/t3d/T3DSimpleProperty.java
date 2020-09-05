@@ -35,8 +35,6 @@ public class T3DSimpleProperty {
      */
     private boolean scalable;
 
-    private Object defaultValue;
-
     private Object propertyValue;
 
     private final boolean isList;
@@ -48,29 +46,27 @@ public class T3DSimpleProperty {
 
     /**
      * Register simple property from single float, string, ...
-     * @param propertyName
-     * @param propertyClass
-     * @param defaultValue
+     * @param propertyName Property name
+     * @param propertyClass Property class
+     * @param defaultValue Default value
      */
     public T3DSimpleProperty(final String propertyName, final Object propertyClass, final Object defaultValue, boolean isList) {
         this.propertyName = propertyName;
         this.propertyNameConverted = this.propertyName;
         this.propertyClass = propertyClass;
-        this.defaultValue = defaultValue;
         this.isList = isList;
     }
 
     /**
      * Register simple property ressource
-     * @param propertyName
-     * @param ressourceType
+     * @param propertyName Property name
+     * @param ressourceType Ressource type
      */
     public T3DSimpleProperty(final String propertyName, final T3DRessource.Type ressourceType, boolean isList) {
         this.propertyName = propertyName;
         this.propertyNameConverted = this.propertyName;
         this.propertyClass = UPackageRessource.class;
         this.ressourceType = ressourceType;
-        this.defaultValue = null;
         this.isList = isList;
     }
 
@@ -81,7 +77,7 @@ public class T3DSimpleProperty {
             return false;
         }
 
-        boolean hasLineProp = false;
+        boolean hasLineProp;
 
         if(this.isList){
             if(this.propertyValue == null) {
@@ -190,14 +186,6 @@ public class T3DSimpleProperty {
 
     public T3DRessource.Type getRessourceType() {
         return ressourceType;
-    }
-
-    public Object getPropertyClass() {
-        return propertyClass;
-    }
-
-    public void setPropertyNameConverted(String propertyNameConverted) {
-        this.propertyNameConverted = propertyNameConverted;
     }
 
     public void clonePropertyAs(String clonePropertyName) {

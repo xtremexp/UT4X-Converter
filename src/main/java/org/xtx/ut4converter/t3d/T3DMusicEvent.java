@@ -56,8 +56,7 @@ public class T3DMusicEvent extends T3DActor {
         super.convert();
     }
 
-    @Override
-    public String toString() {
+    public String toT3d() {
 
         sbf.append(IDT).append("Begin Actor Class=MusicEvent_C \n");
 

@@ -42,8 +42,7 @@ public class DomPoint extends T3DSound {
 	 *
 	 * @return
 	 */
-	@Override
-	public String toString() {
+	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(UT4_DOMPOINT_CLASS).append(" Name=").append(name).append(" ");
 		sbf.append(" Archetype=BP_ControlPoint_C'/Game/Domination/BP_ControlPoint.Default__BP_ControlPoint_C'\n");

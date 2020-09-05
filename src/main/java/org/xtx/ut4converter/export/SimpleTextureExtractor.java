@@ -1,7 +1,6 @@
 package org.xtx.ut4converter.export;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -32,10 +31,10 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 
 	/**
 	 * Extract all textures from given package
-	 * @param texturePackageFile
-	 * @param outputFolder
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @param texturePackageFile MyPackage.utx
+	 * @param outputFolder C:\OutputFolder
+	 * @throws IOException Exception thrown
+	 * @throws InterruptedException Exception thrown
 	 */
 	public static void extractSimple(final File texturePackageFile, final File outputFolder) throws IOException, InterruptedException {
 		final List<String> logLines = new ArrayList<>();
@@ -114,11 +113,6 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	@Override
 	public String getName() {
 		return "Simple Texture Extractor";
-	}
-
-	@Override
-	public UnrealEngine[] getSupportedEngines() {
-		return new UnrealEngine[] { UnrealEngine.UE1, UnrealEngine.UE2 };
 	}
 
 	@Override
