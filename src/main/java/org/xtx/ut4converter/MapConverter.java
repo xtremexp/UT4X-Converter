@@ -1722,4 +1722,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public Class<? extends UTPackageExtractor> getPreferedTextureExtractorClass() {
 		return preferedTextureExtractorClass;
 	}
+
+	public File getIntT3dUt3Editor() {
+		return intT3dUt3Editor;
+	}
+
+	public void setIntT3dUt3Editor(File intT3dUt3Editor) {
+		this.intT3dUt3Editor = intT3dUt3Editor;
+	}
 }

@@ -418,7 +418,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// FOR UT3 need to have .t3d file created from UT3 editor
 		// because the ut3.com batchexport command is buggy and messes up actors !
-		if (mapConverter.getInputGame() == UTGame.UT3 && mapConverter.getInT3d() == null) {
+		if (mapConverter.getInputGame() == UTGame.UT3 && mapConverter.getIntT3dUt3Editor() == null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Input .t3d map not set");
 			alert.setHeaderText("Input map not set");
@@ -554,7 +554,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// UT3 commandlet export too buggy and messed .t3d file so need to use the exported one from UT3 editor
 		if (t3dUt3EditorFile != null) {
-			mapConverter.setInT3d(t3dUt3EditorFile);
+			mapConverter.setIntT3dUt3Editor(t3dUt3EditorFile);
 		}
 	}
 }
