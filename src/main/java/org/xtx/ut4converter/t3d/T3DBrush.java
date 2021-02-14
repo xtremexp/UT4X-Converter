@@ -413,8 +413,13 @@ public class T3DBrush extends T3DVolume {
 			// only notify if this brush could not be replaced by another
 			// actor
 			if (isUnsupportedUE4Brush() && children.isEmpty()) {
-				valid = false;
-				logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
+				// for movers convert them else might impact gameplay events
+				if (this.brushClass == BrushClass.Mover) {
+					logger.warning(name + " will cause BSP holes unless converted to staticmesh.");
+				} else {
+					valid = false;
+					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
+				}
 			}
 		}
 
