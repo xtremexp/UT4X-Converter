@@ -68,12 +68,14 @@ public class T3DMover extends T3DBrush {
 			String originalName = this.name;
 			this.brushClass = BrushClass.Brush;
 			this.name += "_Brush";
-			String x = super.toString();
+
+			// TODO the way it's been written is really messy
+			super.toT3d();
 			// put back original name (might be used later for linked actors .
 			// e.g: liftexit)
 			this.name = originalName;
 
-			return x;
+			return sbf.toString();
 		}
 		// TODO write mover UT UE<=3
 		else {
