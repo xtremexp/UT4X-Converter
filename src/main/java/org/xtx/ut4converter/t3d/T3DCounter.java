@@ -9,7 +9,7 @@ public class T3DCounter extends T3DSound{
         registerSimpleProperty("bShowMessage", Boolean.class, Boolean.FALSE);
         registerSimpleProperty("CompleteMessage", String.class, "Completed!");
         registerSimpleProperty("CountMessage", String.class, "Only %i more to go...");
-        registerSimpleProperty("NumToCount", Integer.class, 0);
+        registerSimpleProperty("NumToCount", Integer.class, 2);
     }
 
     public String toT3d() {
