@@ -91,7 +91,11 @@ public class MoverProperties implements T3D {
 
 	private MoverGlideType moverGlideType;
 
-	private int numKeys = 1;
+	/**
+	 * Default number of keys a mover has assuming, first key is initial position
+	 * and second key is final position.
+	 */
+	private int numKeys = 2;
 
 	/**
 	 * Reference to converter
@@ -280,6 +284,11 @@ public class MoverProperties implements T3D {
 
 			for (int numKey = 0; numKey < numKeys; numKey++) {
 
+				// first key is always 0,0,0
+				if (numKey == 0) {
+					continue;
+				}
+
 				final Vector3d vec = positions.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
 
 				// KeyPos(1)=(X=-96.000000)
@@ -298,6 +307,11 @@ public class MoverProperties implements T3D {
 
 			// same comment as above
 			for (int numKey = 0; numKey < numKeys; numKey++) {
+
+				// first key is always 0,0,0
+				if (numKey == 0) {
+					continue;
+				}
 
 				final Vector3d rot = rotations.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
 
@@ -433,7 +447,7 @@ public class MoverProperties implements T3D {
 		}
 
 		if(mapConverter.isUseUbClasses()) {
-			mover.t3dClass = "UBMover_C";
+			mover.t3dClass = "UE1Mover_C";
 		} else {
 			mover.t3dClass = "Generic_Lift_C";
 		}
