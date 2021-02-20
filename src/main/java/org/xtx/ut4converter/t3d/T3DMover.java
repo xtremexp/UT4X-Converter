@@ -10,7 +10,7 @@ import org.xtx.ut4converter.UTGames;
 
 /**
  * A mover is a brush that moves in level.
- * 
+ *
  * @author XtremeXp
  */
 public class T3DMover extends T3DBrush {
@@ -91,9 +91,16 @@ public class T3DMover extends T3DBrush {
 		super.convert();
 	}
 
+
+	/*
+	@Override
+	public boolean isValidConverting() {
+		return !this.moverProperties.getRotations().isEmpty();
+	}*/
+
 	public MoverProperties getMoverProperties() {
 		return moverProperties;
 	}
 
-	
+
 }

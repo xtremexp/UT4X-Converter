@@ -21,7 +21,7 @@ import static org.xtx.ut4converter.t3d.T3DObject.IDT;
  * Since T3DMover extends T3DBrush for Unreal Engine 1 and T3DMover extends
  * T3DStaticMesh for Unreal Engine > 1 Need to have a common "class" for both
  * actors for sharing same properties
- * 
+ *
  * @author XtremeXp
  */
 public class MoverProperties implements T3D {
@@ -49,7 +49,7 @@ public class MoverProperties implements T3D {
 	/**
 	 * Map of [NumKey, Rotation]
 	 */
-	private Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
+	private final Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
 
 
 	/**
@@ -300,6 +300,8 @@ public class MoverProperties implements T3D {
 			}
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(lastPosition.x)).append(",Y=").append(T3DActor.fmt(lastPosition.y)).append(",Z=").append(T3DActor.fmt(lastPosition.z)).append(")\n");
+		} else {
+			sbf.append(IDT).append("\tLift Destination=(X=0.000000,Y=0.000000,Z=0.000000)\n");
 		}
 
 		if(!rotations.isEmpty()){
@@ -457,7 +459,7 @@ public class MoverProperties implements T3D {
 	public void scale(Double newScale) {
 
 		for( Vector3d position : positions.values() ) {
-			position.scale(newScale); 
+			position.scale(newScale);
 		}
 	}
 
@@ -469,5 +471,9 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {
+	}
+
+	public Map<Integer, Vector3d> getRotations() {
+		return rotations;
 	}
 }
