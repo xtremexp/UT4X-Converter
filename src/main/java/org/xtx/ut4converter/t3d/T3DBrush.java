@@ -25,7 +25,7 @@ import java.util.Locale;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
- * 
+ *
  * @author XtremeXp
  */
 public class T3DBrush extends T3DVolume {
@@ -95,7 +95,7 @@ public class T3DBrush extends T3DVolume {
 	 * UE1/2 property containing scale and sheer info
 	 */
 	private FScale mainScale;
-	
+
 	/**
 	 * UE1/2 property containing scale and sheer info
 	 */
@@ -135,14 +135,14 @@ public class T3DBrush extends T3DVolume {
 	 * Used for UT pain volumes
 	 */
 	private Float physicsVolumeFluidFriction;
-	
+
 	/**
 	 * Used for cull distances only
 	 */
 	private List<CullDistance> cullDistances;
-	
+
 	/**
-	 * 
+	 *
 	 * Used for cull distances volumes only
 	 *
 	 */
@@ -160,7 +160,7 @@ public class T3DBrush extends T3DVolume {
 		}
 	}
 
-	
+
 	public T3DBrush(MapConverter mapConverter, String t3dClass) {
 		super(mapConverter, t3dClass);
 
@@ -178,7 +178,7 @@ public class T3DBrush extends T3DVolume {
 
 		init();
 	}
-	
+
 	private void init(){
 		brushClass = BrushClass.getBrushClass(t3dClass);
 
@@ -218,15 +218,15 @@ public class T3DBrush extends T3DVolume {
 			if(line.contains("(Scale=")){
 				mainScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
 			}
-			
+
 			if(line.contains("SheerAxis=")){
 				mainScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
 			}
-			
+
 			if(line.contains("SheerRate=")){
 				mainScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
 			}
-			
+
 			reverseVertexOrder = mainScale.scale.x * mainScale.scale.y * mainScale.scale.z < 0;
 		}
 
@@ -234,16 +234,16 @@ public class T3DBrush extends T3DVolume {
 		// PostScale=(Scale=(X=1.058824,Y=1.250000,Z=0.920918),SheerAxis=SHEER_ZX)
 		else if (line.contains("PostScale=")) {
 			postScale = new FScale();
-			
-			
+
+
 			if(line.contains("(Scale=")){
 				postScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
 			}
-			
+
 			if(line.contains("SheerAxis=")){
 				postScale.sheerAxis = ESheerAxis.valueOf(T3DUtils.getString(line, "SheerAxis"));
 			}
-			
+
 			if(line.contains("SheerRate=")){
 				postScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
 			}
@@ -310,7 +310,7 @@ public class T3DBrush extends T3DVolume {
 		else if (line.startsWith("Begin Brush") && line.contains("Name=")) {
 			// modelName = line.split("Name=")[1].replaceAll("\"", "");
 		}
-		
+
 		// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
 		else if (line.startsWith("CullDistances(")) {
 			if (cullDistances == null) {
@@ -341,7 +341,7 @@ public class T3DBrush extends T3DVolume {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param t3dBrushClass
 	 * @return
 	 */
@@ -388,48 +388,25 @@ public class T3DBrush extends T3DVolume {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
 	public boolean isValidWriting() {
-
-		boolean valid = true;
 
 		// is first "red" brush in previous UE editors
 		if ("Brush".equals(name)) {
 			return false;
 		}
 
-		if (mapConverter.fromUE123ToUE4()) {
 
-
-			// BUG UE4 DON'T LIKE SHEETS brushes or "Light Brushes" mainly
-			// coming from UE1/UE2 ...
-			// Else geometry building got holes so need to get rid of them ...
-			// TODO add note? (some sheet brushes are movers ...)
-			// TODO replace sheetbrush with sheet staticmesh
-			// if 2 polygons and sheetbrush not a portal
-			// only notify if this brush could not be replaced by another
-			// actor
-			if (isUnsupportedUE4Brush() && children.isEmpty()) {
-				// for movers convert them else might impact gameplay events
-				if (this.brushClass == BrushClass.Mover) {
-					logger.warning(name + " will cause BSP holes unless converted to staticmesh.");
-				} else {
-					valid = false;
-					logger.warning("Skipped unsupported 'sheet brush' in " + mapConverter.getUnrealEngineTo().name() + " for " + name);
-				}
-			}
-		}
-
-		return valid && super.isValidWriting();
+		return super.isValidWriting();
 	}
 
 	/**
 	 * Tells if current brush is sheet brush: - one polygon - 4 vertices for
 	 * this polygon
-	 * 
+	 *
 	 * @return
 	 */
 	private boolean isSheetBrush() {
@@ -453,7 +430,7 @@ public class T3DBrush extends T3DVolume {
 	 * kind of brush makes bsp holes on import. Generally is a "flat" brush used
 	 * in Unreal Engine 1 / 2 as a "Torch", "Water surface" and so on ... 1 poly
 	 * = sheet brush 2+ poly (generally torch)
-	 * 
+	 *
 	 * @return <code>true</code> If this brush is a sheet brush
 	 */
 	protected boolean isUnsupportedUE4Brush() {
@@ -476,7 +453,7 @@ public class T3DBrush extends T3DVolume {
 	 * Compute if this brush will cause bsp holes: - only 4 or less polygon - OR
 	 * some vertex not bound with at least 3 polygons not enough accurate at
 	 * this stage
-	 * 
+	 *
 	 * @return <code>true</code> if this brush will cause bsp holes on import
 	 */
 	private boolean willCauseBspHoles() {
@@ -507,7 +484,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Return how many polygons are attached to this vertex.
-	 * 
+	 *
 	 * @param v
 	 *            Brush vertex
 	 * @return Number of polygons attached to this vertex.
@@ -592,7 +569,7 @@ public class T3DBrush extends T3DVolume {
 				idx++;
 			}
 		}
-		
+
 		sbf.append(IDT).append("\tBegin Brush Name=").append(modelName).append("\n");
 		sbf.append(IDT).append("\t\tBegin PolyList\n");
 
@@ -617,7 +594,7 @@ public class T3DBrush extends T3DVolume {
 		for (String line : forcedWrittenLines) {
 			sbf.append(IDT).append(line).append("\n");
 		}
-		
+
 		// write specific properties of post process volume brush subclass
 		if(this instanceof T3DPostProcessVolume){
 			T3DPostProcessVolume ppv = (T3DPostProcessVolume) this;
@@ -659,7 +636,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Creates a brush box.
-	 * 
+	 *
 	 * @param mc
 	 *            Map Converter
 	 * @param width
@@ -677,7 +654,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Force brush to be a box
-	 * 
+	 *
 	 * @param size Size
 	 */
 	public void forceToBox(Double size) {
@@ -688,7 +665,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Creates a cylinder brush
-	 * 
+	 *
 	 * @param mc
 	 *            Map Converter
 	 * @param radius
@@ -719,7 +696,7 @@ public class T3DBrush extends T3DVolume {
 			if(collisionRadius == null){
 				collisionRadius = 10d; // default value in UE1/UE2
 			}
-			
+
 			if(collisionHeight == null){
 				collisionHeight = 10d;
 			}
@@ -727,17 +704,17 @@ public class T3DBrush extends T3DVolume {
 			polyList = Geometry.createCylinder(collisionRadius, collisionHeight, 8);
 			super.convert();
 		}
-		
+
 		// UT3
 		if(brushClass == BrushClass.UTKillZVolume || brushClass == BrushClass.xFallingVolume){
 			brushClass = BrushClass.KillZVolume;
 		}
-		
+
 		// UT2004
 		else if(brushClass == BrushClass.WaterVolume){
 			brushClass = BrushClass.UTWaterVolume;
 		}
-		
+
 		// TODO handle other properties of volume like friction, ...
 		// maybe add a super-class T3DVolume?
 		// UTSlimeVolume does not exists in UT4
@@ -759,14 +736,14 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		// Update Location if prepivot set
+		// prepivot is the rotating point
 		if (prePivot != null) {
 
-			prePivot.negate();
-			// location = location - prepivot
-			if (location == null) {
-				location = prePivot;
-			} else {
-				location.add(prePivot);
+
+			for (T3DPolygon p : polyList) {
+				for(Vertex v : p.getVertices()){
+					v.getCoordinates().sub(prePivot);
+				}
 			}
 
 			prePivot = null;
@@ -777,16 +754,15 @@ public class T3DBrush extends T3DVolume {
 			p.convert();
 		}
 
-		// Replace Sheet Brush with Sheet StaticMesh
-		// only if it is not a mover
-		// will cause bdp hole first, but since movers are then converted to staticmeshes
-		// in UT4 editor, won't cause bsphole
-		if (isSheetBrush() && !this.polyflags.contains(BrushPolyflag.SEMI_SOLID) && !this.polyflags.contains(BrushPolyflag.NON_SOLID)) {
-			if(!isHorizontallyFlatBrush()) {
-				T3DStaticMesh sheetStaticMesh = new T3DStaticMesh(mapConverter, this);
-				children.add(sheetStaticMesh);
-			} else {
-				isSheetFlatHorizontallyBrush = true;
+		if (mapConverter.fromUE123ToUE4()) {
+
+			// for solid sheet brushes force them to be semi-solid
+			// so it won't cause BSP holes and will still be visible
+			if (isUnsupportedUE4Brush() && children.isEmpty()) {
+
+				if(!this.polyflags.contains(BrushPolyflag.SEMI_SOLID)) {
+					this.polyflags.add(BrushPolyflag.SEMI_SOLID);
+				}
 			}
 		}
 
@@ -833,7 +809,7 @@ public class T3DBrush extends T3DVolume {
 	 */
 	@Override
 	public void scale(Double newScale) {
-		
+
 		if (cullDistances != null) {
 			for (CullDistance cullDistance : cullDistances) {
 				cullDistance.scale(newScale);
@@ -849,7 +825,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Returns the max position of vertex belonging to this brush.
-	 * 
+	 *
 	 * @return Max position
 	 */
 	public Vector3d getMaxVertexPos() {
@@ -877,7 +853,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Returns the min position of vertex belonging to this brush.
-	 * 
+	 *
 	 * @return Min position
 	 */
 	public Vector3d getMinVertexPos() {
@@ -905,7 +881,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 * Sets polygons to this brush
-	 * 
+	 *
 	 * @param polyList Polygon list
 	 */
 	public void setPolyList(LinkedList<T3DPolygon> polyList) {
