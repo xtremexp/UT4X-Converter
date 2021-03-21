@@ -7,6 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
 /**
  * A mover is a brush that moves in level.
@@ -69,7 +70,12 @@ public class T3DMover extends T3DBrush {
 			this.brushClass = BrushClass.Brush;
 			this.name += "_Brush";
 
-			// TODO the way it's been written is really messy
+			// force mover brush to be non-solid so won't cause possible bsp holes around
+			// does not need to be solid since it's going to be transformed to staticmesh anyway in UE4 editor
+			getPolyflags().clear();
+			getPolyflags().add(BrushPolyflag.NON_SOLID);
+
+			// TODO refactor, the way it's been coded is really messy/confusing
 			super.toT3d();
 			// put back original name (might be used later for linked actors .
 			// e.g: liftexit)
