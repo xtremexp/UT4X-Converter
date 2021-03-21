@@ -616,6 +616,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			showInstructions();
 
+			// logs converted actors
+			// might be useful to find out if some actors are missing from level
+			logBuffWriter.write("\n*** Converted actors ***\n");
+
+			for (String actorClass : t3dLvlConvertor.getConvertedActors().stream().map(T3DObject::getT3dClass).distinct().sorted().collect(Collectors.toList())) {
+				logBuffWriter.write("- " + actorClass + "\n");
+			}
+
 			writeUnconvertedActorsPropertiesToLogFile();
 		} finally {
 			if (logBuffWriter != null) {
@@ -1704,7 +1712,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	public boolean isUseUbClasses() {
-		return useUbClasses;
+		return true;
 	}
 
 	public void setUseUbClasses(boolean useUbClasses) {
