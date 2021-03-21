@@ -28,7 +28,7 @@ import java.util.logging.Level;
  * Interface to umodel.exe program by Konstantin Nosov
  * http://www.gildor.org/en/projects/umodel Not embedding umodel.exe binary to
  * project since license of it is "undetermined"
- * 
+ *
  * @author XtremeXp
  */
 public class UModelExporter extends UTPackageExtractor {
@@ -42,7 +42,7 @@ public class UModelExporter extends UTPackageExtractor {
 	public UModelExporter(MapConverter mapConverter) {
 		super(mapConverter);
 	}
-	
+
 	/**
 	 * Builds the /conf/
 	 *
@@ -50,22 +50,22 @@ public class UModelExporter extends UTPackageExtractor {
 	 * @throws InterruptedException Exception thrown
 	 */
 	public void buildUT99TexToPackageFile() throws InterruptedException, IOException{
-		
+
 		final UserConfig userConfig = mapConverter.getUserConfig();
 		Map<String, String> texToPack = new HashMap<>();
-		
+
 		if(userConfig != null){
 			final UserGameConfig ut99GameConfig = mapConverter.getUserConfig().getGameConfigByGame(UTGame.UT99);
-			
+
 			if(ut99GameConfig != null){
 				final File texFolder = UTGames.getTexturesFolder(ut99GameConfig.getPath(), UTGame.UT99);
 				assert texFolder != null;
 				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, texFolder));
-				
+
 				final File sysFolder = UTGames.getSystemFolder(ut99GameConfig.getPath(), UTGame.UT99);
 				assert sysFolder != null;
 				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, sysFolder));
-				
+
 				// copy paste result of this in the .txt file
 				for(String texName : texToPack.keySet()){
 					System.out.println(texName + ":" + texToPack.get(texName));
@@ -75,32 +75,32 @@ public class UModelExporter extends UTPackageExtractor {
 	}
 
 	private Map<String, String> getUT99TexToPackageInfo(final UserGameConfig ut99GameConfig, final File texFolder) throws InterruptedException, IOException {
-		
+
 		Map<String, String> texToPac = new HashMap<>();
-		
+
 		for(final File texFile : Objects.requireNonNull(texFolder.listFiles())){
 			if(texFile.isFile() && (texFile.getName().endsWith(".utx") || texFile.getName().endsWith(".u"))){
 				String command = "\"" + getExporterPath() + "\" -export -sounds -groups \"" + texFile.getAbsolutePath() + "\"";
 				command += " -out=\"D:\\TEMP\"";
 				command += " -path=\"" + ut99GameConfig.getPath() + "\"";
-				
+
 
 				List<String> logLines = new ArrayList<>();
 				Installation.executeProcess(command, logLines);
-				
+
 				for (final String logLine : logLines) {
 					// Exporting Texture newgreen to D:/TEMP/Belt_fx/ShieldBelt
 					if (logLine.startsWith("Exporting Texture")) {
 						//System.out.println(logLine);
 						final String texName = logLine.split("Exporting Texture ")[1].split(" to ")[0].toLowerCase();
-						
+
 						texToPac.put(texName, texFile.getName().split("\\.")[0]);
 					}
 				}
-				
+
 			}
 		}
-		
+
 		return texToPac;
 	}
 
@@ -123,9 +123,9 @@ public class UModelExporter extends UTPackageExtractor {
 		logger.log(Level.FINE, command);
 
 		Installation.executeProcess(command, logLines);
-		
+
 		final String failedLoadPackage = "UModel: bad command line: failed to load provided packages";
-		
+
 		// UMODEL was not able to load package
 		// we try using the basic ucc exporter one
 		if(logLines.contains(failedLoadPackage)){
@@ -133,7 +133,7 @@ public class UModelExporter extends UTPackageExtractor {
 			logger.log(Level.WARNING, "Failed to load " + fileContainer.getName() + " with " + getName() + " testing with " + uccExporter.getName());
 			return uccExporter.extract(ressource, forceExport, perfectMatchOnly);
 		}
-		
+
 		ressource.getUnrealPackage().setExported(true);
 
 
@@ -163,7 +163,7 @@ public class UModelExporter extends UTPackageExtractor {
 	/**
 	 * From umodel batch log lines get exported files and extra info about
 	 * package ressources
-	 * 
+	 *
 	 * @param logLine
 	 *            Log line from umodel
 	 * @param unrealPackage
@@ -245,7 +245,7 @@ public class UModelExporter extends UTPackageExtractor {
 				forceIsUsedInMap = true;
 			}
 		}
-		
+
 
 		// If package = map then force resource as being used in map
 		if (packageName.equalsIgnoreCase(this.mapConverter.getMapPackageName())) {
@@ -338,7 +338,7 @@ public class UModelExporter extends UTPackageExtractor {
 				 * export diffuse texture if not ever done
 				 * uRessource.export(UTPackageExtractor
 				 * .getExtractor(mapConverter, uRessource));
-				 * 
+				 *
 				 * uRessource.replaceWith(uRessource.getMaterialInfo().getDiffuse
 				 * ()); }
 				 */
@@ -362,7 +362,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 	/**
 	 * Get material info from .mat file created by umodel program
-	 * 
+	 *
 	 * @param matFile
 	 *            .mat file containing info about material texture (normal,
 	 *            diffuse, ...)
@@ -395,20 +395,20 @@ public class UModelExporter extends UTPackageExtractor {
 				/*
 				 * // guessing package name the material comes from String
 				 * pakName = parentRessource.getUnrealPackage().getName();
-				 * 
+				 *
 				 * // .mat file does not only give ressource name not where it
 				 * // belong to // we assume it belong to parent ressource which
 				 * should work for // 75%+ of cases ... if
 				 * (mapConverter.isTo(UnrealEngine.UE3) &&
 				 * mapConverter.getUt3PackageFileFromName(pakName) == null) {
 				 * continue; }
-				 * 
+				 *
 				 * UPackageRessource uRessource =
 				 * mapConverter.getUPackageRessource(matName, pakName,
 				 * Type.TEXTURE);
-				 * 
+				 *
 				 * if (uRessource != null) {
-				 * 
+				 *
 				 * uRessource.setIsUsedInMap(parentRessource.isUsedInMap());
 				 */
 				switch (type) {
@@ -467,7 +467,7 @@ public class UModelExporter extends UTPackageExtractor {
 		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
 		mc.setConvertTextures(true);
 		UModelExporter export = new UModelExporter(mc);
-		
+
 		try {
 			export.buildUT99TexToPackageFile();
 		} catch (InterruptedException | IOException e) {
