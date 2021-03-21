@@ -756,13 +756,14 @@ public class T3DBrush extends T3DVolume {
 
 		if (mapConverter.fromUE123ToUE4()) {
 
-			// for solid sheet brushes force them to be semi-solid
+			// for solid sheet brushes force them to be non-solid
 			// so it won't cause BSP holes and will still be visible
+			// note semi-solid flat brushes still sometimes creates BSP holes
+			// that's why using non solid
 			if (isUnsupportedUE4Brush() && children.isEmpty()) {
 
-				if(!this.polyflags.contains(BrushPolyflag.SEMI_SOLID)) {
-					this.polyflags.add(BrushPolyflag.SEMI_SOLID);
-				}
+				this.polyflags.clear();
+				this.polyflags.add(BrushPolyflag.SEMI_SOLID);
 			}
 		}
 

@@ -1716,7 +1716,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	public boolean isUseUbClasses() {
-		return true;
+		return this.useUbClasses;
 	}
 
 	public void setUseUbClasses(boolean useUbClasses) {
