@@ -108,7 +108,7 @@ public class UModelExporter extends UTPackageExtractor {
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
 
 		// Ressource ever extracted, we skip ...
-		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
+		if ((!forceExport && ressource.isExported()) || "null".equals(ressource.getUnrealPackage().getName()) || (!forceExport && ressource.getUnrealPackage().isExported())) {
 			return null;
 		}
 
