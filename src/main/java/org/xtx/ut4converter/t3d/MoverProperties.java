@@ -436,7 +436,7 @@ public class MoverProperties implements T3D {
 
 		for(Vector3d rotator : rotations.values()){
 			// convert 65536 rotator old range to UE4 range
-			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE3, UnrealEngine.UE3)){
+			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)){
 				T3DUtils.convertRotatorTo360Format(rotator);
 			}
 		}
