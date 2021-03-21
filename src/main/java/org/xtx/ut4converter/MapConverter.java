@@ -1414,7 +1414,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							fullRessourceName = packageName + "." + name;
 						}
 					} else {
-						fullRessourceName = packageName + "." + name;
+						fullRessourceName = name;
 					}
 				}
 				// assuming it's from map
@@ -1441,7 +1441,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 			}
 		}
-		if (packageName != null && "mylevel".equals(packageName.toLowerCase())) {
+
+		// for UT99 with unreal editor not giving package name in t3d resource name
+		// force to map package if not present
+		// else for Unreal 1 "myLevel" in resource name means it's map as package
+		if (packageName == null || "mylevel".equalsIgnoreCase(packageName)) {
 			packageName = getMapPackageName();
 		}
 
