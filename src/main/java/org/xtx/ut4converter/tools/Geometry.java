@@ -19,7 +19,7 @@ import java.util.LinkedList;
 /**
  * Utility class for geometry operations TODO refactor a bit (some functions
  * from oldy UT3 Converter)
- * 
+ *
  * @author XtremeXp
  */
 public class Geometry {
@@ -46,7 +46,7 @@ public class Geometry {
 
 	/**
 	 * Get the rotation vector (pitch, yaw, roll) from normal vector
-	 * 
+	 *
 	 * @param normal
 	 *            Normal vector
 	 * @return Rotate vector in radians
@@ -75,7 +75,7 @@ public class Geometry {
 
 	/**
 	 * Rotates the vector
-	 * 
+	 *
 	 * @param v
 	 *            Vector to be rotated
 	 * @param rotation
@@ -95,7 +95,7 @@ public class Geometry {
 	 * values in the YXZ UT Editor coordinate system.
 	 * +00576.000000,+01088.000000,+00192.000000 ->
 	 * -00192.000000,+00064.000000,+00192.000000
-	 * 
+	 *
 	 * @param v Vector
 	 * @param pitch
 	 *            Pitch in Unreal Value (65536 u.v. = 360°)
@@ -131,13 +131,13 @@ public class Geometry {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rot_x X axis rotation value
 	 * @param rot_y Y axis rotation value
 	 * @param rot_z Z axis rotation value
 	 * @return Rotation matrix
 	 */
-	private static Matrix4d getGlobalRotationMatrix(double rot_x, double rot_y, double rot_z) {
+	public static Matrix4d getGlobalRotationMatrix(double rot_x, double rot_y, double rot_z) {
 		Matrix4d m4d;
 
 		// Checked
@@ -177,7 +177,7 @@ public class Geometry {
 
 	/**
 	 * Replaces low values in matrix by zeroes.
-	 * 
+	 *
 	 * @param m4d
 	 *            Input 4x4 matrix
 	 * @return Filtered matrix.
@@ -198,7 +198,7 @@ public class Geometry {
 	/**
 	 * Convert an unreal engine 1/2 angle to degree. 65536 Unreal Angle (UE1, 2)
 	 * = 360°
-	 * 
+	 *
 	 * @param angle
 	 *            Unreal Angle from Unreal Engine 1 or 2
 	 * @return Unreal angle in degrees
@@ -215,7 +215,7 @@ public class Geometry {
 		return (angle / 65536D) * 360D;
 	}
 
-	private static double[] getRot(double[] d2, Matrix4d m4d) {
+	public static double[] getRot(double[] d2, Matrix4d m4d) {
 		double[] d = new double[] { d2[0], d2[1], d2[2], 1D };
 
 		double dx = m4d.m00 * d[0] + m4d.m10 * d[1] + m4d.m20 * d[2] + m4d.m30 * d[3];
@@ -241,7 +241,7 @@ public class Geometry {
 	 * Permanently) generally only used for brush data such as vertices, normal
 	 * and so on. Scale the vertice then make it rotate and scale it again (post
 	 * scale)
-	 * 
+	 *
 	 * @param v
 	 *            Vector to be transformed permanently
 	 * @param mainScale
@@ -262,7 +262,7 @@ public class Geometry {
 				v.x *= mainScale.scale.x;
 				v.y *= mainScale.scale.y;
 				v.z *= mainScale.scale.z;
-				
+
 				//v = UnMath.applySheerRate(v, mainScale);
 			} else {
 				v.x /= mainScale.scale.x;
@@ -283,7 +283,7 @@ public class Geometry {
 				v.x *= postScale.scale.x;
 				v.y *= postScale.scale.y;
 				v.z *= postScale.scale.z;
-				
+
 				//v = UnMath.applySheerRate(v, postScale);
 			} else {
 				v.x /= postScale.scale.x;
@@ -300,7 +300,7 @@ public class Geometry {
 
 	/**
 	 * Null-safe operation to subtract vectors
-	 * 
+	 *
 	 * @param a First vector
 	 * @param b Second vector
 	 * @return Vector a - Vector b
@@ -326,7 +326,7 @@ public class Geometry {
 
 	/**
 	 * Create poly data for creating a box brush
-	 * 
+	 *
 	 * @param width Box width
 	 * @param length Box length
 	 * @param height Box hiehgt
@@ -386,7 +386,7 @@ public class Geometry {
 
 	/**
 	 * Creates a cylinder
-	 * 
+	 *
 	 * @param radius Cylinder radius
 	 * @param height Cylinder height
 	 * @param sides
@@ -473,7 +473,7 @@ public class Geometry {
 
 	/**
 	 * Converts a "stadard" java vector to apache one
-	 * 
+	 *
 	 * @param v Vector
 	 * @return
 	 */
@@ -499,7 +499,7 @@ public class Geometry {
 
 	/**
 	 * Guess if this vertex is belonging to one of the edges of a polygon
-	 * 
+	 *
 	 * @param polygon
 	 *            Polygon
 	 * @param v

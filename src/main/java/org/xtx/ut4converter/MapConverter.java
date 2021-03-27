@@ -506,7 +506,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 
 		if(utGameFolder != null) {
-			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK, "ut3"}, true);
+			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
 			logger.info("Scanned " + packageFilesCache.size() + " .upk files");
 		}
 	}
@@ -615,6 +615,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			UIUtils.openExplorer(getOutPath().toFile());
 
 			showInstructions();
+
+			// logs converted actors
+			// might be useful to find out if some actors are missing from level
+			logBuffWriter.write("\n*** Converted actors ***\n");
+
+			for (String actorClass : t3dLvlConvertor.getConvertedActors().stream().map(T3DObject::getT3dClass).distinct().sorted().collect(Collectors.toList())) {
+				logBuffWriter.write("- " + actorClass + "\n");
+			}
 
 			writeUnconvertedActorsPropertiesToLogFile();
 		} finally {
@@ -1406,7 +1414,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							fullRessourceName = packageName + "." + name;
 						}
 					} else {
-						fullRessourceName = packageName + "." + name;
+						fullRessourceName = name;
 					}
 				}
 				// assuming it's from map
@@ -1433,7 +1441,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				}
 			}
 		}
-		if (packageName != null && "mylevel".equals(packageName.toLowerCase())) {
+
+		// for UT99 with unreal editor not giving package name in t3d resource name
+		// force to map package if not present
+		// else for Unreal 1 "myLevel" in resource name means it's map as package
+		if (packageName == null || "mylevel".equalsIgnoreCase(packageName)) {
 			packageName = getMapPackageName();
 		}
 
@@ -1704,7 +1716,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	public boolean isUseUbClasses() {
-		return useUbClasses;
+		return this.useUbClasses;
 	}
 
 	public void setUseUbClasses(boolean useUbClasses) {
@@ -1721,13 +1733,5 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public Class<? extends UTPackageExtractor> getPreferedTextureExtractorClass() {
 		return preferedTextureExtractorClass;
-	}
-
-	public File getIntT3dUt3Editor() {
-		return intT3dUt3Editor;
-	}
-
-	public void setIntT3dUt3Editor(File intT3dUt3Editor) {
-		this.intT3dUt3Editor = intT3dUt3Editor;
 	}
 }

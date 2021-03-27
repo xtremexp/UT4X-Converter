@@ -21,7 +21,7 @@ import static org.xtx.ut4converter.t3d.T3DObject.IDT;
  * Since T3DMover extends T3DBrush for Unreal Engine 1 and T3DMover extends
  * T3DStaticMesh for Unreal Engine > 1 Need to have a common "class" for both
  * actors for sharing same properties
- * 
+ *
  * @author XtremeXp
  */
 public class MoverProperties implements T3D {
@@ -49,7 +49,7 @@ public class MoverProperties implements T3D {
 	/**
 	 * Map of [NumKey, Rotation]
 	 */
-	private Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
+	private final Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
 
 
 	/**
@@ -91,7 +91,11 @@ public class MoverProperties implements T3D {
 
 	private MoverGlideType moverGlideType;
 
-	private int numKeys = 1;
+	/**
+	 * Default number of keys a mover has assuming, first key is initial position
+	 * and second key is final position.
+	 */
+	private int numKeys = 2;
 
 	/**
 	 * Reference to converter
@@ -280,6 +284,11 @@ public class MoverProperties implements T3D {
 
 			for (int numKey = 0; numKey < numKeys; numKey++) {
 
+				// first key is always 0,0,0
+				if (numKey == 0) {
+					continue;
+				}
+
 				final Vector3d vec = positions.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
 
 				// KeyPos(1)=(X=-96.000000)
@@ -291,6 +300,8 @@ public class MoverProperties implements T3D {
 			}
 
 			sbf.append(IDT).append("\tLift Destination=(X=").append(T3DActor.fmt(lastPosition.x)).append(",Y=").append(T3DActor.fmt(lastPosition.y)).append(",Z=").append(T3DActor.fmt(lastPosition.z)).append(")\n");
+		} else {
+			sbf.append(IDT).append("\tLift Destination=(X=0.000000,Y=0.000000,Z=0.000000)\n");
 		}
 
 		if(!rotations.isEmpty()){
@@ -298,6 +309,11 @@ public class MoverProperties implements T3D {
 
 			// same comment as above
 			for (int numKey = 0; numKey < numKeys; numKey++) {
+
+				// first key is always 0,0,0
+				if (numKey == 0) {
+					continue;
+				}
 
 				final Vector3d rot = rotations.getOrDefault(numKey, new Vector3d(0d, 0d, 0d));
 
@@ -420,7 +436,7 @@ public class MoverProperties implements T3D {
 
 		for(Vector3d rotator : rotations.values()){
 			// convert 65536 rotator old range to UE4 range
-			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE3, UnrealEngine.UE3)){
+			if(mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)){
 				T3DUtils.convertRotatorTo360Format(rotator);
 			}
 		}
@@ -433,7 +449,7 @@ public class MoverProperties implements T3D {
 		}
 
 		if(mapConverter.isUseUbClasses()) {
-			mover.t3dClass = "UBMover_C";
+			mover.t3dClass = "UE1Mover_C";
 		} else {
 			mover.t3dClass = "Generic_Lift_C";
 		}
@@ -443,7 +459,7 @@ public class MoverProperties implements T3D {
 	public void scale(Double newScale) {
 
 		for( Vector3d position : positions.values() ) {
-			position.scale(newScale); 
+			position.scale(newScale);
 		}
 	}
 
@@ -455,5 +471,9 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {
+	}
+
+	public Map<Integer, Vector3d> getRotations() {
+		return rotations;
 	}
 }

@@ -8,6 +8,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * 
+ *
  * @author XtremeXp
  */
 public class T3DUtils {
@@ -90,7 +91,7 @@ public class T3DUtils {
 	public static Double getDouble(String line) {
 		return Double.valueOf(line.split("=")[1]);
 	}
-	
+
 	/**
 	 *
 	 * @param line
@@ -99,7 +100,7 @@ public class T3DUtils {
 	public static Float getFloat(String line) {
 		return Float.valueOf(line.split("=")[1]);
 	}
-	
+
 	/**
 	 *
 	 * @param line
@@ -134,7 +135,7 @@ public class T3DUtils {
 	public static String getString(String line) {
 		return line.split("=")[1].replaceAll("\"", "").replaceAll("\\)", "");
 	}
-	
+
 	public static String getString(String line, String property, String nextFieldSeparator) {
 		return getPropValue(line, property, nextFieldSeparator);
 	}
@@ -219,6 +220,16 @@ public class T3DUtils {
 	 */
 	public static Vector3d getVector3dRot(String line) {
 		return getVector3d(line, new String[] { "Pitch", "Yaw", "Roll" }, null);
+	}
+
+	/**
+	 * Parse line to a rotator in UE123 range
+	 * @param line
+	 * @return
+	 */
+	public static Rotator parseRotator(String line){
+		final Vector3d v = getVector3dRot(line);
+		return new Rotator(v.x, v.y, v.z);
 	}
 
 	/**
@@ -441,7 +452,7 @@ public class T3DUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sb
 	 * @param prefix
 	 */
@@ -509,7 +520,7 @@ public class T3DUtils {
 	/**
 	 * E.G: InterpGroups(0)=InterpGroup'InterpGroup_2'
 	 * InterpGroups(1)=InterpGroup'InterpGroup_3'
-	 * 
+	 *
 	 * @param sb
 	 * @param propName
 	 * @param t3dObjs
@@ -532,7 +543,7 @@ public class T3DUtils {
 
 	/**
 	 * E.G: CurveEdSetup=InterpCurveEdSetup'InterpCurveEdSetup_0'
-	 * 
+	 *
 	 * @param sb
 	 * @param propName
 	 * @param t3dObj
@@ -572,7 +583,7 @@ public class T3DUtils {
 
 	/**
 	 * Write rgbcolor to t3d (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
-	 * 
+	 *
 	 * @param sb
 	 * @param rgbColor
 	 *            Rgb Color
@@ -586,7 +597,7 @@ public class T3DUtils {
 
 	/**
 	 * Writes hsvcolor to t3d in RGB format
-	 * 
+	 *
 	 * @param sb
 	 * @param hsvColor
 	 *            HsvColor
@@ -599,7 +610,7 @@ public class T3DUtils {
 
 	/**
 	 * CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
-	 * 
+	 *
 	 * @param line
 	 * @return
 	 */
