@@ -176,39 +176,12 @@ Note:
 
 ## How to build and run latest version ?
 
-- Download and install OpenJDK13: 
+- Download and install OpenJDK16: https://jdk.java.net/16/ 
 
-- Download and install JavaFX SDK: https://gluonhq.com/products/javafx/
-
-  
-
-### With [IntelliJ IDEA](https://www.jetbrains.com/idea/) (not-free):
-
-Retrieve project :
-
-- File -> New -> Project from Version Control -> Git
-- Set "Git Repository URL" to: "https://github.com/xtremexp/UT4X-Converter"
-- Click on "Clone"
-
-Build and Run :
-
-- Menu: "Run" -> "Edit configuration"
-- Click on "+" then select "Application"
-- Set "org.xtx.ut4converter.MainApp" as "Main class"
-- Set "VM Options" parameter to "--module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml"
-- Save "Apply"/"OK" and go to menu "Run" -> "Run.."
-
-Package .jar project :
-
-- Menu: "Run" -> "Edit configuration"
-- Click on "+" then select "Maven"
-- Set "Command line" parameter to "clean install -e"
-- Save "Apply"/"OK" and go to menu "Run" -> "Run.."
-- The .jar file can be found here "C:\Users\<USERNAME>\.m2\repository\org\xtx\UT4X-Converter\<VERSION>\UT4X-Converter-<VERSION>.jar"
+- Run with maven command : "clean javafx:run"
 
 
-
-Optional (UI editing) :
+Optional (UI editing with [IntelliJ IDEA](https://www.jetbrains.com/idea/) (not-free)) :
 
 - Install "Java FX Scene Builder 2": http://www.oracle.com/technetwork/java/javase/downloads/javafxscenebuilder-1x-archive-2199384.html
 - Select project then "File" -> "Project structure..." -> "Artifacts"

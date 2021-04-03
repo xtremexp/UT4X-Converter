@@ -11,9 +11,9 @@
 	<name>UT4 Converter</name>
 
 	<properties>
-		<java.version>13</java.version>
+		<java.version>16</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>13</javafx.version>
+		<javafx.version>16</javafx.version>
 		<slf4j.version>1.7.29</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
@@ -35,8 +35,17 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>14</release>
+					<release>16</release>
                 </configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.5</version>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+				</configuration>
 			</plugin>
 
 			<!-- skips test by default else would convert all maps -->
@@ -59,7 +68,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.xtx.ut4converter.MainApp</mainClass>
+							<mainClass>${mainClass}</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -318,8 +327,6 @@
 			<version>3.9</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
