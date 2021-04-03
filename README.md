@@ -165,12 +165,7 @@ Note:
 
 ## License
 
-- No commercial use allowed
-- You can edit/share source code as well as binaries
-  always keeping original author credits
-- MAKE SURE YOU GOT AUTHORISATION OR ARE ALLOWED TO CONVERT MAP BEFORE DOING IT.
-  YOU ARE THE ONLY ONE RESPONSIBLE FOR ANY COPYRIGHT INFRINGMENT RELATIVE TO
-  CONVERTED MAP.
+See license.txt file.
 
 ---
 

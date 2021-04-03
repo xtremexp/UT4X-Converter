@@ -20,6 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
 		<junit.version>5.2.0</junit.version>
+		<upgrade.uuid>9134cc3f-269d-46f2-8ff9-b182c28798bb</upgrade.uuid>
 	</properties>
 
 	<organization>
@@ -36,7 +37,9 @@
 				<version>3.8.1</version>
 				<configuration>
 					<release>16</release>
-                </configuration>
+					<source>15</source>
+					<target>15</target>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -179,6 +182,7 @@
 
 
 			<!-- CREATES AN INSTALLER FOR UT4 CONVERTER -->
+			<!-- https://docs.oracle.com/en/java/javase/16/docs/specs/man/jpackage.html -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -198,58 +202,39 @@
 								<JAVA_HOME>${java.home}</JAVA_HOME>
 							</environmentVariables>
 							<arguments>
-								<!-- packager arguments -->
-								<!-- <argument>create-image</argument> -->
-								<argument>create-installer</argument>
+								<!-- jpackage arguments -->
 								<argument>--verbose</argument>
-								<argument>--echo-mode</argument>
 								<argument>--input</argument>
 								<argument>${project.build.directory}/libs</argument>
-
-								<argument>--class</argument>
-								<argument>org.xtx.ut4converter.MainApp</argument>
 
 								<argument>--main-jar</argument>
 								<argument>./${project.artifactId}-${project.version}.jar</argument>
 
-								<argument>--output</argument>
+								<argument>--dest</argument>
 								<argument>package</argument>
 
-								<argument>--identifier</argument>
-								<argument>org.xtx.ut4converter</argument>
-
-								<argument>--version</argument>
+								<argument>--app-version</argument>
 								<argument>${project.version}</argument>
 
 								<argument>--name</argument>
 								<argument>${project.artifactId}</argument>
 
 								<argument>--description</argument>
-								<argument>Tool that helps converting maps from Unreal 1, Unreal 2, Unreal Tournament (1999), Unreal Tournament 2003/4, Unreal Tournament 3 to Unreal Tournament 4 (UT2005)</argument>
-
-								<!--  Prevents multiple instances of the application from launching -->
-								<argument>--singleton</argument>
+								<argument>UT4X Converter</argument>
 
 								<argument>--vendor</argument>
-								<argument>Thomas P.</argument>
+								<argument>Thomas 'WinterIsComing' P.</argument>
 
 								<argument>--copyright</argument>
 								<argument>You are free to distribute and use with tool but with no commercial use</argument>
 
-								<argument>--identifier</argument>
-								<argument>org.xtx.ut4converter</argument>
-
-								<argument>--category</argument>
-								<argument>Tool</argument>
-
-								<argument>--win-registry-name</argument>
-								<argument>${project.artifactId}</argument>
-
 								<!-- FOR INSTALL, ONLY do it for current user and not all -->
-								<argument>--win-per-user</argument>
+								<argument>--win-per-user-install</argument>
 
                                 <argument>--win-dir-chooser</argument>
 								<argument>--win-shortcut</argument>
+								<argument>--win-upgrade-uuid</argument>
+								<argument>${upgrade.uuid}</argument>
 
 								<!-- jlink arguments -->
 								<argument>--module-path</argument>

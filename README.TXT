@@ -1,1 +1,0 @@
-see readme.md or go to https://github.com/xtremexp/UT4X-Converter
