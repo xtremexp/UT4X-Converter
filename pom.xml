@@ -11,9 +11,9 @@
 	<name>UT4 Converter</name>
 
 	<properties>
-		<java.version>16</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>16</javafx.version>
+		<javafx.version>17</javafx.version>
 		<slf4j.version>1.7.29</slf4j.version>
 		<log4j.version>2.13.3</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
@@ -36,9 +36,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>16</release>
-					<source>15</source>
-					<target>15</target>
+					<release>17</release>
 				</configuration>
 			</plugin>
 
