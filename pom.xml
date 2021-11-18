@@ -13,13 +13,13 @@
 	<properties>
 		<java.version>17</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>17</javafx.version>
-		<slf4j.version>1.7.29</slf4j.version>
-		<log4j.version>2.13.3</log4j.version>
+		<javafx.version>17.0.0.1</javafx.version>
+		<slf4j.version>1.7.32</slf4j.version>
+		<log4j.version>2.14.1</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
-		<junit.version>5.2.0</junit.version>
+		<junit.version>5.8.1</junit.version>
 		<upgrade.uuid>9134cc3f-269d-46f2-8ff9-b182c28798bb</upgrade.uuid>
 	</properties>
 
@@ -226,14 +226,6 @@
 								<argument>--copyright</argument>
 								<argument>You are free to distribute and use with tool but with no commercial use</argument>
 
-								<!-- FOR INSTALL, ONLY do it for current user and not all -->
-								<argument>--win-per-user-install</argument>
-
-                                <argument>--win-dir-chooser</argument>
-								<argument>--win-shortcut</argument>
-								<argument>--win-upgrade-uuid</argument>
-								<argument>${upgrade.uuid}</argument>
-
 								<!-- jlink arguments -->
 								<argument>--module-path</argument>
 								<argument>${project.build.directory}/mods</argument>
@@ -247,6 +239,48 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- libbrotli-dev -->
+	<profiles>
+		<!-- specific parameters for windows only -->
+		<profile>
+			<id>windows-active</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.6.0</version>
+						<executions>
+							<execution>
+								<id>create-package</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<!-- FOR INSTALL, ONLY do it for current user and not all -->
+										<argument>--win-per-user-install</argument>
+										<argument>--win-dir-chooser</argument>
+										<argument>--win-shortcut</argument>
+										<argument>--win-upgrade-uuid</argument>
+										<argument>${upgrade.uuid}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 
@@ -294,7 +328,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
+			<version>2.11.0</version>
 		</dependency>
 
 		<dependency>
@@ -307,14 +341,14 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
+			<version>3.12.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.10.0</version>
+			<version>2.13.0</version>
 		</dependency>
 
 
