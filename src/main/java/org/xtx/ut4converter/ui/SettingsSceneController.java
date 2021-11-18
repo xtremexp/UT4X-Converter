@@ -68,8 +68,6 @@ public class SettingsSceneController implements Initializable {
 	@FXML
 	private TextField uModelPath;
 
-	@FXML
-	private TextField nconvertPath;
 
 	/**
 	 * Initializes the controller class.
@@ -88,7 +86,6 @@ public class SettingsSceneController implements Initializable {
 			String homeDir = System.getProperty("user.home");
 
 			uModelPath.setPromptText("e.g: " + homeDir + "/Downloads/umodel/umodel");
-			nconvertPath.setPromptText("e.g: " + homeDir + "/Downloads/nconvert/nconvert");
 		}
 	}
 
