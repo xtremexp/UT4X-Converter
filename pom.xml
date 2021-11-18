@@ -11,15 +11,16 @@
 	<name>UT4 Converter</name>
 
 	<properties>
-		<java.version>13</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>13</javafx.version>
-		<slf4j.version>1.7.29</slf4j.version>
-		<log4j.version>2.13.3</log4j.version>
+		<javafx.version>17.0.0.1</javafx.version>
+		<slf4j.version>1.7.32</slf4j.version>
+		<log4j.version>2.14.1</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
-		<junit.version>5.2.0</junit.version>
+		<junit.version>5.8.1</junit.version>
+		<upgrade.uuid>9134cc3f-269d-46f2-8ff9-b182c28798bb</upgrade.uuid>
 	</properties>
 
 	<organization>
@@ -35,8 +36,17 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>14</release>
-                </configuration>
+					<release>17</release>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.5</version>
+				<configuration>
+					<mainClass>${mainClass}</mainClass>
+				</configuration>
 			</plugin>
 
 			<!-- skips test by default else would convert all maps -->
@@ -59,7 +69,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>org.xtx.ut4converter.MainApp</mainClass>
+							<mainClass>${mainClass}</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -170,6 +180,7 @@
 
 
 			<!-- CREATES AN INSTALLER FOR UT4 CONVERTER -->
+			<!-- https://docs.oracle.com/en/java/javase/16/docs/specs/man/jpackage.html -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -189,58 +200,31 @@
 								<JAVA_HOME>${java.home}</JAVA_HOME>
 							</environmentVariables>
 							<arguments>
-								<!-- packager arguments -->
-								<!-- <argument>create-image</argument> -->
-								<argument>create-installer</argument>
+								<!-- jpackage arguments -->
 								<argument>--verbose</argument>
-								<argument>--echo-mode</argument>
 								<argument>--input</argument>
 								<argument>${project.build.directory}/libs</argument>
-
-								<argument>--class</argument>
-								<argument>org.xtx.ut4converter.MainApp</argument>
 
 								<argument>--main-jar</argument>
 								<argument>./${project.artifactId}-${project.version}.jar</argument>
 
-								<argument>--output</argument>
+								<argument>--dest</argument>
 								<argument>package</argument>
 
-								<argument>--identifier</argument>
-								<argument>org.xtx.ut4converter</argument>
-
-								<argument>--version</argument>
+								<argument>--app-version</argument>
 								<argument>${project.version}</argument>
 
 								<argument>--name</argument>
 								<argument>${project.artifactId}</argument>
 
 								<argument>--description</argument>
-								<argument>Tool that helps converting maps from Unreal 1, Unreal 2, Unreal Tournament (1999), Unreal Tournament 2003/4, Unreal Tournament 3 to Unreal Tournament 4 (UT2005)</argument>
-
-								<!--  Prevents multiple instances of the application from launching -->
-								<argument>--singleton</argument>
+								<argument>UT4X Converter</argument>
 
 								<argument>--vendor</argument>
-								<argument>Thomas P.</argument>
+								<argument>Thomas 'WinterIsComing' P.</argument>
 
 								<argument>--copyright</argument>
 								<argument>You are free to distribute and use with tool but with no commercial use</argument>
-
-								<argument>--identifier</argument>
-								<argument>org.xtx.ut4converter</argument>
-
-								<argument>--category</argument>
-								<argument>Tool</argument>
-
-								<argument>--win-registry-name</argument>
-								<argument>${project.artifactId}</argument>
-
-								<!-- FOR INSTALL, ONLY do it for current user and not all -->
-								<argument>--win-per-user</argument>
-
-                                <argument>--win-dir-chooser</argument>
-								<argument>--win-shortcut</argument>
 
 								<!-- jlink arguments -->
 								<argument>--module-path</argument>
@@ -255,6 +239,48 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- libbrotli-dev -->
+	<profiles>
+		<!-- specific parameters for windows only -->
+		<profile>
+			<id>windows-active</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.6.0</version>
+						<executions>
+							<execution>
+								<id>create-package</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<arguments>
+										<!-- FOR INSTALL, ONLY do it for current user and not all -->
+										<argument>--win-per-user-install</argument>
+										<argument>--win-dir-chooser</argument>
+										<argument>--win-shortcut</argument>
+										<argument>--win-upgrade-uuid</argument>
+										<argument>${upgrade.uuid}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
 
@@ -302,7 +328,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
+			<version>2.11.0</version>
 		</dependency>
 
 		<dependency>
@@ -315,16 +341,14 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
+			<version>3.12.0</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.10.0</version>
+			<version>2.13.0</version>
 		</dependency>
 
 
