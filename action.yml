@@ -10,7 +10,7 @@ inputs:
   java-package:
     description: 'The package type (jre, jdk, jdk+fx)'
     required: false
-    default: 'jdk+fx'
+    default: 'jdk'
   architecture:
     description: 'The architecture (x86, x64) of the package.'
     required: false
