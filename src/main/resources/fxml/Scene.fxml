@@ -36,6 +36,7 @@
                 <MenuItem fx:id="menuSettings" onAction="#handleSettings" text="Settings" />
             </Menu>
             <Menu text="?">
+                <MenuItem fx:id="menuGitHub" onAction="#openGitHubUrl" text="GitHub project" />
                 <MenuItem fx:id="menuCheckForUpdates" onAction="#openUtTopicUrl" text="Check for updates" />
                 <!--<MenuItem text="Report bug" onAction="#openGitHubIssues" fx:id="reportIssue"/>-->
                 <MenuItem fx:id="menuItemAbout" onAction="#handleAbout" text="About UT4X Converter ..." />

@@ -24,6 +24,7 @@ import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Url to git hub for source code
 	 */
-	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4Converter";
+	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4X-Converter";
 
 	/**
 	 * Url to github project for reporting issues
@@ -68,6 +69,12 @@ public class MainSceneController implements Initializable {
 
 	@FXML
 	private MenuItem menuCheckForUpdates;
+
+	/**
+	 * Entry meny to github project page
+	 */
+	@FXML
+	private MenuItem menuGitHub;
 
 	public MainApp mainApp;
 	public Stage mainStage;
@@ -200,6 +207,7 @@ public class MainSceneController implements Initializable {
 		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
 	}
 
+	@FXML
 	private void openGitHubUrl(ActionEvent event) {
 		openUrl(URL_UTCONV_GITHUB, true, null);
 	}
@@ -323,7 +331,20 @@ public class MainSceneController implements Initializable {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select your " + unreal2.name + " texture package");
 
-		File texFolder = UTGames.getTexturesFolder(this.userConfig.getGameConfigByGame(UTGame.U2).getPath(), UTGame.U2);
+		final UserGameConfig userGameConfigU2 = this.userConfig.getGameConfigByGame(UTGame.U2);
+
+		if (userGameConfigU2 == null) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Unreal 2 path not set");
+			alert.setHeaderText("Unreal 2 installation path needs to be set.");
+			alert.setContentText("Adjust settings for unreal 2 game");
+
+			alert.showAndWait();
+			showSettings();
+			return;
+		}
+
+		File texFolder = UTGames.getTexturesFolder(userGameConfigU2.getPath(), UTGame.U2);
 
 		if (texFolder.exists()) {
 			chooser.setInitialDirectory(texFolder);
