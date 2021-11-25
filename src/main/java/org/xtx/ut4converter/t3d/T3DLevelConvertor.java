@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  * Converts T3D Unreal 1 / Unreal Tournament to Unreal Tournament "4" t3d file
- * 
+ *
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
@@ -76,7 +76,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	private int actorCount;
 
 	private boolean noUi;
-	
+
 	/**
 	 * Unconverted properties
 	 */
@@ -104,7 +104,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param originalT3d
 	 *            Original t3d ut3 file
 	 * @param convertedT3d
@@ -124,7 +124,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
-     * 
+     *
      */
 	private void initialise() {
 
@@ -174,7 +174,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Converts t3d file for final game
-	 * 
+	 *
 	 * @throws Exception Exception thrown
 	 */
 	public void readConvertAndWrite() throws Exception {
@@ -242,7 +242,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 
-	
+
 	/**
 	 * Find an actor by name
 	 * @param actorName Actor name
@@ -260,7 +260,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Write actors to .t3d file
-	 * 
+	 *
 	 * @throws IOException Exception thrown
 	 */
 	private void writeActors() throws IOException {
@@ -326,7 +326,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void convertActors() {
 
@@ -362,7 +362,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			convertedActorsCount ++;
 
 			// update global conversion
-			if(convertedActorsCount % 5 == 0 && !noUi){
+			if(!noUi){
 				float pcDone = ((float) convertedActorsCount) / convertedActors.size();
 				long newProgress = (long) (MapConverter.PROGRESS_BEFORE_CONVERT + xx * pcDone);
 				mapConverter.updateMapConverterProgress(newProgress, 100);
@@ -376,7 +376,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Read actor data from original t3d level file
-	 * 
+	 *
 	 * @throws IOException Exception thrown
 	 */
 	private void readActors() throws IOException {
@@ -415,7 +415,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Says if current line is data for new actor
-	 * 
+	 *
 	 * @param line t3d data line
 	 * @return <code>true</code> if lines describe a new actor
 	 */
@@ -432,7 +432,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Analyze T3D line to get and convert UT data
-	 * 
+	 *
 	 * @param line
 	 *            current T3D line being read
 	 * @throws Exception Exception thrown
@@ -508,7 +508,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Returns current actor class from t3d line defining actor
-	 * 
+	 *
 	 * @param line
 	 *            t3d line
 	 * @return Actor class
@@ -524,7 +524,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Write header of T3D file TODO check for UE1/UE2
-	 * 
+	 *
 	 * @throws IOException Exception thrown
 	 */
 	private void writeHeader() throws IOException {
@@ -556,7 +556,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Level dimensions
 	 */
 	private Vector3d getLevelDimensions() {
@@ -611,7 +611,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * Write footer of converted t3d file // Begin Map
 	 * Name=/Game/RestrictedAssets/Maps/WIP/DM-SolarTest // Begin Level
 	 * NAME=PersistentLevel TODO check for UE1/UE2
-	 * 
+	 *
 	 * @throws IOException Exception thrown
 	 */
 	private void writeFooter() throws IOException {
@@ -665,9 +665,9 @@ public class T3DLevelConvertor extends Task<Object> {
 	public void setCreateNoteWhenUnconverted(boolean createNoteWhenUnconverted) {
 		this.createNoteWhenUnconverted = createNoteWhenUnconverted;
 	}
-	
-	
-	
+
+
+
 	public Map<String, Set<String>> getUnconvertedProperties() {
 		return unconvertedProperties;
 	}
@@ -699,8 +699,8 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 	}
 
-	
-	
+
+
 	public SortedSet<String> getUnconvertedActors() {
 		return unconvertedActors;
 	}

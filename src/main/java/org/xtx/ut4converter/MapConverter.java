@@ -279,7 +279,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @param outputGame
 	 *            Output UT Game
 	 */
-	public MapConverter(UTGame inputGame, UTGame outputGame) {
+	public MapConverter(UTGame inputGame, UTGame outputGame) throws IOException {
 		this.inputGame = inputGame;
 		this.outputGame = outputGame;
 		initialise();
@@ -295,7 +295,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *            Map to be converted (either a t3d file or map)
 	 * @param path
 	 */
-	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, String path) {
+	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, String path) throws IOException {
 		this.inputGame = inputGame;
 		this.outputGame = outputGame;
 		this.inMap = inpMap;
@@ -303,7 +303,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		initialise();
 	}
 
-	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap) {
+	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap) throws IOException {
 		this.inputGame = inputGame;
 		this.outputGame = outputGame;
 		initialise();
@@ -379,7 +379,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return new File(config.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
 	}
 
-	private void initialise() {
+	private void initialise() throws IOException {
 
 		if (this.outPath == null && inMap != null) {
 			this.outPath = Paths.get(this.getMapConvertFolder().toURI());
@@ -390,7 +390,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 
 
-		try {
+		//try {
 
 			tm = new T3DMatch(this);
 
@@ -428,9 +428,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			userConfig = UserConfig.load();
-		} catch (IOException ex) {
-			Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		//} catch (IOException ex) {
+		//	Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
+		//}
 
 		// init available extractors
 		packageExtractors = new ArrayList<>();
@@ -1507,7 +1507,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return conversionViewController;
 	}
 
-	public void setInMap(File inMap) {
+	public void setInMap(File inMap) throws IOException {
 		this.inMap = inMap;
 		this.outPath = null;
 		packageExtractors.clear();

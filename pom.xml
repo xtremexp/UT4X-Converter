@@ -5,7 +5,7 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT4X-Converter</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<packaging>jar</packaging>
 
 	<name>UT4 Converter</name>
@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
 		<junit.version>5.8.1</junit.version>
-		<upgrade.uuid>9134cc3f-269d-46f2-8ff9-b182c28798bb</upgrade.uuid>
+		<upgrade.uuid>398ee34b-d455-4d08-a264-08eb7f325e92</upgrade.uuid>
 	</properties>
 
 	<organization>
@@ -37,6 +37,8 @@
 				<version>3.8.1</version>
 				<configuration>
 					<release>17</release>
+					<source>17</source>
+					<target>17</target>
 				</configuration>
 			</plugin>
 
@@ -178,69 +180,9 @@
 				</executions>
 			</plugin>
 
-
-			<!-- CREATES AN INSTALLER FOR UT4 CONVERTER -->
-			<!-- https://docs.oracle.com/en/java/javase/16/docs/specs/man/jpackage.html -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>create-package</id>
-						<phase>package</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${java.home}/bin/jpackage</executable>
-							<workingDirectory>${project.build.directory}</workingDirectory>
-							<longModulepath>false</longModulepath>
-							<environmentVariables>
-								<JAVA_HOME>${java.home}</JAVA_HOME>
-							</environmentVariables>
-							<arguments>
-								<!-- jpackage arguments -->
-								<argument>--verbose</argument>
-								<argument>--input</argument>
-								<argument>${project.build.directory}/libs</argument>
-
-								<argument>--main-jar</argument>
-								<argument>./${project.artifactId}-${project.version}.jar</argument>
-
-								<argument>--dest</argument>
-								<argument>package</argument>
-
-								<argument>--app-version</argument>
-								<argument>${project.version}</argument>
-
-								<argument>--name</argument>
-								<argument>${project.artifactId}</argument>
-
-								<argument>--description</argument>
-								<argument>UT4X Converter</argument>
-
-								<argument>--vendor</argument>
-								<argument>Thomas 'WinterIsComing' P.</argument>
-
-								<argument>--copyright</argument>
-								<argument>You are free to distribute and use with tool but with no commercial use</argument>
-
-								<!-- jlink arguments -->
-								<argument>--module-path</argument>
-								<argument>${project.build.directory}/mods</argument>
-
-								<argument>--add-modules</argument>
-								<argument>java.base,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 
-	<!-- libbrotli-dev -->
 	<profiles>
 		<!-- specific parameters for windows only -->
 		<profile>
@@ -265,11 +207,53 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
+									<executable>${java.home}/bin/jpackage</executable>
+									<workingDirectory>${project.build.directory}</workingDirectory>
+									<longModulepath>false</longModulepath>
+									<environmentVariables>
+										<JAVA_HOME>${java.home}</JAVA_HOME>
+									</environmentVariables>
 									<arguments>
-										<!-- FOR INSTALL, ONLY do it for current user and not all -->
+										<!-- jpackage arguments -->
+										<argument>--verbose</argument>
+										<argument>--input</argument>
+										<argument>${project.build.directory}/libs</argument>
+
+										<argument>--main-jar</argument>
+										<argument>./${project.artifactId}-${project.version}.jar</argument>
+
+										<argument>--dest</argument>
+										<argument>package</argument>
+
+										<argument>--app-version</argument>
+										<argument>${project.version}</argument>
+
+										<argument>--name</argument>
+										<argument>${project.artifactId}</argument>
+
+										<argument>--description</argument>
+										<argument>UT4X Converter</argument>
+
+										<argument>--vendor</argument>
+										<argument>Thomas 'WinterIsComing' P.</argument>
+
+										<argument>--copyright</argument>
+										<argument>You are free to distribute and use with tool but with no commercial use</argument>
+
+										<!-- jlink arguments -->
+										<argument>--module-path</argument>
+										<argument>${project.build.directory}/mods</argument>
+
+										<argument>--add-modules</argument>
+										<argument>java.base,java.logging,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml</argument>
+
+										<argument>--about-url</argument>
+										<argument>https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285</argument>
+
 										<argument>--win-per-user-install</argument>
 										<argument>--win-dir-chooser</argument>
 										<argument>--win-shortcut</argument>
+										<argument>--win-shortcut-prompt</argument>
 										<argument>--win-upgrade-uuid</argument>
 										<argument>${upgrade.uuid}</argument>
 									</arguments>
@@ -300,10 +284,17 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
+
 		<!-- LOGGING -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
 			<version>${slf4j.version}</version>
 		</dependency>
 

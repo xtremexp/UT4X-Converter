@@ -14,13 +14,13 @@ import org.xtx.ut4converter.ui.MainSceneController;
 import java.io.IOException;
 
 /**
- * 
+ *
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
 public class MainApp extends Application {
 
-	private Logger logger = LoggerFactory.getLogger(MainApp.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
 	/**
 	 * Program Name
@@ -30,7 +30,7 @@ public class MainApp extends Application {
 	/**
 	 * Version of UT4 Converter
 	 */
-	public static final String VERSION = "1.0.2";
+	public static final String VERSION = "1.0.3";
 
 	/**
 	 * Author
@@ -42,7 +42,23 @@ public class MainApp extends Application {
 	 */
 	public enum FXMLoc {
 
-		MAIN("/fxml/Scene.fxml"), WELCOME("/fxml/WelcomeView.fxml"), SETTINGS("/fxml/SettingsScene.fxml"), CONV_SETTINGS("/fxml/ConversionSettings.fxml"), CONVERSION("/fxml/ConversionView.fxml");
+		/**
+		 *
+		 */
+		MAIN("/fxml/Scene.fxml"),
+		/**
+		 * Welcome message
+		 */
+		WELCOME("/fxml/WelcomeView.fxml"),
+		/**
+		 * App settings
+		 */
+		SETTINGS("/fxml/SettingsScene.fxml"),
+		/**
+		 * Conversion settings view
+		 */
+		CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
+		CONVERSION("/fxml/ConversionView.fxml");
 
 		String path;
 
@@ -117,7 +133,7 @@ public class MainApp extends Application {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 *            fxml view file relative path
 	 * @return Controller of view
@@ -132,7 +148,7 @@ public class MainApp extends Application {
 
 			return loader.getController();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error loading view " + name, e);
 		}
 
 		return null;
@@ -147,7 +163,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Show conversion view (log table, ...)
-	 * 
+	 *
 	 * @return Controller of view
 	 */
 	public ConversionViewController showConversionView() {

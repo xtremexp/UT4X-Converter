@@ -113,7 +113,7 @@ public class UModelExporter extends UTPackageExtractor {
 		}
 
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
-		String command = getExporterPath() + " -export -sounds -groups -notgacomp -png -nolightmap -lods -uc \"" + fileContainer + "\"";
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp -png -nooverwrite -nolightmap -lods -uc \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
@@ -471,11 +471,11 @@ public class UModelExporter extends UTPackageExtractor {
 	}
 
 	public static void main(final String[] args){
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
-		mc.setConvertTextures(true);
-		UModelExporter export = new UModelExporter(mc);
 
 		try {
+			MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
+			mc.setConvertTextures(true);
+			UModelExporter export = new UModelExporter(mc);
 			export.buildUT99TexToPackageFile();
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block

@@ -8,18 +8,15 @@ package org.xtx.ut4converter.config.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.ui.SettingsSceneController;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author XtremeXp
  */
 public class UserConfig {
@@ -73,7 +70,7 @@ public class UserConfig {
 
 	/**
 	 * Tells if use have specifies the path of the game
-	 * 
+	 *
 	 * @param game
 	 *            UT Game
 	 * @return <code>true</code> if UT game path is set in settings
@@ -90,7 +87,7 @@ public class UserConfig {
 
 	/**
 	 * Get the game config for some UT game
-	 * 
+	 *
 	 * @param game
 	 *            UT game
 	 * @return User game configuration for the ut game
@@ -122,25 +119,20 @@ public class UserConfig {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return User configuration
 	 */
 	public static UserConfig load() throws  IOException {
-		try {
-			File file = UserConfig.getUserConfigFile();
+		File file = UserConfig.getUserConfigFile();
 
-			// auto-create config file
-			if (!file.exists()) {
-				UserConfig userConfig = new UserConfig();
-				userConfig.saveFile();
-				return userConfig;
-			}
-
-			return objectMapper.readValue(file, UserConfig.class);
-		} catch (IOException ex) {
-			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-			throw ex;
+		// auto-create config file
+		if (!file.exists()) {
+			UserConfig userConfig = new UserConfig();
+			userConfig.saveFile();
+			return userConfig;
 		}
+
+		return objectMapper.readValue(file, UserConfig.class);
 	}
 
 }

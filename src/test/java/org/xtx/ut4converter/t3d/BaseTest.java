@@ -21,7 +21,7 @@ public class BaseTest {
      * @param inputGame
      * @return
      */
-    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame){
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame) throws IOException {
         final MapConverter mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
 
         if (inputGame == UTGames.UTGame.U2) {
@@ -105,7 +105,7 @@ public class BaseTest {
         return uta;
     }
 
-    public static void setMapFile(final MapConverter mc, final String inMap){
+    public static void setMapFile(final MapConverter mc, final String inMap) throws IOException {
         mc.setInMap(new File(UTGames.getMapsFolder(mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath(), mc.getInputGame())  + "/" + inMap));
     }
 }

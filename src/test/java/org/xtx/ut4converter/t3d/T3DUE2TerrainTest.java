@@ -18,7 +18,7 @@ public class T3DUE2TerrainTest {
     private MapConverter mc;
 
     @Before
-    public void setUp(){
+    public void setUp() throws IOException {
         this.mc = BaseTest.getMapConverterInstance(UTGames.UTGame.UT2004);
     }
 
