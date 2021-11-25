@@ -6,7 +6,7 @@
 
 
 * Version: 1.0.3
-* Release date: MM/DD/2021
+* Release date: 25/11/2021
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
 * Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
