@@ -97,6 +97,12 @@ Installation and quick start
 * Go to Settings and set the unreal games folders as well as the umodel.exe program path
 * Convert your map in Menu: File -> Unreal (Tournament) -> Convert Map to UT4 ...
 
+
+Program Update
+------------------------------
+* Uninstall program in windows applications configuration panel
+* Install new version (.msi file)
+
 ## How to convert a map?
 
 Make sure you are allowed to convert the original map (if you are not the original author for example)
