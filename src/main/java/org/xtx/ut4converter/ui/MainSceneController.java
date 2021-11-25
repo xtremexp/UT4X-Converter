@@ -52,14 +52,14 @@ public class MainSceneController implements Initializable {
 
 	// TODO - should be in properties file
 	/**
-	 * Link to UT4 Converter topic
-	 */
-	private final String URL_UT4CONV_FORUM = "https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285";
-
-	/**
 	 * Url to git hub for source code
 	 */
 	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4X-Converter";
+
+	/**
+	 * Url to git hub releases
+	 */
+	private final String URL_UTCONV_GITHUB_RELEASES = "https://github.com/xtremexp/UT4X-Converter/releases";
 
 	/**
 	 * Url to github project for reporting issues
@@ -83,6 +83,12 @@ public class MainSceneController implements Initializable {
 	 */
 	@FXML
 	private MenuItem menuGitHub;
+
+	/**
+	 * Entry meny to github releases
+	 */
+	@FXML
+	private MenuItem menuGitHubReleases;
 
 	public MainApp mainApp;
 	public Stage mainStage;
@@ -197,21 +203,14 @@ public class MainSceneController implements Initializable {
 	}
 
 
-
-	/**
-	 * OPen web browser to ut4 converter topic at ut forums
-	 *
-	 * @param event
-	 */
-	@FXML
-	private void openUtTopicUrl(ActionEvent event) {
-		openUrl(URL_UT4CONV_FORUM, true, null);
-	}
-
-
 	@FXML
 	private void openGitHubIssues(ActionEvent event){
 		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
+	}
+
+	@FXML
+	private void openGitHubUrlReleases(ActionEvent event) {
+		openUrl(URL_UTCONV_GITHUB_RELEASES, true, null);
 	}
 
 	@FXML

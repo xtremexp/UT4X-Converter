@@ -5,11 +5,11 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
 
 
-* Version: 1.0.3
+* Version: 1.0.4
 * Release date: 25/11/2021
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
-* Download: [UT Forums](https://www.epicgames.com/unrealtournament/forums/unreal-tournament-development/ut-development-level-design/9285)
-* Source Code: [GitHub-UT4X Converter](https://github.com/xtremexp/UT4X-Converter)
+* Download: [GitHub - Releases](https://github.com/xtremexp/UT4X-Converter/releases)
+* Source Code: [GitHub](https://github.com/xtremexp/UT4X-Converter)
 
   
 
@@ -88,19 +88,14 @@ Notes:
   * Unreal Tournament 3
 * UModel Unreal Engine package extractor: http://www.gildor.org/en/projects/umodel
 
-Installation and first start
+Installation and quick start
 ------------------------------
 
-* Install umodel http://www.gildor.org/en/projects/umodel
-* Decompress the ZIP archive to any folder of your choice.
-* Double-click on UT4-Converter-<version>.jar, the program should be launching.
-
-Go to Settings and set the unreal games folders as well as umodel program paths
-
-
-Detailed explanations about conversion is always displayed after each end of map conversion
-
-in program.
+* Download umodel from http://www.gildor.org/en/projects/umodel
+* Install program by clicking on .msi file
+* Launch program
+* Go to Settings and set the unreal games folders as well as the umodel.exe program path
+* Convert your map in Menu: File -> Unreal (Tournament) -> Convert Map to UT4 ...
 
 ## How to convert a map?
 
@@ -228,19 +223,24 @@ These programs are used during conversion process.
 ---
 
 ## History
+- 1.0.4 - 25/11/2021
+  * removed references to utforums since it has been set to read-only permanently (https://www.epicgames.com/unrealtournament/forums/unreal-tournament-discussion/announcements/413461-unreal-tournament-forum-changes)
+  * updated readme for installation procedure
+  * "Check for updates" menu now opens github releases page
+
 - 1.0.3 - 25/11/2021
- * all: textures are now exported by default to .png (better quality and alpha layer) instead of .tga
- * all: flat brushes (water, fire torches, ...) that were causing bsp holes are no longer deleted but converted instead into semi-solid brushes
- * all: mover brushes are now converted to semi-solid brushes instead of solid brushes to prevent potential bsp holes
- * all: added extra scale options for conversion
- * ut3: now correctly handling "SoundSlots" property
- * ut3: fixed some resources not exported from map package
- * all: fixed lift destination for non moving movers
- * all: fixed some potential resources not exported
- * ut99: fixed bad export package name for textures in map package causing no texture match in UT4 import and bad scaling
- * ui: fixed some alignment issues, added github project link in menu
- * ci: fixed github build
- * tech: migrated from Java 13 to Java 17
+  * all: textures are now exported by default to .png (better quality and alpha layer) instead of .tga
+  * all: flat brushes (water, fire torches, ...) that were causing bsp holes are no longer deleted but converted instead into semi-solid brushes
+  * all: mover brushes are now converted to semi-solid brushes instead of solid brushes to prevent potential bsp holes
+  * all: added extra scale options for conversion
+  * ut3: now correctly handling "SoundSlots" property
+  * ut3: fixed some resources not exported from map package
+  * all: fixed lift destination for non moving movers
+  * all: fixed some potential resources not exported
+  * ut99: fixed bad export package name for textures in map package causing no texture match in UT4 import and bad scaling
+  * ui: fixed some alignment issues, added github project link in menu
+  * ci: fixed github build
+  * tech: migrated from Java 13 to Java 17
 
 - 1.0.0 - 22/02/2020
   * ut3: added support for terrain conversion
