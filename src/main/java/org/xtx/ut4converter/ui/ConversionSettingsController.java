@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -333,7 +334,7 @@ public class ConversionSettingsController implements Initializable {
 	}
 
 	@FXML
-	private void selectInputMap(ActionEvent event) {
+	private void selectInputMap(ActionEvent event) throws IOException {
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.shortName + " map");

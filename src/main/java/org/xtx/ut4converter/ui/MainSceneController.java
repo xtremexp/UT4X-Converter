@@ -19,6 +19,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames;
@@ -36,13 +38,19 @@ import static org.xtx.ut4converter.tools.UIUtils.openUrl;
 
 /**
  * FXML Controller class TODO i18n
- * 
+ *
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
 public class MainSceneController implements Initializable {
 
 
+	/**
+	 * Logger
+	 */
+	private Logger logger = LoggerFactory.getLogger(MainSceneController.class);
+
+	// TODO - should be in properties file
 	/**
 	 * Link to UT4 Converter topic
 	 */
@@ -98,8 +106,7 @@ public class MainSceneController implements Initializable {
 				showAlertFirstTime();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("initialize " + url, e);
 		}
 	}
 
@@ -122,7 +129,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Exit program
-	 * 
+	 *
 	 * @param event
 	 */
 	@FXML
@@ -132,7 +139,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Opens file browser for UT99 .t3d map, then convert it.
-	 * 
+	 *
 	 * @param event
 	 */
 	@FXML
@@ -142,7 +149,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Show credits about program TODO history, library used, licence
-	 * 
+	 *
 	 * @param event Event
 	 */
 	@FXML
@@ -157,7 +164,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Display Settings panel
-	 * 
+	 *
 	 * @param event
 	 */
 	@FXML
@@ -185,7 +192,7 @@ public class MainSceneController implements Initializable {
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("showSettings", e);
 		}
 	}
 
@@ -193,7 +200,7 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * OPen web browser to ut4 converter topic at ut forums
-	 * 
+	 *
 	 * @param event
 	 */
 	@FXML
@@ -223,7 +230,7 @@ public class MainSceneController implements Initializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputGame
 	 *            Input UT Game
 	 * @param outputGame
@@ -271,9 +278,15 @@ public class MainSceneController implements Initializable {
 				alert.showAndWait();
 				showSettings();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			// TODO alert
+		} catch (Throwable t) {
+			logger.error("convertUtxMap " + inputGame.name + " to " + outputGame.name, t);
+
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Error");
+			alert.setContentText("Error detail :" + t.getMessage());
+
+			alert.showAndWait();
 		}
 
 	}

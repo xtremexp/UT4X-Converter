@@ -471,11 +471,11 @@ public class UModelExporter extends UTPackageExtractor {
 	}
 
 	public static void main(final String[] args){
-		MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
-		mc.setConvertTextures(true);
-		UModelExporter export = new UModelExporter(mc);
 
 		try {
+			MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
+			mc.setConvertTextures(true);
+			UModelExporter export = new UModelExporter(mc);
 			export.buildUT99TexToPackageFile();
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block

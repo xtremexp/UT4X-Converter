@@ -1,13 +1,11 @@
 package org.xtx.ut4converter.ucore.ue4.matinee;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.t3d.MoverProperties;
 import org.xtx.ut4converter.t3d.T3DActor;
 import org.xtx.ut4converter.t3d.T3DMover;
 import org.xtx.ut4converter.t3d.T3DUtils;
 
-import javax.vecmath.Vector3d;
 import java.util.List;
 
 public class MatineeActor extends T3DActor {
@@ -19,7 +17,7 @@ public class MatineeActor extends T3DActor {
 
 	/**
 	 * Builds a matinee actor from a UE1/UE2 mover actor
-	 * 
+	 *
 	 * @param mc
 	 * @param mover
 	 */
@@ -112,29 +110,4 @@ public class MatineeActor extends T3DActor {
 		return null;
 	}
 
-	public static void main(String... args) {
-		MapConverter mc = new MapConverter(UTGame.UT99, UTGame.UT4);
-		MatineeActor ma = new MatineeActor(mc, "MatineeActor");
-		ma.location = new Vector3d(new double[] { 0d, 0d, 0d });
-		// ma.interpGroupInsts = new ArrayList<>();
-
-		InterpData id = new InterpData(mc);
-		InterpGroup ig = new InterpGroup(mc, id, "Movement");
-		InterpTrackMove moveTrack = new InterpTrackMove(mc);
-
-		InterpCurve ic = new InterpCurve(mc);
-		InterpCurvePoint loc1 = new InterpCurvePoint(0d, new Vector3d(0d, 0d, 0d));
-		InterpCurvePoint loc2 = new InterpCurvePoint(5d, new Vector3d(0d, 0d, 1024d));
-		ic.addPoint(loc1);
-		ic.addPoint(loc2);
-
-		moveTrack.setPosTrack(ic);
-		
-		ig.addTrack(moveTrack);
-		id.addGroup(ig);
-		// ma.interpGroupInsts.add(new InterpGroupInst(mc, ig, null));
-		ma.matineeData = id;
-
-		System.out.println(ma);
-	}
 }

@@ -5,13 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xtx.ut4converter.UTGames;
 
+import java.io.IOException;
+
 /**
  * Testing t3d light
  */
 public class T3DLightTest extends T3DActorBaseTest {
 
     @Before
-    public void setUp(){
+    public void setUp() throws IOException {
         super.setUp(UTGames.UTGame.UT99);
     }
 

@@ -6,6 +6,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
 import javax.vecmath.Point2d;
+import java.io.IOException;
 
 
 public class T3DUE4TerrainTest {
@@ -39,7 +40,7 @@ public class T3DUE4TerrainTest {
     }
 
     @Test
-    public void testGetCollisionComponentFromHeightMapIndex(){
+    public void testGetCollisionComponentFromHeightMapIndex() throws IOException {
 
         final MapConverter mc = new MapConverter(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
 
