@@ -15,7 +15,7 @@
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 		<javafx.version>17.0.0.1</javafx.version>
 		<slf4j.version>1.7.32</slf4j.version>
-		<log4j.version>2.15.0</log4j.version>
+		<log4j.version>2.16.0</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
