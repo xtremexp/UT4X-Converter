@@ -5,7 +5,6 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -72,8 +71,8 @@ public class SettingsSceneController implements Initializable {
 	/**
 	 * Initializes the controller class.
 	 * 
-	 * @param url
-	 * @param rb
+	 * @param url Url
+	 * @param rb Resource Bundle
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -90,48 +89,48 @@ public class SettingsSceneController implements Initializable {
 	}
 
 	@FXML
-	private void selectU1Folder(ActionEvent event) {
+	private void selectU1Folder() {
 		setUTxFolder(UTGame.U1, u1Path);
 	}
 
 	@FXML
-	private void selectUt99Folder(ActionEvent event) {
+	private void selectUt99Folder() {
 		setUTxFolder(UTGame.UT99, ut99Path);
 	}
 
 	@FXML
-	private void selectUt2003Folder(ActionEvent event) {
+	private void selectUt2003Folder() {
 		setUTxFolder(UTGame.UT2003, ut2003Folder);
 	}
 
 	@FXML
-	private void selectUt2004Folder(ActionEvent event) {
+	private void selectUt2004Folder() {
 		setUTxFolder(UTGame.UT2004, ut2004Path);
 	}
 
 	@FXML
-	private void selectUt3Folder(ActionEvent event) {
+	private void selectUt3Folder() {
 		setUTxFolder(UTGame.UT3, ut3Folder);
 	}
 
 	@FXML
-	private void selectUdkFolder(ActionEvent event) {
+	private void selectUdkFolder() {
 		setUTxFolder(UTGame.UDK, udkFolder);
 	}
 
 	@FXML
-	private void selectUt4EditorFolder(ActionEvent event) {
+	private void selectUt4EditorFolder() {
 		setUTxFolder(UTGame.UT4, ut4EditorFolder);
 	}
 
 	@FXML
-	private void selectU2Folder(ActionEvent event) {
+	private void selectU2Folder() {
 		setUTxFolder(UTGame.U2, u2Path);
 	}
 
 
 	@FXML
-	private void gotoUModelWebsite(ActionEvent event) {
+	private void gotoUModelWebsite() {
 
 		final String uModelUrl = "http://www.gildor.org/en/projects/umodel";
 		UIUtils.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
@@ -140,8 +139,8 @@ public class SettingsSceneController implements Initializable {
 	/**
 	 * Saves game path to UserConfig object
 	 * 
-	 * @param textFile
-	 * @param utGame
+	 * @param textFile Text field where new ut game path is stored
+	 * @param utGame UT game to save
 	 */
 	private void saveGamePath(TextField textFile, UTGames.UTGame utGame) {
 
@@ -191,33 +190,18 @@ public class SettingsSceneController implements Initializable {
 			for (UserGameConfig game : userConfig.getGame()) {
 
 				if (game.getPath() != null && null != game.getId()) {
-						switch (game.getId()) {
-						case UT99:
-							ut99Path.setText(game.getPath().getAbsolutePath());
-							break;
-						case U1:
-							u1Path.setText(game.getPath().getAbsolutePath());
-							break;
-						case U2:
-							u2Path.setText(game.getPath().getAbsolutePath());
-							break;
-						case UT2003:
-							ut2003Folder.setText(game.getPath().getAbsolutePath());
-							break;
-						case UT2004:
-							ut2004Path.setText(game.getPath().getAbsolutePath());
-							break;
-						case UT3:
-							ut3Folder.setText(game.getPath().getAbsolutePath());
-							break;
-						case UDK:
-							udkFolder.setText(game.getPath().getAbsolutePath());
-							break;
-						case UT4:
-							ut4EditorFolder.setText(game.getPath().getAbsolutePath());
-							break;
-						default:
+					switch (game.getId()) {
+						case UT99 -> ut99Path.setText(game.getPath().getAbsolutePath());
+						case U1 -> u1Path.setText(game.getPath().getAbsolutePath());
+						case U2 -> u2Path.setText(game.getPath().getAbsolutePath());
+						case UT2003 -> ut2003Folder.setText(game.getPath().getAbsolutePath());
+						case UT2004 -> ut2004Path.setText(game.getPath().getAbsolutePath());
+						case UT3 -> ut3Folder.setText(game.getPath().getAbsolutePath());
+						case UDK -> udkFolder.setText(game.getPath().getAbsolutePath());
+						case UT4 -> ut4EditorFolder.setText(game.getPath().getAbsolutePath());
+						default -> {
 						}
+					}
 				}
 			}
 
@@ -250,7 +234,7 @@ public class SettingsSceneController implements Initializable {
 
 		File utxFolder = chooser.showDialog(new Stage());
 
-		if (utxFolder != null) {
+		if (utPathTxtField != null && utxFolder != null) {
 			utPathTxtField.setText(utxFolder.getAbsolutePath());
 			saveGamePath(utPathTxtField, utGame);
 		}
@@ -261,30 +245,38 @@ public class SettingsSceneController implements Initializable {
 	}
 
 	@FXML
-	private void closeDialog(ActionEvent event) {
+	private void closeDialog() {
 		this.dialogStage.close();
 	}
 
 	@FXML
-	private void setUModelPath(ActionEvent event) {
+	private void setUModelPath() {
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select umodel file");
 
 		// TODO strict filter on filename
 		if (Installation.isWindows()) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe", "*.exe"));
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe/umodel_64.exe", "*.exe"));
 		}
 
 		File umodelPathFile = chooser.showOpenDialog(new Stage());
 
 		if (umodelPathFile != null) {
-			try {
-				userConfig.setUModelPath(umodelPathFile);
-				userConfig.saveFile();
-				uModelPath.setText(umodelPathFile.getAbsolutePath());
-			} catch (IOException ex) {
-				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
+			if(umodelPathFile.getName().equals("umodel.exe") || umodelPathFile.getName().equals("umodel_64.exe")) {
+				try {
+					userConfig.setUModelPath(umodelPathFile);
+					userConfig.saveFile();
+					uModelPath.setText(umodelPathFile.getAbsolutePath());
+				} catch (IOException ex) {
+					Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			} else {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Invalid file");
+				alert.setHeaderText("Invalid file");
+				alert.setContentText("Select umodel.exe or umodel_64.exe file");
+				alert.showAndWait();
 			}
 		}
 	}

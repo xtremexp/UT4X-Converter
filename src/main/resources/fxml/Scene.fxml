@@ -8,37 +8,42 @@
         <MenuBar>
             <Menu text="File">
                 <Menu text="Unreal 1">
-                    <MenuItem onAction="#handleConvertU1Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertU1toUT3Map" text="Convert map to UT3 ..." />
+                    <MenuItem onAction="#convertU1toUT4Map" text="Convert map to UT4 ..."/>
                 </Menu>
                 <Menu text="Unreal 2">
-                    <MenuItem onAction="#convertU2Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertU2ToUT3Map" text="Convert map to UT3 ..." />
+                    <MenuItem onAction="#convertU2ToUT4Map" text="Convert map to UT4 ..." />
                     <MenuItem onAction="#extractTexturesFromU2Package" text="Extract textures from package ..." />
                 </Menu>
                 <Menu text="Unreal Tournament">
-                    <MenuItem onAction="#handleConvert" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUT99ToUT3Map" text="Convert map to UT3 ..." />
+                    <MenuItem onAction="#convertUT99ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2003">
-                    <MenuItem onAction="#convertUt2003Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUT2003ToUT3Map" text="Convert map to UT3 ..." />
+                    <MenuItem onAction="#convertUT2003ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2004">
-                    <MenuItem onAction="#convertUt2004Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUt2004ToUT3Map" text="Convert map to UT3 ..." />
+                    <MenuItem onAction="#convertUt2004ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 3">
-                    <MenuItem onAction="#convertUt3Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUT3ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="UDK">
-                    <MenuItem onAction="#convertUdkMap" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUdkToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <SeparatorMenuItem />
-                <MenuItem fx:id="menuExit" onAction="#handleExit" text="Exit" />
+                <MenuItem onAction="#handleExit" text="Exit" />
             </Menu>
-            <Menu fx:id="menuOptions" text="Options">
-                <MenuItem fx:id="menuSettings" onAction="#handleSettings" text="Settings" />
+            <Menu text="Options">
+                <MenuItem onAction="#handleSettings" text="Settings" />
             </Menu>
             <Menu text="?">
-                <MenuItem fx:id="menuGitHub" onAction="#openGitHubUrl" text="GitHub page" />
-                <MenuItem fx:id="menuGitHubReleases" onAction="#openGitHubUrlReleases" text="Check for updates" />
-                <MenuItem fx:id="menuItemAbout" onAction="#handleAbout" text="About UT4X Converter ..." />
+                <MenuItem onAction="#openGitHubUrl" text="GitHub page" />
+                <MenuItem onAction="#openGitHubUrlReleases" text="Check for updates" />
+                <MenuItem onAction="#handleAbout" text="About UT4X Converter ..." />
             </Menu>
         </MenuBar>
     </top>
