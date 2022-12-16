@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 
 import java.lang.reflect.Field;
@@ -132,8 +133,7 @@ public abstract class T3DObject {
 
 				if (T3DObject.class.isAssignableFrom(obj.getClass())) {
 					t3dObj = (T3DObject) obj;
-				} else if (obj instanceof List) {
-					List objList = (List) obj;
+				} else if (obj instanceof List objList) {
 
 					if (!objList.isEmpty() && (objList.get(0) != null && objList.get(0) instanceof T3DObject)) {
 						t3dObj = (T3DObject) objList.get(0);
@@ -202,5 +202,9 @@ public abstract class T3DObject {
 
 	public void setGame(UTGame game) {
 		this.game = game;
+	}
+
+	protected boolean isTo(UTGames.UnrealEngine unrealEngine){
+		return this.mapConverter.getUnrealEngineTo() == unrealEngine;
 	}
 }

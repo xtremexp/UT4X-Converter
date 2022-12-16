@@ -146,9 +146,6 @@ public abstract class T3DActor extends T3DObject {
 	protected List<T3DActor> children = new ArrayList<>();
 
 
-	
-	private boolean invalidActorForWrite;
-
 	String currentSubObjectClass;
 	String currentSubObjectName;
 
@@ -156,7 +153,7 @@ public abstract class T3DActor extends T3DObject {
 	 * Begin Object Class=DistributionFloatUniform Name=DistributionDelayTime
 	 * For UE3 only used to get subobject definitions
 	 * 
-	 * @param line
+	 * @param line T3D line text to analyse
 	 */
 	public void preAnalyse(String line) {
 
@@ -347,7 +344,7 @@ public abstract class T3DActor extends T3DObject {
 	 * @param rotation Rotation
 	 * @param scale3d Scale 3D
 	 */
-	public static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
+	private static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
 
 		String baseText = IDT + "\t\t";
 
@@ -558,8 +555,7 @@ public abstract class T3DActor extends T3DObject {
 		});
 
 		for(final T3DSimpleProperty simpleProperty : registeredProperties){
-			if(simpleProperty.getPropertyValue() instanceof UPackageRessource){
-				final UPackageRessource packageRessource = (UPackageRessource) simpleProperty.getPropertyValue();
+			if(simpleProperty.getPropertyValue() instanceof final UPackageRessource packageRessource){
 				final T3DRessource.Type type = simpleProperty.getRessourceType();
 
 				if(type == T3DRessource.Type.SOUND && mapConverter.convertSounds()){

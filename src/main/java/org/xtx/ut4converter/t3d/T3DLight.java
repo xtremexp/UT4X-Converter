@@ -255,7 +255,7 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("bCorona=")) {
-			isCorona = "true".equals(line.split("=")[1].toLowerCase());
+			isCorona = "true".equalsIgnoreCase(line.split("=")[1]);
 		}
 
 		// UT3
@@ -407,24 +407,25 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 *
-	 * @return
+	 * @return T3D
 	 */
 	public String toT3d() {
 
-		if (mapConverter.toUnrealEngine4()) {
-			String componentLightClass;
+		String componentLightClass;
 
-			if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
-				componentLightClass = "SkyLightComponent";
-			} else if (isSpotLight()) {
-				componentLightClass = "SpotLightComponent";
-			} else if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
-				componentLightClass = "DirectionalLightComponent";
-			} else {
-				componentLightClass = "PointLightComponent";
-			}
+		if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
+			componentLightClass = "SkyLightComponent";
+		} else if (isSpotLight()) {
+			componentLightClass = "SpotLightComponent";
+		} else if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+			componentLightClass = "DirectionalLightComponent";
+		} else {
+			componentLightClass = "PointLightComponent";
+		}
 
-			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+		sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+
+		if (isTo(UnrealEngine.UE4)) {
 
 			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
@@ -466,8 +467,7 @@ public class T3DLight extends T3DSound {
 
 			writeSimpleProperties();
 
-			if(this instanceof T3DTriggerLight){
-				final T3DTriggerLight t3DTriggerLight = (T3DTriggerLight) this;
+			if(this instanceof final T3DTriggerLight t3DTriggerLight){
 
 				if(t3DTriggerLight.getInitialState() != null){
 					sbf.append(IDT).append("\tInitialState=NewEnumerator").append(t3DTriggerLight.getInitialState().ordinal()).append("\n");
@@ -486,8 +486,21 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
             sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
 
-			writeEndActor();
+
+		} else if(isTo(UnrealEngine.UE3)){
+
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0\"\n");
+			sbf.append(IDT).append("\t\tRadius=").append(radius).append("\n");
+			sbf.append(IDT).append("\t\tBrightness=").append(brightness).append("\n");
+			sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
+			sbf.append(IDT).append("\t\tLightColor=(B=").append(blue).append(",G=").append(green).append(",R=").append(red).append(",A=").append(alpha).append(")\n");
+			sbf.append(IDT).append("\tEnd Object\n");
+
+			writeLocRotAndScale();
+			sbf.append(IDT).append("\tLightComponent=").append(componentLightClass).append("'").append(componentLightClass).append("_0'\n");
 		}
+
+		writeEndActor();
 
 		return super.toString();
 	}

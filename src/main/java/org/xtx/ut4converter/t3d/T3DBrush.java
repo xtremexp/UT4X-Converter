@@ -449,37 +449,6 @@ public class T3DBrush extends T3DVolume {
 		 */
 	}
 
-	/**
-	 * Compute if this brush will cause bsp holes: - only 4 or less polygon - OR
-	 * some vertex not bound with at least 3 polygons not enough accurate at
-	 * this stage
-	 *
-	 * @return <code>true</code> if this brush will cause bsp holes on import
-	 */
-	private boolean willCauseBspHoles() {
-
-		// sheet brush (total nb polygons <= 4)
-		if (polyList.size() <= 4) {
-			return true;
-		}
-
-		for (T3DPolygon poly : polyList) {
-			for (Vertex v : poly.vertices) {
-				// vertex only linked with 2 or less other vertices
-				// might be candidate for bsp hole
-				// however need to do some extra checks
-				if (getPolyCountWithVertexCoordinate(v) < 3 && !Geometry.vertexInOtherPoly(polyList, poly, v)) {
-
-					// if this vertex is belonging to edge
-					// of another polygon
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
 	final double VERY_TINY_NUM = 0.001d;
 
 	/**
@@ -514,16 +483,20 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 *
-	 * @return
+	 * @return T3D
 	 */
 	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(brushClass.name()).append(" Name=").append(name).append("\n");
 
 		// Location Data
-		sbf.append(IDT).append("\tBegin Object Name=\"BrushComponent0\"\n");
-		writeLocRotAndScale();
-		sbf.append(IDT).append("\tEnd Object\n");
+		if(isTo(UnrealEngine.UE4)) {
+			sbf.append(IDT).append("\tBegin Object Name=\"BrushComponent0\"\n");
+			writeLocRotAndScale();
+			sbf.append(IDT).append("\tEnd Object\n");
+		} else {
+			writeLocRotAndScale();
+		}
 
 		if(this.damagePerSec != null){
 			sbf.append(IDT).append("\tDamagePerSec=").append(this.damagePerSec).append("\n");
@@ -537,7 +510,11 @@ public class T3DBrush extends T3DVolume {
 			sbf.append(IDT).append("\tFluidFriction=").append(this.physicsVolumeFluidFriction).append("\n");
 		}
 
-		sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
+		if(mapConverter.isTo(UnrealEngine.UE4)) {
+			sbf.append(IDT).append("\tBrushType=").append(UE123_BrushType.valueOf(brushType) == UE123_BrushType.CSG_Add ? UE4_BrushType.Brush_Add : UE4_BrushType.Brush_Subtract).append("\n");
+		} else {
+			sbf.append(IDT).append("\tCsgOper=").append(brushType).append("\n");
+		}
 
 		if (this.polyflags.contains(BrushPolyflag.SEMI_SOLID)) {
 			sbf.append(IDT).append("\tPolyFlags=").append(BrushPolyflag.SEMI_SOLID.getPow()).append("\n");
@@ -596,8 +573,7 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		// write specific properties of post process volume brush subclass
-		if(this instanceof T3DPostProcessVolume){
-			T3DPostProcessVolume ppv = (T3DPostProcessVolume) this;
+		if(this instanceof T3DPostProcessVolume ppv){
 			ppv.writeProps();
 		}
 
@@ -615,18 +591,15 @@ public class T3DBrush extends T3DVolume {
 
 			if (null != t3dClass)
 				switch (t3dClass) {
-					case "SlimeZone":
-					case "UTSlimeVolume":
+					case "SlimeZone", "UTSlimeVolume" ->
 						// slimy ppv copied/pasted from DM-DeckTest (UT4)
-						postProcessVolume.forcedWrittenLines
-								.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
-						break;
-					case "WaterZone":
-						postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
-						break;
+							postProcessVolume.forcedWrittenLines
+									.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_AmbientCubemapIntensity=True,bOverride_DepthOfFieldMethod=True,FilmWhitePoint=(R=0.700000,G=1.000000,B=0.000000,A=1.000000),FilmShadowTint=(R=0.000000,G=1.000000,B=0.180251,A=1.000000),AmbientCubemapIntensity=0.000000,DepthOfFieldMethod=DOFM_Gaussian)");
+					case "WaterZone" ->
+							postProcessVolume.forcedWrittenLines.add("Settings=(bOverride_FilmWhitePoint=True,bOverride_BloomIntensity=True,FilmWhitePoint=(R=0.189938,G=0.611443,B=1.000000,A=0.000000))");
 				}
 
-			sbf.append(postProcessVolume.toString());
+			sbf.append(postProcessVolume);
 
 			// TODO add sheet surface
 		}
@@ -639,10 +612,10 @@ public class T3DBrush extends T3DVolume {
 	 *
 	 * @param mc
 	 *            Map Converter
-	 * @param width
-	 * @param length
-	 * @param height
-	 * @return
+	 * @param width Width of box
+	 * @param length Lenght of box
+	 * @param height Height of box
+	 * @return T3D brush
 	 */
 	public static T3DBrush createBox(MapConverter mc, Double width, Double length, Double height) {
 
@@ -661,28 +634,6 @@ public class T3DBrush extends T3DVolume {
 		polyList.clear();
 
 		polyList = Geometry.createBox(size, size, size);
-	}
-
-	/**
-	 * Creates a cylinder brush
-	 *
-	 * @param mc
-	 *            Map Converter
-	 * @param radius
-	 *            Radius of cylinder
-	 * @param height
-	 *            Height
-	 * @param sides
-	 *            Number of sides for cylinder
-	 * @return
-	 */
-	public static T3DBrush createCylinder(MapConverter mc, Double radius, Double height, int sides) {
-
-		T3DBrush volume = new T3DBrush(mc, BrushClass.Brush.name());
-		volume.polyList.clear();
-		volume.polyList = Geometry.createCylinder(radius, height, sides);
-
-		return volume;
 	}
 
 	/**
