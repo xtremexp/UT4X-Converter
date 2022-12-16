@@ -4,13 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<AnchorPane fx:id="ConversionSettings" prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
+<AnchorPane prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
 
     <BorderPane prefHeight="550.0" prefWidth="700.0">
 
         <center>
             <VBox>
-            <TitledPane fx:id="mainSettingsTitle" expanded="true">
+            <TitledPane fx:id="mainSettingsTitle">
 
                     <GridPane hgap="10" vgap="10">
                         <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0">Input Game:</Label>
