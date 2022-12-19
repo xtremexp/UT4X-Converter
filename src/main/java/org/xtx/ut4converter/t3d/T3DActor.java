@@ -618,7 +618,7 @@ public abstract class T3DActor extends T3DObject {
 			if (drawScale != null) {
 				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");
             }
-			sbf.append(IDT).append("\tName=\"").append(name).append("\n");
+			sbf.append(IDT).append("\tName=\"").append(name).append("\"\n");
 		}
 
 		if (group != null) {
