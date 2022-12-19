@@ -17,6 +17,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Class for converting lights.
@@ -188,18 +189,18 @@ public class T3DLight extends T3DSound {
 	public T3DLight(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
 
-		// Default Values when u put some light in UE1/UE2 editor
+		// Default property lights values in UE1/UE2 editor
 		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			this.hue = 0;
 			this.saturation = 255f;
 			this.brightness = 64f;
 			this.radius = 64f;
 
+			this.lightFalloffExponent = 2d;
+
 			if (mc.isFrom(UnrealEngine.UE1)) {
-				this.lightFalloffExponent = 2.4d;
 				this.intensity = 35f;
 			} else if (mc.isFrom(UnrealEngine.UE2)) {
-				this.lightFalloffExponent = 1.9d;
 				this.intensity = 70f;
 			}
 		}
@@ -487,18 +488,34 @@ public class T3DLight extends T3DSound {
             sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
 
 
-		} else if(isTo(UnrealEngine.UE3)){
+		} else if (isTo(UnrealEngine.UE3)) {
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0\"\n");
-			sbf.append(IDT).append("\t\tRadius=").append(radius).append("\n");
-			sbf.append(IDT).append("\t\tBrightness=").append(brightness).append("\n");
+			final String drawRadObjName = "DrawLightRadiusComponent_" + new Random().nextInt(10000);
+
+			sbf.append(T3DUtils.writeSimpleObject("\t\t", "DrawLightRadiusComponent", "DrawLightRadius0", drawRadObjName, "DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'", "SphereRadius", Float.toString(attenuationRadius)));
+
+			final String pointCompObjName = componentLightClass + "_" + new Random().nextInt(10000);
+
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0 ");
+			sbf.append("ObjName=").append(pointCompObjName).append(" Archetype=").append(componentLightClass).append("'Engine.Default__PointLight:").append(componentLightClass).append("0'\n");
+
+			sbf.append(IDT).append("\t\tRadius=").append(attenuationRadius).append("\n");
+			sbf.append(IDT).append("\t\tBrightness=1.0\n");
 			sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
-			// B,G,R integers for UE3
+			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
+			// R,G,B as integers for UE3
 			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
+			final String spritCompObjName = "SpriteComponent_" + new Random().nextInt(10000);
+			sbf.append(T3DUtils.writeSimpleObject("\t\t", "SpriteComponent", "Sprite", spritCompObjName, "SpriteComponent'Engine.Default__PointLight:Sprite'", null, null));
+
 			writeLocRotAndScale();
-			sbf.append(IDT).append("\tLightComponent=").append(componentLightClass).append("'").append(componentLightClass).append("_0'\n");
+			sbf.append(IDT).append("\tLightComponent=PointLightComponent'").append(pointCompObjName).append("'\n");
+
+			sbf.append(IDT).append("\tComponents(0)=SpriteComponent'").append(spritCompObjName).append("'\n");
+			sbf.append(IDT).append("\tComponents(1)=DrawLightRadiusComponent'").append(drawRadObjName).append("'\n");
+			sbf.append(IDT).append("\tComponents(2)=PointLightComponent'").append(pointCompObjName).append("'\n");
 		}
 
 		writeEndActor();

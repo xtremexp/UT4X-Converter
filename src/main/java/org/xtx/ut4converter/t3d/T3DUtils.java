@@ -679,7 +679,7 @@ public class T3DUtils {
 	public static String writeSimpleObject(String indent, String className, String name, String objName, String archType, String prop, String value) {
 
 		final StringBuilder sbf = new StringBuilder();
-		sbf.append(indent).append("Begin Object Class=").append(className).append(" Name=").append(name).append(" ObjName=").append(objName).append(" Archetype=").append(archType != null ? archType : "").append("\n");
+		sbf.append(indent).append("Begin Object Class=").append(className).append(" Name=").append(name).append(" ObjName=").append(objName).append(archType != null ? (" Archetype=" + archType) : "").append("\n");
 
 		if (prop != null && value != null) {
 			sbf.append(indent).append("\t").append(prop).append("=").append(value).append("\n");
