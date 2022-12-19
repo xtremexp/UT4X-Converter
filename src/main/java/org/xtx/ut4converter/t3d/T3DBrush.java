@@ -558,7 +558,7 @@ public class T3DBrush extends T3DVolume {
 				t3dPolygon.reverseVertexOrder();
 			}
 
-			t3dPolygon.toT3D(sbf, df, IDT, numPoly);
+			t3dPolygon.toT3D(sbf, df, IDT, numPoly, mapConverter.getUnrealEngineTo());
 			numPoly++;
 		}
 

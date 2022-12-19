@@ -55,9 +55,17 @@ public class T3DMover extends T3DBrush {
 	 */
 	public String toT3d() {
 
-		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+		// no generic mover actor for UE4 but UT4 with Lift blueprint
+		// UE3 movers are InterpActors
+		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4 || mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
 
-			moverProperties.writeMoverProperties(sbf);
+			if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+				moverProperties.writeUT4MoverActor(sbf);
+			}
+			// UE3
+			else {
+				moverProperties.writeUE3MoverActor(sbf);
+			}
 
 			// TODO for UT4 make converter from brush to .fbx Autodesk file and
 			// transform into StaticMesh
@@ -83,7 +91,6 @@ public class T3DMover extends T3DBrush {
 
 			return sbf.toString();
 		}
-		// TODO write mover UT UE<=3
 		else {
 			return super.toString();
 		}
