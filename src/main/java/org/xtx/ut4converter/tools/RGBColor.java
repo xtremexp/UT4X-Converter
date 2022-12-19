@@ -6,12 +6,14 @@
 package org.xtx.ut4converter.tools;
 
 /**
- *
+ * RGB Color
  * @author XtremeXp
  */
 public class RGBColor {
 	/**
-	 * Red, Green, Blue, Alpha
+	 * Red, Green, Blue, Alpha color values
+	 * Range is 0-255 (integer) for UE1/2/3
+	 * Range is 0-1 (float) for UE1/2/3
 	 */
 	public float R, G, B, A;
 
@@ -23,7 +25,7 @@ public class RGBColor {
 	}
 
 	/**
-	 * Change values from 0-255(UE1/2) range to 0-1 (for UE3/4)
+	 * Change values from 0-255(UE1/2/3) range to 0-1 (for 4)
 	 */
 	public void toOneRange() {
 		R /= 255;

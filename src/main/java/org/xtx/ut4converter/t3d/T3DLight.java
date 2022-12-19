@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Class for converting lights.
- * 
+ *
  * @author XtremeXp TODO handle "light skins" (coronas)
  */
 public class T3DLight extends T3DSound {
@@ -42,7 +42,7 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
-     * 
+     *
      */
 	enum UE4_Mobility {
 		Static, // don't move and don't change color
@@ -67,7 +67,7 @@ public class T3DLight extends T3DSound {
 
 		DirectionalLight, DirectionalLightToggleable,
 		/**
-		 * 
+		 *
 		 */
 		PointLight,
 		/**
@@ -296,7 +296,7 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 * Tell if this light is spotlight or not
-	 * 
+	 *
 	 * @return <code>true</code> if light is a spot light
 	 */
 	private boolean isSpotLight() {
@@ -306,7 +306,7 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 * Tells if current light is sunlight if true
-	 * 
+	 *
 	 * @return <code>true</code> if light is a sun light
 	 */
 	private boolean isSunLight() {
@@ -493,7 +493,8 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\t\tRadius=").append(radius).append("\n");
 			sbf.append(IDT).append("\t\tBrightness=").append(brightness).append("\n");
 			sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
-			sbf.append(IDT).append("\t\tLightColor=(B=").append(blue).append(",G=").append(green).append(",R=").append(red).append(",A=").append(alpha).append(")\n");
+			// B,G,R integers for UE3
+			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			writeLocRotAndScale();
@@ -502,11 +503,11 @@ public class T3DLight extends T3DSound {
 
 		writeEndActor();
 
-		return super.toString();
+		return super.toT3d();
 	}
 
 	/**
-     * 
+     *
      */
 	@Override
 	public void convert() {
