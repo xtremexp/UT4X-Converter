@@ -51,7 +51,12 @@ public abstract class T3DActor extends T3DObject {
 	 * UE1/2/3? property in Events->Tag
 	 */
 	protected String tag;
-	
+
+	/**
+	 * Group
+	 */
+	protected String group;
+
 	/**
 	 * UE1/2/ (3?) property in Events->Event
 	 */
@@ -102,8 +107,6 @@ public abstract class T3DActor extends T3DObject {
 	 * UT99
 	 */
 	protected Double collisionHeight;
-
-	protected String otherdata = "";
 
 
 	/**
@@ -304,7 +307,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("Group=")) {
-			addOtherData(line);
+			group = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("Tag=")) {
@@ -404,10 +407,6 @@ public abstract class T3DActor extends T3DObject {
 			if (scale3d != null)
 				scale3d.scale(newScale);
 		}
-	}
-
-	private void addOtherData(String somedata) {
-		this.otherdata += somedata + "\n";
 	}
 
 
@@ -620,6 +619,11 @@ public abstract class T3DActor extends T3DObject {
 				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");
             }
 			sbf.append(IDT).append("\tName=\"").append(name).append("\n");
+		}
+
+		if (group != null) {
+			// need check for UE4
+			sbf.append(IDT).append("\tGroup=\"").append(group).append("\n");
 		}
 
 		sbf.append(IDT).append("End Actor\n");
