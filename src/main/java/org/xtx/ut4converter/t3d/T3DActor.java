@@ -369,12 +369,11 @@ public abstract class T3DActor extends T3DObject {
 				sbf.append(baseText).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
 			}
 
-			// RelativeRotation=(Pitch=14.179391,Yaw=13.995641,Roll=14.179387)
+			// integer precision for rotation in UE1/2/3
 			if (rotation != null) {
-				sbf.append(baseText).append("Rotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
+				sbf.append(baseText).append("Rotation=(Pitch=").append((int) rotation.x).append(",Yaw=").append((int) rotation.y).append(",Roll=").append((int) rotation.z).append(")\n");
 			}
 
-			// RelativeScale3D=(X=4.000000,Y=3.000000,Z=2.000000)
 			if (scale3d != null) {
 				sbf.append(baseText).append("Scale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
 			}
