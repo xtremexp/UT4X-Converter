@@ -203,7 +203,7 @@ public class T3DPolygon {
 	 * @param prefix Prefix
 	 * @param polyIndex Polygon index
 	 */
-	public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int polyIndex) {
+	public void toT3D(StringBuilder sb, DecimalFormat df, String prefix, int polyIndex, UnrealEngine ue) {
 
 		prefix += "\t\t\t";
 
@@ -214,7 +214,11 @@ public class T3DPolygon {
 		}
 
 		if (lightMapScale != null) {
-			sb.append(" LightMapScale=").append(lightMapScale);
+			if (ue == UnrealEngine.UE4) {
+				sb.append(" LightMapScale=").append(lightMapScale);
+			} else if (ue == UnrealEngine.UE3) {
+				sb.append(" ShadowMapScale=").append(lightMapScale);
+			}
 		}
 
 		sb.append(" Link=").append(polyIndex);
