@@ -367,10 +367,8 @@ public class T3DPolygon {
 				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));
 			}
 
-			// For Unreal 3 and 4
-			// we need to update the UV scaling which is dependant from texture
-			// size
-			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
+			// FOR UE3/UE4 conversion, need to update texture scale with texture dimension values
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2) && mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 
 				// maybe bufferedimagereader could not read the dimensions of
 				// texture
@@ -390,23 +388,24 @@ public class T3DPolygon {
 
 					if (texDimension != null) {
 
+						// since UE4, grid base unit is 100
 						if (texture_u != null) {
-							texture_u.scale(1 / (texDimension.width / 100d));
+							texture_u.scale(1 / (texDimension.width / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 						}
 
 						if (texture_v != null) {
-							texture_v.scale(1 / (texDimension.height / 100d));
+							texture_v.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 						}
 					}
 
 					if (origin != null) {
-						// i guess it depends of normal
-						// todo check
+						// FIXME texture coordinates are incorrect if PanU or PanV set
 						origin.x += pan_u;
 						origin.y += pan_v;
 					}
 				}
 
+				// UE3->UE4, viewport grid has changed of scale, need to update texture scale
 				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
 					if (texture_u != null) {
@@ -423,7 +422,7 @@ public class T3DPolygon {
 		// originally UE1 had a low light resolution
 		// default is 32 in UE4
 		// 128 seems good enough
-		if(mapConverter != null && mapConverter.getLightMapResolution() != null){
+		if (mapConverter != null && mapConverter.getLightMapResolution() != null) {
 			lightMapScale = mapConverter.getLightMapResolution();
 		}
 	}
