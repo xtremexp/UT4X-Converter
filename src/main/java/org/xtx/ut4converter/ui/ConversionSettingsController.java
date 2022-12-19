@@ -217,23 +217,29 @@ public class ConversionSettingsController implements Initializable {
 			t3dLabel.setDisable(true);
 		}
 
-		switch (mapConverter.getInputGame().engine.version) {
-			case 1 -> {
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-			}
-			case 2 -> {
-				if (inputGame == UTGame.U2) {
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
-				} else {
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+		// set default scale value depending on input and output engine
+		if(mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+			switch (mapConverter.getInputGame().engine.version) {
+				case 1 -> {
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				}
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
+				case 2 -> {
+					if (inputGame == UTGame.U2) {
+						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
+					} else {
+						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+					}
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
+				}
+				default -> {
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
+				}
 			}
-			default -> {
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
-			}
+		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+			scaleFactorList.getSelectionModel().select("1.25");
+			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}
 
 		disableConversionType();
