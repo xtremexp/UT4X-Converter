@@ -1205,11 +1205,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return false;
 	}
 
-	public boolean isTo(UnrealEngine... engines) {
+	public boolean isTo(UTGame... utgames) {
 
-		if (engines.length == 0) {
-			return false;
+		for (UTGame utgame : utgames) {
+			if (utgame == this.getOutputGame()) {
+				return true;
+			}
 		}
+
+		return false;
+	}
+
+	public boolean isTo(UnrealEngine... engines) {
 
 		for (UnrealEngine engine : engines) {
 			if (engine == this.getOutputGame().engine) {
