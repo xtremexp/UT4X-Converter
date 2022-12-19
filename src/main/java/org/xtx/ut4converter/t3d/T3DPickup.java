@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 
 /**
  * 
@@ -34,29 +35,34 @@ public class T3DPickup extends T3DSound {
 			return "";
 		}
 
-		if (mapConverter.toUnrealEngine4()) {
+		if (mapConverter.isTo(UTGames.UTGame.UT3, UTGames.UTGame.UT4)) {
 
 			sbf.append(IDT).append("Begin Actor Class=").append(convertedPickupClass).append(" Name=").append(name).append("\n");
 
-			T3DMatch.UE4_RCType rootType;
+			T3DMatch.UE4_RCType rootType = T3DMatch.UE4_RCType.ICON;
 
-			// TODO refactoring
-			if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.SCENE_COMP.name)) {
-				rootType = T3DMatch.UE4_RCType.SCENE_COMP;
-			} else if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.ICON.name)) {
-				rootType = T3DMatch.UE4_RCType.ICON;
-			} else {
-				rootType = T3DMatch.UE4_RCType.CAPSULE;
-			}
+			if(mapConverter.isTo(UTGames.UTGame.UT4)) {
 
-			if (!rootType.equals(T3DMatch.UE4_RCType.ICON)) {
-				sbf.append(IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
+				// TODO refactoring
+				if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.SCENE_COMP.name)) {
+					rootType = T3DMatch.UE4_RCType.SCENE_COMP;
+				} else if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.ICON.name)) {
+					rootType = T3DMatch.UE4_RCType.ICON;
+				} else {
+					rootType = T3DMatch.UE4_RCType.CAPSULE;
+				}
+
+				if (!rootType.equals(T3DMatch.UE4_RCType.ICON)) {
+					sbf.append(IDT).append("\tBegin Object Class=").append(rootType.name).append(" Name=\"").append(rootType.alias).append("\" \n");
+					sbf.append(IDT).append("\tEnd Object\n");
+				}
+
+				sbf.append(IDT).append("\tBegin Object Name=\"").append(rootType.alias).append("\"\n");
+				writeLocRotAndScale();
 				sbf.append(IDT).append("\tEnd Object\n");
+			} else {
+				writeLocRotAndScale();
 			}
-
-			sbf.append(IDT).append("\tBegin Object Name=\"").append(rootType.alias).append("\"\n");
-			writeLocRotAndScale();
-			sbf.append(IDT).append("\tEnd Object\n");
 
 			if (match != null) {
 				for (String property : match.properties.keySet()) {
@@ -66,7 +72,9 @@ public class T3DPickup extends T3DSound {
 			}
 
 			// sbf.append(IDT).append("\tCollision=").append(rootType.alias).append("\n");
-			sbf.append(IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
+			if(mapConverter.isTo(UTGames.UTGame.UT4)) {
+				sbf.append(IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
+			}
 
 			writeEndActor();
 		}
