@@ -429,11 +429,10 @@ public class UPackageRessource {
 			// but better use cue since lift sounds need volume attenuation
 			// depending on player distance
 			// ("AttenuationSettings=Attenuation_Lifts")
-			if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
-				// beware UT3 needs cue for AmbientSound but not for
-				// AmbientSoundSimple actor
+			if (mapConverter.isTo(UnrealEngine.UE4)) {
 				suffix = "_Cue";
 			}
+			// in UE3 using AmbientSoundSimple as sound actor which does not require Cue
 		}
 
 		else if (type == Type.TEXTURE) {
