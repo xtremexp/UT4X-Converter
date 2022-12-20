@@ -665,8 +665,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 	}
 
+	/**
+	 * TODO open webbrowser and add conversion instruction to github project wiki
+	 * rather than using this not very humain friendly 'basic text' instructions
+	 */
 	private void showInstructions() {
-		if(isTo(UnrealEngine.UE4)){
+		if (isTo(UnrealEngine.UE4)) {
 			showUE4Instructions();
 		} else {
 			showUE3Instructions();
@@ -695,7 +699,23 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.log(Level.INFO, "In import panel, check 'Create Material?' and then press 'OK to all'");
 				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
 			}
+
+			if (convertSounds) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "Textures Import:");
+				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.SOUND.getName());
+				logger.log(Level.INFO, "Select all sound files and click on 'Open'");
+				logger.log(Level.INFO, "Set 'Package' = '" + this.mapName + "'");
+				logger.log(Level.INFO, "In import panel, check 'bAutoCreateCue' and then press 'OK to all'");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
+			}
 		}
+
+		logger.log(Level.INFO, "In main menu, go to File -> Import -> Into Existing Map..");
+		logger.log(Level.INFO, "Select "+ getOutT3d());
+		logger.log(Level.INFO, "In main menu File-> Save as.. and save map with filename " + getOutMapName());
+		logger.log(Level.INFO, "Go to play in editor (before last icon to the right in main page) so ");
+		logger.log(Level.INFO, "You may now change map name");
 	}
 
 	/**

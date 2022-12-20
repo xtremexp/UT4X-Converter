@@ -136,6 +136,14 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<String> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
+	@FXML
+	private Label ut4MapNameLbl;
+
+	@FXML
+	private Label ut4BaseReferencePathLbl;
+
+	@FXML
+	private Button ut4BaseReferencePathBtn;
 	// @FXML
 	// private Label relativeUtMapPathLbl;
 	@FXML
@@ -238,6 +246,12 @@ public class ConversionSettingsController implements Initializable {
 				}
 			}
 		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+			outMapNameLbl.setVisible(false);
+			changeMapNameBtn.setVisible(false);
+			ut4MapNameLbl.setVisible(false);
+			ut4BaseReferencePath.setVisible(false);
+			ut4BaseReferencePathLbl.setVisible(false);
+			ut4BaseReferencePathBtn.setVisible(false);
 			scaleFactorList.getSelectionModel().select("1.25");
 			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}

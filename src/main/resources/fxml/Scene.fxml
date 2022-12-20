@@ -13,7 +13,7 @@
                 </Menu>
                 <Menu text="Unreal 2">
                     <MenuItem onAction="#convertU2ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertU2ToUT4Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertU2ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
                     <MenuItem onAction="#extractTexturesFromU2Package" text="Extract textures from package ..." />
                 </Menu>
                 <Menu text="Unreal Tournament">
@@ -22,11 +22,11 @@
                 </Menu>
                 <Menu text="Unreal Tournament 2003">
                     <MenuItem onAction="#convertUT2003ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertUT2003ToUT4Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUT2003ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
                 </Menu>
                 <Menu text="Unreal Tournament 2004">
                     <MenuItem onAction="#convertUt2004ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertUt2004ToUT4Map" text="Convert map to UT4 ..." />
+                    <MenuItem onAction="#convertUt2004ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
                 </Menu>
                 <Menu text="Unreal Tournament 3">
                     <MenuItem onAction="#convertUT3ToUT4Map" text="Convert map to UT4 ..." />

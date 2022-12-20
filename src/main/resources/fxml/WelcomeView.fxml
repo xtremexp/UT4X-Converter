@@ -6,7 +6,7 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0">
    <Label alignment="CENTER" layoutX="22.0" layoutY="46.0" prefHeight="51.0" prefWidth="544.0"
-          text="Welcome to UT4 converter !">
+          text="Welcome to UT converter !">
       <font>
          <Font size="35.0"/>
       </font>
