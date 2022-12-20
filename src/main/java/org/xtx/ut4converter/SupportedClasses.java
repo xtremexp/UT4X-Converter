@@ -165,7 +165,7 @@ public class SupportedClasses {
 				registerUClass(AlarmTrigger.class, "AlarmTrigger");
 			}
 		} else {
-			registerUClass(T3DTrigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
+			registerUClass(T3DTriggerVolume.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
 		}
 
