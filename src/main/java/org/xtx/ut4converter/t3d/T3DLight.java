@@ -17,10 +17,11 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Class for converting lights.
- * 
+ *
  * @author XtremeXp TODO handle "light skins" (coronas)
  */
 public class T3DLight extends T3DSound {
@@ -42,7 +43,7 @@ public class T3DLight extends T3DSound {
 	}
 
 	/**
-     * 
+     *
      */
 	enum UE4_Mobility {
 		Static, // don't move and don't change color
@@ -67,7 +68,7 @@ public class T3DLight extends T3DSound {
 
 		DirectionalLight, DirectionalLightToggleable,
 		/**
-		 * 
+		 *
 		 */
 		PointLight,
 		/**
@@ -175,10 +176,10 @@ public class T3DLight extends T3DSound {
 	private UE4_Mobility mobility = UE4_Mobility.Static;
 
 	/**
-	 * As seen in UT2004.
+	 * As seen in UT2004 and UE1
 	 * Overrides spot light class to directional light if true
 	 */
-	private Boolean isDirectional;
+	private Boolean isDirectional = Boolean.FALSE;
 
 	/**
 	 *
@@ -188,18 +189,18 @@ public class T3DLight extends T3DSound {
 	public T3DLight(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
 
-		// Default Values when u put some light in UE1/UE2 editor
+		// Default property lights values in UE1/UE2 editor
 		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 			this.hue = 0;
 			this.saturation = 255f;
 			this.brightness = 64f;
 			this.radius = 64f;
 
+			this.lightFalloffExponent = 2d;
+
 			if (mc.isFrom(UnrealEngine.UE1)) {
-				this.lightFalloffExponent = 2.4d;
 				this.intensity = 35f;
 			} else if (mc.isFrom(UnrealEngine.UE2)) {
-				this.lightFalloffExponent = 1.9d;
 				this.intensity = 70f;
 			}
 		}
@@ -255,7 +256,7 @@ public class T3DLight extends T3DSound {
 		}
 
 		else if (line.startsWith("bCorona=")) {
-			isCorona = "true".equals(line.split("=")[1].toLowerCase());
+			isCorona = "true".equalsIgnoreCase(line.split("=")[1]);
 		}
 
 		// UT3
@@ -296,7 +297,7 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 * Tell if this light is spotlight or not
-	 * 
+	 *
 	 * @return <code>true</code> if light is a spot light
 	 */
 	private boolean isSpotLight() {
@@ -306,7 +307,7 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 * Tells if current light is sunlight if true
-	 * 
+	 *
 	 * @return <code>true</code> if light is a sun light
 	 */
 	private boolean isSunLight() {
@@ -407,24 +408,25 @@ public class T3DLight extends T3DSound {
 
 	/**
 	 *
-	 * @return
+	 * @return T3D
 	 */
 	public String toT3d() {
 
-		if (mapConverter.toUnrealEngine4()) {
-			String componentLightClass;
+		String componentLightClass;
 
-			if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
-				componentLightClass = "SkyLightComponent";
-			} else if (isSpotLight()) {
-				componentLightClass = "SpotLightComponent";
-			} else if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
-				componentLightClass = "DirectionalLightComponent";
-			} else {
-				componentLightClass = "PointLightComponent";
-			}
+		if (UE4_LightActor.SkyLight.name().equals(t3dClass)) {
+			componentLightClass = "SkyLightComponent";
+		} else if (isSpotLight()) {
+			componentLightClass = "SpotLightComponent";
+		} else if (UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
+			componentLightClass = "DirectionalLightComponent";
+		} else {
+			componentLightClass = "PointLightComponent";
+		}
 
-			sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+		sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+
+		if (isTo(UnrealEngine.UE4)) {
 
 			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
@@ -466,8 +468,7 @@ public class T3DLight extends T3DSound {
 
 			writeSimpleProperties();
 
-			if(this instanceof T3DTriggerLight){
-				final T3DTriggerLight t3DTriggerLight = (T3DTriggerLight) this;
+			if(this instanceof final T3DTriggerLight t3DTriggerLight){
 
 				if(t3DTriggerLight.getInitialState() != null){
 					sbf.append(IDT).append("\tInitialState=NewEnumerator").append(t3DTriggerLight.getInitialState().ordinal()).append("\n");
@@ -486,14 +487,57 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
             sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
 
-			writeEndActor();
+
+		} else if (isTo(UnrealEngine.UE3)) {
+
+			final String drawRadObjName = "DrawLightRadiusComponent_" + new Random().nextInt(10000);
+
+			// CastShadow=False
+			sbf.append(IDT).append("\tBegin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=").append(drawRadObjName).append(" Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'\n");
+			sbf.append(IDT).append("\t\tSphereRadius=").append(attenuationRadius).append("\n");
+			// for directional lights do not cast shadows because in original UE1/UE2 maps
+			// the sky is "blocked" by a brush (with fakebackdrop sky) thus light rays not going
+			if (isDirectional) {
+				sbf.append(IDT).append("\t\tCastShadow=False\n");
+			}
+			sbf.append(IDT).append("\tEnd Object\n");
+
+			final String pointCompObjName = componentLightClass + "_" + new Random().nextInt(10000);
+
+			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0 ");
+			sbf.append("ObjName=").append(pointCompObjName).append(" Archetype=").append(componentLightClass).append("'Engine.Default__PointLight:").append(componentLightClass).append("0'\n");
+
+			sbf.append(IDT).append("\t\tRadius=").append(attenuationRadius).append("\n");
+			sbf.append(IDT).append("\t\tBrightness=1.0\n");
+			// for directional lights do not cast shadows else it looks very dark
+			if (isDirectional) {
+				sbf.append(IDT).append("\t\tCastShadows=False\n");
+			} else {
+				sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
+			}
+			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
+			// R,G,B as integers for UE3
+			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
+			sbf.append(IDT).append("\tEnd Object\n");
+
+			final String spritCompObjName = "SpriteComponent_" + new Random().nextInt(10000);
+			sbf.append(T3DUtils.writeSimpleObject("\t\t", "SpriteComponent", "Sprite", spritCompObjName, "SpriteComponent'Engine.Default__PointLight:Sprite'", null, null));
+
+			writeLocRotAndScale();
+			sbf.append(IDT).append("\tLightComponent=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
+
+			sbf.append(IDT).append("\tComponents(0)=SpriteComponent'").append(spritCompObjName).append("'\n");
+			sbf.append(IDT).append("\tComponents(1)=DrawLightRadiusComponent'").append(drawRadObjName).append("'\n");
+			sbf.append(IDT).append("\tComponents(2)=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
 		}
 
-		return super.toString();
+		writeEndActor();
+
+		return super.toT3d();
 	}
 
 	/**
-     * 
+     *
      */
 	@Override
 	public void convert() {

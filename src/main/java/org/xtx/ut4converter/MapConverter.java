@@ -85,9 +85,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 * Relative subfolder from: <UT4Folder>/UnrealTournament/Content path
-	 *
 	 * E.g: "MyMaps" would give /UnrealTournament/Content/MyMaps path
-	 *
 	 * but /Game/MyMaps for .t3d actor path
 	 *
 	 */
@@ -668,10 +666,63 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
+	 * TODO open webbrowser and add conversion instruction to github project wiki
+	 * rather than using this not very humain friendly 'basic text' instructions
+	 */
+	private void showInstructions() {
+		if (isTo(UnrealEngine.UE4)) {
+			showUE4Instructions();
+		} else {
+			showUE3Instructions();
+		}
+	}
+
+	/**
+	 * Display in log instructions to convert map within UE3 editor
+	 */
+	private void showUE3Instructions() {
+		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
+		logger.log(Level.INFO, "Note: these instructions are always under work and might not be 100% accurate");
+		logger.log(Level.INFO, "Open Unreal Editor for UT3");
+		logger.log(Level.INFO, "File -> New -> New Level (Geometry Style: Additive)");
+
+		if (hasConvertedRessources()) {
+			logger.log(Level.INFO, "Converted Map Ressources Import");
+			logger.log(Level.INFO, "In 'Generic Browser' panel in menu go to 'File' -> 'Import'");
+
+			if (convertTextures) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "Textures Import:");
+				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.TEXTURE.getName());
+				logger.log(Level.INFO, "Select all texture files and click on 'Open'");
+				logger.log(Level.INFO, "Set 'Package' = '" + this.mapName + "'");
+				logger.log(Level.INFO, "In import panel, check 'Create Material?' and then press 'OK to all'");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
+			}
+
+			if (convertSounds) {
+				logger.log(Level.INFO, "");
+				logger.log(Level.INFO, "Textures Import:");
+				logger.log(Level.INFO, "Browse for folder : " + getMapConvertFolder().getAbsolutePath() + File.separator + Type.SOUND.getName());
+				logger.log(Level.INFO, "Select all sound files and click on 'Open'");
+				logger.log(Level.INFO, "Set 'Package' = '" + this.mapName + "'");
+				logger.log(Level.INFO, "In import panel, check 'bAutoCreateCue' and then press 'OK to all'");
+				logger.log(Level.INFO, "Click on 'Save All' in 'Content Browser'");
+			}
+		}
+
+		logger.log(Level.INFO, "In main menu, go to File -> Import -> Into Existing Map..");
+		logger.log(Level.INFO, "Select "+ getOutT3d());
+		logger.log(Level.INFO, "In main menu File-> Save as.. and save map with filename " + getOutMapName());
+		logger.log(Level.INFO, "Go to play in editor (before last icon to the right in main page) so ");
+		logger.log(Level.INFO, "You may now change map name");
+	}
+
+	/**
 	 * Add log info message to guide user converting the map properly TODO add
 	 * some pics like in UT3 converter
 	 */
-	private void showInstructions() {
+	private void showUE4Instructions() {
 		logger.log(Level.INFO, "* * * * * * * * I N S T R U C T I O N S * * * * * * * *");
 		logger.log(Level.INFO, "Note: these instructions are always under work and might not be 100% accurate");
 		logger.log(Level.INFO, "Open Unreal Editor for UT4");
@@ -1174,11 +1225,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return false;
 	}
 
-	public boolean isTo(UnrealEngine... engines) {
+	public boolean isTo(UTGame... utgames) {
 
-		if (engines.length == 0) {
-			return false;
+		for (UTGame utgame : utgames) {
+			if (utgame == this.getOutputGame()) {
+				return true;
+			}
 		}
+
+		return false;
+	}
+
+	public boolean isTo(UnrealEngine... engines) {
 
 		for (UnrealEngine engine : engines) {
 			if (engine == this.getOutputGame().engine) {

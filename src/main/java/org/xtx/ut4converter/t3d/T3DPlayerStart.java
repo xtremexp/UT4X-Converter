@@ -7,6 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGameTypes;
+import org.xtx.ut4converter.UTGames;
 
 /**
  * 
@@ -80,10 +81,12 @@ public class T3DPlayerStart extends T3DSound {
 
 		sbf.append(IDT).append("Begin Actor Class=").append(isTeamPlayerStart ? teamPlayerStartClass : "PlayerStart").append(" Name=").append(name).append("\n");
 
-		if (mapConverter.toUnrealEngine4()) {
+		if (isTo(UTGames.UnrealEngine.UE4)) {
 			sbf.append(IDT).append("\tBegin Object Name=\"CollisionCapsule\"\n");
 			writeLocRotAndScale();
 			sbf.append(IDT).append("\tEnd Object\n");
+		} else {
+			writeLocRotAndScale();
 		}
 
 		if (isTeamPlayerStart) {

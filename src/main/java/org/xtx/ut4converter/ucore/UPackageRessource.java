@@ -32,12 +32,12 @@ public class UPackageRessource {
 	 * Reference to map converter to know if this ressource should be converted
 	 * or not ...
 	 */
-	private MapConverter mapConverter;
+	private final MapConverter mapConverter;
 
 	/**
 	 * Unreal Package this ressource belongs to
 	 */
-	private UPackage unrealPackage;
+	private final UPackage unrealPackage;
 
 	/**
 	 * Where this ressource have been exported. TODO handle multi export file
@@ -429,11 +429,10 @@ public class UPackageRessource {
 			// but better use cue since lift sounds need volume attenuation
 			// depending on player distance
 			// ("AttenuationSettings=Attenuation_Lifts")
-			if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
-				// beware UT3 needs cue for AmbientSound but not for
-				// AmbientSoundSimple actor
+			if (mapConverter.isTo(UnrealEngine.UE4)) {
 				suffix = "_Cue";
 			}
+			// in UE3 using AmbientSoundSimple as sound actor which does not require Cue
 		}
 
 		else if (type == Type.TEXTURE) {
@@ -489,8 +488,14 @@ public class UPackageRessource {
 
 		final String baseName = getConvertedBaseName(mapConverter);
 		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
-		
-		return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+
+		if(mapConverter.isTo(UnrealEngine.UE4)){
+			// e.g: Texture=/Game/RestrictedAssets/Maps/WIP/DmFith-U1/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
+			return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+		} else {
+			// e.g: Texture=DM-Malevolence-UT99.Starship_Base_basic9_Mat
+			return mapConverter.getOutMapName() + "." + baseName;
+		}
 	}
 	
 	public String getConvertedFileName(File exportedFile) {

@@ -51,7 +51,12 @@ public abstract class T3DActor extends T3DObject {
 	 * UE1/2/3? property in Events->Tag
 	 */
 	protected String tag;
-	
+
+	/**
+	 * Group
+	 */
+	protected String group;
+
 	/**
 	 * UE1/2/ (3?) property in Events->Event
 	 */
@@ -103,8 +108,6 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	protected Double collisionHeight;
 
-	protected String otherdata = "";
-
 
 	/**
 	 * Used to add extra Z location (for converting pickup for exemple not
@@ -146,9 +149,6 @@ public abstract class T3DActor extends T3DObject {
 	protected List<T3DActor> children = new ArrayList<>();
 
 
-	
-	private boolean invalidActorForWrite;
-
 	String currentSubObjectClass;
 	String currentSubObjectName;
 
@@ -156,7 +156,7 @@ public abstract class T3DActor extends T3DObject {
 	 * Begin Object Class=DistributionFloatUniform Name=DistributionDelayTime
 	 * For UE3 only used to get subobject definitions
 	 * 
-	 * @param line
+	 * @param line T3D line text to analyse
 	 */
 	public void preAnalyse(String line) {
 
@@ -307,7 +307,7 @@ public abstract class T3DActor extends T3DObject {
 		}
 
 		else if (line.startsWith("Group=")) {
-			addOtherData(line);
+			group = T3DUtils.getString(line);
 		}
 
 		else if (line.startsWith("Tag=")) {
@@ -347,7 +347,7 @@ public abstract class T3DActor extends T3DObject {
 	 * @param rotation Rotation
 	 * @param scale3d Scale 3D
 	 */
-	public static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
+	private static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
 
 		String baseText = IDT + "\t\t";
 
@@ -372,12 +372,11 @@ public abstract class T3DActor extends T3DObject {
 				sbf.append(baseText).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
 			}
 
-			// RelativeRotation=(Pitch=14.179391,Yaw=13.995641,Roll=14.179387)
+			// integer precision for rotation in UE1/2/3
 			if (rotation != null) {
-				sbf.append(baseText).append("Rotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
+				sbf.append(baseText).append("Rotation=(Pitch=").append((int) rotation.x).append(",Yaw=").append((int) rotation.y).append(",Roll=").append((int) rotation.z).append(")\n");
 			}
 
-			// RelativeScale3D=(X=4.000000,Y=3.000000,Z=2.000000)
 			if (scale3d != null) {
 				sbf.append(baseText).append("Scale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
 			}
@@ -408,10 +407,6 @@ public abstract class T3DActor extends T3DObject {
 			if (scale3d != null)
 				scale3d.scale(newScale);
 		}
-	}
-
-	private void addOtherData(String somedata) {
-		this.otherdata += somedata + "\n";
 	}
 
 
@@ -558,8 +553,7 @@ public abstract class T3DActor extends T3DObject {
 		});
 
 		for(final T3DSimpleProperty simpleProperty : registeredProperties){
-			if(simpleProperty.getPropertyValue() instanceof UPackageRessource){
-				final UPackageRessource packageRessource = (UPackageRessource) simpleProperty.getPropertyValue();
+			if(simpleProperty.getPropertyValue() instanceof final UPackageRessource packageRessource){
 				final T3DRessource.Type type = simpleProperty.getRessourceType();
 
 				if(type == T3DRessource.Type.SOUND && mapConverter.convertSounds()){
@@ -622,9 +616,14 @@ public abstract class T3DActor extends T3DObject {
 		// Checked u1, ut99, ut2004, ut3
 		else {
 			if (drawScale != null) {
-				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");
+				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\n");
             }
-			sbf.append(IDT).append("\tName=\"").append(name).append("\n");
+			sbf.append(IDT).append("\tName=\"").append(name).append("\"\n");
+		}
+
+		if (group != null) {
+			// need check for UE4
+			sbf.append(IDT).append("\tGroup=\"").append(group).append("\n");
 		}
 
 		sbf.append(IDT).append("End Actor\n");

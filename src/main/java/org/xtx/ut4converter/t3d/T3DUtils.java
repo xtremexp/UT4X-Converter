@@ -663,4 +663,30 @@ public class T3DUtils {
 
 		return sb.toString();
 	}
+
+	/**
+	 * Write a simple T3D object with one single property
+	 *
+	 * @param indent    Current indentation
+	 * @param className Class name
+	 * @param name      Name
+	 * @param objName   Object name
+	 * @param archType  Archetype
+	 * @param prop      Property (not mandatory)
+	 * @param value     Value
+	 * @return Simple T3D object
+	 */
+	public static String writeSimpleObject(String indent, String className, String name, String objName, String archType, String prop, String value) {
+
+		final StringBuilder sbf = new StringBuilder();
+		sbf.append(indent).append("Begin Object Class=").append(className).append(" Name=").append(name).append(" ObjName=").append(objName).append(archType != null ? (" Archetype=" + archType) : "").append("\n");
+
+		if (prop != null && value != null) {
+			sbf.append(indent).append("\t").append(prop).append("=").append(value).append("\n");
+		}
+
+		sbf.append(indent).append("\tName=\"").append(objName).append("\"\n");
+		sbf.append(indent).append("End Object\n");
+		return sbf.toString();
+	}
 }

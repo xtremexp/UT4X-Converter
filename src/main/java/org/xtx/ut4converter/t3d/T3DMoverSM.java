@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 
 /**
@@ -47,7 +48,12 @@ public class T3DMoverSM extends T3DStaticMesh {
 	 */
 	public String toT3d() {
 
-		moverProperties.writeMoverProperties(sbf);
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+			moverProperties.writeUE3MoverActor(sbf);
+		} else if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+			moverProperties.writeUT4MoverActor(sbf);
+		}
+
 		return sbf.toString();
 	}
 

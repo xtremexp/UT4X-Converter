@@ -5,7 +5,7 @@ import org.xtx.ut4converter.MapConverter;
 /**
  * More advanced implementation of Unreal Engine 1 Trigger
  * using our better implementation Trigger blueprint
- * compared to {@link T3DTrigger}
+ * compared to {@link T3DTriggerVolume}
  */
 public class T3DUE1Trigger extends T3DSound {
 

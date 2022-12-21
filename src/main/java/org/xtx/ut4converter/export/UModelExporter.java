@@ -113,9 +113,14 @@ public class UModelExporter extends UTPackageExtractor {
 		}
 
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
-		String command = getExporterPath() + " -export -sounds -groups -notgacomp -png -nooverwrite -nolightmap -lods -uc \"" + fileContainer + "\"";
+		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nooverwrite -nolightmap -lods -uc \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
+
+		// if converting to UE4 use png for better quality (else default is tga)
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+			command += " -png";
+		}
 
 		List<String> logLines = new ArrayList<>();
 
@@ -261,7 +266,11 @@ public class UModelExporter extends UTPackageExtractor {
 		if (type == Type.STATICMESH) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
-			exportedFile = new File(BASE_EXPORT_FILE + ".png");
+			if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+				exportedFile = new File(BASE_EXPORT_FILE + ".png");
+			} else {
+				exportedFile = new File(BASE_EXPORT_FILE + ".tga");
+			}
 		} else if (type == Type.MESH) {
 			// how the mesh is scale and some other things ...
 			exportedFile = new File(BASE_EXPORT_FILE + ".uc");
@@ -419,28 +428,13 @@ public class UModelExporter extends UTPackageExtractor {
 				 * uRessource.setIsUsedInMap(parentRessource.isUsedInMap());
 				 */
 				switch (type) {
-
-				case "Diffuse":
-					mi.setDiffuseName(matName);
-					break;
-				case "Normal":
-					mi.setNormalName(matName);
-					break;
-				case "Specular":
-					mi.setSpecularName(matName);
-					break;
-				case "Emissive":
-					mi.setEmissiveName(matName);
-					break;
-				case "SpecPower":
-					mi.setSpecPowerName(matName);
-					break;
-				case "Opacity":
-					mi.setOpacityName(matName);
-					break;
-				default:
-					logger.warning("Unhandled type " + type + " Value:" + matName);
-					break;
+					case "Diffuse" -> mi.setDiffuseName(matName);
+					case "Normal" -> mi.setNormalName(matName);
+					case "Specular" -> mi.setSpecularName(matName);
+					case "Emissive" -> mi.setEmissiveName(matName);
+					case "SpecPower" -> mi.setSpecPowerName(matName);
+					case "Opacity" -> mi.setOpacityName(matName);
+					default -> logger.warning("Unhandled type " + type + " Value:" + matName);
 				}
 
 				// }

@@ -5,15 +5,12 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -48,52 +45,16 @@ public class MainSceneController implements Initializable {
 	/**
 	 * Logger
 	 */
-	private Logger logger = LoggerFactory.getLogger(MainSceneController.class);
+	private final Logger logger = LoggerFactory.getLogger(MainSceneController.class);
 
-	// TODO - should be in properties file
-	/**
-	 * Url to git hub for source code
-	 */
-	private final String URL_UTCONV_GITHUB = "https://github.com/xtremexp/UT4X-Converter";
-
-	/**
-	 * Url to git hub releases
-	 */
-	private final String URL_UTCONV_GITHUB_RELEASES = "https://github.com/xtremexp/UT4X-Converter/releases";
-
-	/**
-	 * Url to github project for reporting issues
-	 */
-	private final String URL_UTCONV_GITHUB_ISSUES = "https://github.com/xtremexp/UT4X-Converter/issues";
-
-	@FXML
-	private MenuItem menuExit;
-	@FXML
-	private MenuItem menuItemAbout;
-	@FXML
-	private Menu menuOptions;
-	@FXML
-	private MenuItem menuSettings;
-
-	@FXML
-	private MenuItem menuCheckForUpdates;
-
-	/**
-	 * Entry meny to github project page
-	 */
-	@FXML
-	private MenuItem menuGitHub;
-
-	/**
-	 * Entry meny to github releases
-	 */
-	@FXML
-	private MenuItem menuGitHubReleases;
 
 	public MainApp mainApp;
 	public Stage mainStage;
 
 	private UserConfig userConfig;
+
+	public MainSceneController() {
+	}
 
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -135,31 +96,30 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Exit program
-	 *
-	 * @param event
 	 */
 	@FXML
-	private void handleExit(ActionEvent event) {
+	private void handleExit() {
 		System.exit(0);
+	}
+
+	@FXML
+	private void convertUT99ToUT3Map() {
+		convertUtxMap(UTGame.UT99, UTGame.UT3);
 	}
 
 	/**
 	 * Opens file browser for UT99 .t3d map, then convert it.
-	 *
-	 * @param event
 	 */
 	@FXML
-	private void handleConvert(ActionEvent event) {
-		convertUtxMap(UTGame.UT99);
+	private void convertUT99ToUT4Map() {
+		convertUtxMap(UTGame.UT99, UTGame.UT4);
 	}
 
 	/**
 	 * Show credits about program TODO history, library used, licence
-	 *
-	 * @param event Event
 	 */
 	@FXML
-	private void handleAbout(ActionEvent event) {
+	private void handleAbout() {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("About");
 		alert.setHeaderText("About " + MainApp.PROGRAM_NAME + ": ");
@@ -170,11 +130,9 @@ public class MainSceneController implements Initializable {
 
 	/**
 	 * Display Settings panel
-	 *
-	 * @param event
 	 */
 	@FXML
-	private void handleSettings(ActionEvent event) {
+	private void handleSettings() {
 
 		showSettings();
 	}
@@ -204,28 +162,29 @@ public class MainSceneController implements Initializable {
 
 
 	@FXML
-	private void openGitHubIssues(ActionEvent event){
-		openUrl(URL_UTCONV_GITHUB_ISSUES, true, "Game and map info are needed.");
+	private void openGitHubUrlReleases() {
+		openUrl("https://github.com/xtremexp/UT4X-Converter/releases", true, null);
 	}
 
 	@FXML
-	private void openGitHubUrlReleases(ActionEvent event) {
-		openUrl(URL_UTCONV_GITHUB_RELEASES, true, null);
+	private void openGitHubWiki() {
+		openUrl("https://github.com/xtremexp/UT4X-Converter/wiki", true, null);
 	}
 
 	@FXML
-	private void openGitHubUrl(ActionEvent event) {
-		openUrl(URL_UTCONV_GITHUB, true, null);
+	private void openGitHubUrl() {
+		openUrl("https://github.com/xtremexp/UT4X-Converter", true, null);
+	}
+
+
+	@FXML
+	private void convertU1toUT3Map() {
+		convertUtxMap(UTGame.U1, UTGame.UT3);
 	}
 
 	@FXML
-	private void handleConvertU1Map(ActionEvent event) {
-		convertUtxMap(UTGame.U1);
-	}
-
-	private void convertUtxMap(UTGame inputGame) {
-
-		convertUtxMap(inputGame, UTGame.UT4);
+	private void convertU1toUT4Map() {
+		convertUtxMap(UTGame.U1, UTGame.UT4);
 	}
 
 	/**
@@ -305,39 +264,51 @@ public class MainSceneController implements Initializable {
 		return false;
 	}
 
-
 	@FXML
-	private void convertUt2004Map(ActionEvent event) {
-		convertUtxMap(UTGame.UT2004);
+	private void convertUt2004ToUT3Map() {
+		convertUtxMap(UTGame.UT2004, UTGame.UT3);
 	}
 
 	@FXML
-	private void convertUt3Map(ActionEvent event) {
-		convertUtxMap(UTGame.UT3);
+	private void convertUt2004ToUT4Map() {
+		convertUtxMap(UTGame.UT2004, UTGame.UT4);
 	}
 
 	@FXML
-	private void convertUdkMap(ActionEvent event) {
-		convertUtxMap(UTGame.UDK);
-	}
-
-
-	@FXML
-	private void convertUt2003Map(ActionEvent event) {
-		convertUtxMap(UTGame.UT2003);
+	private void convertUT3ToUT4Map() {
+		convertUtxMap(UTGame.UT3, UTGame.UT4);
 	}
 
 	@FXML
-	private void convertU2Map(ActionEvent event) {
-		convertUtxMap(UTGame.U2);
+	private void convertUdkToUT4Map() {
+		convertUtxMap(UTGame.UDK, UTGame.UT4);
+	}
+
+	@FXML
+	private void convertUT2003ToUT3Map() {
+		convertUtxMap(UTGame.UT2003, UTGame.UT3);
+	}
+
+	@FXML
+	private void convertUT2003ToUT4Map() {
+		convertUtxMap(UTGame.UT2003, UTGame.UT4);
+	}
+
+	@FXML
+	private void convertU2ToUT3Map() {
+		convertUtxMap(UTGame.U2, UTGame.UT3);
+	}
+
+	@FXML
+	private void convertU2ToUT4Map() {
+		convertUtxMap(UTGame.U2, UTGame.UT4);
 	}
 
 	/**
 	 * Allow extract textures from Unreal 2 package
-	 * @param event
 	 */
 	@FXML
-	private void extractTexturesFromU2Package(ActionEvent event){
+	private void extractTexturesFromU2Package(){
 
 		final UTGame unreal2 = UTGame.U2;
 		FileChooser chooser = new FileChooser();
@@ -358,7 +329,7 @@ public class MainSceneController implements Initializable {
 
 		File texFolder = UTGames.getTexturesFolder(userGameConfigU2.getPath(), UTGame.U2);
 
-		if (texFolder.exists()) {
+		if (texFolder != null && texFolder.exists()) {
 			chooser.setInitialDirectory(texFolder);
 		}
 

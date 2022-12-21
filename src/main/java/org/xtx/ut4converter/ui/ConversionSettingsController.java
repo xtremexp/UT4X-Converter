@@ -5,15 +5,15 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -27,8 +27,11 @@ import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -50,9 +53,6 @@ public class ConversionSettingsController implements Initializable {
 
 	@FXML
 	public Label t3dLabel;
-
-	@FXML
-	private AnchorPane ConversionSettings;
 
 	private Stage dialogStage;
 
@@ -79,9 +79,7 @@ public class ConversionSettingsController implements Initializable {
 	private UTGames.UTGame inputGame;
 	private UTGames.UTGame outputGame;
 
-	private UserConfig userConfig;
 	private UserGameConfig userInputGameConfig;
-	private UserGameConfig userOutputGameConfig;
 	@FXML
 	private TitledPane advancedSettingsTitle;
 	@FXML
@@ -138,15 +136,20 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<String> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
+	@FXML
+	private Label ut4MapNameLbl;
+
+	@FXML
+	private Label ut4BaseReferencePathLbl;
+
+	@FXML
+	private Button ut4BaseReferencePathBtn;
 	// @FXML
 	// private Label relativeUtMapPathLbl;
 	@FXML
 	private CheckBox debugLogLevel;
 	@FXML
 	private Button changeMapNameBtn;
-
-	@FXML
-	private Button changeRelativeUtMapPathBtn;
 
 	@FXML
 	private Label warningMessage;
@@ -157,8 +160,8 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Initializes the controller class.
 	 *
-	 * @param url
-	 * @param rb
+	 * @param url Url
+	 * @param rb Resource bundle
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -192,16 +195,15 @@ public class ConversionSettingsController implements Initializable {
 		inputGameLbl.setText(inputGame.name);
 		outputGameLbl.setText(outputGame.name);
 
-		userConfig = UserConfig.load();
+		UserConfig userConfig = UserConfig.load();
 
 		if (userConfig != null) {
 			userInputGameConfig = userConfig.getGameConfigByGame(inputGame);
-			userOutputGameConfig = userConfig.getGameConfigByGame(outputGame);
-		}
 
-		if (userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()) {
-			warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
-			warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+			if (userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()) {
+				warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
+				warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
+			}
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
@@ -223,23 +225,33 @@ public class ConversionSettingsController implements Initializable {
 			t3dLabel.setDisable(true);
 		}
 
-		switch(mapConverter.getInputGame().engine.version){
-			case 1:
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-				break;
-			case 2:
-				if(inputGame == UTGame.U2){
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
-				} else {
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+		// set default scale value depending on input and output engine
+		if(mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+			switch (mapConverter.getInputGame().engine.version) {
+				case 1 -> {
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				}
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-				break;
-			default:
-				scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
-				lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
-				break;
+				case 2 -> {
+					if (inputGame == UTGame.U2) {
+						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
+					} else {
+						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
+					}
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
+				}
+				default -> {
+					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
+					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
+				}
+			}
+		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+			ut4MapNameLbl.setText("UT3 Map Name");
+			ut4BaseReferencePath.setVisible(false);
+			ut4BaseReferencePathLbl.setVisible(false);
+			ut4BaseReferencePathBtn.setVisible(false);
+			scaleFactorList.getSelectionModel().select("1.25");
+			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}
 
 		disableConversionType();
@@ -279,11 +291,9 @@ public class ConversionSettingsController implements Initializable {
 
 	/**
 	 * Allow changing the default ut4 map name suggested by ut4 converter
-	 *
-	 * @param event
 	 */
 	@FXML
-	private void changeMapName(ActionEvent event) {
+	private void changeMapName() {
 
 		TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
 
@@ -309,32 +319,7 @@ public class ConversionSettingsController implements Initializable {
 	}
 
 	@FXML
-	private void changeRelativeUtMapPath(ActionEvent event) {
-
-		// TODO
-		TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
-
-		dialog.setTitle("Text Input Dialog");
-		dialog.setHeaderText("Map Name Change");
-		dialog.setContentText("Enter UT4 map name:");
-
-		// Traditional way to get the response value.
-		Optional<String> result = dialog.showAndWait();
-
-		if (result.isPresent()) {
-			String newMapName = result.get();
-			newMapName = T3DUtils.filterName(newMapName);
-
-			if (newMapName.length() > 3) {
-				mapConverter.setOutMapName(newMapName);
-				outMapNameLbl.setText(mapConverter.getOutMapName());
-			}
-		}
-
-	}
-
-	@FXML
-	private void selectInputMap(ActionEvent event) throws IOException {
+	private void selectInputMap() throws IOException {
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.shortName + " map");
@@ -368,7 +353,7 @@ public class ConversionSettingsController implements Initializable {
 	}
 
 	@FXML
-	private void convert(ActionEvent event) {
+	private void convert() {
 
 		if (checkConversionSettings()) {
 
@@ -403,7 +388,7 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * All settings good
 	 *
-	 * @return
+	 * @return <code>true</code> if conversion settings are fine else <code>false</code>
 	 */
 	private boolean checkConversionSettings() {
 
@@ -429,20 +414,38 @@ public class ConversionSettingsController implements Initializable {
 			return false;
 		}
 
+		// for Unreal 1, needs to have oldunreal.com installed
+		if(mapConverter.getInputGame() == UTGame.U1 && !new File(mapConverter.getUserConfig().getGameConfigByGame(UTGame.U1).getPath()+"/System/UCC.exe").exists()){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("OldUnreal Patch not installed");
+			alert.setHeaderText("Patch from oldunreal.com is needed.");
+			alert.setContentText("Install latest oldunreal.com patch and try again. It is required to extract some level resources.");
+
+			alert.showAndWait();
+
+			if (Desktop.isDesktopSupported()) {
+				try {
+					Desktop.getDesktop().browse(new URI("https://www.oldunreal.com/downloads/"));
+				} catch (URISyntaxException | IOException ex) {
+					Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+			return false;
+		}
+
 		return true;
 	}
 
 	/**
-	 *
-	 * @param event
+	 * Select UT4 editor base reference path
 	 */
 	@FXML
-	private void selectUt4BaseReferencePath(ActionEvent event) {
+	private void selectUt4BaseReferencePath() {
 
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Select ut4 editor reference base path");
 
-		UserConfig userConfig = null;
+		UserConfig userConfig;
 
 		try {
 			userConfig = UserConfig.load();
@@ -475,13 +478,15 @@ public class ConversionSettingsController implements Initializable {
 							ut4BaseReferencePath.setText(ut4BaseRef);
 							mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
 						} else {
-							showErrorMessage("Reference folder must be in ut4 content subfolder!");
+							Alert alert = new Alert(Alert.AlertType.ERROR);
+							alert.setTitle("Error");
+							alert.setHeaderText("Operation failed");
+							alert.setContentText("An error occured: Reference folder must be in ut4 content subfolder!");
+							alert.showAndWait();
 						}
-
 					}
 				} else {
 					Logger.getGlobal().severe("UT4 Editor path not set !");
-					return;
 				}
 			}
 		} catch (Exception e) {
@@ -490,56 +495,44 @@ public class ConversionSettingsController implements Initializable {
 
 	}
 
-	private void showErrorMessage(String message) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Operation failed");
-		alert.setContentText("An error occured: " + message);
-		alert.showAndWait();
-	}
-
 	@FXML
-	private void close(ActionEvent event) {
+	private void close() {
 		dialogStage.close();
 	}
 
 	@FXML
-	private void toggleTexConversion(ActionEvent event) {
+	private void toggleTexConversion() {
 		mapConverter.setConvertTextures(convTexCheckBox.isSelected());
 	}
 
 	@FXML
-	private void toggleSndConversion(ActionEvent event) {
+	private void toggleSndConversion() {
 		mapConverter.setConvertSounds(convSndCheckBox.isSelected());
 	}
 
 	@FXML
-	private void toggleSmConversion(ActionEvent event) {
+	private void toggleSmConversion() {
 		mapConverter.setConvertStaticMeshes(convSmCheckBox.isSelected());
 	}
 
 	@FXML
-	private void toggleMusicConversion(ActionEvent event) {
+	private void toggleMusicConversion() {
 		mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
 	}
 
 	/**
 	 * Changes the log level
-	 *
-	 * @param event
 	 */
 	@FXML
-	private void toggleDebugLogLevel(ActionEvent event) {
+	private void toggleDebugLogLevel() {
 		mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
 	}
 
 	/**
 	 * // FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
 	 * // because the UT3 commandlet is kinda in "alpha" stages
-	 *
-	 * @param actionEvent
 	 */
-	public void selectInputT3dMap(ActionEvent actionEvent) {
+	public void selectInputT3dMap() {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from " + mapConverter.getInputGame().shortName + " editor ");
 

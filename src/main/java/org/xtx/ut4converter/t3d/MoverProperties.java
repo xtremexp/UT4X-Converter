@@ -246,7 +246,66 @@ public class MoverProperties implements T3D {
 		return true;
 	}
 
-	public void writeMoverProperties(final StringBuilder sbf) {
+	/**
+	 * Write UE3 mover actor (InterpActor) from mover properties
+	 *
+	 * @param sbf Data to write
+	 */
+	public void writeUE3MoverActor(final StringBuilder sbf) {
+
+		sbf.append(IDT).append("Begin Actor Class=InterpActor Name=").append(mover.name).append("_Mover\n");
+
+		final String dynLightObjName = "DynamicLightEnvironmentComponent_89" + new Random().nextInt(10000);
+		// bEnabled = true, avoid black movers
+		sbf.append(T3DUtils.writeSimpleObject("\t\t", "DynamicLightEnvironmentComponent", "MyLightEnvironment", dynLightObjName, "DynamicLightEnvironmentComponent'Engine.Default__InterpActor:MyLightEnvironment'", "bEnabled", "true"));
+
+		final String smObjName = "StaticMeshComponent_" + new Random().nextInt(10000);
+		sbf.append(T3DUtils.writeSimpleObject("\t\t", "StaticMeshComponent", "StaticMeshComponent0", smObjName, "StaticMeshComponent'Engine.Default__InterpActor:StaticMeshComponent0'","StaticMesh", "StaticMesh'HU_Floor2.SM.Mesh.S_HU_Floor_SM_WalkwaySetA_256'"));
+
+		sbf.append(IDT).append("\tStaticMeshComponent=StaticMeshComponent'").append(smObjName).append("'\n");
+		sbf.append(IDT).append("\tComponents(0)=DynamicLightEnvironmentComponent'").append(dynLightObjName).append("'\n");
+		sbf.append(IDT).append("\tComponents(1)=StaticMeshComponent'").append(smObjName).append("'\n");
+		sbf.append(IDT).append("\tCollisionComponent=StaticMeshComponent'").append(smObjName).append("'\n");
+
+		if (openingSound != null) {
+			sbf.append(IDT).append("\tOpenSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+		} else if (mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tOpenSound=None\n");
+		}
+
+		if (openedSound != null) {
+			sbf.append(IDT).append("\tOpenedSound=SoundCue'").append(openedSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+		} else if (mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tOpenedSound=None\n");
+		}
+
+		if (closingSound != null) {
+			sbf.append(IDT).append("\tClosingAmbientSound=SoundCue'").append(closingSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+		} else if (mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tClosingAmbientSound=None\n");
+		}
+
+		if (closedSound != null) {
+			sbf.append(IDT).append("\tClosedSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+		} else if (mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tClosedSound=None\n");
+		}
+
+		if (moveAmbientSound != null) {
+			sbf.append(IDT).append("\tOpeningAmbientSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+		} else if (mapConverter.convertSounds()) {
+			sbf.append(IDT).append("\tOpeningAmbientSound=None\n");
+		}
+
+		mover.writeLocRotAndScale();
+		mover.writeEndActor();
+	}
+
+	/**
+	 * Write mover properties as UT4 mover actor (aka 'Lift')
+	 * @param sbf
+	 */
+	public void writeUT4MoverActor(final StringBuilder sbf) {
 		// Write the mover as Destination Lift
 		// TODO write as well matinee actor (once implementation done)
 		// because it's impossible to know ("guess") if a mover is a lift or

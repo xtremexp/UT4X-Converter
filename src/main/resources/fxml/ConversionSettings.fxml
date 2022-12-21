@@ -4,13 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
-<AnchorPane fx:id="ConversionSettings" prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
+<AnchorPane prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
 
     <BorderPane prefHeight="550.0" prefWidth="700.0">
 
         <center>
             <VBox>
-            <TitledPane fx:id="mainSettingsTitle" expanded="true">
+            <TitledPane fx:id="mainSettingsTitle">
 
                     <GridPane hgap="10" vgap="10">
                         <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0">Input Game:</Label>
@@ -30,7 +30,7 @@
                         <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="3">Output Folder:</Label>
                         <Label fx:id="outputFolderLbl" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
 
-                        <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="4">UT4 Map Name:</Label>
+                        <Label fx:id="ut4MapNameLbl" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="4">UT4 Map Name:</Label>
                         <Label fx:id="outMapNameLbl" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                     	<Button fx:id="changeMapNameBtn" disable="true" onAction="#changeMapName" GridPane.columnIndex="2" GridPane.rowIndex="4">Change</Button>
 
@@ -67,9 +67,9 @@
 
                         <Separator GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="6" />
 
-                        <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="7">UT4 reference base path:</Label>
+                        <Label fx:id="ut4BaseReferencePathLbl" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="7">UT4 reference base path:</Label>
                         <Label fx:id="ut4BaseReferencePath" minWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="7" />
-                        <Button onAction="#selectUt4BaseReferencePath" GridPane.columnIndex="5" GridPane.rowIndex="7">Change Path</Button>
+                        <Button fx:id="ut4BaseReferencePathBtn" onAction="#selectUt4BaseReferencePath" GridPane.columnIndex="5" GridPane.rowIndex="7">Change Path</Button>
 
                         <Label GridPane.columnIndex="0" GridPane.rowIndex="8">Convert Textures:</Label>
                         <CheckBox fx:id="convTexCheckBox" onAction="#toggleTexConversion" GridPane.columnIndex="1" GridPane.rowIndex="8" />
@@ -80,7 +80,7 @@
                         <Label GridPane.columnIndex="0" GridPane.rowIndex="9">Convert Music:</Label>
                         <CheckBox fx:id="convMusicCheckBox" onAction="#toggleMusicConversion" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
-                        <Label GridPane.columnIndex="2" GridPane.rowIndex="9">Convert StaticMeshes (.obj):</Label>
+                        <Label GridPane.columnIndex="2" GridPane.rowIndex="9">Convert StaticMeshes:</Label>
                         <CheckBox fx:id="convSmCheckBox" onAction="#toggleSmConversion" GridPane.columnIndex="3" GridPane.rowIndex="9" />
 
                         <Label fx:id="warningMessage" GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="10" />

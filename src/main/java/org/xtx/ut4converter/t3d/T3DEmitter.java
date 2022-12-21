@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 
 /**
  *
@@ -63,4 +64,13 @@ public class T3DEmitter extends T3DSound {
 		return sbf.toString();
 	}
 
+
+	/**
+	 * TODO map emitter work for UT3
+	 * @return
+	 */
+	@Override
+	public boolean isValidWriting() {
+		return this.mapConverter.isTo(UTGames.UnrealEngine.UE4);
+	}
 }

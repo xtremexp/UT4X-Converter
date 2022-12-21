@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 
 /**
  * All unconverted actors in map will be replaced by this one so mappers can see
@@ -19,7 +20,7 @@ public class T3DNote extends T3DActor {
 
 	/**
 	 *
-	 * @param mc
+	 * @param mc Map Converter
 	 */
 	public T3DNote(MapConverter mc) {
 		super(mc, "Note");
@@ -33,10 +34,6 @@ public class T3DNote extends T3DActor {
 	public T3DNote(MapConverter mc, String text) {
 		super(mc, "Note");
 		this.text = text;
-		/**
-		 * If true means this actor provides info about some unconverted actor so
-		 * logger should display actor info
-		 */
 	}
 
 	@Override
@@ -64,14 +61,23 @@ public class T3DNote extends T3DActor {
 	public String toT3d() {
 
 		sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");
-		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");
-		sbf.append(IDT).append("\tEnd Object\n");
 
-		sbf.append(IDT).append("\tBegin Object Name=\"SceneComp\"\n");
-		writeLocRotAndScale();
-		sbf.append(IDT).append("\tEnd Object\n");
+		if(isTo(UTGames.UnrealEngine.UE4)) {
+			sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");
+			sbf.append(IDT).append("\tEnd Object\n");
+
+			sbf.append(IDT).append("\tBegin Object Name=\"SceneComp\"\n");
+			writeLocRotAndScale();
+			sbf.append(IDT).append("\tEnd Object\n");
+		} else {
+			writeLocRotAndScale();
+		}
+
 		sbf.append(IDT).append("\tText=\"").append(text).append("\"\n");
-		sbf.append(IDT).append("\tRootComponent=SceneComp\n");
+
+		if(isTo(UTGames.UnrealEngine.UE4)) {
+			sbf.append(IDT).append("\tRootComponent=SceneComp\n");
+		}
 
 		writeEndActor();
 
