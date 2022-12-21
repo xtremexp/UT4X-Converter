@@ -42,6 +42,7 @@
             </Menu>
             <Menu text="?">
                 <MenuItem onAction="#openGitHubUrl" text="GitHub page" />
+                <MenuItem onAction="#openGitHubWiki" text="Help wiki" />
                 <MenuItem onAction="#openGitHubUrlReleases" text="Check for updates" />
                 <MenuItem onAction="#handleAbout" text="About UT4X Converter ..." />
             </Menu>

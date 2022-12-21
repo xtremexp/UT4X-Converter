@@ -167,6 +167,11 @@ public class MainSceneController implements Initializable {
 	}
 
 	@FXML
+	private void openGitHubWiki() {
+		openUrl("https://github.com/xtremexp/UT4X-Converter/wiki", true, null);
+	}
+
+	@FXML
 	private void openGitHubUrl() {
 		openUrl("https://github.com/xtremexp/UT4X-Converter", true, null);
 	}
