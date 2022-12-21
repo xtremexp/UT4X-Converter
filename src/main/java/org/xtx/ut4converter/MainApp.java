@@ -25,7 +25,7 @@ public class MainApp extends Application {
 	/**
 	 * Program Name
 	 */
-	public static final String PROGRAM_NAME = "UT4X Converter";
+	public static final String PROGRAM_NAME = "UT Converter";
 
 	/**
 	 * Version of UT4 Converter

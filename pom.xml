@@ -235,7 +235,7 @@
 										<argument>${project.artifactId}</argument>
 
 										<argument>--description</argument>
-										<argument>UT4X Converter</argument>
+										<argument>UT Converter</argument>
 
 										<argument>--vendor</argument>
 										<argument>Thomas 'WinterIsComing' P.</argument>
