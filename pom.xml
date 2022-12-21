@@ -42,10 +42,11 @@
 				</configuration>
 			</plugin>
 
+
 			<plugin>
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.5</version>
+				<version>0.0.8</version>
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
 				</configuration>
@@ -217,7 +218,7 @@
 										<!-- jpackage arguments -->
 										<argument>--verbose</argument>
 										<!-- allow redirect output to window console -->
-										<argument>--win-console</argument>
+										<!-- arguement: win-console -->
 										<argument>--input</argument>
 										<argument>${project.build.directory}/libs</argument>
 
