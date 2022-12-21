@@ -19,7 +19,7 @@ import javax.vecmath.Vector3d;
 public class T3DTeleporter extends T3DSound {
 
 	/**
-	 * Unreal 1 property refering to
+	 * Destination teleporter tag
 	 */
 	private String url;
 
@@ -32,7 +32,7 @@ public class T3DTeleporter extends T3DSound {
 
 		// UE1 -> "URL="hepburn2"
 		if (line.contains("URL=")) {
-			url = line.split("\\=")[1];
+			url = line.split("=")[1];
 		} else {
 			return super.analyseT3DData(line);
 		}
@@ -43,7 +43,7 @@ public class T3DTeleporter extends T3DSound {
 	public String toT3d() {
 
 		// only write if we have data about linked teleporter
-		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+		if (mapConverter.isTo(UTGames.UTGame.UT4)) {
 
 			sbf.append(IDT).append("Begin Actor Class=BP_Teleporter_New_C Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"TriggerBox\"\n");
@@ -77,6 +77,16 @@ public class T3DTeleporter extends T3DSound {
 				writeEndActor();
 				return sbf.toString();
 			}
+		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+			final String teleporterClass = mapConverter.isTo(UTGames.UTGame.UT3) ? "UTTeleporter" : "Teleporter";
+
+			sbf.append(IDT).append("Begin Actor Class=").append(teleporterClass).append(" Name=").append(name).append(" Archetype=").append(teleporterClass).append("'Engine.Default__Teleporter'\n");
+			if (url != null) {
+				sbf.append(IDT).append("\t URL=").append(url).append("\n");
+			}
+			writeLocRotAndScale();
+			writeEndActor();
+			return sbf.toString();
 		} else {
 			return "";
 		}
@@ -88,16 +98,18 @@ public class T3DTeleporter extends T3DSound {
 		// we need to retrieve the linked teleporters
 		// at this stage the T3D level converter
 		// may not have yet parsed data of destination teleporter
-		if (linkedTo == null || linkedTo.isEmpty()) {
-			T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
+		if (mapConverter.isTo(UTGames.UTGame.UT4)) {
+			if (linkedTo == null || linkedTo.isEmpty()) {
+				T3DLevelConvertor tlc = mapConverter.getT3dLvlConvertor();
 
-			for (T3DActor actor : tlc.getConvertedActors()) {
-				if (actor instanceof T3DTeleporter) {
+				for (T3DActor actor : tlc.getConvertedActors()) {
+					if (actor instanceof T3DTeleporter) {
 
-					if (actor.tag != null && this.url != null && this.url.equals("\"" + actor.tag + "\"")) {
-						this.linkedTo.add(actor);
-						actor.linkedTo.add(this);
-						break;
+						if (actor.tag != null && this.url != null && this.url.equals("\"" + actor.tag + "\"")) {
+							this.linkedTo.add(actor);
+							actor.linkedTo.add(this);
+							break;
+						}
 					}
 				}
 			}
