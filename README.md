@@ -6,7 +6,7 @@
 
 
 * Version: 1.1.0
-* Release date: DD/MM/2022
+* Release date: 21/12/2022
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download: [GitHub - Releases](https://github.com/xtremexp/UT4X-Converter/releases)
 * Source Code: [GitHub](https://github.com/xtremexp/UT4X-Converter)
@@ -56,13 +56,13 @@ Notes:
   * Unreal Tournament 2003
   * Unreal Tournament 2004
   * Unreal Tournament 3
-* UModel Unreal Engine package extractor: http://www.gildor.org/en/projects/umodel
+* UModel Unreal Engine package extractor: [www.gildor.org](http://www.gildor.org/en/projects/umodel)
 * Some minimum skills with unreal engine editors
 
 ## Installation and quick start
 ------------------------------
 
-* Download umodel from http://www.gildor.org/en/projects/umodel
+* Download umodel from [www.gildor.org](http://www.gildor.org/en/projects/umodel)
 * Install program by clicking on .exe file
 * Launch program (.exe file)
 * Go to Settings and set the unreal games folders as well as the umodel.exe program path
@@ -75,61 +75,7 @@ Program Update
 * Install new version (.exe file)
 
 ## How to convert a map?
-
-Make sure you are allowed to convert the original map (if you are not the original author for example)
-
-For UT3/UDK maps only:
-
-- Open a text editor (notepad for example)
-- Open map with the UT3 or UDK editor.
-- In menu go to "Edit" -> "Select all"
-- Copy all data stuff ("Edit" -> "Copy" or Ctrl+C)
-- Paste data in your text editor and save your file with a .t3d file extension
-
-Note: this .t3d file is needed because the "ut3/udk.com batchexport" command to export
-.ut3 level to .t3d file messes up the brush order unlike the copy/paste from editor.
-
----
-
-<u>In UT Converter:</u>
-
-- Launch UT Converter
-- Go to "Convert -> <Unreal Tournament X/Unreal X> Map"
-- In the conversion settings, press "Select" and choose the map
-- for ut3 only: select the .t3d file you previously created manually (see For UT3 maps only section)
-- Press ok and wait while the conversion is running (it might takes several minutes)
-
-<u>In UT4 Editor:</u>
-
-- Open the UT4 Editor
-- Create new level ("File -> New level ...") and select "Empty level"
-
-- Import sounds
-  - Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
-  - Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Sounds
-  - After import, right click on all sounds imported in editor and choose "create cue"
-  - Make sounds loop if needed (double click on it and set "looping" to true). Generally sounds with name containing "loop" word are loop sounds
-  (e.g:  "AmbOutside_Looping_waves4")
-
-- Import Textures
-  - Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
-  - Click on "Import" and select converted sound files from <UT4ConverterPath>/Converted/<MapName>/Textures
-  - After import, right click on all texture in editor and choose "create material"
-
-- Import StaticMeshes
-  - Browse to /Maps/WIP/<MapName>-UT99/U1 path using the internal browser
-  - Click on "Import" and select converted staticmeshes .obj files from <UT4ConverterPath>/Converted/<MapName>/StaticMeshes
-
-- Import converted map
-  - Open the file <UT4ConverterPath>/Converted/<MapName>/<MapName>-<X>.t3d with an advanced text editor (like notepad++)
-  - Select all text (Ctrl+A) and copy(Ctrl+C)/paste(Ctrl+V) it into the editor
-- Convert flat brushes that will cause bsp holes reported by the converter to staticmeshes ("Create Staticmesh" button)
-- Rebuid Geometry ("Build" -> "Build Geometry")
-
-
-**Note**:
-- UE1/UE2: If after conversion your map got some bsp holes, remove all brushes with flat surfaces (such as torches)
-
+Check wiki page at: [UT Converter Wiki](https://github.com/xtremexp/UT4X-Converter/wiki)
 
 
 ## License
@@ -165,11 +111,12 @@ These programs are used during conversion process.
 ---
 
 ## History
-- 1.1.0 - DD/MM/2022
+- 1.1.0 - 21/12/2022
   * Added Unreal 1/UT99 -> UT3 conversion
   * UE1/UE2: fixed no sound actor created from actors with sound properties (e.g Lights)
   * all: group property is now properly converted
   * u1: now checks if patch from oldunreal.com is installed prior to conversion (ucc.exe needed)
   * ui: renamed program from UT4X Converter to UT Converter since it helps converting not to UT4 only
+  * ui: added menu entry to github project wiki page
 
 See history.md for complete history
