@@ -511,11 +511,11 @@ public class T3DLight extends T3DSound {
 			sbf.append(T3DUtils.writeSimpleObject("\t\t", "SpriteComponent", "Sprite", spritCompObjName, "SpriteComponent'Engine.Default__PointLight:Sprite'", null, null));
 
 			writeLocRotAndScale();
-			sbf.append(IDT).append("\tLightComponent=PointLightComponent'").append(pointCompObjName).append("'\n");
+			sbf.append(IDT).append("\tLightComponent=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
 
 			sbf.append(IDT).append("\tComponents(0)=SpriteComponent'").append(spritCompObjName).append("'\n");
 			sbf.append(IDT).append("\tComponents(1)=DrawLightRadiusComponent'").append(drawRadObjName).append("'\n");
-			sbf.append(IDT).append("\tComponents(2)=PointLightComponent'").append(pointCompObjName).append("'\n");
+			sbf.append(IDT).append("\tComponents(2)=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
 		}
 
 		writeEndActor();
