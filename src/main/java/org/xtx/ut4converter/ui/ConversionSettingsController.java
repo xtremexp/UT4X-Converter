@@ -246,9 +246,7 @@ public class ConversionSettingsController implements Initializable {
 				}
 			}
 		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
-			outMapNameLbl.setVisible(false);
-			changeMapNameBtn.setVisible(false);
-			ut4MapNameLbl.setVisible(false);
+			ut4MapNameLbl.setText("UT3 Map Name");
 			ut4BaseReferencePath.setVisible(false);
 			ut4BaseReferencePathLbl.setVisible(false);
 			ut4BaseReferencePathBtn.setVisible(false);

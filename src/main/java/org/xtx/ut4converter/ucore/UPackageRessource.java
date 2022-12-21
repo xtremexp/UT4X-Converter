@@ -493,8 +493,8 @@ public class UPackageRessource {
 			// e.g: Texture=/Game/RestrictedAssets/Maps/WIP/DmFith-U1/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
 			return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
 		} else {
-			// e.g: Texture=DM-Dummy.Starship_Base_basic9_Mat
-			return mapConverter.getMapPackageName() + "." + baseName;
+			// e.g: Texture=DM-Malevolence-UT99.Starship_Base_basic9_Mat
+			return mapConverter.getOutMapName() + "." + baseName;
 		}
 	}
 	
