@@ -176,10 +176,10 @@ public class T3DLight extends T3DSound {
 	private UE4_Mobility mobility = UE4_Mobility.Static;
 
 	/**
-	 * As seen in UT2004.
+	 * As seen in UT2004 and UE1
 	 * Overrides spot light class to directional light if true
 	 */
-	private Boolean isDirectional;
+	private Boolean isDirectional = Boolean.FALSE;
 
 	/**
 	 *
@@ -492,7 +492,15 @@ public class T3DLight extends T3DSound {
 
 			final String drawRadObjName = "DrawLightRadiusComponent_" + new Random().nextInt(10000);
 
-			sbf.append(T3DUtils.writeSimpleObject("\t\t", "DrawLightRadiusComponent", "DrawLightRadius0", drawRadObjName, "DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'", "SphereRadius", Float.toString(attenuationRadius)));
+			// CastShadow=False
+			sbf.append(IDT).append("\tBegin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=").append(drawRadObjName).append(" Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'\n");
+			sbf.append(IDT).append("\t\tSphereRadius=").append(attenuationRadius).append("\n");
+			// for directional lights do not cast shadows because in original UE1/UE2 maps
+			// the sky is "blocked" by a brush (with fakebackdrop sky) thus light rays not going
+			if (isDirectional) {
+				sbf.append(IDT).append("\t\tCastShadow=False\n");
+			}
+			sbf.append(IDT).append("\tEnd Object\n");
 
 			final String pointCompObjName = componentLightClass + "_" + new Random().nextInt(10000);
 
@@ -501,7 +509,12 @@ public class T3DLight extends T3DSound {
 
 			sbf.append(IDT).append("\t\tRadius=").append(attenuationRadius).append("\n");
 			sbf.append(IDT).append("\t\tBrightness=1.0\n");
-			sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
+			// for directional lights do not cast shadows else it looks very dark
+			if (isDirectional) {
+				sbf.append(IDT).append("\t\tCastShadows=False\n");
+			} else {
+				sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
+			}
 			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
 			// R,G,B as integers for UE3
 			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
