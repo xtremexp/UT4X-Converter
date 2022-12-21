@@ -616,7 +616,7 @@ public abstract class T3DActor extends T3DObject {
 		// Checked u1, ut99, ut2004, ut3
 		else {
 			if (drawScale != null) {
-				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\"\n");
+				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\n");
             }
 			sbf.append(IDT).append("\tName=\"").append(name).append("\"\n");
 		}
