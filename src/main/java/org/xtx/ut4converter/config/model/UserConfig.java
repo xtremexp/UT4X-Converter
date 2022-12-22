@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.config.model;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.Installation;
@@ -17,18 +18,19 @@ import java.util.List;
 
 /**
  *
+ * 22/12/2022: removed uModelPath field
  * @author XtremeXp
  */
 public class UserConfig {
 
-	private static ObjectMapper objectMapper = new ObjectMapper();
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	public final static String USER_CONFIG_JSON_FILE = "UserConfig.json";
 
 	/**
-	 * umodel.exe path set by user in settings
+	 * Version of userconfig file
 	 */
-	private File uModelPath;
+	private int version = 1;
 
 
 	/**
@@ -37,15 +39,7 @@ public class UserConfig {
 	 */
 	private Boolean isFirstRun;
 
-	List<UserGameConfig> games = new ArrayList<>();
-
-	public File getUModelPath() {
-		return uModelPath;
-	}
-
-	public void setUModelPath(File uModelPath) {
-		this.uModelPath = uModelPath;
-	}
+	private List<UserGameConfig> games = new ArrayList<>();
 
 	public Boolean getIsFirstRun() {
 		return isFirstRun;
@@ -66,6 +60,14 @@ public class UserConfig {
 
 	public static File getUserConfigFile() {
 		return new File(Installation.getDocumentProgramFolder().getAbsolutePath() + File.separator + UserConfig.USER_CONFIG_JSON_FILE);
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	/**
@@ -109,12 +111,13 @@ public class UserConfig {
 	 */
 	public void saveFile() throws IOException {
 		File configFile = getUserConfigFile();
-        configFile.getParentFile().mkdirs();
+
+		if (!configFile.getParentFile().exists() && !configFile.getParentFile().mkdirs()) {
+			throw new IOException("Could not create directory " + configFile.getParentFile());
+		}
 
 		try (final FileWriter fw = new FileWriter(configFile)) {
 			objectMapper.writeValue(fw, this);
-		} catch (IOException e) {
-			throw e;
 		}
 	}
 
@@ -131,6 +134,8 @@ public class UserConfig {
 			userConfig.saveFile();
 			return userConfig;
 		}
+
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 		return objectMapper.readValue(file, UserConfig.class);
 	}

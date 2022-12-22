@@ -21,7 +21,7 @@ It might work from non unreal/ut games, but it's not tested/supported at all.
 
 ## UT games supported
 
-Here are the different games possible :
+Here are the different conversion possible :
 
 - Source Game -> Dest Game (Conversion quality)
 - Unreal 1 -> UT3/UT4 (Good)
@@ -33,9 +33,9 @@ Here are the different games possible :
 - Unreal Engine 5 -> Not Supported
 
 Notes:
-* All: Custom scripts are blueprints are not converted
+* All: Custom scripts and blueprints are not converted
 * All: Shader materials are not converted
-* <UT3: Since there is no actor possible for conversion of ZoneInfo, converted level might appear too dark sometimes
+* UT3: Since there is no actor possible for conversion of ZoneInfo, converted level might appear too dark sometimes
 * U1/UT99 : Meshes (Unreal Engine 1/2) are not converted
 * UT99 : Custom textures are not converted
 * U2: Staticmeshes have bad UV
@@ -47,27 +47,19 @@ Notes:
 
 ## Requirements
 
-* Windows 7/8/10/11 - 64 Bit Operating System
-* Unreal Tournament 4 (2015) Editor
-* One of the following previous UT games (or UDK):
-  * Unreal 1
-  * Unreal 2
-  * Unreal Tournament
-  * Unreal Tournament 2003
-  * Unreal Tournament 2004
-  * Unreal Tournament 3
-* UModel Unreal Engine package extractor: [www.gildor.org](http://www.gildor.org/en/projects/umodel)
+* Windows 7/8/10/11 - 64 Bit
+* UT3 or UT4 editor for output converted map
+* Any Unreal (Tournament) game for input map
 * Some minimum skills with unreal engine editors
 
 ## Installation and quick start
+
 ------------------------------
 
-* Download umodel from [www.gildor.org](http://www.gildor.org/en/projects/umodel)
 * Install program by clicking on .exe file
 * Launch program (.exe file)
-* Go to Settings and set the unreal games folders as well as the umodel.exe program path
+* Go to Settings and set the unreal games folders
 * Convert your map in Menu: File -> Unreal (Tournament) -> Convert Map to UT4/UT3 ...
-
 
 Program Update
 ------------------------------
@@ -99,7 +91,7 @@ See license.txt file.
 **Note**: UI(.fxml files) can be easily modified with [Scene Builder editor](https://gluonhq.com/products/scene-builder/)
 
 ## External programs used
-These programs are used during conversion process.
+These programs are being used during conversion process.
 
 | Library / Program                         | Description                        | Author                                    | Website                                         |
 | ----------------------------------------- | ---------------------------------- | ----------------------------------------- | ----------------------------------------------- |
@@ -111,9 +103,12 @@ These programs are used during conversion process.
 ---
 
 ## History
+- 1.1.X
+  * dependencies: now umodel is embedded in program
+  
 - 1.1.1 - 22/12/2022
- * u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
- * tech: upgraded to latest java version (17->19)
+  * u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
+  * tech: upgraded to latest java version (17->19)
 
 - 1.1.0 - 21/12/2022
   * Added Unreal 1/UT99 -> UT3 conversion

@@ -199,11 +199,6 @@ public class ConversionSettingsController implements Initializable {
 
 		if (userConfig != null) {
 			userInputGameConfig = userConfig.getGameConfigByGame(inputGame);
-
-			if (userConfig.getUModelPath() == null || !userConfig.getUModelPath().exists()) {
-				warningMessage.setText("UModel not set in settings. Some ressources might not be exported.");
-				warningMessage.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
-			}
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
