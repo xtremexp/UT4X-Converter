@@ -5,8 +5,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
 
 
-* Version: 1.1.0
-* Release date: 21/12/2022
+* Version: 1.1.1
+* Release date: 22/12/2022
 * Author: Thomas 'XtremeXp/WinterIsComing' P.
 * Download: [GitHub - Releases](https://github.com/xtremexp/UT4X-Converter/releases)
 * Source Code: [GitHub](https://github.com/xtremexp/UT4X-Converter)
@@ -86,17 +86,17 @@ See license.txt file.
 
 ## Build and run from source code
 
-- Install git
-- Install maven
-- Clone project (default master branch is the release branch and most stable, develop being used for on going developments)
+- Install [git](https://gitforwindows.org/) 
+- Install [maven](https://maven.apache.org/)
+- Clone project using this command line:
 > git clone https://github.com/xtremexp/UT4X-Converter
-- Download and install OpenJDK17: https://jdk.java.net/17/
-- Run with maven command :
+- Download and install [OpenJDK19](https://jdk.java.net/19/): 
+- Build and run with maven command :
 > mvn clean javafx:run
-- For packaging application use maven command (.exe install file will be generated in /target/package folder)
+- Package application with maven command (.exe install file will be generated in <project_path>/target/package folder) :
 > mvn clean install
 
-**Note**: UI(.fxml files) can be easily modified with Scene Builder editor (https://gluonhq.com/products/scene-builder/)
+**Note**: UI(.fxml files) can be easily modified with [Scene Builder editor](https://gluonhq.com/products/scene-builder/)
 
 ## External programs used
 These programs are used during conversion process.
@@ -111,6 +111,10 @@ These programs are used during conversion process.
 ---
 
 ## History
+- 1.1.1 - 22/12/2022
+ * u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
+ * tech: upgraded to latest java version (17->19)
+
 - 1.1.0 - 21/12/2022
   * Added Unreal 1/UT99 -> UT3 conversion
   * UE1/UE2: fixed no sound actor created from actors with sound properties (e.g Lights)

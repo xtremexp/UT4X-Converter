@@ -5,16 +5,16 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT-Converter</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<packaging>jar</packaging>
 
 	<name>UT Converter</name>
 
 	<properties>
-		<java.version>17</java.version>
+		<java.version>19.0.1</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>17.0.0.1</javafx.version>
-		<slf4j.version>1.7.32</slf4j.version>
+		<javafx.version>19</javafx.version>
+		<slf4j.version>2.0.5</slf4j.version>
 		<log4j.version>2.19.0</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,9 +36,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>17</release>
-					<source>17</source>
-					<target>17</target>
+					<release>19</release>
+					<source>19</source>
+					<target>19</target>
 				</configuration>
 			</plugin>
 
@@ -235,7 +235,7 @@
 										<argument>${project.artifactId}</argument>
 
 										<argument>--description</argument>
-										<argument>UT Converter</argument>
+										<argument>Helps converting Unreal (Tournament) maps to UT3/UT4</argument>
 
 										<argument>--vendor</argument>
 										<argument>Thomas 'WinterIsComing' P.</argument>

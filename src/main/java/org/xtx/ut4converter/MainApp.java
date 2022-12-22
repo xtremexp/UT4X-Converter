@@ -30,7 +30,7 @@ public class MainApp extends Application {
 	/**
 	 * Version of UT4 Converter
 	 */
-	public static final String VERSION = "1.1.0";
+	public static final String VERSION = "1.1.1";
 
 	/**
 	 * Author
@@ -60,7 +60,7 @@ public class MainApp extends Application {
 		CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
 		CONVERSION("/fxml/ConversionView.fxml");
 
-		String path;
+		final String path;
 
 		FXMLoc(String path) {
 			this.path = path;
@@ -113,6 +113,7 @@ public class MainApp extends Application {
 				try {
 					stop();
 				} catch (Exception e) {
+					logger.error("Error while closing", e);
 				}
 				System.exit(0);
 			});
@@ -154,12 +155,6 @@ public class MainApp extends Application {
 		return null;
 	}
 
-	/**
-	 * Shows user settings panel
-	 */
-	public void showUserSettingsView() {
-		showView(FXMLoc.SETTINGS.path);
-	}
 
 	/**
 	 * Show conversion view (log table, ...)
@@ -187,9 +182,6 @@ public class MainApp extends Application {
 		return primaryStage;
 	}
 
-	public BorderPane getRootLayout() {
-		return rootLayout;
-	}
 
 	public boolean isUseUbClasses() {
 		return useUbClasses;
