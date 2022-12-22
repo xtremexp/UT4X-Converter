@@ -12,8 +12,8 @@
                     <MenuItem onAction="#convertU1toUT4Map" text="Convert map to UT4 ..."/>
                 </Menu>
                 <Menu text="Unreal 2">
-                    <MenuItem onAction="#convertU2ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertU2ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
+                    <MenuItem onAction="#convertU2ToUT3Map" text="Convert map to UT3 ..." visible="false"/>
+                    <MenuItem onAction="#convertU2ToUT4Map" text="Convert map to UT4 ..." />
                     <MenuItem onAction="#extractTexturesFromU2Package" text="Extract textures from package ..." />
                 </Menu>
                 <Menu text="Unreal Tournament">
@@ -21,12 +21,12 @@
                     <MenuItem onAction="#convertUT99ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2003">
-                    <MenuItem onAction="#convertUT2003ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertUT2003ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
+                    <MenuItem onAction="#convertUT2003ToUT3Map" text="Convert map to UT3 ..." visible="false"/>
+                    <MenuItem onAction="#convertUT2003ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 2004">
-                    <MenuItem onAction="#convertUt2004ToUT3Map" text="Convert map to UT3 ..." />
-                    <MenuItem onAction="#convertUt2004ToUT4Map" text="Convert map to UT4 ..." visible="false"/>
+                    <MenuItem onAction="#convertUt2004ToUT3Map" text="Convert map to UT3 ..." visible="false"/>
+                    <MenuItem onAction="#convertUt2004ToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
                 <Menu text="Unreal Tournament 3">
                     <MenuItem onAction="#convertUT3ToUT4Map" text="Convert map to UT4 ..." />
