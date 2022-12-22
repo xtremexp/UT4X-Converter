@@ -167,11 +167,14 @@ public class Installation {
 	 * @return
 	 */
 	public static File getUModelPath(MapConverter mapConverter) {
-		if (mapConverter.getUserConfig() != null) {
-			return mapConverter.getUserConfig().getUModelPath();
-		}
 
-		return null;
+		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "umodel" + File.separator + "umodel_64.exe");
+
+		if (file.exists()) {
+			return file;
+		} else {
+			return new File(Installation.getInstallDirectory(MainApp.class) + File.separator  + "umodel" + File.separator + "umodel_64.exe");
+		}
 	}
 
 

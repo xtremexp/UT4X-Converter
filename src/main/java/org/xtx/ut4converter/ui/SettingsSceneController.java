@@ -60,12 +60,6 @@ public class SettingsSceneController implements Initializable {
 	private Label settingsLog;
 
 	private Stage dialogStage;
-	@FXML
-	private TitledPane gamePathsPane;
-	@FXML
-	private TitledPane externalPrograms;
-	@FXML
-	private TextField uModelPath;
 
 
 	/**
@@ -76,16 +70,7 @@ public class SettingsSceneController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-
 		loadSettings();
-		externalPrograms.setText("External program paths");
-		gamePathsPane.setText("Unreal games paths");
-
-		if (Installation.isLinux()) {
-			String homeDir = System.getProperty("user.home");
-
-			uModelPath.setPromptText("e.g: " + homeDir + "/Downloads/umodel/umodel");
-		}
 	}
 
 	@FXML
@@ -182,11 +167,6 @@ public class SettingsSceneController implements Initializable {
 		try {
 			userConfig = UserConfig.load();
 
-			if (userConfig.getUModelPath() != null) {
-				uModelPath.setText(userConfig.getUModelPath().getAbsolutePath());
-			}
-
-
 			for (UserGameConfig game : userConfig.getGame()) {
 
 				if (game.getPath() != null && null != game.getId()) {
@@ -249,36 +229,5 @@ public class SettingsSceneController implements Initializable {
 		this.dialogStage.close();
 	}
 
-	@FXML
-	private void setUModelPath() {
-
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select umodel file");
-
-		// TODO strict filter on filename
-		if (Installation.isWindows()) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("umodel.exe/umodel_64.exe", "*.exe"));
-		}
-
-		File umodelPathFile = chooser.showOpenDialog(new Stage());
-
-		if (umodelPathFile != null) {
-			if(umodelPathFile.getName().equals("umodel.exe") || umodelPathFile.getName().equals("umodel_64.exe")) {
-				try {
-					userConfig.setUModelPath(umodelPathFile);
-					userConfig.saveFile();
-					uModelPath.setText(umodelPathFile.getAbsolutePath());
-				} catch (IOException ex) {
-					Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			} else {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.setTitle("Invalid file");
-				alert.setHeaderText("Invalid file");
-				alert.setContentText("Select umodel.exe or umodel_64.exe file");
-				alert.showAndWait();
-			}
-		}
-	}
 
 }

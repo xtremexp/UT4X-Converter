@@ -435,10 +435,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		packageExtractors.add(new UCCExporter(this));
 		packageExtractors.add(new CopyExporter(this));
 		packageExtractors.add(new SimpleTextureExtractor(this));
-
-		if (userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()) {
-			packageExtractors.add(new UModelExporter(this));
-		}
+		packageExtractors.add(new UModelExporter(this));
 	}
 
 	/**
@@ -1591,10 +1588,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	public boolean canConvertTextures() {
 
-		if (userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()) {
-			return true;
-		}
-
 		// todo handle/test ucc_bin for Unreal 1 for linux with
 		// www.oldunreal.com patch
 		if (inputGame.engine.version <= UnrealEngine.UE2.version && inputGame != UTGame.U2) {
@@ -1610,10 +1603,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return
 	 */
 	public boolean canConvertSounds() {
-
-		if (userConfig.getUModelPath() != null && userConfig.getUModelPath().exists()) {
-			return true;
-		}
 
 		if (inputGame.engine.version <= UnrealEngine.UE2.version) {
 			// todo handle/test ucc_bin for Unreal 1 for linux with
@@ -1660,7 +1649,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// conversion only partial for umodel
 		// since pskx cannot be used by UE4 but can be imported with blender
 		// and exported to fbx or obj format file allowed by UE4
-		return userConfig.getUModelPath() != null && userConfig.getUModelPath().exists();
+		return true;
 	}
 
 	public boolean convertMusic() {
