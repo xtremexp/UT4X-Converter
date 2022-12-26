@@ -32,6 +32,10 @@ public class UserConfig {
 	 */
 	private int version = 1;
 
+	/**
+	 * If true, program will check for updates at start
+	 */
+	private boolean checkForUpdates = true;
 
 	/**
 	 * true if program running for the first time. If so should display some
@@ -40,6 +44,15 @@ public class UserConfig {
 	private Boolean isFirstRun;
 
 	private List<UserGameConfig> games = new ArrayList<>();
+
+
+	public boolean isCheckForUpdates() {
+		return checkForUpdates;
+	}
+
+	public void setCheckForUpdates(boolean checkForUpdates) {
+		this.checkForUpdates = checkForUpdates;
+	}
 
 	public Boolean getIsFirstRun() {
 		return isFirstRun;

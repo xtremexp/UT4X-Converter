@@ -11,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -25,10 +27,14 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
+import org.xtx.ut4converter.tools.GitHubReleaseJson;
+import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.tools.UIUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static org.xtx.ut4converter.tools.UIUtils.openUrl;
@@ -72,7 +78,12 @@ public class MainSceneController implements Initializable {
 				userConfig.saveFile();
 				showAlertFirstTime();
 			}
-		} catch (IOException e) {
+
+			// check for update at startup if user said so
+			if (userConfig != null && userConfig.isCheckForUpdates()) {
+				checkForUpdate();
+			}
+		} catch (IOException | InterruptedException e) {
 			logger.error("initialize " + url, e);
 		}
 	}
@@ -85,7 +96,6 @@ public class MainSceneController implements Initializable {
 
 		String msg = "In order to fully use the converter you need to set: \n";
 		msg += "- the unreal game(s) path(s)\n";
-		msg += "- download and set the umodel program file path (download at: http://www.gildor.org/en/projects/umodel ) \n";
 		msg += "\nPress OK to go to the settings panel";
 
 		alert.setContentText(msg);
@@ -160,10 +170,46 @@ public class MainSceneController implements Initializable {
 		}
 	}
 
+	private void checkForUpdate() throws IOException, InterruptedException {
+		final GitHubReleaseJson newLatestRelease = Installation.checkForUpdate();
 
+		if (newLatestRelease != null) {
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Information");
+			alert.setHeaderText("New update available");
+			alert.setContentText("A new update is available do you want to go download site ?\nYour version: v" + MainApp.VERSION + "\nLatest version: " + newLatestRelease.getTagName());
+
+			Optional<ButtonType> result = alert.showAndWait();
+
+			if (result.isPresent() && result.get() == ButtonType.OK) {
+				openUrl(newLatestRelease.getHtmlUrl(), false, null);
+			}
+		} else {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Information");
+			alert.setHeaderText("No new update is available");
+			alert.setContentText("No new update is available");
+
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Checks from github api if there is a new update for program
+	 */
 	@FXML
 	private void openGitHubUrlReleases() {
-		openUrl("https://github.com/xtremexp/UT4X-Converter/releases", true, null);
+		try {
+			checkForUpdate();
+		} catch (IOException | InterruptedException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Error while checking for update.");
+			alert.setContentText("Error while checking for update " + e.getMessage());
+
+			alert.showAndWait();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@FXML

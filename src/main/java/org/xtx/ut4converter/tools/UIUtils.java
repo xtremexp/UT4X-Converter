@@ -28,7 +28,7 @@ public class UIUtils {
 	/**
 	 * Opens explorer to specific folder
 	 * 
-	 * @param dirToOpen
+	 * @param dirToOpen Folder to open with explorer
 	 */
 	public static void openExplorer(File dirToOpen) {
 		Desktop desktop = Desktop.getDesktop();
@@ -39,15 +39,21 @@ public class UIUtils {
 		}
 	}
 
-	public static boolean confirm(String header, String text) {
+	/**
+	 * Opens a confirm popup.
+	 * @param title Title of popup
+	 * @param header Header of popup
+	 * @param text Content text of popup
+	 * @return Returns <code>true</code> if user pressed OK else <code>false</code>
+	 */
+	public static boolean confirm(String title, String header, String text) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Confirmation");
+		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(text);
 
 		Optional<ButtonType> result = alert.showAndWait();
-
-		return result.get() != ButtonType.OK;
+		return result.isPresent() && result.get() == ButtonType.OK;
 	}
 
 	/**

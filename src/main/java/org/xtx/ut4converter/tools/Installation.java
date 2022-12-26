@@ -5,13 +5,10 @@
 
 package org.xtx.ut4converter.tools;
 
-/**
- *
- * @author hyperion
- */
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import org.xtx.ut4converter.MainApp;
-import org.xtx.ut4converter.MapConverter;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -19,8 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.JarURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class Installation {
 	 * @param clazz Class
 	 * @return <code>true</code> if installed
 	 */
-	public static boolean isInstalled(Class clazz) {
+	public static boolean isInstalled(Class<MainApp> clazz) {
 		try {
 			URL classUrl = getClassURL(clazz);
 			
@@ -65,15 +66,14 @@ public class Installation {
 	 * If it is not installed (see {@link #isInstalled(Class)}}) the <em>current
 	 * user working directory</em> (as denoted by the system property
 	 * <code>user.dir<code>) is returned instead.
-	 *
+	 * <p>
 	 * The install directory should be normally "C:\Program Files\UT4X-Converter\app"
 	 * 
 	 * @param clazz Class
 	 *            class to check for installation
 	 * @return the installation directory
-	 * @see
 	 */
-	public static File getInstallDirectory(Class clazz) {
+	public static File getInstallDirectory(Class<MainApp> clazz) {
 		if (isInstalled(clazz)) {
 			try {
 				JarURLConnection jarCon = (JarURLConnection) getClassURL(clazz).openConnection();
@@ -98,13 +98,13 @@ public class Installation {
 	 *            class to get URL for
 	 * @return the URL this class was loaded from
 	 */
-	private static URL getClassURL(Class clazz) {
+	private static URL getClassURL(Class<MainApp> clazz) {
 		return clazz.getResource("/" + clazz.getName().replace('.', '/'));
 	}
 
 	/**
 	 *
-	 * @return
+	 * @return Full path of UT4X converter program
 	 */
 	public static File getProgramFolder() {
 		return Installation.getInstallDirectory(MainApp.class);
@@ -139,7 +139,7 @@ public class Installation {
 
 	/**
 	 * Basically c:\Users\<user>\Documents
-	 * @return
+	 * @return Full path of user documents folder
 	 */
 	public static File getDocumentUserFolder(){
 		return new JFileChooser().getFileSystemView().getDefaultDirectory();
@@ -163,10 +163,9 @@ public class Installation {
 	/**
 	 * Return full path of texture converter
 	 * 
-	 * @param mapConverter
-	 * @return
+	 * @return Full path of umodel program
 	 */
-	public static File getUModelPath(MapConverter mapConverter) {
+	public static File getUModelPath() {
 
 		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "umodel" + File.separator + "umodel_64.exe");
 
@@ -183,7 +182,7 @@ public class Installation {
 	 * Return full path of texture extractor (basic extractor once done for UT3
 	 * converter). The only one working for Unreal 2!
 	 * 
-	 * @return
+	 * @return Full path of extract textures program
 	 */
 	public static File getExtractTextures() {
 		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "ExtractTextures.exe");
@@ -195,6 +194,11 @@ public class Installation {
 		}
 	}
 
+
+	/**
+	 *
+	 * @return Full path of utx analyser program
+	 */
 	public static File getUtxAnalyser() {
 		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "utxextractor" + File.separator + "UtxAnalyser.exe");
 
@@ -210,34 +214,17 @@ public class Installation {
 	/**
 	 * Means program running on windows
 	 * 
-	 * @return
+	 * @return <code>true</code> if current OS is windows else <code>false</code>
 	 */
 	public static boolean isWindows() {
 		return (OS.contains("win"));
 	}
 
-	/**
-	 * Means program running on mac
-	 * 
-	 * @return
-	 */
-	public static boolean isMac() {
-		return (OS.contains("mac"));
-	}
-
-	/**
-	 * Means program running on Unix
-	 * 
-	 * @return
-	 */
-	public static boolean isUnix() {
-		return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0);
-	}
 
 	/**
 	 * Means program running on linux
-	 * 
-	 * @return
+	 *
+	 * @return <code>true</code> if current OS is linux else <code>false</code>
 	 */
 	public static boolean isLinux() {
 		return (OS.contains("nux"));
@@ -250,8 +237,8 @@ public class Installation {
 	 * @param logLines
 	 *            Store program lofs
 	 * @return Program exit code (0 if everything went fine)
-	 * @throws InterruptedException
-	 * @throws IOException
+	 * @throws InterruptedException Exception thrown
+	 * @throws IOException Exception thrown
 	 */
 	public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
 
@@ -279,6 +266,53 @@ public class Installation {
 			if (pp != null) {
 				pp.destroy();
 			}
+		}
+	}
+
+
+	public static GitHubReleaseJson getLatestRelease() throws IOException, InterruptedException {
+
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create("https://api.github.com/repos/xtremexp/UT4X-Converter/releases/latest"))
+				.build();
+
+		final ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.setPropertyNamingStrategy( PropertyNamingStrategies.SNAKE_CASE );
+
+
+		final HttpResponse<String> response =
+				client.send(request, HttpResponse.BodyHandlers.ofString());
+
+		return objectMapper.readValue(response.body(), GitHubReleaseJson.class);
+	}
+
+	/**
+	 * Check for update.
+	 * Returns latest release information if there is an update available else <code>null</code>
+	 *
+	 * @return Latest release information if there is an update available else <code>null</code>
+	 */
+	public static GitHubReleaseJson checkForUpdate() throws IOException, InterruptedException {
+
+		final GitHubReleaseJson latestRelease = getLatestRelease();
+
+		final String[] remoteVersionSplit = latestRelease.getTagName().replace("v", "").split("\\.");
+		final String[] currentVersionSplit = MainApp.VERSION.split("\\.");
+
+		if (Integer.parseInt(remoteVersionSplit[0]) > Integer.parseInt(currentVersionSplit[0])) {
+			return latestRelease;
+		}
+
+		if (Integer.parseInt(remoteVersionSplit[1]) > Integer.parseInt(currentVersionSplit[1])) {
+			return latestRelease;
+		}
+
+		if (Integer.parseInt(remoteVersionSplit[2]) > Integer.parseInt(currentVersionSplit[2])) {
+			return latestRelease;
+		} else {
+			return null;
 		}
 	}
 }
