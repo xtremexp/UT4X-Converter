@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class BaseTest {
+public class T3DTestUtils {
 
 
     /**
@@ -21,8 +21,8 @@ public class BaseTest {
      * @param inputGame
      * @return
      */
-    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame) throws IOException {
-        final MapConverter mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws IOException {
+        final MapConverter mc = new MapConverter(inputGame, outputGame);
 
         if (inputGame == UTGames.UTGame.U2) {
             mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
@@ -54,7 +54,7 @@ public class BaseTest {
 
         final List<UserGameConfig> userGameConfigs = new ArrayList<>();
 
-        try (final InputStream input = BaseTest.class.getResourceAsStream("/application.properties")) {
+        try (final InputStream input = T3DTestUtils.class.getResourceAsStream("/application.properties")) {
 
             final Properties prop = new Properties();
             prop.load(input);

@@ -113,17 +113,24 @@ public class T3DLight extends T3DSound {
 	private boolean isCorona;
 
 	/**
-	 * UE1/2 brightness UE1 range: 0-255 UE2 range: 0-Infinite
+	 * UE1/2 brightness
+	 * UE1: Range 0->255
+	 * UE2: Range: 0->Infinite
 	 */
 	private float brightness;
 
 	/**
-	 * UE1/2 hue
+	 * Hue of the light
+	 * UE1/2 hue: Range 0->255 (White->Red) (default: 0)
+	 * UE3+: replaced with RGB
 	 */
 	private float hue;
 
 	/**
-	 * UE1/2 saturation
+	 * Light saturation
+	 * UE1/2 saturation: Range 0->255 (default: 255)
+	 * UE3+: replaced with RGB
+	 * The higher saturation is, the more light looks white (no matter if hue is not white)
 	 */
 	private float saturation;
 
@@ -137,7 +144,7 @@ public class T3DLight extends T3DSound {
 	// *** Unreal Engine 3 / 4 Properties ***
 
 	/**
-	 * Range Value 0->1
+	 * UE3+: Range Value 0->1
 	 */
 	private float red, green, blue, alpha = 255;
 
@@ -673,4 +680,16 @@ public class T3DLight extends T3DSound {
 		}
 	}
 
+
+	public void setBrightness(float brightness) {
+		this.brightness = brightness;
+	}
+
+	public void setHue(float hue) {
+		this.hue = hue;
+	}
+
+	public void setSaturation(float saturation) {
+		this.saturation = saturation;
+	}
 }
