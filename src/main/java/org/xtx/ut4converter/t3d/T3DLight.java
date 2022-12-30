@@ -113,25 +113,38 @@ public class T3DLight extends T3DSound {
 	private boolean isCorona;
 
 	/**
-	 * UE1/2 brightness UE1 range: 0-255 UE2 range: 0-Infinite
+	 * UE1/2 brightness
+	 * UE1: Range 0->255
+	 * UE2: Range: 0->Infinite
 	 */
 	private float brightness;
 
 	/**
-	 * UE1/2 hue
+	 * Hue of the light
+	 * UE1/2 hue: Range 0->255 (White->Red) (default: 0)
+	 * UE3+: replaced with RGB
 	 */
 	private float hue;
 
 	/**
-	 * UE1/2 saturation
+	 * Light saturation
+	 * UE1/2 saturation: Range 0->255 (default: 255)
+	 * UE3+: replaced with RGB
+	 * The higher saturation is, the more light looks white (no matter if hue is not white)
 	 */
 	private float saturation;
+
+	/**
+	 * How far the light goes
+	 * UE1/UE2: Default radius is 64 for lights, real light radius = radius * 32 = 2048
+	 * UE3/UE4: Default radius is 1024 for lights, real light radius = radius (same)
+	 */
 	private float radius;
 
 	// *** Unreal Engine 3 / 4 Properties ***
 
 	/**
-	 * Range Value 0->1
+	 * UE3+: Range Value 0->1
 	 */
 	private float red, green, blue, alpha = 255;
 
@@ -509,12 +522,12 @@ public class T3DLight extends T3DSound {
 
 			sbf.append(IDT).append("\t\tRadius=").append(attenuationRadius).append("\n");
 			sbf.append(IDT).append("\t\tBrightness=1.0\n");
+
 			// for directional lights do not cast shadows else it looks very dark
 			if (isDirectional) {
 				sbf.append(IDT).append("\t\tCastShadows=False\n");
-			} else {
-				sbf.append(IDT).append("\t\tFalloffExponent=").append(lightFalloffExponent).append("\n");
 			}
+
 			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
 			// R,G,B as integers for UE3
 			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
@@ -585,11 +598,10 @@ public class T3DLight extends T3DSound {
 		attenuationRadius = radius;
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-			if (mapConverter.isFrom(UnrealEngine.UE1)) {
-				attenuationRadius *= UE1_UE4_ATTENUATION_RADIUS_FACTOR;
-			} else {
-				attenuationRadius *= UE2_UE4_ATTENUATION_RADIUS_FACTOR;
-			}
+
+			// the real radius in UE1/UE2 is 32X more important for real
+			// e.g: Radius(UE1/UE2) = 64 -> Real Radius = 64 * 32 = 2048
+			attenuationRadius *= 32;
 
 			if (outerConeAngle != null) {
 				// 0 -> 255 range to 0 -> 180 range
@@ -668,4 +680,16 @@ public class T3DLight extends T3DSound {
 		}
 	}
 
+
+	public void setBrightness(float brightness) {
+		this.brightness = brightness;
+	}
+
+	public void setHue(float hue) {
+		this.hue = hue;
+	}
+
+	public void setSaturation(float saturation) {
+		this.saturation = saturation;
+	}
 }

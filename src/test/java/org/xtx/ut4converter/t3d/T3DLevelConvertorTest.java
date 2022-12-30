@@ -1,6 +1,6 @@
 package org.xtx.ut4converter.t3d;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
@@ -25,7 +25,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     @Test
-    public void testT3dConvertU1() throws IOException {
+    void testT3dConvertU1() throws IOException {
         testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.U1.shortName, UTGames.UTGame.U1);
     }
 
@@ -36,7 +36,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     @Test
-    public void testT3dConvertUT99() throws IOException {
+    void testT3dConvertUT99() throws IOException {
         testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT99.shortName, UTGames.UTGame.UT99);
     }
 
@@ -47,7 +47,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     @Test
-    public void testT3dConvertU2() throws IOException {
+    void testT3dConvertU2() throws IOException {
         testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.U2.shortName, UTGames.UTGame.U2);
     }
 
@@ -58,7 +58,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     @Test
-    public void testT3dConvertUT2003() throws IOException {
+    void testT3dConvertUT2003() throws IOException {
         testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT2003.shortName, UTGames.UTGame.UT2003);
     }
 
@@ -69,7 +69,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     @Test
-    public void testT3dConvertUT2004() throws IOException {
+    void testT3dConvertUT2004() throws IOException {
         testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT2004.shortName, UTGames.UTGame.UT2004);
     }
 
@@ -81,7 +81,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     private void testT3dConvertForGame(final String t3dFilesFolder, UTGames.UTGame inputGame) throws IOException {
-        final MapConverter mc = BaseTest.getMapConverterInstance(inputGame);
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, UTGames.UTGame.UT4);
         mc.setConvertTextures(false);
         mc.setConvertMusic(false);
         mc.setConvertSounds(false);

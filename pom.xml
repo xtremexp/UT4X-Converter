@@ -392,11 +392,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 	<description>Converter for Unreal Tournament 4 (UT2015) game</description>
 

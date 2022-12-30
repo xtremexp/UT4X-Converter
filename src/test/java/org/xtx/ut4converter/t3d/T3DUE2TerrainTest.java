@@ -1,8 +1,10 @@
 package org.xtx.ut4converter.t3d;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
@@ -10,27 +12,28 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static org.xtx.ut4converter.t3d.BaseTest.parseFromT3d;
+import static org.xtx.ut4converter.t3d.T3DTestUtils.parseFromT3d;
 
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class T3DUE2TerrainTest {
 
     private MapConverter mc;
 
-    @Before
-    public void setUp() throws IOException {
-        this.mc = BaseTest.getMapConverterInstance(UTGames.UTGame.UT2004);
+    @BeforeAll
+    void setUp() throws IOException {
+        this.mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
     }
 
 
     private T3DUE4Terrain testUE2TerrainReadAndConvert(final String mapFile, final String t3dFile) throws IOException, ReflectiveOperationException, InterruptedException {
 
         // TODO conversion should be done exactly like in T3DLevelConvertor
-        BaseTest.setMapFile(this.mc, mapFile);
+        T3DTestUtils.setMapFile(this.mc, mapFile);
         final T3DActor actor = parseFromT3d( this.mc, "TerrainInfo", T3DUE2Terrain.class, T3DUE2Terrain.class.getResource("/t3d/ue2/" + t3dFile).getPath());
 
-        Assert.assertNotNull(actor);
-        Assert.assertTrue(actor instanceof T3DUE2Terrain);
+        Assertions.assertNotNull(actor);
+        Assertions.assertTrue(actor instanceof T3DUE2Terrain);
 
         final T3DUE2Terrain ue2Terrain = (T3DUE2Terrain) actor;
 
@@ -50,19 +53,19 @@ public class T3DUE2TerrainTest {
      * @throws InterruptedException
      */
     @Test
-    public void testUT2004TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
+    void testUT2004TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("DM-1on1-Serpentine.ut2", "UT2004-Serpentine-TerrainInfo.t3d");
-        Assert.assertNotNull(t3DUE4Terrain);
+        Assertions.assertNotNull(t3DUE4Terrain);
 
         System.out.println(t3DUE4Terrain.toT3d());
     }
 
     @Test
-    public void testUT2004DriaTerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
+    void testUT2004DriaTerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("ONS-Dria.ut2", "UT2004-Dria-TerrainInfo.t3d");
-        Assert.assertNotNull(t3DUE4Terrain);
+        Assertions.assertNotNull(t3DUE4Terrain);
 
         try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
             fw.write(t3DUE4Terrain.toT3d());
@@ -77,12 +80,12 @@ public class T3DUE2TerrainTest {
      * @throws InterruptedException
      */
     @Test
-    public void testUnreal2TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
+    void testUnreal2TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
-        this.mc = BaseTest.getMapConverterInstance(UTGames.UTGame.U2);
-        BaseTest.setMapFile(this.mc, "mm_waterfront.un2");
+        this.mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U2, UTGames.UTGame.UT4);
+        T3DTestUtils.setMapFile(this.mc, "mm_waterfront.un2");
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("mm_waterfront.un2", "U2-WaterFront-TerrainInfo.t3d");
-        Assert.assertNotNull(t3DUE4Terrain);
+        Assertions.assertNotNull(t3DUE4Terrain);
 
         try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
             fw.write(t3DUE4Terrain.toT3d());

@@ -1,10 +1,10 @@
 package org.xtx.ut4converter.export;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.t3d.BaseTest;
+import org.xtx.ut4converter.t3d.T3DTestUtils;
 
 import java.io.File;
 import java.util.Collection;
@@ -21,7 +21,7 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllU1Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.U1);
+        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT4);
     }
 
     /**
@@ -31,7 +31,7 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllUT99Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT99);
+        exportAllUTXLevels(UTGames.UTGame.UT99, UTGames.UTGame.UT4);
     }
 
     /**
@@ -41,7 +41,7 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllU2Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.U2);
+        exportAllUTXLevels(UTGames.UTGame.U2, UTGames.UTGame.UT4);
     }
 
     /**
@@ -51,7 +51,7 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllUT2003Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT2003);
+        exportAllUTXLevels(UTGames.UTGame.UT2003, UTGames.UTGame.UT4);
     }
 
     /**
@@ -61,7 +61,7 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllUT2004Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT2004);
+        exportAllUTXLevels(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
     }
 
     /**
@@ -71,11 +71,11 @@ public class UCCExporterTest {
      */
     @Test
     public void testExportAllUT3Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT3);
+        exportAllUTXLevels(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
     }
 
-    private void exportAllUTXLevels(final UTGames.UTGame inputGame) throws Exception {
-        final MapConverter mc = BaseTest.getMapConverterInstance(inputGame);
+    private void exportAllUTXLevels(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws Exception {
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
 
 
         final File ut2004BasePath = mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath();

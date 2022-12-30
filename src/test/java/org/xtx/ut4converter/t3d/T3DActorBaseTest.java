@@ -10,7 +10,7 @@ public abstract class T3DActorBaseTest {
 
     protected MapConverter mc;
 
-    public void setUp(final UTGames.UTGame inputGame) throws IOException {
+    void setUp(final UTGames.UTGame inputGame) throws IOException {
         this.mc = new MapConverter(inputGame, UTGames.UTGame.UT4);
     }
 }

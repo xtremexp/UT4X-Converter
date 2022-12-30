@@ -1,7 +1,9 @@
 package org.xtx.ut4converter.t3d;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
@@ -18,7 +20,7 @@ public class T3DUE4TerrainTest {
      * and y axis is from top to bottom)
      */
     @Test
-    public void testGetCoordinatesForIndexInSquareSize(){
+    void testGetCoordinatesForIndexInSquareSize(){
 
         // index 28 means it's 29th value (0,1, .... 28)
         // -- X ->
@@ -35,12 +37,12 @@ public class T3DUE4TerrainTest {
         final Point2d result = T3DUE4Terrain.getCoordinatesForIndexInSquareSize(28, 10, 5);
 
         // should return (x=8, y = 2)
-        Assert.assertEquals(8d, result.getX(), 0.01d);
-        Assert.assertEquals(2d, result.getY(), 0.01d);
+        Assertions.assertEquals(8d, result.getX(), 0.01d);
+        Assertions.assertEquals(2d, result.getY(), 0.01d);
     }
 
     @Test
-    public void testGetCollisionComponentFromHeightMapIndex() throws IOException {
+    void testGetCollisionComponentFromHeightMapIndex() throws IOException {
 
         final MapConverter mc = new MapConverter(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
 
