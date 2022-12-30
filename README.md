@@ -94,15 +94,22 @@ See license.txt file.
 - Package application with maven command (.exe install file will be generated in <project_path>/target/package folder) :
 > mvn clean install
 
-**Note**: UI(.fxml files) can be easily modified with [Scene Builder editor](https://gluonhq.com/products/scene-builder/)
+**Notes**: 
+*  UI(.fxml files) can be easily modified with [Scene Builder editor](https://gluonhq.com/products/scene-builder/)
+*  ExtractTextures.exe and UtxAnalyser.exe programs have been compiled using modified source code from "UT Package Delphi Unit" by Antonio Corbero
+   * Download and install [Delphi Comunity Edition](https://www.embarcadero.com/products/delphi/starter) 
+   * Download and extract [UT Package Delphi Unit](https://www.acordero.org/projects/unreal-tournament-package-delphi-library/)
+   * Add the /src/delphi/*.dpr files where you installed UT Package Delphi Unit
+   * Open ExtractTextures.dpr or UtxAnalyser.dpr with the IDE
 
 ## External programs used
 These programs are being used during conversion process.
 
-| Library / Program | Description                    | Author                              | Website                                         |
-|-------------------| ------------------------------ | ----------------------------------- | ----------------------------------------------- |
-| Texture Toolkit   | Unreal terrain bitmap conversion | Alex Stewart                       | http://www.foogod.com/UEdTexKit/                |
-| UModel            | Unreal package extractor       | Konstantin Nosov                 | http://www.gildor.org/en/projects/umodel        |
+| Library / Program                    | Description                      | Author           | Website                                         |
+|--------------------------------------|----------------------------------|------------------| ----------------------------------------------- |
+| Texture Toolkit<br/>(g16convert.exe) | Unreal terrain bitmap conversion | Alex Stewart     | http://www.foogod.com/UEdTexKit/                |
+| UModel  (umodel_64.exe)              | Unreal package extractor         | Konstantin Nosov | http://www.gildor.org/en/projects/umodel        |
+| SoundExchange (sox.exe)              | Sound wave conversion            | Multiple         | https://sox.sourceforge.net/                                             |
 
 
 
