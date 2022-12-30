@@ -535,7 +535,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		// Auto creates a big additive brush surrounding level
 		// to simulate creating a level in subtract mode (not existing in UE4
 		// ...)
-		if (mapConverter.isFromUE1UE2ToUE3UE4() && !mapConverter.hasClassFilter()) {
+		if (mapConverter.isFromUE1UE2ToUE3UE4() && (!mapConverter.hasClassFilter() || (mapConverter.hasClassFilter() && Arrays.asList(mapConverter.getFilteredClasses()).contains("Brush")))) {
 
 			double offset = 200d;
 			Vector3d boundBox = getLevelDimensions();
