@@ -81,7 +81,7 @@ public class MainSceneController implements Initializable {
 
 			// check for update at startup if user said so
 			if (userConfig != null && userConfig.isCheckForUpdates()) {
-				checkForUpdate();
+				checkForUpdate(false);
 			}
 		} catch (IOException | InterruptedException e) {
 			logger.error("initialize " + url, e);
@@ -170,7 +170,7 @@ public class MainSceneController implements Initializable {
 		}
 	}
 
-	private void checkForUpdate() throws IOException, InterruptedException {
+	private void checkForUpdate(boolean showAlertIfNoUpdate) throws IOException, InterruptedException {
 		final GitHubReleaseJson newLatestRelease = Installation.checkForUpdate();
 
 		if (newLatestRelease != null) {
@@ -184,7 +184,7 @@ public class MainSceneController implements Initializable {
 			if (result.isPresent() && result.get() == ButtonType.OK) {
 				openUrl(newLatestRelease.getHtmlUrl(), false, null);
 			}
-		} else {
+		} else if(showAlertIfNoUpdate) {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Information");
 			alert.setHeaderText("No new update is available");
@@ -200,7 +200,7 @@ public class MainSceneController implements Initializable {
 	@FXML
 	private void openGitHubUrlReleases() {
 		try {
-			checkForUpdate();
+			checkForUpdate(true);
 		} catch (IOException | InterruptedException e) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
