@@ -449,7 +449,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 	@Override
 	public File getExporterPath() {
-		return Installation.getUModelPath(mapConverter);
+		return Installation.getUModelPath();
 	}
 
 	@Override

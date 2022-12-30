@@ -74,6 +74,12 @@ Check wiki page at: [UT Converter Wiki](https://github.com/xtremexp/UT4X-Convert
 
 See license.txt file.
 
+## Security
+
+*  Program only access to the internet to check for updates via github api (can be disabled in settings)
+*  No information is being sent over the internet
+*  For conversion, program creates files either in your system temp folder or the program folder (/Documents/UT4X-Converter)
+
 ---
 
 ## Build and run from source code
@@ -93,10 +99,10 @@ See license.txt file.
 ## External programs used
 These programs are being used during conversion process.
 
-| Library / Program                         | Description                        | Author                                    | Website                                         |
-| ----------------------------------------- | ---------------------------------- | ----------------------------------------- | ----------------------------------------------- |
-| Texture Toolkit                           | Unreal terrain bitmap conversion   | Alex Stewart                              | http://www.foogod.com/UEdTexKit/                |
-| UModel <u>(not embedded with program)</u> | Unreal package extractor           | Konstantin Nosov                          | http://www.gildor.org/en/projects/umodel        |
+| Library / Program | Description                    | Author                              | Website                                         |
+|-------------------| ------------------------------ | ----------------------------------- | ----------------------------------------------- |
+| Texture Toolkit   | Unreal terrain bitmap conversion | Alex Stewart                       | http://www.foogod.com/UEdTexKit/                |
+| UModel            | Unreal package extractor       | Konstantin Nosov                 | http://www.gildor.org/en/projects/umodel        |
 
 
 
@@ -105,6 +111,9 @@ These programs are being used during conversion process.
 ## History
 - 1.1.X
   * dependencies: now umodel is embedded in program
+  * all: better lightning radius
+  * ui: now program checks for updates at startup (can be desactivated in settings)
+  * all: if actor filter is on and contains brush actor, the big additive brush will still be added
   
 - 1.1.1 - 22/12/2022
   * u2/ut2003/4->UT4: fixed menu to convert to UT4 not available

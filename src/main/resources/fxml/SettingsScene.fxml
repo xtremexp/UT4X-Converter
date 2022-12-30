@@ -78,8 +78,10 @@
                                 GridPane.rowIndex="8">Select
                         </Button>
 
+                        <Separator GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="9" />
+                        <CheckBox fx:id="chkBoxCheckUpdates" GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="2">Check updates at startup ?</CheckBox>
                         <Label fx:id="settingsLog" alignment="CENTER" GridPane.columnIndex="0"
-                               GridPane.columnSpan="3" GridPane.rowIndex="9"/>
+                               GridPane.columnSpan="3" GridPane.rowIndex="11"/>
                     </GridPane>
             </VBox>
         </center>

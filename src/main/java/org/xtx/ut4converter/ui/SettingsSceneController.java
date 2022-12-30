@@ -5,12 +5,11 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -59,7 +58,14 @@ public class SettingsSceneController implements Initializable {
 	@FXML
 	private Label settingsLog;
 
+	/**
+	 * If this checkbox is checked, program will check if there is an update at startup
+	 */
+	@FXML
+	private CheckBox chkBoxCheckUpdates;
+
 	private Stage dialogStage;
+
 
 
 	/**
@@ -185,6 +191,15 @@ public class SettingsSceneController implements Initializable {
 				}
 			}
 
+			chkBoxCheckUpdates.setSelected(userConfig.isCheckForUpdates());
+			chkBoxCheckUpdates.selectedProperty().addListener((observable, oldValue, newValue) -> {
+				userConfig.setCheckForUpdates(newValue);
+				try {
+					userConfig.saveFile();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
 		} catch (IOException ex) {
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			showErrorMessage("An error occured while loading UserConfig file :" + ex.getMessage());
