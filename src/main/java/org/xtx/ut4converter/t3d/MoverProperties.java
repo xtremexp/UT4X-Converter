@@ -35,16 +35,15 @@ public class MoverProperties implements T3D {
 	/**
 	 * CHECK usage?
 	 */
-	private List<Vector3d> savedPositions = new ArrayList<>();
+	private final List<Vector3d> savedPositions = new ArrayList<>();
 
 	/**
 	 * Map of [NumKey, Position]
-	 *
 	 * List of positions where mover moves UTUE4: Lift
 	 * Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several
 	 * nav localisations unlike UE1/2) UT99: KeyPos(1)=(Y=72.000000)
 	 */
-	private Map<Integer, Vector3d> positions = new LinkedHashMap<>();
+	private final Map<Integer, Vector3d> positions = new LinkedHashMap<>();
 
 	/**
 	 * Map of [NumKey, Rotation]
@@ -55,7 +54,7 @@ public class MoverProperties implements T3D {
 	/**
 	 * CHECK usage? U1: BaseRot=(Yaw=-49152)
 	 */
-	private List<Vector3d> savedRotations = new ArrayList<>();
+	private final List<Vector3d> savedRotations = new ArrayList<>();
 
     /**
 	 * How long it takes for the mover to get to next position
@@ -74,7 +73,7 @@ public class MoverProperties implements T3D {
 	 */
 	private Double delayTime;
 
-	private T3DActor mover;
+	private final T3DActor mover;
 
 	/**
 	 * Default state for Unreal 1
@@ -100,9 +99,9 @@ public class MoverProperties implements T3D {
 	/**
 	 * Reference to converter
 	 */
-	private MapConverter mapConverter;
+	private final MapConverter mapConverter;
 
-	private List<T3DSimpleProperty> simpleProperties = new LinkedList<>();
+	private final List<T3DSimpleProperty> simpleProperties = new LinkedList<>();
 
 	public MoverProperties(T3DActor mover, MapConverter mapConverter) {
 		this.mover = mover;
@@ -297,13 +296,19 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tOpeningAmbientSound=None\n");
 		}
 
+		if (this.mover.blockActors == Boolean.FALSE) {
+			sbf.append(IDT).append("\tCollisionType=").append(T3DActor.UE3CollisionType.COLLIDE_NoCollision.name()).append("\n");
+		} else {
+			sbf.append(IDT).append("\tCollisionType=").append(T3DActor.UE3CollisionType.COLLIDE_BlockAll.name()).append("\n");
+		}
+
 		mover.writeLocRotAndScale();
 		mover.writeEndActor();
 	}
 
 	/**
 	 * Write mover properties as UT4 mover actor (aka 'Lift')
-	 * @param sbf
+	 * @param sbf String builder
 	 */
 	public void writeUT4MoverActor(final StringBuilder sbf) {
 		// Write the mover as Destination Lift
@@ -445,8 +450,7 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tMoverGlideType=").append("NewEnumerator").append(moverGlideType.ordinal()).append("\n");
 		}
 
-		if (mover instanceof T3DMoverSM) {
-			T3DMoverSM moverSm = (T3DMoverSM) mover;
+		if (mover instanceof T3DMoverSM moverSm) {
 
 			if (moverSm.getStaticMesh() != null && moverSm.getMapConverter().convertStaticMeshes()) {
 				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName(moverSm.getMapConverter())).append("'\n");
@@ -530,9 +534,5 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {
-	}
-
-	public Map<Integer, Vector3d> getRotations() {
-		return rotations;
 	}
 }

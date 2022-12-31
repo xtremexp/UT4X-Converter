@@ -110,6 +110,44 @@ public abstract class T3DActor extends T3DObject {
 
 
 	/**
+	 * UE1/UE2 property: bCollideActors
+	 * In UE3 its CollideActors
+	 */
+	protected Boolean collideActors;
+
+	/**
+	 * UE1/UE2 property only
+	 */
+	protected Boolean collideWorld;
+
+	/**
+	 * UE1/UE2 property only
+	 */
+	protected Boolean blockActors;
+
+	/**
+	 * UE1/UE2 property only
+	 */
+	protected Boolean blockPlayers;
+
+	/**
+	 * UE3 property
+	 * Default collision type for static meshes in ut3/ue3
+	 */
+	protected UE3CollisionType collisionType = UE3CollisionType.COLLIDE_NoCollision;
+
+	public enum UE3CollisionType {
+		COLLIDE_CustomDefault,
+		COLLIDE_NoCollision,
+		COLLIDE_BlockAll,
+		COLLIDE_BlockWeapons,
+		COLLIDE_TouchAll,
+		COLLIDE_TouchWeapons,
+		COLLIDE_BlockAllButWeapons,
+		COLLIDE_TouchAllButWeapons
+	}
+
+	/**
 	 * Used to add extra Z location (for converting pickup for exemple not
 	 * having same 'origin')solar
 	 */
@@ -250,6 +288,18 @@ public abstract class T3DActor extends T3DObject {
 		}
 		else if (line.startsWith("bHidden=")) {
 			bHidden = T3DUtils.getBoolean(line);
+		}
+		else if (line.startsWith("bCollideActors=")) {
+			this.collideActors = T3DUtils.getBoolean(line);
+		}
+		else if (line.startsWith("bCollideWorld=")) {
+			this.collideWorld = T3DUtils.getBoolean(line);
+		}
+		else if (line.startsWith("bBlockActors=")) {
+			this.blockActors = T3DUtils.getBoolean(line);
+		}
+		else if (line.startsWith("bBlockPlayers=")) {
+			this.blockPlayers = T3DUtils.getBoolean(line);
 		}
 
 		else if (line.startsWith("DrawScale3D")) {

@@ -9,7 +9,6 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 
 import javax.vecmath.Vector3d;
@@ -22,10 +21,8 @@ import java.util.List;
  */
 public class T3DStaticMesh extends T3DSound {
 
-	private final static String UT4_SHEET_SM = "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500";
-	private final static String UT4_SHEET_SM_MAT_WATER = "/Game/RestrictedAssets/Environments/ShellResources/Materials/Misc/M_Shell_Glass_E.M_Shell_Glass_E";
 
-	private List<String> overiddeMaterials = new ArrayList<>();
+	private final List<String> overiddeMaterials = new ArrayList<>();
 
 	/**
 	 * 
@@ -73,28 +70,6 @@ public class T3DStaticMesh extends T3DSound {
 	 */
 	private UPackageRessource uv2Texture;
 
-	/**
-	 * Unreal Engine 2: bCollideActors
-	 * Unreal Engine 3: CollideActors
-	 */
-	private Boolean collideActors;
-
-	/**
-	 * Unreal Engine 3
-	 * Default collision type for static meshes in ut3/ue3
-	 */
-	private UE3CollisionType collisionType = UE3CollisionType.COLLIDE_BlockAll;
-
-	public enum UE3CollisionType {
-		COLLIDE_CustomDefault,
-		COLLIDE_NoCollision,
-		COLLIDE_BlockAll,
-		COLLIDE_BlockWeapons,
-		COLLIDE_TouchAll,
-		COLLIDE_TouchWeapons,
-		COLLIDE_BlockAllButWeapons,
-		COLLIDE_TouchAllButWeapons
-	}
 
 	public enum UV2Mode {
 		UVM_MacroTexture,
@@ -135,7 +110,7 @@ public class T3DStaticMesh extends T3DSound {
 		else if(line.startsWith("UV2Mode=")){
 			this.uv2Mode = UV2Mode.valueOf(T3DUtils.getString(line));
 		}
-		else if(line.startsWith("bCollideActors=") || line.startsWith("CollideActors")){
+		else if (line.startsWith("CollideActors")) {
 			this.collideActors = T3DUtils.getBoolean(line);
 		}
 		// UE3
@@ -161,56 +136,7 @@ public class T3DStaticMesh extends T3DSound {
 
 		return true;
 	}
-	
 
-	/**
-	 * Create t3d static mesh from t3d sheet brush using existing UT4 sheet sm
-	 * brush Temp trick until we convert brushes to .fbx
-	 * 
-	 * @param mc
-	 *            Map Converter
-	 * @param sheetBrush
-	 *            Sheet Brush (brush with only 2 polygons)
-	 */
-	T3DStaticMesh(MapConverter mc, T3DBrush sheetBrush) {
-		super(mc, "StaticMesh");
-
-		this.parent = sheetBrush;
-		this.location = sheetBrush.location;
-		// at this stage actor not yet converted so rotation should be in range
-		// of the input engine
-		this.rotation = Geometry.getRotation(sheetBrush.getPolyList().get(0).normal, mc.getInputGame().engine);
-		this.tag = sheetBrush.tag + "_SM";
-		this.name = sheetBrush.name + "_SM";
-		this.forcedStaticMesh = UT4_SHEET_SM;
-
-		// TODO get good scale from brush poly size
-		// force small scale because rotation not good yet (so converted map
-		// looks less 'weird')
-		this.scale3d = new Vector3d(0.2d, 0.2d, 0.2d);
-		this.overriddenLightMapRes = 128;
-		this.castShadow = Boolean.FALSE;
-
-		bodyInstance = new BodyInstance();
-		bodyInstance.scale3D = this.scale3d;
-
-		// set material from original brush
-		//final T3DPolygon polyWithMat = sheetBrush.getPolyList().stream().filter(e -> e.getTexture() != null).findAny().orElse(null);
-
-		/*
-		if (polyWithMat != null) {
-			this.overiddeMaterials.add(polyWithMat.getTexture().getConvertedName(this.mapConverter));
-		}
-		// none found, use default glass material
-		else {*/
-			this.overiddeMaterials.add(UT4_SHEET_SM_MAT_WATER);
-		//}
-
-		// Set no colission if originally not a solid brush
-		if (BrushPolyflag.isNonSolid(sheetBrush.getPolyflags())) {
-			bodyInstance.setCollisionEnabled(BodyInstance.CollisionEnabled.NoCollision);
-		}
-	}
 
 	protected void writeStaticMeshComponent(){
 
