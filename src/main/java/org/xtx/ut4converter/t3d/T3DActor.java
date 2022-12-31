@@ -648,7 +648,7 @@ public abstract class T3DActor extends T3DObject {
 			return;
 		}
 
-		if (mapConverter.toUnrealEngine4()) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			if (drawScale != null) {
 				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}

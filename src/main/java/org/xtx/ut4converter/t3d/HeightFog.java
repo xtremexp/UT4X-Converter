@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.RGBColor;
 
 public class HeightFog extends T3DActor {
@@ -59,7 +60,7 @@ public class HeightFog extends T3DActor {
 	@Override
 	public String toT3d() {
 
-		if (mapConverter.toUnrealEngine4()) {
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
 			sbf.append(IDT).append("Begin Actor Class=AtmosphericFog Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Class=BillboardComponent Name=\"Sprite\" Archetype=BillboardComponent'Default__AtmosphericFog:Sprite'\n");
 			sbf.append(IDT).append("\tEnd Object\n");

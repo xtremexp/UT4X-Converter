@@ -182,7 +182,7 @@ public class T3DBrush extends T3DVolume {
 	private void init(){
 		brushClass = BrushClass.getBrushClass(t3dClass);
 
-		if (mapConverter.fromUE1orUE2OrUE3()) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
 			brushType = UE123_BrushType.CSG_Add.name();
 		} else {
 			brushType = UE4_BrushType.Brush_Add.name();
@@ -370,7 +370,7 @@ public class T3DBrush extends T3DVolume {
 
 		boolean valid = true;
 
-		if (mapConverter.fromUE123ToUE4()) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			// do not convert invisible brushes such as portals and so on
 			if (BrushPolyflag.hasInvisibleFlag(polyflags)) {
 				//logger.warning("Skipped invisible brush " + name);
@@ -705,7 +705,7 @@ public class T3DBrush extends T3DVolume {
 			p.convert();
 		}
 
-		if (mapConverter.fromUE123ToUE4()) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 
 			// for solid sheet brushes force them to be non-solid
 			// so it won't cause BSP holes and will still be visible

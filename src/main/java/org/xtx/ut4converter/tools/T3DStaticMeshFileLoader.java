@@ -6,6 +6,7 @@
 package org.xtx.ut4converter.tools;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
@@ -59,11 +60,11 @@ public class T3DStaticMeshFileLoader {
 		this.mapConverter = mapConverter;
 		this.t3dStaticMeshFile = t3dStaticMeshFile;
 
-		if (mapConverter.toUE4()) {
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
 			exportFormat = ExportFormat.FBX;
 		}
 
-		else if (mapConverter.toUE3()) {
+		else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
 			exportFormat = ExportFormat.ASE;
 		}
 

@@ -30,17 +30,17 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Current map converter
 	 */
-	private MapConverter mapConverter;
+	private final MapConverter mapConverter;
 
 	/**
 	 * Input t3d file that need conversion
 	 */
-	private File inT3dFile;
+	private final File inT3dFile;
 
 	/**
 	 * Converted input t3d file
 	 */
-	private File outT3dFile;
+	private final File outT3dFile;
 
 	/**
 	 * Reader for input t3d file
@@ -55,19 +55,19 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Actors that were not converted.
 	 */
-	private SortedSet<String> unconvertedActors = new TreeSet<>();
+	private final SortedSet<String> unconvertedActors = new TreeSet<>();
 
-	private LinkedList<T3DActor> convertedActors = new LinkedList<>();
+	private final LinkedList<T3DActor> convertedActors = new LinkedList<>();
 
 	/**
 	 * Assault objectives. Declared here so we can set out the good "order"
 	 * prop. TODO move out to proper class
 	 */
-	private SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
+	private final SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
 
 	private boolean createNoteWhenUnconverted = true;
 
-	private Logger logger;
+	private final Logger logger;
 
 	private Vector3d levelDimension;
 
@@ -80,7 +80,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	/**
 	 * Unconverted properties
 	 */
-	private Map<String, Set<String>> unconvertedProperties = new HashMap<>();
+	private final Map<String, Set<String>> unconvertedProperties = new HashMap<>();
 
 	/**
 	 * If true means we don't analyze t3d lines of current actor being parsed
@@ -568,9 +568,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			// get the max/min boundaries of brush vertices on whole level
 			for (T3DActor actor : convertedActors) {
 
-				if (actor instanceof T3DBrush) {
-
-					T3DBrush brush = (T3DBrush) actor;
+				if (actor instanceof T3DBrush brush) {
 
 					Vector3d maxA = brush.getMaxVertexPos();
 					Vector3d minA = brush.getMinVertexPos();
@@ -616,7 +614,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void writeFooter() throws IOException {
 
-		if (mapConverter.toUnrealEngine4()) {
+		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
 
 			Vector3d boundBox = getLevelDimensions();
 			double offset = 100d;
