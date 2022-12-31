@@ -1,8 +1,5 @@
 package org.xtx.ut4converter.tools.objmesh;
 
-import org.xtx.ut4converter.tools.psk.Face;
-import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
-import org.xtx.ut4converter.tools.psk.Wedge;
 import org.xtx.ut4converter.tools.t3dmesh.StaticMesh;
 import org.xtx.ut4converter.tools.t3dmesh.Triangle;
 import org.xtx.ut4converter.tools.t3dmesh.Vertex;
@@ -51,7 +48,7 @@ public class ObjStaticMesh {
      * Creates an .obj staticmesh from vertmesh .3d
      * (used in unreal 1 engine)
      *
-     * @param vertMesh
+     * @param vertMesh Unreal vertmesh
      */
     public ObjStaticMesh(final VertMesh vertMesh) {
         this.vertices = new LinkedList<>();
@@ -85,28 +82,12 @@ public class ObjStaticMesh {
         }
     }
 
-    public ObjStaticMesh(final PSKStaticMesh pskStaticMesh) {
-        this.vertices = new LinkedList<>();
-        this.uvs = new LinkedList<>();
-        this.faces = new LinkedList<>();
-        this.materials = new LinkedList<>();
-
-        this.vertices.addAll(pskStaticMesh.getPoints());
-
-        for (final Wedge w : pskStaticMesh.getWedges()) {
-            this.uvs.add(new Vector2d(w.getU(), w.getV()));
-        }
-
-        for (final Face fc : pskStaticMesh.getFaces()) {
-
-        }
-    }
 
 
     /**
      * Creates an .obj staticmesh from .td3 staticmesh
      *
-     * @param t3dSm
+     * @param t3dSm Unreal ascii static mesh
      */
     public ObjStaticMesh(final StaticMesh t3dSm) {
         this.vertices = new LinkedList<>();

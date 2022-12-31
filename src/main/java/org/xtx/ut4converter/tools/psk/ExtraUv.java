@@ -6,6 +6,7 @@ import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 import javax.vecmath.Vector2d;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.nio.ByteBuffer;
 
 /**
@@ -23,6 +24,7 @@ public class ExtraUv extends Vector2d implements BinReadWrite {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -6092254432611264842L;
 
 	public ExtraUv(ByteBuffer bf) {

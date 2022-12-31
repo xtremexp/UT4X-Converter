@@ -13,43 +13,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
  * @author XtremeXp
  */
 public class TerrainDecoLayer implements T3D {
-
-	enum DrawOrder {
-		SORT_NoSort, SORT_BackToFront, SORT_FrontToBack
-	}
-
-	enum DetailMode {
-		DM_Low, DM_High, DM_SuperHigh
-	}
-
-	boolean alignToTerrain;
-
-	UPackageRessource colorMap;
-	UPackageRessource densityMap;
-
-	double densityMultiplierMin, densityMultiplierMax;
-
-	boolean disregardTerrainLightning;
-
-	double fadeOutRadiusMin, fadeOutRadiusMax;
-	int litDirectional;
-	int maxPerQuad;
-	int randomYaw;
-
-	/**
-	 * ?
-	 */
-	UPackageRessource scaleMap;
-
-	double scaleMultiplierMinX, scaleMultiplierMaxX;
-	double scaleMultiplierMinY, scaleMultiplierMaxY;
-	double scaleMultiplierMinZ, scaleMultiplierMaxZ;
-
-	int seed;
-	boolean showOnInvisibleTerrain;
-	boolean showOnTerrain;
-
-	UPackageRessource staticMesh;
+	
 
 	@Override
 	public void convert() {
@@ -127,10 +91,6 @@ public class TerrainDecoLayer implements T3D {
 
 	}
 
-	public TerrainDecoLayer(UPackageRessource densityMap, UPackageRessource staticMesh) {
-		this.densityMap = densityMap;
-		this.staticMesh = staticMesh;
-	}
 
 	public void load() {
 		// TODO

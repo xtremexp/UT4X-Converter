@@ -9,7 +9,6 @@ import org.xtx.ut4converter.MapConverter;
 
 /**
  * Checked: UT99, U1, U2, UT2004, UT3
- * 
  * UT99: DM-Cybrosis][ UT4: DM-Vortex
  * 
  * @author XtremeXp

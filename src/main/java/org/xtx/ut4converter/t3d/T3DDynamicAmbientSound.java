@@ -17,11 +17,11 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
 
         sounds = new LinkedList<>();
 
-        registerSimpleProperty("bDontRepeat", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("bInitiallyOn", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("maxRecheckTime", Float.class, 10f);
-        registerSimpleProperty("minRecheckTime", Float.class, 5f);
-        registerSimpleProperty("playProbability", Float.class, 0.6f);
+        registerSimpleProperty("bDontRepeat", Boolean.class);
+        registerSimpleProperty("bInitiallyOn", Boolean.class);
+        registerSimpleProperty("maxRecheckTime", Float.class);
+        registerSimpleProperty("minRecheckTime", Float.class);
+        registerSimpleProperty("playProbability", Float.class);
     }
 
     @Override

@@ -40,12 +40,12 @@ public final class UCCExporter extends UTPackageExtractor {
 	 * User game configuration used to get UT game path and so Unreal Package
 	 * extractor as well
 	 */
-	protected UserGameConfig userGameConfig;
+    private final UserGameConfig userGameConfig;
 
 	/**
 	 * File path of ucc.exe or ut3.com program. Depends of user game settings
 	 */
-	private File uccExporterPath;
+	private final File uccExporterPath;
 
 	private UccOptions forcedUccOption;
 
@@ -83,7 +83,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		/**
 		 * Filename of exporter
 		 */
-		private String programName;
+		private final String programName;
 
 		Name(String programName) {
 			this.programName = programName;
@@ -120,7 +120,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		TEXTURE_PCX("Texture pcx"), // for U1, UT99
 		STATICMESH_T3D("StaticMesh t3d"), CLASS_UC("Class uc");
 
-		String option;
+		final String option;
 
 		UccOptions(String command) {
 			this.option = command;

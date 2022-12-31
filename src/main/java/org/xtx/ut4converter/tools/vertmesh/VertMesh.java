@@ -10,6 +10,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -24,13 +25,9 @@ public class VertMesh {
 	 * Order how bytes are read for vert mesh files
 	 */
 	private static final ByteOrder BYTE_ORDER_LE = ByteOrder.LITTLE_ENDIAN;
-	private File vertMeshFile;
+	private final File vertMeshFile;
 	private FJSDataHeader dataHead;
 	private List<FJSMeshTri> faces;
-
-	public VertMesh() {
-		init();
-	}
 
 	public VertMesh(File vertMeshFile) {
 		this.vertMeshFile = vertMeshFile;
@@ -42,11 +39,6 @@ public class VertMesh {
 		faces = new LinkedList<>();
 	}
 
-	
-	
-	public FJSDataHeader getDataHead() {
-		return dataHead;
-	}
 
 	public List<FJSMeshTri> getFaces() {
 		return faces;
@@ -83,7 +75,7 @@ public class VertMesh {
 		File f = new File("E:\\");
 
 
-		for(final File ff : f.listFiles()) {
+		for(final File ff : Objects.requireNonNull(f.listFiles())) {
 			if(!ff.getName().endsWith("d.3d")){
 				continue;
 			}

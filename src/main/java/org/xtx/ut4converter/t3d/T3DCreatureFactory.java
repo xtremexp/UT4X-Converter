@@ -13,14 +13,14 @@ public class T3DCreatureFactory extends T3DThingFactory {
         super(mc, t3dClass);
 
         // Extra creatures for coop mode
-        registerSimpleProperty("AddedCoopCapacity", Short.class, null);
+        registerSimpleProperty("AddedCoopCapacity", Short.class);
 
         // alarmtag given to creatures from this factory
-        registerSimpleProperty("AlarmTag", String.class, null);
+        registerSimpleProperty("AlarmTag", String.class);
 
         // creatures from this factory will have these orders
-        registerSimpleProperty("Orders", String.class, "Attacking");
-        registerSimpleProperty("OrderTag", String.class, null);
+        registerSimpleProperty("Orders", String.class);
+        registerSimpleProperty("OrderTag", String.class);
     }
 
     public String toT3d() {

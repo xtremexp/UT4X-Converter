@@ -24,7 +24,7 @@ public class UPackage {
 	/**
 	 * UT game this package comes from
 	 */
-	private UTGames.UTGame game;
+	private final UTGames.UTGame game;
 
 	/**
 	 * Name of package

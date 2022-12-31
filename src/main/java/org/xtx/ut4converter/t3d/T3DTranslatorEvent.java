@@ -19,11 +19,11 @@ public class T3DTranslatorEvent extends T3DActor {
         registerSimpleProperty("bTriggerAltMessage", Boolean.class);
         registerSimpleProperty("bTriggerOnceOnly", Boolean.class);
         registerSimpleProperty("Hint", String.class);
-        registerSimpleProperty("M_NewMessage", String.class, "New Translator Message");
-        registerSimpleProperty("M_TransMessage", String.class, "Translator Message");
-        registerSimpleProperty("M_HintMessage", String.class, "New hint message (press F3 to read).");
+        registerSimpleProperty("M_NewMessage", String.class);
+        registerSimpleProperty("M_TransMessage", String.class);
+        registerSimpleProperty("M_HintMessage", String.class);
         registerSimpleProperty("Message", String.class);
-        registerSimpleProperty("ReTriggerDelay", Float.class, 0.25f);
+        registerSimpleProperty("ReTriggerDelay", Float.class);
     }
 
     @Override

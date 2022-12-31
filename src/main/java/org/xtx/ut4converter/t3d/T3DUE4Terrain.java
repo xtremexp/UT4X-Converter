@@ -33,21 +33,21 @@ public class T3DUE4Terrain extends T3DActor {
 	private UPackageRessource landscapeHoleMaterial;
 
 	private int collisionMipLevel;
-	private int collisionThickness = 16;
+	private final int collisionThickness = 16;
 
 	/**
 	 * Max component size
 	 */
 	private final int maxComponentSize = 255;
 
-	private int componentSizeQuads;
-	private int subsectionSizeQuads;
+	private final int componentSizeQuads;
+	private final int subsectionSizeQuads;
 	private short numSubsections;
 	private boolean bUsedForNavigation;
 
-	private LandscapeCollisionComponent[][] collisionComponents;
+	private final LandscapeCollisionComponent[][] collisionComponents;
 
-	private LandscapeComponent[][] landscapeComponents;
+	private final LandscapeComponent[][] landscapeComponents;
 
 	/**
 	 * Creates an Unreal Engine 4 terrain from Unreal Engine 3 terrain

@@ -25,13 +25,10 @@ public class BodyInstance {
 
 	public Vector3d scale3D = new Vector3d(1d, 1d, 1d);
 
-	private List<CollisionResponse> collisionResponses = new ArrayList<>();
+	private final List<CollisionResponse> collisionResponses = new ArrayList<>();
 
-	private CollisionEnabled collisionEnabled = CollisionEnabled.QueryAndPhysics;
+	private final CollisionEnabled collisionEnabled = CollisionEnabled.QueryAndPhysics;
 
-	public void setCollisionEnabled(CollisionEnabled collisionEnabled) {
-		this.collisionEnabled = collisionEnabled;
-	}
 
 	public enum CollisionEnabled {
 		NoCollision, QueryOnly, QueryAndPhysics

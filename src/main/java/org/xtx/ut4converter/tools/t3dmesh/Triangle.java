@@ -22,7 +22,7 @@ public class Triangle {
      Vertex 0 144.000000 80.000000 4.000000 -0.296875 0.000000
      Vertex 1 -144.000000 80.000000 4.000000 -0.015625 0.000000
      Vertex 2 -160.000000 96.000000 8.000000 0.000000 0.003906
-     * @param line
+     * @param line Vertex t3d line to parse
      */
     public void parseLine(final String line){
 

@@ -17,7 +17,7 @@ public class Vertex {
 	/**
      * 
      */
-	private Vector3d coordinates;
+	private final Vector3d coordinates;
 
 	/**
 	 * Texture U

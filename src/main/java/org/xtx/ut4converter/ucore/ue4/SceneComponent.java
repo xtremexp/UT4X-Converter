@@ -30,24 +30,12 @@ public class SceneComponent extends T3DObject {
 		this.name = "SceneComp";
 	}
 
-	public Vector3d getRelativeLocation() {
-		return relativeLocation;
-	}
-
 	public void setRelativeLocation(Vector3d relativeLocation) {
 		this.relativeLocation = relativeLocation;
 	}
 
-	public Vector3d getRelativeRotation() {
-		return relativeRotation;
-	}
-
 	public void setRelativeRotation(Vector3d relativeRotation) {
 		this.relativeRotation = relativeRotation;
-	}
-
-	public Vector3d getRelativeScale3D() {
-		return relativeScale3D;
 	}
 
 	public void setRelativeScale3D(Vector3d relativeScale3D) {

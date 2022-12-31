@@ -27,12 +27,6 @@ public class T3DASObjective extends T3DSound {
 	final String DEFAULT_COMPLETED_OBJ_UT99 = "was destroyed!";
 
 	/**
-	 * If critical means this objective has to be completed to finish the map
-	 * else this is a secondary/optional objective
-	 */
-	private boolean isCritical = true;
-
-	/**
 	 * Means this objective is completed by touching it UT99: Default is false
 	 * UT4 MOD: default is true
 	 */
@@ -214,6 +208,11 @@ public class T3DASObjective extends T3DSound {
 
 		sbf.append(IDT).append("\tbyTouch=").append(byTouch).append("\n");
 		sbf.append(IDT).append("\tbyDamage=").append(byDamage).append("\n");
+		/**
+		 * If critical means this objective has to be completed to finish the map
+		 * else this is a secondary/optional objective
+		 */
+		boolean isCritical = true;
 		sbf.append(IDT).append("\tisCritical=").append(isCritical).append("\n");
 		sbf.append(IDT).append("\tOrder=").append(order).append("\n");
 

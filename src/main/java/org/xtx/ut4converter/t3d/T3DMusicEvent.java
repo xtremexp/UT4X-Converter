@@ -20,11 +20,11 @@ public class T3DMusicEvent extends T3DActor {
     public T3DMusicEvent(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bAffectAllPlayers", Boolean.class, Boolean.TRUE);
-        registerSimpleProperty("bOnceOnly", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("bSilence", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("CdTrack", Short.class, 255);
-        registerSimpleProperty("SongSection", Short.class, 0);
+        registerSimpleProperty("bAffectAllPlayers", Boolean.class);
+        registerSimpleProperty("bOnceOnly", Boolean.class);
+        registerSimpleProperty("bSilence", Boolean.class);
+        registerSimpleProperty("CdTrack", Short.class);
+        registerSimpleProperty("SongSection", Short.class);
 
         // for unreal 2 only
         registerSimpleProperty("Script", String.class).clonePropertyAs("SongOriginal");

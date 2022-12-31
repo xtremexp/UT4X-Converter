@@ -54,17 +54,4 @@ public class UserGameConfig {
 		this.path = path;
 	}
 
-	/**
-	 * Last converted map
-	 * 
-	 * @return
-	 */
-	public File getLastConverted() {
-		return lastConverted;
-	}
-
-	public void setLastConverted(File lastConverted) {
-		this.lastConverted = lastConverted;
-	}
-
 }

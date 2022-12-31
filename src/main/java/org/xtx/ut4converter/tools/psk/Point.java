@@ -6,6 +6,7 @@ import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 import javax.vecmath.Vector3d;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.nio.ByteBuffer;
 
 /**
@@ -20,6 +21,7 @@ public class Point extends Vector3d implements BinReadWrite {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public Point(ByteBuffer bf) {

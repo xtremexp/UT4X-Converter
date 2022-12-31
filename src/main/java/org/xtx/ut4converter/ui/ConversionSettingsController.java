@@ -7,10 +7,10 @@ package org.xtx.ut4converter.ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -144,15 +144,12 @@ public class ConversionSettingsController implements Initializable {
 
 	@FXML
 	private Button ut4BaseReferencePathBtn;
-	// @FXML
-	// private Label relativeUtMapPathLbl;
+
 	@FXML
 	private CheckBox debugLogLevel;
 	@FXML
 	private Button changeMapNameBtn;
 
-	@FXML
-	private Label warningMessage;
 
 	@FXML
 	private TextField classesNameFilter;

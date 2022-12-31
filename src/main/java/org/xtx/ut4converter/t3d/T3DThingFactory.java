@@ -10,31 +10,31 @@ public class T3DThingFactory extends T3DKeyPoint {
         // if bCovert = true and player could see monster being spawn
         // then it must not spawn the monster
         // only do hidden spawns
-        registerSimpleProperty("bCovert", Boolean.class, Boolean.TRUE);
+        registerSimpleProperty("bCovert", Boolean.class);
 
         // should set monster physics to falling on spawn (maybe to get it to the floor)
-        registerSimpleProperty("bFalling", Boolean.class, Boolean.TRUE);
+        registerSimpleProperty("bFalling", Boolean.class);
 
         //only player can trigger it
-        registerSimpleProperty("bOnlyPlayerTouched", Boolean.class, Boolean.FALSE);
+        registerSimpleProperty("bOnlyPlayerTouched", Boolean.class);
 
         //stops producing when untouched
-        registerSimpleProperty("bStoppable", Boolean.class, Boolean.FALSE);
+        registerSimpleProperty("bStoppable", Boolean.class);
 
         // number of monsters spawned
-        registerSimpleProperty("Capacity", Short.class, 1);
+        registerSimpleProperty("Capacity", Short.class);
 
         // Called once all items has been spawned and destroyed.
-        registerSimpleProperty("FinishedEvent", String.class, null);
+        registerSimpleProperty("FinishedEvent", String.class);
 
         // interval each monster is spawned
-        registerSimpleProperty("Interval", Float.class, 1);
+        registerSimpleProperty("Interval", Float.class);
 
         // tag of the monster spawned
-        registerSimpleProperty("ItemTag", String.class, null);
-        registerSimpleProperty("MaxItems", String.class, 1);
+        registerSimpleProperty("ItemTag", String.class);
+        registerSimpleProperty("MaxItems", String.class);
         registerSimplePropertyRessource("Prototype", T3DRessource.Type.MESH).clonePropertyAs("PrototypeOriginal");
-        registerSimpleProperty("TimeDistribution", String.class, TimeDistribution.DIST_Constant.name());
+        registerSimpleProperty("TimeDistribution", String.class);
 
     }
 

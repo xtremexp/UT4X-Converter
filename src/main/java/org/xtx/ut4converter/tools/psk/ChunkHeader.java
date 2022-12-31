@@ -35,10 +35,6 @@ class ChunkHeader implements BinReadWrite {
 		}
 	}
 
-	public ChunkHeader(String chunkID) {
-		this.chunkID = chunkID;
-	}
-
 	public ChunkHeader(ByteBuffer bf)  {
 		read(bf);
 	}

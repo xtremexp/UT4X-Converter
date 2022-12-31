@@ -5,7 +5,6 @@ import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InterpData extends T3DObject implements T3D {
@@ -36,23 +35,6 @@ public class InterpData extends T3DObject implements T3D {
 		// TODO Auto-generated method stub
 	}
 
-	public void addGroup(InterpGroup group) {
-
-		if (interpGroups == null) {
-			interpGroups = new ArrayList<>();
-		}
-
-		group.setName(group.getName() + "_" + interpGroups.size());
-		interpGroups.add(group);
-	}
-
-	public InterpCurveEdSetup getInterpCurveEdSetup() {
-		return interpCurveEdSetup;
-	}
-
-	public List<InterpGroup> getInterpGroups() {
-		return interpGroups;
-	}
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {

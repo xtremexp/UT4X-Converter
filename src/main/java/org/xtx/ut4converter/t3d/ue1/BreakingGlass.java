@@ -6,8 +6,8 @@ public class BreakingGlass extends ExplodingWall {
     public BreakingGlass(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("Numparticles", Float.class, 13f);
-        registerSimpleProperty("ParticleSize", Float.class, 0.75f);
+        registerSimpleProperty("Numparticles", Float.class);
+        registerSimpleProperty("ParticleSize", Float.class);
     }
 
     @Override

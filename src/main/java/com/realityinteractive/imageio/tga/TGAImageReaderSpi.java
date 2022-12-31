@@ -176,12 +176,11 @@ public class TGAImageReaderSpi extends ImageReaderSpi {
 
 		// ensure that the input type is a ImageInputStream as that is all that
 		// is supported
-		if (!(source instanceof ImageInputStream))
+		if (!(source instanceof final ImageInputStream inputStream))
 			return false;
 		/* else -- source is a ImageInputStream */
 
 		// cast to ImageInputStream for convenience
-		final ImageInputStream inputStream = (ImageInputStream) source;
 
 		try {
 			// set a mark at the current position so that the stream can be

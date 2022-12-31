@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -29,7 +28,6 @@ import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.tools.UIUtils;
 
 import java.io.File;
 import java.io.IOException;

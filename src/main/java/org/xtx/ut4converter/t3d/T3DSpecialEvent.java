@@ -10,9 +10,9 @@ public class T3DSpecialEvent extends T3DActor {
     public T3DSpecialEvent(final MapConverter mc, final String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bBroadcast", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("bPlayerViewRot", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("Damage", Float.class, 0f);
+        registerSimpleProperty("bBroadcast", Boolean.class);
+        registerSimpleProperty("bPlayerViewRot", Boolean.class);
+        registerSimpleProperty("Damage", Float.class);
         registerSimpleProperty("DamageString", String.class);
         registerSimpleProperty("DamageType", String.class);
         registerSimpleProperty("Message", String.class);

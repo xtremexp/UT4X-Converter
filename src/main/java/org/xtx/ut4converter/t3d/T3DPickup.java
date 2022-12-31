@@ -18,8 +18,8 @@ public class T3DPickup extends T3DSound {
 
 	/**
 	 *
-	 * @param mc
-	 * @param t3dClass
+	 * @param mc Map converter
+	 * @param t3dClass T3d lcass
 	 */
 	public T3DPickup(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);

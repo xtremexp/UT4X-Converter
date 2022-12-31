@@ -67,7 +67,7 @@ public class T3DEmitter extends T3DSound {
 
 	/**
 	 * TODO map emitter work for UT3
-	 * @return
+	 * @return <code>true</code> if it's valid writting else <code>false</code>
 	 */
 	@Override
 	public boolean isValidWriting() {

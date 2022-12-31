@@ -12,8 +12,8 @@ public class AlarmTrigger extends T3DSound {
         registerSimplePropertyRessource("AlarmSound", T3DRessource.Type.SOUND);
         registerSimpleProperty("AlarmMessage", String.class);
         registerSimpleArrayProperty("AlarmMessages", String.class);
-        registerSimpleProperty("bAmbient", Boolean.class, Boolean.TRUE);
-        registerSimpleProperty("bToggeable", Boolean.class, Boolean.TRUE);
+        registerSimpleProperty("bAmbient", Boolean.class);
+        registerSimpleProperty("bToggeable", Boolean.class);
     }
 
     public String toT3d() {

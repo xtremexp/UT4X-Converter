@@ -15,9 +15,9 @@ import java.util.Objects;
 
 /**
  * Checked: U1, U2, UT99, UT2004, UT3 Tested: UT99
- * 
+ * <p>
  * For testing: UT99: DM-Cybrosis][ UT3: VCTF-Necropolis
- * 
+ * <p>
  * TODO convert properly JumpVelocity to JumpTarget
  * 
  * @author XtremeXp
@@ -44,7 +44,6 @@ public class T3DJumpPad extends T3DSound {
 	/**
 	 * UT3: JumpSound=SoundCue
 	 * 'A_Gameplay.JumpPad.Cue.A_Gameplay_JumpPad_Activate_Cue'
-	 * 
 	 * UT4: JumpSound=SoundCue
 	 * '/Game/RestrictedAssets/Audio/Gameplay/A_Gameplay_JumpPadJump01_Cue.A_Gameplay_JumpPadJump01_Cue
 	 * '

@@ -5,10 +5,7 @@
 
 package org.xtx.ut4converter.tools;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Line;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.geom.Vertex;
+
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
@@ -23,55 +20,6 @@ import java.util.LinkedList;
  * @author XtremeXp
  */
 public class Geometry {
-
-	public static Vector3d getRotation(Vector3d normal, UTGames.UnrealEngine engine) {
-
-		Vector3d r = getRotationInRadian(normal);
-
-		// 0 -> 65536 range for Unreal Engine 1/2/3
-		// for UE3, rotation displayed in degrees in editor but always saved
-		// with old range
-		if (engine.version <= 3) {
-			r.scale(65536f / (Math.PI));
-		}
-		// 0 -> 360 range for UE4
-		else {
-			r.x = Math.toDegrees(r.x);
-			r.y = Math.toDegrees(r.y);
-			r.z = Math.toDegrees(r.z);
-		}
-
-		return r;
-	}
-
-	/**
-	 * Get the rotation vector (pitch, yaw, roll) from normal vector
-	 *
-	 * @param normal
-	 *            Normal vector
-	 * @return Rotate vector in radians
-	 */
-	public static Vector3d getRotationInRadian(Vector3d normal) {
-
-		normal.normalize();
-
-		double dX = normal.x;
-		double dY = normal.y;
-		double dZ = normal.z;
-
-		// Rotator X
-		double roll = Math.atan2(dY, dZ);
-
-		// Rotator Y
-		double pitch = Math.atan2(dZ, Math.sqrt(dY * dY + dX * dX));
-
-		// Rotator Z
-		double yaw = Math.atan2(dX, dY);// - Math.PI / 2;
-
-		// order different in t3d not Roll, Pitch, Yaw (X, Y, Z) ...
-		// RelativeRotation=(Pitch=20.000000,Yaw=30.000000,Roll=10.000000)
-		return new Vector3d(pitch, yaw, roll);
-	}
 
 	/**
 	 * Rotates the vector
@@ -161,10 +109,10 @@ public class Geometry {
 
 	/**
 	 * Replaces low values near zero with zero
+	 *
 	 * @param v Vector
-	 * @return Updated vector
 	 */
-	public static Vector3d updateDoubleZeroes(Vector3d v) {
+	public static void updateDoubleZeroes(Vector3d v) {
 		if (Math.abs(v.x) < 0.001D)
 			v.x = 0d;
 		if (Math.abs(v.y) < 0.001D)
@@ -172,7 +120,6 @@ public class Geometry {
 		if (Math.abs(v.z) < 0.001D)
 			v.z = 0d;
 
-		return v;
 	}
 
 	/**
@@ -180,7 +127,6 @@ public class Geometry {
 	 *
 	 * @param m4d
 	 *            Input 4x4 matrix
-	 * @return Filtered matrix.
 	 */
 	private static void updateMatrix(Matrix4d m4d) {
 		double tmp;
@@ -470,62 +416,6 @@ public class Geometry {
 		return polyList;
 	}
 
-
-	/**
-	 * Converts a "stadard" java vector to apache one
-	 *
-	 * @param v Vector
-	 * @return
-	 */
-	public static Vector3D getApacheVector3D(Vector3d v) {
-		return new Vector3D(new double[] { v.x, v.y, v.z });
-	}
-
-	public static boolean vertexInOtherPoly(LinkedList<T3DPolygon> polygons, T3DPolygon polyVertex, Vertex v) {
-
-		for (T3DPolygon p : polygons) {
-
-			if (p == polyVertex) {
-				continue;
-			}
-
-			if (vertexInOtherPolyEdge(p, v)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Guess if this vertex is belonging to one of the edges of a polygon
-	 *
-	 * @param polygon
-	 *            Polygon
-	 * @param v
-	 *            Vertex
-	 * @return <code>true</code> if vertex belongs to polygon
-	 */
-	public static boolean vertexInOtherPolyEdge(T3DPolygon polygon, Vertex v) {
-
-		if (polygon == null || v == null) {
-			return false;
-		}
-
-		for (int i = 0; i < (polygon.vertices.size() - 1); i++) {
-
-			Vector3d v1 = polygon.vertices.get(i).getCoordinates();
-			Vector3d v2 = polygon.vertices.get(i + 1).getCoordinates();
-
-			Line line = new Line(getApacheVector3D(v1), getApacheVector3D(v2), 0.001d);
-
-			if (line.distance(getApacheVector3D(v.getCoordinates())) < 0.001d) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	/**
 	 * Converts an Unreal Engine 1/2/3 rotation vector to UE4 rotation vector.

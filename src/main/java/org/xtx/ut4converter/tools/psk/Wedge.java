@@ -16,11 +16,6 @@ public class Wedge implements BinReadWrite {
 
 	protected static final int DATA_SIZE = 16;
 
-	/**
-	 * If index bytes as integer rather than short type
-	 */
-	protected static final int DATA_SIZE_INT = 18;
-
 	private long pointIndex;
 	private float u;
 	private float v;

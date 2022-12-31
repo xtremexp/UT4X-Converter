@@ -60,11 +60,11 @@ public class DDSImage {
 	 */
 
 	public static class ImageInfo {
-		private ByteBuffer data;
-		private int width;
-		private int height;
-		private boolean isCompressed;
-		private int compressionFormat;
+		private final ByteBuffer data;
+		private final int width;
+		private final int height;
+		private final boolean isCompressed;
+		private final int compressionFormat;
 
 		public ImageInfo(ByteBuffer data, int width, int height, boolean compressed, int compressionFormat) {
 			this.data = data;
@@ -1043,13 +1043,10 @@ public class DDSImage {
 
 	private static int computeCompressedBlockSize(int width, int height, int depth, int compressionFormat) {
 		int blockSize = ((width + 3) / 4) * ((height + 3) / 4) * ((depth + 3) / 4);
-		switch (compressionFormat) {
-		case D3DFMT_DXT1:
+		if (compressionFormat == D3DFMT_DXT1) {
 			blockSize *= 8;
-			break;
-		default:
+		} else {
 			blockSize *= 16;
-			break;
 		}
 		return blockSize;
 	}

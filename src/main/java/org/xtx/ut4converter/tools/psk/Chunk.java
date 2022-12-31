@@ -23,12 +23,6 @@ public class Chunk {
 		this.data = data;
 	}
 
-	public Chunk(ChunkHeader header, List<? extends BinReadWrite> data) {
-		super();
-		this.header = header;
-		this.data = data;
-	}
-
 	public ChunkHeader getHeader() {
 		return header;
 	}

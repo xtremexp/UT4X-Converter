@@ -7,7 +7,6 @@ package org.xtx.ut4converter.geom;
 
 import org.xtx.ut4converter.UTGames.UnrealEngine;
 
-import javax.vecmath.Vector3d;
 import java.util.Objects;
 
 /**
@@ -37,20 +36,14 @@ public class Rotator {
 
 	/**
 	 * Creates a rotator in UE4 range
-	 * @param pitch
-	 * @param yaw
-	 * @param roll
+	 * @param pitch Pitch
+	 * @param yaw Yaw
+	 * @param roll Roll
 	 */
 	public Rotator(double pitch, double yaw, double roll) {
 		this.pitch = pitch;
 		this.yaw = yaw;
 		this.roll = roll;
-	}
-
-	public Rotator(Vector3d rotator) {
-		this.pitch = rotator.y;
-		this.yaw = rotator.z;
-		this.roll = rotator.x;
 	}
 
 	public double getPitch() {
@@ -65,22 +58,14 @@ public class Rotator {
 		return yaw;
 	}
 
-	public void setYaw(double yaw) {
-		this.yaw = yaw;
-	}
-
 	public double getRoll() {
 		return roll;
 	}
 
-	public void setRoll(double roll) {
-		this.roll = roll;
-	}
-
 	/**
 	 * Remove/refactor
-	 * @param engine
-	 * @return
+	 * @param engine Unreal engine
+	 * @return Size of circle in specified engine
 	 */
 	@Deprecated
 	public static double getDefaultTwoPi(UnrealEngine engine){
@@ -93,7 +78,7 @@ public class Rotator {
 
 	/**
 	 * Switch to UE123 range to UE4 range or vice-versa
-	 * @param isUE4Space
+	 * @param isUE4Space If true means, it's UE4 space
 	 */
 	public void switchSpace(boolean isUE4Space) {
 

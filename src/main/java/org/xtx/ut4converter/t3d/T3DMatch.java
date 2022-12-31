@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class T3DMatch {
 
-	private MapConverter mapConverter;
+	private final MapConverter mapConverter;
 
 	/**
 	 * Conversion property. Must always be checked when using 1.0x scaling! TODO
@@ -75,12 +75,12 @@ public class T3DMatch {
 		/**
          *
          */
-		public String name;
+		public final String name;
 
 		/**
          *
          */
-		public String alias;
+		public final String alias;
 
 		UE4_RCType(String name, String alias) {
 			this.name = name;
@@ -379,14 +379,8 @@ public class T3DMatch {
 	/**
      *
      */
-	public class GlobalMatch {
+	public static class GlobalMatch {
 
-		/**
-		 * Internal tag. Might be used to set the same conversion property for
-		 * all globalmatches having this tag (e.g: z offset for all weapon
-		 * pickups)
-		 */
-		String tag;
 
 		List<Match> matches;
 
@@ -422,8 +416,8 @@ public class T3DMatch {
 		 * 
 		 * @param outGame
 		 *            UT Game the actor will be converted to
-		 * @param keyValue
-		 * @return
+		 * @param keyValue Property that will be added for conversion (name/value)
+		 * @return Global match with converted property
 		 */
 		public GlobalMatch addConvP(UTGame outGame, Object[] keyValue) {
 
@@ -445,7 +439,7 @@ public class T3DMatch {
 		/**
          * 
          */
-		UTGames.UTGame game = UTGames.UTGame.NONE;
+		UTGames.UTGame game;
 
 		/**
 		 * Match available for this engine. Might be useful for convert between
@@ -477,19 +471,6 @@ public class T3DMatch {
 		 */
 		public Map<String, Object> convertProperties = new HashMap<>();
 
-		/**
-		 *
-		 * @param names
-		 * @param game
-		 * @param t3dClass
-		 */
-		public Match(String[] names, UTGames.UTGame game, Class<? extends T3DActor> t3dClass) {
-
-			this.actorClass.addAll(Arrays.asList(names));
-			this.game = game;
-			this.engine = game.engine;
-			this.t3dClass = t3dClass;
-		}
 
 		/**
 		 *
@@ -508,7 +489,7 @@ public class T3DMatch {
 
 		/**
 		 *
-		 * @param property
+		 * @param property Unreal object property
 		 * @param value
 		 * @return
 		 */
@@ -604,13 +585,13 @@ public class T3DMatch {
 	 * Tries to find out converted t3d actor inActorClass (if inActorClass has
 	 * changed between ut games)
 	 * 
-	 * @param inActorClass
+	 * @param inActorClass Unreal actor input class (e.g: Light)
 	 * @param inputGame
 	 *            Input game map is being converted from
 	 * @param outputGame
 	 *            Output game map is being converted to
-	 * @param inActorProps
-	 * @return
+	 * @param inActorProps Unreal actor with these properties
+	 * @return A match or null
 	 */
 	public Match getMatchFor(final String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, Map<String, String> inActorProps) {
 
@@ -629,7 +610,7 @@ public class T3DMatch {
 
 					// insensitive case class name check matching
 					long matchCount = matchForName.actorClass.stream().filter(x -> {
-						return x.toLowerCase().equals(inActorClass.toLowerCase());
+						return x.equalsIgnoreCase(inActorClass);
 					}).count();
 
 					if (matchCount > 0) {

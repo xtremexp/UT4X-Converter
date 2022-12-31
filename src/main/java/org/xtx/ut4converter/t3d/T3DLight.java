@@ -149,26 +149,9 @@ public class T3DLight extends T3DSound {
 	private float red, green, blue, alpha = 255;
 
 	/**
-	 * Unreal Engine 4 Default Intensity
-	 */
-	private static final int DEFAULT_INTENSITY = 5000;
-
-	/**
 	 * Default Attenuation Radius for unreal engine 4
 	 */
 	private static final float DEFAULT_ATTENUATION_RADIUS = 1000f;
-
-	/**
-	 * How much attenuation radius will be multiplied Attenuation Radius =
-	 * Radius(UE123) * Factor
-	 */
-	private static final int UE1_UE4_ATTENUATION_RADIUS_FACTOR = 20;
-
-	/**
-	 * How much attenuation radius will be multiplied Attenuation Radius =
-	 * Radius(UE123) * Factor
-	 */
-	private static final int UE2_UE4_ATTENUATION_RADIUS_FACTOR = 22;
 
 	/**
 	 * Intensity.

@@ -83,7 +83,6 @@
                         <Label GridPane.columnIndex="2" GridPane.rowIndex="9">Convert StaticMeshes:</Label>
                         <CheckBox fx:id="convSmCheckBox" onAction="#toggleSmConversion" GridPane.columnIndex="3" GridPane.rowIndex="9" />
 
-                        <Label fx:id="warningMessage" GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="10" />
                   <columnConstraints>
                      <ColumnConstraints />
                      <ColumnConstraints />

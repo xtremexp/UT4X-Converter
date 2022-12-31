@@ -101,24 +101,22 @@ public class MoverProperties implements T3D {
 	 */
 	private final MapConverter mapConverter;
 
-	private final List<T3DSimpleProperty> simpleProperties = new LinkedList<>();
-
 	public MoverProperties(T3DActor mover, MapConverter mapConverter) {
 		this.mover = mover;
 		this.mapConverter = mapConverter;
 
-		mover.registerSimpleProperty("bDamageTriggered", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("bDirectionalPushoff", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("bSlave", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("bTriggerOnceOnly", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
-		mover.registerSimpleProperty("DelayTime", Float.class, null);
-		mover.registerSimpleProperty("BumpEvent", String.class, null);
-		mover.registerSimpleProperty("bUseTriggered", Boolean.class, Boolean.FALSE);
-		mover.registerSimpleProperty("DamageThreshold", Float.class, 0f);
-		mover.registerSimpleProperty("EncroachDamage", Float.class, 0f);
-		mover.registerSimpleProperty("OtherTime", Float.class, 0f);
-		mover.registerSimpleProperty("PlayerBumpEvent", String.class, null);
+		mover.registerSimpleProperty("bDamageTriggered", Boolean.class);
+		mover.registerSimpleProperty("bDirectionalPushoff", Boolean.class);
+		mover.registerSimpleProperty("bSlave", Boolean.class);
+		mover.registerSimpleProperty("bTriggerOnceOnly", Boolean.class);
+		mover.registerSimpleProperty("PlayerBumpEvent", String.class);
+		mover.registerSimpleProperty("DelayTime", Float.class);
+		mover.registerSimpleProperty("BumpEvent", String.class);
+		mover.registerSimpleProperty("bUseTriggered", Boolean.class);
+		mover.registerSimpleProperty("DamageThreshold", Float.class);
+		mover.registerSimpleProperty("EncroachDamage", Float.class);
+		mover.registerSimpleProperty("OtherTime", Float.class);
+		mover.registerSimpleProperty("PlayerBumpEvent", String.class);
 		mover.registerSimpleProperty("AttachTag", String.class);
 	}
 

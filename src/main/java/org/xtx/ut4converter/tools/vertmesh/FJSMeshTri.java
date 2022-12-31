@@ -33,7 +33,7 @@ public class FJSMeshTri implements BinReadWrite {
 	 * same texture coordinates at the vertex.
 	 *
 	 */
-	public class FMeshByteUV {
+	public static class FMeshByteUV {
 		byte u;
 		byte v;
 
@@ -95,20 +95,20 @@ public class FJSMeshTri implements BinReadWrite {
 	}
 	
 	public String toString() {
-		String s = "";
-		s += "iVertex: " + iVertex[0] + ", " + iVertex[1] + "," + iVertex[1] + "\n";
-		s += "type: " + type + "\n";
-		s += "color: " + color + "\n";
-		
-		for(int i=0; i < tex.length; i++){
-			s += "tex: " + tex[i].u + ", " + tex[i].v  + "\n";
+		StringBuilder s = new StringBuilder();
+		s.append("iVertex: ").append(iVertex[0]).append(", ").append(iVertex[1]).append(",").append(iVertex[1]).append("\n");
+		s.append("type: ").append(type).append("\n");
+		s.append("color: ").append(color).append("\n");
+
+		for (FMeshByteUV fMeshByteUV : tex) {
+			s.append("tex: ").append(fMeshByteUV.u).append(", ").append(fMeshByteUV.v).append("\n");
 		}
 		
 		
-		s += "textureNum: " + textureNum + "\n";
-		s += "flags: " + flags + "\n";
+		s.append("textureNum: ").append(textureNum).append("\n");
+		s.append("flags: ").append(flags).append("\n");
 
-		return s;
+		return s.toString();
 	}
 
 }

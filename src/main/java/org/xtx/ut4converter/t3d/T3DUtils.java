@@ -46,7 +46,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line T
 	 * @param split
 	 * @return
 	 */
@@ -85,7 +85,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return
 	 */
 	public static Double getDouble(String line) {
@@ -94,7 +94,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return
 	 */
 	public static Float getFloat(String line) {
@@ -103,7 +103,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line T3D line to parse
 	 * @param property
 	 * @return
 	 */
@@ -121,7 +121,7 @@ public class T3DUtils {
 
 	/**
 	 * Extra utility function to return null for resource if ends with "=None"
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return
 	 */
 	public static String getResourceName(String line) {
@@ -146,7 +146,7 @@ public class T3DUtils {
 
 	/**
 	 *
-	 * @param line
+	 * @param line T3D line to parse
 	 * @param defaut
 	 * @return
 	 */
@@ -157,7 +157,7 @@ public class T3DUtils {
 	/**
 	 * Remove double whitespaces and trim to t3d line
 	 *
-	 * @param t3dLine
+	 * @param t3dLine T3D line to parse
 	 * @return
 	 */
 	public static String clean(String t3dLine) {
@@ -169,7 +169,7 @@ public class T3DUtils {
 	 * Transform polygon data into vector E.G:
 	 * "Normal   -00001.000000,+00000.000000,+00000.000000"
 	 *
-	 * @param t3dPolyLine
+	 * @param t3dPolyLine T3D line to parse
 	 * @param polyParam
 	 * @return
 	 */
@@ -201,7 +201,7 @@ public class T3DUtils {
 
 	/**
 	 * KeyRot(2)=(Yaw=-16384)
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return [2, "(Yaw=-16384)"]
 	 */
 	public static Pair<Integer, String> getArrayEntry(String line){
@@ -215,7 +215,7 @@ public class T3DUtils {
 	 * Get vector3d from rotation data in t3d format E.G:
 	 * "Rotation=(Pitch=848,Yaw=-12928,Roll=1208)"
 	 *
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return
 	 */
 	public static Vector3d getVector3dRot(String line) {
@@ -224,7 +224,7 @@ public class T3DUtils {
 
 	/**
 	 * Parse line to a rotator in UE123 range
-	 * @param line
+	 * @param line T3D line to parse
 	 * @return
 	 */
 	public static Rotator parseRotator(String line){
@@ -440,7 +440,7 @@ public class T3DUtils {
 
 	public static Boolean getBoolean(String line) {
 
-		if ("true".equals(line.split("=")[1].toLowerCase())) {
+		if ("true".equalsIgnoreCase(line.split("=")[1])) {
 			return Boolean.TRUE;
 		} else {
 			return Boolean.FALSE;
@@ -486,7 +486,7 @@ public class T3DUtils {
 
 			sb.append(")");
 		} else {
-			sb.append(propName).append(EQUAL).append(propValue.toString());
+			sb.append(propName).append(EQUAL).append(propValue);
 		}
 
 		return true;

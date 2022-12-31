@@ -53,10 +53,6 @@ public class StaticMesh {
         }
     }
 
-    public File getT3dFile() {
-        return t3dFile;
-    }
-
     public List<Triangle> getTriangles() {
         return triangles;
     }

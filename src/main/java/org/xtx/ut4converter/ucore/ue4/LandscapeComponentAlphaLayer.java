@@ -18,7 +18,7 @@ public class LandscapeComponentAlphaLayer {
     /**
      * Alpha values within 0-255 range
      */
-    private List<Integer> alphaData = new LinkedList<>();
+    private final List<Integer> alphaData = new LinkedList<>();
 
 
     public LandscapeComponentAlphaLayer(int layerNum) {
@@ -31,10 +31,6 @@ public class LandscapeComponentAlphaLayer {
 
     public List<Integer> getAlphaData() {
         return alphaData;
-    }
-
-    public void setAlphaData(List<Integer> alphaData) {
-        this.alphaData = alphaData;
     }
 
     public String getLayerInfo() {

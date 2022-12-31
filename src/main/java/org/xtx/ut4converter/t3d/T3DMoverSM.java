@@ -17,7 +17,7 @@ import org.xtx.ut4converter.export.UTPackageExtractor;
  */
 public class T3DMoverSM extends T3DStaticMesh {
 
-	private MoverProperties moverProperties;
+	private final MoverProperties moverProperties;
 
 	public T3DMoverSM(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
@@ -37,14 +37,12 @@ public class T3DMoverSM extends T3DStaticMesh {
 	@Override
 	public void scale(Double newScale) {
 
-		//moverProperties.scale(newScale);
-
 		super.scale(newScale);
 	}
 
 	/**
 	 *
-	 * @return
+	 * @return T3d
 	 */
 	public String toT3d() {
 

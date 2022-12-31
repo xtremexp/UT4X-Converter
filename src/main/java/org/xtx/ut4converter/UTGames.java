@@ -16,7 +16,6 @@ import java.io.File;
  */
 public class UTGames {
 
-	public static final String T3D_LEVEL_NAME_UE12 = "myLevel.t3d";
 
 	public static final String T3D_LEVEL_NAME_UE3 = "PersistentLevel.t3d";
 
@@ -71,7 +70,7 @@ public class UTGames {
 
 		/**
 		 *
-		 * @return
+		 * @return Name of unreal engine
 		 */
 		@Override
 		public String toString() {
@@ -179,54 +178,18 @@ public class UTGames {
 
 		/**
 		 *
-		 * @return
+		 * @return Name of game
 		 */
 		@Override
 		public String toString() {
-
 			return name;
 		}
 	}
 
-	/**
-	 *
-	 * @param utGame
-	 * @return
-	 */
-	public static boolean isUnrealEngine4(UTGames.UTGame utGame) {
-		return utGame.engine == UnrealEngine.UE4;
-	}
-
-	/**
-	 *
-	 * @param utGame
-	 * @return
-	 */
-	public static boolean isUnrealEngine3(UTGames.UTGame utGame) {
-		return utGame.engine == UnrealEngine.UE3;
-	}
-
-	/**
-	 *
-	 * @param utGame
-	 * @return
-	 */
-	public static boolean isUnrealEngine2(UTGames.UTGame utGame) {
-		return utGame.engine == UnrealEngine.UE2;
-	}
-
-	/**
-	 *
-	 * @param utGame
-	 * @return
-	 */
-	public static boolean isUnrealEngine1(UTGames.UTGame utGame) {
-		return utGame.engine == UnrealEngine.UE1;
-	}
 	
 	/**
 	 * Returns default folder for textures.
-	 * @param basePath
+	 * @param basePath Unreal game root path (e.g: C:\Program Files (x86)\Steam\steamapps\common\Unreal Tournament)
 	 * @param utgame UT Game
 	 * @return Default folder for texture (only for UE1/UE2 ut games)
 	 */

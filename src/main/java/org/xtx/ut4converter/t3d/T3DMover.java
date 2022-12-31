@@ -19,7 +19,7 @@ public class T3DMover extends T3DBrush {
 	/**
 	 * Common properties of basic mover
 	 */
-	private MoverProperties moverProperties;
+	private final MoverProperties moverProperties;
 
 	/**
 	 *
@@ -102,17 +102,6 @@ public class T3DMover extends T3DBrush {
 		moverProperties.convert();
 
 		super.convert();
-	}
-
-
-	/*
-	@Override
-	public boolean isValidConverting() {
-		return !this.moverProperties.getRotations().isEmpty();
-	}*/
-
-	public MoverProperties getMoverProperties() {
-		return moverProperties;
 	}
 
 

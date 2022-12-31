@@ -37,11 +37,6 @@ public class BinUtils {
 		bos.write(bytes);
 	}
 
-	public static void writeLong(FileOutputStream bos, long someLong) throws IOException {
-		byte[] bytes = ByteBuffer.allocate(Long.SIZE / Byte.SIZE).order(BYTE_ORDER_LE).putLong(someLong).array();
-		bos.write(bytes);
-	}
-
 	public static Vector4d readVector4d(ByteBuffer bf) {
 
 		Vector4d v = new Vector4d();

@@ -959,9 +959,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			this.getT3dLvlConvertor().getConvertedActors().stream().filter(e -> e instanceof T3DUE2Terrain || e instanceof T3DUE3Terrain).forEach(terrain -> {
 
 				// only support 3 terrains
-				if (landscapeMatIdx.getAcquire() < 3&& terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof T3DUE4Terrain) {
-						final T3DUE4Terrain ue4Terrain = (T3DUE4Terrain) terrain.getChildren().get(0);
-						final String landscapeMatFilename = "UT4X_LandscapeMat_" + landscapeMatIdx.getAcquire() + ".uasset";
+				if (landscapeMatIdx.getAcquire() < 3&& terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof final T3DUE4Terrain ue4Terrain) {
+					final String landscapeMatFilename = "UT4X_LandscapeMat_" + landscapeMatIdx.getAcquire() + ".uasset";
 
 						final File landscapeMat = new File(Installation.getContentFolder() + File.separator + landscapeMatFilename);
 						final File landscapeMatCopy = new File(wipConvertedMapFolder + File.separator + landscapeMatFilename);

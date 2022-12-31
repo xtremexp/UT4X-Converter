@@ -13,10 +13,6 @@ import org.xtx.ut4converter.UTGames.UTGame;
  */
 public class UTGameTypes {
 
-	public static final String UT4_ASSAULT_CLASS = "BlueprintGeneratedClass'/Game/Blueprints/UTASGameMode.UTASGameMode_C'";
-
-	public static final String UT4_DOM_CLASS = "Blueprint'/Game/Domination/BP_Domination.BP_Domination'";
-
 	/**
      *
      */
@@ -57,54 +53,28 @@ public class UTGameTypes {
         */
 		BR("BR", "Bombing run", true);
 
-		String prefix;
-		String name;
+		final String prefix;
+		final String name;
 
 		/**
          *
          */
-		public boolean isTeamBased;
+		public final boolean isTeamBased;
 
 		GameType(String prefix, String name, boolean isTeamBased) {
 			this.prefix = prefix;
 			this.isTeamBased = isTeamBased;
+			this.name = name;
 		}
 	}
 
-	/**
-     *
-     */
-	public static final String GAMETYPE_DEATHMATCH = "DM";
 
 	/**
-     *
-     */
-	public static final String GAMETYPE_TEAM_DEATHMATCH = "TDM";
-
-	/**
-     *
-     */
-	public static final String GAMETYPE_DUEL = "DUEL";
-
-	/**
-     *
-     */
-	public static final String GAMETYPE_ASSAULT = "AS";
-
-	/**
-    *
-    */
-	public static final String GAMETYPE_DOMINATION = "DOM";
-
-	/**
-    *
-    */
-	public static final String GAMETYPE_BOMBING_RUN = "BR";
-
-	/**
+	 * Guess if map is a team based gametype from map name.
+	 * E.g: CTF-Face works with team based gametype, DM-Deck16 not
 	 *
-	 * @param mapName
-	 * @return
+	 * @param mapName Map name (e.g: "CTF-Face")
+	 * @return <code>true</code> if map name is linked with team based gametype else <code>false</code>
 	 */
 	public static boolean isTeamBasedFromMapName(String mapName) {
 
@@ -136,44 +106,14 @@ public class UTGameTypes {
 
 		prefix = prefix.toUpperCase();
 
-		switch (prefix) {
-		case "DM":
-			return GameType.DM;
-		case "AS":
-			return GameType.ASSAULT;
-		case "CTF":
-			return GameType.CTF;
-		case "DOM":
-			return GameType.DOM;
-		case "BR":
-			return GameType.BR;
-		default:
-			return null;
-		}
+		return switch (prefix) {
+			case "DM" -> GameType.DM;
+			case "AS" -> GameType.ASSAULT;
+			case "CTF" -> GameType.CTF;
+			case "DOM" -> GameType.DOM;
+			case "BR" -> GameType.BR;
+			default -> null;
+		};
 	}
 
-	/**
-	 * 
-	 * @param gameType
-	 * @return
-	 */
-	public static boolean isTeamBased(String gameType) {
-
-		switch (gameType) {
-		case GAMETYPE_DEATHMATCH:
-			return false;
-		case GAMETYPE_TEAM_DEATHMATCH:
-			return true;
-		case GAMETYPE_ASSAULT:
-			return true;
-		case GAMETYPE_DUEL:
-			return false;
-		case GAMETYPE_DOMINATION:
-			return true;
-		case GAMETYPE_BOMBING_RUN:
-			return true;
-		default:
-			return false;
-		}
-	}
 }

@@ -382,12 +382,6 @@ public abstract class T3DActor extends T3DObject {
 		writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
 	}
 
-	public void writeLocRotSceneComponent(String prefix) {
-		sceneComponent.writeBeginObj(sbf, prefix);
-		writeLocRotAndScale();
-		sceneComponent.writeEndObj(sbf, prefix);
-	}
-
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 * 
@@ -634,10 +628,6 @@ public abstract class T3DActor extends T3DObject {
 		sbf.append(IDT).append("\tEnd Object\n");
 	}
 
-	protected void writeBeginActor() {
-		sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
-	}
-
 	/**
      *
      */
@@ -726,23 +716,6 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Returns the reference of this actor in level E.G: Generic_Lift_C
-	 * '/Game/Maps/AS-Mazon/AS-Mazon-V01.AS-Mazon-V01:PersistentLevel.Mover4'
-	 * 
-	 * @return Level reference
-	 */
-	public String getLevelReference() {
-
-		if (t3dClass == null) {
-			return null;
-		}
-
-		// UE4
-		// TODO check <=UE3 getLevelReference
-		return t3dClass + "'" + mapConverter.getRelativeUtMapPath() + "." + mapConverter.getOutMapName() + ":PersistentLevel." + name;
 	}
 
 	protected String writeSimpleActor(final String actorClass){

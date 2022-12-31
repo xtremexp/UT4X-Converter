@@ -71,7 +71,7 @@ public class T3DTeleporter extends T3DSound {
 
 				linkedTo.clear(); // needs to remove linked teleporter or else loop
 				// on writting linked teleporter
-				return sbf.toString() + linkedTel.toString();
+				return sbf.toString() + linkedTel;
 			} else {
 				sbf.append(IDT).append("\tRootComponent=TriggerBox\n");
 				writeEndActor();

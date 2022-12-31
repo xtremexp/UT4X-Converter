@@ -6,10 +6,10 @@ public class T3DCounter extends T3DSound{
     public T3DCounter(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bShowMessage", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("CompleteMessage", String.class, "Completed!");
-        registerSimpleProperty("CountMessage", String.class, "Only %i more to go...");
-        registerSimpleProperty("NumToCount", Integer.class, 2);
+        registerSimpleProperty("bShowMessage", Boolean.class);
+        registerSimpleProperty("CompleteMessage", String.class);
+        registerSimpleProperty("CountMessage", String.class);
+        registerSimpleProperty("NumToCount", Integer.class);
     }
 
     public String toT3d() {

@@ -8,8 +8,8 @@ public class T3DDecoration extends T3DStaticMesh {
     public T3DDecoration(final MapConverter mc, final String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bOnlyTriggerable", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("bPushable", Boolean.class, Boolean.FALSE);
+        registerSimpleProperty("bOnlyTriggerable", Boolean.class);
+        registerSimpleProperty("bPushable", Boolean.class);
         registerSimpleProperty("content2", String.class);
         registerSimpleProperty("content3", String.class);
         registerSimpleProperty("contents", String.class);

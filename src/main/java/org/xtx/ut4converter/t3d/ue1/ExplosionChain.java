@@ -8,10 +8,10 @@ public class ExplosionChain extends Effects {
     public ExplosionChain(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("Damage", Float.class, 100f);
-        registerSimpleProperty("DelayTime", Float.class, 0.3f);
-        registerSimpleProperty("MomentumTransfer", Float.class, 100000f);
-        registerSimpleProperty("Size", Float.class, 1f);
+        registerSimpleProperty("Damage", Float.class);
+        registerSimpleProperty("DelayTime", Float.class);
+        registerSimpleProperty("MomentumTransfer", Float.class);
+        registerSimpleProperty("Size", Float.class);
     }
 
     @Override

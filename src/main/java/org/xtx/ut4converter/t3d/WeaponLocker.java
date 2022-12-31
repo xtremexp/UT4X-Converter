@@ -43,46 +43,28 @@ public class WeaponLocker extends T3DActor {
 
             switch (weaponClass) {
                 // UT3 and UT2004classes
-                case "UTGame.UTWeap_LinkGun":
-                case "XWeapons.LinkGun":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/LinkGun/BP_LinkGun.BP_LinkGun_C";
-                    break;
-                case "UTGame.UTWeap_RocketLauncher":
-                case "XWeapons.RocketLauncher":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/RocketLauncher/BP_RocketLauncher.BP_RocketLauncher_C";
-                    break;
-                case "UTGameContent.UTWeap_BioRifle_Content":
-                case "XWeapons.BioRifle":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/BioRifle/BP_BioRifle.BP_BioRifle_C";
-                    break;
-                case "UTGame.UTWeap_FlakCannon":
-                case "XWeapons.FlakCannon":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/Flak/BP_FlakCannon.BP_FlakCannon_C";
-                    break;
-                case "UTGameContent.UTWeap_Redeemer_Content":
-                case "XWeapons.Redeemer":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/Redeemer/BP_Redeemer.BP_Redeemer_C";
-                    break;
-                case "UTGame.UTWeap_ShockRifle":
-                case "XWeapons.ShockRifle":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/ShockRifle/ShockRifle.ShockRifle_C";
-                    break;
-                case "UTGame.UTWeap_SniperRifle":
-                case "XWeapons.SniperRifle":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/Sniper/BP_Sniper.BP_Sniper_C";
-                    break;
-                case "UTGame.UTWeap_Stinger":
-                case "XWeapons.Minigun":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/Minigun/BP_Minigun.BP_Minigun_C";
-                    break;
-                case "XWeapons.SuperShockRifle":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/ShockRifle/BP_InstagibRifle.BP_InstagibRifle_C";
-                    break;
-                case "XWeapons.ShieldGun":
-                    newWeaponClass = "/Game/RestrictedAssets/Weapons/ImpactHammer/BP_ImpactHammer.BP_ImpactHammer_C";
-                    break;
-                default:
-                    break;
+                case "UTGame.UTWeap_LinkGun", "XWeapons.LinkGun" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/LinkGun/BP_LinkGun.BP_LinkGun_C";
+                case "UTGame.UTWeap_RocketLauncher", "XWeapons.RocketLauncher" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/RocketLauncher/BP_RocketLauncher.BP_RocketLauncher_C";
+                case "UTGameContent.UTWeap_BioRifle_Content", "XWeapons.BioRifle" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/BioRifle/BP_BioRifle.BP_BioRifle_C";
+                case "UTGame.UTWeap_FlakCannon", "XWeapons.FlakCannon" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/Flak/BP_FlakCannon.BP_FlakCannon_C";
+                case "UTGameContent.UTWeap_Redeemer_Content", "XWeapons.Redeemer" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/Redeemer/BP_Redeemer.BP_Redeemer_C";
+                case "UTGame.UTWeap_ShockRifle", "XWeapons.ShockRifle" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/ShockRifle/ShockRifle.ShockRifle_C";
+                case "UTGame.UTWeap_SniperRifle", "XWeapons.SniperRifle" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/Sniper/BP_Sniper.BP_Sniper_C";
+                case "UTGame.UTWeap_Stinger", "XWeapons.Minigun" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/Minigun/BP_Minigun.BP_Minigun_C";
+                case "XWeapons.SuperShockRifle" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/ShockRifle/BP_InstagibRifle.BP_InstagibRifle_C";
+                case "XWeapons.ShieldGun" ->
+                        newWeaponClass = "/Game/RestrictedAssets/Weapons/ImpactHammer/BP_ImpactHammer.BP_ImpactHammer_C";
+                default -> {
+                }
             }
 
             if (newWeaponClass != null) {

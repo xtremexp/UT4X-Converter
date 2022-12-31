@@ -40,24 +40,17 @@ public class SupportedClasses {
 
 	/**
 	 *
-	 * @param mapConverter
+	 * @param mapConverter Map converter
 	 */
 	public SupportedClasses(final MapConverter mapConverter) {
 		this.mapConverter = mapConverter;
 		initialize();
 	}
 
-	/**
-	 *
-	 * @param utxclass
-	 */
-	public void addClass(String utxclass) {
-		classToUtActor.put(utxclass.toLowerCase(), null);
-	}
 
 	/**
 	 *
-	 * @param classNames
+	 * @param classNames Class name (e.g: Light)
 	 * @param utActorClass
 	 */
 	private void registerUClass(Class<? extends T3DActor> utActorClass, String... classNames) {

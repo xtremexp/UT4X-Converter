@@ -34,9 +34,9 @@ public class T3DUE2Terrain extends T3DActor {
 	/**
 	 * Decolayers - Not used since UE4 do not have such thing
 	 */
-	private List<TerrainDecoLayer> decoLayers = new LinkedList<>();
+	private final List<TerrainDecoLayer> decoLayers = new LinkedList<>();
 
-	private List<TerrainLayer> layers = new LinkedList<>();
+	private final List<TerrainLayer> layers = new LinkedList<>();
 
     /**
 	 * TerrainMap
@@ -61,7 +61,7 @@ public class T3DUE2Terrain extends T3DActor {
 	/**
 	 * Invisible pieces of terrain
 	 */
-	private Map<Integer, Long> quadVisibilityBitmaps = new HashMap<>();
+	private final Map<Integer, Long> quadVisibilityBitmaps = new HashMap<>();
 
 	public T3DUE2Terrain(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);

@@ -11,8 +11,8 @@ public class UBLight extends T3DLight {
     public UBLight(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("LightPeriod", Integer.class, 32);
-        registerSimpleProperty("LightPhase", Integer.class, 0);
+        registerSimpleProperty("LightPeriod", Integer.class);
+        registerSimpleProperty("LightPhase", Integer.class);
     }
 
     @Override

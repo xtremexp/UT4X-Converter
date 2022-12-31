@@ -10,15 +10,15 @@ public class ExplodingWall extends  Effects {
         super(mc, t3dClass);
 
 
-        registerSimpleProperty("ExplosionSize", Float.class, 200);
-        registerSimpleProperty("ExplosionDimensions", Float.class, 120f);
-        registerSimpleProperty("WallParticleSize", Float.class, 1f);
-        registerSimpleProperty("WoodParticleSize", Float.class, 1f);
-        registerSimpleProperty("GlassParticleSize", Float.class, 1f);
-        registerSimpleProperty("NumWallChunks", Float.class, 10);
-        registerSimpleProperty("NumWoodChunks", Float.class, 3);
-        registerSimpleProperty("Health", Integer.class, 0);
-        registerSimpleProperty("bTranslucentGlass", Boolean.class, 0);
+        registerSimpleProperty("ExplosionSize", Float.class);
+        registerSimpleProperty("ExplosionDimensions", Float.class);
+        registerSimpleProperty("WallParticleSize", Float.class);
+        registerSimpleProperty("WoodParticleSize", Float.class);
+        registerSimpleProperty("GlassParticleSize", Float.class);
+        registerSimpleProperty("NumWallChunks", Float.class);
+        registerSimpleProperty("NumWoodChunks", Float.class);
+        registerSimpleProperty("Health", Integer.class);
+        registerSimpleProperty("bTranslucentGlass", Boolean.class);
         registerSimpleArrayProperty("ActivatedBy", String.class);
         registerSimplePropertyRessource("BreakingSound", T3DRessource.Type.SOUND);
         registerSimplePropertyRessource("WallTexture", T3DRessource.Type.TEXTURE);

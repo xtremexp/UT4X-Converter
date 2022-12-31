@@ -23,13 +23,13 @@ public class T3DPostProcessVolume extends T3DBrush {
 	/**
 	 * If true will apply post process effects to whole level
 	 */
-	private Boolean bUnbound = Boolean.FALSE;
+	private final Boolean bUnbound = Boolean.FALSE;
 
 	/**
 	 * Color in post process volume
 	 */
 	private HSVColor ambientCubemapTint;
-	private String ambientCubemap;
+	private final String ambientCubemap;
 
 
 

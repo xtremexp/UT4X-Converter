@@ -44,10 +44,6 @@ public class GitHubReleaseJson {
             this.size = size;
         }
 
-        public String getBrowseDownloadUrl() {
-            return browseDownloadUrl;
-        }
-
         public void setBrowseDownloadUrl(String browserDownloadUrl) {
             this.browseDownloadUrl = browserDownloadUrl;
         }

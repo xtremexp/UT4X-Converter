@@ -22,7 +22,7 @@ public class Face implements BinReadWrite {
 	private byte matIndex, auxMatIndex;
 	private int smoothingGroups;
 	
-	boolean isFace32 = false;
+	boolean isFace32;
 
 	public Face(ByteBuffer bf, boolean isFace32) {
 		this.isFace32 = isFace32;
@@ -77,10 +77,6 @@ public class Face implements BinReadWrite {
 
 	public byte getMatIndex() {
 		return matIndex;
-	}
-
-	public byte getAuxMatIndex() {
-		return auxMatIndex;
 	}
 
 	public int getSmoothingGroups() {

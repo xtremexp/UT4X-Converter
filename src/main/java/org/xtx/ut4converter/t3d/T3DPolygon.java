@@ -118,7 +118,7 @@ public class T3DPolygon {
 	public void scale(Double newScale) {
 
 		this.origin.scale(newScale);
-		scaleUV(newScale, false);
+		scaleUV(newScale);
 
 		for (Vertex vertex : vertices) {
 			vertex.scale(newScale);
@@ -127,18 +127,15 @@ public class T3DPolygon {
 
 	/**
 	 * Scales UV
-	 * 
-	 * @param newScale
-	 *            Scale factor
+	 *
+	 * @param newScale Scale factor
 	 */
-	private void scaleUV(Double newScale, boolean noPanScale) {
+	private void scaleUV(Double newScale) {
 
 		if (newScale != null) {
 
-			if (!noPanScale) {
-				pan_u *= newScale;
-				pan_v *= newScale;
-			}
+			pan_u *= newScale;
+			pan_v *= newScale;
 
 			if (texture_u != null) {
 				texture_u.scale(1 / newScale);
@@ -253,40 +250,10 @@ public class T3DPolygon {
 
 	}
 
-	public void addVertex(Vertex vertex) {
-		vertices.add(vertex);
-	}
-
 	public T3DPolygon addVertex(Double x, Double y, Double z) {
 
 		vertices.add(new Vertex(new Vector3d(x, y, z)));
 		return this;
-	}
-
-	/**
-	 * Calculate the normal of this polygon
-	 */
-	public void calculateNormal() {
-
-		Vector3d n = new Vector3d(0, 0, 0);
-
-		for (int i = 2; i < vertices.size(); i++) {
-
-			Vector3d edge1 = new Vector3d(vertices.get(i - 1).getCoordinates());
-			edge1.sub(vertices.get(0).getCoordinates());
-
-			Vector3d edge2 = new Vector3d(vertices.get(i).getCoordinates());
-			edge2.sub(vertices.get(0).getCoordinates());
-
-			Vector3d crsProd = new Vector3d(0, 0, 0);
-			crsProd.cross(edge1, edge2);
-
-			n.add(crsProd);
-		}
-
-		n.normalize();
-
-		this.normal = n;
 	}
 
 	public void setNormal(Vector3d v) {
@@ -437,15 +404,6 @@ public class T3DPolygon {
 
 	public void setTexture(UPackageRessource texture) {
 		this.texture = texture;
-	}
-
-	/**
-	 * Set the smoothing mask (?)
-	 * 
-	 * @param smoothingMask Smoothing mask
-	 */
-	public void setSmoothingMask(Integer smoothingMask) {
-		this.smoothingMask = smoothingMask;
 	}
 
 	public LinkedList<Vertex> getVertices() {

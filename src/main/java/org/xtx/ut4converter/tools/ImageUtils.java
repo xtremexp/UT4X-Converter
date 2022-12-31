@@ -34,7 +34,7 @@ public class ImageUtils {
 	 *            Brightness
 	 * @param zeroOneScale
 	 *            If true will use 0..1 scale else 0...255 (UE1/UE2 scale)
-	 * @return
+	 * @return HSV color converted to RGB
 	 */
 	public static RGBColor HSVToLinearRGB(float hue, float saturation, float brightness, boolean zeroOneScale) {
 		return HSVToLinearRGB(new HSVColor(hue, saturation, brightness), zeroOneScale);

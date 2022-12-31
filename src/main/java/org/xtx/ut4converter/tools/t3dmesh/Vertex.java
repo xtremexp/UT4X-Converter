@@ -15,13 +15,13 @@ public class Vertex {
 
     /**
      * Vertex 2 -160.000000 96.000000 8.000000 0.000000 0.003906
-     * @param line
+     * @param line T3d line to parse
      */
     public void parseLine(final String line){
         final String[] s = line.split(" ");
 
-        this.xyz = new Vector3d(Double.valueOf(s[2]), Double.valueOf(s[3]), Double.valueOf(s[4]));
-        this.uv = new Vector2d(Double.valueOf(s[5]), Double.valueOf(s[6]));
+        this.xyz = new Vector3d(Double.parseDouble(s[2]), Double.parseDouble(s[3]), Double.parseDouble(s[4]));
+        this.uv = new Vector2d(Double.parseDouble(s[5]), Double.parseDouble(s[6]));
     }
 
     public Vector3d getXyz() {

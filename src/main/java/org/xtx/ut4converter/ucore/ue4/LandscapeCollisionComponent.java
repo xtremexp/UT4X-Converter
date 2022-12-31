@@ -10,7 +10,6 @@ import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-import javax.vecmath.Vector3d;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,20 +27,17 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 	 * List of boolean for each square of the section saying if it's rendered or
 	 * not
 	 */
-	private List<Boolean> visibilityData = new LinkedList<>();
+	private final List<Boolean> visibilityData = new LinkedList<>();
 
-	private float collisionScale = 1f;
-
-	private Vector3d relativeLocation;
 
 	/**
 	 *
-	 * @param mc
-	 * @param numComponent
-	 * @param sizeQuads
+	 * @param mc Map converter
+	 * @param numComponent Number of components
+	 * @param sizeQuads Size of quads
 	 */
 	public LandscapeCollisionComponent(MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, int numComponent, int sizeQuads) {
-		super(mc, t3DUE4Terrain, numComponent, sizeQuads);
+		super(mc, numComponent, sizeQuads);
 	}
 
 	@Override
@@ -86,17 +82,8 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 																		// Templates.
 	}
 
-	public void setCollisionScale(float collisionScale) {
-		this.collisionScale = collisionScale;
-	}
 
-	public void setRelativeLocation(Vector3d relativeLocation) {
-		this.relativeLocation = relativeLocation;
-	}
 
-	public LandscapeComponent getRenderComponent() {
-		return renderComponent;
-	}
 
 	public void setRenderComponent(LandscapeComponent renderComponent) {
 		this.renderComponent = renderComponent;
@@ -122,6 +109,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 		sb.append(base).append("\tSectionBaseY=").append(sectionBaseY).append("\n");
 
 		sb.append(base).append("\tCollisionSizeQuads=").append(sizeQuads).append("\n");
+		float collisionScale = 1f;
 		sb.append(base).append("\tCollisionScale=").append(collisionScale).append("\n");
 
 		sb.append(base).append("\tHeightfieldGuid=").append(T3DUtils.randomGuid()).append("\n");
@@ -141,7 +129,7 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 
 		sb.append("\n");
 
-		if (visibilityData != null && !visibilityData.isEmpty()) {
+		if (!visibilityData.isEmpty()) {
 
 			sb.append(base).append("\tCustomProperties DominantLayerData ");
 
@@ -160,9 +148,6 @@ public class LandscapeCollisionComponent extends TerrainComponent implements T3D
 		return BASE_NAME + "_" + numComponent;
 	}
 
-	public void setVisibilityData(List<Boolean> visibilityData) {
-		this.visibilityData = visibilityData;
-	}
 
 	public List<Boolean> getVisibilityData() {
 		return visibilityData;

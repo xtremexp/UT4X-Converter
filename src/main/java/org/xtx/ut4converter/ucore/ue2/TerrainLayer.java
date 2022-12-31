@@ -64,7 +64,7 @@ public class TerrainLayer implements T3D {
 	private Float uPan, vPan;
 	private Float uScale, vScale;
 
-	private MapConverter mapConverter;
+	private final MapConverter mapConverter;
 
 	public TerrainLayer(MapConverter mapConverter) {
 		this.mapConverter = mapConverter;

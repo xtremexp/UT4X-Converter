@@ -10,24 +10,21 @@ import java.util.List;
 
 public abstract class TerrainComponent extends T3DObject implements T3D {
 
-	/**
-	 * Terrain this landscape component belongs to
-	 */
-	private T3DUE4Terrain t3DUE4Terrain;
-
 	int sectionBaseX;
 	int sectionBaseY;
 
 	int sizeQuads;
 
-	private List<Long> heightData = new LinkedList<>();
+	private final List<Long> heightData = new LinkedList<>();
 
 	int numComponent;
 
-	public TerrainComponent(MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, int numComponent, int sizeQuads) {
+	public TerrainComponent(MapConverter mc, int numComponent, int sizeQuads) {
 		super(mc);
 
-		this.t3DUE4Terrain = t3DUE4Terrain;
+		/**
+		 * Terrain this landscape component belongs to
+		 */
 		this.numComponent = numComponent;
 		this.sizeQuads = sizeQuads;
 	}
@@ -52,9 +49,6 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 		return heightData;
 	}
 
-	public void setHeightData(List<Long> heightData) {
-		this.heightData = heightData;
-	}
 
 	@Override
 	public void convert() {
@@ -84,20 +78,8 @@ public abstract class TerrainComponent extends T3DObject implements T3D {
 		return null;
 	}
 
-	public int getNumComponent() {
-		return numComponent;
-	}
-
-	public void setNumComponent(int numComponent) {
-		this.numComponent = numComponent;
-	}
-
 	public int getSizeQuads() {
 		return sizeQuads;
-	}
-
-	public void setSizeQuads(int sizeQuads) {
-		this.sizeQuads = sizeQuads;
 	}
 
 	protected String getT3dRelativeLocation() {

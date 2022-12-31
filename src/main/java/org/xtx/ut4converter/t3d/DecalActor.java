@@ -15,7 +15,7 @@ import javax.vecmath.Vector3d;
 public class DecalActor extends T3DActor {
 
 	private UPackageRessource decalMaterial;
-	private Vector3d decalSize;
+	private final Vector3d decalSize;
 	private Integer sortOrder;
 
 	public DecalActor(MapConverter mc, String t3dClass) {

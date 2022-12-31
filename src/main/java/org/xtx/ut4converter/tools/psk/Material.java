@@ -73,7 +73,7 @@ public class Material implements BinReadWrite {
 	 * Allow chaning material name. Used to change original matname with
 	 * converter naming convention (e.g: <packagename>_<group>_<name>_mat )
 	 * 
-	 * @param materialName
+	 * @param materialName Material name
 	 */
 	public void setMaterialName(String materialName) {
 		this.materialName = materialName;

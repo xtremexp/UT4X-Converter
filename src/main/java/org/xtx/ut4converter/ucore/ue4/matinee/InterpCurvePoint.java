@@ -76,10 +76,6 @@ public class InterpCurvePoint implements T3D {
 	 */
 	EInterpCurveMode interpMode = EInterpCurveMode.CIM_CurveAutoClamped;
 
-	public InterpCurvePoint() {
-
-	}
-
 	/**
 	 * 
 	 * @param time

@@ -19,13 +19,13 @@ public class T3DUE1Trigger extends T3DSound {
     public T3DUE1Trigger(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bInitiallyActive", Boolean.class, Boolean.TRUE);
-        registerSimpleProperty("bTriggerOnceOnly", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("ClassProximityType", String.class, null);
-        registerSimpleProperty("DamageThreshold", Float.class, 0f);
-        registerSimpleProperty("Message", String.class, null);
-        registerSimpleProperty("RepeatTriggerTime", Float.class, 0f);
-        registerSimpleProperty("ReTriggerDelay", Float.class, 0f);
+        registerSimpleProperty("bInitiallyActive", Boolean.class);
+        registerSimpleProperty("bTriggerOnceOnly", Boolean.class);
+        registerSimpleProperty("ClassProximityType", String.class);
+        registerSimpleProperty("DamageThreshold", Float.class);
+        registerSimpleProperty("Message", String.class);
+        registerSimpleProperty("RepeatTriggerTime", Float.class);
+        registerSimpleProperty("ReTriggerDelay", Float.class);
     }
 
     enum TriggerType{

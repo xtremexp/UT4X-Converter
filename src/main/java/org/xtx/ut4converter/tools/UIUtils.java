@@ -40,23 +40,6 @@ public class UIUtils {
 	}
 
 	/**
-	 * Opens a confirm popup.
-	 * @param title Title of popup
-	 * @param header Header of popup
-	 * @param text Content text of popup
-	 * @return Returns <code>true</code> if user pressed OK else <code>false</code>
-	 */
-	public static boolean confirm(String title, String header, String text) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(title);
-		alert.setHeaderText(header);
-		alert.setContentText(text);
-
-		Optional<ButtonType> result = alert.showAndWait();
-		return result.isPresent() && result.get() == ButtonType.OK;
-	}
-
-	/**
 	 * Opens url in web browser
 	 *
 	 * @param url

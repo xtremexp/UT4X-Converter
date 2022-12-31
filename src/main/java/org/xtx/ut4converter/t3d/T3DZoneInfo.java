@@ -37,7 +37,7 @@ public class T3DZoneInfo extends T3DActor {
 
 	private ZoneEffect zoneEffect;
 
-	private KillZType killzType = KillZType.KILLZ_None;
+	private final KillZType killzType = KillZType.KILLZ_None;
 
 	public T3DZoneInfo(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);

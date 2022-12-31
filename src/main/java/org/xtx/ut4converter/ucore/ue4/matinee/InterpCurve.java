@@ -53,22 +53,5 @@ public class InterpCurve extends T3DObject implements T3D {
 		return null;
 	}
 
-	public void addPoint(Double time, Vector3d location) {
-
-		if (points == null) {
-			points = new ArrayList<>();
-		}
-
-		points.add(new InterpCurvePoint(time, location));
-	}
-
-	public void addPoint(InterpCurvePoint point) {
-
-		if (points == null) {
-			points = new ArrayList<>();
-		}
-
-		points.add(point);
-	}
 
 }

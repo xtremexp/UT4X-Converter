@@ -14,7 +14,7 @@ public class T3DRessource {
 	public enum Type {
 		UNKNOWN("Unknown"), LEVEL("Level"), TEXTURE("Texture"), MESH("Mesh"), STATICMESH("StaticMesh"), MUSIC("Music"), SCRIPT("Script"), SOUND("Sound");
 
-		String name;
+		final String name;
 
 		Type(String name) {
 			this.name = name;

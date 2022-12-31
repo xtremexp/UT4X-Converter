@@ -18,9 +18,9 @@ public class T3DTriggerLight extends T3DLight {
     public T3DTriggerLight(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bInitiallyOn", Boolean.class, Boolean.TRUE);
-        registerSimpleProperty("bDelayFullOn", Boolean.class, Boolean.FALSE);
-        registerSimpleProperty("ChangeTime", Float.class, Boolean.FALSE);
+        registerSimpleProperty("bInitiallyOn", Boolean.class);
+        registerSimpleProperty("bDelayFullOn", Boolean.class);
+        registerSimpleProperty("ChangeTime", Float.class);
     }
 
     @Override

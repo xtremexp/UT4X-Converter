@@ -20,7 +20,7 @@ public class T3DSimpleProperty {
      * but we might need to have name different
      * than original
      */
-    private String propertyNameConverted;
+    private final String propertyNameConverted;
 
     /**
      * Used if we want to copy this property with another name.
@@ -48,7 +48,6 @@ public class T3DSimpleProperty {
      * Register simple property from single float, string, ...
      * @param propertyName Property name
      * @param propertyClass Property class
-     * @param defaultValue Default value
      */
     public T3DSimpleProperty(final String propertyName, final Object propertyClass, final Object defaultValue, boolean isList) {
         this.propertyName = propertyName;
@@ -162,9 +161,7 @@ public class T3DSimpleProperty {
     private void writeValueProperty(StringBuilder sbf, MapConverter mapConverter, Object value) {
         if (value instanceof String) {
             sbf.append("\"").append(value).append("\"\n");
-        } else if (value instanceof UPackageRessource) {
-
-            final UPackageRessource packageRessource = (UPackageRessource) value;
+        } else if (value instanceof final UPackageRessource packageRessource) {
 
             if(ressourceType == T3DRessource.Type.SOUND) {
                 sbf.append("SoundCue'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");

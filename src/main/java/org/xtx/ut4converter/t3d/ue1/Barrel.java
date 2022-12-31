@@ -7,7 +7,7 @@ public class Barrel extends T3DDecoration {
     public Barrel(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("Health", Integer.class, 10);
+        registerSimpleProperty("Health", Integer.class);
     }
 
     @Override

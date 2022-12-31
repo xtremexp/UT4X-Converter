@@ -4,7 +4,6 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -97,61 +96,6 @@ public abstract class T3DObject {
 		}
 	}
 
-	public void writeEndObj(StringBuilder sbf, String prefix) {
-
-		if (prefix != null) {
-			sbf.append(prefix);
-		}
-
-		if (this instanceof T3DActor) {
-			sbf.append("End Actor\n");
-		} else {
-			sbf.append("End Object\n");
-		}
-	}
-
-	/**
-	 * Write sub-objects of this object if not-null and of class T3DObject
-	 * (unreal objects). Only write "public" fields in class not null
-	 * 
-	 * @param sbf String builder instance
-	 * @param prefix Prefix (normally a tab \t )
-	 */
-	public void writeObjDefinition(StringBuilder sbf, String prefix) {
-
-		for (Field f : getClass().getFields()) {
-
-			Object obj;
-			try {
-				obj = f.get(this);
-
-				if (obj == null) {
-					continue;
-				}
-
-				T3DObject t3dObj = null;
-
-				if (T3DObject.class.isAssignableFrom(obj.getClass())) {
-					t3dObj = (T3DObject) obj;
-				} else if (obj instanceof List objList) {
-
-					if (!objList.isEmpty() && (objList.get(0) != null && objList.get(0) instanceof T3DObject)) {
-						t3dObj = (T3DObject) objList.get(0);
-					}
-				}
-
-				if (t3dObj != null) {
-					t3dObj.writeBeginObj(sbf, prefix);
-					t3dObj.writeObjDefinition(sbf, prefix + "\t");
-					T3DUtils.writeEndObj(sbf, prefix);
-				}
-			} catch (IllegalArgumentException | IllegalAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
-
 	boolean parseSimpleProperty(final String line){
 
 		boolean propFound = false;
@@ -182,7 +126,6 @@ public abstract class T3DObject {
 	 *
 	 * @param propertyName Property name
 	 * @param classType Type of property (String, Float, or other)
-	 * @param defaultValue Default value for INPUT game
 	 */
 	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, defaultValue, false);

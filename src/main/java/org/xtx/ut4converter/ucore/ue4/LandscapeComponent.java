@@ -10,7 +10,6 @@ import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,12 +24,12 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	 */
 	private LandscapeCollisionComponent colisionComponent;
 
-	private int subsectionSizeQuads;
+	private final int subsectionSizeQuads;
 
 	/**
 	 * Alpha layers
 	 */
-	private List<LandscapeComponentAlphaLayer> alphaLayers = new LinkedList<>();
+	private final List<LandscapeComponentAlphaLayer> alphaLayers;
 
 
 	/**
@@ -42,7 +41,7 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 	 */
 	public LandscapeComponent(final MapConverter mc, final T3DUE4Terrain t3DUE4Terrain, final LandscapeCollisionComponent colComp, final List<LandscapeComponentAlphaLayer> alphaLayers) {
 
-		super(mc, t3DUE4Terrain, colComp.numComponent, colComp.getSizeQuads());
+		super(mc, colComp.numComponent, colComp.getSizeQuads());
 
 		this.alphaLayers = alphaLayers;
 		this.colisionComponent = colComp;

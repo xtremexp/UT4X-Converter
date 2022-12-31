@@ -25,13 +25,6 @@ public class TextureNameToPackageGenerator {
         String packageName;
         String textureType;
 
-        /**
-         * Needed for JSON
-         */
-        public TextureInfo() {
-
-        }
-
         public TextureInfo(String name, String group, String packageName, String textureType) {
             this.name = name;
             this.group = group;
@@ -75,7 +68,7 @@ public class TextureNameToPackageGenerator {
     /**
      * Generates the UT99TexNameToPackage.json file in /conf folder
      *
-     * @param args
+     * @param args Arguments
      * @throws IOException
      */
     public static void main(String[] args) throws IOException, InterruptedException {

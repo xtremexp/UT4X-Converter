@@ -79,7 +79,7 @@ public abstract class UTPackageExtractor {
 	 * 
 	 * @param ressource Unreal package resource
 	 * @param forceExport If true will force export no matter if resource is not used in map
-	 * @return List of files exported
+	 * @return Set of files exported
 	 * @throws java.lang.Exception
 	 *             If anythings goes wrong when exporting this ressource
 	 */

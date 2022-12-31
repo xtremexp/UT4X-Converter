@@ -46,8 +46,8 @@ public class ConversionViewController implements Initializable {
 	/**
 	 * Initializes the controller class.
 	 * 
-	 * @param url
-	 * @param rb
+	 * @param url Url
+	 * @param rb Resource Bundle
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {

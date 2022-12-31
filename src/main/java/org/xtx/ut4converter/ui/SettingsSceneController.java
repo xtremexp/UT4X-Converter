@@ -5,19 +5,18 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
-import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.UIUtils;
 
 import java.io.File;
@@ -119,13 +118,6 @@ public class SettingsSceneController implements Initializable {
 		setUTxFolder(UTGame.U2, u2Path);
 	}
 
-
-	@FXML
-	private void gotoUModelWebsite() {
-
-		final String uModelUrl = "http://www.gildor.org/en/projects/umodel";
-		UIUtils.openUrl(uModelUrl, false, "Press ok to go to umodel website for download:\n" + uModelUrl);
-	}
 
 	/**
 	 * Saves game path to UserConfig object

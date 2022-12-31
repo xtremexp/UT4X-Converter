@@ -6,26 +6,17 @@ import org.xtx.ut4converter.tools.psk.PSKStaticMesh.BinReadWrite;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Datafile header for vertmesh UE1 files see: -
- * - https://udn.epicgames.com/Two/rsrc/Two/BinaryFormatSpecifications/UnrealVertexAnimation.h -
- * - http://paulbourke.net/dataformats/unreal/
- * 
+ * - <a href="https://udn.epicgames.com/Two/rsrc/Two/BinaryFormatSpecifications/UnrealVertexAnimation.h">...</a> -
+ * - <a href="http://paulbourke.net/dataformats/unreal/">...</a>
+ *
  * @author XtremeXp
  *
  */
 public class FJSDataHeader implements BinReadWrite {
-
-	/**
-	 * _WORD	NumPolys;
-	_WORD	NumVertices;
-	_WORD	BogusRot;  		 //(unused)
-	_WORD	BogusFrame;		 //(unused)
-	DWORD	BogusNormX,BogusNormY,BogusNormZ; //(unused)
-	DWORD	FixScale; 		 //(unused)
-	DWORD	Unused1,Unused2,Unused3; //(unused)
-	 */
 
 	/**
 	 * _WORD	NumPolys
@@ -99,7 +90,7 @@ public class FJSDataHeader implements BinReadWrite {
 		s += "unused1: " + unused1 + "\n";
 		s += "unused2: " + unused2 + "\n";
 		s += "unused3: " + unused3 + "\n";
-		s += "unknown: " + unknown + "\n";
+		s += "unknown: " + Arrays.toString(unknown) + "\n";
 
 		return s;
 	}

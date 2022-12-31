@@ -19,7 +19,7 @@ public class InterpGroup extends T3DObject implements T3D {
 	/**
 	 * Group Name
 	 */
-	private String groupName;
+	private final String groupName;
 
 	/**
 	 * List of tracks this group have
@@ -72,7 +72,7 @@ public class InterpGroup extends T3DObject implements T3D {
 
 			for (InterpTrack track : interpTracks) {
 				// InterpTracks(0)=InterpTrackToggle'InterpTrackToggle_0'
-				sb.append(prefix + IDT + "InterpTracks(").append(idx).append(")=").append(track.getClass().getSimpleName()).append("'").append(track.getName()).append("'\n");
+				sb.append(prefix).append(IDT).append("InterpTracks(").append(idx).append(")=").append(track.getClass().getSimpleName()).append("'").append(track.getName()).append("'\n");
 			}
 
 			T3DUtils.writeLine(sb, "GroupName", groupName, prefix + IDT);
@@ -80,21 +80,7 @@ public class InterpGroup extends T3DObject implements T3D {
 		}
 	}
 
-	/**
-	 * Adds a track
-	 * 
-	 * @param track
-	 *            Track
-	 */
-	public void addTrack(InterpTrack track) {
 
-		if (interpTracks == null) {
-			interpTracks = new ArrayList<>();
-		}
-
-		// track.setName(track.getName() + "_" + interpTracks.size());
-		interpTracks.add(track);
-	}
 
 	public InterpData getInterpData() {
 		return interpData;

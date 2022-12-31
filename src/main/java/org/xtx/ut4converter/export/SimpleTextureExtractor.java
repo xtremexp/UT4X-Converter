@@ -17,7 +17,7 @@ import java.util.logging.Level;
  * from partial delphi package unit sources
  * "http://www.acordero.org/projects/unreal-tournament-package-delphi-library/"
  * but can't find my original sources ..
- * 
+
  * This is the ONLY one working for texture extraction from Unreal 2
  * 
  * @author XtremeXp

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class SoundConverter {
 
-	private File soxConverter;
+	private final File soxConverter;
 	final Logger logger;
 
 	/**
@@ -45,22 +45,13 @@ public class SoundConverter {
 	 */
 	public synchronized void convertTo16BitSampleSize(File inWaveFile, File outWaveFile) {
 
-		// convert sound using sox program
-		if(this.soxConverter.exists()){
-			convertTo16BitSampleSizeUsingSox(inWaveFile, outWaveFile);
-		} 
-		// convert sound using java core api
-		else {
-			logger.warning("Sox sound converter not found in " + this.soxConverter + " Using core java converter.");
-			convertTo16BitSampleSizeUsingCoreApi(inWaveFile, outWaveFile);
-		}
-
+		convertTo16BitSampleSizeUsingSox(inWaveFile, outWaveFile);
 	}
 	
 	/**
 	 * 
-	 * @param inWaveFile
-	 * @param outWaveFile
+	 * @param inWaveFile Input wave file
+	 * @param outWaveFile Output converted wave file
 	 */
 	private synchronized void convertTo16BitSampleSizeUsingSox(File inWaveFile, File outWaveFile){
 		
@@ -76,68 +67,5 @@ public class SoundConverter {
 		}
 	}
 	
-	/**
-	 * Convert sound wave file to 16 bit sample size (UE4 does not support 8 bits sample sound files)
-	 * Using the core conversion is crap since some sound might not be correctly imported by UE4
-	 * @deprecated might be deleted in some near future ...
-	 * @param inWaveFile Sound file
-	 * @param outWaveFile Converted 16 bit sound file
-	 */
-	private synchronized void convertTo16BitSampleSizeUsingCoreApi(File inWaveFile, File outWaveFile){
-		// TODO use other lib (if existing) since OPENJDK can't use WaveFileWriter
-		throw new UnsupportedOperationException("OPENJDK 11+ does not support this operation");
 
-		/*
-		AudioInputStream audioInputStream = null;
-		AudioInputStream convertedIn = null;
-
-		AudioFormat srcAudioFormat;
-
-		try {
-			audioInputStream = AudioSystem.getAudioInputStream(inWaveFile);
-			srcAudioFormat = audioInputStream.getFormat();
-
-			// SampleSize ever 16 bits, just do a file copy
-			if (srcAudioFormat.getSampleSizeInBits() == 16) {
-				Files.copy(inWaveFile.toPath(), outWaveFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-				return;
-			}
-
-			AudioFormat dstAudioFormat = getAudioFormat16bit(srcAudioFormat);
-
-			if (dstAudioFormat == null) {
-				logger.log(Level.WARNING, "No sound conversion available for " + inWaveFile.getName());
-				return;
-			}
-
-			convertedIn = AudioSystem.getAudioInputStream(dstAudioFormat, audioInputStream);
-
-			logger.info("Converting " + inWaveFile.getName() + " sound to 44.1 Khz / 16 bit");
-
-			WaveFileWriter writer = new WaveFileWriter();
-			writer.write(convertedIn, Type.WAVE, outWaveFile);
-
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
-		}
-
-		finally {
-
-			if (audioInputStream != null) {
-				try {
-					audioInputStream.close();
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
-				}
-			}
-
-			if (convertedIn != null) {
-				try {
-					convertedIn.close();
-				} catch (IOException e) {
-					logger.log(Level.SEVERE, "Error while converting sound file " + inWaveFile.getName(), e);
-				}
-			}
-		}*/
-	}
 }

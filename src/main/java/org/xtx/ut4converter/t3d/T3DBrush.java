@@ -169,8 +169,8 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 *
-	 * @param mapConverter
-	 * @param t3dClass
+	 * @param mapConverter Map converter
+	 * @param t3dClass Brush actor class that is being converted
 	 * @param actor Used if creating brush from another type of actor (like zoneinfo for postprocessvolume, ...)
 	 */
 	public T3DBrush(MapConverter mapConverter, String t3dClass, T3DActor actor) {
@@ -198,8 +198,6 @@ public class T3DBrush extends T3DVolume {
 	 */
 	boolean reverseVertexOrder = false;
 
-
-	boolean isSheetFlatHorizontallyBrush;
 
 	@Override
 	public boolean analyseT3DData(String line) {
@@ -342,8 +340,8 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 *
-	 * @param t3dBrushClass
-	 * @return
+	 * @param t3dBrushClass Unreal brush class
+	 * @return <code>true</code> if brush actor class is a zone volume
 	 */
 	private boolean isU1ZoneVolume(String t3dBrushClass) {
 
@@ -389,7 +387,7 @@ public class T3DBrush extends T3DVolume {
 
 	/**
 	 *
-	 * @return
+	 * @return <code>true</code> if it's valid writting
 	 */
 	@Override
 	public boolean isValidWriting() {
@@ -403,27 +401,6 @@ public class T3DBrush extends T3DVolume {
 		return super.isValidWriting();
 	}
 
-	/**
-	 * Tells if current brush is sheet brush: - one polygon - 4 vertices for
-	 * this polygon
-	 *
-	 * @return
-	 */
-	private boolean isSheetBrush() {
-		return polyList.size() == 1 && polyList.get(0).vertices.size() == 4;
-	}
-
-
-
-	private boolean isHorizontallyFlatBrush(){
-		for(final T3DPolygon p : polyList){
-			if(p.getVertices().stream().map(Vertex::getZ).distinct().count() > 1){
-				return false;
-			}
-		}
-
-		return true;
-	}
 
 	/**
 	 * Detect if this current brush is not supported by Unreal Engine 4. This
@@ -450,31 +427,6 @@ public class T3DBrush extends T3DVolume {
 	}
 
 	final double VERY_TINY_NUM = 0.001d;
-
-	/**
-	 * Return how many polygons are attached to this vertex.
-	 *
-	 * @param v
-	 *            Brush vertex
-	 * @return Number of polygons attached to this vertex.
-	 */
-	private int getPolyCountWithVertexCoordinate(Vertex v) {
-
-		int count = 0;
-
-		for (T3DPolygon poly : polyList) {
-
-			for (Vertex v2 : poly.vertices) {
-
-				if (Math.abs(v.getX() - v2.getX()) < VERY_TINY_NUM && Math.abs(v.getY() - v2.getY()) < VERY_TINY_NUM && Math.abs(v.getZ() - v2.getZ()) < VERY_TINY_NUM) {
-					count++;
-					break;
-				}
-			}
-		}
-
-		return count;
-	}
 
 	/**
      *
