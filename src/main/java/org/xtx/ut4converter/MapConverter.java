@@ -206,6 +206,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private boolean useUbClasses;
 
+	/**
+	 * If true, map converter is called not from ui (for batch tests)
+	 */
+	private boolean noUi;
+
 
 	/**
 	 * Prefered texture extractor for non Unreal 2 game
@@ -561,7 +566,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// t3d ever exported or directly converting from t3d file, then skip
 			// export of it
 			// and directly convert it
-			t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this);
+			t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this, noUi);
 			t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
 			updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
 			t3dLvlConvertor.readConvertAndWrite();
@@ -577,7 +582,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			updateMessage("All done!");
 			logger.log(Level.INFO, "Map was succesfully converted to " + getOutT3d().getAbsolutePath());
 
-			UIUtils.openExplorer(getOutPath().toFile());
+			if(!noUi) {
+				UIUtils.openExplorer(getOutPath().toFile());
+			}
 
 			showInstructions();
 
@@ -599,6 +606,18 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (logFileWriter != null) {
 				logFileWriter.close();
 			}
+		}
+	}
+
+	protected void updateMessage(String message) {
+		if(!noUi) {
+			super.updateMessage(message);
+		}
+	}
+
+	protected void updateProgress(long workDone, long max) {
+		if(!noUi) {
+			super.updateProgress((double) workDone, (double) max);
 		}
 	}
 
@@ -674,10 +693,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			});
 		}
 
-		final String wikiUrl = isTo(UnrealEngine.UE3) ? "https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT3":"https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT4";
-
 		// TODO cannot open the confirm dialog (not same javafx thread), try fix
-		UIUtils.openUrl(wikiUrl, false, null);
+		if(!noUi) {
+			final String wikiUrl = isTo(UnrealEngine.UE3) ? "https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT3":"https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT4";
+			UIUtils.openUrl(wikiUrl, false, null);
+		}
 	}
 
 
@@ -1538,5 +1558,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public Class<? extends UTPackageExtractor> getPreferedTextureExtractorClass() {
 		return preferedTextureExtractorClass;
+	}
+
+	public void setNoUi(boolean noUi) {
+		this.noUi = noUi;
 	}
 }

@@ -105,20 +105,26 @@ See license.txt file.
 ## External programs used
 These programs are being used during conversion process.
 
-| Library / Program                    | Description                      | Author           | Website                                         |
-|--------------------------------------|----------------------------------|------------------| ----------------------------------------------- |
-| Texture Toolkit<br/>(g16convert.exe) | Unreal terrain bitmap conversion | Alex Stewart     | http://www.foogod.com/UEdTexKit/                |
-| UModel  (umodel_64.exe)              | Unreal package extractor         | Konstantin Nosov | http://www.gildor.org/en/projects/umodel        |
-| SoundExchange (sox.exe)              | Sound wave conversion            | Multiple         | https://sox.sourceforge.net/                                             |
+| Library / Program                     | Description                                       | Author                                       | Website                                         |
+|---------------------------------------|---------------------------------------------------|----------------------------------------------| ----------------------------------------------- |
+| Texture Toolkit<br/>(g16convert.exe)  | Unreal terrain bitmap conversion                  | Alex Stewart                                 | http://www.foogod.com/UEdTexKit/                |
+| UModel  (umodel_64.exe)               | Unreal package extractor                          | Konstantin Nosov                             | http://www.gildor.org/en/projects/umodel        |
+| SoundExchange (sox.exe)               | Sound wave conversion                             | Multiple                                     | https://sox.sourceforge.net/                                             |
+| UTXAnalyser.exe / ExtractTextures.exe | Texture info / Texture extract<br/>(for Unreal 2) | Me / Modified code of UT Package Delphi Unit | https://www.acordero.org/projects/unreal-tournament-package-delphi-library/                                                                         |
 
 
 
 ---
 
 ## History
-- 1.1.X
+- 1.2.0 - DD/MM/2023
+  * Added support for Duke Nukem Forever (Experimental)
+  * u1/ut99->ut3: interpactors (movers) now collide_all by default
+  * u1/ut99->ut3: sheet brushes causing BSP holes are now converted into semi-solid brushes (will remove many bsp holes)
+  * ut99->ut3/ut4: fixed convertor crash when converting SpectatorCam (Assault maps)
   * dependencies: now umodel is embedded in program
   * all: better lightning radius
+  * ui: now opens wiki github page at end of conversion
   * ui: now program checks for updates at startup (can be desactivated in settings)
   * all: if actor filter is on and contains brush actor, the big additive brush will still be added
   

@@ -112,13 +112,14 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @param mc
 	 *            MapConverter options
 	 */
-	public T3DLevelConvertor(File originalT3d, File convertedT3d, MapConverter mc) {
+	public T3DLevelConvertor(File originalT3d, File convertedT3d, MapConverter mc, boolean noUi) {
 
 		this.inT3dFile = originalT3d;
 		this.outT3dFile = convertedT3d;
 		this.mapConverter = mc;
 		this.mapConverter.setT3dLvlConvertor(this);
 		this.logger = mc.getLogger();
+		this.noUi = noUi;
 
 		initialise();
 	}
@@ -193,15 +194,11 @@ public class T3DLevelConvertor extends Task<Object> {
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
 
 		// Read actor data from file
-		if(!noUi) {
-			updateMessage("Reading actors");
-		}
+		updateMessage("Reading actors");
 		readActors();
 
 		// Convert actors
-		if(!noUi) {
-			updateMessage("Converting actors");
-		}
+		updateMessage("Converting actors");
 
 		convertActors();
 
@@ -210,14 +207,22 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		// Write to file
-		if(!noUi) {
-			updateMessage("Writing actors");
-		}
+		updateMessage("Writing actors");
 		writeActors();
 
+		updateProgress(100, 100);
+		updateMessage("All done!");
+	}
+
+	protected void updateProgress(long workDone, long max) {
 		if(!noUi) {
-			updateProgress(100, 100);
-			updateMessage("All done!");
+			super.updateProgress(workDone, max);
+		}
+	}
+
+	protected void updateMessage(String message) {
+		if(!noUi) {
+			super.updateMessage(message);
 		}
 	}
 
@@ -277,9 +282,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			String buffer;
 
-			if(!noUi) {
-				updateProgress(0, convertedActors.size());
-			}
+			updateProgress(0, convertedActors.size());
 
 			long actorsWriten = 0;
 
@@ -310,9 +313,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					logger.log(Level.SEVERE, "Error while writting actor " + actor.getName() + ":", e);
 				}
 
-				if(!noUi) {
-					updateProgress(++actorsWriten, convertedActors.size());
-				}
+				updateProgress(++actorsWriten, convertedActors.size());
 			}
 
 			writeFooter();
@@ -332,9 +333,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 		int convertedActorsCount = 0;
 		long xx = 80 - MapConverter.PROGRESS_BEFORE_CONVERT;
-		if(!noUi) {
-			updateProgress(0, convertedActors.size());
-		}
+		updateProgress(0, convertedActors.size());
 
 		for (T3DActor uta : convertedActors) {
 			if (uta != null) {
@@ -343,9 +342,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					if (uta.isValidConverting()) {
 						// we might want to only re-scale map
 						if (uta.getMapConverter().getOutputGame() != uta.getMapConverter().getInputGame()) {
-							if(!noUi) {
-								updateMessage("Converting " + uta.name);
-							}
+							updateMessage("Converting " + uta.name);
 							uta.convert();
 						}
 						// rescale if needed
@@ -489,9 +486,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		// Actor End - We write converted data to t3d file
 		else if (isEndActor(line)) {
 
-			if(!noUi) {
-				updateProgress(actorsReadCount, actorCount);
-			}
+			updateProgress(actorsReadCount, actorCount);
 			// Reset
 			banalyseline = false;
 			uta = null;

@@ -20,8 +20,17 @@ public class UCCExporterTest {
      * @throws Exception
      */
     @Test
-    public void testExportAllU1Levels() throws Exception {
+    public void testExportAllU1LevelsToUT4() throws Exception {
         exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT4);
+    }
+
+    /**
+     * Test convert all U1 maps to UT3
+     * @throws Exception
+     */
+    @Test
+    public void testExportAllU1LevelsToUT3() throws Exception {
+        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT3);
     }
 
     /**
@@ -74,6 +83,11 @@ public class UCCExporterTest {
         exportAllUTXLevels(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
     }
 
+    @Test
+    public void testExportAllDNFLevels() throws Exception {
+        exportAllUTXLevels(UTGames.UTGame.DNF, UTGames.UTGame.UT3);
+    }
+
     private void exportAllUTXLevels(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws Exception {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
 
@@ -82,6 +96,8 @@ public class UCCExporterTest {
         final File mapFolder = UTGames.getMapsFolder(ut2004BasePath, mc.getInputGame());
 
         final Collection<File> utxMapFiles = FileUtils.listFiles(mapFolder, new String[]{inputGame.mapExtension}, true);
+
+        FileUtils.deleteDirectory(new File(T3D_EXPORT_FOLDER));
         final File exportFolderBase = new File(T3D_EXPORT_FOLDER + "\\t3d\\" + inputGame.shortName);
 
         if (exportFolderBase.exists() || exportFolderBase.mkdirs()) {

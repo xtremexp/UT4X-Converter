@@ -37,7 +37,7 @@ public class T3DTestUtils {
 
         mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
 
-        mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc));
+        mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
 
         return mc;
     }

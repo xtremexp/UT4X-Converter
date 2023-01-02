@@ -307,11 +307,7 @@ public class UTGames {
 				case SCRIPT:
 					return ".u";
 				case LEVEL:
-					if (game == UTGames.UTGame.DNF) {
-						return ".dnf";
-					} else {
-						return ".unr";
-					}
+					return "." + game.mapExtension;
 				default:
 			}
 
