@@ -24,6 +24,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Some core class that allows to know where program is running (path)
@@ -230,17 +232,24 @@ public class Installation {
 		return (OS.contains("nux"));
 	}
 
+
+	public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
+		return executeProcess(command, logLines, null, null);
+	}
+
 	/**
 	 * 
 	 * @param command
 	 *            Command line / path to exec file
 	 * @param logLines
 	 *            Store program lofs
+	 * @param logger if not null will directly log output of process to logger
+	 * @param logLevel Log level
 	 * @return Program exit code (0 if everything went fine)
 	 * @throws InterruptedException Exception thrown
 	 * @throws IOException Exception thrown
 	 */
-	public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
+	public static synchronized int executeProcess(String command, List<String> logLines, Logger logger, Level logLevel) throws InterruptedException, IOException {
 
 		Runtime run;
 		Process pp = null;
@@ -254,6 +263,9 @@ public class Installation {
 				String log;
 
 				while ((log = in.readLine()) != null) {
+					if (logger != null) {
+						logger.log(logLevel, log);
+					}
 					logLines.add(log);
 				}
 			}

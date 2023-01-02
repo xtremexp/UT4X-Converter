@@ -57,7 +57,7 @@ public class UPackage {
 	 *            Type of package (sounds, textures, ...)
 	 * @param game
 	 *            UT game this package belong to
-	 * @param uRessource
+	 * @param uRessource Unreal package resource to add with this new unreal package
 	 */
 	public UPackage(String name, Type type, UTGames.UTGame game, UPackageRessource uRessource) {
 		this.name = name;
@@ -82,7 +82,7 @@ public class UPackage {
 	 * 
 	 * @param mapConverter
 	 *            Map converter
-	 * @return
+	 * @return Full file path of this unreal package
 	 */
 	public File getFileContainer(final MapConverter mapConverter) {
 
@@ -98,7 +98,7 @@ public class UPackage {
 		} else {
 
 			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-				this.file = new File(gamePath.getAbsolutePath() + File.separator + getFileFolder() + File.separator + getName() + getFileExtension());
+				this.file = new File(gamePath.getAbsolutePath() + File.separator + UTGames.getPackageBaseFolderByResourceType(type) + File.separator + getName() + UTGames.getPackageFileExtensionByGameAndType(game, type));
 
 				// Temp hack sometimes textures are embedded not only in .utx
 				// files but .u files
@@ -209,71 +209,13 @@ public class UPackage {
 	 * Get ressources used by the package. The ressource list is built on
 	 * extracting ressource packages with unreal package extractor
 	 * 
-	 * @return List of ressources of the package
+	 * @return Set of ressources of the package
 	 */
 	public Set<UPackageRessource> getRessources() {
 		return ressources;
 	}
 
-	/**
-	 * Return path where unreal packages are stored depending on type of
-	 * ressource
-	 * 
-	 * @return Relative folder from UT path where the unreal package file should
-	 *         be
-	 */
-	private String getFileFolder() {
 
-		if (null != type)
-			switch (type) {
-			case MUSIC:
-				return "Music";
-			case SOUND:
-				return "Sounds";
-			case TEXTURE:
-				return "Textures";
-			case STATICMESH:
-				return "StaticMeshes";
-			case LEVEL:
-				return "Maps";
-			case SCRIPT:
-				return "System";
-			default:
-			}
-
-		return null;
-	}
-
-	/**
-	 * Return relative path
-	 * 
-	 * @return
-	 */
-	private String getFileExtension() {
-
-		if (null != type)
-			switch (type) {
-			case MUSIC:
-				if (game.engine == UnrealEngine.UE1) {
-					return ".umx";
-				} else if (game.engine == UnrealEngine.UE2) {
-					return ".ogg";
-				}
-			case SOUND:
-				return ".uax";
-			case TEXTURE:
-				return ".utx";
-			case STATICMESH:
-				return ".usx";
-			case SCRIPT:
-				return ".u";
-			case LEVEL:
-				return ".unr";
-			default:
-			}
-
-		return null;
-	}
 
 	public boolean isExported() {
 		return exported;

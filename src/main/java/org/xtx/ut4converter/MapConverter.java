@@ -294,11 +294,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		initialise();
 	}
 
-	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap) throws IOException {
-		this.inputGame = inputGame;
-		this.outputGame = outputGame;
-		initialise();
-	}
 
 	/**
 	 * Indicates that gametype is team based
@@ -309,10 +304,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return isTeamGameType;
 	}
 
-	/**
-	 *
-	 * @param isTeamGameType
-	 */
+
 	public void setIsTeamGameType(Boolean isTeamGameType) {
 		this.isTeamGameType = isTeamGameType;
 	}
@@ -381,8 +373,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 
 
-		//try {
-
 			tm = new T3DMatch(this);
 
 			if (inMap != null) {
@@ -402,26 +392,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			supportedActorClasses = new SupportedClasses(this);
 
-			// Unreal Text map level files (.t3d)
-			// do not export full info about textures on polygon but only name
-			// (not package)
-			// E.g: "Begin Polygon Texture=Ebwl Link=1""
-			// so need to load the name to package db
-			// not for Unreal 1 no need that since latest Unreal 1 patch
-			// from oldunreal.com got better version of unreal engine with full
-			// info export
-			// E.G: "Begin Polygon Texture=Skaarj.Wall.Ebwl Link=1"
-			// TODO test if Unreal 1 path set try export t3d level with Unreal 1
-			// for ut99 map
-			// so we have always package info at all circumstances
-			if (inputGame == UTGame.UT99) {
-				loadNameToPackage();
-			}
-
 			userConfig = UserConfig.load();
-		//} catch (IOException ex) {
-		//	Logger.getLogger(MapConverter.class.getName()).log(Level.SEVERE, null, ex);
-		//}
 
 		// init available extractors
 		packageExtractors = new ArrayList<>();
@@ -561,6 +532,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			updateProgress(0, 100);
+
+			if (inputGame == UTGame.UT99 || inputGame == UTGame.DNF) {
+				loadTexNameDbFile();
+				updateProgress(5, 100);
+			}
 
 			if (isFrom(UnrealEngine.UE3)) {
 				initUe3PackageFilesCache();
@@ -1164,22 +1140,41 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return new File(getMapConvertFolder() + File.separator + "Temp");
 	}
 
-	List<TextureNameToPackageGenerator.TextureInfo> ut99TexInfo;
+	List<TextureNameToPackageGenerator.TextureInfo> gameTextureDb;
 
-	private void loadNameToPackage() throws IOException {
+	/**
+	 * Loads the texture db file to get package name from texture name
+	 */
+	private void loadTexNameDbFile()  {
 
-		File dbFile = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf" + File.separator + TextureNameToPackageGenerator.UT99_TEXNAME_TO_PACKAGE_FILENAME);
+		try {
+			File confFolder = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf");
 
-		if (!dbFile.exists()) {
-			dbFile = new File(Installation.getProgramFolder() + File.separator + "conf" + File.separator + TextureNameToPackageGenerator.UT99_TEXNAME_TO_PACKAGE_FILENAME);
-		}
+			if (!confFolder.exists()) {
+				confFolder = new File(Installation.getProgramFolder() + File.separator + "conf");
+			}
 
-		if (dbFile.exists()) {
+			File dbFile = new File(confFolder + File.separator + TextureNameToPackageGenerator.getBaseFileName(inputGame));
+
+			if (!dbFile.exists()) {
+				dbFile = new File(confFolder + File.separator + TextureNameToPackageGenerator.getBaseFileName(inputGame));
+			}
+
 			final ObjectMapper om = new ObjectMapper();
-			ut99TexInfo = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
 
-		} else {
-			logger.log(Level.WARNING, "Texture db file " + dbFile + " not found !");
+			if (dbFile.exists()) {
+				gameTextureDb = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
+			}
+			// creates .json if it does not exists yet
+			else {
+				logger.log(Level.INFO, "Generating " + inputGame.shortName + " texture db file " + dbFile.getName());
+				TextureNameToPackageGenerator.GenerateTexNameToPackageFile(inputGame, dbFile);
+				gameTextureDb = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
+			}
+		} catch (IOException e){
+			logger.log(Level.SEVERE, "Error while reading or writing json file.", e);
+		} catch (InterruptedException e){
+			logger.log(Level.SEVERE, "Error while analysing textures from " + inputGame.name, e);
 		}
 	}
 
@@ -1245,10 +1240,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (split.length <= 1) {
 
 				// for ut99 polygon data does not give package info
-				if (type == T3DRessource.Type.TEXTURE && inputGame == UTGame.UT99) {
+				if (type == T3DRessource.Type.TEXTURE && (inputGame == UTGame.UT99 || inputGame == UTGame.DNF) && gameTextureDb != null) {
 					String name = split[0];
 
-					final TextureNameToPackageGenerator.TextureInfo ti = ut99TexInfo.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+					final TextureNameToPackageGenerator.TextureInfo ti = gameTextureDb.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 
 					if (ti != null) {
 						packageName = ti.getPackageName();
@@ -1258,6 +1253,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						} else {
 							fullRessourceName = packageName + "." + name;
 						}
+
+						System.out.println(fullRessourceName);
 					} else {
 						fullRessourceName = name;
 					}

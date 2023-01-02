@@ -39,7 +39,11 @@ public class T3DLight extends T3DSound {
 	 * Light Type UE 1 / 2
 	 */
 	public enum UE12_LightType {
-		LT_None, LT_Steady, LT_Pulse, LT_Blink, LT_Flicker, LT_Strobe, LT_BackdropLight, LT_SubtlePulse, LT_TexturePaletteLoop, LT_TexturePaletteOnce
+		LT_None, LT_Steady, LT_Pulse, LT_Blink, LT_Flicker, LT_Strobe, LT_BackdropLight, LT_SubtlePulse, LT_TexturePaletteLoop, LT_TexturePaletteOnce,
+		/**
+		 * Duke Nukem Forever
+		 */
+		LT_StringLight
 	}
 
 	/**

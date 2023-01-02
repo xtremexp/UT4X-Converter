@@ -53,7 +53,15 @@ public class T3DTriggerVolume extends T3DBrush {
 		/**
 		 * Unreal 2 - Trigger activated by using it
 		 */
-		TT_Use
+		TT_Use,
+		/**
+		 * Duke Nukem Forever
+		 */
+		TT_PlayerProximityAndLookUse,
+		/**
+		 * Duke Nukem Forever
+		 */
+		TT_PlayerProximityAndUse
 	}
 
 	/**

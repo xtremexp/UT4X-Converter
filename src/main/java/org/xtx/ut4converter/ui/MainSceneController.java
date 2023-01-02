@@ -340,6 +340,16 @@ public class MainSceneController implements Initializable {
 		convertUtxMap(UTGame.U2, UTGame.UT4);
 	}
 
+	@FXML
+	private void convertDNFToUT3Map() {
+		convertUtxMap(UTGame.DNF, UTGame.UT3);
+	}
+
+	@FXML
+	private void convertDNFToUT4Map() {
+		convertUtxMap(UTGame.DNF, UTGame.UT4);
+	}
+
 	/**
 	 * Allow extract textures from Unreal 2 package
 	 */

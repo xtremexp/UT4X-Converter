@@ -244,7 +244,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			return new File(binariesFolder + File.separator + UTGames.T3D_LEVEL_NAME_UE3);
 		}
 		else {
-			return !files.isEmpty() ? files.iterator().next() : null;
+			return (files != null&& !files.isEmpty()) ? files.iterator().next() : null;
 		}
 	}
 
@@ -328,7 +328,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		UTGames.UnrealEngine inEngine = mapConverter.getInputGame().engine;
 
 		if (inEngine.version <= UTGames.UnrealEngine.UE2.version) {
-			return uccExporterPath.getName() + " batchexport  " + fileName + " " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
+			return uccExporterPath.getName() + " batchexport  \"" + fileName + "\" " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
 		}
 
 		else {
@@ -341,8 +341,8 @@ public final class UCCExporter extends UTPackageExtractor {
 	 * @param unrealPackage Unreal package to export
 	 * @return Exported file for the ressource. If null means that ucc exported
 	 *         was not able to export the ressource.
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @throws IOException Error while exporting package
+	 * @throws InterruptedException Error while reading package
 	 */
 	private Set<File> exportPackage(UPackage unrealPackage) throws IOException, InterruptedException {
 
@@ -424,7 +424,7 @@ public final class UCCExporter extends UTPackageExtractor {
 
 					File exportedFile = new File(logLine.split(" to ")[1]);
 					exportedFiles.add(exportedFile);
-					String ressourceName = logLine.split("\\ ")[2];
+					String ressourceName = logLine.split(" ")[2];
 
 					UPackageRessource uRessource = unrealPackage.findRessource(ressourceName);
 
