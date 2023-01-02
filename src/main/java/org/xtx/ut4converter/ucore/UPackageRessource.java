@@ -13,7 +13,9 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.psk.Material;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -616,8 +618,12 @@ public class UPackageRessource {
 		}
 
 		// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
-		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && type == Type.SOUND) {
-			return true;
+		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
+			if (type == Type.SOUND) {
+				return true;
+			} else if (type == Type.TEXTURE && this.exportInfo.getExportedFiles().stream().anyMatch(f -> f.getName().endsWith(".pcx"))) {
+				return true;
+			}
 		}
 
 		// ucc exporter exports malformed .dds textures ...
@@ -633,24 +639,30 @@ public class UPackageRessource {
     }
 
 	/**
-	 * Convert ressource to good format if needed
+	 * Convert ressource to good format if needed for UE3 or UE4
 	 * 
 	 * @param logger Logger
 	 * @return Sound file converted
 	 */
 	public File convert(Logger logger) {
 
-		if (type == Type.SOUND) {
-			SoundConverter scs = new SoundConverter(logger);
-
-			try {
+		try {
+			if (type == Type.SOUND) {
+				SoundConverter scs = new SoundConverter(logger);
 				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
+			// have to convert files to .bmp, because sometimes UT3 fails to import .pcx
+			else if (type == Type.TEXTURE) {
+				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".bmp");
+				final BufferedImage img = ImageIO.read(exportInfo.getExportedFiles().get(0));
+				ImageIO.write(img, "bmp", tempFile);
+				return tempFile;
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			mapConverter.getLogger().log(Level.SEVERE, null, ex);
 		}
 		// TODO handle type MESH
 
