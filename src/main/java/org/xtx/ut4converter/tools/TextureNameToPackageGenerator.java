@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.t3d.T3DRessource;
@@ -118,7 +119,8 @@ public class TextureNameToPackageGenerator {
 
         // filters texture or system files that can contains texture resources
         final String texFileExtension = UTGames.getPackageFileExtensionByGameAndType(ue1ue2Game, T3DRessource.Type.TEXTURE);
-        final FilenameFilter fn = (file, s) -> file != null && (s.endsWith(texFileExtension) || s.endsWith(".u"));
+        // equalsIgnoreCase because DukeNukemForever have .dtx and .Dtx files for textures ...
+        final FilenameFilter fn = (file, s) -> file != null && (("."+FilenameUtils.getExtension(s)).equalsIgnoreCase(texFileExtension) || s.endsWith(".u"));
 
         final List<TextureInfo> texInfos = new ArrayList<>();
         analyseTextures(Objects.requireNonNull(texFolder.listFiles(fn)), texInfos);
