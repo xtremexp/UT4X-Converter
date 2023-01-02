@@ -518,6 +518,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			logger.log(Level.INFO, "Writting log file " + logFile);
 
 			logger.log(Level.INFO, "*****************************************");
+			System.out.println("Converting " + inMap.getAbsolutePath());
 			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
 			logger.log(Level.INFO, "Scale Factor: " + scale);
 			logger.log(Level.WARNING, "Shader materials are not yet converted");
@@ -1007,26 +1008,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return wasConverted;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public SupportedClasses getSupportedActorClasses() {
 		return supportedActorClasses;
 	}
 
-	/**
-	 *
-	 * @return
-	 */
 	public T3DLevelConvertor getT3dLvlConvertor() {
 		return t3dLvlConvertor;
 	}
 
-	/**
-	 *
-	 * @param t3dLvlConvertor
-	 */
 	public void setT3dLvlConvertor(T3DLevelConvertor t3dLvlConvertor) {
 		this.t3dLvlConvertor = t3dLvlConvertor;
 	}
@@ -1038,7 +1027,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Current user configuration such as program path for UT99 and so on ...
 	 *
-	 * @return
+	 * @return User configuration
 	 */
 	public UserConfig getUserConfig() {
 		return userConfig;
@@ -1116,7 +1105,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * <UT4ConverterFolder>/Converted
 	 *
-	 * @return
+	 * @return <UT4ConverterFolder>/Converted
 	 */
 	private static File getBaseConvertFolder() {
 		return new File(Installation.getDocumentProgramFolder() + File.separator + CONV_PATH);
@@ -1125,7 +1114,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * <UT4ConverterFolder>/Converted/<MapName>
 	 *
-	 * @return
+	 * @return <UT4ConverterFolder>/Converted/<MapName>
 	 */
 	public File getMapConvertFolder() {
 		return new File(getBaseConvertFolder() + File.separator + getInMap().getName().split("\\.")[0]);
@@ -1134,7 +1123,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * <UT4ConverterFolder>/Converted/<MapName>/Temp
 	 *
-	 * @return
+	 * @return <UT4ConverterFolder>/Converted/<MapName>/Temp
 	 */
 	public File getTempExportFolder() {
 		return new File(getMapConvertFolder() + File.separator + "Temp");
@@ -1220,7 +1209,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @param packageName
 	 *            Package Name (e.g: "AmbModern"). Null if don't have this info
 	 *            yet
-	 * @return
+	 * @return Unreal package ressource
 	 */
 	public UPackageRessource getUPackageRessource(String fullRessourceName, String packageName, T3DRessource.Type type) {
 
@@ -1254,7 +1243,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 							fullRessourceName = packageName + "." + name;
 						}
 
-						System.out.println(fullRessourceName);
 					} else {
 						fullRessourceName = name;
 					}

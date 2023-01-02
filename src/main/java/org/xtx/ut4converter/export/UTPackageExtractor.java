@@ -13,6 +13,7 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -83,7 +84,7 @@ public abstract class UTPackageExtractor {
 	 * @throws java.lang.Exception
 	 *             If anythings goes wrong when exporting this ressource
 	 */
-	public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception;
+	public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException;
 
 	public abstract File getExporterPath();
 

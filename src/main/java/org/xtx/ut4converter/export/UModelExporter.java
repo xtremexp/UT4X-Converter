@@ -26,7 +26,7 @@ import java.util.logging.Level;
 /**
  *
  * Interface to umodel.exe program by Konstantin Nosov
- * http://www.gildor.org/en/projects/umodel Not embedding umodel.exe binary to
+ * <a href="http://www.gildor.org/en/projects/umodel">...</a> Not embedding umodel.exe binary to
  * project since license of it is "undetermined"
  *
  * @author XtremeXp
@@ -105,7 +105,7 @@ public class UModelExporter extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || "null".equals(ressource.getUnrealPackage().getName()) || (!forceExport && ressource.getUnrealPackage().isExported())) {
@@ -127,13 +127,11 @@ public class UModelExporter extends UTPackageExtractor {
 		logger.log(Level.INFO, "Exporting " + fileContainer.getName() + " with " + getName());
 		logger.log(Level.FINE, command);
 
-		Installation.executeProcess(command, logLines);
+		int exitCode = Installation.executeProcess(command, logLines);
 
-		final String failedLoadPackage = "UModel: bad command line: failed to load provided packages";
-
-		// UMODEL was not able to load package
-		// we try using the basic ucc exporter one
-		if(logLines.contains(failedLoadPackage)){
+		// UModel could not load or extract package correctly
+		// try the generic ucc exporter
+		if (exitCode != 0) {
 			final UCCExporter uccExporter = new UCCExporter(this.mapConverter);
 			logger.log(Level.WARNING, "Failed to load " + fileContainer.getName() + " with " + getName() + " testing with " + uccExporter.getName());
 			return uccExporter.extract(ressource, forceExport, perfectMatchOnly);

@@ -368,7 +368,7 @@ public class T3DBrush extends T3DVolume {
 
 		boolean valid = true;
 
-		if (mapConverter.isTo(UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE3) || mapConverter.isTo(UnrealEngine.UE4)) {
 			// do not convert invisible brushes such as portals and so on
 			if (BrushPolyflag.hasInvisibleFlag(polyflags)) {
 				//logger.warning("Skipped invisible brush " + name);
@@ -410,20 +410,10 @@ public class T3DBrush extends T3DVolume {
 	 *
 	 * @return <code>true</code> If this brush is a sheet brush
 	 */
-	protected boolean isUnsupportedUE4Brush() {
+	protected boolean isUnsupportedUE3UE4Brush() {
 
 		return polyList.size() <= 4 && !this.polyflags.contains(BrushPolyflag.SEMI_SOLID) && !this.polyflags.contains(BrushPolyflag.NON_SOLID);
-		// FIXME all sheet brushes are well deleted but some (a very few)
-		// normal brushes are detected as sheet ones (eg.: stairs / test
-		// AS-HighSpeed)
-		// so they are not being converted.
-		// so the test is not reliable yet
-		// for each vertices we check that it is linked to 3 polygons
-		/*
-		 * for(T3DPolygon poly : polyList){ for(Vector3d v : poly.vertices){
-		 * if(getPolyCountWithVertexCoordinate(v) < 3){ return true; } } }
-		 * return false;
-		 */
+		// FIXME all sheet brushes are well detected but some not (a very few)
 	}
 
 	final double VERY_TINY_NUM = 0.001d;
@@ -657,13 +647,13 @@ public class T3DBrush extends T3DVolume {
 			p.convert();
 		}
 
-		if (mapConverter.isTo(UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 
 			// for solid sheet brushes force them to be non-solid
 			// so it won't cause BSP holes and will still be visible
 			// note semi-solid flat brushes still sometimes creates BSP holes
 			// that's why using non solid
-			if (isUnsupportedUE4Brush() && children.isEmpty()) {
+			if (isUnsupportedUE3UE4Brush() && children.isEmpty()) {
 
 				this.polyflags.clear();
 				this.polyflags.add(BrushPolyflag.SEMI_SOLID);

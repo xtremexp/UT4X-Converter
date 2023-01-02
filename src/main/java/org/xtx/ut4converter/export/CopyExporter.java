@@ -10,6 +10,7 @@ import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class CopyExporter extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException {
 
 		File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
 		File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
