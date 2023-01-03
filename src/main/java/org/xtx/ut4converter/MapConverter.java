@@ -1337,7 +1337,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return t3dLvlConvertor;
 	}
 
-	public void setScale(float scale) {
+	public void setScale(Double scale) {
 		this.scale = scale;
 	}
 

@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -111,27 +112,27 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
 	 */
-	public static final Float DEFAULT_SCALE_FACTOR_UE1_UE4 = 2.5f;
+	public static final Double DEFAULT_SCALE_FACTOR_UE1_UE4 = 2.5d;
 
 	/**
 	 * Default scale when converting Unreal 2 map to UT4
 	 */
-	public static final Float DEFAULT_SCALE_UNREAL2_UE4 = 2.5f;
+	public static final Double DEFAULT_SCALE_UNREAL2_UE4 = 2.5d;
 
 	/**
 	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
 	 */
-	public static final Float DEFAULT_SCALE_FACTOR_UE2_UE4 = 2.2f;
+	public static final Double DEFAULT_SCALE_FACTOR_UE2_UE4 = 2.2d;
 
 	/**
 	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
 	 */
-	static final Float DEFAULT_SCALE_FACTOR_UE3_UE4 = 2.2f;
+	static final Double DEFAULT_SCALE_FACTOR_UE3_UE4 = 2.2d;
 
 	@FXML
 	private ComboBox<Integer> lightMapResolutionList;
 	@FXML
-	private ComboBox<Float> scaleFactorList;
+	private ComboBox<Double> scaleFactorList;
 	@FXML
 	private ComboBox<Float> lightningBrightnessFactor;
 	@FXML
@@ -164,6 +165,26 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+
+		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 3., 3.125, 3.5, 4., 4.5, 5.);
+		scaleFactorList.getItems().sort(Comparator.naturalOrder());
+		scaleFactorList.setConverter(new StringConverter<>() {
+
+			@Override
+			public String toString(Double object) {
+				if (object == null) return null;
+				return object.toString();
+			}
+
+			@Override
+			public Double fromString(String string) {
+				if (string != null) {
+					return Double.parseDouble(string);
+				} else {
+					return null;
+				}
+			}
+		});
 
 		lightningBrightnessFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
 		lightningBrightnessFactor.getSelectionModel().select(2); //1
@@ -249,7 +270,7 @@ public class ConversionSettingsController implements Initializable {
 			ut4BaseReferencePath.setVisible(false);
 			ut4BaseReferencePathLbl.setVisible(false);
 			ut4BaseReferencePathBtn.setVisible(false);
-			scaleFactorList.getSelectionModel().select(1.25f);
+			scaleFactorList.getSelectionModel().select(1.25d);
 			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}
 
@@ -565,7 +586,8 @@ public class ConversionSettingsController implements Initializable {
 		}
 	}
 
-	public void onScaleChange(KeyEvent keyEvent) {
-		System.out.println("HELLO");
+	public static void main(String[] args){
+		float x = Float.parseFloat("1.22");
+		System.out.println(x);
 	}
 }
