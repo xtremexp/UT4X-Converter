@@ -264,7 +264,7 @@
 										<argument>${project.build.directory}/mods</argument>
 
 										<argument>--add-modules</argument>
-										<argument>java.base,java.logging,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml</argument>
+										<argument>java.base,java.logging,java.desktop,java.xml,jdk.unsupported,javafx.base,javafx.graphics,javafx.controls,javafx.fxml,java.net.http</argument>
 
 										<argument>--about-url</argument>
 										<argument>https://github.com/xtremexp/UT4X-Converter</argument>
