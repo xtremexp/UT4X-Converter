@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.ucore.ue2;
 
 import org.xtx.ut4converter.t3d.iface.T3D;
-import org.xtx.ut4converter.ucore.UPackageRessource;
 
 /**
  *

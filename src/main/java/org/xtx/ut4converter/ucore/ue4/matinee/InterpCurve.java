@@ -5,8 +5,6 @@ import org.xtx.ut4converter.t3d.T3DObject;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
-import javax.vecmath.Vector3d;
-import java.util.ArrayList;
 import java.util.List;
 
 public class InterpCurve extends T3DObject implements T3D {

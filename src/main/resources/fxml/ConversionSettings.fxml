@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.collections.*?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.*?>
@@ -126,32 +126,10 @@
 
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="1">Lightning Brightness Factor:</Label>
-                    <ComboBox fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="0.6" />
-                                <String fx:value="0.8" />
-                                <String fx:value="1" />
-                                <String fx:value="1.2" />
-                                <String fx:value="1.5" />
-                                <String fx:value="2" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
+                    <ComboBox fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="2">Sound Volume Factor:</Label>
-                    <ComboBox fx:id="soundVolumeFactor" promptText="changes volume of all sounds of map" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="0.6" />
-                                <String fx:value="0.8" />
-                                <String fx:value="1" />
-                                <String fx:value="1.2" />
-                                <String fx:value="1.5" />
-                                <String fx:value="2" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
+                    <ComboBox fx:id="soundVolumeFactor" promptText="changes volume of all sounds of map" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="3">Restrict conversion to these actor classes:</Label>
                     <TextField fx:id="classesNameFilter" prefWidth="350.0" promptText="Restrict class conversion (e.g: 'Brush;PlayerStart;DefensePoint')" GridPane.columnIndex="1" GridPane.rowIndex="3" />

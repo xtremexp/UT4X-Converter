@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -35,6 +34,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -133,9 +133,9 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private ComboBox<Float> scaleFactorList;
 	@FXML
-	private ComboBox<Integer> lightningBrightnessFactor;
+	private ComboBox<Float> lightningBrightnessFactor;
 	@FXML
-	private ComboBox<Integer> soundVolumeFactor;
+	private ComboBox<Float> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
 	@FXML
@@ -165,10 +165,16 @@ public class ConversionSettingsController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
-		lightningBrightnessFactor.getSelectionModel().select(1);
-		lightMapResolutionList.getItems().addAll(16,32,64,128,256,512,1024,2048,4096);
+		lightningBrightnessFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
+		lightningBrightnessFactor.getSelectionModel().select(2); //1
+
+		lightMapResolutionList.getItems().addAll(16,32,DEFAULT_LIGHTMAP_RESOLUTION_UE3,128,256,512,1024,2048,4096);
+		lightMapResolutionList.getItems().sort(Comparator.naturalOrder());
 		lightMapResolutionList.getSelectionModel().select(lightMapResolutionList.getItems().indexOf(DEFAULT_LIGHTMAP_RESOLUTION_UE3));
-		soundVolumeFactor.getSelectionModel().select(1);
+
+		soundVolumeFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
+		soundVolumeFactor.getSelectionModel().select(2f);
+
 		texExtractorChoiceBox.getSelectionModel().select("umodel");
 	}
 

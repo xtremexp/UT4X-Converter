@@ -1,7 +1,5 @@
 package org.xtx.ut4converter.tools.psk;
 
-import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

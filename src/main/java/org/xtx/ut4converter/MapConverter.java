@@ -161,13 +161,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Changes sound volume of sound actors. For exemple, if soundVolumeRatio <
 	 * 100%, volume will be decreased
 	 */
-	public Integer soundVolumeFactor;
+	public Float soundVolumeFactor;
 
 	/**
 	 * Changes sound volume of sound actors. For exemple, if soundVolumeRatio <
 	 * 100%, volume will be decreased
 	 */
-	public Integer brightnessFactor;
+	public Float brightnessFactor;
 
 	/**
 	 * If <code>true</code> staticmeshes of the map will be exported and

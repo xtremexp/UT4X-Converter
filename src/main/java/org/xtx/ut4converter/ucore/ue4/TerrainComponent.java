@@ -2,7 +2,6 @@ package org.xtx.ut4converter.ucore.ue4;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DObject;
-import org.xtx.ut4converter.t3d.T3DUE4Terrain;
 import org.xtx.ut4converter.t3d.iface.T3D;
 
 import java.util.LinkedList;

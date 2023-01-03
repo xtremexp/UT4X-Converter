@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.xtx.ut4converter.export.UCCExporterTest.T3D_EXPORT_FOLDER;
 

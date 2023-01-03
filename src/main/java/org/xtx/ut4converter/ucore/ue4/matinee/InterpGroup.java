@@ -6,7 +6,6 @@ import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.tools.RGBColor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class InterpGroup extends T3DObject implements T3D {
