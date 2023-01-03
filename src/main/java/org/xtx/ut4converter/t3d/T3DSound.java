@@ -361,7 +361,7 @@ public class T3DSound extends T3DActor {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		soundRadius *= newScale;
 		T3DUtils.scale(attenuation.attenuationShapeExtents, newScale);

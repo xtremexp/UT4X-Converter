@@ -10,8 +10,9 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DASCinematicCamera extends T3DActor {
 
-	public T3DASCinematicCamera(MapConverter mc) {
+	public T3DASCinematicCamera(MapConverter mc, String originalClass) {
 		super(mc, "UTASCinematicCamera_C");
+		this.t3dOriginClass = originalClass;
 	}
 
 

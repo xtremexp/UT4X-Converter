@@ -25,9 +25,9 @@ public class T3DTestUtils {
         final MapConverter mc = new MapConverter(inputGame, outputGame);
 
         if (inputGame == UTGames.UTGame.U2) {
-            mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4));
+            mc.setScale(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4);
         } else {
-            mc.setScale(Double.parseDouble(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4));
+            mc.setScale(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4);
         }
 
         final UserConfig uc = loadUserConfig();
@@ -37,7 +37,7 @@ public class T3DTestUtils {
 
         mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
 
-        mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc));
+        mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
 
         return mc;
     }

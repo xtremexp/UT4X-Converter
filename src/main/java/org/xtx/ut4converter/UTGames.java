@@ -5,6 +5,7 @@
 
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.SystemUtil;
 
 import java.io.File;
@@ -134,9 +135,13 @@ public class UTGames {
 		UDK("Unreal Development Kit", "UDK", UnrealEngine.UE3, "udk"),
 
 		/**
-         *
+         * Deus Ex (UNTESTED)
          */
-		DEUSEX("Deux Ex", "DE", UnrealEngine.UE2, "un2");
+		DEUSEX("Deux Ex", "DE", UnrealEngine.UE2, "un2"),
+		/**
+		 * Duke Nukem Forever
+		 */
+		DNF("Duke Nukem Forever", "DNF", UnrealEngine.UE1, "dnf");
 
 		/**
 		 * Generic name of UT game
@@ -144,7 +149,7 @@ public class UTGames {
 		public final String name;
 
 		/**
-		 * Short name of UT name
+		 * Short name of the game (e.g: UT99)
 		 */
 		public final String shortName;
 
@@ -265,4 +270,82 @@ public class UTGames {
 		}
 	}
 
+	/**
+	 * UE1/UE2 only
+	 * Returns file extension of this package depending on its type
+	 *
+	 * @return Extension of resource
+	 */
+	public static String getPackageFileExtensionByGameAndType(final UTGame game, final T3DRessource.Type type) {
+
+		if (null != type)
+			switch (type) {
+				case MUSIC:
+					if (game == UTGames.UTGame.DNF) {
+						return ".mp3";
+					} else {
+						if (game.engine == UnrealEngine.UE1) {
+							return ".umx";
+						} else if (game.engine == UnrealEngine.UE2) {
+							return ".ogg";
+						}
+					}
+				case SOUND:
+					if (game == UTGames.UTGame.DNF) {
+						return ".dfx";
+					} else {
+						return ".uax";
+					}
+				case TEXTURE:
+					if (game == UTGames.UTGame.DNF) {
+						return ".dtx";
+					} else {
+						return ".utx";
+					}
+				case STATICMESH:
+					return ".usx";
+				case SCRIPT:
+					return ".u";
+				case LEVEL:
+					return "." + game.mapExtension;
+				default:
+			}
+
+		return null;
+	}
+
+	/**
+	 * Return path where unreal packages are stored depending on type of
+	 * ressource
+	 *
+	 * @return Relative folder from UT path where the unreal package file should
+	 *         be
+	 */
+	public static String getPackageBaseFolderByResourceType(T3DRessource.Type type){
+		if (null != type)
+			switch (type) {
+				case MUSIC -> {
+					return "Music";
+				}
+				case SOUND -> {
+					return "Sounds";
+				}
+				case TEXTURE -> {
+					return "Textures";
+				}
+				case STATICMESH -> {
+					return "StaticMeshes";
+				}
+				case LEVEL -> {
+					return "Maps";
+				}
+				case SCRIPT -> {
+					return "System";
+				}
+				default -> {
+				}
+			}
+
+		return null;
+	}
 }

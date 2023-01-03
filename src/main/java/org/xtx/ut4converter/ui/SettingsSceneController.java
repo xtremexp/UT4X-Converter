@@ -17,7 +17,6 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
-import org.xtx.ut4converter.tools.UIUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +46,10 @@ public class SettingsSceneController implements Initializable {
 	private TextField udkFolder;
 	@FXML
 	private TextField ut4EditorFolder;
+
+	@FXML
+	private TextField dnfFolder;
+
 	@FXML
 	private TextField u2Path;
 
@@ -118,6 +121,11 @@ public class SettingsSceneController implements Initializable {
 		setUTxFolder(UTGame.U2, u2Path);
 	}
 
+	@FXML
+	private void selectDnfFolder() {
+		setUTxFolder(UTGame.DNF, dnfFolder);
+	}
+
 
 	/**
 	 * Saves game path to UserConfig object
@@ -176,6 +184,7 @@ public class SettingsSceneController implements Initializable {
 						case UT2004 -> ut2004Path.setText(game.getPath().getAbsolutePath());
 						case UT3 -> ut3Folder.setText(game.getPath().getAbsolutePath());
 						case UDK -> udkFolder.setText(game.getPath().getAbsolutePath());
+						case DNF -> dnfFolder.setText(game.getPath().getAbsolutePath());
 						case UT4 -> ut4EditorFolder.setText(game.getPath().getAbsolutePath());
 						default -> {
 						}

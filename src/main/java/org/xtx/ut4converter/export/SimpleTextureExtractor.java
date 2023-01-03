@@ -15,11 +15,10 @@ import java.util.logging.Level;
 /**
  * Simple texture extractor once i had done with UT3 converter probably compiled
  * from partial delphi package unit sources
- * "http://www.acordero.org/projects/unreal-tournament-package-delphi-library/"
+ * "<a href="http://www.acordero.org/projects/unreal-tournament-package-delphi-library/">...</a>"
  * but can't find my original sources ..
-
  * This is the ONLY one working for texture extraction from Unreal 2
- * 
+ *
  * @author XtremeXp
  *
  */
@@ -46,7 +45,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	}
 
 	@Override
-	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws Exception {
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException {
 
 		// Ressource ever extracted, we skip ...
 		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
@@ -61,7 +60,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		logger.log(Level.INFO, "Exporting " + ressource.getUnrealPackage().getFileContainer(mapConverter).getName() + " with " + getName());
 		logger.log(Level.FINE, command);
 
-		Installation.executeProcess(command, logLines);
+		int exitCode = Installation.executeProcess(command, logLines);
 
 		ressource.getUnrealPackage().setExported(true);
 

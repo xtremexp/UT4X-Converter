@@ -117,7 +117,7 @@ public class T3DZoneInfo extends T3DActor {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		if (distanceFogEnd != null) {
 			distanceFogEnd *= newScale;
@@ -140,7 +140,4 @@ public class T3DZoneInfo extends T3DActor {
 		return ambientColor;
 	}
 
-	public RGBColor getDistanceFogColor() {
-		return distanceFogColor;
-	}
 }

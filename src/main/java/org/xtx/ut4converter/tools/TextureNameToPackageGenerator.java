@@ -1,9 +1,10 @@
 package org.xtx.ut4converter.tools;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.math3.util.Pair;
+import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.model.UserConfig;
+import org.xtx.ut4converter.t3d.T3DRessource;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,18 +13,50 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * UE1/UE2 games sometimes do not share package info about texture being used in .t3d file.
+ * E.g: "Begin Polygon Item=2DLoftTOP Texture=swinerds1RC Flags=524288 Link=1" (texture is swinerds1RC but package is unknown)
+ * In order to get package name, utxanalyser get the package info then program generates a json file
+ * that can be used for map conversion for it to get the package name and extract the textures
+ */
 public class TextureNameToPackageGenerator {
 
-
-    public static String UT99_TEXNAME_TO_PACKAGE_FILENAME = "UT99TexNameToPackage.json";
+    /**
+     * Logger
+     */
+    static final Logger logger = Logger.getLogger("TextureNameToPackageGenerator");
 
 
     public static class TextureInfo {
+
+        /**
+         * Name of texture (e.g: 'Grey')
+         */
         String name;
+        /**
+         * Name of group (e.g: 'Base')
+         */
         String group;
+
+        /**
+         * Package name (e.g: 'StarShip')
+         */
         String packageName;
+        /**
+         * Type of texture (Texture, FireTexture, WetTexture, ...)
+         */
         String textureType;
+
+
+        /**
+         * DO NOT DELETE, empty constructor for json jackson lib
+         */
+        public TextureInfo() {
+
+        }
 
         public TextureInfo(String name, String group, String packageName, String textureType) {
             this.name = name;
@@ -65,37 +98,41 @@ public class TextureNameToPackageGenerator {
         }
     }
 
+
     /**
-     * Generates the UT99TexNameToPackage.json file in /conf folder
+     * Generates the texture database json file
+     * It is used afterwards for conversion to get the package name from texture name (packagename info not in .t3d level file)
+     * Only Unreal 1 with oldunreal.com patch does not need it
      *
-     * @param args Arguments
-     * @throws IOException
+     * @param ue1ue2Game Unreal engine 1 or 2 game
+     * @param outJsonFile .json file to write
+     *
+     * @throws IOException Exception throw when writing json file
+     * @throws InterruptedException Exception thrown when analysing texture files
      */
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void GenerateTexNameToPackageFile(UTGames.UTGame ue1ue2Game, File outJsonFile) throws IOException, InterruptedException {
+
         final UserConfig uc = UserConfig.load();
 
+        final File texFolder = new File(uc.getGameConfigByGame(ue1ue2Game).getPath() + "/" + UTGames.getPackageBaseFolderByResourceType(T3DRessource.Type.TEXTURE));
+        final File systemFolder = new File(uc.getGameConfigByGame(ue1ue2Game).getPath() + "/System");
 
-        final File texFolder = new File(uc.getGameConfigByGame(UTGames.UTGame.UT99).getPath() + "/Textures");
-        final File systemFolder = new File(uc.getGameConfigByGame(UTGames.UTGame.UT99).getPath() + "/System");
-
-        // filters .utx or .u files
-        final FilenameFilter fn = (file, s) -> file != null && (s.endsWith(".utx") || s.endsWith(".u"));
+        // filters texture or system files that can contains texture resources
+        final String texFileExtension = UTGames.getPackageFileExtensionByGameAndType(ue1ue2Game, T3DRessource.Type.TEXTURE);
+        // equalsIgnoreCase because DukeNukemForever have .dtx and .Dtx files for textures ...
+        final FilenameFilter fn = (file, s) -> file != null && (("."+FilenameUtils.getExtension(s)).equalsIgnoreCase(texFileExtension) || s.endsWith(".u"));
 
         final List<TextureInfo> texInfos = new ArrayList<>();
         analyseTextures(Objects.requireNonNull(texFolder.listFiles(fn)), texInfos);
         analyseTextures(Objects.requireNonNull(systemFolder.listFiles(fn)), texInfos);
 
-        // writes .txt file
-        final File txtFile = new File("C:\\dev\\" + UT99_TEXNAME_TO_PACKAGE_FILENAME);
+        // Export to .json file the texture db
+        System.out.print("Writting " + outJsonFile.getName() + "...");
 
-        System.out.print("Writting " + txtFile.getName() + "...");
+        final ObjectMapper objectMapper = new ObjectMapper();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try (final FileWriter fw = new FileWriter(txtFile)) {
-            objectMapper.writeValue(fw, texInfos);
-        } catch (IOException e) {
-            throw e;
+        try (final FileWriter fw = new FileWriter(outJsonFile)) {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(fw, texInfos);
         }
 
         System.out.println("OK");
@@ -108,9 +145,8 @@ public class TextureNameToPackageGenerator {
             final String command = Installation.getUtxAnalyser() + " \"" + utxFile.getAbsolutePath() + "\"";
             final List<String> logLines = new ArrayList<>();
 
-            System.out.print("Analyzing " + utxFile.getName() + "...");
-            Installation.executeProcess(command, logLines);
-            System.out.println("OK");
+            logger.info("Analyzing " + utxFile.getName());
+            Installation.executeProcess(command, logLines, logger, Level.FINE);
 
             // analyze log lines
 
@@ -129,8 +165,6 @@ public class TextureNameToPackageGenerator {
                     final String name = split[1];
                     final String texType = split[3];
 
-                    final Pair<String, String> p = new Pair("x", "y");
-
 
                     //if ("Texture".equals(texType)) {
                     if ("NoGroup".equals(group)) {
@@ -144,5 +178,14 @@ public class TextureNameToPackageGenerator {
                 idx++;
             }
         }
+    }
+
+    /**
+     *
+     * @param utgame Input game
+     * @return Texture db filename
+     */
+    public static String getBaseFileName(UTGames.UTGame utgame) {
+        return utgame.shortName + "TextureDb.json";
     }
 }

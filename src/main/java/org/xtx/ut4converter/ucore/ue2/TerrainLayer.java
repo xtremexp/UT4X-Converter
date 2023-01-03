@@ -168,7 +168,7 @@ public class TerrainLayer implements T3D {
 		alphaMapTexture.export(uccExporter, true);
 
 		int alphaValue;
-		final BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getFirstExportedFile());
+		final BufferedImage img = ImageIO.read(alphaMapTexture.getExportInfo().getExportedFiles().get(0));
 
 		// read alpha data values for heightmap alpha texture
 

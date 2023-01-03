@@ -87,7 +87,7 @@ public class T3DLevelConvertorTest {
         mc.setConvertSounds(false);
         mc.setConvertStaticMeshes(false);
 
-        final List<Path> t3dFiles = Files.list(Paths.get(t3dFilesFolder)).collect(Collectors.toList());
+        final List<Path> t3dFiles = Files.list(Paths.get(t3dFilesFolder)).toList();
 
         int idx = 0;
 
@@ -95,7 +95,7 @@ public class T3DLevelConvertorTest {
             final File tempFile = File.createTempFile(t3dPath.toFile().getName(), "temp");
 
             try {
-                final T3DLevelConvertor lc = new T3DLevelConvertor(t3dPath.toFile(), tempFile, mc);
+                final T3DLevelConvertor lc = new T3DLevelConvertor(t3dPath.toFile(), tempFile, mc, true);
                 lc.setNoUi(true);
                 lc.readConvertAndWrite();
             } catch (Exception e) {

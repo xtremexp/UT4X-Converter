@@ -13,7 +13,9 @@ import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.SoundConverter;
 import org.xtx.ut4converter.tools.psk.Material;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -106,7 +108,7 @@ public class UPackageRessource {
 		 * Exported files, there might be several ones for same ressource (e.g:
 		 * terrain textures
 		 */
-		List<File> exportedFiles;
+		final List<File> exportedFiles = new ArrayList<>();
 
 		/**
 		 * Extractor used to export this package ressource
@@ -117,17 +119,12 @@ public class UPackageRessource {
 		}
 
 		public ExportInfo(List<File> exportedFiles, UTPackageExtractor extractor) {
-			this.exportedFiles = exportedFiles;
+			this.exportedFiles.addAll(exportedFiles);
 			this.extractor = extractor;
 		}
 		
 		public void setExportedFile(File exportedFile){
-			this.exportedFiles = new ArrayList<>();
 			this.exportedFiles.add(exportedFile);
-		}
-
-		public void setExportedFiles(List<File> exportedFiles) {
-			this.exportedFiles = exportedFiles;
 		}
 
 		public List<File> getExportedFiles() {
@@ -135,7 +132,7 @@ public class UPackageRessource {
 		}
 
 		public File getExportedFileByExtension(final String... extensions){
-			if(this.exportedFiles != null && extensions != null){
+			if(extensions != null){
 				for (String extension : extensions) {
 					final File fileMatch = this.exportedFiles.stream().filter(f -> f.getName().endsWith(extension)).findFirst().orElse(null);
 
@@ -154,26 +151,11 @@ public class UPackageRessource {
 		 * @return Exported file with that extension else null
 		 */
 		public File getExportedFileByExtension(final String extension){
-			if(this.exportedFiles != null && extension != null){
+			if(extension != null){
 				return this.exportedFiles.stream().filter(f -> f.getName().endsWith(extension)).findFirst().orElse(null);
 			}
 
 			return null;
-		}
-
-		/**
-		 * Use getExportedFileByExtension
-		 * because very hasardous method if multiple exported files.
-		 * May not have the good file !!
-		 * @return
-		 */
-		@Deprecated
-		public File getFirstExportedFile(){
-			if(this.exportedFiles == null || this.exportedFiles.isEmpty()){
-				return null;
-			} else {
-				return this.exportedFiles.get(0);
-			}
 		}
 
 		public UTPackageExtractor getExtractor() {
@@ -181,7 +163,7 @@ public class UPackageRessource {
 		}
 		
 		public void replaceExportedFile(File exportedFile, File newExportedFile){
-			if(this.exportedFiles == null){
+			if(this.exportedFiles.isEmpty()){
 				return;
 			}
 			
@@ -198,18 +180,21 @@ public class UPackageRessource {
 			}
 		}
 
-		public void addExportedFile(File exportedFile){
-			if(exportedFile == null){
+		public void addExportedFile(File exportedFile) {
+			if (exportedFile == null) {
 				return;
 			}
-			
-			if(this.exportedFiles == null){
-				this.exportedFiles = new ArrayList<>();
-			}
-			
-			if(!this.exportedFiles.contains(exportedFile)){
+
+			if (!this.exportedFiles.contains(exportedFile)) {
 				this.exportedFiles.add(exportedFile);
 			}
+		}
+
+		@Override
+		public String toString() {
+			return "ExportInfo{" +
+					"exportedFiles=" + exportedFiles +
+					'}';
 		}
 	}
 
@@ -221,7 +206,7 @@ public class UPackageRessource {
 	 *            "AmbAncient.Looping.Stower51")
 	 * @param type
 	 *            Type of ressource (texture, sound, staticmesh, mesh, ...)
-	 * @param mapConverter
+	 * @param mapConverter Map converter
 	 * @param isUsedInMap
 	 *            if <code>true</code> means ressource is being used
 	 */
@@ -243,10 +228,6 @@ public class UPackageRessource {
 		this.isUsedInMap = isUsedInMap;
 	}
 
-	public void setPackageFile(File f) {
-		unrealPackage.setFile(f);
-	}
-
 	/**
 	 * Creates a package ressource
 	 * 
@@ -254,7 +235,7 @@ public class UPackageRessource {
 	 *            Full name of ressource
 	 * @param uPackage
 	 *            Package this ressource belongs to
-	 * @param mapConverter
+	 * @param mapConverter Map converter
 	 * @param ressourceType
 	 *            Type of ressource (texture, sound, ...)
 	 * @param isUsedInMap
@@ -275,9 +256,9 @@ public class UPackageRessource {
 	 * 
 	 * @param fullName
 	 *            Full ressource name (e.g: "AmbAncient.Looping.Stower51")
-	 * @param uPackage
-	 * @param exportedFiles
-	 * @param extractor
+	 * @param uPackage Unreal package
+	 * @param exportedFiles Exported files
+	 * @param extractor Extractor
 	 */
 	public UPackageRessource(MapConverter mapConverter, String fullName, UPackage uPackage, List<File> exportedFiles, UTPackageExtractor extractor) {
 
@@ -311,7 +292,7 @@ public class UPackageRessource {
 	 */
 	public static void readTextureDimensions(MapConverter mapConverter, UPackageRessource texRessource) {
 
-		if (texRessource.type != Type.TEXTURE || texRessource.exportInfo.exportedFiles == null || texRessource.exportInfo.exportedFiles.isEmpty() || texRessource.textureDimensions != null) {
+		if (texRessource.type != Type.TEXTURE  || texRessource.exportInfo.exportedFiles.isEmpty() || texRessource.textureDimensions != null) {
 			return;
 		}
 
@@ -371,7 +352,7 @@ public class UPackageRessource {
 	 * @return <code>true</code> if the file need to be exported
 	 */
 	public boolean needExport() {
-		return !exportFailed && exportInfo.exportedFiles == null;
+		return !exportFailed && exportInfo.exportedFiles.isEmpty();
 	}
 
 	/**
@@ -400,7 +381,7 @@ public class UPackageRessource {
 	/**
 	 * Export the ressource from unreal package to file
 	 * 
-	 * @param packageExtractor
+	 * @param packageExtractor Package extractor to use for export
 	 */
 	public void export(UTPackageExtractor packageExtractor, boolean perfectMatchOnly) {
 		export(packageExtractor, false, perfectMatchOnly);
@@ -413,7 +394,7 @@ public class UPackageRessource {
 	 * with suffix depending on type of ressource (_Mat for texture, _Cue for
 	 * sound, ...)
 	 * 
-	 * @param mapConverter
+	 * @param mapConverter Map converter
 	 * @return
 	 */
 	public String getConvertedBaseName(MapConverter mapConverter) {
@@ -478,7 +459,7 @@ public class UPackageRessource {
 	 * 
 	 * @param mapConverter
 	 *            Map Converter
-	 * @return
+	 * @return Converted name
 	 */
 	public String getConvertedName(MapConverter mapConverter) {
 
@@ -558,7 +539,7 @@ public class UPackageRessource {
 	 * Replace all dots in full name with underscores. This is used to get
 	 * converted name or filename
 	 * 
-	 * @return
+	 * @return Full name without dots
 	 */
 	public String getFullNameWithoutDots() {
 		return getFullName().replaceAll("\\.", "_");
@@ -586,7 +567,7 @@ public class UPackageRessource {
 	 * @return true if this ressource has been exported to a file
 	 */
 	public boolean isExported() {
-		return exportInfo != null && exportInfo.exportedFiles != null;
+		return exportInfo != null && !exportInfo.exportedFiles.isEmpty();
 	}
 
 	public List<File> getExportedFiles() {
@@ -632,13 +613,17 @@ public class UPackageRessource {
 	 */
 	public boolean needsConversion(MapConverter mc) {
 
-		if (exportInfo.exportedFiles == null) {
+		if (exportInfo.exportedFiles.isEmpty()) {
 			return false;
 		}
 
 		// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
-		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && type == Type.SOUND) {
-			return true;
+		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
+			if (type == Type.SOUND) {
+				return true;
+			} else if (type == Type.TEXTURE && this.exportInfo.getExportedFiles().stream().anyMatch(f -> f.getName().endsWith(".pcx"))) {
+				return true;
+			}
 		}
 
 		// ucc exporter exports malformed .dds textures ...
@@ -654,24 +639,30 @@ public class UPackageRessource {
     }
 
 	/**
-	 * Convert ressource to good format if needed
+	 * Convert ressource to good format if needed for UE3 or UE4
 	 * 
-	 * @param logger
-	 * @return
+	 * @param logger Logger
+	 * @return Sound file converted
 	 */
 	public File convert(Logger logger) {
 
-		if (type == Type.SOUND) {
-			SoundConverter scs = new SoundConverter(logger);
-
-			try {
+		try {
+			if (type == Type.SOUND) {
+				SoundConverter scs = new SoundConverter(logger);
 				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				mapConverter.getLogger().log(Level.SEVERE, null, ex);
 			}
+			// have to convert files to .bmp, because sometimes UT3 fails to import .pcx
+			else if (type == Type.TEXTURE) {
+				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".bmp");
+				final BufferedImage img = ImageIO.read(exportInfo.getExportedFiles().get(0));
+				ImageIO.write(img, "bmp", tempFile);
+				return tempFile;
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			mapConverter.getLogger().log(Level.SEVERE, null, ex);
 		}
 		// TODO handle type MESH
 
@@ -722,7 +713,7 @@ public class UPackageRessource {
 	/**
 	 * Replaces current resources with new one
 	 * 
-	 * @param ressource
+	 * @param ressource Ressource to replace with
 	 */
 	public void replaceWith(UPackageRessource ressource) {
 		this.replacement = ressource;

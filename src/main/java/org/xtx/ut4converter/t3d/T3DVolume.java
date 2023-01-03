@@ -22,7 +22,7 @@ public class T3DVolume extends T3DSound {
 
 	
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 		super.scale(newScale);
 	}
 	

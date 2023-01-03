@@ -40,7 +40,7 @@ public class HeightFog extends T3DActor {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		if (startDistance != null) {
 			startDistance *= newScale;

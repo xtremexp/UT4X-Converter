@@ -200,7 +200,7 @@ public class T3DUE2Terrain extends T3DActor {
      * 
      */
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 		if (this.terrainScale != null) {
 			this.terrainScale.setX(this.terrainScale.getX() * newScale);
 			this.terrainScale.setY(this.terrainScale.getY() * newScale);
