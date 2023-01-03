@@ -35,7 +35,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		super.scale(newScale);
 	}

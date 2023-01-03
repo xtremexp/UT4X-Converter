@@ -543,7 +543,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			// no need accurate light map resolution on this brush since it will
 			// be never seen by player
 			for (T3DPolygon p : additiveBrush.getPolyList()) {
-				p.setLightMapScale( 2048d);
+				p.setLightMapScale( 2048);
 			}
 
 			bwr.write(additiveBrush.toT3d());

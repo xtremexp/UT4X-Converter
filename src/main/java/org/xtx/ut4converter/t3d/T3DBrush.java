@@ -702,7 +702,7 @@ public class T3DBrush extends T3DVolume {
 	 * Rescale brush. Must be done always after convert
 	 */
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		if (cullDistances != null) {
 			for (CullDistance cullDistance : cullDistances) {

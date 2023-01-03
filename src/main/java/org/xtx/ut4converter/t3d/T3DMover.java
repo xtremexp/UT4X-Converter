@@ -42,7 +42,7 @@ public class T3DMover extends T3DBrush {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		moverProperties.scale(newScale);
 

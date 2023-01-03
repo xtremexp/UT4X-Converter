@@ -10,7 +10,7 @@
 
         <center>
             <VBox>
-            <TitledPane fx:id="mainSettingsTitle">
+            <TitledPane fx:id="mainSettingsTitle" text="Main settings">
 
                     <GridPane hgap="10" vgap="10">
                         <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0">Input Game:</Label>
@@ -35,7 +35,7 @@
                     	<Button fx:id="changeMapNameBtn" disable="true" onAction="#changeMapName" GridPane.columnIndex="2" GridPane.rowIndex="4">Change</Button>
 
                         <Label style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="5">Scale Factor:</Label>
-                        <ComboBox fx:id="scaleFactorList" promptText="how much the map will be scaled" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <ComboBox fx:id="scaleFactorList" promptText="how much the map will be scaled" GridPane.columnIndex="1" GridPane.rowIndex="5" editable="true">
                             <items>
                                 <FXCollections fx:factory="observableArrayList">
                                     <String fx:value="0.5" />
@@ -46,7 +46,7 @@
                                     <String fx:value="1.1" />
                                     <String fx:value="1.25" />
                                     <String fx:value="1.5" />
-                                    <String fx:value="1.5625" />
+                                    <String fx:value="1.5625" /><!-- 2*(100/128) -->
                                     <String fx:value="1.75" />
                                     <String fx:value="1.875" />
                                     <String fx:value="2" />
@@ -61,6 +61,13 @@
                                     <String fx:value="2.55" />
                                     <String fx:value="2.6" />
                                     <String fx:value="3" />
+                                    <String fx:value="3.125" /><!-- 3*(100/128) -->
+                                    <String fx:value="3.5" />
+                                    <String fx:value="4" />
+                                    <String fx:value="4.5" />
+                                    <String fx:value="5" />
+                                    <String fx:value="5.5" />
+                                    <String fx:value="6" />
                                 </FXCollections>
                             </items>
                         </ComboBox>
@@ -110,32 +117,13 @@
             </TitledPane>
 
 
-            <TitledPane fx:id="advancedSettingsTitle" expanded="false">
+            <TitledPane fx:id="advancedSettingsTitle" expanded="false" text="Advanced Settings">
                 <GridPane hgap="10" vgap="10">
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="0">Brush lightmap resolution:</Label>
-                    <ComboBox fx:id="lightMapResolutionList" promptText="Lightmap resolution for brushes. The smaller, the bigger the map filesize will be!" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="16" />
-                                <String fx:value="32" />
-                                <String fx:value="48" />
-                                <String fx:value="64" />
-                                <String fx:value="96" />
-                                <String fx:value="128" />
-                                <String fx:value="144" />
-                                <String fx:value="200" />
-                                <String fx:value="256" />
-                                <String fx:value="400" />
-                                <String fx:value="512" />
-                                <String fx:value="768" />
-                                <String fx:value="800" />
-                                <String fx:value="1024" />
-                                <String fx:value="2048" />
-                                <String fx:value="4096" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
+                    <!-- values populated in controller -->
+                    <ComboBox fx:id="lightMapResolutionList" promptText="Lightmap resolution for brushes. The smaller, the bigger the map filesize will be!" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="1">Lightning Brightness Factor:</Label>
                     <ComboBox fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map" GridPane.columnIndex="1" GridPane.rowIndex="1">

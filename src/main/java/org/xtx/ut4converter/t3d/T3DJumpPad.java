@@ -91,7 +91,7 @@ public class T3DJumpPad extends T3DSound {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		if (jumpVelocity != null) {
 			jumpVelocity.scale(newScale);

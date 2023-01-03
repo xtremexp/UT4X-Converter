@@ -17,7 +17,7 @@ public class Barrel extends T3DDecoration {
     }
 
     @Override
-    public void scale(Double newScale) {
+    public void scale(double newScale) {
         super.scale(newScale);
         // TODO check for scale != 2.5 (U1 default scale ratio)
         this.scale3d = null;

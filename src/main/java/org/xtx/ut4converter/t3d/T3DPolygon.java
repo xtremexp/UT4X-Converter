@@ -56,7 +56,7 @@ public class T3DPolygon {
 	 * LightMapScale=64.000000 UE1: None UE2: ? UE3: ? UE4: Light Map
 	 * resolution.
 	 */
-	private Double lightMapScale;
+	private int lightMapScale;
 
 	/**
 	 * Only in UE1/UE2 Basically changes the origin
@@ -210,12 +210,10 @@ public class T3DPolygon {
 			sb.append(" Texture=").append(texture.getConvertedName(mapConverter));
 		}
 
-		if (lightMapScale != null) {
-			if (ue == UnrealEngine.UE4) {
-				sb.append(" LightMapScale=").append(lightMapScale);
-			} else if (ue == UnrealEngine.UE3) {
-				sb.append(" ShadowMapScale=").append(lightMapScale);
-			}
+		if (ue == UnrealEngine.UE4) {
+			sb.append(" LightMapScale=").append(lightMapScale);
+		} else if (ue == UnrealEngine.UE3) {
+			sb.append(" ShadowMapScale=").append(lightMapScale);
 		}
 
 		sb.append(" Link=").append(polyIndex);
@@ -393,7 +391,7 @@ public class T3DPolygon {
 		// originally UE1 had a low light resolution
 		// default is 32 in UE4
 		// 128 seems good enough
-		if (mapConverter != null && mapConverter.getLightMapResolution() != null) {
+		if (mapConverter != null) {
 			lightMapScale = mapConverter.getLightMapResolution();
 		}
 	}
@@ -414,7 +412,7 @@ public class T3DPolygon {
 		return texture;
 	}
 
-	public void setLightMapScale(Double lightMapScale) {
+	public void setLightMapScale(int lightMapScale) {
 		this.lightMapScale = lightMapScale;
 	}
 

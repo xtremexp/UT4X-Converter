@@ -431,11 +431,7 @@ public abstract class T3DActor extends T3DObject {
 	 * 
 	 * @param newScale New scale
 	 */
-	public void scale(Double newScale) {
-
-		if (newScale == null) {
-			return;
-		}
+	public void scale(double newScale) {
 
 		if (newScale > 1) {
 			if (location != null)

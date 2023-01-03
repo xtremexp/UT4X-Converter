@@ -649,7 +649,7 @@ public class T3DLight extends T3DSound {
 	}
 
 	@Override
-	public void scale(Double newScale) {
+	public void scale(double newScale) {
 
 		attenuationRadius *= newScale;
 		radius *= newScale;
