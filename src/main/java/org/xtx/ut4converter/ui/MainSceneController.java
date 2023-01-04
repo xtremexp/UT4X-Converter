@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -23,15 +25,19 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -57,6 +63,11 @@ public class MainSceneController implements Initializable {
 
 	private UserConfig userConfig;
 
+	private ApplicationConfig applicationConfig;
+
+	@FXML
+	private Menu menuFile;
+
 	public MainSceneController() {
 	}
 
@@ -69,6 +80,39 @@ public class MainSceneController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 
 		try {
+			this.applicationConfig = ApplicationConfig.load();
+
+			// adds dynamically game to file menu
+			for (Map.Entry<String, List<String>> entry : this.applicationConfig.getGameConversion().entrySet()) {
+
+				final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(entry.getKey());
+
+				if (inputGame.isEditorOnly()) {
+					continue;
+				}
+
+				final Menu gameFromMenu = new Menu(this.applicationConfig.getUnrealGameById(entry.getKey()).getName());
+				gameFromMenu.setId("convert" + entry.getKey());
+
+				for (final String outputShortNameGame : entry.getValue()) {
+
+					final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(outputShortNameGame);
+
+					if (outputGame.isEditorOnly()) {
+						continue;
+					}
+					final MenuItem gameToMenuItem = new MenuItem("Convert map to " + outputGame.getShortName() + " ...");
+					gameToMenuItem.setId("convert" + entry.getKey() + outputGame);
+					gameFromMenu.getItems().add(gameToMenuItem);
+
+					gameToMenuItem.setOnAction(t -> {
+						convertUtxMap(inputGame, outputGame);
+					});
+				}
+
+				menuFile.getItems().add(0, gameFromMenu);
+			}
+
 			this.userConfig = UserConfig.load();
 
 			if (userConfig.getIsFirstRun() == null || userConfig.getIsFirstRun()) {
@@ -82,6 +126,7 @@ public class MainSceneController implements Initializable {
 				checkForUpdate(false);
 			}
 		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
 			logger.error("initialize " + url, e);
 		}
 	}
@@ -110,18 +155,6 @@ public class MainSceneController implements Initializable {
 		System.exit(0);
 	}
 
-	@FXML
-	private void convertUT99ToUT3Map() {
-		convertUtxMap(UTGame.UT99, UTGame.UT3);
-	}
-
-	/**
-	 * Opens file browser for UT99 .t3d map, then convert it.
-	 */
-	@FXML
-	private void convertUT99ToUT4Map() {
-		convertUtxMap(UTGame.UT99, UTGame.UT4);
-	}
 
 	/**
 	 * Show credits about program TODO history, library used, licence
@@ -221,16 +254,6 @@ public class MainSceneController implements Initializable {
 	}
 
 
-	@FXML
-	private void convertU1toUT3Map() {
-		convertUtxMap(UTGame.U1, UTGame.UT3);
-	}
-
-	@FXML
-	private void convertU1toUT4Map() {
-		convertUtxMap(UTGame.U1, UTGame.UT4);
-	}
-
 	/**
 	 *
 	 * @param inputGame
@@ -238,7 +261,7 @@ public class MainSceneController implements Initializable {
 	 * @param outputGame
 	 *            Output UT Game
 	 */
-	private void convertUtxMap(UTGame inputGame, UTGame outputGame) {
+	private void convertUtxMap(UnrealGame inputGame, UnrealGame outputGame) {
 
 		try {
 			if (checkGamePathSet(inputGame, outputGame)) {
@@ -267,13 +290,13 @@ public class MainSceneController implements Initializable {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Game paths not set");
 				alert.setHeaderText("Need to set game path");
-				alert.setContentText(inputGame.name + " and/or " + outputGame.name + " game path not set.");
+				alert.setContentText(inputGame.getName() + " and/or " + outputGame.getName() + " game path not set.");
 
 				alert.showAndWait();
 				showSettings();
 			}
 		} catch (Throwable t) {
-			logger.error("convertUtxMap " + inputGame.name + " to " + outputGame.name, t);
+			logger.error("convertUtxMap " + inputGame.getName() + " to " + outputGame.getName(), t);
 
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
@@ -285,69 +308,22 @@ public class MainSceneController implements Initializable {
 
 	}
 
-	private boolean checkGamePathSet(UTGame... games) throws IOException {
-		UserConfig userConfig = UserConfig.load();
-		if(userConfig != null){
+	private boolean checkGamePathSet(UnrealGame... games) throws IOException {
+
+		// need to reload if user changed path in settings
+		this.applicationConfig = ApplicationConfig.load();
+
+		if (applicationConfig != null) {
 			boolean gamePathSet = true;
 
-			for (UTGame game : games) {
-				gamePathSet &= userConfig.hasGamePathSet(game);
+			for (UnrealGame game : games) {
+				gamePathSet &= game.getPath() != null && game.getPath().exists();
 			}
 
 			return gamePathSet;
 		}
 
 		return false;
-	}
-
-	@FXML
-	private void convertUt2004ToUT3Map() {
-		convertUtxMap(UTGame.UT2004, UTGame.UT3);
-	}
-
-	@FXML
-	private void convertUt2004ToUT4Map() {
-		convertUtxMap(UTGame.UT2004, UTGame.UT4);
-	}
-
-	@FXML
-	private void convertUT3ToUT4Map() {
-		convertUtxMap(UTGame.UT3, UTGame.UT4);
-	}
-
-	@FXML
-	private void convertUdkToUT4Map() {
-		convertUtxMap(UTGame.UDK, UTGame.UT4);
-	}
-
-	@FXML
-	private void convertUT2003ToUT3Map() {
-		convertUtxMap(UTGame.UT2003, UTGame.UT3);
-	}
-
-	@FXML
-	private void convertUT2003ToUT4Map() {
-		convertUtxMap(UTGame.UT2003, UTGame.UT4);
-	}
-
-	@FXML
-	private void convertU2ToUT3Map() {
-		convertUtxMap(UTGame.U2, UTGame.UT3);
-	}
-
-	@FXML
-	private void convertU2ToUT4Map() {
-		convertUtxMap(UTGame.U2, UTGame.UT4);
-	}
-
-	@FXML
-	private void convertDNFToUT3Map() {
-		convertUtxMap(UTGame.DNF, UTGame.UT3);
-	}
-
-	@FXML
-	private void convertDNFToUT4Map() {
-		convertUtxMap(UTGame.DNF, UTGame.UT4);
 	}
 
 	/**

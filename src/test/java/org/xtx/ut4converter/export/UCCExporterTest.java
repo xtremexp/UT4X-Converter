@@ -4,10 +4,13 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.t3d.T3DTestUtils;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public class UCCExporterTest {
 
@@ -92,8 +95,10 @@ public class UCCExporterTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
 
 
-        final File ut2004BasePath = mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath();
-        final File mapFolder = UTGames.getMapsFolder(ut2004BasePath, mc.getInputGame());
+        final List<UnrealGame> games = ApplicationConfig.getBaseGames();
+        final UnrealGame inputGame2 = games.stream().filter(g -> g.getShortName().equals(inputGame.shortName)).findFirst().orElse(null);
+
+        final File mapFolder = UTGames.getMapsFolder(inputGame2.getPath(), mc.getInputGame());
 
         final Collection<File> utxMapFiles = FileUtils.listFiles(mapFolder, new String[]{inputGame.mapExtension}, true);
 

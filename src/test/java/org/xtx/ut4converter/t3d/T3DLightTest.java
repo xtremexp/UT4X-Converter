@@ -1,7 +1,6 @@
 package org.xtx.ut4converter.t3d;
 
 
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -32,6 +31,7 @@ public class T3DLightTest extends T3DActorBaseTest {
 
     @Test
     void testLight() throws IOException {
+
         final T3DLight pureBlueLight = new T3DLight(T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3), "Light");
         pureBlueLight.setHue(170f); // blue
         pureBlueLight.setSaturation(0f); // pure blue (no saturation)

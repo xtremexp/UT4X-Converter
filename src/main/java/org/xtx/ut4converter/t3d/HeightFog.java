@@ -1,8 +1,8 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.tools.RGBColor;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 public class HeightFog extends T3DActor {
 

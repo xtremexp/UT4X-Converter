@@ -80,6 +80,7 @@ public class T3DLevelConvertorTest {
      * @throws IOException
      */
     private void testT3dConvertForGame(final String t3dFilesFolder, UTGames.UTGame inputGame) throws IOException {
+
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, UTGames.UTGame.UT4);
         mc.setConvertTextures(false);
         mc.setConvertMusic(false);

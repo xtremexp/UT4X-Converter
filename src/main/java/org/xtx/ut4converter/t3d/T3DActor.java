@@ -6,11 +6,11 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.ucore.ue4.SceneComponent;
 
 import javax.vecmath.Vector3d;
@@ -379,7 +379,7 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	protected void writeLocRotAndScale() {
-		writeLocRotAndScale(sbf, getOutputGame().engine, location, rotation, scale3d);
+		writeLocRotAndScale(sbf, Objects.requireNonNull(UnrealEngine.from(getOutputGame().getUeVersion())), location, rotation, scale3d);
 	}
 
 	/**
@@ -482,7 +482,7 @@ public abstract class T3DActor extends T3DObject {
 	 * 
 	 * @return Input game
 	 */
-	protected UTGames.UTGame getInputGame() {
+	protected UnrealGame getInputGame() {
 		return mapConverter.getInputGame();
 	}
 
@@ -491,7 +491,7 @@ public abstract class T3DActor extends T3DObject {
 	 * 
 	 * @return Output game
 	 */
-	protected UTGames.UTGame getOutputGame() {
+	protected UnrealGame getOutputGame() {
 		return mapConverter.getOutputGame();
 	}
 
@@ -522,7 +522,7 @@ public abstract class T3DActor extends T3DObject {
             collisionRadius = 40d;
         }
 
-		if (coLocation != null && mapConverter.getInputGame().engine == UnrealEngine.UE1) {
+		if (coLocation != null && mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE1.version) {
 			if (location != null) {
 				location.add(coLocation);
 			} else {

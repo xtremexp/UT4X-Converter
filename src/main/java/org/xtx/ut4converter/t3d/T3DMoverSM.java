@@ -7,8 +7,8 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 /**
  * StaticMesh movers. Mover class for Unreal Engine >= 2 Unreal Engine 1 is
@@ -49,7 +49,7 @@ public class T3DMoverSM extends T3DStaticMesh {
 
 		if (mapConverter.isTo(UnrealEngine.UE3)) {
 			moverProperties.writeUE3MoverActor(sbf);
-		} else if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+		} else if (mapConverter.isTo(UTGames.UTGame.UT4)) {
 			moverProperties.writeUT4MoverActor(sbf);
 		}
 

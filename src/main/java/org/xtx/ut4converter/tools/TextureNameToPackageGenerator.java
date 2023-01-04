@@ -3,8 +3,8 @@ package org.xtx.ut4converter.tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.t3d.T3DRessource;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -110,12 +110,11 @@ public class TextureNameToPackageGenerator {
      * @throws IOException Exception throw when writing json file
      * @throws InterruptedException Exception thrown when analysing texture files
      */
-    public static void GenerateTexNameToPackageFile(UTGames.UTGame ue1ue2Game, File outJsonFile) throws IOException, InterruptedException {
+    public static void GenerateTexNameToPackageFile(UnrealGame ue1ue2Game, File outJsonFile) throws IOException, InterruptedException {
 
-        final UserConfig uc = UserConfig.load();
 
-        final File texFolder = new File(uc.getGameConfigByGame(ue1ue2Game).getPath() + "/" + UTGames.getPackageBaseFolderByResourceType(T3DRessource.Type.TEXTURE));
-        final File systemFolder = new File(uc.getGameConfigByGame(ue1ue2Game).getPath() + "/System");
+        final File texFolder = new File(ue1ue2Game.getPath() + "/" + UTGames.getPackageBaseFolderByResourceType(T3DRessource.Type.TEXTURE));
+        final File systemFolder = new File(ue1ue2Game.getPath() + "/System");
 
         // filters texture or system files that can contains texture resources
         final String texFileExtension = UTGames.getPackageFileExtensionByGameAndType(ue1ue2Game, T3DRessource.Type.TEXTURE);
@@ -185,7 +184,7 @@ public class TextureNameToPackageGenerator {
      * @param utgame Input game
      * @return Texture db filename
      */
-    public static String getBaseFileName(UTGames.UTGame utgame) {
-        return utgame.shortName + "TextureDb.json";
+    public static String getBaseFileName(UnrealGame utgame) {
+        return utgame.getShortName() + "TextureDb.json";
     }
 }

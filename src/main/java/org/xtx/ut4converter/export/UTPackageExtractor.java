@@ -7,10 +7,10 @@ package org.xtx.ut4converter.export;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +81,7 @@ public abstract class UTPackageExtractor {
 	 * @param ressource Unreal package resource
 	 * @param forceExport If true will force export no matter if resource is not used in map
 	 * @return Set of files exported
-	 * @throws java.lang.Exception
+	 * @throws IOException, Interrupted Exception
 	 *             If anythings goes wrong when exporting this ressource
 	 */
 	public abstract Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException;
@@ -108,7 +108,7 @@ public abstract class UTPackageExtractor {
 	public static UTPackageExtractor getExtractor(final MapConverter mapConverter, final UPackageRessource ressource) {
 
 		// umodel does not support unreal 2 at all ...
-		if (mapConverter.getInputGame() == UTGame.U2) {
+		if (mapConverter.getInputGame().getShortName().equals(UTGame.U2.shortName)) {
 			if (ressource.getType() == Type.TEXTURE) {
 				return getUtPackageExtractor(mapConverter, SimpleTextureExtractor.class);
 			} else {
@@ -117,11 +117,11 @@ public abstract class UTPackageExtractor {
 		}
 		else if (ressource.getType() == T3DRessource.Type.MUSIC) {
 			// only ucc can export .umx files
-			if (mapConverter.getInputGame().engine == UnrealEngine.UE1) {
+			if (mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE1.version) {
 				return getUtPackageExtractor(mapConverter, UCCExporter.class);
 			}
 			// Special case UT2004 .ogg files
-			else if (mapConverter.getInputGame().engine == UnrealEngine.UE2) {
+			else if (mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE2.version) {
 				return getUtPackageExtractor(mapConverter, CopyExporter.class);
 			}
 			// else embedded .wav files

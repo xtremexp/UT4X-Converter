@@ -2,8 +2,10 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
+import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.ui.ConversionSettingsController;
 
 import java.io.*;
@@ -18,20 +20,22 @@ public class T3DTestUtils {
 
     /**
      * Initialise
-     * @param inputGame
+     * @param inGame
      * @return
      */
-    public static MapConverter getMapConverterInstance(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws IOException {
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inGame, final UTGames.UTGame outGame) throws IOException {
+
+        final UnrealGame inputGame = ApplicationConfig.getBaseGames().stream().filter(g -> g.getShortName().equals(inGame.shortName)).findFirst().orElse(null);
+        final UnrealGame outputGame = ApplicationConfig.getBaseGames().stream().filter(g -> g.getShortName().equals(outGame.shortName)).findFirst().orElse(null);
+
         final MapConverter mc = new MapConverter(inputGame, outputGame);
 
-        if (inputGame == UTGames.UTGame.U2) {
+        if (inputGame.getShortName().equals(UTGames.UTGame.U2.shortName)) {
             mc.setScale(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4);
         } else {
             mc.setScale(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4);
         }
 
-        final UserConfig uc = loadUserConfig();
-        mc.setUserConfig(uc);
 
         mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
 
@@ -106,6 +110,6 @@ public class T3DTestUtils {
     }
 
     public static void setMapFile(final MapConverter mc, final String inMap) throws IOException {
-        mc.setInMap(new File(UTGames.getMapsFolder(mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath(), mc.getInputGame())  + "/" + inMap));
+        mc.setInMap(new File(mc.getInputGame().getMapFolder() + "/" + inMap));
     }
 }

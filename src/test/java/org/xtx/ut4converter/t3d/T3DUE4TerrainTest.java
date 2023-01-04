@@ -1,14 +1,10 @@
 package org.xtx.ut4converter.t3d;
 
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 
 import javax.vecmath.Point2d;
-import java.io.IOException;
 
 
 public class T3DUE4TerrainTest {
@@ -41,13 +37,4 @@ public class T3DUE4TerrainTest {
         Assertions.assertEquals(2d, result.getY(), 0.01d);
     }
 
-    @Test
-    void testGetCollisionComponentFromHeightMapIndex() throws IOException {
-
-        final MapConverter mc = new MapConverter(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
-
-        // simulating an ut3 terrain with 4 terrain compoonents
-        final T3DUE3Terrain.TerrainComponent  tc1 = new T3DUE3Terrain.TerrainComponent();
-
-    }
 }

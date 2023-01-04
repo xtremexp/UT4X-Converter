@@ -5,9 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.ucore.UnrealEngine;
-import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.export.*;
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -22,6 +20,8 @@ import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
 import org.xtx.ut4converter.tools.t3dmesh.StaticMesh;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.ui.ConversionViewController;
 import org.xtx.ut4converter.ui.TableRowLog;
 
@@ -48,12 +48,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * UT Game the map will be converted from
 	 */
-	private final UTGame inputGame;
+	private final UnrealGame inputGame;
 
 	/**
 	 * UT Game the map will be converted to
 	 */
-	private final UTGame outputGame;
+	private final UnrealGame outputGame;
 
 	/**
 	 * Default sub-folder of UT4 Converter where converted maps will be saved
@@ -196,7 +196,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * User configuration which allows to know where UT games are installed for
 	 * exemple
 	 */
-	UserConfig userConfig;
+	ApplicationConfig applicationConfig;
 
 	/**
 	 * If true will create notes for unconverted actors in level
@@ -236,7 +236,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *
 	 * @return Input unreal game
 	 */
-	public UTGame getInputGame() {
+	public UnrealGame getInputGame() {
 		return inputGame;
 	}
 
@@ -245,7 +245,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *
 	 * @return Output unreal game
 	 */
-	public UTGame getOutputGame() {
+	public UnrealGame getOutputGame() {
 		return outputGame;
 	}
 
@@ -283,7 +283,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @param outputGame
 	 *            Output UT Game
 	 */
-	public MapConverter(UTGame inputGame, UTGame outputGame) throws IOException {
+	public MapConverter(UnrealGame inputGame, UnrealGame outputGame) throws IOException {
 		this.inputGame = inputGame;
 		this.outputGame = outputGame;
 		initialise();
@@ -299,7 +299,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *            Map to be converted (either a t3d file or map)
 	 * @param path Full path where to convert resource to
 	 */
-	public MapConverter(UTGame inputGame, UTGame outputGame, File inpMap, String path) throws IOException {
+	public MapConverter(UnrealGame inputGame, UnrealGame outputGame, File inpMap, String path) throws IOException {
 		this.inputGame = inputGame;
 		this.outputGame = outputGame;
 		this.inMap = inpMap;
@@ -341,7 +341,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	private void initOutMapName() {
 		if (mapName == null) {
 			// TODO being able to set it manually (chosen by user)
-			mapName = inMap.getName().split("\\.")[0] + "-" + inputGame.shortName;
+			mapName = inMap.getName().split("\\.")[0] + "-" + inputGame.getShortName();
 
 			// Remove bad chars from name (e.g: DM-Cybrosis][ -> DM-Cybrosis)
 			// else ue4 editor won't be able to set sounds or textures to actors
@@ -367,9 +367,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// e.g: ut4ReferenceBaseFolder = '/Game/RestrictedAssets/Map/DM-MyMap'
 		String xx = ut4ReferenceBaseFolder;
 		xx = xx.replace("/Game", "/Content");
-		UserGameConfig config = userConfig.getGameConfigByGame(outputGame);
 
-		return new File(config.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
+		return new File(outputGame.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
 	}
 
 	private void initialise() throws IOException {
@@ -402,7 +401,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			supportedActorClasses = new SupportedClasses(this);
 
-			userConfig = UserConfig.load();
 
 		// init available extractors
 		packageExtractors = new ArrayList<>();
@@ -464,20 +462,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void initUe3PackageFilesCache() {
 
-		File utGameFolder = null;
-
-		final String basePath = userConfig.getGameConfigByGame(inputGame).getPath().getAbsolutePath() + File.separator;
-
-		if(this.inputGame == UTGame.UT3) {
-			utGameFolder = new File(basePath + "UTGame");
-		} else if(this.inputGame == UTGame.UDK){
-			utGameFolder = new File(basePath);
-		}
-
-		if(utGameFolder != null) {
-			packageFilesCache = org.apache.commons.io.FileUtils.listFiles(utGameFolder, new String[]{UPK}, true);
-			logger.info("Scanned " + packageFilesCache.size() + " .upk files");
-		}
+		packageFilesCache = org.apache.commons.io.FileUtils.listFiles(inputGame.getPath(), new String[]{UPK}, true);
+		logger.info("Scanned " + packageFilesCache.size() + " .upk files");
 	}
 
 	/**
@@ -491,7 +477,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		for (File upk : packageFilesCache) {
 
-			if (upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + UPK) || upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + getInputGame().mapExtension)) {
+			if (upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + UPK) || upk.getName().toLowerCase().equals(packageName.toLowerCase() + "." + getInputGame().getMapExt())) {
 				return upk;
 			}
 		}
@@ -527,7 +513,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			logger.log(Level.INFO, "*****************************************");
 			System.out.println("Converting " + inMap.getAbsolutePath());
-			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.name);
+			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.getName());
 			logger.log(Level.INFO, "Scale Factor: " + scale);
 			logger.log(Level.WARNING, "Shader materials are not yet converted");
 
@@ -542,7 +528,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			updateProgress(0, 100);
 
-			if (inputGame == UTGame.UT99 || inputGame == UTGame.DNF) {
+			if (inputGame.isUseTexDb()) {
 				loadTexNameDbFile();
 				updateProgress(5, 100);
 			}
@@ -927,15 +913,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// Create a folder for this map in UE4Editor
 		// and copy a simple existing .uasset file so we can see the folder
 		// created in UT4 editor ...
-		if (isTo(UTGame.UT4)) {
-			UserGameConfig userGameConfig = userConfig.getGameConfigByGame(UTGame.UT4);
+		if (isTo(UnrealEngine.UE4)) {
 
-			if (userGameConfig.getPath() == null || !userGameConfig.getPath().exists()) {
-				logger.log(Level.WARNING, "UT4 Editor path not set in settings!");
-				return;
-			}
-
-			File restrictedAssetsFolder = new File(userGameConfig.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
+			final File restrictedAssetsFolder = new File(outputGame.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
 			// TEMP thingy use custom one if user changed it
 			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
 			File wipConvertedMapFolder = getUt4ReferenceBaseFolderFile();
@@ -1047,30 +1027,20 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return mapName;
 	}
 
-	/**
-	 * Current user configuration such as program path for UT99 and so on ...
-	 *
-	 * @return User configuration
-	 */
-	public UserConfig getUserConfig() {
-		return userConfig;
-	}
-
-
 
 	/**
 	 *
 	 * @return
 	 */
 	public UnrealEngine getUnrealEngineTo() {
-		return this.getOutputGame().engine;
+		return UnrealEngine.from(this.getOutputGame().getUeVersion());
 	}
 
 
 	public boolean isFrom(UnrealEngine... engines) {
 
 		for (UnrealEngine engine : engines) {
-			if (engine == this.getInputGame().engine) {
+			if (engine.version == this.getInputGame().getUeVersion()) {
 				return true;
 			}
 		}
@@ -1078,9 +1048,41 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return false;
 	}
 
-	public boolean isTo(UTGame... utgames) {
+	public boolean isFrom(String... shortNames) {
+		for (String shortName : shortNames) {
+			if (shortName.equals(this.getInputGame().getShortName())) {
+				return true;
+			}
+		}
 
+		return false;
+	}
+
+	public boolean isTo(String... shortNames) {
+		for (String shortName : shortNames) {
+			if (shortName.equals(this.getOutputGame().getShortName())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	// used for backward compatibility
+	@Deprecated
+	public boolean isTo(UTGame... utgames) {
 		for (UTGame utgame : utgames) {
+			if (utgame.shortName.equals(this.getOutputGame().getShortName())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isTo(UnrealGame... utgames) {
+
+		for (UnrealGame utgame : utgames) {
 			if (utgame == this.getOutputGame()) {
 				return true;
 			}
@@ -1092,7 +1094,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public boolean isTo(UnrealEngine... engines) {
 
 		for (UnrealEngine engine : engines) {
-			if (engine == this.getOutputGame().engine) {
+			if (engine.version == this.getOutputGame().getUeVersion()) {
 				return true;
 			}
 		}
@@ -1179,14 +1181,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 			// creates .json if it does not exists yet
 			else {
-				logger.log(Level.INFO, "Generating " + inputGame.shortName + " texture db file " + dbFile.getName());
+				logger.log(Level.INFO, "Generating " + inputGame.getShortName() + " texture db file " + dbFile.getName());
 				TextureNameToPackageGenerator.GenerateTexNameToPackageFile(inputGame, dbFile);
 				gameTextureDb = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
 			}
 		} catch (IOException e){
 			logger.log(Level.SEVERE, "Error while reading or writing json file.", e);
 		} catch (InterruptedException e){
-			logger.log(Level.SEVERE, "Error while analysing textures from " + inputGame.name, e);
+			logger.log(Level.SEVERE, "Error while analysing textures from " + inputGame.getName(), e);
 		}
 	}
 
@@ -1252,7 +1254,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (split.length <= 1) {
 
 				// for ut99 polygon data does not give package info
-				if (type == T3DRessource.Type.TEXTURE && (inputGame == UTGame.UT99 || inputGame == UTGame.DNF) && gameTextureDb != null) {
+				if (type == T3DRessource.Type.TEXTURE && inputGame.isUseTexDb() && gameTextureDb != null) {
 					String name = split[0];
 
 					final TextureNameToPackageGenerator.TextureInfo ti = gameTextureDb.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
@@ -1370,14 +1372,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *         false
 	 */
 	public boolean canConvertTextures() {
-
-		// todo handle/test ucc_bin for Unreal 1 for linux with
-		// www.oldunreal.com patch
-		if (inputGame.engine.version <= UnrealEngine.UE2.version && inputGame != UTGame.U2) {
-			return userConfig.hasGamePathSet(inputGame) && Installation.isWindows();
-		}
-
-		return false;
+		return inputGame.getUeVersion() <= UnrealEngine.UE2.version;
 	}
 
 	/**
@@ -1386,17 +1381,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return
 	 */
 	public boolean canConvertSounds() {
-
-		if (inputGame.engine.version <= UnrealEngine.UE2.version) {
-			return userConfig.hasGamePathSet(inputGame) && Installation.isWindows();
-		}
-
-		return false;
+		return inputGame.getUeVersion() <= UnrealEngine.UE2.version;
 	}
 
 	public boolean canConvertMusic() {
 		// just a file copy for UT2004 (.ogg files ...)
-		if (inputGame.engine == UnrealEngine.UE2) {
+		if (inputGame.getUeVersion() == UnrealEngine.UE2.version) {
 			return true;
 		} else {
 			return canConvertSounds();
@@ -1551,8 +1541,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.useUbClasses = useUbClasses;
 	}
 
-	public void setUserConfig(UserConfig userConfig) {
-		this.userConfig = userConfig;
+	public ApplicationConfig getApplicationConfig() {
+		return applicationConfig;
 	}
 
 	public void setPreferedTextureExtractorClass(Class<? extends UTPackageExtractor> preferedTextureExtractorClass) {

@@ -8,8 +8,6 @@ package org.xtx.ut4converter.t3d;
 
 import javafx.concurrent.Task;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGameTypes;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
 
@@ -192,7 +190,7 @@ public class T3DLevelConvertor extends Task<Object> {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 
-		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().name + " t3d level");
+		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().getName() + " t3d level");
 
 		// Read actor data from file
 		updateMessage("Reading actors");
@@ -418,12 +416,12 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @return <code>true</code> if lines describe a new actor
 	 */
 	private boolean isBeginActor(String line) {
-		return line.contains("Begin Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.startsWith("Begin Terrain "));
+		return line.contains("Begin Actor") || (this.mapConverter.getInputGame().getUeVersion() == 3 && line.startsWith("Begin Terrain "));
 	}
 
 	private boolean isEndActor(String line) {
 		// Terrain actor does not begins with "Begin Actor Class=Terrain"
-		return line.contains("End Actor") || (this.mapConverter.getInputGame() == UTGames.UTGame.UT3 && line.endsWith("End Terrain"));
+		return line.contains("End Actor") || (this.mapConverter.getInputGame().getUeVersion() == 3 && line.endsWith("End Terrain"));
 	}
 
 	private int actorsReadCount;
@@ -622,27 +620,6 @@ public class T3DLevelConvertor extends Task<Object> {
 				lightMassVolume.name = LIGHTMASS_IMP_VOL_NAME;
 				lightMassVolume.brushClass = T3DBrush.BrushClass.LightmassImportanceVolume;
 				bwr.write(lightMassVolume.toT3d());
-			}
-
-			// Automatically add a navigation volume
-			// FIXME UED4 editor crashes for unknown reason
-			/*
-			 * T3DBrush navMeshBoundsVolume = T3DBrush.createBox(mapConverter,
-			 * boundBox.x + offset, boundBox.y + offset, boundBox.z + offset);
-			 * navMeshBoundsVolume.location = loc; navMeshBoundsVolume.name =
-			 * "NavMeshBndsVolume"; navMeshBoundsVolume.brushClass =
-			 * T3DBrush.BrushClass.NavMeshBoundsVolume;
-			 * bwr.write(navMeshBoundsVolume.writeMoverProperties());
-			 */
-
-			// warn designer to do these steps
-			// to be able to convert correctly objectives
-			// since WorldInfo actor not imported by UE4 (which contained
-			// gametype)
-			if (UTGameTypes.isUt99Assault(mapConverter)) {
-				logger.log(Level.WARNING, "After .t3d file import, set gametype to assault mode in world settings");
-				logger.log(Level.WARNING, "delete all actors in map. Save and re-import the .t3d file");
-				logger.log(Level.WARNING, "You should now see properly assault objectives !");
 			}
 		}
 

@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 
 /**
@@ -36,10 +35,6 @@ public class T3DPlayerStart extends T3DSound {
 
 		if (mc.isTeamGameType()) {
 			isTeamPlayerStart = true;
-		}
-
-		if (UTGameTypes.isUt99Assault(mc)) {
-			teamPlayerStartClass = "UTASTeamStart_C";
 		}
 	}
 

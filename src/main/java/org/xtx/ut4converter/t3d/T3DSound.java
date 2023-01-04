@@ -7,9 +7,9 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import javax.vecmath.Vector3d;
 import java.util.HashMap;
@@ -389,7 +389,7 @@ public class T3DSound extends T3DActor {
 				// decreasing sound volume from UT2004 because seems "loudy" in
 				// UT4 ...
 				// not needed for Unreal 2 even if they share same engine version ..
-				if (mapConverter.getInputGame() == UTGames.UTGame.UT2004) {
+				if (mapConverter.isFrom(UTGames.UTGame.UT2004.shortName)) {
 					soundVolume *= 0.10;
 				}
 
@@ -428,7 +428,8 @@ public class T3DSound extends T3DActor {
 		sbf.append(IDT).append("\tBegin Object Name=\"AudioComponent0\"\n");
 
 		sbf.append(IDT).append("\t\tbOverrideAttenuation=True\n");
-		sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
+		// ????
+		//sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
 
 		if (ambientSound != null) {
 			sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");

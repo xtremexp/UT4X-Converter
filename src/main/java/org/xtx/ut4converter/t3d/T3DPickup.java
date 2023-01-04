@@ -35,13 +35,13 @@ public class T3DPickup extends T3DSound {
 			return "";
 		}
 
-		if (mapConverter.isTo(UTGames.UTGame.UT3, UTGames.UTGame.UT4)) {
+		if (mapConverter.isTo(UTGames.UTGame.UT3.shortName, UTGames.UTGame.UT4.shortName)) {
 
 			sbf.append(IDT).append("Begin Actor Class=").append(convertedPickupClass).append(" Name=").append(name).append("\n");
 
 			T3DMatch.UE4_RCType rootType = T3DMatch.UE4_RCType.ICON;
 
-			if(mapConverter.isTo(UTGames.UTGame.UT4)) {
+			if(mapConverter.isTo(UTGames.UTGame.UT4.shortName)) {
 
 				// TODO refactoring
 				if (match.convertProperties.containsKey(T3DMatch.UE4_RCType.SCENE_COMP.name)) {
@@ -72,7 +72,7 @@ public class T3DPickup extends T3DSound {
 			}
 
 			// sbf.append(IDT).append("\tCollision=").append(rootType.alias).append("\n");
-			if(mapConverter.isTo(UTGames.UTGame.UT4)) {
+			if(mapConverter.isTo(UTGames.UTGame.UT4.shortName)) {
 				sbf.append(IDT).append("\tRootComponent=").append(rootType.alias).append("\n");
 			}
 

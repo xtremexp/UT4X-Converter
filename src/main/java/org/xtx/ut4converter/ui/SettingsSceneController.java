@@ -7,16 +7,14 @@ package org.xtx.ut4converter.ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +54,7 @@ public class SettingsSceneController implements Initializable {
 	/**
 	 * Current user configuration
 	 */
-	UserConfig userConfig;
+	ApplicationConfig appConfig;
 	@FXML
 	private Label settingsLog;
 
@@ -65,6 +63,9 @@ public class SettingsSceneController implements Initializable {
 	 */
 	@FXML
 	private CheckBox chkBoxCheckUpdates;
+
+	@FXML
+	private GridPane gridPane;
 
 	private Stage dialogStage;
 
@@ -81,51 +82,6 @@ public class SettingsSceneController implements Initializable {
 		loadSettings();
 	}
 
-	@FXML
-	private void selectU1Folder() {
-		setUTxFolder(UTGame.U1, u1Path);
-	}
-
-	@FXML
-	private void selectUt99Folder() {
-		setUTxFolder(UTGame.UT99, ut99Path);
-	}
-
-	@FXML
-	private void selectUt2003Folder() {
-		setUTxFolder(UTGame.UT2003, ut2003Folder);
-	}
-
-	@FXML
-	private void selectUt2004Folder() {
-		setUTxFolder(UTGame.UT2004, ut2004Path);
-	}
-
-	@FXML
-	private void selectUt3Folder() {
-		setUTxFolder(UTGame.UT3, ut3Folder);
-	}
-
-	@FXML
-	private void selectUdkFolder() {
-		setUTxFolder(UTGame.UDK, udkFolder);
-	}
-
-	@FXML
-	private void selectUt4EditorFolder() {
-		setUTxFolder(UTGame.UT4, ut4EditorFolder);
-	}
-
-	@FXML
-	private void selectU2Folder() {
-		setUTxFolder(UTGame.U2, u2Path);
-	}
-
-	@FXML
-	private void selectDnfFolder() {
-		setUTxFolder(UTGame.DNF, dnfFolder);
-	}
-
 
 	/**
 	 * Saves game path to UserConfig object
@@ -133,21 +89,16 @@ public class SettingsSceneController implements Initializable {
 	 * @param textFile Text field where new ut game path is stored
 	 * @param utGame UT game to save
 	 */
-	private void saveGamePath(TextField textFile, UTGames.UTGame utGame) {
+	private void saveGamePath(TextField textFile, UnrealGame utGame) {
 
-		UserGameConfig gc = userConfig.getGameConfigByGame(utGame);
 		File gameFolder = new File(textFile.getText());
 
 		if (gameFolder.exists()) {
-			if (gc == null) {
-				userConfig.getGame().add(new UserGameConfig(utGame, gameFolder));
-			} else {
-				gc.setPath(new File(textFile.getText()));
-			}
+			utGame.setPath(gameFolder);
 
 			try {
-				userConfig.saveFile();
-				settingsLog.setText(utGame.name + " folder saved to " + UserConfig.getUserConfigFile().getName());
+				appConfig.saveFile();
+				settingsLog.setText(utGame.getName() + " folder saved to " + ApplicationConfig.getApplicationConfigFile().getName());
 			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_JSON_FILE + " : " + ex.getMessage());
@@ -171,37 +122,39 @@ public class SettingsSceneController implements Initializable {
 	 */
 	private void loadSettings() {
 		try {
-			userConfig = UserConfig.load();
+			appConfig = ApplicationConfig.load();
 
-			for (UserGameConfig game : userConfig.getGame()) {
+			int gameIdx = 0;
 
-				if (game.getPath() != null && null != game.getId()) {
-					switch (game.getId()) {
-						case UT99 -> ut99Path.setText(game.getPath().getAbsolutePath());
-						case U1 -> u1Path.setText(game.getPath().getAbsolutePath());
-						case U2 -> u2Path.setText(game.getPath().getAbsolutePath());
-						case UT2003 -> ut2003Folder.setText(game.getPath().getAbsolutePath());
-						case UT2004 -> ut2004Path.setText(game.getPath().getAbsolutePath());
-						case UT3 -> ut3Folder.setText(game.getPath().getAbsolutePath());
-						case UDK -> udkFolder.setText(game.getPath().getAbsolutePath());
-						case DNF -> dnfFolder.setText(game.getPath().getAbsolutePath());
-						case UT4 -> ut4EditorFolder.setText(game.getPath().getAbsolutePath());
-						default -> {
-						}
-					}
-				}
+			for (UnrealGame game : appConfig.getGames()) {
+
+				final Label gameLabel = new Label(game.getShortName()+ (game.isEditorOnly() ? " Editor":""));
+				final TextField textField = new TextField(game.getPath() != null ? game.getPath().getAbsolutePath() : "");
+				textField.setEditable(false);
+				textField.setPrefWidth(400d);
+				textField.setPromptText("C:\\Program Files (x86)\\" + game.getName());
+
+				final Button button = new Button("Select");
+				button.setOnMouseClicked(mouseEvent -> setUTxFolder(game, textField));
+
+				gridPane.add(gameLabel, 0, gameIdx);
+				gridPane.add(textField, 1, gameIdx);
+				gridPane.add(button, 2, gameIdx);
+
+				gameIdx ++;
 			}
 
-			chkBoxCheckUpdates.setSelected(userConfig.isCheckForUpdates());
+			chkBoxCheckUpdates.setSelected(appConfig.isCheckForUpdates());
 			chkBoxCheckUpdates.selectedProperty().addListener((observable, oldValue, newValue) -> {
-				userConfig.setCheckForUpdates(newValue);
+				appConfig.setCheckForUpdates(newValue);
 				try {
-					userConfig.saveFile();
+					appConfig.saveFile();
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			});
 		} catch (IOException ex) {
+			ex.printStackTrace();
 			Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			showErrorMessage("An error occured while loading UserConfig file :" + ex.getMessage());
 		}
@@ -215,17 +168,17 @@ public class SettingsSceneController implements Initializable {
 	 * @param utPathTxtField
 	 *            Textfield for path game display in settings
 	 */
-	private void setUTxFolder(UTGame utGame, TextField utPathTxtField) {
+	private void setUTxFolder(UnrealGame utGame, TextField utPathTxtField) {
 
 		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("Select " + utGame.name + " folder");
+		chooser.setTitle("Select " + utGame.getName() + " folder");
 
 		if (utPathTxtField != null && utPathTxtField.getText() != null && new File(utPathTxtField.getText()).exists()) {
 			chooser.setInitialDirectory(new File(utPathTxtField.getText()));
 		}
 
-		if (utGame == UTGame.UT4) {
-			chooser.setTitle("Select " + utGame.name + " editor folder");
+		if (utGame.getShortName().equals(UTGame.UT4.shortName)) {
+			chooser.setTitle("Select " + utGame.getName() + " editor folder");
 		}
 
 		File utxFolder = chooser.showDialog(new Stage());

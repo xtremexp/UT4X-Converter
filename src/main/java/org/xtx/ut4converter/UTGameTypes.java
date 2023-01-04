@@ -5,8 +5,6 @@
  */
 package org.xtx.ut4converter;
 
-import org.xtx.ut4converter.UTGames.UTGame;
-
 /**
  * 
  * @author XtremeXp
@@ -94,9 +92,7 @@ public class UTGameTypes {
 		return false;
 	}
 
-	public static boolean isUt99Assault(MapConverter mc) {
-		return mc.getInputGame() == UTGame.UT99 && getGameType(mc.getInMap().getName().split("-")[0]) == GameType.ASSAULT;
-	}
+
 
 	public static GameType getGameType(String prefix) {
 

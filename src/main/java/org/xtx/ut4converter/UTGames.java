@@ -5,9 +5,10 @@
 
 package org.xtx.ut4converter;
 
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.SystemUtil;
+import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 
@@ -34,10 +35,6 @@ public class UTGames {
 	 */
 	public enum UTGame {
 
-		/**
-		 * Undefined
-		 */
-		NONE("None", "None", UnrealEngine.NONE, "unr"),
 
 		/**
 		 * Unreal Tournament
@@ -64,10 +61,6 @@ public class UTGames {
 		 */
 		UT4("Unreal Tournament 4", "UT4", UnrealEngine.UE4, "umap"),
 
-		/**
-		 * Unreal Engine 4.23+ game
-		 */
-		UE4Game("UE4 Game", "UE4Game", UnrealEngine.UE4, "umap"),
 
 		/**
 		 * Unreal 1
@@ -84,10 +77,7 @@ public class UTGames {
 		 */
 		UDK("Unreal Development Kit", "UDK", UnrealEngine.UE3, "udk"),
 
-		/**
-         * Deus Ex (UNTESTED)
-         */
-		DEUSEX("Deux Ex", "DE", UnrealEngine.UE2, "un2"),
+
 		/**
 		 * Duke Nukem Forever
 		 */
@@ -164,27 +154,11 @@ public class UTGames {
 		}
 	}
 
-	public static File getMapsFolder(File basePath, UTGames.UTGame utgame) {
+	public static File getMapsFolder(File basePath, UnrealGame utgame) {
 
-		if (utgame.engine.version <= UnrealEngine.UE2.version) {
-			return new File(basePath + File.separator + "Maps");
-		}
-
-		// not really a specific "Maps" folder but most of them are in parent
-		// folder cookedpc
-		else if (utgame == UTGame.UT3) {
-			return new File(basePath + File.separator + "UTGame" + File.separator + "CookedPC");
-		}
-
-		else if (utgame == UTGame.UDK) {
-			return new File(basePath + File.separator + "UDKGame" + File.separator + "Content" + File.separator + "Maps");
-		}
-
-		else if (utgame == UTGame.UT4) {
-			return new File(basePath + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets" + File.separator + "Maps" + File.separator + "WIP");
-		}
-
-		else {
+		if(utgame.getMapFolder() != null) {
+			return new File(basePath + File.separator + utgame.getMapFolder());
+		} else {
 			return basePath;
 		}
 	}
@@ -195,27 +169,29 @@ public class UTGames {
 	 * @param utgame UT Game
 	 * @return Folder where binaries files of UT game are.
 	 */
-	public static File getBinariesFolder(final File basePath, final UTGames.UTGame utgame) {
+	public static File getBinariesFolder(final File basePath, final UnrealGame utgame) {
 
-		if (utgame.engine.version <= UnrealEngine.UE2.version) {
+		if (utgame.getBinFolder() != null) {
+			return new File(basePath + File.separator + utgame.getBinFolder());
+		}
+
+		if (utgame.getUeVersion() <= UnrealEngine.UE2.version) {
 			return new File(basePath + File.separator + "System");
 		}
 
 		// not really a specific "Maps" folder but most of them are in parent
 		// folder cookedpc
-		else if (utgame == UTGame.UT3) {
-			return new File(basePath + File.separator + "Binaries");
-		}
-		else if (utgame == UTGame.UDK) {
-			if(SystemUtil.is32BitOS()){
-				return new File(basePath + File.separator + "Binaries" + File.separator + "Win32");
+		else if (utgame.getUeVersion() == 3) {
+			if (utgame.getShortName().equals(UTGame.UDK.shortName)) {
+				if (SystemUtil.is32BitOS()) {
+					return new File(basePath + File.separator + "Binaries" + File.separator + "Win32");
+				} else {
+					return new File(basePath + File.separator + "Binaries" + File.separator + "Win64");
+				}
 			} else {
-				return new File(basePath + File.separator + "Binaries" + File.separator + "Win64");
+				return new File(basePath + File.separator + "Binaries");
 			}
-
-		}
-
-		else {
+		} else {
 			return basePath;
 		}
 	}
@@ -226,39 +202,30 @@ public class UTGames {
 	 *
 	 * @return Extension of resource
 	 */
-	public static String getPackageFileExtensionByGameAndType(final UTGame game, final T3DRessource.Type type) {
+	public static String getPackageFileExtensionByGameAndType(final UnrealGame game, final T3DRessource.Type type) {
 
 		if (null != type)
 			switch (type) {
-				case MUSIC:
-					if (game == UTGames.UTGame.DNF) {
-						return ".mp3";
-					} else {
-						if (game.engine == UnrealEngine.UE1) {
-							return ".umx";
-						} else if (game.engine == UnrealEngine.UE2) {
-							return ".ogg";
-						}
-					}
-				case SOUND:
-					if (game == UTGames.UTGame.DNF) {
-						return ".dfx";
-					} else {
-						return ".uax";
-					}
-				case TEXTURE:
-					if (game == UTGames.UTGame.DNF) {
-						return ".dtx";
-					} else {
-						return ".utx";
-					}
-				case STATICMESH:
-					return ".usx";
-				case SCRIPT:
-					return ".u";
-				case LEVEL:
-					return "." + game.mapExtension;
-				default:
+				case MUSIC -> {
+					return game.getMusicExt();
+				}
+				case SOUND -> {
+					return game.getSoundExt();
+				}
+				case TEXTURE -> {
+					return game.getTexExt();
+				}
+				case STATICMESH -> {
+					return "usx";
+				}
+				case SCRIPT -> {
+					return "u";
+				}
+				case LEVEL -> {
+					return game.getMapExt();
+				}
+				default -> {
+				}
 			}
 
 		return null;

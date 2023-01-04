@@ -6,13 +6,13 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.ue1.UBLight;
 import org.xtx.ut4converter.tools.ImageUtils;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
@@ -604,7 +604,7 @@ public class T3DLight extends T3DSound {
 					rotation = new Vector3d();
 				}
 
-				final double DEFAULT_PI_UE = Rotator.getDefaultTwoPi(mapConverter.getInputGame().engine);
+				final double DEFAULT_PI_UE = Rotator.getDefaultTwoPi(UnrealEngine.from(mapConverter.getInputGame().getUeVersion()));
 				final double DEFAULT_PI_UE_HALF = DEFAULT_PI_UE / 2d;
 
 				if (scale3d.x < 0) {

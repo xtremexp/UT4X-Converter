@@ -5,10 +5,10 @@
 
 package org.xtx.ut4converter;
 
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.ue1.*;
 import org.xtx.ut4converter.t3d.ue2.u2.AlarmTrigger;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +154,7 @@ public class SupportedClasses {
 			registerUClass(T3DUE1Trigger.class, "Trigger", "TeamTrigger", "ZoneTrigger", "TimedTrigger", "Trigger_ASTeam", "ScriptedTrigger", "VolumeTrigger", "MessageTrigger", "CrowdTrigger", "UseTrigger", "MusicTrigger", "RedirectionTrigger",
 					"GravityTrigger", "MaterialTrigger", "TriggeredCondition");
 
-			if(mapConverter.getInputGame() == UTGames.UTGame.U2){
+			if(mapConverter.getInputGame().getShortName().equals(UTGames.UTGame.U2.shortName)){
 				registerUClass(AlarmTrigger.class, "AlarmTrigger");
 			}
 		} else {

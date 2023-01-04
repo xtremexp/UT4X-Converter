@@ -23,7 +23,7 @@ public class UPackage {
 	/**
 	 * UT game this package comes from
 	 */
-	private final UTGames.UTGame game;
+	private final UnrealGame game;
 
 	/**
 	 * Name of package
@@ -58,7 +58,7 @@ public class UPackage {
 	 *            UT game this package belong to
 	 * @param uRessource Unreal package resource to add with this new unreal package
 	 */
-	public UPackage(String name, Type type, UTGames.UTGame game, UPackageRessource uRessource) {
+	public UPackage(String name, Type type, UnrealGame game, UPackageRessource uRessource) {
 		this.name = name;
 		this.type = type;
 		this.game = game;
@@ -85,7 +85,7 @@ public class UPackage {
 	 */
 	public File getFileContainer(final MapConverter mapConverter) {
 
-		File gamePath = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath();
+		File gamePath = mapConverter.getInputGame().getPath();
 
 		if (this.file != null) {
 			return this.file;
@@ -97,7 +97,7 @@ public class UPackage {
 		} else {
 
 			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-				this.file = new File(gamePath.getAbsolutePath() + File.separator + UTGames.getPackageBaseFolderByResourceType(type) + File.separator + getName() + UTGames.getPackageFileExtensionByGameAndType(game, type));
+				this.file = new File(gamePath.getAbsolutePath() + File.separator + UTGames.getPackageBaseFolderByResourceType(type) + File.separator + getName() + "." + UTGames.getPackageFileExtensionByGameAndType(game, type));
 
 				// Temp hack sometimes textures are embedded not only in .utx
 				// files but .u files

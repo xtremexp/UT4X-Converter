@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.ucore.UnrealEngine;
-import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -37,11 +37,7 @@ import java.util.logging.Level;
  */
 public final class UCCExporter extends UTPackageExtractor {
 
-	/**
-	 * User game configuration used to get UT game path and so Unreal Package
-	 * extractor as well
-	 */
-    private final UserGameConfig userGameConfig;
+
 
 	/**
 	 * File path of ucc.exe or ut3.com program. Depends of user game settings
@@ -54,7 +50,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	public boolean supportLinux() {
 		// oldunreal.com u1 patch as some UCCLinux.bin file (but is optional
 		// during patch install)
-		return mapConverter.getInputGame() == UTGame.U1;
+		return mapConverter.getInputGame().getShortName().equals(UTGame.U1.shortName);
 	}
 
 	@Override
@@ -62,39 +58,6 @@ public final class UCCExporter extends UTPackageExtractor {
 		return "UCC";
 	}
 
-	/**
-	 * Exporter names
-	 */
-	private enum Name {
-
-		UCC_EXE("ucc.exe"),
-		/**
-		 * Linux version of ucc (Unreal 1 only)
-		 */
-		UCC_BIN("UCCLinux.bin"),
-		/**
-		 * Unreal Tournament 3
-		 */
-		UT3_COM("ut3.com"),
-		/**
-		 * UDK
-		 */
-		UDK_COM("UDK.com");
-
-		/**
-		 * Filename of exporter
-		 */
-		private final String programName;
-
-		Name(String programName) {
-			this.programName = programName;
-		}
-
-		@Override
-		public String toString() {
-			return this.programName;
-		}
-	}
 
 	/**
 	 * Exporter options of embedded UT extractor for Unreal Packages
@@ -144,7 +107,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	 *            Type of ressource
 	 * @return ucc command line options
 	 */
-	private UccOptions getUccOptions(Type type, UnrealEngine engine) {
+	private UccOptions getUccOptions(Type type, int engineVersion) {
 
 		if (forcedUccOption != null) {
 			return forcedUccOption;
@@ -160,11 +123,11 @@ public final class UCCExporter extends UTPackageExtractor {
 
 		else if (type == Type.TEXTURE) {
 
-			if (engine == UnrealEngine.UE2) {
+			if (engineVersion == UnrealEngine.UE2.version) {
 				return UccOptions.TEXTURE_DDS;
 			}
 
-			else if (engine == UnrealEngine.UE1) {
+			else if (engineVersion == UnrealEngine.UE1.version) {
 				return UccOptions.TEXTURE_PCX;
 			}
 		}
@@ -183,7 +146,6 @@ public final class UCCExporter extends UTPackageExtractor {
 	public UCCExporter(MapConverter mapConverter) {
 		super(mapConverter);
 
-		userGameConfig = mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame());
 		uccExporterPath = getExporterPath();
 	}
 
@@ -196,16 +158,11 @@ public final class UCCExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		if (userGameConfig.getPath() == null || !userGameConfig.getPath().exists()) {
-			logger.log(Level.SEVERE, "Game path not set or does not exists in user settings for game " + mapConverter.getInputGame().name);
-			return null;
-		}
-
 		if (!uccExporterPath.exists()) {
 
 			// For Unreal 1, by default ucc.exe program is not embedded, need
 			// download latest patch from www.oldunreal.com !
-			if (mapConverter.getOutputGame() == UTGames.UTGame.U1) {
+			if (mapConverter.isTo(UTGame.U1.shortName)) {
 				logger.log(Level.SEVERE, "{0} program does not exist. Download and install latest {1} patch at www.oldunreal.com", new Object[] { uccExporterPath.getName(), UTGames.UTGame.U1.name });
 			} else {
 				logger.log(Level.SEVERE, "Impossible to find {0} unreal package extractor", uccExporterPath.getAbsolutePath());
@@ -241,8 +198,8 @@ public final class UCCExporter extends UTPackageExtractor {
 
 		// UT3.com or UDK.com does not give info about t3d exported file in logs
 		// but is always PersistentLevel.t3d in Binaries folder
-		if (mapConverter.getInputGame() == UTGame.UT3 || mapConverter.getInputGame() == UTGame.UDK) {
-			final File binariesFolder = UTGames.getBinariesFolder(mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath(), mapConverter.getInputGame());
+		if (mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE3.version) {
+			final File binariesFolder = UTGames.getBinariesFolder(mapConverter.getInputGame().getPath(), mapConverter.getInputGame());
 			return new File(binariesFolder + File.separator + UTGames.T3D_LEVEL_NAME_UE3);
 		} else {
 			return (files != null && !files.isEmpty()) ? files.iterator().next() : null;
@@ -284,36 +241,8 @@ public final class UCCExporter extends UTPackageExtractor {
 	@Override
 	public File getExporterPath() {
 
-		if (userGameConfig == null) {
-			return null;
-		}
-
-		if (mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) {
-			String basePathUcc = userGameConfig.getPath() + File.separator + "System" + File.separator;
-
-			if (supportLinux() && Installation.isLinux()) {
-				basePathUcc += Name.UCC_BIN;
-			} else {
-				basePathUcc += Name.UCC_EXE;
-			}
-
-			return new File(basePathUcc);
-		}
-
-		// UT3
-		else if (mapConverter.getInputGame() == UTGames.UTGame.UT3) {
-			return new File(userGameConfig.getPath() + File.separator + "Binaries" + File.separator + Name.UT3_COM);
-		}
-
-		// UDK
-		else if (mapConverter.getInputGame() == UTGames.UTGame.UDK) {
-			return new File(UTGames.getBinariesFolder(userGameConfig.getPath(), UTGame.UDK) + File.separator + Name.UDK_COM);
-		}
-
-		// UT4 TODO CHECK if exporter does exists in command line
-		else {
-			throw new UnsupportedOperationException("Unsupported UCC exporter for Unreal Engine " + mapConverter.getInputGame().engine.name());
-		}
+		final UnrealGame inputGame = this.mapConverter.getInputGame();
+		return new File(inputGame.getPath() + File.separator + inputGame.getBinFolder() + File.separator + inputGame.getExportExecFilename());
 	}
 
 	/**
@@ -326,14 +255,12 @@ public final class UCCExporter extends UTPackageExtractor {
 	 */
 	private String getCommandLine(String fileName, Type type) {
 
-		UnrealEngine inEngine = mapConverter.getInputGame().engine;
-
-		if (inEngine.version <= UnrealEngine.UE2.version) {
-			return uccExporterPath.getName() + " batchexport  \"" + fileName + "\" " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
+		if (mapConverter.getInputGame().getUeVersion() <= UnrealEngine.UE2.version) {
+			return uccExporterPath.getName() + " batchexport  \"" + fileName + "\" " + getUccOptions(type, mapConverter.getInputGame().getUeVersion()) + " \"" + getExportFolder(type) + "\"";
 		}
 
 		else {
-			return "\"" + uccExporterPath.getAbsolutePath() + "\" batchexport  " + fileName + " " + getUccOptions(type, inEngine);
+			return "\"" + uccExporterPath.getAbsolutePath() + "\" batchexport  " + fileName + " " + getUccOptions(type, mapConverter.getInputGame().getUeVersion());
 		}
 	}
 
@@ -357,7 +284,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			logger.log(
 					Level.INFO,
 					"Exporting " + unrealPackage.getFileContainer(mapConverter).getName() + " " + unrealPackage.type.name() + " package (mode: "
-							+ getUccOptions(unrealPackage.type, mapConverter.getInputGame().engine) + ")");
+							+ getUccOptions(unrealPackage.type, mapConverter.getInputGame().getUeVersion()) + ")");
 
 			// Copy of unreal package to folder of ucc.exe (/System) for U1/U2
 			unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(mapConverter).getName());
@@ -379,7 +306,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			// because ucc.exe don't work if executing itself with parent
 			// folders with whitespaces in name
 			// TODO use only if whitespaces in ucc.exe or map folder name
-			if (mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version) {
+			if (mapConverter.getInputGame().getUeVersion() <= UnrealEngine.UE2.version) {
 				u1Batch = createExportFileBatch(unrealMapCopy, unrealPackage.type);
 				command = u1Batch.getAbsolutePath();
 			} else {

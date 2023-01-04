@@ -6,22 +6,20 @@
 package org.xtx.ut4converter.export;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.ucore.UnrealEngine;
-import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.MaterialInfo;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -50,9 +48,10 @@ public class UModelExporter extends UTPackageExtractor {
 	 * @throws IOException Exception thrown
 	 * @throws InterruptedException Exception thrown
 	 */
-	public void buildUT99TexToPackageFile() throws InterruptedException, IOException{
+	/*
+	public void buildUT99TexToPackageFile(UnrealGame unrealGame) throws InterruptedException, IOException{
 
-		final UserConfig userConfig = mapConverter.getUserConfig();
+		final UserConfig userConfig = mapConverter.getIn();
 		Map<String, String> texToPack = new HashMap<>();
 
 		if(userConfig != null){
@@ -74,6 +73,7 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 		}
 	}
+
 
 	private Map<String, String> getUT99TexToPackageInfo(final UserGameConfig ut99GameConfig, final File texFolder) throws InterruptedException, IOException {
 
@@ -104,6 +104,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 		return texToPac;
 	}
+	*/
 
 	@Override
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException {
@@ -116,7 +117,7 @@ public class UModelExporter extends UTPackageExtractor {
 		final File fileContainer = ressource.getUnrealPackage().getFileContainer(mapConverter);
 		String command = getExporterPath() + " -export -sounds -groups -notgacomp -nooverwrite -nolightmap -lods -uc \"" + fileContainer + "\"";
 		command += " -out=\"" + mapConverter.getTempExportFolder() + "\"";
-		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
+		command += " -path=\"" + mapConverter.getInputGame().getPath() + "\"";
 
 		// if converting to UE4 use png for better quality (else default is tga)
 		if (mapConverter.isTo(UnrealEngine.UE4)) {
@@ -291,11 +292,11 @@ public class UModelExporter extends UTPackageExtractor {
 			type = Type.TEXTURE;
 		} else if (type == Type.SOUND) {
 
-			if (mapConverter.getInputGame().engine.version <= 2) {
+			if (mapConverter.getInputGame().getUeVersion() <= 2) {
 				exportedFile = new File(BASE_EXPORT_FILE + ".wav");
 			}
 
-			else if (mapConverter.getInputGame().engine.version == 3) {
+			else if (mapConverter.getInputGame().getUeVersion() == 3) {
 				exportedFile = new File(BASE_EXPORT_FILE + ".ogg");
 			}
 		}
@@ -461,19 +462,6 @@ public class UModelExporter extends UTPackageExtractor {
 	@Override
 	public String getName() {
 		return "umodel";
-	}
-
-	public static void main(final String[] args){
-
-		try {
-			MapConverter mc = new MapConverter(UTGames.UTGame.UT99, UTGame.UT4);
-			mc.setConvertTextures(true);
-			UModelExporter export = new UModelExporter(mc);
-			export.buildUT99TexToPackageFile();
-		} catch (InterruptedException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

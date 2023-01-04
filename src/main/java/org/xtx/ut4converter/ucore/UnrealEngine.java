@@ -51,6 +51,16 @@ public enum UnrealEngine {
 
     }
 
+    public static UnrealEngine from(int version) {
+        for (UnrealEngine ue : UnrealEngine.values()) {
+            if (ue.version == version) {
+                return ue;
+            }
+        }
+
+        return null;
+    }
+
     /**
      *
      * @return Name of unreal engine

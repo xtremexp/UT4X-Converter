@@ -7,9 +7,9 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue1.UnMath.ESheerAxis;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
@@ -523,7 +523,7 @@ public class T3DBrush extends T3DVolume {
 
 		// UT3 has postprocess volumes
 		// TODO merge/refactor/move to T3DPostProcessVolume class
-		if ((mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
+		if ((mapConverter.getInputGame().getUeVersion() < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
 
 			// add post processvolume
 			T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);

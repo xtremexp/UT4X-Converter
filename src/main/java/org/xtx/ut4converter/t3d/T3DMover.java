@@ -58,9 +58,9 @@ public class T3DMover extends T3DBrush {
 
 		// no generic mover actor for UE4 but UT4 with Lift blueprint
 		// UE3 movers are InterpActors
-		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4 || mapConverter.isTo(UnrealEngine.UE3)) {
+		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName) || mapConverter.isTo(UnrealEngine.UE3)) {
 
-			if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
+			if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
 				moverProperties.writeUT4MoverActor(sbf);
 			}
 			// UE3

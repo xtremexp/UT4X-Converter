@@ -7,8 +7,8 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.tools.Geometry;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import javax.vecmath.Vector3d;
 
@@ -44,7 +44,7 @@ public class T3DTeleporter extends T3DSound {
 	public String toT3d() {
 
 		// only write if we have data about linked teleporter
-		if (mapConverter.isTo(UTGames.UTGame.UT4)) {
+		if (mapConverter.isTo(UTGames.UTGame.UT4.shortName)) {
 
 			sbf.append(IDT).append("Begin Actor Class=BP_Teleporter_New_C Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"TriggerBox\"\n");

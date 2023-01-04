@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="650.0" styleClass="mainFxmlClass"
@@ -13,79 +16,8 @@
                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <center>
             <VBox>
-                    <GridPane alignment="CENTER" hgap="10" vgap="10">
-                        <Label text="Unreal 1 Folder" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                        <TextField fx:id="u1Path" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Gold"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <Button onAction="#selectU1Folder" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                            Select
-                        </Button>
-
-                        <Label text="Unreal 2 Folder" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                        <TextField fx:id="u2Path" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal II The Awakening"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <Button onAction="#selectU2Folder" GridPane.columnIndex="2" GridPane.rowIndex="2">
-                            Select
-                        </Button>
-
-                        <Label text="UT99 Folder" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                        <TextField fx:id="ut99Path" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                        <Button onAction="#selectUt99Folder" GridPane.columnIndex="2" GridPane.rowIndex="3">
-                            Select
-                        </Button>
-
-                        <Label text="UT2003 Folder" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                        <TextField fx:id="ut2003Folder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\UT2003" GridPane.columnIndex="1"
-                                   GridPane.rowIndex="4"/>
-                        <Button onAction="#selectUt2003Folder" GridPane.columnIndex="2"
-                                GridPane.rowIndex="4">Select
-                        </Button>
-
-                        <Label text="UT2004 Folder" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                        <TextField fx:id="ut2004Path" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 2004"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                        <Button onAction="#selectUt2004Folder" GridPane.columnIndex="2"
-                                GridPane.rowIndex="5">Select
-                        </Button>
-
-                        <Label text="UT3 Folder" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                        <TextField fx:id="ut3Folder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files (x86)\Steam\SteamApps\common\Unreal Tournament 3"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                        <Button onAction="#selectUt3Folder" GridPane.columnIndex="2" GridPane.rowIndex="6">
-                            Select
-                        </Button>
-
-                        <Label text="UDK Folder" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                        <TextField fx:id="udkFolder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\UDK-2015-02" GridPane.columnIndex="1"
-                                   GridPane.rowIndex="7"/>
-                        <Button onAction="#selectUdkFolder" GridPane.columnIndex="2" GridPane.rowIndex="7">
-                            Select
-                        </Button>
-
-                        <Label text="UT4 Editor" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                        <TextField fx:id="ut4EditorFolder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\Program Files\Epic Games\UnrealTournamentEditor"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="8"/>
-                        <Button onAction="#selectUt4EditorFolder" GridPane.columnIndex="2"
-                                GridPane.rowIndex="8">Select
-                        </Button>
-
-                        <Label text="DNF (2001)" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                        <TextField fx:id="dnfFolder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\DukeNukemForever2001"
-                                   GridPane.columnIndex="1" GridPane.rowIndex="9"/>
-                        <Button onAction="#selectDnfFolder" GridPane.columnIndex="2"
-                                GridPane.rowIndex="9" userData="DNF">Select
-                        </Button>
-
+                    <GridPane alignment="CENTER" hgap="10" vgap="10" fx:id="gridPane">
+                        <!-- auto filled by program -->
                         <Separator GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="10" />
                         <CheckBox fx:id="chkBoxCheckUpdates" GridPane.columnIndex="0" GridPane.rowIndex="11" GridPane.columnSpan="2">Check updates at startup ?</CheckBox>
                         <Label fx:id="settingsLog" alignment="CENTER" GridPane.columnIndex="0"

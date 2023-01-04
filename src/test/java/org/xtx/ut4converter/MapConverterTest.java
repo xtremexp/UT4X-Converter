@@ -1,6 +1,5 @@
 package org.xtx.ut4converter;
 
-import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.t3d.T3DTestUtils;
 
 import java.io.File;
@@ -22,8 +21,9 @@ class MapConverterTest {
      */
     public static void testConvertAllMapsOfGameToGame(UTGames.UTGame inputGame, UTGames.UTGame outputGame) throws IOException {
 
+
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
-        final File mapsFolder = UTGames.getMapsFolder(mc.getUserConfig().getGameConfigByGame(mc.getInputGame()).getPath(), mc.getInputGame());
+        final File mapsFolder = new File(mc.getInputGame().getPath() + File.separator + mc.getInputGame().getMapFolder());
         mc.setNoUi(true);
 
 
@@ -31,7 +31,7 @@ class MapConverterTest {
 
         for (File mapFile : Objects.requireNonNull(mapsFolder.listFiles())) {
             // try every 4 maps
-            if ((i % 4 == 0) && mapFile.getName().endsWith(UTGames.getPackageFileExtensionByGameAndType(inputGame, T3DRessource.Type.LEVEL)) && mapFile.length() > 100000) {
+            if ((i % 4 == 0) && mapFile.getName().endsWith("." + mc.getInputGame().getMapExt()) && mapFile.length() > 100000) {
                 try {
                     T3DTestUtils.setMapFile(mc, mapFile.getName());
                     mc.convert();

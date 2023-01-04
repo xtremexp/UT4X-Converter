@@ -9,6 +9,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.util.*;
 
@@ -145,7 +146,7 @@ public class T3DMatch {
 	 * Initialise health pickups
 	 * @param inputGame Input game
 	 */
-	private void initialiseHealthPickups(UTGame inputGame) {
+	private void initialiseHealthPickups(UnrealGame inputGame) {
 
 		List<GlobalMatch> gmHpPickups = new ArrayList<>();
 
@@ -161,7 +162,7 @@ public class T3DMatch {
 				new String[] { "SuperHealthCharger" }, new String[] { "UTPickupFactory_SuperHealth" }, new String[] { "Health_Large_C" }));
 
 		for (GlobalMatch gmHpPickup : gmHpPickups) {
-			if (inputGame.engine == UnrealEngine.UE1 || inputGame.engine == UnrealEngine.UE2) {
+			if (inputGame.getUeVersion() == UnrealEngine.UE1.version || inputGame.getUeVersion() == UnrealEngine.UE2.version) {
 				gmHpPickup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UE2_TO_UE4_HP_PICKUP_ZOFFSET });
 			}
 		}
@@ -173,7 +174,7 @@ public class T3DMatch {
 	 * Add actor matches for power ups
 	 * @param inputGame Input game
 	 */
-	private void initialisePowerUps(UTGame inputGame) {
+	private void initialisePowerUps(UnrealGame inputGame) {
 
 		final String UT4_PROP_IT = "InventoryType";
 		final String UT4_CLS_PWRUP = "PowerupBase_C";
@@ -218,7 +219,7 @@ public class T3DMatch {
 				UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Berserk.BP_Berserk_C'"));
 
 		for (GlobalMatch gmPwrup : gmPwrups) {
-			if (inputGame.engine == UnrealEngine.UE1 || inputGame.engine == UnrealEngine.UE2) {
+			if (inputGame.getUeVersion() == UnrealEngine.UE1.version || inputGame.getUeVersion() == UnrealEngine.UE2.version) {
 				gmPwrup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 8d });
 			}
 		}
@@ -278,7 +279,7 @@ public class T3DMatch {
 	 * 
 	 * @param inputGame Input game
 	 */
-	private void initialiseWeapons(UTGame inputGame) {
+	private void initialiseWeapons(UnrealGame inputGame) {
 
 		final String UT4_CLS_WPT = "WeaponBase_C";
 		final String[] UT3_CLS_WPT = new String[] {"UTWeaponPickupFactory"};
@@ -364,11 +365,11 @@ public class T3DMatch {
 
 		for (GlobalMatch gmWp : gmWeapons) {
 			// UT99 -> UT4 modify "z" location to fit with floor
-			if (inputGame.engine == UnrealEngine.UE1) {
+			if (inputGame.getUeVersion() == UnrealEngine.UE1.version) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UT4_WP_ZOFFSET });
-			} else if (inputGame == UTGame.UT2004 || inputGame == UTGame.UT2003) {
+			} else if (UTGame.UT2004.shortName.equals(inputGame.getShortName()) || UTGame.UT2003.shortName.equals(inputGame.getShortName())) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UT2004_UT4_WP_ZOFFSET });
-			} else if (inputGame == UTGame.UT3) {
+			} else if (UTGame.UT3.shortName.equals(inputGame.getShortName())) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UT3_UT4_WP_ZOFFSET });
 			}
 
@@ -400,7 +401,7 @@ public class T3DMatch {
 		 * @param game Game
 		 * @return Global match
 		 */
-		public GlobalMatch withP(UTGames.UTGame game, String property, String value) {
+		public GlobalMatch withP(UTGame game, String property, String value) {
 
 			for (Match m : matches) {
 				if (m.game == game) {
@@ -440,7 +441,7 @@ public class T3DMatch {
 		/**
          * 
          */
-		UTGames.UTGame game;
+		UTGame game;
 
 		/**
 		 * Match available for this engine. Might be useful for convert between
@@ -480,7 +481,7 @@ public class T3DMatch {
 		 * @param t3dClass
 		 * @param convertProperty
 		 */
-		public Match(String[] names, UTGames.UTGame game, Class<? extends T3DActor> t3dClass, String convertProperty) {
+		public Match(String[] names, UTGame game, Class<? extends T3DActor> t3dClass, String convertProperty) {
 			this.actorClass.addAll(Arrays.asList(names));
 			this.game = game;
 			this.engine = game.engine;
@@ -508,8 +509,8 @@ public class T3DMatch {
 	 * @param game
 	 * @return
 	 */
-	private boolean isFromOrTo(UTGame game) {
-		return mapConverter.getInputGame() == game || mapConverter.getOutputGame() == game;
+	private boolean isFromOrTo(UTGames.UTGame game) {
+		return mapConverter.getInputGame().getShortName().equals(game.shortName) || mapConverter.getOutputGame().getShortName().equals(game.shortName) ;
 	}
 
 	private GlobalMatch iByGame(Class<? extends T3DActor> t3dClass, String convertProp, String[] u1Class, String[] u2Class, String[] ut99Class, String[] ut2003Class, String[] ut2004Class,
@@ -554,7 +555,7 @@ public class T3DMatch {
 	 * @param outputGame
 	 * @return
 	 */
-	public HashMap<String, Match> getActorClassMatch(UTGames.UTGame inputGame, UTGames.UTGame outputGame) {
+	public HashMap<String, Match> getActorClassMatch(UnrealGame inputGame, UnrealGame outputGame) {
 
 		List<String> inputClasses = new ArrayList<>();
 		HashMap<String, Match> hm = new HashMap<>();
@@ -562,14 +563,14 @@ public class T3DMatch {
 		for (GlobalMatch matchesForName : list) {
 
 			for (Match matchForName : matchesForName.matches) {
-				if (matchForName.game == inputGame && matchForName.t3dClass != null) {
+				if (matchForName.game.shortName == inputGame.getShortName() && matchForName.t3dClass != null) {
 					inputClasses = matchForName.actorClass;
 					break;
 				}
 			}
 
 			for (Match matchForName : matchesForName.matches) {
-				if (matchForName.game == outputGame) {
+				if (matchForName.game.shortName == outputGame.getShortName()) {
 
 					for (String inputClass : inputClasses) {
 						hm.put(inputClass, matchForName);
@@ -594,7 +595,7 @@ public class T3DMatch {
 	 * @param inActorProps Unreal actor with these properties
 	 * @return A match or null
 	 */
-	public Match getMatchFor(final String inActorClass, UTGames.UTGame inputGame, UTGames.UTGame outputGame, Map<String, String> inActorProps) {
+	public Match getMatchFor(final String inActorClass, UnrealGame inputGame, UnrealGame outputGame, Map<String, String> inActorProps) {
 
 
 		Match m = null;
@@ -607,7 +608,7 @@ public class T3DMatch {
 
 			for (Match matchForName : matchesForName.matches) {
 
-				if (matchForName.game == inputGame && inActorClass != null) {
+				if (matchForName.game.shortName.equals(inputGame.getShortName()) && inActorClass != null) {
 
 					// insensitive case class name check matching
 					long matchCount = matchForName.actorClass.stream().filter(x -> {
@@ -648,7 +649,7 @@ public class T3DMatch {
 
 		for (GlobalMatch matchesForName : goodMatches) {
 			for (Match matchForName : matchesForName.matches) {
-				if (matchForName.game == outputGame) {
+				if (matchForName.game.shortName.equals(outputGame.getShortName())) {
 					return matchForName;
 				}
 			}

@@ -19,14 +19,15 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
+import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,10 +80,17 @@ public class ConversionSettingsController implements Initializable {
 
 	private MapConverter mapConverter;
 
-	private UTGames.UTGame inputGame;
-	private UTGames.UTGame outputGame;
+	/**
+	 * Input unreal game to convert from
+	 */
+	private UnrealGame inputGame;
 
-	private UserGameConfig userInputGameConfig;
+	/**
+	 * Output unreal game to convert to
+	 */
+	private UnrealGame outputGame;
+
+	private ApplicationConfig applicationConfig;
 	@FXML
 	private TitledPane advancedSettingsTitle;
 	@FXML
@@ -203,11 +211,11 @@ public class ConversionSettingsController implements Initializable {
 		this.dialogStage = dialogStage;
 	}
 
-	public void setInputGame(UTGames.UTGame inputGame) {
+	public void setInputGame(UnrealGame inputGame) {
 		this.inputGame = inputGame;
 	}
 
-	public void setOutputGame(UTGames.UTGame outputGame) {
+	public void setOutputGame(UnrealGame outputGame) {
 		this.outputGame = outputGame;
 	}
 
@@ -217,25 +225,24 @@ public class ConversionSettingsController implements Initializable {
 
 	public void load() throws IOException {
 
-		inputGameLbl.setText(inputGame.name);
-		outputGameLbl.setText(outputGame.name);
+		inputGameLbl.setText(inputGame.getName());
+		outputGameLbl.setText(outputGame.getName());
 
-		UserConfig userConfig = UserConfig.load();
 
-		if (userConfig != null) {
-			userInputGameConfig = userConfig.getGameConfigByGame(inputGame);
+		if (applicationConfig == null) {
+			applicationConfig = ApplicationConfig.load();
 		}
 
 		mapConverter = new MapConverter(inputGame, outputGame);
 
 		// games we are working on and testing and adding blueprints
-		if(inputGame == UTGame.U1 || inputGame == UTGame.U2) {
+		if("U1".equals(inputGame.getShortName()) || "U2".equals(inputGame.getShortName())) {
 			mapConverter.setUseUbClasses(mainApp.isUseUbClasses());
 		} else {
 			mapConverter.setUseUbClasses(false);
 		}
 
-		if (inputGame == UTGame.UT3) {
+		if ("UT3".equals(inputGame.getShortName())) {
 			inputMapT3dLbl.setDisable(false);
 			selectInputT3dMap.setDisable(false);
 			t3dLabel.setDisable(false);
@@ -247,13 +254,13 @@ public class ConversionSettingsController implements Initializable {
 
 		// set default scale value depending on input and output engine
 		if(mapConverter.isTo(UnrealEngine.UE4)) {
-			switch (mapConverter.getInputGame().engine.version) {
+			switch (mapConverter.getInputGame().getUeVersion()) {
 				case 1 -> {
 					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
 					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
 				}
 				case 2 -> {
-					if (inputGame == UTGame.U2) {
+					if ("U2".equals(inputGame.getShortName())) {
 						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
 					} else {
 						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
@@ -342,20 +349,20 @@ public class ConversionSettingsController implements Initializable {
 	private void selectInputMap() throws IOException {
 
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select " + inputGame.shortName + " map");
+		chooser.setTitle("Select " + inputGame.getShortName() + " map");
 
-		File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+		File mapFolder = UTGames.getMapsFolder(this.inputGame.getPath(), inputGame);
 
 		if (mapFolder.exists()) {
-			chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+			chooser.setInitialDirectory(mapFolder);
 		}
 
 		// TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal
 		// text files with linux
 		if (Installation.isLinux()) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Map (*.t3d)", "*.t3d"));
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getShortName() + " Map (*.t3d)", "*.t3d"));
 		} else {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Map (*." + inputGame.mapExtension + ", *.t3d)", "*." + inputGame.mapExtension, "*.t3d"));
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getShortName() + " Map (*." + inputGame.getMapExt() + ", *.t3d)", "*." + inputGame.getMapExt(), "*.t3d"));
 		}
 
 		File unrealMap = chooser.showOpenDialog(new Stage());
@@ -391,7 +398,7 @@ public class ConversionSettingsController implements Initializable {
 			}
 			dialogStage.close();
 
-			if (inputGame != UTGame.U2) {
+			if (!"U2".equals(inputGame.getShortName())) {
 				if ("umodel".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
 					mapConverter.setPreferedTextureExtractorClass(UModelExporter.class);
 				} else if ("UCC".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
@@ -428,7 +435,7 @@ public class ConversionSettingsController implements Initializable {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Input map not set");
 			alert.setHeaderText("Input map not set");
-			alert.setContentText("Select your " + inputGame.name + " input map");
+			alert.setContentText("Select your " + inputGame.getName() + " input map");
 
 			alert.showAndWait();
 			return false;
@@ -436,7 +443,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// FOR UT3 need to have .t3d file created from UT3 editor
 		// because the ut3.com batchexport command is buggy and messes up actors !
-		if (mapConverter.getInputGame() == UTGame.UT3 && mapConverter.getInT3d() == null) {
+		if (UTGame.UT3.shortName.equals(mapConverter.getInputGame().getShortName()) && mapConverter.getInT3d() == null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Input .t3d map not set");
 			alert.setHeaderText("Input map not set");
@@ -447,7 +454,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		// for Unreal 1, needs to have oldunreal.com installed
-		if(mapConverter.getInputGame() == UTGame.U1 && !new File(mapConverter.getUserConfig().getGameConfigByGame(UTGame.U1).getPath()+"/System/UCC.exe").exists()){
+		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getBinFolder() + File.separator + inputGame.getExportExecFilename()).exists()) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("OldUnreal Patch not installed");
 			alert.setHeaderText("Patch from oldunreal.com is needed.");
@@ -568,15 +575,15 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	public void selectInputT3dMap() {
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select " + inputGame.shortName + " .t3d map you created from " + mapConverter.getInputGame().shortName + " editor ");
+		chooser.setTitle("Select " + inputGame.getShortName() + " .t3d map you created from " + mapConverter.getInputGame().getShortName() + " editor ");
 
-		File mapFolder = UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame);
+		File mapFolder = UTGames.getMapsFolder(inputGame.getPath(), inputGame);
 
 		if (mapFolder.exists()) {
-			chooser.setInitialDirectory(UTGames.getMapsFolder(userInputGameConfig.getPath(), inputGame));
+			chooser.setInitialDirectory(mapFolder);
 		}
 
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.shortName + " Editor Map (*.t3d)", "*.t3d"));
+		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getShortName() + " Editor Map (*.t3d)", "*.t3d"));
 
 		File t3dUt3EditorFile = chooser.showOpenDialog(new Stage());
 

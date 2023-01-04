@@ -5,4 +5,4 @@
 .project
 *.iml
 /.idea
-/app/conf/*.json
+/app/conf/*TextureDb.json

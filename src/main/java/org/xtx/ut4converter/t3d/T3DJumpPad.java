@@ -58,7 +58,7 @@ public class T3DJumpPad extends T3DSound {
 	public T3DJumpPad(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
 
-		if (mc.isTo(UTGame.UT4)) {
+		if (mc.isTo(UTGame.UT4.shortName)) {
 			offsetZLocation = -40.5d;
 		}
 	}
@@ -111,7 +111,7 @@ public class T3DJumpPad extends T3DSound {
 			jumpSound.export(UTPackageExtractor.getExtractor(mapConverter, jumpSound));
 		}
 
-		if (mapConverter.getOutputGame() == UTGame.UT4) {
+		if (mapConverter.isTo(UTGame.UT4.shortName)) {
 
 			if (jumpZ != null) {
 				jumpTarget = new Vector3d(0d, 0d, jumpZ);
@@ -127,7 +127,7 @@ public class T3DJumpPad extends T3DSound {
 
 	public String toT3d() {
 
-		if (mapConverter.isTo(UTGame.UT4)) {
+		if (mapConverter.isTo(UTGame.UT4.shortName)) {
 			sbf.append(IDT).append("Begin Actor Class=BaseJumpPad_C name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Name=\"SceneComponent\"\n");
 			writeLocRotAndScale();

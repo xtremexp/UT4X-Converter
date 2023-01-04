@@ -1,8 +1,8 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public abstract class T3DObject {
 	 * Current game compatibility state for actor. Should automatically change
 	 * after convert
 	 */
-	private UTGame game = UTGame.NONE;
+	private UnrealGame game = new UnrealGame("Fake Game", "FG", 1, "unr", null, null, null, null, null, null);
 
 	protected Logger logger;
 
@@ -139,11 +139,11 @@ public abstract class T3DObject {
 		}
 	}
 
-	public UTGame getGame() {
+	public UnrealGame getGame() {
 		return game;
 	}
 
-	public void setGame(UTGame game) {
+	public void setGame(UnrealGame game) {
 		this.game = game;
 	}
 
