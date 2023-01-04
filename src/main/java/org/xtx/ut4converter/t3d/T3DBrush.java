@@ -7,7 +7,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;

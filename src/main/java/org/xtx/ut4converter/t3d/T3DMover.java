@@ -7,6 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
 /**
@@ -57,7 +58,7 @@ public class T3DMover extends T3DBrush {
 
 		// no generic mover actor for UE4 but UT4 with Lift blueprint
 		// UE3 movers are InterpActors
-		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4 || mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+		if (mapConverter.getOutputGame() == UTGames.UTGame.UT4 || mapConverter.isTo(UnrealEngine.UE3)) {
 
 			if (mapConverter.getOutputGame() == UTGames.UTGame.UT4) {
 				moverProperties.writeUT4MoverActor(sbf);

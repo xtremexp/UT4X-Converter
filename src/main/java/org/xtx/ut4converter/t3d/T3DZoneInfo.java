@@ -6,7 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.ue1.KillZType;
@@ -108,7 +108,7 @@ public class T3DZoneInfo extends T3DActor {
 			distanceFogColor.toOneRange();
 		}
 		
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4) && (distanceFogColor != null || ambientColor != null)) {
+		if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4) && (distanceFogColor != null || ambientColor != null)) {
 
 			// replace with postprocess volume if light or fog info set
 				T3DPostProcessVolume ppv = new T3DPostProcessVolume(mapConverter, this);

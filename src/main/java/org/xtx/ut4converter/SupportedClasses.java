@@ -5,7 +5,7 @@
 
 package org.xtx.ut4converter;
 
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.ue1.*;
 import org.xtx.ut4converter.t3d.ue2.u2.AlarmTrigger;
@@ -192,13 +192,13 @@ public class SupportedClasses {
 
 		registerUClass(T3DLevelInfo.class, "LevelInfo");
 
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE3, UTGames.UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
 			// disabled until working good
 			registerUClass(T3DZoneInfo.class, "ZoneInfo");
 		}
 
 		// terrain conversion disabled until working good
-		if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
+		if (mapConverter.isFrom(UnrealEngine.UE2)) {
 			registerUClass(T3DUE2Terrain.class, "TerrainInfo");
 		} else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 			registerUClass(T3DUE3Terrain.class, "Terrain");

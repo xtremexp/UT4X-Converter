@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
@@ -143,7 +144,7 @@ public final class UCCExporter extends UTPackageExtractor {
 	 *            Type of ressource
 	 * @return ucc command line options
 	 */
-	private UccOptions getUccOptions(Type type, UTGames.UnrealEngine engine) {
+	private UccOptions getUccOptions(Type type, UnrealEngine engine) {
 
 		if (forcedUccOption != null) {
 			return forcedUccOption;
@@ -159,11 +160,11 @@ public final class UCCExporter extends UTPackageExtractor {
 
 		else if (type == Type.TEXTURE) {
 
-			if (engine == UTGames.UnrealEngine.UE2) {
+			if (engine == UnrealEngine.UE2) {
 				return UccOptions.TEXTURE_DDS;
 			}
 
-			else if (engine == UTGames.UnrealEngine.UE1) {
+			else if (engine == UnrealEngine.UE1) {
 				return UccOptions.TEXTURE_PCX;
 			}
 		}
@@ -287,7 +288,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			return null;
 		}
 
-		if (mapConverter.getInputGame().engine.version < UTGames.UnrealEngine.UE3.version) {
+		if (mapConverter.getInputGame().engine.version < UnrealEngine.UE3.version) {
 			String basePathUcc = userGameConfig.getPath() + File.separator + "System" + File.separator;
 
 			if (supportLinux() && Installation.isLinux()) {
@@ -325,9 +326,9 @@ public final class UCCExporter extends UTPackageExtractor {
 	 */
 	private String getCommandLine(String fileName, Type type) {
 
-		UTGames.UnrealEngine inEngine = mapConverter.getInputGame().engine;
+		UnrealEngine inEngine = mapConverter.getInputGame().engine;
 
-		if (inEngine.version <= UTGames.UnrealEngine.UE2.version) {
+		if (inEngine.version <= UnrealEngine.UE2.version) {
 			return uccExporterPath.getName() + " batchexport  \"" + fileName + "\" " + getUccOptions(type, inEngine) + " \"" + getExportFolder(type) + "\"";
 		}
 
@@ -378,7 +379,7 @@ public final class UCCExporter extends UTPackageExtractor {
 			// because ucc.exe don't work if executing itself with parent
 			// folders with whitespaces in name
 			// TODO use only if whitespaces in ucc.exe or map folder name
-			if (mapConverter.getInputGame().engine.version <= UTGames.UnrealEngine.UE2.version) {
+			if (mapConverter.getInputGame().engine.version <= UnrealEngine.UE2.version) {
 				u1Batch = createExportFileBatch(unrealMapCopy, unrealPackage.type);
 				command = u1Batch.getAbsolutePath();
 			} else {

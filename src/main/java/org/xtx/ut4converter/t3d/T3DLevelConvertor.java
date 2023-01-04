@@ -10,6 +10,7 @@ import javafx.concurrent.Task;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGameTypes;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ui.ConversionViewController;
 
 import javax.vecmath.Vector3d;
@@ -609,7 +610,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void writeFooter() throws IOException {
 
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 
 			Vector3d boundBox = getLevelDimensions();
 			double offset = 100d;

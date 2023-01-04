@@ -7,7 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DMatch.Match;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -395,7 +395,7 @@ public abstract class T3DActor extends T3DObject {
 
 		String baseText = IDT + "\t\t";
 
-		if (outEngine.version >= UTGames.UnrealEngine.UE4.version) {
+		if (outEngine.version >= UnrealEngine.UE4.version) {
 			if (location != null) {
 				sbf.append(baseText).append("RelativeLocation=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
 			}
@@ -522,7 +522,7 @@ public abstract class T3DActor extends T3DObject {
             collisionRadius = 40d;
         }
 
-		if (coLocation != null && mapConverter.getInputGame().engine == UTGames.UnrealEngine.UE1) {
+		if (coLocation != null && mapConverter.getInputGame().engine == UnrealEngine.UE1) {
 			if (location != null) {
 				location.add(coLocation);
 			} else {

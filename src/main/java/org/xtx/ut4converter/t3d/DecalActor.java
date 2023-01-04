@@ -1,7 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -69,7 +69,7 @@ public class DecalActor extends T3DActor {
 
 	public String toT3d() {
 
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			sbf.append(IDT).append("Begin Actor Class=DecalActor Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Class=DecalComponent Name=\"NewDecalComponent\" Archetype=DecalComponent'Default__DecalActor:NewDecalComponent'\n");
 			sbf.append(IDT).append("\tEnd Object\n");

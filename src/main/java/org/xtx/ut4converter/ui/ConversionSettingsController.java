@@ -11,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,6 +19,7 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
@@ -246,7 +246,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		// set default scale value depending on input and output engine
-		if(mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+		if(mapConverter.isTo(UnrealEngine.UE4)) {
 			switch (mapConverter.getInputGame().engine.version) {
 				case 1 -> {
 					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
@@ -265,7 +265,7 @@ public class ConversionSettingsController implements Initializable {
 					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 				}
 			}
-		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+		} else if (mapConverter.isTo(UnrealEngine.UE3)) {
 			ut4MapNameLbl.setText("UT3 Map Name");
 			ut4BaseReferencePath.setVisible(false);
 			ut4BaseReferencePathLbl.setVisible(false);

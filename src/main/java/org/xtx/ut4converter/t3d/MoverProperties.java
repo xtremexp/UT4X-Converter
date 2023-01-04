@@ -7,7 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.iface.T3D;
 import org.xtx.ut4converter.ucore.UPackageRessource;

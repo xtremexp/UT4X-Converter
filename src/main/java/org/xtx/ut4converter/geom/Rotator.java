@@ -5,7 +5,8 @@
  */
 package org.xtx.ut4converter.geom;
 
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.util.Objects;
 

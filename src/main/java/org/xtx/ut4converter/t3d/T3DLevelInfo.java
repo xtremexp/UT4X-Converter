@@ -6,7 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -62,9 +62,9 @@ public class T3DLevelInfo extends T3DActor {
 
 		else if (line.startsWith("Song=")) {
 
-			if (mapConverter.isFrom(UTGames.UnrealEngine.UE1)) {
+			if (mapConverter.isFrom(UnrealEngine.UE1)) {
 				music = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.MUSIC);
-			} else if (mapConverter.isFrom(UTGames.UnrealEngine.UE2)) {
+			} else if (mapConverter.isFrom(UnrealEngine.UE2)) {
 				music = mapConverter.getUPackageRessource(line.split("\"")[1], T3DRessource.Type.MUSIC);
 			}
 		}

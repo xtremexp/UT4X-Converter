@@ -8,6 +8,7 @@ package org.xtx.ut4converter.export;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -118,7 +119,7 @@ public class UModelExporter extends UTPackageExtractor {
 		command += " -path=\"" + mapConverter.getUserConfig().getGameConfigByGame(mapConverter.getInputGame()).getPath() + "\"";
 
 		// if converting to UE4 use png for better quality (else default is tga)
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			command += " -png";
 		}
 
@@ -264,7 +265,7 @@ public class UModelExporter extends UTPackageExtractor {
 		if (type == Type.STATICMESH) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
-			if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+			if (mapConverter.isTo(UnrealEngine.UE4)) {
 				exportedFile = new File(BASE_EXPORT_FILE + ".png");
 			} else {
 				exportedFile = new File(BASE_EXPORT_FILE + ".tga");

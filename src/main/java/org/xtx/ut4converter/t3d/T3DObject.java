@@ -1,8 +1,8 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +147,7 @@ public abstract class T3DObject {
 		this.game = game;
 	}
 
-	protected boolean isTo(UTGames.UnrealEngine unrealEngine){
+	protected boolean isTo(UnrealEngine unrealEngine){
 		return this.mapConverter.getUnrealEngineTo() == unrealEngine;
 	}
 }

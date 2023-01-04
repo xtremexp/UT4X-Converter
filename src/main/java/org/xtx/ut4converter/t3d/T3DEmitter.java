@@ -6,7 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 /**
  *
@@ -71,6 +71,6 @@ public class T3DEmitter extends T3DSound {
 	 */
 	@Override
 	public boolean isValidWriting() {
-		return this.mapConverter.isTo(UTGames.UnrealEngine.UE4);
+		return this.mapConverter.isTo(UnrealEngine.UE4);
 	}
 }

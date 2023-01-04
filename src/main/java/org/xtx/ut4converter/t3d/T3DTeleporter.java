@@ -7,6 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.tools.Geometry;
 
 import javax.vecmath.Vector3d;
@@ -77,7 +78,7 @@ public class T3DTeleporter extends T3DSound {
 				writeEndActor();
 				return sbf.toString();
 			}
-		} else if (mapConverter.isTo(UTGames.UnrealEngine.UE3)) {
+		} else if (mapConverter.isTo(UnrealEngine.UE3)) {
 			final String teleporterClass = mapConverter.isTo(UTGames.UTGame.UT3) ? "UTTeleporter" : "Teleporter";
 
 			sbf.append(IDT).append("Begin Actor Class=").append(teleporterClass).append(" Name=").append(name).append(" Archetype=").append(teleporterClass).append("'Engine.Default__Teleporter'\n");

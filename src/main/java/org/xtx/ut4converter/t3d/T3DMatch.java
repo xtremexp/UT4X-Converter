@@ -8,6 +8,7 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.util.*;
 
@@ -160,7 +161,7 @@ public class T3DMatch {
 				new String[] { "SuperHealthCharger" }, new String[] { "UTPickupFactory_SuperHealth" }, new String[] { "Health_Large_C" }));
 
 		for (GlobalMatch gmHpPickup : gmHpPickups) {
-			if (inputGame.engine == UTGames.UnrealEngine.UE1 || inputGame.engine == UTGames.UnrealEngine.UE2) {
+			if (inputGame.engine == UnrealEngine.UE1 || inputGame.engine == UnrealEngine.UE2) {
 				gmHpPickup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UE2_TO_UE4_HP_PICKUP_ZOFFSET });
 			}
 		}
@@ -217,7 +218,7 @@ public class T3DMatch {
 				UT4_PROP_IT, "BlueprintGeneratedClass'/Game/RestrictedAssets/Pickups/Powerups/BP_Berserk.BP_Berserk_C'"));
 
 		for (GlobalMatch gmPwrup : gmPwrups) {
-			if (inputGame.engine == UTGames.UnrealEngine.UE1 || inputGame.engine == UTGames.UnrealEngine.UE2) {
+			if (inputGame.engine == UnrealEngine.UE1 || inputGame.engine == UnrealEngine.UE2) {
 				gmPwrup.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, 8d });
 			}
 		}
@@ -363,7 +364,7 @@ public class T3DMatch {
 
 		for (GlobalMatch gmWp : gmWeapons) {
 			// UT99 -> UT4 modify "z" location to fit with floor
-			if (inputGame.engine == UTGames.UnrealEngine.UE1) {
+			if (inputGame.engine == UnrealEngine.UE1) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UE1_UT4_WP_ZOFFSET });
 			} else if (inputGame == UTGame.UT2004 || inputGame == UTGame.UT2003) {
 				gmWp.addConvP(UTGame.UT4, new Object[] { Z_OFFSET, UT2004_UT4_WP_ZOFFSET });
@@ -445,7 +446,7 @@ public class T3DMatch {
 		 * Match available for this engine. Might be useful for convert between
 		 * games with same engine or very close (eg.: UT3/UT4)
 		 */
-		UTGames.UnrealEngine engine;
+		UnrealEngine engine;
 
 		/**
          *

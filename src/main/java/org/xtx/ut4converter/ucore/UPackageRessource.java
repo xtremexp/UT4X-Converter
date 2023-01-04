@@ -6,7 +6,6 @@
 package org.xtx.ut4converter.ucore;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.ImageUtils;

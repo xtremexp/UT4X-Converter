@@ -5,7 +5,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.export.*;
@@ -1062,7 +1062,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *
 	 * @return
 	 */
-	public UTGames.UnrealEngine getUnrealEngineTo() {
+	public UnrealEngine getUnrealEngineTo() {
 		return this.getOutputGame().engine;
 	}
 

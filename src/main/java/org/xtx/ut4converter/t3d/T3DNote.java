@@ -6,7 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 
 /**
  * All unconverted actors in map will be replaced by this one so mappers can see
@@ -62,7 +62,7 @@ public class T3DNote extends T3DActor {
 
 		sbf.append(IDT).append("Begin Actor Class=Note Name=").append(name).append("\n");
 
-		if(isTo(UTGames.UnrealEngine.UE4)) {
+		if(isTo(UnrealEngine.UE4)) {
 			sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"SceneComp\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
@@ -75,7 +75,7 @@ public class T3DNote extends T3DActor {
 
 		sbf.append(IDT).append("\tText=\"").append(text).append("\"\n");
 
-		if(isTo(UTGames.UnrealEngine.UE4)) {
+		if(isTo(UnrealEngine.UE4)) {
 			sbf.append(IDT).append("\tRootComponent=SceneComp\n");
 		}
 

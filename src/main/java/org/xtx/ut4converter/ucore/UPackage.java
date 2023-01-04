@@ -7,7 +7,6 @@ package org.xtx.ut4converter.ucore;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 
 import java.io.File;

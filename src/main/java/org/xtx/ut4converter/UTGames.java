@@ -5,6 +5,7 @@
 
 package org.xtx.ut4converter;
 
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.t3d.T3DRessource;
 import org.xtx.ut4converter.tools.SystemUtil;
 
@@ -26,58 +27,7 @@ public class UTGames {
 	 */
 	public static final String UE4_FOLDER_MAP = "/Game/RestrictedAssets/Maps/WIP";
 
-	/**
-	 * List all unreal engines
-	 */
-	public enum UnrealEngine {
 
-		/**
-         *
-         */
-		NONE("None", 0), // Used for java objects sometimes
-
-		/**
-         *
-         */
-		UE1("Unreal Engine 1", 1),
-
-		/**
-         *
-         */
-		UE2("Unreal Engine 2", 2),
-
-		/**
-         *
-         */
-		UE3("Unreal Engine 3", 3),
-
-		/**
-         *
-         */
-		UE4("Unreal Engine 4", 4);
-
-		private final String name;
-
-		/**
-         *
-         */
-		public final int version;
-
-		UnrealEngine(String name, int version) {
-			this.name = name;
-			this.version = version;
-
-		}
-
-		/**
-		 *
-		 * @return Name of unreal engine
-		 */
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
 
 	/**
 	 * List all UT Games

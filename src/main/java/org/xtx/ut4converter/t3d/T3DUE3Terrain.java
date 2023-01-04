@@ -6,7 +6,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue3.TerrainLayer;
 
 import javax.vecmath.Vector3d;
@@ -388,7 +388,7 @@ public class T3DUE3Terrain extends T3DActor {
 	@Override
 	public void convert() {
 
-		if (mapConverter.isTo(UTGames.UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			T3DUE4Terrain ue4Terrain = new T3DUE4Terrain(this);
 			replaceWith(ue4Terrain);
 		}

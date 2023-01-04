@@ -7,7 +7,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UnrealEngine;
+import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -190,7 +190,7 @@ public class T3DSound extends T3DActor {
 		 */
 		Boolean bAttenuateWithLPF;
 
-		public String toString(UTGames.UnrealEngine engine) {
+		public String toString(UnrealEngine engine) {
 			if (engine.version <= 3) {
 				return null;
 			}
