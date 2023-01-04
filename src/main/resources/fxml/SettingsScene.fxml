@@ -78,9 +78,9 @@
                                 GridPane.rowIndex="8">Select
                         </Button>
 
-                        <Label text="Duke Nukem Forever" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                        <Label text="DNF (2001)" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
                         <TextField fx:id="dnfFolder" editable="false" prefWidth="400.0"
-                                   promptText="e.g: C:\DNF"
+                                   promptText="e.g: C:\DukeNukemForever2001"
                                    GridPane.columnIndex="1" GridPane.rowIndex="9"/>
                         <Button onAction="#selectDnfFolder" GridPane.columnIndex="2"
                                 GridPane.rowIndex="9" userData="DNF">Select

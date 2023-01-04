@@ -34,7 +34,7 @@
                 <Menu text="UDK">
                     <MenuItem onAction="#convertUdkToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>
-                <Menu text="Duke Nukem Forever">
+                <Menu text="Duke Nukem Forever (2001)">
                     <MenuItem onAction="#convertDNFToUT3Map" text="Convert map to UT3 ..." />
                     <MenuItem onAction="#convertDNFToUT4Map" text="Convert map to UT4 ..." />
                 </Menu>

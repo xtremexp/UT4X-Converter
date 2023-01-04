@@ -141,7 +141,7 @@ public class UTGames {
 		/**
 		 * Duke Nukem Forever
 		 */
-		DNF("Duke Nukem Forever", "DNF", UnrealEngine.UE1, "dnf");
+		DNF("Duke Nukem Forever (2001)", "DNF", UnrealEngine.UE1, "dnf");
 
 		/**
 		 * Generic name of UT game

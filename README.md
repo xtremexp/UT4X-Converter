@@ -24,7 +24,7 @@ It might work from non unreal/ut games, but it's not tested/supported at all.
 Here are the different conversion possible :
 
 - Source Game -> Dest Game (Conversion quality)
-- U1/UT99/Duke Nukem Forever -> UT3/UT4 (Good)
+- U1/UT99/Duke Nukem Forever (2001) -> UT3/UT4 (Good)
 - UT2003/2004 -> UT4 (Good)
 - Unreal 2/UT3/UDK -> UT4 (Medium)
 - X -> Unreal Engine 5 (Not Supported)
@@ -114,8 +114,13 @@ These programs are being used during conversion process.
 ---
 
 ## History
+- 1.2.1 - DD/MM/YYYY
+  - Legal: Set licence to Attribution-NonCommercial-ShareAlike 4.0
+  - Legal: Added license user agreement for install
+  - ui: Added UT Converter logo icon
+
 - 1.2.0 - 03/01/2023
-  - Added support for Duke Nukem Forever (Experimental)
+  - Added support for Duke Nukem Forever 2001 (Experimental)
   - ui: map scale factor can now be customized
   - u1/ut99->ut3: interpactors (movers) now collide_all by default
   - u1/ut99->ut3: sheet brushes causing BSP holes are now converted into semi-solid brushes (will remove many bsp holes)
@@ -126,16 +131,5 @@ These programs are being used during conversion process.
   - ui: now program checks for updates at startup (can be desactivated in settings)
   - all: if actor filter is on and contains brush actor, the big additive brush will still be added
 
-- 1.1.1 - 22/12/2022
-  - u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
-  - tech: upgraded to latest java version (17->19)
-
-- 1.1.0 - 21/12/2022
-  - Added Unreal 1/UT99 -> UT3 conversion
-  - UE1/UE2: fixed no sound actor created from actors with sound properties (e.g Lights)
-  - all: group property is now properly converted
-  - u1: now checks if patch from oldunreal.com is installed prior to conversion (ucc.exe needed)
-  - ui: renamed program from UT4X Converter to UT Converter since it helps converting not to UT4 only
-  - ui: added menu entry to github project wiki page
 
 See history.md for complete history
