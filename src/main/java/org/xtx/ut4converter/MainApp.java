@@ -3,6 +3,7 @@ package org.xtx.ut4converter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -35,7 +36,7 @@ public class MainApp extends Application {
 	/**
 	 * Author
 	 */
-	public static final String AUTHOR = "XtremeXp / WinterIsComing";
+	public static final String AUTHOR = "Thomas 'WinterIsComing/XtremeXp' P.";
 
 	/**
 	 * All scenes should be enumerated here
@@ -106,6 +107,7 @@ public class MainApp extends Application {
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 
+			primaryStage.getIcons().add(new Image("ut-converter-logo.png"));
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
