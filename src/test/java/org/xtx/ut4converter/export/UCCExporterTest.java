@@ -98,7 +98,8 @@ public class UCCExporterTest {
         final List<UnrealGame> games = ApplicationConfig.getBaseGames();
         final UnrealGame inputGame2 = games.stream().filter(g -> g.getShortName().equals(inputGame.shortName)).findFirst().orElse(null);
 
-        final File mapFolder = UTGames.getMapsFolder(inputGame2.getPath(), mc.getInputGame());
+
+        final File mapFolder = new File(inputGame2.getPath() + File.separator + mc.getInputGame().getMapFolder());
 
         final Collection<File> utxMapFiles = FileUtils.listFiles(mapFolder, new String[]{inputGame.mapExtension}, true);
 

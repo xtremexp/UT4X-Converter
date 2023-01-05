@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
@@ -351,7 +350,7 @@ public class ConversionSettingsController implements Initializable {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.getShortName() + " map");
 
-		File mapFolder = UTGames.getMapsFolder(this.inputGame.getPath(), inputGame);
+		File mapFolder = new File(this.inputGame.getPath() + File.separator + this.inputGame.getMapFolder());
 
 		if (mapFolder.exists()) {
 			chooser.setInitialDirectory(mapFolder);
@@ -577,7 +576,7 @@ public class ConversionSettingsController implements Initializable {
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.getShortName() + " .t3d map you created from " + mapConverter.getInputGame().getShortName() + " editor ");
 
-		File mapFolder = UTGames.getMapsFolder(inputGame.getPath(), inputGame);
+		File mapFolder = new File(inputGame.getPath() + File.separator + inputGame.getMapFolder());
 
 		if (mapFolder.exists()) {
 			chooser.setInitialDirectory(mapFolder);
@@ -593,8 +592,4 @@ public class ConversionSettingsController implements Initializable {
 		}
 	}
 
-	public static void main(String[] args){
-		float x = Float.parseFloat("1.22");
-		System.out.println(x);
-	}
 }

@@ -6,11 +6,8 @@
 package org.xtx.ut4converter;
 
 import org.xtx.ut4converter.t3d.T3DRessource;
-import org.xtx.ut4converter.tools.SystemUtil;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.UnrealGame;
-
-import java.io.File;
 
 /**
  * Class defining all UT Games
@@ -131,70 +128,6 @@ public class UTGames {
 		}
 	}
 
-	
-	/**
-	 * Returns default folder for textures.
-	 * @param basePath Unreal game root path (e.g: C:\Program Files (x86)\Steam\steamapps\common\Unreal Tournament)
-	 * @param utgame UT Game
-	 * @return Default folder for texture (only for UE1/UE2 ut games)
-	 */
-	public static File getTexturesFolder(final File basePath, UTGames.UTGame utgame) {
-		if (utgame.engine.version <= UnrealEngine.UE2.version) {
-			return new File(basePath + File.separator + "Textures");
-		} else {
-			return null;
-		}
-	}
-	
-	public static File getSystemFolder(final File basePath, UTGames.UTGame utgame) {
-		if (utgame.engine.version <= UnrealEngine.UE2.version) {
-			return new File(basePath + File.separator + "System");
-		} else {
-			return null;
-		}
-	}
-
-	public static File getMapsFolder(File basePath, UnrealGame utgame) {
-
-		if(utgame.getMapFolder() != null) {
-			return new File(basePath + File.separator + utgame.getMapFolder());
-		} else {
-			return basePath;
-		}
-	}
-
-	/**
-	 * 
-	 * @param basePath Game path from config
-	 * @param utgame UT Game
-	 * @return Folder where binaries files of UT game are.
-	 */
-	public static File getBinariesFolder(final File basePath, final UnrealGame utgame) {
-
-		if (utgame.getBinFolder() != null) {
-			return new File(basePath + File.separator + utgame.getBinFolder());
-		}
-
-		if (utgame.getUeVersion() <= UnrealEngine.UE2.version) {
-			return new File(basePath + File.separator + "System");
-		}
-
-		// not really a specific "Maps" folder but most of them are in parent
-		// folder cookedpc
-		else if (utgame.getUeVersion() == 3) {
-			if (utgame.getShortName().equals(UTGame.UDK.shortName)) {
-				if (SystemUtil.is32BitOS()) {
-					return new File(basePath + File.separator + "Binaries" + File.separator + "Win32");
-				} else {
-					return new File(basePath + File.separator + "Binaries" + File.separator + "Win64");
-				}
-			} else {
-				return new File(basePath + File.separator + "Binaries");
-			}
-		} else {
-			return basePath;
-		}
-	}
 
 	/**
 	 * UE1/UE2 only

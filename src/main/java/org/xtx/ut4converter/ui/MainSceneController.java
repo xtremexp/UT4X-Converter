@@ -15,25 +15,18 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
-import org.xtx.ut4converter.UTGames;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
-import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -326,61 +319,5 @@ public class MainSceneController implements Initializable {
 		return false;
 	}
 
-	/**
-	 * Allow extract textures from Unreal 2 package
-	 */
-	@FXML
-	private void extractTexturesFromU2Package(){
-
-		final UTGame unreal2 = UTGame.U2;
-		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select your " + unreal2.name + " texture package");
-
-		final UserGameConfig userGameConfigU2 = this.userConfig.getGameConfigByGame(UTGame.U2);
-
-		if (userGameConfigU2 == null) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Unreal 2 path not set");
-			alert.setHeaderText("Unreal 2 installation path needs to be set.");
-			alert.setContentText("Adjust settings for unreal 2 game");
-
-			alert.showAndWait();
-			showSettings();
-			return;
-		}
-
-		File texFolder = UTGames.getTexturesFolder(userGameConfigU2.getPath(), UTGame.U2);
-
-		if (texFolder != null && texFolder.exists()) {
-			chooser.setInitialDirectory(texFolder);
-		}
-
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(unreal2.shortName + " texture package (*.utx)", "*.utx"));
-		chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(unreal2.shortName + " texture package (*.u)", "*.u"));
-
-		File texturePackage = chooser.showOpenDialog(new Stage());
-
-		if(texturePackage != null){
-			final DirectoryChooser dcOutputFolder = new DirectoryChooser();
-			dcOutputFolder.setTitle("Select where you want to extract textures");
-
-			final File outputFolder = dcOutputFolder.showDialog(new Stage());
-			if(outputFolder != null){
-				try {
-					SimpleTextureExtractor.extractSimple(texturePackage, outputFolder);
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Texture package succesfully extracted !");
-					alert.setHeaderText("Texture package succesfully extracted !");
-					alert.showAndWait();
-				} catch (Exception e) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error while extracting texture package.");
-					alert.setHeaderText("Error while extracting texture package.");
-					alert.showAndWait();
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 }

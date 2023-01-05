@@ -199,7 +199,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		// UT3.com or UDK.com does not give info about t3d exported file in logs
 		// but is always PersistentLevel.t3d in Binaries folder
 		if (mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE3.version) {
-			final File binariesFolder = UTGames.getBinariesFolder(mapConverter.getInputGame().getPath(), mapConverter.getInputGame());
+			final File binariesFolder = new File(mapConverter.getInputGame().getPath() + File.separator + mapConverter.getInputGame().getBinFolder());
 			return new File(binariesFolder + File.separator + UTGames.T3D_LEVEL_NAME_UE3);
 		} else {
 			return (files != null && !files.isEmpty()) ? files.iterator().next() : null;
