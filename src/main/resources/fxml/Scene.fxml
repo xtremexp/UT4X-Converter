@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane id="AnchorPane" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
     <!-- MENU BAR -->
     <top>
@@ -22,4 +23,16 @@
             </Menu>
         </MenuBar>
     </top>
+    <center>
+        <Pane>
+        <Label alignment="CENTER" layoutX="22.0" layoutY="46.0" prefHeight="51.0" prefWidth="544.0"
+               text="Welcome to UT converter !" style="-fx-font-size: 35"/>
+        <Label alignment="CENTER" layoutX="46.0" layoutY="151.0" prefHeight="17.0" prefWidth="511.0"
+               text="Program helps converting maps from previous Unreal (Tournament) games" style="-fx-font-size: 14"/>
+        <Label alignment="CENTER" layoutX="103.0" layoutY="200.0" prefHeight="17.0" prefWidth="396.0"
+               text="to either UT3(2007) or UT4(2015) game." style="-fx-font-size: 14"/>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="39.0" layoutY="248.0" prefHeight="17.0" prefWidth="526.0"
+               text="You may ask authorization from original author prior to converting map." textFill="#ff681c"/>
+        </Pane>
+    </center>
 </BorderPane>

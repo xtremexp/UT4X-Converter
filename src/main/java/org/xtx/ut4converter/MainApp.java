@@ -47,10 +47,7 @@ public class MainApp extends Application {
 		 *
 		 */
 		MAIN("/fxml/Scene.fxml"),
-		/**
-		 * Welcome message
-		 */
-		WELCOME("/fxml/WelcomeView.fxml"),
+
 		/**
 		 * App settings
 		 */
@@ -91,7 +88,8 @@ public class MainApp extends Application {
 			this.useUbClasses = true;
 		}
 
-		showWelcomeView();
+		logger.info(PROGRAM_NAME + " " + VERSION + " started");
+		//showWelcomeView();
 	}
 
 	/**
@@ -127,13 +125,6 @@ public class MainApp extends Application {
 		}
 	}
 
-	/**
-	 * Shows the welcome overview inside the root layout.
-	 */
-	public void showWelcomeView() {
-		showView(FXMLoc.WELCOME.path);
-		logger.info(PROGRAM_NAME + " " + VERSION + " started");
-	}
 
 	/**
 	 *
