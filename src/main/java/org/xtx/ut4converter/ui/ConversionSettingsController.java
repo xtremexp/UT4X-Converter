@@ -201,7 +201,7 @@ public class ConversionSettingsController implements Initializable {
 		lightMapResolutionList.getSelectionModel().select(lightMapResolutionList.getItems().indexOf(DEFAULT_LIGHTMAP_RESOLUTION_UE3));
 
 		soundVolumeFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
-		soundVolumeFactor.getSelectionModel().select(2f);
+		soundVolumeFactor.getSelectionModel().select(1f);
 
 		texExtractorChoiceBox.getSelectionModel().select("umodel");
 	}
