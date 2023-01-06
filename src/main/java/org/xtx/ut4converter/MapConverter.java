@@ -529,8 +529,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			// UE1 games (but U1) may need to build texture db file to get packagename from texture name
 			if (inputGame.isUseTexDb()) {
-				logger.log(Level.INFO, "Generating or updating " + inputGame.getShortName() + " texture db file " + TextureDbFile.getBaseFileName(inputGame));
+				logger.log(Level.INFO, "Generating or updating " + inputGame.getShortName() + " texture db file " + TextureDbFile.getTextureDbFileNameForGame(inputGame));
 				TextureDbFile.createOrUpdateTexDbForGame(inputGame);
+				this.gameTextureDb = TextureDbFile.loadTextureDbForGame(inputGame);
 				updateProgress(5, 100);
 			}
 

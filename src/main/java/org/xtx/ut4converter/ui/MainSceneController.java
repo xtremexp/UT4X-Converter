@@ -99,9 +99,7 @@ public class MainSceneController implements Initializable {
 					gameToMenuItem.setId("convert" + entry.getKey() + outputGame);
 					gameFromMenu.getItems().add(gameToMenuItem);
 
-					gameToMenuItem.setOnAction(t -> {
-						convertUtxMap(inputGame, outputGame);
-					});
+					gameToMenuItem.setOnAction(t -> convertUtxMap(inputGame, outputGame));
 				}
 
 				menuFile.getItems().add(0, gameFromMenu);
@@ -158,7 +156,7 @@ public class MainSceneController implements Initializable {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("About");
 		alert.setHeaderText("About " + MainApp.PROGRAM_NAME + ": ");
-		alert.setContentText("Version: " + MainApp.VERSION + "\nAuthor: " + MainApp.AUTHOR + "\nPowered by Java " + System.getProperty("java.version"));
+		alert.setContentText("Version: " + MainApp.VERSION + "\nAuthor: " + MainApp.AUTHOR + "\nPowered by Java " + Runtime.version().feature() + "." + Runtime.version().interim()+ "." + Runtime.version().update());
 
 		alert.showAndWait();
 	}
