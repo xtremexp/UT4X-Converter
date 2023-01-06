@@ -4,7 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
+<?import java.net.URL?>
+
 <AnchorPane prefHeight="480.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
+
+    <stylesheets>
+        <URL value="@/styles/Styles.css"/>
+    </stylesheets>
 
     <BorderPane prefHeight="550.0" prefWidth="700.0">
 

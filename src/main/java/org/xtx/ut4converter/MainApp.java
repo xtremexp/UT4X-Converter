@@ -97,6 +97,7 @@ public class MainApp extends Application {
 	 */
 	public void initRootLayout() {
 		try {
+
 			// Load root layout from fxml file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(FXMLoc.MAIN.path));
@@ -105,7 +106,7 @@ public class MainApp extends Application {
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 
-			primaryStage.getIcons().add(new Image("ut-converter-logo.png"));
+			primaryStage.getIcons().add(new Image("images/ut-converter-logo.png"));
 			primaryStage.setScene(scene);
 			primaryStage.show();
 

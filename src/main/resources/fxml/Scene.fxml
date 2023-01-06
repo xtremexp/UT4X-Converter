@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-<BorderPane id="AnchorPane" prefHeight="600" prefWidth="800" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
+<?import java.net.URL?>
+
+<BorderPane id="AnchorPane" prefHeight="600" prefWidth="1030" style="-fx-background-color: #1E1F22; -fx-background-image: url('/images/utx-welcome.png'); -fx-background-repeat: stretch;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
+
+    <stylesheets>
+        <URL value="@/styles/Styles.css"/>
+    </stylesheets>
+
     <!-- MENU BAR -->
     <top>
         <MenuBar>
@@ -23,16 +34,17 @@
             </Menu>
         </MenuBar>
     </top>
+
     <center>
         <Pane>
-        <Label alignment="CENTER" layoutX="22.0" layoutY="46.0" prefHeight="51.0" prefWidth="544.0"
-               text="Welcome to UT converter !" style="-fx-font-size: 35"/>
-        <Label alignment="CENTER" layoutX="46.0" layoutY="151.0" prefHeight="17.0" prefWidth="511.0"
-               text="Program helps converting maps from previous Unreal (Tournament) games" style="-fx-font-size: 14"/>
-        <Label alignment="CENTER" layoutX="103.0" layoutY="200.0" prefHeight="17.0" prefWidth="396.0"
-               text="to either UT3(2007) or UT4(2015) game." style="-fx-font-size: 14"/>
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="39.0" layoutY="248.0" prefHeight="17.0" prefWidth="526.0"
-               text="You may ask authorization from original author prior to converting map." textFill="#ff681c"/>
+            <Label alignment="CENTER" layoutX="300.0" layoutY="270" textAlignment="CENTER" style="-fx-font-size: 35;" text="Welcome to UT converter !" textFill="WHITE" />
+            <Label alignment="CENTER" layoutX="300.0" layoutY="330" textAlignment="CENTER" style="-fx-font-size: 14" text="Program helps converting maps from previous Unreal (Tournament) games" textFill="WHITE" />
+            <Label alignment="CENTER" layoutX="300.0" layoutY="360" textAlignment="CENTER" style="-fx-font-size: 14" text="to either UT3(2007) or UT4(2015) game." textFill="WHITE" />
+            <Label alignment="CENTER" layoutX="300.0" layoutY="390" textAlignment="CENTER" text="You may ask authorization from original author prior to converting map." textFill="#fc5400" />
         </Pane>
     </center>
+
+    <bottom>
+        <Label BorderPane.alignment="CENTER" textFill="WHITE">Note: this program is not affiliated with Epic Games© or any of its subsidiaries.</Label>
+    </bottom>
 </BorderPane>
