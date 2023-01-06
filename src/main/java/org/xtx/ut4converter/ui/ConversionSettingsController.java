@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -51,29 +52,11 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	public Label inputMapT3dLbl;
 
-	@FXML
-	public Button selectInputT3dMap;
-
-	@FXML
-	public Label t3dLabel;
-
 	private Stage dialogStage;
 
 	@FXML
-	private Label inputGameLbl;
-	@FXML
-	private Label outputGameLbl;
-	@FXML
-	private Label inputMapLbl;
-	@FXML
 	private Label outputFolderLbl;
 
-	/**
-	 * Path where ressources will be referenced to
-	 * (e.g: '/Game/RestrictedAssets/Maps/WIP/DM-Deck16'
-	 */
-	@FXML
-	private Label ut4BaseReferencePath;
 
 	private MainApp mainApp;
 
@@ -90,10 +73,7 @@ public class ConversionSettingsController implements Initializable {
 	private UnrealGame outputGame;
 
 	private ApplicationConfig applicationConfig;
-	@FXML
-	private TitledPane advancedSettingsTitle;
-	@FXML
-	private TitledPane mainSettingsTitle;
+
 	@FXML
 	private CheckBox convTexCheckBox;
 	@FXML
@@ -146,23 +126,24 @@ public class ConversionSettingsController implements Initializable {
 	private ComboBox<Float> soundVolumeFactor;
 	@FXML
 	private Label outMapNameLbl;
-	@FXML
-	private Label ut4MapNameLbl;
-
-	@FXML
-	private Label ut4BaseReferencePathLbl;
-
-	@FXML
-	private Button ut4BaseReferencePathBtn;
 
 	@FXML
 	private CheckBox debugLogLevel;
-	@FXML
-	private Button changeMapNameBtn;
-
 
 	@FXML
 	private TextField classesNameFilter;
+
+	@FXML
+	private GridPane gridPaneMainSettings;
+
+	private Label inputMapPathLbl;
+
+
+	private Label ue4RefPathLbl;
+
+	private Button changeMapNameBtn;
+
+	private Button changeUe4RefPathBtn;
 
 	/**
 	 * Initializes the controller class.
@@ -172,26 +153,6 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-
-		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 3., 3.125, 3.5, 4., 4.5, 5.);
-		scaleFactorList.getItems().sort(Comparator.naturalOrder());
-		scaleFactorList.setConverter(new StringConverter<>() {
-
-			@Override
-			public String toString(Double object) {
-				if (object == null) return null;
-				return object.toString();
-			}
-
-			@Override
-			public Double fromString(String string) {
-				if (string != null) {
-					return Double.parseDouble(string);
-				} else {
-					return null;
-				}
-			}
-		});
 
 		lightningBrightnessFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
 		lightningBrightnessFactor.getSelectionModel().select(2); //1
@@ -224,8 +185,81 @@ public class ConversionSettingsController implements Initializable {
 
 	public void load() throws IOException {
 
-		inputGameLbl.setText(inputGame.getName());
-		outputGameLbl.setText(outputGame.getName());
+		// INPUT MAP SETTINGS
+		gridPaneMainSettings.add(new Label("Input Game"), 0, 0);
+		gridPaneMainSettings.add(new Label(inputGame.getName()), 1, 0);
+
+		// Select map
+		gridPaneMainSettings.add(new Label("Map :"), 0, 1);
+		inputMapPathLbl = new Label("Select map !");
+		gridPaneMainSettings.add(inputMapPathLbl, 1, 1);
+		Button selectInputMapBtn = new Button("Select");
+		selectInputMapBtn.setOnAction(t -> selectInputMap());
+		gridPaneMainSettings.add(selectInputMapBtn, 2, 1);
+
+		// FOR input UE3 game we need the .t3d from editor to get the right brush order
+		int rowIdx = 3;
+
+		// UT3 Only - Select .t3d map
+		if (inputGame.getShortName().equals("UT3")) {
+			gridPaneMainSettings.add(new Label("Map (.t3d):"), 0, rowIdx);
+			inputMapT3dLbl = new Label("Select UT3 .t3d Map!");
+			gridPaneMainSettings.add(inputMapT3dLbl, 1, rowIdx++);
+		}
+
+		gridPaneMainSettings.add(new Separator(), 0, rowIdx++, 3, 1);
+
+		// OUTPUT MAP SETTINGS
+		gridPaneMainSettings.add(new Label("Output Game :"), 0, rowIdx);
+		gridPaneMainSettings.add(new Label(outputGame.getName()), 1, rowIdx++);
+
+		gridPaneMainSettings.add(new Label("Output Folder: "), 0, rowIdx);
+		outputFolderLbl = new Label("");
+		gridPaneMainSettings.add(outputFolderLbl, 1, rowIdx++);
+
+		gridPaneMainSettings.add(new Label("Scale Factor:"), 0, rowIdx);
+		scaleFactorList = new ComboBox<>();
+		scaleFactorList.setEditable(true);
+		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 3., 3.125, 3.5, 4., 4.5, 5.);
+		scaleFactorList.getItems().sort(Comparator.naturalOrder());
+		scaleFactorList.setConverter(new StringConverter<>() {
+
+			@Override
+			public String toString(Double object) {
+				if (object == null) return null;
+				return object.toString();
+			}
+
+			@Override
+			public Double fromString(String string) {
+				if (string != null) {
+					return Double.parseDouble(string);
+				} else {
+					return null;
+				}
+			}
+		});
+		gridPaneMainSettings.add(scaleFactorList, 1, rowIdx++);
+
+		gridPaneMainSettings.add(new Label(outputGame.getShortName() + " Map Name"), 0, rowIdx);
+		outMapNameLbl = new Label("");
+		gridPaneMainSettings.add(outMapNameLbl, 1, rowIdx);
+
+		changeMapNameBtn = new Button("Change");
+		changeMapNameBtn.setDisable(true);
+		changeMapNameBtn.setOnAction(t -> changeMapName());
+		gridPaneMainSettings.add(changeMapNameBtn, 2, rowIdx++);
+
+		// UE4 Editor only
+		if (outputGame.getUeVersion() == 4) {
+			gridPaneMainSettings.add(new Label("UE4 Editor ref. base path:"), 0, rowIdx);
+			ue4RefPathLbl = new Label("");
+			gridPaneMainSettings.add(ue4RefPathLbl, 1, rowIdx);
+			changeUe4RefPathBtn = new Button("Change");
+			changeUe4RefPathBtn.setDisable(true);
+			changeUe4RefPathBtn.setOnAction(t -> selectUe4EditorBaseRefPath());
+			gridPaneMainSettings.add(changeUe4RefPathBtn, 2, rowIdx);
+		}
 
 
 		if (applicationConfig == null) {
@@ -241,15 +275,6 @@ public class ConversionSettingsController implements Initializable {
 			mapConverter.setUseUbClasses(false);
 		}
 
-		if ("UT3".equals(inputGame.getShortName())) {
-			inputMapT3dLbl.setDisable(false);
-			selectInputT3dMap.setDisable(false);
-			t3dLabel.setDisable(false);
-		} else {
-			inputMapT3dLbl.setDisable(true);
-			selectInputT3dMap.setDisable(true);
-			t3dLabel.setDisable(true);
-		}
 
 		// set default scale value depending on input and output engine
 		if(mapConverter.isTo(UnrealEngine.UE4)) {
@@ -272,10 +297,6 @@ public class ConversionSettingsController implements Initializable {
 				}
 			}
 		} else if (mapConverter.isTo(UnrealEngine.UE3)) {
-			ut4MapNameLbl.setText("UT3 Map Name");
-			ut4BaseReferencePath.setVisible(false);
-			ut4BaseReferencePathLbl.setVisible(false);
-			ut4BaseReferencePathBtn.setVisible(false);
 			scaleFactorList.getSelectionModel().select(1.25d);
 			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
 		}
@@ -338,14 +359,17 @@ public class ConversionSettingsController implements Initializable {
 				mapConverter.setOutMapName(newMapName);
 				outMapNameLbl.setText(mapConverter.getOutMapName());
 				mapConverter.initConvertedResourcesFolder();
-				ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
+
+				if(ue4RefPathLbl != null) {
+					ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+				}
 			}
 		}
 
 	}
 
 	@FXML
-	private void selectInputMap() throws IOException {
+	private void selectInputMap()  {
 
 		FileChooser chooser = new FileChooser();
 		chooser.setTitle("Select " + inputGame.getShortName() + " map");
@@ -368,11 +392,16 @@ public class ConversionSettingsController implements Initializable {
 
 		if (unrealMap != null) {
 			changeMapNameBtn.setDisable(false);
-			inputMapLbl.setText(unrealMap.getName());
+			inputMapPathLbl.setText(unrealMap.getName());
 			mapConverter.setInMap(unrealMap);
 			mapConverter.initConvertedResourcesFolder();
-			ut4BaseReferencePath.setDisable(false);
-			ut4BaseReferencePath.setText(mapConverter.getUt4ReferenceBaseFolder());
+			if (ue4RefPathLbl != null) {
+				ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+			}
+
+			if(changeUe4RefPathBtn != null){
+				changeUe4RefPathBtn.setDisable(false);
+			}
 			outputFolderLbl.setText(mapConverter.getOutPath().toString());
 			outMapNameLbl.setText(mapConverter.getOutMapName());
 		}
@@ -480,10 +509,10 @@ public class ConversionSettingsController implements Initializable {
 	 * Select UT4 editor base reference path
 	 */
 	@FXML
-	private void selectUt4BaseReferencePath() {
+	private void selectUe4EditorBaseRefPath() {
 
 		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("Select ut4 editor reference base path");
+		chooser.setTitle("Select ue4 editor reference base path");
 
 		UserConfig userConfig;
 
@@ -496,8 +525,8 @@ public class ConversionSettingsController implements Initializable {
 				if (ut4RootPath.exists()) {
 					File ut4RootContentPath = new File(ut4RootPath.getAbsolutePath() + File.separator + "UnrealTournament" + File.separator + "Content");
 
-					if (ut4BaseReferencePath != null && ut4BaseReferencePath.getText() != null && !ut4BaseReferencePath.getText().trim().isEmpty()) {
-						File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ut4BaseReferencePath);
+					if (ue4RefPathLbl != null && ue4RefPathLbl.getText() != null && !ue4RefPathLbl.getText().trim().isEmpty()) {
+						File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ue4RefPathLbl);
 
 						if (ut4BaseRefPath.getParentFile().exists()) {
 							chooser.setInitialDirectory(ut4BaseRefPath.getParentFile());
@@ -515,7 +544,7 @@ public class ConversionSettingsController implements Initializable {
 							String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
 							ut4BaseRef = ut4BaseRef.replace("\\", "/");
 
-							ut4BaseReferencePath.setText(ut4BaseRef);
+							ue4RefPathLbl.setText(ut4BaseRef);
 							mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
 						} else {
 							Alert alert = new Alert(Alert.AlertType.ERROR);

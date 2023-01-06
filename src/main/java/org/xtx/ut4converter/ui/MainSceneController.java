@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -260,7 +261,7 @@ public class MainSceneController implements Initializable {
 			if (checkGamePathSet(inputGame, outputGame)) {
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
-				AnchorPane page = loader.load();
+				VBox page = loader.load();
 
 				Stage dialogStage = new Stage();
 				dialogStage.setTitle("Conversion Settings");
@@ -289,6 +290,7 @@ public class MainSceneController implements Initializable {
 				showSettings();
 			}
 		} catch (Throwable t) {
+			t.printStackTrace();
 			logger.error("convertUtxMap " + inputGame.getName() + " to " + outputGame.getName(), t);
 
 			Alert alert = new Alert(AlertType.ERROR);

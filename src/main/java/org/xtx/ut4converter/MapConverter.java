@@ -370,7 +370,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return new File(outputGame.getPath() + File.separator + "UnrealTournament" + File.separator + xx);
 	}
 
-	private void initialise() throws IOException {
+	private void initialise() {
 
 		if (this.outPath == null && inMap != null) {
 			this.outPath = Paths.get(this.getMapConvertFolder().toURI());
@@ -1318,7 +1318,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return conversionViewController;
 	}
 
-	public void setInMap(File inMap) throws IOException {
+	public void setInMap(File inMap)  {
 		this.inMap = inMap;
 		this.outPath = null;
 		packageExtractors.clear();
