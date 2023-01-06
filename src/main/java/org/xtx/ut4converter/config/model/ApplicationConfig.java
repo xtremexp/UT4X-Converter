@@ -96,7 +96,6 @@ public class ApplicationConfig {
         final UnrealGame ut3Game = new UnrealGame("Unreal Tournament 3", "UT3", 3, "/Binaries", "ut3.com", "/UTGame/CookedPC/Maps", "ut3", "pak", "pak","pak");
         final UnrealGame ut4Game = new UnrealGame("Unreal Tournament 4", "UT4", 4, "/UnrealTournament/Binaries/Win64", "/Engine/Binaries/Win64/UnrealPak.exe", "/UnrealTournament/Content", "umap", "pak", "pak","pak");
         final UnrealGame dnf2001 = new UnrealGame("Duke Nukem Forever 2001", "DNF", 1, "/System", "ucc.exe", "/Maps", "dnf", "dtx", "dfx","mp3");
-        u1Game.addConvertsToGame(ut2003Game);
         dnf2001.setUseTexDb(true);
 
         games.add(u1Game);

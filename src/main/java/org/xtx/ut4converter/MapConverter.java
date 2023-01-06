@@ -1,6 +1,5 @@
 package org.xtx.ut4converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
@@ -11,7 +10,7 @@ import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.tools.TextureNameToPackageGenerator;
+import org.xtx.ut4converter.tools.TextureDbFile;
 import org.xtx.ut4converter.tools.UIUtils;
 import org.xtx.ut4converter.tools.objmesh.ObjMaterial;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
@@ -513,9 +512,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			logger.log(Level.INFO, "*****************************************");
 			System.out.println("Converting " + inMap.getAbsolutePath());
+			logger.log(Level.INFO, MainApp.PROGRAM_NAME + " v" + MainApp.VERSION);
 			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.getName());
 			logger.log(Level.INFO, "Scale Factor: " + scale);
-			logger.log(Level.WARNING, "Shader materials are not yet converted");
 
 			if (filteredClasses != null && filteredClasses.length > 0) {
 				getSupportedActorClasses().setConvertOnly(filteredClasses);
@@ -528,8 +527,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			updateProgress(0, 100);
 
+			// UE1 games (but U1) may need to build texture db file to get packagename from texture name
 			if (inputGame.isUseTexDb()) {
-				loadTexNameDbFile();
+				logger.log(Level.INFO, "Generating or updating " + inputGame.getShortName() + " texture db file " + TextureDbFile.getBaseFileName(inputGame));
+				TextureDbFile.createOrUpdateTexDbForGame(inputGame);
 				updateProgress(5, 100);
 			}
 
@@ -1154,43 +1155,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return new File(getMapConvertFolder() + File.separator + "Temp");
 	}
 
-	List<TextureNameToPackageGenerator.TextureInfo> gameTextureDb;
-
 	/**
-	 * Loads the texture db file to get package name from texture name
+	 * Texture db info for input game
+	 * Allows to get package name from texture name (since ucc batchexport level commandlet does not expor this info)
 	 */
-	private void loadTexNameDbFile()  {
+	private List<TextureDbFile.TextureInfo> gameTextureDb = new ArrayList<>();
 
-		try {
-			File confFolder = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf");
 
-			if (!confFolder.exists()) {
-				confFolder = new File(Installation.getProgramFolder() + File.separator + "conf");
-			}
-
-			File dbFile = new File(confFolder + File.separator + TextureNameToPackageGenerator.getBaseFileName(inputGame));
-
-			if (!dbFile.exists()) {
-				dbFile = new File(confFolder + File.separator + TextureNameToPackageGenerator.getBaseFileName(inputGame));
-			}
-
-			final ObjectMapper om = new ObjectMapper();
-
-			if (dbFile.exists()) {
-				gameTextureDb = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
-			}
-			// creates .json if it does not exists yet
-			else {
-				logger.log(Level.INFO, "Generating " + inputGame.getShortName() + " texture db file " + dbFile.getName());
-				TextureNameToPackageGenerator.GenerateTexNameToPackageFile(inputGame, dbFile);
-				gameTextureDb = Arrays.asList(om.readValue(dbFile, TextureNameToPackageGenerator.TextureInfo[].class));
-			}
-		} catch (IOException e){
-			logger.log(Level.SEVERE, "Error while reading or writing json file.", e);
-		} catch (InterruptedException e){
-			logger.log(Level.SEVERE, "Error while analysing textures from " + inputGame.getName(), e);
-		}
-	}
 
 	/**
 	 * Find package ressource by simple name
@@ -1257,7 +1228,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				if (type == T3DRessource.Type.TEXTURE && inputGame.isUseTexDb() && gameTextureDb != null) {
 					String name = split[0];
 
-					final TextureNameToPackageGenerator.TextureInfo ti = gameTextureDb.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+					final TextureDbFile.TextureInfo ti = gameTextureDb.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
 
 					if (ti != null) {
 						packageName = ti.getPackageName();
