@@ -120,9 +120,12 @@ public class UModelExporter extends UTPackageExtractor {
 		command += " -path=\"" + mapConverter.getInputGame().getPath() + "\"";
 
 		// if converting to UE4 use png for better quality (else default is tga)
+		// disabled 07012023 - sometimes textures are completely washed out with umodel exporting as .png (as seen in Unreal 1)
+		// Will need to check for UE2/UE3
+		/*
 		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			command += " -png";
-		}
+		}*/
 
 		List<String> logLines = new ArrayList<>();
 
