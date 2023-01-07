@@ -269,11 +269,12 @@ public class UModelExporter extends UTPackageExtractor {
 		if (type == Type.STATICMESH) {
 			exportedFile = new File(BASE_EXPORT_FILE + ".pskx");
 		} else if (type == Type.TEXTURE) {
-			if (mapConverter.isTo(UnrealEngine.UE4)) {
-				exportedFile = new File(BASE_EXPORT_FILE + ".png");
-			} else {
+			// disabled png export due to some textures washed out by umodel
+			//if (mapConverter.isTo(UnrealEngine.UE4)) {
+				//exportedFile = new File(BASE_EXPORT_FILE + ".png");
+			//} else {
 				exportedFile = new File(BASE_EXPORT_FILE + ".tga");
-			}
+			//}
 		} else if (type == Type.MESH) {
 			// how the mesh is scale and some other things ...
 			exportedFile = new File(BASE_EXPORT_FILE + ".uc");
