@@ -204,7 +204,10 @@ public class ConversionSettingsController implements Initializable {
 		if (inputGame.getShortName().equals("UT3")) {
 			gridPaneMainSettings.add(new Label("Map (.t3d):"), 0, rowIdx);
 			inputMapT3dLbl = new Label("Select UT3 .t3d Map!");
-			gridPaneMainSettings.add(inputMapT3dLbl, 1, rowIdx++);
+			gridPaneMainSettings.add(inputMapT3dLbl, 1, rowIdx);
+			Button selectInputT3dMapBtn = new Button("Select");
+			selectInputT3dMapBtn.setOnAction(t -> selectInputT3dMap());
+			gridPaneMainSettings.add(selectInputT3dMapBtn, 2, rowIdx++);
 		}
 
 		gridPaneMainSettings.add(new Separator(), 0, rowIdx++, 3, 1);

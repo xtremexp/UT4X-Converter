@@ -1,13 +1,12 @@
+
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
-import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
@@ -31,6 +30,11 @@ import java.util.Locale;
 public class T3DBrush extends T3DVolume {
 
 	protected BrushClass brushClass = BrushClass.Brush;
+
+	/**
+	 * Format used in t3d files for writing brushes vector data
+	 */
+	private static final DecimalFormat decimalFormatVector = new DecimalFormat("+00000.000000;-00000.000000", new DecimalFormatSymbols(Locale.US));
 
 	public enum BrushClass {
 
@@ -89,7 +93,7 @@ public class T3DBrush extends T3DVolume {
 	/**
 	 * Type of brush (regular, portal, semi-solid, ...) UE1/UE2 only
 	 */
-	private List<BrushPolyflag> polyflags = new ArrayList<>();
+	private final List<BrushPolyflag> polyflags = new ArrayList<>();
 
 	/**
 	 * UE1/2 property containing scale and sheer info
@@ -257,7 +261,7 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (line.contains("PolyFlags=")) {
-			polyflags = BrushPolyflag.parse(T3DUtils.getInteger(line));
+			polyflags.addAll(BrushPolyflag.parse(T3DUtils.getInteger(line)));
 		}
 
 		// Begin Polygon Item=Rise Texture=r-plates-g Link=0
@@ -275,22 +279,21 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (line.contains("TextureU ")) {
-			polyList.getLast().setTexture_u(T3DUtils.getPolyVector3d(line, "TextureU"));
+			polyList.getLast().setTextureU(T3DUtils.getPolyVector3d(line, "TextureU"));
 		}
 
 		else if (line.contains("TextureV ")) {
-			polyList.getLast().setTexture_v(T3DUtils.getPolyVector3d(line, "TextureV"));
+			polyList.getLast().setTextureV(T3DUtils.getPolyVector3d(line, "TextureV"));
 		}
 
 		else if (line.contains("Vertex ")) {
-			Vector3d coordinates = T3DUtils.getPolyVector3d(line, "Vertex");
-			polyList.getLast().vertices.add(new Vertex(coordinates));
+			polyList.getLast().vertices.add(T3DUtils.getPolyVector3d(line, "Vertex"));
 		}
 
 		// Pan U=381 V=-7
-		else if (line.contains(" Pan ")) {
-			polyList.getLast().pan_u = Double.parseDouble(line.split("U=")[1].split(" ")[0]);
-			polyList.getLast().pan_v = Double.parseDouble(line.split("V=")[1].split(" ")[0]);
+		else if (line.contains("Pan ") & line.contains("U=")) {
+			polyList.getLast().panU = Double.parseDouble(line.split("U=")[1].split(" ")[0]);
+			polyList.getLast().panV = Double.parseDouble(line.split("V=")[1].split(" ")[0]);
 		}
 
 		// Hack, normally analysed in T3DActor but needed
@@ -306,13 +309,13 @@ public class T3DBrush extends T3DVolume {
 		}
 
 		else if (line.startsWith("Begin Brush") && line.contains("Name=")) {
-			// modelName = line.split("Name=")[1].replaceAll("\"", "");
+			return true;
 		}
 
 		// CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)
 		else if (line.startsWith("CullDistances(")) {
 			if (cullDistances == null) {
-				cullDistances = new ArrayList<T3DBrush.CullDistance>();
+				cullDistances = new ArrayList<>();
 			}
 
 			CullDistance cullDistance = new CullDistance();
@@ -416,12 +419,6 @@ public class T3DBrush extends T3DVolume {
 		// FIXME all sheet brushes are well detected but some not (a very few)
 	}
 
-	final double VERY_TINY_NUM = 0.001d;
-
-	/**
-     *
-     */
-	public static DecimalFormat df = new DecimalFormat("+00000.000000;-00000.000000", new DecimalFormatSymbols(Locale.US));
 
 	/**
 	 *
@@ -497,10 +494,16 @@ public class T3DBrush extends T3DVolume {
 		for (T3DPolygon t3dPolygon : polyList) {
 
 			if (reverseVertexOrder) {
-				t3dPolygon.reverseVertexOrder();
+				List<Vector3d> verticesReverted = new LinkedList<>();
+
+				for (Vector3d vertex : t3dPolygon.vertices) {
+					verticesReverted.add(0, vertex);
+				}
+
+				t3dPolygon.vertices = verticesReverted;
 			}
 
-			t3dPolygon.toT3D(sbf, df, IDT, numPoly, mapConverter.getUnrealEngineTo());
+			t3dPolygon.toT3D(sbf, decimalFormatVector, IDT, numPoly, mapConverter.getUnrealEngineTo());
 			numPoly++;
 		}
 
@@ -634,8 +637,11 @@ public class T3DBrush extends T3DVolume {
 
 
 			for (T3DPolygon p : polyList) {
-				for(Vertex v : p.getVertices()){
-					v.getCoordinates().sub(prePivot);
+
+				p.origin.sub(prePivot);
+
+				for(Vector3d v : p.getVertices()){
+					v.sub(prePivot);
 				}
 			}
 
@@ -727,12 +733,10 @@ public class T3DBrush extends T3DVolume {
 		Vector3d max = new Vector3d(0d, 0d, 0d);
 
 		for (T3DPolygon p : polyList) {
-			for (Vertex v : p.vertices) {
-
-				Vector3d c = v.getCoordinates();
-				max.x = Math.max(max.x, c.x);
-				max.y = Math.max(max.y, c.y);
-				max.z = Math.max(max.z, c.z);
+			for (Vector3d v : p.vertices) {
+				max.x = Math.max(max.x, v.x);
+				max.y = Math.max(max.y, v.y);
+				max.z = Math.max(max.z, v.z);
 			}
 		}
 
@@ -755,12 +759,11 @@ public class T3DBrush extends T3DVolume {
 		Vector3d min = new Vector3d(0d, 0d, 0d);
 
 		for (T3DPolygon p : polyList) {
-			for (Vertex v : p.vertices) {
+			for (Vector3d v : p.vertices) {
 
-				Vector3d c = v.getCoordinates();
-				min.x = Math.min(min.x, c.x);
-				min.y = Math.min(min.y, c.y);
-				min.z = Math.min(min.z, c.z);
+				min.x = Math.min(min.x, v.x);
+				min.y = Math.min(min.y, v.y);
+				min.z = Math.min(min.z, v.z);
 			}
 		}
 

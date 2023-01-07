@@ -1,11 +1,13 @@
+
+
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 
 package org.xtx.ut4converter.tools;
 
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.xtx.ut4converter.t3d.T3DPolygon;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
@@ -20,6 +22,11 @@ import java.util.LinkedList;
  * @author XtremeXp
  */
 public class Geometry {
+
+	/**
+	 * Origin point
+	 */
+	private static final Vector3D v0 = new Vector3D(0, 0, 0);
 
 	/**
 	 * Rotates the vector
@@ -369,7 +376,7 @@ public class Geometry {
 				}
 			}
 
-			Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+			Vector3d firstVertCoord = p.vertices.get(0);
 			p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 			polyList.add(p);
 		}
@@ -391,7 +398,7 @@ public class Geometry {
 			a -= angle;
 		}
 
-		Vector3d firstVertCoord = p.vertices.getFirst().getCoordinates();
+		Vector3d firstVertCoord = p.vertices.get(0);
 		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
@@ -409,7 +416,7 @@ public class Geometry {
 			a += angle;
 		}
 
-		firstVertCoord = p.vertices.getFirst().getCoordinates();
+		firstVertCoord = p.vertices.get(0);
 		p.setOrigin(new Vector3d(firstVertCoord.x, firstVertCoord.y, firstVertCoord.z));
 		polyList.add(p);
 
@@ -431,4 +438,36 @@ public class Geometry {
 
 		return rotation;
 	}
+
+
+
+
+	/**
+	 * UE1 only
+	 * Recompute origin so that panU and panV are equals to zero.
+	 *
+	 * @param origin Texture origin
+	 * @param texU TextureU (Scale/Rotation)
+	 * @param texV TextureV (Scale/Rotation)
+	 * @param panU PanU Texture position
+	 * @param panV PanV Texture position
+	 * @return Recomputed origin with PanU and PanV integrated
+	 */
+	public static Vector3d computeNewOrigin(Vector3d origin, Vector3d texU, Vector3d texV, double panU, double panV) {
+
+		final Vector3D origin2 = new Vector3D(origin.getX(), origin.getY(), origin.getZ());
+
+		final Vector3D texU2 = new Vector3D(texU.getX(), texU.getY(), texU.getZ());
+		double texUScale = texU2.distance(v0);
+		Vector3D originOffsetU = texU2.scalarMultiply(panU / (texUScale * texUScale));
+
+		final Vector3D texV2 = new Vector3D(texV.getX(), texV.getY(), texV.getZ());
+		double texVScale = texV2.distance(v0);
+		Vector3D originOffsetV = texV2.scalarMultiply(panV / (texVScale * texVScale));
+
+		final Vector3D newOri = origin2.add(originOffsetU).add(originOffsetV);
+
+		return new Vector3d(newOri.getX(), newOri.getY(), newOri.getZ());
+	}
+
 }

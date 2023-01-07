@@ -1,29 +1,35 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
-import org.xtx.ut4converter.geom.Vertex;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
 
 import javax.vecmath.Vector3d;
-import java.awt.*;
+import java.awt.Dimension;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
- * 
+ * Represents a polygon in unreal ascii format (t3d).
  * @author XtremeXp
  */
 public class T3DPolygon {
+
+	/**
+	 * UV conversion scale factor when converting UT3 texture scaling to UT4
+	 * texture scaling (this is equals to 100/128).
+	 * Grid base unit is 128 in UE3.
+	 * Grid base unit is 100 in UE4.
+	 */
+	private static final double UE3_UE4_UV_SCALE_FACTOR = 0.78125d;
 
 	/**
 	 * Original texture or material applied to the polygon
@@ -31,12 +37,12 @@ public class T3DPolygon {
 	private UPackageRessource texture;
 
 	/**
-     *
+     * Texture position on surface
      */
 	public Vector3d origin;
 
 	/**
-     *
+     * Normal to the polygon
      */
 	public Vector3d normal;
 
@@ -53,20 +59,24 @@ public class T3DPolygon {
 	private Integer flag;
 
 	/**
-	 * LightMapScale=64.000000 UE1: None UE2: ? UE3: ? UE4: Light Map
-	 * resolution.
+	 * UE3+ Only
+	 * Light map resolution
+	 * UE4: LightMapScale
+	 * UE3: ShadowMapScale
 	 */
 	private int lightMapScale;
 
 	/**
-	 * Only in UE1/UE2 Basically changes the origin
+	 * UE1 only
+	 * Changes the texture position on surface
 	 */
-	public double pan_u,
+	public double panU;
 
 	/**
-     *
+     * UE1 only
+	 * Changes the texture position on surface
      */
-	pan_v;
+	public double panV;
 
 	/**
 	 * As seen in Polys.h
@@ -75,17 +85,21 @@ public class T3DPolygon {
 	 */
 	private Integer smoothingMask;
 
-	private Vector3d original_tex_u, original_tex_v;
 
 	/**
-	 * UV texture align
+	 * Texture rotation and scale
 	 */
-	private Vector3d texture_u, texture_v;
+	private Vector3d textureU;
 
 	/**
-     *
+	 * Texture rotation and scale
+	 */
+	private Vector3d textureV;
+
+	/**
+     * Vertices of this polygon
      */
-	public LinkedList<Vertex> vertices = new LinkedList<>();
+	public List<Vector3d> vertices = new LinkedList<>();
 
 	private MapConverter mapConverter;
 
@@ -120,7 +134,7 @@ public class T3DPolygon {
 		this.origin.scale(newScale);
 		scaleUV(newScale);
 
-		for (Vertex vertex : vertices) {
+		for (Vector3d vertex : vertices) {
 			vertex.scale(newScale);
 		}
 	}
@@ -134,15 +148,15 @@ public class T3DPolygon {
 
 		if (newScale != null) {
 
-			pan_u *= newScale;
-			pan_v *= newScale;
+			panU *= newScale;
+			panV *= newScale;
 
-			if (texture_u != null) {
-				texture_u.scale(1 / newScale);
+			if (textureU != null) {
+				textureU.scale(1 / newScale);
 			}
 
-			if (texture_v != null) {
-				texture_v.scale(1 / newScale);
+			if (textureV != null) {
+				textureV.scale(1 / newScale);
 			}
 		}
 	}
@@ -161,34 +175,17 @@ public class T3DPolygon {
 
 		Geometry.transformPermanently(normal, mainScale, rotation, postScale, false);
 
-		if (texture_u != null) {
-			Geometry.transformPermanently(texture_u, mainScale, rotation, postScale, true);
+		if (textureU != null) {
+			Geometry.transformPermanently(textureU, mainScale, rotation, postScale, true);
 		}
 
-		if (texture_v != null) {
-			Geometry.transformPermanently(texture_v, mainScale, rotation, postScale, true);
+		if (textureV != null) {
+			Geometry.transformPermanently(textureV, mainScale, rotation, postScale, true);
 		}
 
-		for (Vertex vertex : vertices) {
-			Geometry.transformPermanently(vertex.getCoordinates(), mainScale, rotation, postScale, false);
+		for (Vector3d vertex : vertices) {
+			Geometry.transformPermanently(vertex, mainScale, rotation, postScale, false);
 		}
-	}
-	
-	
-	
-
-	/**
-	 * Revert the order of vertices
-	 */
-	public void reverseVertexOrder() {
-
-		LinkedList<Vertex> verticesReverted = new LinkedList<>();
-
-		for (Vertex vertex : vertices) {
-			verticesReverted.addFirst(vertex);
-		}
-
-		vertices = verticesReverted;
 	}
 
 	/**
@@ -222,35 +219,26 @@ public class T3DPolygon {
 
 		sb.append(prefix).append("\tOrigin   ").append(T3DUtils.toPolyStringVector3d(origin, df)).append("\n");
 		sb.append(prefix).append("\tNormal   ").append(T3DUtils.toPolyStringVector3d(normal, df)).append("\n");
+		sb.append(prefix).append("\tTextureU ").append(T3DUtils.toPolyStringVector3d(textureU, df)).append("\n");
+		sb.append(prefix).append("\tTextureV ").append(T3DUtils.toPolyStringVector3d(textureV, df)).append("\n");
 
-		if (pan_u > 0d || pan_v > 0d) {
-			sb.append(prefix).append("\tPan      ");
-
-			if (pan_u > 0d) {
-				sb.append("U=").append(pan_u);
-			}
-
-			if (pan_v > 0d) {
-				sb.append(" V=").append(pan_v);
-			}
-
-			sb.append("\n");
-		}
-
-		sb.append(prefix).append("\tTextureU ").append(T3DUtils.toPolyStringVector3d(texture_u, df)).append("\n");
-		sb.append(prefix).append("\tTextureV ").append(T3DUtils.toPolyStringVector3d(texture_v, df)).append("\n");
-
-		for (Vertex vertex : vertices) {
-			sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex.getCoordinates(), df)).append("\n");
+		for (Vector3d vertex : vertices) {
+			sb.append(prefix).append("\tVertex   ").append(T3DUtils.toPolyStringVector3d(vertex, df)).append("\n");
 		}
 
 		sb.append(prefix).append("End Polygon\n");
-
 	}
 
+	/**
+	 * Adds a vertex to the polygon
+	 * @param x X value of vertex
+	 * @param y Y value of vertex
+	 * @param z Z value of vertex
+	 * @return
+	 */
 	public T3DPolygon addVertex(Double x, Double y, Double z) {
 
-		vertices.add(new Vertex(new Vector3d(x, y, z)));
+		vertices.add(new Vector3d(x, y, z));
 		return this;
 	}
 
@@ -263,60 +251,26 @@ public class T3DPolygon {
 	}
 
 	public void setTextureV(Vector3d textureV) {
-		this.texture_v = textureV;
+		this.textureV = textureV;
 	}
 	
 	public void setTextureV(Double x, Double y, Double z) {
-		this.texture_v = new Vector3d(x, y, z);
+		this.textureV = new Vector3d(x, y, z);
 	}
-	
-	/**
-	 * 
-	 * @param x X
-	 * @param y Y
-	 * @param z Z
-	 */
+
 	public void setTextureU(Double x, Double y, Double z) {
-		this.texture_u = new Vector3d(x, y, z);
+		this.textureU = new Vector3d(x, y, z);
 	}
 
 	public void setTextureU(Vector3d textureU) {
-		this.texture_u = textureU;
+		this.textureU = textureU;
 	}
 
-	/**
-	 * 
-	 * @param x X
-	 * @param y Y
-	 * @param z Z
-	 * @deprecated Use setTextureU
-	 */
-	@Deprecated
-	public void setTexU(Double x, Double y, Double z) {
-		texture_u = new Vector3d(x, y, z);
-	}
-
-	/**
-	 * 
-	 * @param x X
-	 * @param y Y
-	 * @param z Z
-	 * @deprecated Use setTextureV
-	 */
-	@Deprecated
-	public void setTexV(Double x, Double y, Double z) {
-		texture_v = new Vector3d(x, y, z);
-	}
 
 	public void setOrigin(Vector3d origin) {
 		this.origin = origin;
 	}
 
-	/**
-	 * UV conversion scale factor when converting UT3 texture scaling to UT4
-	 * texture scaling (this is equals to 200/256)
-	 */
-	private static final double UE3_UE4_UV_SCALE_FACTOR = 0.78125d;
 
 	public void convert() {
 
@@ -355,34 +309,43 @@ public class T3DPolygon {
 						texDimension = texture.getTextureDimensions();
 					}
 
+					/*
+					if("A_stt2a".equals(this.getTexture().getName())){
+						System.out.println("CONVERT");
+						System.out.println("Origin:" + this.origin);
+						System.out.println("Vertex: "+ this.vertices.get(0));
+					}*/
+
+					// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
+					if (origin != null) {
+						origin = Geometry.computeNewOrigin(origin, textureU, textureV, panU, panV);
+						this.panU = 0;
+						this.panV = 0;
+					}
+
 					if (texDimension != null) {
 
 						// since UE4, grid base unit is 100
-						if (texture_u != null) {
-							texture_u.scale(1 / (texDimension.width / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
+						if (textureU != null) {
+							textureU.scale(1 / (texDimension.width / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 						}
 
-						if (texture_v != null) {
-							texture_v.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
+						if (textureV != null) {
+							textureV.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 						}
 					}
 
-					if (origin != null) {
-						// FIXME texture coordinates are incorrect if PanU or PanV set
-						origin.x += pan_u;
-						origin.y += pan_v;
-					}
 				}
 
 				// UE3->UE4, viewport grid has changed of scale, need to update texture scale
 				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
 
-					if (texture_u != null) {
-						texture_u.scale(UE3_UE4_UV_SCALE_FACTOR);
+					if (textureU != null) {
+						textureU.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
 
-					if (texture_v != null) {
-						texture_v.scale(UE3_UE4_UV_SCALE_FACTOR);
+					if (textureV != null) {
+						textureV.scale(UE3_UE4_UV_SCALE_FACTOR);
 					}
 				}
 			}
@@ -404,7 +367,7 @@ public class T3DPolygon {
 		this.texture = texture;
 	}
 
-	public LinkedList<Vertex> getVertices() {
+	public List<Vector3d> getVertices() {
 		return vertices;
 	}
 
@@ -416,11 +379,18 @@ public class T3DPolygon {
 		this.lightMapScale = lightMapScale;
 	}
 
-	public void setTexture_u(Vector3d texture_u) {
-		this.texture_u = texture_u;
-	}
 
-	public void setTexture_v(Vector3d texture_v) {
-		this.texture_v = texture_v;
+	@Override
+	public String toString() {
+		return "T3DPolygon{" +
+				"texture=" + texture +
+				", origin=" + origin +
+				", normal=" + normal +
+				", panU=" + panU +
+				", panV=" + panV +
+				", textureU=" + textureU +
+				", textureV=" + textureV +
+				", vertices=" + vertices +
+				'}';
 	}
 }
