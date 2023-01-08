@@ -684,11 +684,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			});
 		}
 
-		// TODO cannot open the confirm dialog (not same javafx thread), try fix
-		if(!noUi) {
-			final String wikiUrl = isTo(UnrealEngine.UE3) ? "https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT3":"https://github.com/xtremexp/UT4X-Converter/wiki/Conversion-to-UT4";
-			UIUtils.openUrl(wikiUrl, false, null);
-		}
+		logger.log(Level.INFO, "Check the conversion wiki page for further instructions.");
 	}
 
 

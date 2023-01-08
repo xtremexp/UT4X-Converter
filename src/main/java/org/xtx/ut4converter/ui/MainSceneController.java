@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.ui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,12 +29,16 @@ import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import static org.xtx.ut4converter.tools.UIUtils.openUrl;
 
@@ -81,10 +86,6 @@ public class MainSceneController implements Initializable {
 
 				final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(entry.getKey());
 
-				if (inputGame.isEditorOnly()) {
-					continue;
-				}
-
 				final Menu gameFromMenu = new Menu(this.applicationConfig.getUnrealGameById(entry.getKey()).getName());
 				gameFromMenu.setId("convert" + entry.getKey());
 
@@ -92,9 +93,6 @@ public class MainSceneController implements Initializable {
 
 					final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(outputShortNameGame);
 
-					if (outputGame.isEditorOnly()) {
-						continue;
-					}
 					final MenuItem gameToMenuItem = new MenuItem("Convert map to " + outputGame.getShortName() + " ...");
 					gameToMenuItem.setId("convert" + entry.getKey() + outputGame);
 					gameFromMenu.getItems().add(gameToMenuItem);
@@ -320,4 +318,13 @@ public class MainSceneController implements Initializable {
 	}
 
 
+	public void goToConversionWiki() {
+		if (Desktop.isDesktopSupported()) {
+			try {
+				Desktop.getDesktop().browse(new URI("https://github.com/xtremexp/UT4X-Converter/wiki"));
+			} catch (URISyntaxException | IOException ex) {
+				java.util.logging.Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 }
