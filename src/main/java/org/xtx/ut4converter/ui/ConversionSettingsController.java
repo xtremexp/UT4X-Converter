@@ -1,8 +1,8 @@
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
+
 package org.xtx.ut4converter.ui;
 
 import javafx.fxml.FXML;
@@ -20,7 +20,6 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
-import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
@@ -260,7 +259,7 @@ public class ConversionSettingsController implements Initializable {
 			gridPaneMainSettings.add(ue4RefPathLbl, 1, rowIdx);
 			changeUe4RefPathBtn = new Button("Change");
 			changeUe4RefPathBtn.setDisable(true);
-			changeUe4RefPathBtn.setOnAction(t -> selectUe4EditorBaseRefPath());
+			changeUe4RefPathBtn.setOnAction(t -> selectUe4EditorBaseRefPath(outputGame));
 			gridPaneMainSettings.add(changeUe4RefPathBtn, 2, rowIdx);
 		}
 
@@ -485,7 +484,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		// for Unreal 1, needs to have oldunreal.com installed
-		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getBinFolder() + File.separator + inputGame.getExportExecFilename()).exists()) {
+		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getExportExecPath()).exists()) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("OldUnreal Patch not installed");
 			alert.setHeaderText("Patch from oldunreal.com is needed.");
@@ -512,57 +511,47 @@ public class ConversionSettingsController implements Initializable {
 	 * Select UT4 editor base reference path
 	 */
 	@FXML
-	private void selectUe4EditorBaseRefPath() {
+	private void selectUe4EditorBaseRefPath(UnrealGame unrealGame) {
 
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Select ue4 editor reference base path");
 
-		UserConfig userConfig;
+		final File ut4RootPath = unrealGame.getPath();
 
-		try {
-			userConfig = UserConfig.load();
+		if (ut4RootPath.exists()) {
+			File ut4RootContentPath = new File(ut4RootPath.getAbsolutePath() + File.separator + "UnrealTournament" + File.separator + "Content");
 
-			if (userConfig != null) {
-				File ut4RootPath = userConfig.getGameConfigByGame(UTGame.UT4).getPath();
+			if (ue4RefPathLbl != null && ue4RefPathLbl.getText() != null && !ue4RefPathLbl.getText().trim().isEmpty()) {
+				File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ue4RefPathLbl);
 
-				if (ut4RootPath.exists()) {
-					File ut4RootContentPath = new File(ut4RootPath.getAbsolutePath() + File.separator + "UnrealTournament" + File.separator + "Content");
-
-					if (ue4RefPathLbl != null && ue4RefPathLbl.getText() != null && !ue4RefPathLbl.getText().trim().isEmpty()) {
-						File ut4BaseRefPath = new File(ut4RootContentPath.getAbsolutePath() + File.separator + ue4RefPathLbl);
-
-						if (ut4BaseRefPath.getParentFile().exists()) {
-							chooser.setInitialDirectory(ut4BaseRefPath.getParentFile());
-						}
-					}
-
-					if (chooser.getInitialDirectory() == null) {
-						chooser.setInitialDirectory(ut4RootContentPath);
-					}
-
-					File ut4RefFolder = chooser.showDialog(new Stage());
-
-					if (ut4RefFolder != null) {
-						if(ut4RefFolder.getPath().startsWith(ut4RootContentPath.getAbsolutePath())){
-							String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
-							ut4BaseRef = ut4BaseRef.replace("\\", "/");
-
-							ue4RefPathLbl.setText(ut4BaseRef);
-							mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
-						} else {
-							Alert alert = new Alert(Alert.AlertType.ERROR);
-							alert.setTitle("Error");
-							alert.setHeaderText("Operation failed");
-							alert.setContentText("An error occured: Reference folder must be in ut4 content subfolder!");
-							alert.showAndWait();
-						}
-					}
-				} else {
-					Logger.getGlobal().severe("UT4 Editor path not set !");
+				if (ut4BaseRefPath.getParentFile().exists()) {
+					chooser.setInitialDirectory(ut4BaseRefPath.getParentFile());
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			if (chooser.getInitialDirectory() == null) {
+				chooser.setInitialDirectory(ut4RootContentPath);
+			}
+
+			File ut4RefFolder = chooser.showDialog(new Stage());
+
+			if (ut4RefFolder != null) {
+				if (ut4RefFolder.getPath().startsWith(ut4RootContentPath.getAbsolutePath())) {
+					String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
+					ut4BaseRef = ut4BaseRef.replace("\\", "/");
+
+					ue4RefPathLbl.setText(ut4BaseRef);
+					mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
+				} else {
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setHeaderText("Operation failed");
+					alert.setContentText("An error occured: Reference folder must be in ut4 content subfolder!");
+					alert.showAndWait();
+				}
+			}
+		} else {
+			Logger.getGlobal().severe("UT4 Editor path not set !");
 		}
 
 	}

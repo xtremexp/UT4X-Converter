@@ -1,8 +1,8 @@
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
+
 package org.xtx.ut4converter.ui;
 
 import javafx.fxml.FXML;
@@ -11,9 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
-import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
@@ -73,16 +71,17 @@ public class SettingsSceneController implements Initializable {
 	private void saveGamePath(TextField textFile, UnrealGame utGame) {
 
 		File gameFolder = new File(textFile.getText());
+		final String jsonFile = ApplicationConfig.getApplicationConfigFile().getName();
 
 		if (gameFolder.exists()) {
 			utGame.setPath(gameFolder);
 
 			try {
 				appConfig.saveFile();
-				settingsLog.setText(utGame.getName() + " folder saved to " + ApplicationConfig.getApplicationConfigFile().getName());
+				settingsLog.setText("Settings saved to " + jsonFile);
 			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-				settingsLog.setText("An error occured while saving " + UserConfig.USER_CONFIG_JSON_FILE + " : " + ex.getMessage());
+				settingsLog.setText("An error occured while saving " + jsonFile + " : " + ex.getMessage());
 			}
 		} else {
 			showErrorMessage(textFile.getText() + " is not valid folder");
@@ -114,7 +113,7 @@ public class SettingsSceneController implements Initializable {
 				final TextField textField = new TextField(game.getPath() != null ? game.getPath().getAbsolutePath() : "");
 				textField.setEditable(false);
 				textField.setPrefWidth(400d);
-				textField.setPromptText("C:\\Program Files (x86)\\" + game.getName());
+				textField.setPromptText("C:\\Program Files (x86)\\" + game.getName() + (game.getUeVersion() == 4 ? " Editor":""));
 
 				final Button button = new Button("Select");
 				button.setOnMouseClicked(mouseEvent -> setUTxFolder(game, textField));
@@ -131,6 +130,7 @@ public class SettingsSceneController implements Initializable {
 				appConfig.setCheckForUpdates(newValue);
 				try {
 					appConfig.saveFile();
+					settingsLog.setText("Settings saved to " + ApplicationConfig.getApplicationConfigFile().getName());
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}

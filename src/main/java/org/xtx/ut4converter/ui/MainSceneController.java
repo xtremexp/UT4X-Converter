@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
-import org.xtx.ut4converter.config.model.UserConfig;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
@@ -59,8 +58,9 @@ public class MainSceneController implements Initializable {
 	public MainApp mainApp;
 	public Stage mainStage;
 
-	private UserConfig userConfig;
-
+	/**
+	 * Application config file
+	 */
 	private ApplicationConfig applicationConfig;
 
 	@FXML
@@ -102,16 +102,15 @@ public class MainSceneController implements Initializable {
 				menuFile.getItems().add(0, gameFromMenu);
 			}
 
-			this.userConfig = UserConfig.load();
 
-			if (userConfig.getIsFirstRun() == null || userConfig.getIsFirstRun()) {
-				userConfig.setIsFirstRun(Boolean.FALSE);
-				userConfig.saveFile();
+			if (applicationConfig.isFirstRun() == null || applicationConfig.isFirstRun()) {
+				applicationConfig.setIsFirstRun(Boolean.FALSE);
+				applicationConfig.saveFile();
 				showAlertFirstTime();
 			}
 
 			// check for update at startup if user said so
-			if (userConfig != null && userConfig.isCheckForUpdates()) {
+			if (applicationConfig != null && applicationConfig.isCheckForUpdates()) {
 				checkForUpdate(false);
 			}
 		} catch (IOException | InterruptedException e) {

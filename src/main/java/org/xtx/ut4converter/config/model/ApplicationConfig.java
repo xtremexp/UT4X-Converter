@@ -25,8 +25,15 @@ public class ApplicationConfig {
     private int version = 1;
 
     /**
+     *
+     */
+    @JsonProperty("is_first_run")
+    private Boolean isFirstRun;
+
+    /**
      * If true, program will check for updates at start
      */
+    @JsonProperty("check_for_updates")
     private boolean checkForUpdates = true;
 
     public ApplicationConfig(){
@@ -82,38 +89,97 @@ public class ApplicationConfig {
         }
     }
 
-    public static List<UnrealGame> getBaseGames(){
+    /**
+     * Return list of supported unreal games by the converter
+     *
+     * @return List of supported unreal games by the converter
+     */
+    public static List<UnrealGame> getBaseGames() {
 
         final List<UnrealGame> games = new ArrayList<>();
 
-        final UnrealGame u1Game = new UnrealGame("Unreal 1", "U1", 1, "/System", "ucc.exe", "/Maps", "unr", "utx", "uax","umx");
-        final UnrealGame u2Game = new UnrealGame("Unreal 2", "U2", 2, "/System", "ucc.exe", "/Maps", "un2", "utx", "uax","ogg");
-        final UnrealGame ut99Game = new UnrealGame("Unreal Tournament", "UT99", 1, "/System", "ucc.exe", "/Maps", "unr", "utx", "uax","umx");
-        ut99Game.setUseTexDb(true);
-        final UnrealGame ut2003Game = new UnrealGame("Unreal Tournament 2003", "UT2003", 2, "/System", "ucc.exe", "/Maps", "ut2", "utx", "uax","ogg");
-        final UnrealGame ut2004Game = new UnrealGame("Unreal Tournament 2004", "UT2004", 2, "/System", "ucc.exe", "/Maps", "ut2", "utx", "uax","ogg");
-        final UnrealGame udkGame = new UnrealGame("Unreal Development Kit", "UDK", 3, "/Binaries/Win64", "UDK.com", "/Maps", "udk", "pak", "pak","pak");
-        final UnrealGame ut3Game = new UnrealGame("Unreal Tournament 3", "UT3", 3, "/Binaries", "ut3.com", "/UTGame/CookedPC/Maps", "ut3", "pak", "pak","pak");
-        final UnrealGame ut4Game = new UnrealGame("Unreal Tournament 4", "UT4", 4, "/UnrealTournament/Binaries/Win64", "/Engine/Binaries/Win64/UnrealPak.exe", "/UnrealTournament/Content", "umap", "pak", "pak","pak");
-        final UnrealGame dnf2001 = new UnrealGame("Duke Nukem Forever 2001", "DNF", 1, "/System", "ucc.exe", "/Maps", "dnf", "dtx", "dfx","mp3");
-        dnf2001.setUseTexDb(true);
-
+        final UnrealGame u1Game = fromUeVersion("Unreal 1", "U1", "unr", 1);
+        u1Game.setUseTexDb(false);
         games.add(u1Game);
-        games.add(u2Game);
-        games.add(ut99Game);
-        games.add(ut2003Game);
-        games.add(ut2004Game);
+
+        games.add(fromUeVersion("Unreal Tournament", "UT99", "unr", 1));
+
+        final UnrealGame dnf = fromUeVersion("Duke Nukem Forever 2001", "DNF", "dnf", 1);
+        dnf.setTexExt("dtx");
+        dnf.setSoundExt("dfx");
+        dnf.setMusicExt("ext");
+        dnf.setUseTexDb(true);
+        games.add(dnf);
+
+        games.add(fromUeVersion("Unreal 2", "U2", "un2", 2));
+        games.add(fromUeVersion("Unreal Tournament 2003", "UT2003", "ut2", 2));
+        games.add(fromUeVersion("Unreal Tournament 2004", "UT2004", "ut2", 2));
+        final UnrealGame udkGame = fromUeVersion("Unreal Development Kit", "UDK", "udk", 3);
+        udkGame.setExportExecPath("/Binaries/Win64/udk.com");
         games.add(udkGame);
+
+        final UnrealGame ut3Game = fromUeVersion("Unreal Tournament 3", "UT3", "ut3", 3);
+        ut3Game.setMapFolder("/UTGame/CookedPC/Maps");
+        ut3Game.setExportExecPath("/Binaries/ut3.com");
         games.add(ut3Game);
+
+        final UnrealGame ut4Game = fromUeVersion("Unreal Tournament 4", "UT4", "umap", 4);
+        ut4Game.setMapFolder("/UnrealTournament/Content");
+        ut4Game.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
         games.add(ut4Game);
-        games.add(dnf2001);
 
         return games;
     }
 
+    /**
+     * Init unreal game from name, shortname, map extension and ueversion
+     *
+     * @param name        Full game name
+     * @param shortNameId Short name (used as id)
+     * @param mapExt      Map extension
+     * @param ueVersion   Unreal engine version
+     * @return Unreal game
+     */
+    private static UnrealGame fromUeVersion(String name, String shortNameId, String mapExt, int ueVersion) {
+
+        final UnrealGame unrealGame = new UnrealGame();
+        unrealGame.setUeVersion(ueVersion);
+        unrealGame.setMapExt(mapExt);
+        unrealGame.setName(name);
+        unrealGame.setShortName(shortNameId);
+
+        if (ueVersion <= 2) {
+            unrealGame.setExportExecPath("/System/ucc.exe");
+            unrealGame.setMapFolder("/Maps");
+            unrealGame.setTexExt("utx");
+            unrealGame.setSoundExt("uax");
+
+            if (ueVersion == 1) {
+                unrealGame.setMusicExt("umx");
+                // ucc batch export does not provide unreal package name in Level.t3d file for brush surfaces
+                unrealGame.setUseTexDb(true);
+            } else {
+                unrealGame.setMusicExt("ogg");
+            }
+        } else if (ueVersion == 4) {
+            unrealGame.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
+            unrealGame.setMusicExt("pak");
+            unrealGame.setTexExt("pak");
+            unrealGame.setSoundExt("pak");
+        }
+
+        return unrealGame;
+    }
+
+    /**
+     * Load application config from hson file
+     *
+     * @return Application config
+     * @throws IOException Exception thrown when reading json file
+     */
     public static ApplicationConfig load() throws IOException {
 
-        File file = ApplicationConfig.getApplicationConfigFile();
+        final File file = ApplicationConfig.getApplicationConfigFile();
 
         // auto-create config file
         if (!file.exists()) {
@@ -122,22 +188,20 @@ public class ApplicationConfig {
             appConfig.getGames().addAll(getBaseGames());
 
             // init
-            appConfig.getGameConversion().put("U1", Arrays.asList("UT3","UT4"));
-            appConfig.getGameConversion().put("U2", Arrays.asList("UT3","UT4"));
-            appConfig.getGameConversion().put("UT99", Arrays.asList("UT3","UT4"));
+            appConfig.getGameConversion().put("U1", Arrays.asList("UT3", "UT4"));
+            appConfig.getGameConversion().put("U2", Arrays.asList("UT3", "UT4"));
+            appConfig.getGameConversion().put("UT99", Arrays.asList("UT3", "UT4"));
             appConfig.getGameConversion().put("UT2003", List.of("UT4"));
             appConfig.getGameConversion().put("UT2004", List.of("UT4"));
             appConfig.getGameConversion().put("UT3", List.of("UT4"));
-            appConfig.getGameConversion().put("DNF", Arrays.asList("UT3","UT4"));
+            appConfig.getGameConversion().put("DNF", Arrays.asList("UT3", "UT4"));
 
             appConfig.saveFile();
 
             return appConfig;
         }
 
-
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
 
         return objectMapper.readValue(file, ApplicationConfig.class);
     }
@@ -163,4 +227,11 @@ public class ApplicationConfig {
         return this.games.stream().filter(u -> u.getShortName().equals(shortName)).findFirst().orElse(null);
     }
 
+    public Boolean isFirstRun() {
+        return isFirstRun;
+    }
+
+    public void setIsFirstRun(Boolean firstRun) {
+        isFirstRun = firstRun;
+    }
 }

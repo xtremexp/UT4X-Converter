@@ -12,6 +12,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UnrealGame {
 
@@ -60,11 +62,12 @@ public class UnrealGame {
     private String musicExt;
 
     /**
-     * Executable filename for exporting stuff from package
-     * (e.g: ucc.exe)
+     * Relative path of export program
+     * used to export level to t3d and also map resources
+     * E.g: /System/ucc.exe
      */
-    @JsonProperty("export_exec_filename")
-    private String exportExecFilename;
+    @JsonProperty("export_exec_path")
+    private String exportExecPath;
 
     /**
      * Where this unreal game is installed
@@ -85,32 +88,12 @@ public class UnrealGame {
     private String soundExt;
 
 
-    /**
-     * Folder where binaries are
-     * e.g: /System for UT99
-     * e.g: /Engine/Binaries/Win64 for UE3+
-     */
-    private String binFolder;
 
     // do not delete, constructor for jackson json lib
     public UnrealGame() {
 
     }
 
-
-
-    public UnrealGame(String name, String shortName, int ueVersion, String binFolder, String exportExecFilename, String mapFolder, String mapExt, String texExtension, String soundExt, String musicExt) {
-        this.name = name;
-        this.shortName = shortName;
-        this.ueVersion = ueVersion;
-        this.mapExt = mapExt;
-        this.binFolder = binFolder;
-        this.exportExecFilename = exportExecFilename;
-        this.mapFolder = mapFolder;
-        this.texExt = texExtension;
-        this.soundExt = soundExt;
-        this.musicExt = musicExt;
-    }
 
     public String getMapFolder() {
         return mapFolder;
@@ -193,21 +176,14 @@ public class UnrealGame {
         this.musicExt = musicExt;
     }
 
-    public String getBinFolder() {
-        return binFolder;
+    public String getExportExecPath() {
+        return exportExecPath;
     }
 
-    public void setBinFolder(String binFolder) {
-        this.binFolder = binFolder;
+    public void setExportExecPath(String exportExecPath) {
+        this.exportExecPath = exportExecPath;
     }
 
-    public String getExportExecFilename() {
-        return exportExecFilename;
-    }
-
-    public void setExportExecFilename(String exportExecFilename) {
-        this.exportExecFilename = exportExecFilename;
-    }
 
     @Override
     public String toString() {

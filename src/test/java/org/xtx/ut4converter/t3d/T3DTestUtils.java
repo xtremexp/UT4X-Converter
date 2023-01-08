@@ -3,25 +3,20 @@ package org.xtx.ut4converter.t3d;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.model.ApplicationConfig;
-import org.xtx.ut4converter.config.model.UserConfig;
-import org.xtx.ut4converter.config.model.UserGameConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.ui.ConversionSettingsController;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public class T3DTestUtils {
 
 
     /**
-     * Initialise
-     * @param inGame
-     * @return
+     * Initialise a map converter instance from input and output game
+     * @param inGame Input game
+     * @param outGame Output game
+     * @return Map converter instance
      */
     public static MapConverter getMapConverterInstance(final UTGames.UTGame inGame, final UTGames.UTGame outGame) throws IOException {
 
@@ -30,7 +25,7 @@ public class T3DTestUtils {
 
         final MapConverter mc = new MapConverter(inputGame, outputGame);
 
-        if (inputGame.getShortName().equals(UTGames.UTGame.U2.shortName)) {
+        if (inputGame != null && UTGames.UTGame.U2.shortName.equals(inputGame.getShortName())) {
             mc.setScale(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4);
         } else {
             mc.setScale(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4);
@@ -46,48 +41,16 @@ public class T3DTestUtils {
         return mc;
     }
 
-    /**
-     * Load user test config from application.properties file
-     *
-     * @return
-     */
-    public static UserConfig loadUserConfig() {
-        final UserConfig uc = new UserConfig();
-        uc.setIsFirstRun(false);
-
-
-        final List<UserGameConfig> userGameConfigs = new ArrayList<>();
-
-        try (final InputStream input = T3DTestUtils.class.getResourceAsStream("/application.properties")) {
-
-            final Properties prop = new Properties();
-            prop.load(input);
-
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U1.shortName, new File(prop.getProperty("u1.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U2.shortName, new File(prop.getProperty("u2.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2003.shortName, new File(prop.getProperty("ut2003.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2004.shortName, new File(prop.getProperty("ut2004.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT3.shortName, new File(prop.getProperty("ut3.path"))));
-
-            uc.setGame(userGameConfigs);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return uc;
-    }
 
     /**
      * Utility fonction, given an input game, read a .t3d file for a specific actor and parse it to build the actor
      *
-     * @param inputClassName
-     * @param utActorClass
+     * @param inputClassName Input class name in original t3d file (e.g: 'Light')
+     * @param utActorClass   Map converter actor class to convert to (e.g: 'T3DLight')
      * @param t3dFilePath    "/src/test/resources/t3d/***.t3d
-     * @return
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
+     * @return T3D actor parsed
+     * @throws ReflectiveOperationException Exception thrown if could not instantiate utActorClass
+     * @throws IOException                  Exception thrown if could not read t3d file
      */
     public static T3DActor parseFromT3d(final MapConverter mc, final String inputClassName, final Class<? extends T3DActor> utActorClass, final String t3dFilePath) throws ReflectiveOperationException, IOException {
 

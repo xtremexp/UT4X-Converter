@@ -30,7 +30,7 @@ public abstract class T3DObject {
 	 * Current game compatibility state for actor. Should automatically change
 	 * after convert
 	 */
-	private UnrealGame game = new UnrealGame("Fake Game", "FG", 1, "unr", null, null, null, null, null, null);
+	private UnrealGame game = new UnrealGame();
 
 	protected Logger logger;
 
