@@ -63,11 +63,11 @@ public class T3DTestUtils {
             final Properties prop = new Properties();
             prop.load(input);
 
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U1, new File(prop.getProperty("u1.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U2, new File(prop.getProperty("u2.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2003, new File(prop.getProperty("ut2003.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2004, new File(prop.getProperty("ut2004.path"))));
-            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT3, new File(prop.getProperty("ut3.path"))));
+            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U1.shortName, new File(prop.getProperty("u1.path"))));
+            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.U2.shortName, new File(prop.getProperty("u2.path"))));
+            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2003.shortName, new File(prop.getProperty("ut2003.path"))));
+            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT2004.shortName, new File(prop.getProperty("ut2004.path"))));
+            userGameConfigs.add(new UserGameConfig(UTGames.UTGame.UT3.shortName, new File(prop.getProperty("ut3.path"))));
 
             uc.setGame(userGameConfigs);
         } catch (IOException ex) {

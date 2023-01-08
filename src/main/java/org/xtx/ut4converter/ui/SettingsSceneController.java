@@ -30,26 +30,7 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("restriction")
 public class SettingsSceneController implements Initializable {
-	@FXML
-	private TextField ut99Path;
-	@FXML
-	private TextField u1Path;
-	@FXML
-	private TextField ut2004Path;
-	@FXML
-	private TextField ut2003Folder;
-	@FXML
-	private TextField ut3Folder;
-	@FXML
-	private TextField udkFolder;
-	@FXML
-	private TextField ut4EditorFolder;
 
-	@FXML
-	private TextField dnfFolder;
-
-	@FXML
-	private TextField u2Path;
 
 	/**
 	 * Current user configuration
@@ -128,7 +109,8 @@ public class SettingsSceneController implements Initializable {
 
 			for (UnrealGame game : appConfig.getGames()) {
 
-				final Label gameLabel = new Label(game.getShortName()+ (game.isEditorOnly() ? " Editor":""));
+				// For UE4 needs to select the editor path and not the normal packaged game (which does not have editor)
+				final Label gameLabel = new Label(game.getShortName()+ (game.getUeVersion() == 4 ? " Editor":""));
 				final TextField textField = new TextField(game.getPath() != null ? game.getPath().getAbsolutePath() : "");
 				textField.setEditable(false);
 				textField.setPrefWidth(400d);
@@ -177,7 +159,7 @@ public class SettingsSceneController implements Initializable {
 			chooser.setInitialDirectory(new File(utPathTxtField.getText()));
 		}
 
-		if (utGame.getShortName().equals(UTGame.UT4.shortName)) {
+		if (utGame.getUeVersion() >= 4) {
 			chooser.setTitle("Select " + utGame.getName() + " editor folder");
 		}
 

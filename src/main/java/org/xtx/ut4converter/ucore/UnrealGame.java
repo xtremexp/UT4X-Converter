@@ -78,8 +78,6 @@ public class UnrealGame {
     private boolean useTexDb;
 
 
-    private boolean isEditorOnly;
-
     /**
      * Sound file extension
      */
@@ -209,14 +207,6 @@ public class UnrealGame {
 
     public void setExportExecFilename(String exportExecFilename) {
         this.exportExecFilename = exportExecFilename;
-    }
-
-    public boolean isEditorOnly() {
-        return isEditorOnly;
-    }
-
-    public void setEditorOnly(boolean editorOnly) {
-        isEditorOnly = editorOnly;
     }
 
     @Override

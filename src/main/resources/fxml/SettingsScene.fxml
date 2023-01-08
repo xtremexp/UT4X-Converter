@@ -16,6 +16,7 @@
                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <center>
             <VBox>
+                    <Label text="Unreal games installation path"/>
                     <GridPane alignment="CENTER" hgap="10" vgap="10" fx:id="gridPane">
                         <!-- auto filled by program -->
                         <Separator GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="10" />

@@ -5,7 +5,6 @@
  */
 package org.xtx.ut4converter.ui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -278,9 +277,9 @@ public class MainSceneController implements Initializable {
 			}
 			else {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error Game paths not set");
-				alert.setHeaderText("Need to set game path");
-				alert.setContentText(inputGame.getName() + " and/or " + outputGame.getName() + " game path not set.");
+				alert.setTitle("Error");
+				alert.setHeaderText("Unreal game paths not set");
+				alert.setContentText(inputGame.getName() + " and/or " + outputGame.getName() + " game path not set or invalid.");
 
 				alert.showAndWait();
 				showSettings();

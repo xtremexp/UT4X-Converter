@@ -110,7 +110,7 @@ public class UserConfig {
 	public UserGameConfig getGameConfigByGame(UTGames.UTGame game) {
 
 		for (UserGameConfig gameConfig : games) {
-			if (gameConfig.id == game) {
+			if (game.shortName.equals(gameConfig.getId())) {
 				return gameConfig;
 			}
 		}
