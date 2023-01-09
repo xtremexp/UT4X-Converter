@@ -182,10 +182,17 @@ public class ConversionSettingsController implements Initializable {
 		this.mainApp = mainApp;
 	}
 
+
+	private Label createLabelWithTooltip(String text, String tooltip){
+		final Label lbl = new Label(text);
+		lbl.setTooltip(new Tooltip(tooltip));
+		return lbl;
+	}
+
 	public void load() throws IOException {
 
 		// INPUT MAP SETTINGS
-		gridPaneMainSettings.add(new Label("Input Game"), 0, 0);
+		gridPaneMainSettings.add( createLabelWithTooltip("Input Game:", "Input unreal game"), 0, 0);
 		gridPaneMainSettings.add(new Label(inputGame.getName()), 1, 0);
 
 		// Select map
@@ -212,14 +219,14 @@ public class ConversionSettingsController implements Initializable {
 		gridPaneMainSettings.add(new Separator(), 0, rowIdx++, 3, 1);
 
 		// OUTPUT MAP SETTINGS
-		gridPaneMainSettings.add(new Label("Output Game :"), 0, rowIdx);
+		gridPaneMainSettings.add(createLabelWithTooltip("Output Game :", "Output game map will be converted to."), 0, rowIdx);
 		gridPaneMainSettings.add(new Label(outputGame.getName()), 1, rowIdx++);
 
-		gridPaneMainSettings.add(new Label("Output Folder: "), 0, rowIdx);
+		gridPaneMainSettings.add(createLabelWithTooltip("Output Folder: ", "Folder where map and their resources (textures, ...)\n will be converted to."), 0, rowIdx);
 		outputFolderLbl = new Label("");
 		gridPaneMainSettings.add(outputFolderLbl, 1, rowIdx++);
 
-		gridPaneMainSettings.add(new Label("Scale Factor:"), 0, rowIdx);
+		gridPaneMainSettings.add(createLabelWithTooltip("Scale Factor:", "How much the map will be scaled to."), 0, rowIdx);
 		scaleFactorList = new ComboBox<>();
 		scaleFactorList.setEditable(true);
 		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 3., 3.125, 3.5, 4., 4.5, 5.);
@@ -243,7 +250,7 @@ public class ConversionSettingsController implements Initializable {
 		});
 		gridPaneMainSettings.add(scaleFactorList, 1, rowIdx++);
 
-		gridPaneMainSettings.add(new Label(outputGame.getShortName() + " Map Name"), 0, rowIdx);
+		gridPaneMainSettings.add(createLabelWithTooltip(outputGame.getShortName() + " Map Name :", "Output map name"), 0, rowIdx);
 		outMapNameLbl = new Label("");
 		gridPaneMainSettings.add(outMapNameLbl, 1, rowIdx);
 
@@ -254,7 +261,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// UE4 Editor only
 		if (outputGame.getUeVersion() == 4) {
-			gridPaneMainSettings.add(new Label("UE4 Editor ref. base path:"), 0, rowIdx);
+			gridPaneMainSettings.add(createLabelWithTooltip("UE4 Editor ref. base path:", "Folder within UE4 editor where map resources will be stored."), 0, rowIdx);
 			ue4RefPathLbl = new Label("");
 			gridPaneMainSettings.add(ue4RefPathLbl, 1, rowIdx);
 			changeUe4RefPathBtn = new Button("Change");
