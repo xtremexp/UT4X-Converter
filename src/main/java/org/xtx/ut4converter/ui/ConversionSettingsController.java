@@ -71,7 +71,6 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	private UnrealGame outputGame;
 
-	private ApplicationConfig applicationConfig;
 
 	@FXML
 	private CheckBox convTexCheckBox;
@@ -270,11 +269,6 @@ public class ConversionSettingsController implements Initializable {
 			gridPaneMainSettings.add(changeUe4RefPathBtn, 2, rowIdx);
 		}
 
-
-		if (applicationConfig == null) {
-			applicationConfig = ApplicationConfig.load();
-		}
-
 		mapConverter = new MapConverter(inputGame, outputGame);
 
 		// games we are working on and testing and adding blueprints
@@ -381,7 +375,7 @@ public class ConversionSettingsController implements Initializable {
 	private void selectInputMap()  {
 
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select " + inputGame.getShortName() + " map");
+		chooser.setTitle("Select " + inputGame.getName() + " map");
 
 		File mapFolder = new File(this.inputGame.getPath() + File.separator + this.inputGame.getMapFolder());
 
@@ -392,9 +386,9 @@ public class ConversionSettingsController implements Initializable {
 		// TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal
 		// text files with linux
 		if (Installation.isLinux()) {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getShortName() + " Map (*.t3d)", "*.t3d"));
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getName() + " Map (*.t3d)", "*.t3d"));
 		} else {
-			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getShortName() + " Map (*." + inputGame.getMapExt() + ", *.t3d)", "*." + inputGame.getMapExt(), "*.t3d"));
+			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getName() + " Map (*." + inputGame.getMapExt() + ", *.t3d)", "*." + inputGame.getMapExt(), "*.t3d"));
 		}
 
 		File unrealMap = chooser.showOpenDialog(new Stage());

@@ -11,7 +11,6 @@ import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.MaterialInfo;
 import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 
 import java.io.BufferedReader;
 import java.io.File;

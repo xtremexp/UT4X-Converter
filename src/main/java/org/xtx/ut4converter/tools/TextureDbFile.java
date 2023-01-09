@@ -275,19 +275,7 @@ public class TextureDbFile {
      */
     private static File getDbFileForGame(UnrealGame unrealGame) {
 
-        File confFolder = new File(Installation.getProgramFolder() + File.separator + Installation.APP_FOLDER + File.separator + "conf");
-
-        if (!confFolder.exists()) {
-            confFolder = new File(Installation.getProgramFolder() + File.separator + "conf");
-        }
-
-        File dbFile = new File(confFolder + File.separator + TextureDbFile.getTextureDbFileNameForGame(unrealGame));
-
-        if (!dbFile.exists()) {
-            dbFile = new File(confFolder + File.separator + TextureDbFile.getTextureDbFileNameForGame(unrealGame));
-        }
-
-        return dbFile;
+        return new File(Installation.getConfFolder() + File.separator + TextureDbFile.getTextureDbFileNameForGame(unrealGame));
     }
 
     /**

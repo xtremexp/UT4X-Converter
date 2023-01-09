@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "isFirstRun" : false,
+  "checkForUpdates" : false,
+  "games": [
+    {
+      "name": "Unreal 1",
+      "path": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold",
+      "suggestedPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold",
+      "useTexDb": false,
+      "isCustom": false,
+      "id": "U1",
+      "ueVersion": 1,
+      "mapFolder": "/Maps",
+      "mapExt": "unr",
+      "texExt": "utx",
+      "musicExt": "umx",
+      "exportExecPath": "/System/ucc.exe",
+      "soundExt": "uax",
+      "convertsTo": [
+        "UT3",
+        "UT4"
+      ]
+    },
+    {
+      "comment": "Simulates custom game added by user",
+      "name": "CUSTOM GAME",
+      "path": null,
+      "suggestedPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Custom Game",
+      "useTexDb": false,
+      "isCustom": true,
+      "id": "CG",
+      "ueVersion": 1,
+      "mapFolder": "/Maps",
+      "mapExt": "unr",
+      "texExt": "utx",
+      "musicExt": "umx",
+      "exportExecPath": "/System/ucc.exe",
+      "soundExt": "uax",
+      "convertsTo": [
+        "UT4"
+      ]
+    }
+  ]
+}

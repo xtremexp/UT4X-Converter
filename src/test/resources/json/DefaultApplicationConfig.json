@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "isFirstRun" : true,
+  "checkForUpdates" : true,
+  "fakeUnknownProp": "fake",
+  "games": [
+    {
+      "name": "Unreal 1",
+      "path": null,
+      "suggestedPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold",
+      "useTexDb": false,
+      "isCustom": false,
+      "id": "U1",
+      "ueVersion": 1,
+      "mapFolder": "/Maps",
+      "mapExt": "unr",
+      "texExt": "utx",
+      "musicExt": "umx",
+      "exportExecPath": "/System/ucc.exe",
+      "soundExt": "uax",
+      "fakeUnknownProp2": "fake2",
+      "convertsTo": [
+        "UT3",
+        "UT4"
+      ]
+    },
+    {
+      "name" : "Unreal Tournament 3",
+      "path" : null,
+      "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 3",
+      "useTexDb" : false,
+      "isCustom": false,
+      "id" : "UT3",
+      "ueVersion" : 3,
+      "mapFolder" : "/UTGame/CookedPC/Maps",
+      "mapExt" : "ut3",
+      "texExt" : null,
+      "musicExt" : null,
+      "exportExecPath" : "/Binaries/ut3.com",
+      "soundExt" : null,
+      "convertsTo" : [ "UT4" ]
+    }
+  ]
+}

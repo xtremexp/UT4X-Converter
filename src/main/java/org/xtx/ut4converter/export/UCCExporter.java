@@ -194,7 +194,6 @@ public final class UCCExporter extends UTPackageExtractor {
 		UCCExporter ucE = new UCCExporter(mapConverter);
 
 		Set<File> files = ucE.extract(t3dRessource, false, true);
-		System.out.println(files);
 
 		// UT3.com or UDK.com does not give info about t3d exported file in logs
 		// but is always PersistentLevel.t3d in Binaries folder

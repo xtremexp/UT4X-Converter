@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  * FXML Controller class
- * 
+ *
  * @author XtremeXp
  */
 @SuppressWarnings("restriction")
@@ -52,7 +52,7 @@ public class SettingsSceneController implements Initializable {
 
 	/**
 	 * Initializes the controller class.
-	 * 
+	 *
 	 * @param url Url
 	 * @param rb Resource Bundle
 	 */
@@ -64,24 +64,23 @@ public class SettingsSceneController implements Initializable {
 
 	/**
 	 * Saves game path to UserConfig object
-	 * 
+	 *
 	 * @param textFile Text field where new ut game path is stored
 	 * @param utGame UT game to save
 	 */
 	private void saveGamePath(TextField textFile, UnrealGame utGame) {
 
 		File gameFolder = new File(textFile.getText());
-		final String jsonFile = ApplicationConfig.getApplicationConfigFile().getName();
 
 		if (gameFolder.exists()) {
 			utGame.setPath(gameFolder);
 
 			try {
 				appConfig.saveFile();
-				settingsLog.setText("Settings saved to " + jsonFile);
+				settingsLog.setText("Settings saved to " + appConfig.getFile().getName());
 			} catch (IOException ex) {
 				Logger.getLogger(SettingsSceneController.class.getName()).log(Level.SEVERE, null, ex);
-				settingsLog.setText("An error occured while saving " + jsonFile + " : " + ex.getMessage());
+				settingsLog.setText("An error occured while saving " + appConfig.getFile().getName() + " : " + ex.getMessage());
 			}
 		} else {
 			showErrorMessage(textFile.getText() + " is not valid folder");
@@ -101,19 +100,20 @@ public class SettingsSceneController implements Initializable {
 	 * available.
 	 */
 	private void loadSettings() {
+
 		try {
-			appConfig = ApplicationConfig.load();
+			appConfig = ApplicationConfig.loadApplicationConfig();
 
 			int gameIdx = 0;
 
 			for (UnrealGame game : appConfig.getGames()) {
 
 				// For UE4 needs to select the editor path and not the normal packaged game (which does not have editor)
-				final Label gameLabel = new Label(game.getShortName()+ (game.getUeVersion() == 4 ? " Editor":""));
+				final Label gameLabel = new Label(game.getShortName()+ (game.getUeVersion() == 4 ? " Editor":"") + " Folder");
 				final TextField textField = new TextField(game.getPath() != null ? game.getPath().getAbsolutePath() : "");
 				textField.setEditable(false);
 				textField.setPrefWidth(400d);
-				textField.setPromptText("C:\\Program Files (x86)\\" + game.getName() + (game.getUeVersion() == 4 ? " Editor":""));
+				textField.setPromptText(game.getSuggestedPath() != null ? game.getSuggestedPath().toString() : "");
 
 				final Button button = new Button("Select");
 				button.setOnMouseClicked(mouseEvent -> setUTxFolder(game, textField));
@@ -130,7 +130,7 @@ public class SettingsSceneController implements Initializable {
 				appConfig.setCheckForUpdates(newValue);
 				try {
 					appConfig.saveFile();
-					settingsLog.setText("Settings saved to " + ApplicationConfig.getApplicationConfigFile().getName());
+					settingsLog.setText("Settings saved to " + appConfig.getFile().getName());
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
@@ -144,7 +144,7 @@ public class SettingsSceneController implements Initializable {
 
 	/**
 	 * Sets and save ut path to xml user config file on click "Select"
-	 * 
+	 *
 	 * @param utGame
 	 *            UT game to set path
 	 * @param utPathTxtField
@@ -152,11 +152,16 @@ public class SettingsSceneController implements Initializable {
 	 */
 	private void setUTxFolder(UnrealGame utGame, TextField utPathTxtField) {
 
+		settingsLog.setText("");
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Select " + utGame.getName() + " folder");
 
 		if (utPathTxtField != null && utPathTxtField.getText() != null && new File(utPathTxtField.getText()).exists()) {
 			chooser.setInitialDirectory(new File(utPathTxtField.getText()));
+		}
+		// opens parent dir of suggested path if exists
+		else if (utGame.getSuggestedPath() != null && utGame.getSuggestedPath().exists() && utGame.getSuggestedPath().getParentFile().exists()) {
+			chooser.setInitialDirectory(utGame.getSuggestedPath().getParentFile());
 		}
 
 		if (utGame.getUeVersion() >= 4) {

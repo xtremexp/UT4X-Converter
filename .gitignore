@@ -6,3 +6,4 @@
 *.iml
 /.idea
 /app/conf/*TextureDb*.json
+/app/conf/ApplicationConfig.json

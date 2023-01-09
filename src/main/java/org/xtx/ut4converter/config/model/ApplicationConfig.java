@@ -4,39 +4,62 @@
 
 package org.xtx.ut4converter.config.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ApplicationConfig {
+import static org.xtx.ut4converter.ucore.UnrealGame.fromUeVersion;
+
+/**
+ * Class for representing application configuration such as games supported,
+ * user game paths, ...
+ */
+public class ApplicationConfig implements Serializable {
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
-     * Version of config file
+     * Used for internal purpose for saving json file
      */
+    @JsonIgnore
+    private File file;
+
+    /**
+     * Version of config file.
+     * Might be used for config upgrade for future ut converter versions.
+     */
+    @Min(1)
     private int version = 1;
 
     /**
-     *
+     * Null at very first start.
+     * If so will display a welcome message to user and redirect him to program settings window.
      */
-    @JsonProperty("is_first_run")
     private Boolean isFirstRun;
 
     /**
      * If true, program will check for updates at start
      */
-    @JsonProperty("check_for_updates")
     private boolean checkForUpdates = true;
 
-    public ApplicationConfig(){
+    public ApplicationConfig() {
 
     }
 
@@ -44,14 +67,6 @@ public class ApplicationConfig {
      * List of supported games by the converter
      */
     private List<UnrealGame> games = new ArrayList<>();
-
-    /**
-     * Map of supported conversion with unreal game shortName as key
-     * and list of shortName for output unreal games
-     * E.g: U1 -> UT3/UT4 would give <U1, [UT3,UT4]>
-     */
-    @JsonProperty("game_conversion")
-    private Map<String, List<String>> gameConversion = new HashMap<>();
 
     public List<UnrealGame> getGames() {
         return games;
@@ -61,30 +76,37 @@ public class ApplicationConfig {
         this.games = games;
     }
 
-    public Map<String, List<String>> getGameConversion() {
-        return gameConversion;
-    }
-
-    public void setGameConversion(Map<String, List<String>> gameConversion) {
-        this.gameConversion = gameConversion;
-    }
-
-    public static File getApplicationConfigFile() {
-        return new File(Installation.getDocumentProgramFolder().getAbsolutePath() + File.separator + "ApplicationConfig.json");
+    /**
+     * Return the application config file.
+     * If it's user application config file, it's in /Documents/UT4X-Converter
+     *
+     * @param defaultConfig If true will retrive the default application config file else the user application config file.
+     * @return Application config file
+     */
+    public static File getApplicationConfigFile(boolean defaultConfig) {
+        if (defaultConfig) {
+            return new File(Installation.getConfFolder() + File.separator + "DefaultApplicationConfig.json");
+        } else {
+            return new File(Installation.getDocumentProgramFolder().getAbsolutePath() + File.separator + "ApplicationConfig.json");
+        }
     }
 
     /**
      * Save application config file to json
-     *
      */
     public void saveFile() throws IOException {
-        File configFile = getApplicationConfigFile();
 
-        if (!configFile.getParentFile().exists() && !configFile.getParentFile().mkdirs()) {
-            throw new IOException("Could not create directory " + configFile.getParentFile());
+        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+            throw new IOException("Could not create directory " + file.getParentFile());
         }
 
-        try (final FileWriter fw = new FileWriter(configFile)) {
+        // default config file must never be overidden
+        if (file.getName().equals(ApplicationConfig.getApplicationConfigFile(true).getName())) {
+            throw new UnsupportedOperationException("DefaultApplicationConfig.json must not be overidden !");
+        }
+
+        try (final FileWriter fw = new FileWriter(file)) {
+            logger.info("Saving " + file.getAbsolutePath());
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(fw, this);
         }
     }
@@ -132,80 +154,66 @@ public class ApplicationConfig {
         return games;
     }
 
-    /**
-     * Init unreal game from name, shortname, map extension and ueversion
-     *
-     * @param name        Full game name
-     * @param shortNameId Short name (used as id)
-     * @param mapExt      Map extension
-     * @param ueVersion   Unreal engine version
-     * @return Unreal game
-     */
-    private static UnrealGame fromUeVersion(String name, String shortNameId, String mapExt, int ueVersion) {
 
-        final UnrealGame unrealGame = new UnrealGame();
-        unrealGame.setUeVersion(ueVersion);
-        unrealGame.setMapExt(mapExt);
-        unrealGame.setName(name);
-        unrealGame.setShortName(shortNameId);
+    public static ApplicationConfig loadDefaultApplicationConfig() throws IOException {
+        return ApplicationConfig.loadFromConfigFile(getApplicationConfigFile(true));
+    }
 
-        if (ueVersion <= 2) {
-            unrealGame.setExportExecPath("/System/ucc.exe");
-            unrealGame.setMapFolder("/Maps");
-            unrealGame.setTexExt("utx");
-            unrealGame.setSoundExt("uax");
 
-            if (ueVersion == 1) {
-                unrealGame.setMusicExt("umx");
-                // ucc batch export does not provide unreal package name in Level.t3d file for brush surfaces
-                unrealGame.setUseTexDb(true);
-            } else {
-                unrealGame.setMusicExt("ogg");
-            }
-        } else if (ueVersion == 4) {
-            unrealGame.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
-            unrealGame.setMusicExt("pak");
-            unrealGame.setTexExt("pak");
-            unrealGame.setSoundExt("pak");
-        }
-
-        return unrealGame;
+    public static ApplicationConfig loadApplicationConfig() throws IOException {
+        return ApplicationConfig.loadFromConfigFile(getApplicationConfigFile(false));
     }
 
     /**
-     * Load application config from hson file
+     * Load application config object from ApplicationConfig.json file
      *
+     * @param appConfigFile Application config json file
      * @return Application config
-     * @throws IOException Exception thrown when reading json file
+     * @throws IOException Exception thrown when reading config file
      */
-    public static ApplicationConfig load() throws IOException {
+    public static ApplicationConfig loadFromConfigFile(File appConfigFile) throws IOException {
 
-        final File file = ApplicationConfig.getApplicationConfigFile();
-
-        // auto-create config file
-        if (!file.exists()) {
-            ApplicationConfig appConfig = new ApplicationConfig();
-
-            appConfig.getGames().addAll(getBaseGames());
-
-            // init
-            appConfig.getGameConversion().put("U1", Arrays.asList("UT3", "UT4"));
-            appConfig.getGameConversion().put("U2", Arrays.asList("UT4"));
-            appConfig.getGameConversion().put("UT99", Arrays.asList("UT3", "UT4"));
-            appConfig.getGameConversion().put("UT2003", List.of("UT4"));
-            appConfig.getGameConversion().put("UT2004", List.of("UT4"));
-            appConfig.getGameConversion().put("UT3", List.of("UT4"));
-            appConfig.getGameConversion().put("UDK", Arrays.asList("UT4"));
-            appConfig.getGameConversion().put("DNF", Arrays.asList("UT3", "UT4"));
-
-            appConfig.saveFile();
-
-            return appConfig;
+        if (appConfigFile == null || !appConfigFile.exists()){
+            return null;
         }
 
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        final ApplicationConfig applicationConfig = objectMapper.readValue(appConfigFile, ApplicationConfig.class);
+        applicationConfig.setFile(appConfigFile);
+        return applicationConfig;
+    }
 
-        return objectMapper.readValue(file, ApplicationConfig.class);
+
+    /**
+     * From DefaultApplicationConfig, merge ApplicationConfig.json file into it.
+     *
+     * @param defaultConfig Default app config
+     */
+    public void mergeWithDefaultConfig(final ApplicationConfig defaultConfig) {
+
+        this.isFirstRun = false;
+
+        // clear all games but custom ones and adds one from the default config file
+        final List<UnrealGame> appConfigCustomGames = this.games.stream().filter(UnrealGame::getIsCustom).toList();
+
+        final List<UnrealGame> defAppConfigGamesCopy = new ArrayList<>(defaultConfig.games);
+        defaultConfig.setCheckForUpdates(this.checkForUpdates);
+        // the reference app config must not be updated !
+
+        for (final UnrealGame userGame : defAppConfigGamesCopy) {
+            UnrealGame uGame = this.getGames().stream().filter(g -> g.getShortName().equals(userGame.getShortName())).findFirst().orElse(null);
+
+            if (uGame != null) {
+                userGame.setPath(uGame.getPath());
+            }
+            // game is custom and does not exist in default config, add it then
+            else if (userGame.getIsCustom()) {
+                defAppConfigGamesCopy.add(userGame);
+            }
+        }
+
+        this.games = defAppConfigGamesCopy;
+        this.games.addAll(appConfigCustomGames);
     }
 
     public int getVersion() {
@@ -225,15 +233,33 @@ public class ApplicationConfig {
     }
 
 
-    public UnrealGame getUnrealGameById(final String shortName){
+    public UnrealGame getUnrealGameById(final String shortName) {
         return this.games.stream().filter(u -> u.getShortName().equals(shortName)).findFirst().orElse(null);
     }
 
-    public Boolean isFirstRun() {
+    public Boolean getIsFirstRun() {
         return isFirstRun;
     }
 
     public void setIsFirstRun(Boolean firstRun) {
         isFirstRun = firstRun;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationConfig{" +
+                "version=" + version +
+                ", isFirstRun=" + isFirstRun +
+                ", checkForUpdates=" + checkForUpdates +
+                ", games=" + games +
+                '}';
     }
 }

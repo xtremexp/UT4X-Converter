@@ -6,7 +6,10 @@ import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.ui.ConversionSettingsController;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 
 public class T3DTestUtils {
@@ -72,7 +75,7 @@ public class T3DTestUtils {
         return uta;
     }
 
-    public static void setMapFile(final MapConverter mc, final String inMap) throws IOException {
+    public static void setMapFile(final MapConverter mc, final String inMap) {
         mc.setInMap(new File(mc.getInputGame().getMapFolder() + "/" + inMap));
     }
 }

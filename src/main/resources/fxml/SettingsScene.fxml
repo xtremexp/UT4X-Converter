@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="650.0" styleClass="mainFxmlClass"
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="650.0"
             xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
     <stylesheets>
@@ -16,11 +13,11 @@
                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <center>
             <VBox>
-                    <Label text="Unreal games installation path"/>
+                <BorderPane><top><Label text="Unreal games installation path" alignment="CENTER" style="-fx-font-size: 18" BorderPane.alignment="CENTER"/></top></BorderPane>
                     <GridPane alignment="CENTER" hgap="10" vgap="10" fx:id="gridPane">
                         <!-- auto filled by program -->
                         <Separator GridPane.columnIndex="0" GridPane.columnSpan="6" GridPane.rowIndex="10" />
-                        <CheckBox fx:id="chkBoxCheckUpdates" GridPane.columnIndex="0" GridPane.rowIndex="11" GridPane.columnSpan="2">Check updates at startup ?</CheckBox>
+                        <CheckBox fx:id="chkBoxCheckUpdates" GridPane.columnIndex="0" GridPane.rowIndex="11" GridPane.columnSpan="2">Check for updates at startup ?</CheckBox>
                         <Label fx:id="settingsLog" alignment="CENTER" GridPane.columnIndex="0"
                                GridPane.columnSpan="3" GridPane.rowIndex="12"/>
                     </GridPane>

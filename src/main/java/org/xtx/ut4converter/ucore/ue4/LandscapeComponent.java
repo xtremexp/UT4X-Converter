@@ -97,7 +97,6 @@ public class LandscapeComponent extends TerrainComponent implements T3D {
 			final int layerNum = alphaLayer.getLayerNum();
 
 			alphaLayer.setLayerInfo(layerNumToLayerInfo.getOrDefault(layerNum, LI_DIRT));
-			System.out.println(alphaLayer.getLayerInfo());
 		}
 	}
 

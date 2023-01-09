@@ -191,11 +191,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	public Map<String, UPackage> mapPackages = new HashMap<>();
 
-	/**
-	 * User configuration which allows to know where UT games are installed for
-	 * exemple
-	 */
-	ApplicationConfig applicationConfig;
+
 
 	/**
 	 * If true will create notes for unconverted actors in level
@@ -489,7 +485,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Converts level
 	 *
-	 * @throws Exception
+	 * @throws Exception Exception thrown
 	 */
 	public void convert() throws Exception {
 
@@ -558,7 +554,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// export of it
 			// and directly convert it
 			t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this, noUi);
-			t3dLvlConvertor.setCreateNoteWhenUnconverted(createNoteForUnconvertedActors);
+			t3dLvlConvertor.setCreateNoteForUnconvertedActors(createNoteForUnconvertedActors);
 			updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
 			t3dLvlConvertor.readConvertAndWrite();
 			updateProgress(80, 100);
@@ -676,9 +672,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				else if (actor instanceof T3DUE3Terrain ue3Terrain) {
 					logger.log(Level.INFO, "Assign materials to landscape material from TerrainLayerSetups in UT3 editor :");
 
-					ue3Terrain.getTerrainLayers().forEach(terrainLayer -> {
-						logger.log(Level.INFO, terrainLayer.getTerrainLayerSetupName());
-					});
+					ue3Terrain.getTerrainLayers().forEach(terrainLayer -> logger.log(Level.INFO, terrainLayer.getTerrainLayerSetupName()));
 				}
 
 			});
@@ -789,11 +783,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	/**
 	 *
-	 * @param exportedFile
-	 * @return
-	 * @throws Exception
+	 * @param exportedFile Psk file
+	 * @return Psk staticmesh with renames material
+	 * @throws IOException Error reading psk file
 	 */
-	private PSKStaticMesh listAndRenameMaterialsForPsk(File exportedFile) throws Exception {
+	private PSKStaticMesh listAndRenameMaterialsForPsk(File exportedFile) throws IOException {
 
 		final PSKStaticMesh pskMesh = new PSKStaticMesh(exportedFile);
 
@@ -867,9 +861,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Delete unused files and convert them to good format if needed. (e.g:
 	 * convert staticmeshes to .ase or .fbx format for import in UE4)
 	 *
-	 * @throws IOException
+	 * @throws IOException Error reading files
 	 */
-	private void cleanAndConvertRessources() throws Exception {
+	private void cleanAndConvertRessources() throws IOException {
 
 		updateMessage("Converting ressource files");
 		boolean wasConverted;
@@ -900,8 +894,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// always keep original .t3d file
 		try {
 			Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
-		} catch (AtomicMoveNotSupportedException e) {
-			logger.warning(e.getReason());
+		} catch (IOException e) {
+			logger.warning(e.getMessage());
 		}
 
 		updateMessage("Deleting temporary files");
@@ -940,7 +934,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				if (landscapeMatIdx.getAcquire() < 3&& terrain.getChildren() != null && !terrain.getChildren().isEmpty() && terrain.getChildren().get(0) instanceof final T3DUE4Terrain ue4Terrain) {
 					final String landscapeMatFilename = "UT4X_LandscapeMat_" + landscapeMatIdx.getAcquire() + ".uasset";
 
-						final File landscapeMat = new File(Installation.getContentFolder() + File.separator + landscapeMatFilename);
+						final File landscapeMat = new File(Installation.getConfFolder() + File.separator + landscapeMatFilename);
 						final File landscapeMatCopy = new File(wipConvertedMapFolder + File.separator + landscapeMatFilename);
 
 						if (!landscapeMatCopy.exists()) {
@@ -1297,7 +1291,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	@Override
-	protected T3DLevelConvertor call() throws Exception {
+	protected T3DLevelConvertor call() {
 		try {
 			convert();
 		} catch (Throwable e) {
@@ -1346,7 +1340,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	/**
 	 * Says if program can convert/export sounds.
 	 *
-	 * @return
+	 * @return <code>true</code> if program can convert sounds
 	 */
 	public boolean canConvertSounds() {
 		return inputGame.getUeVersion() <= UnrealEngine.UE2.version;
@@ -1509,9 +1503,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.useUbClasses = useUbClasses;
 	}
 
-	public ApplicationConfig getApplicationConfig() {
-		return applicationConfig;
-	}
 
 	public void setPreferedTextureExtractorClass(Class<? extends UTPackageExtractor> preferedTextureExtractorClass) {
 		this.preferedTextureExtractorClass = preferedTextureExtractorClass;

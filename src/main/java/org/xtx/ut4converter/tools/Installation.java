@@ -117,7 +117,13 @@ public class Installation {
 		return new File(Installation.getDocumentUserFolder().getAbsolutePath() + File.separator + "UT4X-Converter");
 	}
 
-	public static File getContentFolder(){
+	/**
+	 * Returns application conf folder
+	 * If it's packaged application running it will be in [ProgramPath]/conf
+	 * else [ProgramPath]/app/conf
+	 * @return Configuration folder
+	 */
+	public static File getConfFolder(){
 		File file = new File(Installation.getInstallDirectory(MainApp.class) + File.separator + APP_FOLDER + File.separator + "conf");
 
 		if(file.exists()){

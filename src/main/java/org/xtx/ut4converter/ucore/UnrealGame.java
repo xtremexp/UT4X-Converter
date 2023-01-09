@@ -8,12 +8,16 @@
 
 package org.xtx.ut4converter.ucore;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UnrealGame {
 
@@ -22,43 +26,44 @@ public class UnrealGame {
      * Short name
      */
     @JsonProperty("id")
+    @Size(min = 2)
+    @NotBlank
     private String shortName;
 
     /**
      * Full name
      */
+    @NotBlank
     private String name;
 
 
     /**
      * Unreal Engine version
      */
-    @JsonProperty("ue_version")
+    @Min(1)
+    @Max(5)
     private int ueVersion;
 
-    @JsonIgnore
-    private UnrealEngine unrealEngine;
-
-
-    @JsonProperty("map_folder")
+    /**
+     * Relative path from game path where maps are
+     * E.g: '/Maps'
+     */
     private String mapFolder;
 
     /**
      * Map filename extension
      */
-    @JsonProperty("map_ext")
+    @NotBlank
     private String mapExt;
 
     /**
      * Texture file extension
      */
-    @JsonProperty("tex_ext")
     private String texExt;
 
     /**
      * Music file extension
      */
-    @JsonProperty("music_ext")
     private String musicExt;
 
     /**
@@ -66,7 +71,7 @@ public class UnrealGame {
      * used to export level to t3d and also map resources
      * E.g: /System/ucc.exe
      */
-    @JsonProperty("export_exec_path")
+    @NotBlank
     private String exportExecPath;
 
     /**
@@ -76,22 +81,78 @@ public class UnrealGame {
 
 
     /**
+     * Suggestion where this unreal game might be installed.
+     * (e.g: "C:\Program Files (x86)\Steam\steamapps\common\Unreal II The Awakening")
+     */
+    private File suggestedPath;
+
+    /**
      * If true, this game will need texture db
      */
     private boolean useTexDb;
+
+    /**
+     * If true, this game was added by user and should not be deleted or modified
+     * by program (except the 'path' property)
+     */
+    private boolean isCustom;
 
 
     /**
      * Sound file extension
      */
-    @JsonProperty("sound_ext")
     private String soundExt;
+
+    /**
+     * List of id (=shortName) where the game can be converted to
+     */
+    private List<String> convertsTo = new ArrayList<>();
 
 
 
     // do not delete, constructor for jackson json lib
     public UnrealGame() {
 
+    }
+
+    /**
+     * Init unreal game from name, shortname, map extension and ueversion
+     *
+     * @param name        Full game name
+     * @param shortNameId Short name (used as id)
+     * @param mapExt      Map extension
+     * @param ueVersion   Unreal engine version
+     * @return Unreal game
+     */
+    public static UnrealGame fromUeVersion(String name, String shortNameId, String mapExt, int ueVersion) {
+
+        final UnrealGame unrealGame = new UnrealGame();
+        unrealGame.setUeVersion(ueVersion);
+        unrealGame.setMapExt(mapExt);
+        unrealGame.setName(name);
+        unrealGame.setShortName(shortNameId);
+
+        if (ueVersion <= 2) {
+            unrealGame.setExportExecPath("/System/ucc.exe");
+            unrealGame.setMapFolder("/Maps");
+            unrealGame.setTexExt("utx");
+            unrealGame.setSoundExt("uax");
+
+            if (ueVersion == 1) {
+                unrealGame.setMusicExt("umx");
+                // ucc batch export does not provide unreal package name in Level.t3d file for brush surfaces
+                unrealGame.setUseTexDb(true);
+            } else {
+                unrealGame.setMusicExt("ogg");
+            }
+        } else if (ueVersion == 4) {
+            unrealGame.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
+            unrealGame.setMusicExt("pak");
+            unrealGame.setTexExt("pak");
+            unrealGame.setSoundExt("pak");
+        }
+
+        return unrealGame;
     }
 
 
@@ -125,7 +186,6 @@ public class UnrealGame {
 
     public void setUeVersion(int ueVersion) {
         this.ueVersion = ueVersion;
-        this.unrealEngine = UnrealEngine.from(this.ueVersion);
     }
 
     public String getMapExt() {
@@ -160,6 +220,30 @@ public class UnrealGame {
         this.path = path;
     }
 
+    public File getSuggestedPath() {
+        return suggestedPath;
+    }
+
+    public void setSuggestedPath(File suggestedPath) {
+        this.suggestedPath = suggestedPath;
+    }
+
+    public boolean getIsCustom() {
+        return isCustom;
+    }
+
+    public void setIsCustom(boolean custom) {
+        isCustom = custom;
+    }
+
+    public List<String> getConvertsTo() {
+        return convertsTo;
+    }
+
+    public void setConvertsTo(List<String> convertsTo) {
+        this.convertsTo = convertsTo;
+    }
+
     public boolean isUseTexDb() {
         return useTexDb;
     }
@@ -184,13 +268,36 @@ public class UnrealGame {
         this.exportExecPath = exportExecPath;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnrealGame that = (UnrealGame) o;
+        return ueVersion == that.ueVersion && useTexDb == that.useTexDb && isCustom == that.isCustom && name.equals(that.name) && Objects.equals(mapFolder, that.mapFolder) && mapExt.equals(that.mapExt) && Objects.equals(texExt, that.texExt) && Objects.equals(musicExt, that.musicExt) && exportExecPath.equals(that.exportExecPath) && Objects.equals(path, that.path) && Objects.equals(suggestedPath, that.suggestedPath) && Objects.equals(soundExt, that.soundExt) && Objects.equals(convertsTo, that.convertsTo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, ueVersion, mapFolder, mapExt, texExt, musicExt, exportExecPath, path, suggestedPath, useTexDb, isCustom, soundExt, convertsTo);
+    }
 
     @Override
     public String toString() {
         return "UnrealGame{" +
-                "name='" + name + '\'' +
-                ", shortName='" + shortName + '\'' +
+                "shortName='" + shortName + '\'' +
+                ", name='" + name + '\'' +
                 ", ueVersion=" + ueVersion +
+                ", mapFolder='" + mapFolder + '\'' +
+                ", mapExt='" + mapExt + '\'' +
+                ", texExt='" + texExt + '\'' +
+                ", musicExt='" + musicExt + '\'' +
+                ", exportExecPath='" + exportExecPath + '\'' +
+                ", path=" + path +
+                ", suggestedPath='" + suggestedPath + '\'' +
+                ", useTexDb=" + useTexDb +
+                ", isCustom=" + isCustom +
+                ", soundExt='" + soundExt + '\'' +
+                ", convertsTo=" + convertsTo +
                 '}';
     }
 }

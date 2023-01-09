@@ -27,13 +27,11 @@ import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -78,32 +76,49 @@ public class MainSceneController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 
 		try {
-			this.applicationConfig = ApplicationConfig.load();
+			// at start load and merge is necessary from DefaultApplicationConfig.json file
+			this.applicationConfig = ApplicationConfig.loadApplicationConfig();
+			final ApplicationConfig defaultAppConfig = ApplicationConfig.loadDefaultApplicationConfig();
+
+			// no config file, creates it from DefaultConfig
+			if (this.applicationConfig == null) {
+				this.applicationConfig = ApplicationConfig.loadDefaultApplicationConfig();
+			}
+			// update config file from DefaultConfig
+			else {
+				this.applicationConfig.mergeWithDefaultConfig(defaultAppConfig);
+			}
+
+			this.applicationConfig.setFile(ApplicationConfig.getApplicationConfigFile(false));
+			this.applicationConfig.saveFile();
 
 			// adds dynamically game to file menu
-			for (Map.Entry<String, List<String>> entry : this.applicationConfig.getGameConversion().entrySet()) {
+			for (final UnrealGame inputGame : this.applicationConfig.getGames()) {
 
-				final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(entry.getKey());
+				// Do not add menu for games that have no conversion possible to
+				if (inputGame.getConvertsTo().isEmpty()) {
+					continue;
+				}
 
-				final Menu gameFromMenu = new Menu(this.applicationConfig.getUnrealGameById(entry.getKey()).getName());
-				gameFromMenu.setId("convert" + entry.getKey());
+				final Menu gameFromMenu = new Menu(inputGame.getName());
+				gameFromMenu.setId("convert" + inputGame.getShortName());
 
-				for (final String outputShortNameGame : entry.getValue()) {
+				for (final String outputShortNameGame : inputGame.getConvertsTo()) {
 
 					final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(outputShortNameGame);
-
 					final MenuItem gameToMenuItem = new MenuItem("Convert map to " + outputGame.getShortName() + " ...");
-					gameToMenuItem.setId("convert" + entry.getKey() + outputGame);
-					gameFromMenu.getItems().add(gameToMenuItem);
 
+					gameToMenuItem.setId("convert" + inputGame.getShortName() + outputGame);
+					gameFromMenu.getItems().add(gameToMenuItem);
 					gameToMenuItem.setOnAction(t -> convertUtxMap(inputGame, outputGame));
 				}
 
-				menuFile.getItems().add(0, gameFromMenu);
+				// add before the separator and exit submenu
+				menuFile.getItems().add(menuFile.getItems().size() - 2, gameFromMenu);
 			}
 
 
-			if (applicationConfig.isFirstRun() == null || applicationConfig.isFirstRun()) {
+			if (applicationConfig.getIsFirstRun() == null || applicationConfig.getIsFirstRun()) {
 				applicationConfig.setIsFirstRun(Boolean.FALSE);
 				applicationConfig.saveFile();
 				showAlertFirstTime();
@@ -252,6 +267,23 @@ public class MainSceneController implements Initializable {
 	private void convertUtxMap(UnrealGame inputGame, UnrealGame outputGame) {
 
 		try {
+			// refresh input game/output game config
+			// user may have set unreal game install path after trying to convert if it was not set
+			this.applicationConfig = ApplicationConfig.loadApplicationConfig();
+			UnrealGame finalInputGame = inputGame;
+			final UnrealGame inUnrealGameConfig = this.applicationConfig.getGames().stream().filter(g -> g.getShortName().equals(finalInputGame.getShortName())).findFirst().orElse(null);
+
+			if (inUnrealGameConfig != null) {
+				inputGame = inUnrealGameConfig;
+			}
+
+			UnrealGame finalOutputGame = outputGame;
+			final UnrealGame outUnrealGameConfig = this.applicationConfig.getGames().stream().filter(g -> g.getShortName().equals(finalOutputGame.getShortName())).findFirst().orElse(null);
+
+			if (outUnrealGameConfig != null) {
+				outputGame = outUnrealGameConfig;
+			}
+
 			if (checkGamePathSet(inputGame, outputGame)) {
 				FXMLLoader loader = new FXMLLoader();
 				loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
@@ -300,19 +332,18 @@ public class MainSceneController implements Initializable {
 	private boolean checkGamePathSet(UnrealGame... games) throws IOException {
 
 		// need to reload if user changed path in settings
-		this.applicationConfig = ApplicationConfig.load();
+		this.applicationConfig = ApplicationConfig.loadApplicationConfig();
+		// refresh game path if user has changed it
 
-		if (applicationConfig != null) {
-			boolean gamePathSet = true;
+		boolean gamePathSet = true;
 
-			for (UnrealGame game : games) {
-				gamePathSet &= game.getPath() != null && game.getPath().exists();
-			}
-
-			return gamePathSet;
+		for (UnrealGame game : games) {
+			// sync game path with one from config file
+			this.applicationConfig.getGames().stream().filter(g -> g.getShortName().equals(game.getShortName())).findFirst().ifPresent(configGame -> game.setPath(configGame.getPath()));
+			gamePathSet &= game.getPath() != null && game.getPath().exists();
 		}
 
-		return false;
+		return gamePathSet;
 	}
 
 

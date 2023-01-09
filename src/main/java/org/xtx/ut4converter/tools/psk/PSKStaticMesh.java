@@ -74,7 +74,7 @@ public class PSKStaticMesh {
 	 *            .psk staticmesh file
 	 * @throws Exception
 	 */
-	public PSKStaticMesh(File pskFile) throws Exception {
+	public PSKStaticMesh(File pskFile) throws IOException {
 		this.pskFile = pskFile;
 		read();
 	}
@@ -143,7 +143,7 @@ public class PSKStaticMesh {
 		}
 	}
 
-	private void read() throws Exception {
+	private void read() throws IOException {
 
 		if (pskFile == null || !pskFile.exists()) {
 			return;
@@ -160,7 +160,7 @@ public class PSKStaticMesh {
 			ChunkHeader header = new ChunkHeader(buffer);
 
 			if (!CHUNK_HEADER_HEAD_ID.equals(header.chunkID.trim())) {
-				throw new Exception("Not a psk file");
+				throw new IllegalArgumentException("Not a psk file");
 			}
 
 			while (buffer.hasRemaining()) {

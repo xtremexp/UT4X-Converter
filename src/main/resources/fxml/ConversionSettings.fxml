@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.*?>
 <?import java.lang.String?>
 <?import java.net.URL?>
-
 <VBox prefHeight="520.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
 
     <stylesheets>
@@ -46,8 +45,8 @@
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="3">Sound Volume Factor:</Label>
                     <ComboBox fx:id="soundVolumeFactor" promptText="changes volume of all sounds of map" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                    <Label GridPane.columnIndex="0" GridPane.rowIndex="4">Restrict conversion to these actor classes:</Label>
-                    <TextField fx:id="classesNameFilter" prefWidth="200.0" promptText="Restrict class conversion (e.g: 'Brush;PlayerStart;DefensePoint')" GridPane.columnIndex="1" GridPane.rowIndex="4"  GridPane.columnSpan="5"/>
+                    <Label GridPane.columnIndex="0" GridPane.rowIndex="4">Actor class filter:</Label>
+                    <TextField fx:id="classesNameFilter" prefWidth="200.0" promptText="e.g: 'Brush;PlayerStart;DefensePoint'" GridPane.columnIndex="1" GridPane.rowIndex="4"  GridPane.columnSpan="5"/>
 
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="5">Detailled logs</Label>
