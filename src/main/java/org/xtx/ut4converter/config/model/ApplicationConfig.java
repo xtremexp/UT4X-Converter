@@ -115,7 +115,8 @@ public class ApplicationConfig {
         games.add(fromUeVersion("Unreal Tournament 2003", "UT2003", "ut2", 2));
         games.add(fromUeVersion("Unreal Tournament 2004", "UT2004", "ut2", 2));
         final UnrealGame udkGame = fromUeVersion("Unreal Development Kit", "UDK", "udk", 3);
-        udkGame.setExportExecPath("/Binaries/Win64/udk.com");
+        udkGame.setExportExecPath("/Binaries/Win64/UDK.com");
+        udkGame.setMapFolder("/UDKGame/Content");
         games.add(udkGame);
 
         final UnrealGame ut3Game = fromUeVersion("Unreal Tournament 3", "UT3", "ut3", 3);
@@ -189,11 +190,12 @@ public class ApplicationConfig {
 
             // init
             appConfig.getGameConversion().put("U1", Arrays.asList("UT3", "UT4"));
-            appConfig.getGameConversion().put("U2", Arrays.asList("UT3", "UT4"));
+            appConfig.getGameConversion().put("U2", Arrays.asList("UT4"));
             appConfig.getGameConversion().put("UT99", Arrays.asList("UT3", "UT4"));
             appConfig.getGameConversion().put("UT2003", List.of("UT4"));
             appConfig.getGameConversion().put("UT2004", List.of("UT4"));
             appConfig.getGameConversion().put("UT3", List.of("UT4"));
+            appConfig.getGameConversion().put("UDK", Arrays.asList("UT4"));
             appConfig.getGameConversion().put("DNF", Arrays.asList("UT3", "UT4"));
 
             appConfig.saveFile();

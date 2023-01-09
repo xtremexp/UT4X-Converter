@@ -64,7 +64,7 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private final SortedMap<Integer, T3DASObjective> objectives = new TreeMap<>();
 
-	private boolean createNoteWhenUnconverted = true;
+	private boolean createNoteForUnconvertedActors = true;
 
 	private final Logger logger;
 
@@ -78,6 +78,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 * Unconverted properties
+	 * Map[ActorClass, [Property1, Property2, ...]]
 	 */
 	private final Map<String, Set<String>> unconvertedProperties = new HashMap<>();
 
@@ -86,7 +87,24 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	boolean banalyseline = false;
 
+	/**
+	 * T3D actor being converted
+	 */
 	private T3DActor uta = null;
+
+	private int actorsReadCount;
+
+
+	/**
+	 * Used for .t3d UE3 map file which only uses "Begin Object" to declare actor (and not Begin Actor)
+	 * The first line of .t3d would be Begin Object Class=Level
+	 */
+	private int currentObjectLevel = 0;
+
+	/**
+	 * If true current t3d is using "Begin Object" to declare a new actor
+	 */
+	private Boolean isObjectActorClassOnly;
 
 	/**
 	 * Set objective order from DefaultPriority UT99 prop from FortStandard
@@ -408,23 +426,72 @@ public class T3DLevelConvertor extends Task<Object> {
 	}
 
 
-
 	/**
-	 * Says if current line is data for new actor
+	 * Says if current line is data for a new actor
 	 *
 	 * @param line t3d data line
 	 * @return <code>true</code> if lines describe a new actor
 	 */
 	private boolean isBeginActor(String line) {
-		return line.contains("Begin Actor") || (this.mapConverter.getInputGame().getUeVersion() == 3 && line.startsWith("Begin Terrain "));
+
+		if (line.startsWith("Begin Actor")) {
+			isObjectActorClassOnly = Boolean.FALSE; // was null at init
+			return true;
+		} else if (this.mapConverter.getInputGame().getUeVersion() == 3) {
+			// Terrain actors does not starts with "Begin Actor Class=Terrain"
+			if (line.startsWith("Begin Terrain ")) {
+				return true;
+			}
+			// UDK sometimes have issues exporting some actors to T3D
+			// E.G:  Text="Begin Map\r\n   Begin Level\r\n      Begin Actor Class=BlockingVo...."
+			// UDK starts any actor with "Begin Object" not with "Begin Actor Class=XXX"
+			// and actor can also contains other objects
+			else if (line.trim().startsWith("Begin Object") && (isObjectActorClassOnly == null || Boolean.TRUE.equals(isObjectActorClassOnly))) {
+				currentObjectLevel++;
+
+				// t3d map file starts with Begin Object Class=Level Name=PersistentLevel - = level 1
+				/*
+					Begin Object Class=Level Name=PersistentLevel
+   						Begin Object Class=AdvancedReachSpec Name=AdvancedReachSpec_0
+				 */
+				// So actor is level 2
+				if (currentObjectLevel == 2) {
+					isObjectActorClassOnly = Boolean.TRUE;
+					return true;
+				}
+				return false;
+			}
+		}
+
+		return false;
 	}
 
+	/**
+	 * Parses t3d line and return true if it ends actor data
+	 *
+	 * @param line T3d line to parse
+	 * @return <code>true</code> if its last line of actor else <code>false</code>
+	 */
 	private boolean isEndActor(String line) {
+
 		// Terrain actor does not begins with "Begin Actor Class=Terrain"
-		return line.contains("End Actor") || (this.mapConverter.getInputGame().getUeVersion() == 3 && line.endsWith("End Terrain"));
+		if (line.startsWith("End Actor")) {
+			return true;
+		} else if (this.mapConverter.getInputGame().getUeVersion() == 3) {
+			// Terrain actors does not starts with "Begin Actor Class=Terrain"
+			if (line.startsWith("Begin Terrain ")) {
+				return true;
+			}
+			// UDK ends any actor with "Begin Object"
+			else if (line.trim().startsWith("End Object") && Boolean.TRUE.equals(isObjectActorClassOnly)) {
+				currentObjectLevel--;
+				return currentObjectLevel == 0;
+			}
+		}
+
+		return false;
 	}
 
-	private int actorsReadCount;
 
 	/**
 	 * Analyze T3D line to get and convert UT data
@@ -468,7 +535,7 @@ public class T3DLevelConvertor extends Task<Object> {
 				if (!mapConverter.getSupportedActorClasses().noNotifyUnconverted(currentClass)) {
 					unconvertedActors.add(currentClass);
 
-					if (createNoteWhenUnconverted) {
+					if (createNoteForUnconvertedActors) {
 						banalyseline = true;
 						uta = new T3DNote(mapConverter, "Unconverted: " + currentClass);
 						uta.setT3dOriginClass(currentClass);
@@ -631,10 +698,10 @@ public class T3DLevelConvertor extends Task<Object> {
 
 	/**
 	 *
-	 * @param createNoteWhenUnconverted If true will create not within converted map for unconverted actors
+	 * @param createNoteForUnconvertedActors If true will create not within converted map for unconverted actors
 	 */
-	public void setCreateNoteWhenUnconverted(boolean createNoteWhenUnconverted) {
-		this.createNoteWhenUnconverted = createNoteWhenUnconverted;
+	public void setCreateNoteForUnconvertedActors(boolean createNoteForUnconvertedActors) {
+		this.createNoteForUnconvertedActors = createNoteForUnconvertedActors;
 	}
 
 

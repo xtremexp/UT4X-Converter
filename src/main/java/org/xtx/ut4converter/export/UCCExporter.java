@@ -265,7 +265,6 @@ public final class UCCExporter extends UTPackageExtractor {
 	}
 
 	/**
-	 * 
 	 * @param unrealPackage Unreal package to export
 	 * @return Exported file for the ressource. If null means that ucc exported
 	 *         was not able to export the ressource.
@@ -281,10 +280,7 @@ public final class UCCExporter extends UTPackageExtractor {
 		boolean noDelete = false;
 
 		try {
-			logger.log(
-					Level.INFO,
-					"Exporting " + unrealPackage.getFileContainer(mapConverter).getName() + " " + unrealPackage.type.name() + " package (mode: "
-							+ getUccOptions(unrealPackage.type, mapConverter.getInputGame().getUeVersion()) + ")");
+			logger.log(Level.INFO, "Exporting " + unrealPackage.getFileContainer(mapConverter).getName() + " with " + getName() + " (mode: " + getUccOptions(unrealPackage.type, mapConverter.getInputGame().getUeVersion()) + ")");
 
 			// Copy of unreal package to folder of ucc.exe (/System) for U1/U2
 			unrealMapCopy = new File(uccExporterPath.getParent() + File.separator + unrealPackage.getFileContainer(mapConverter).getName());
