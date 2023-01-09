@@ -235,6 +235,7 @@ public class T3DSound extends T3DActor {
 		initialise();
 	}
 
+
 	/**
 	 *
 	 * @param mc Map converter instance
@@ -271,6 +272,9 @@ public class T3DSound extends T3DActor {
 				soundRadius = 32d;
 				soundVolume = 128d;
 			}
+		} else {
+			// default max sound radius for AmbientSoundSimple actor
+			soundRadius = 5000d;
 		}
 	}
 
