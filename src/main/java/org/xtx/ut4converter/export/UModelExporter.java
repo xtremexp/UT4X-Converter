@@ -438,7 +438,7 @@ public class UModelExporter extends UTPackageExtractor {
 					case "Emissive" -> mi.setEmissiveName(matName);
 					case "SpecPower" -> mi.setSpecPowerName(matName);
 					case "Opacity" -> mi.setOpacityName(matName);
-					default -> logger.warning("Unhandled type " + type + " Value:" + matName);
+					default -> logger.fine("Unhandled type " + type + " Value:" + matName);
 				}
 
 				// }
