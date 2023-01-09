@@ -5,7 +5,7 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT-Converter</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>jar</packaging>
 
 	<name>UT Converter</name>
@@ -257,7 +257,7 @@
 										<argument>Thomas 'WinterIsComing' P.</argument>
 
 										<argument>--copyright</argument>
-										<argument>You are free to distribute and use with tool but with no commercial use</argument>
+										<argument>UT Converter is licensed under Attribution-NonCommercial-ShareAlike 4.0 International.</argument>
 
 										<!-- jlink arguments -->
 										<argument>--module-path</argument>

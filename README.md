@@ -2,11 +2,11 @@
 
 ## Description
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/manual/xtremexp/UT4X-Converter?utm_source=github.com&utm_medium=referral&utm_content=xtremexp/UT4X-Converter&utm_campaign=Badge_Grade_Settings)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/gh/xtremexp/UT4X-Converter/dashboard)
 
 
-- Version: 1.2.0
-- Release date: 03/01/2023
+- Version: 1.2.1
+- Release date: 09/01/2023
 - Author: Thomas 'XtremeXp/WinterIsComing' P.
 - Download: [GitHub - Releases](https://github.com/xtremexp/UT4X-Converter/releases)
 - Source Code: [GitHub](https://github.com/xtremexp/UT4X-Converter)
@@ -34,7 +34,6 @@ Notes:
 - All: Shader materials are not converted
 - UT3: Since there is no actor possible for conversion of ZoneInfo, converted level might appear too dark sometimes
 - U1/UT99 : Meshes (Unreal Engine 1/2) are not converted
-- UT99 : Custom textures are not converted
 - U2: Staticmeshes have bad UV
 - UT3/UDK: Music is not converted
 - UTx->UT4: Movers are replaced with the only UT4 mover actor, the lift, which may not suit for some kind of movers (such as doors, switches, ...)
@@ -114,10 +113,21 @@ These programs are being used during conversion process.
 ---
 
 ## History
-- 1.2.1 - DD/MM/YYYY
+- 1.2.1 - 09/01/2023
+  - ut99->ut3/ut4: custom textures are now converted
+  - ui: Added UT Converter logo icon + welcome unreal games screenshots
+  - ui: conversion settings page is now less confusing
+  - ui: changed style to dark theme
+  - u1/ut99->ut3/ut4: much more textures got correct alignment now (still WIP)
+  - ui: removed auto launch browser to wiki after conversion (replaced with visible link at bottom)
+  - ui: decreased log level for unsupported material type (less log spam for ue3 converted maps)
   - Legal: Set licence to Attribution-NonCommercial-ShareAlike 4.0
   - Legal: Added license user agreement for install
-  - ui: Added UT Converter logo icon
+  - all: reverted default texture export format to .tga (some textures in .png were washed out)
+  - all: fixed regression default volume sound factor was 2 instead of 1
+  - udk->ut4: fixed regression conversion non working
+  - ut3->ut4: fixed regression bug AmbientSound actor radius conversion error
+  - tech: UserConfig.json is now ApplicationConfig.json with format changed containing some game config (user will need to set again the game paths at next start in ui)
 
 - 1.2.0 - 03/01/2023
   - Added support for Duke Nukem Forever 2001 (Experimental)
