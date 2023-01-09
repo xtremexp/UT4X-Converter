@@ -6,7 +6,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 
-<VBox prefHeight="520.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
+<VBox prefHeight="520.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.ConversionSettingsController">
 
     <stylesheets>
         <URL value="@/styles/Styles.css"/>

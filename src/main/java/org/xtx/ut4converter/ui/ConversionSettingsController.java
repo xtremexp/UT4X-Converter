@@ -401,7 +401,7 @@ public class ConversionSettingsController implements Initializable {
 
 		if (unrealMap != null) {
 			changeMapNameBtn.setDisable(false);
-			inputMapPathLbl.setText(unrealMap.getName());
+			inputMapPathLbl.setText(unrealMap.getPath());
 			mapConverter.setInMap(unrealMap);
 			mapConverter.initConvertedResourcesFolder();
 			if (ue4RefPathLbl != null) {
@@ -616,6 +616,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// UT3 commandlet export too buggy and messed .t3d file so need to use the exported one from UT3 editor
 		if (t3dUt3EditorFile != null) {
+			inputMapT3dLbl.setText(t3dUt3EditorFile.getPath());
 			mapConverter.setInT3d(t3dUt3EditorFile);
 		}
 	}
