@@ -41,7 +41,7 @@
             <Pane>
                 <Label alignment="CENTER" layoutX="300.0" layoutY="30" textAlignment="CENTER" style="-fx-font-size: 35;" text="Welcome to UT converter !" textFill="WHITE" />
                 <Label alignment="CENTER" layoutX="300.0" layoutY="90" textAlignment="CENTER" style="-fx-font-size: 14" text="Program helps converting maps from previous Unreal (Tournament) games" textFill="WHITE" />
-                <Label alignment="CENTER" layoutX="300.0" layoutY="120" textAlignment="CENTER" style="-fx-font-size: 14" text="to either UT3(2007) or UT4(2015) game." textFill="WHITE" />
+                <Label alignment="CENTER" layoutX="300.0" layoutY="120" textAlignment="CENTER" style="-fx-font-size: 14" text="to either UT3 (2007) or UT4 (2015) game." textFill="WHITE" />
                 <Label alignment="CENTER" layoutX="300.0" layoutY="150" textAlignment="CENTER" text="You may ask authorization from original author prior to converting map." textFill="#fcd900"/>
             </Pane>
         </VBox>
