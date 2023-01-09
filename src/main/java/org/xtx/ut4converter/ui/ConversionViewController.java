@@ -55,30 +55,25 @@ public class ConversionViewController implements Initializable {
 		logLevel.setCellValueFactory(new PropertyValueFactory<>("level"));
 		logMsg.setCellValueFactory(new PropertyValueFactory<>("message"));
 
-		logLevel.setCellFactory(column -> {
-			return new TableCell<TableRowLog, Level>() {
+		logLevel.setCellFactory(column -> new TableCell<>() {
 
-				@Override
-				protected void updateItem(Level item, boolean empty) {
+			@Override
+			protected void updateItem(Level item, boolean empty) {
 
-					if (item != null) {
-						setText(item.getName());
+				if (item != null) {
+					setText(item.getName());
 
-						if (item == Level.WARNING) {
-							setStyle("-fx-background-color: #F5DA81"); // light
-																		// orange
-						} else if (item == Level.SEVERE) {
-							setStyle("-fx-background-color: #F5A9A9"); // light
-																		// red
-						} else if (item == Level.FINE) {
-							setStyle("-fx-background-color: #E6E6E6"); // light
-																		// red
-						} else {
-							setStyle(null);
-						}
+					if (item == Level.WARNING) {
+						setStyle("-fx-background-color: #ff9213"); // orange
+					} else if (item == Level.SEVERE) {
+						setStyle("-fx-background-color: #ff3333"); // red
+					} else if (item == Level.FINE) {
+						setStyle("-fx-background-color: #e8e8e8"); // white
+					} else {
+						setStyle(null);
 					}
 				}
-			};
+			}
 		});
 	}
 
