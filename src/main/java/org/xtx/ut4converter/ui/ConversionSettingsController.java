@@ -19,7 +19,6 @@ import javafx.util.StringConverter;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
@@ -228,7 +227,7 @@ public class ConversionSettingsController implements Initializable {
 		gridPaneMainSettings.add(createLabelWithTooltip("Scale Factor:", "How much the map will be scaled to."), 0, rowIdx);
 		scaleFactorList = new ComboBox<>();
 		scaleFactorList.setEditable(true);
-		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 3., 3.125, 3.5, 4., 4.5, 5.);
+		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 2.7, 2.8, 2.9, 3., 3.125, 3.5, 4., 4.5, 5.);
 		scaleFactorList.getItems().sort(Comparator.naturalOrder());
 		scaleFactorList.setConverter(new StringConverter<>() {
 
