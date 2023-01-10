@@ -270,7 +270,7 @@
 										<argument>https://github.com/xtremexp/UT4X-Converter</argument>
 
 										<argument>--license-file</argument>
-										<argument>${project.build.directory}/../license.txt</argument>
+										<argument>${project.build.directory}/../LICENSE</argument>
 
 										<argument>--icon</argument>
 										<argument>${project.build.directory}/../ut-converter-logo.ico</argument>

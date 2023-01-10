@@ -68,7 +68,7 @@ Check wiki page at: [UT Converter Wiki](https://github.com/xtremexp/UT4X-Convert
 
 ## License
 
-See license.txt file.
+See LICENSE file.
 
 ## Security
 
