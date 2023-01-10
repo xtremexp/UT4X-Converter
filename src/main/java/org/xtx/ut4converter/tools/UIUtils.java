@@ -8,7 +8,7 @@ package org.xtx.ut4converter.tools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import org.xtx.ut4converter.ui.MainSceneController;
+import org.xtx.ut4converter.controller.MainSceneController;
 
 import java.awt.*;
 import java.io.File;

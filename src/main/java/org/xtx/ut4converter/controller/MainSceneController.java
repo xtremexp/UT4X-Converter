@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.xtx.ut4converter.ui;
+package org.xtx.ut4converter.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
-import org.xtx.ut4converter.config.model.ApplicationConfig;
+import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;

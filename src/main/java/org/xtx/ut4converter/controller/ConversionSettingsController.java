@@ -3,7 +3,7 @@
  * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 
-package org.xtx.ut4converter.ui;
+package org.xtx.ut4converter.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

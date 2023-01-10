@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<BorderPane id="AnchorPane" prefHeight="600" prefWidth="1030" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.ui.MainSceneController">
+<BorderPane id="AnchorPane" prefHeight="600" prefWidth="1030" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.xtx.ut4converter.controller.MainSceneController">
 
     <stylesheets>
         <URL value="@/styles/Styles.css"/>

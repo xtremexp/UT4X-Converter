@@ -4,7 +4,6 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
-import org.xtx.ut4converter.config.model.ApplicationConfig;
 import org.xtx.ut4converter.export.*;
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -21,8 +20,8 @@ import org.xtx.ut4converter.ucore.UPackage;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.UnrealGame;
-import org.xtx.ut4converter.ui.ConversionViewController;
-import org.xtx.ut4converter.ui.TableRowLog;
+import org.xtx.ut4converter.controller.ConversionViewController;
+import org.xtx.ut4converter.controller.TableRowLog;
 
 import javax.imageio.spi.IIORegistry;
 import java.io.BufferedWriter;

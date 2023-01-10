@@ -5,7 +5,7 @@
 <?import java.net.URL?>
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="650.0"
             xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.xtx.ut4converter.ui.SettingsSceneController">
+            fx:controller="org.xtx.ut4converter.controller.SettingsSceneController">
     <stylesheets>
         <URL value="@/styles/Styles.css"/>
     </stylesheets>

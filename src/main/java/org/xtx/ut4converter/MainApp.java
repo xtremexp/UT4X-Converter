@@ -9,8 +9,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xtx.ut4converter.ui.ConversionViewController;
-import org.xtx.ut4converter.ui.MainSceneController;
+import org.xtx.ut4converter.controller.ConversionViewController;
+import org.xtx.ut4converter.controller.MainSceneController;
 
 import java.io.IOException;
 
@@ -56,6 +56,8 @@ public class MainApp extends Application {
 		 * Conversion settings view
 		 */
 		CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
+
+		GAMES_EDIT("/fxml/EditGames.fxml"),
 		CONVERSION("/fxml/ConversionView.fxml");
 
 		final String path;

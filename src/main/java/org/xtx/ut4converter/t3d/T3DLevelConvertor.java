@@ -9,7 +9,7 @@ package org.xtx.ut4converter.t3d;
 import javafx.concurrent.Task;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.ucore.UnrealEngine;
-import org.xtx.ut4converter.ui.ConversionViewController;
+import org.xtx.ut4converter.controller.ConversionViewController;
 
 import javax.vecmath.Vector3d;
 import java.io.*;

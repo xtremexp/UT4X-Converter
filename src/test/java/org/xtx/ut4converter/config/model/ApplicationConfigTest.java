@@ -6,6 +6,7 @@ package org.xtx.ut4converter.config.model;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
