@@ -76,7 +76,7 @@ public class T3DTranslatorEvent extends T3DActor {
         writeSimpleProperties();
 
         if(newMessageSound != null){
-            sbf.append(IDT).append("\tNewMessageSound=SoundCue'").append(newMessageSound.getConvertedName(mapConverter)).append("'\n");
+            sbf.append(IDT).append("\tNewMessageSound=SoundCue'").append(newMessageSound.getConvertedName()).append("'\n");
         }
 
         if(collisionRadius != null){

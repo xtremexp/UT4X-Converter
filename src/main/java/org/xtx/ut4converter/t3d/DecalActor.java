@@ -76,7 +76,7 @@ public class DecalActor extends T3DActor {
 			sbf.append(IDT).append("\tBegin Object Name=\"NewDecalComponent\"\n");
 
 			if (decalMaterial != null) {
-				sbf.append(IDT).append("\t\tDecalMaterial=Material'").append(decalMaterial.getConvertedName(mapConverter)).append("'\n");
+				sbf.append(IDT).append("\t\tDecalMaterial=Material'").append(decalMaterial.getConvertedName()).append("'\n");
 			}
 
 			if (decalSize != null) {

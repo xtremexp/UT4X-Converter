@@ -209,6 +209,10 @@ public class Geometry {
 	 */
 	public static void transformPermanently(Vector3d v, FScale mainScale, Vector3d rotation, FScale postScale, boolean isUV) {
 
+		if (v == null) {
+			return;
+		}
+
 		if (mainScale != null) {
 
 			if (!isUV) {

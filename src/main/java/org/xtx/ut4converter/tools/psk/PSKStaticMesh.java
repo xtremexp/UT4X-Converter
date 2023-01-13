@@ -1,5 +1,7 @@
 package org.xtx.ut4converter.tools.psk;
 
+import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -292,33 +294,12 @@ public class PSKStaticMesh {
 	 * @param objFile
 	 */
 	@Deprecated
-	public void exportToObj(final File mtlFile, final File objFile){
-		writeMtlObjFile(mtlFile);
+	public void exportToObj(final File mtlFile, final File objFile) throws IOException {
+		ObjStaticMesh.writeMtlObjFile(mtlFile, this.getMaterials().stream().map(Material::getMaterialName).toList());
 		writeObjFile(objFile, mtlFile);
 	}
 
-	private void writeMtlObjFile(final File mtlFile) {
-		// TODO handle material
-		try (FileWriter fw = new FileWriter(mtlFile)) {
 
-			fw.write("# UT4 Converter MTL File:\n");
-			for(Material mat : this.getMaterials()){
-				fw.write("newmtl "+ mat.getMaterialName()+ " \n");
-				fw.write("Ns 96.078431\n");
-				fw.write("Ka 1.000000 1.000000 1.000000\n");
-				fw.write("Kd 0.640000 0.640000 0.640000\n");
-				fw.write("Ks 0.500000 0.500000 0.500000\n");
-				fw.write("Ke 0.000000 0.000000 0.000000\n");
-				fw.write("Ni 1.000000\n");
-				fw.write("d 1.000000\n");
-				fw.write("illum 2\n");
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 	/**
 	 * Export .psk staticmesh to wavefront (.obj) staticmesh
 	 */

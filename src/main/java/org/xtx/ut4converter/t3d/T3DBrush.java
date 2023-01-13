@@ -12,15 +12,11 @@ import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 import org.xtx.ut4converter.ucore.ue1.UnMath.ESheerAxis;
 import org.xtx.ut4converter.ucore.ue1.UnMath.FScale;
-import org.xtx.ut4converter.ucore.ue1.UnMath.FVector;
 
 import javax.vecmath.Vector3d;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Generic Class for T3D brushes (includes movers as well)
@@ -218,7 +214,7 @@ public class T3DBrush extends T3DVolume {
 			mainScale = new FScale();
 
 			if(line.contains("(Scale=")){
-				mainScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+				mainScale.scale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
 			}
 
 			if(line.contains("SheerAxis=")){
@@ -239,7 +235,7 @@ public class T3DBrush extends T3DVolume {
 
 
 			if(line.contains("(Scale=")){
-				postScale.scale = new FVector(T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D));
+				postScale.scale = T3DUtils.getVector3d(line.split("\\(Scale")[1], 1D);
 			}
 
 			if(line.contains("SheerAxis=")){
@@ -522,6 +518,14 @@ public class T3DBrush extends T3DVolume {
 			ppv.writeProps();
 		}
 
+		if (this.prePivot != null) {
+			if (this.mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+				sbf.append(IDT).append("\tPivotOffset=").append(T3DUtils.toStringVec(this.prePivot)).append(" \n");
+			} else {
+				sbf.append(IDT).append("\tPrePivot=").append(T3DUtils.toStringVec(this.prePivot)).append(" \n");
+			}
+		}
+
 		writeEndActor();
 
 		// UT3 has postprocess volumes
@@ -638,10 +642,21 @@ public class T3DBrush extends T3DVolume {
 
 			for (T3DPolygon p : polyList) {
 
-				p.origin.sub(prePivot);
+				// IN UE1/2/3, prePivot change location of vertices unlike in UE4/5
+				if (this.mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && this.mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
 
-				for(Vector3d v : p.getVertices()){
-					v.sub(prePivot);
+
+					for (Vector3d v : p.getVertices()) {
+						v.sub(prePivot);
+					}
+
+					p.origin.sub(prePivot);
+				} else if (this.mapConverter.isFrom(UnrealEngine.UE4, UnrealEngine.UE5) && this.mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
+					p.origin.add(prePivot);
+
+					for (Vector3d v : p.getVertices()) {
+						v.add(prePivot);
+					}
 				}
 			}
 

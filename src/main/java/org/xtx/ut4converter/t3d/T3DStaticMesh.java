@@ -149,7 +149,7 @@ public class T3DStaticMesh extends T3DSound {
 		if (forcedStaticMesh != null) {
 			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
 		} else if (staticMesh != null) {
-			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName(mapConverter)).append("'\n");
+			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName()).append("'\n");
 		}
 
 		if (overriddenLightMapRes != null) {
@@ -176,7 +176,7 @@ public class T3DStaticMesh extends T3DSound {
 
 			for (UPackageRessource skin : skins) {
 				if (skin != null) {
-					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName(mapConverter)).append("'\n");
+					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName()).append("'\n");
 				} else {
 					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=None\n");
 				}

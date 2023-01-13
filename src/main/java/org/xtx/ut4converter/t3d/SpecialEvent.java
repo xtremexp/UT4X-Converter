@@ -86,7 +86,7 @@ public class SpecialEvent extends T3DSound {
 		}
 
 		if (sound != null) {
-			sbf.append(IDT).append("\tSound=SoundCue'").append(sound.getConvertedName(mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tSound=SoundCue'").append(sound.getConvertedName()).append("'\n");
 		}
 		
 		writeEndActor();

@@ -164,13 +164,13 @@ public class T3DSimpleProperty {
         } else if (value instanceof final UPackageRessource packageRessource) {
 
             if(ressourceType == T3DRessource.Type.SOUND) {
-                sbf.append("SoundCue'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
+                sbf.append("SoundCue'").append((packageRessource).getConvertedName()).append("'\n");
             }
             // MESHES will be converted to staticmeshes
             else if(ressourceType == T3DRessource.Type.STATICMESH || ressourceType == T3DRessource.Type.MESH) {
-                sbf.append("StaticMesh'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
+                sbf.append("StaticMesh'").append((packageRessource).getConvertedName()).append("'\n");
             } else if(ressourceType == T3DRessource.Type.TEXTURE) {
-                sbf.append("Material'").append((packageRessource).getConvertedName(mapConverter)).append("'\n");
+                sbf.append("Material'").append((packageRessource).getConvertedName()).append("'\n");
             }
         } else {
             sbf.append(value).append("\n");

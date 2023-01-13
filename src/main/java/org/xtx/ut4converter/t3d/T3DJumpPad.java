@@ -137,7 +137,7 @@ public class T3DJumpPad extends T3DSound {
 			sbf.append(IDT).append("\tSceneRoot=SceneComponent\n");
 
 			if (jumpSound != null) {
-				sbf.append(IDT).append("\t\tJumpSound=SoundCue'").append(jumpSound.getConvertedName(mapConverter)).append("'\n");
+				sbf.append(IDT).append("\t\tJumpSound=SoundCue'").append(jumpSound.getConvertedName()).append("'\n");
 			}
 
 			if (jumpTarget != null) {

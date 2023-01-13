@@ -663,7 +663,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 					ue2Terrain.getLayers().forEach(terrainLayer -> {
 						if (terrainLayer.getTexture() != null) {
-							logger.log(Level.INFO, "Open " + terrainLayer.getTexture().getConvertedName(this));
+							logger.log(Level.INFO, "Open " + terrainLayer.getTexture().getConvertedName());
 						}
 					});
 				}
@@ -849,7 +849,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
                 // or <packagename>_<name>_mat
                 // or <name>_mat to fit with max size of 64
                 // byte for material name
-                return matRessource.getConvertedBaseName(this);
+                return matRessource.getConvertedBaseName();
             }
         }
 
@@ -1092,6 +1092,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		return false;
 	}
+
 
 	/**
 	 * Tells if converting UT game using Unreal Engine 1 or 2 is being converted

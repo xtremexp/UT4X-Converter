@@ -393,13 +393,12 @@ public class UPackageRessource {
 	 * with suffix depending on type of ressource (_Mat for texture, _Cue for
 	 * sound, ...)
 	 * 
-	 * @param mapConverter Map converter
 	 * @return
 	 */
-	public String getConvertedBaseName(MapConverter mapConverter) {
+	public String getConvertedBaseName() {
 
 		if (replacement != null) {
-			return replacement.getConvertedBaseName(mapConverter);
+			return replacement.getConvertedBaseName();
 		}
 
 		String suffix = "";
@@ -456,17 +455,16 @@ public class UPackageRessource {
 	 * /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix
 	 * >.<pkgName>_<group>_<name>_<suffix>
 	 * 
-	 * @param mapConverter
 	 *            Map Converter
 	 * @return Converted name
 	 */
-	public String getConvertedName(MapConverter mapConverter) {
+	public String getConvertedName() {
 
 		if (replacement != null) {
-			return replacement.getConvertedName(mapConverter);
+			return replacement.getConvertedName();
 		}
 
-		final String baseName = getConvertedBaseName(mapConverter);
+		final String baseName = getConvertedBaseName();
 		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 
 		if(mapConverter.isTo(UnrealEngine.UE4)){

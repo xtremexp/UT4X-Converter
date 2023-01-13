@@ -61,7 +61,7 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
         int idx = 0;
 
         for(final UPackageRessource sound : sounds){
-            sbf.append(IDT).append("Sounds(").append(idx).append(")=SoundCue'").append(sound.getConvertedName(mapConverter)).append("'\n");
+            sbf.append(IDT).append("Sounds(").append(idx).append(")=SoundCue'").append(sound.getConvertedName()).append("'\n");
             idx ++;
         }
 

@@ -69,7 +69,7 @@ public class T3DMusicEvent extends T3DActor {
 
 
         if(song != null){
-            sbf.append(IDT).append("\tSong=SoundCue'").append(song.getConvertedName(mapConverter)).append("'\n");
+            sbf.append(IDT).append("\tSong=SoundCue'").append(song.getConvertedName()).append("'\n");
 
             // duplicate property because in most case won't know the song because of "section" property
             // TODO maybe modify to add _<songSection> to Song property ?? (this would mean convert .s3m/.xm, and extract

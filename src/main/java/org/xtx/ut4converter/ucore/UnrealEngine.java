@@ -36,7 +36,11 @@ public enum UnrealEngine {
     /**
      *
      */
-    UE4("Unreal Engine 4", 4);
+    UE4("Unreal Engine 4", 4),
+    /**
+     * Unreal Engine 5
+     */
+    UE5("Unreal Engine 5", 5);
 
     private final String name;
 

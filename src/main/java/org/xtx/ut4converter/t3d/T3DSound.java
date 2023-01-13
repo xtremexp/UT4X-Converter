@@ -436,7 +436,7 @@ public class T3DSound extends T3DActor {
 		//sbf.append(IDT).append("\t\t").append(attenuation.toString(mapConverter.getOutputGame().engine));
 
 		if (ambientSound != null) {
-			sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
+			sbf.append(IDT).append("\t\tSound=SoundCue'").append(ambientSound.getConvertedName()).append("'\n");
 		}
 
 		if (soundVolume != null) {
@@ -522,7 +522,7 @@ public class T3DSound extends T3DActor {
 			sbf.append(IDT).append("\t\tVolumeModulation=(Distribution=DistributionFloatUniform'DistributionFloatUniform_").append(idxVolumeMod).append("',LookupTable=(").append(volModStr).append("))\n");
 			sbf.append(IDT).append("\t\tPitchModulation=(Distribution=DistributionFloatUniform'DistributionFloatUniform_").append(idxPitchMod).append("',LookupTable=(").append(pitchModStr).append("))\n");
 
-			sbf.append(IDT).append("\t\tWave=SoundNodeWave'").append(ambientSound.getConvertedName(mapConverter)).append("'\n");
+			sbf.append(IDT).append("\t\tWave=SoundNodeWave'").append(ambientSound.getConvertedName()).append("'\n");
 			sbf.append(IDT).append("\t\tName=\"SoundNodeAmbient_5\"\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 

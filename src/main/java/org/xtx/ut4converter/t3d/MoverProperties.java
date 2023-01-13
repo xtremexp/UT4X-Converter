@@ -265,31 +265,31 @@ public class MoverProperties implements T3D {
 		sbf.append(IDT).append("\tCollisionComponent=StaticMeshComponent'").append(smObjName).append("'\n");
 
 		if (openingSound != null) {
-			sbf.append(IDT).append("\tOpenSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+			sbf.append(IDT).append("\tOpenSound=SoundCue'").append(openingSound.getConvertedName()).append("Cue'\n");
 		} else if (mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tOpenSound=None\n");
 		}
 
 		if (openedSound != null) {
-			sbf.append(IDT).append("\tOpenedSound=SoundCue'").append(openedSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+			sbf.append(IDT).append("\tOpenedSound=SoundCue'").append(openedSound.getConvertedName()).append("Cue'\n");
 		} else if (mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tOpenedSound=None\n");
 		}
 
 		if (closingSound != null) {
-			sbf.append(IDT).append("\tClosingAmbientSound=SoundCue'").append(closingSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+			sbf.append(IDT).append("\tClosingAmbientSound=SoundCue'").append(closingSound.getConvertedName()).append("Cue'\n");
 		} else if (mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tClosingAmbientSound=None\n");
 		}
 
 		if (closedSound != null) {
-			sbf.append(IDT).append("\tClosedSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+			sbf.append(IDT).append("\tClosedSound=SoundCue'").append(closedSound.getConvertedName()).append("Cue'\n");
 		} else if (mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tClosedSound=None\n");
 		}
 
 		if (moveAmbientSound != null) {
-			sbf.append(IDT).append("\tOpeningAmbientSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("Cue'\n");
+			sbf.append(IDT).append("\tOpeningAmbientSound=SoundCue'").append(moveAmbientSound.getConvertedName()).append("Cue'\n");
 		} else if (mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tOpeningAmbientSound=None\n");
 		}
@@ -389,31 +389,31 @@ public class MoverProperties implements T3D {
 		}
 
 		if (openingSound != null) {
-			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tOpenStartSound=SoundCue'").append(openingSound.getConvertedName()).append("'\n");
 		} else if(mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tOpenStartSound=None\n");
 		}
 
 		if (openedSound != null) {
-			sbf.append(IDT).append("\tOpenStopSound=SoundCue'").append(openedSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tOpenStopSound=SoundCue'").append(openedSound.getConvertedName()).append("'\n");
 		} else if(mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tOpenStopSound=None\n");
 		}
 
 		if (closingSound != null) {
-			sbf.append(IDT).append("\tCloseStartSound=SoundCue'").append(closingSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tCloseStartSound=SoundCue'").append(closingSound.getConvertedName()).append("'\n");
 		} else if(mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tCloseStartSound=None\n");
 		}
 
 		if (closedSound != null) {
-			sbf.append(IDT).append("\tCloseStopSound=SoundCue'").append(closedSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tCloseStopSound=SoundCue'").append(closedSound.getConvertedName()).append("'\n");
 		} else if(mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tCloseStopSound=None\n");
 		}
 
 		if (moveAmbientSound != null) {
-			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(moveAmbientSound.getConvertedName(mover.mapConverter)).append("'\n");
+			sbf.append(IDT).append("\tMoveLoopSound=SoundCue'").append(moveAmbientSound.getConvertedName()).append("'\n");
 		} else if(mapConverter.convertSounds()) {
 			sbf.append(IDT).append("\tMoveLoopSound=None\n");
 		}
@@ -451,7 +451,7 @@ public class MoverProperties implements T3D {
 		if (mover instanceof T3DMoverSM moverSm) {
 
 			if (moverSm.getStaticMesh() != null && moverSm.getMapConverter().convertStaticMeshes()) {
-				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName(moverSm.getMapConverter())).append("'\n");
+				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName()).append("'\n");
 			}
 		}
 

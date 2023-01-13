@@ -204,7 +204,7 @@ public class T3DPolygon {
 		sb.append(prefix).append("Begin Polygon Item=Side");
 
 		if (texture != null) {
-			sb.append(" Texture=").append(texture.getConvertedName(mapConverter));
+			sb.append(" Texture=").append(texture.getConvertedName());
 		}
 
 		if (ue == UnrealEngine.UE4) {
@@ -379,6 +379,21 @@ public class T3DPolygon {
 		this.lightMapScale = lightMapScale;
 	}
 
+	public Vector3d getNormal() {
+		return normal;
+	}
+
+	public Vector3d getTextureU() {
+		return textureU;
+	}
+
+	public Vector3d getTextureV() {
+		return textureV;
+	}
+
+	public Vector3d getOrigin() {
+		return origin;
+	}
 
 	@Override
 	public String toString() {
