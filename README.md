@@ -113,6 +113,9 @@ These programs are being used during conversion process.
 ---
 
 ## History
+- 1.2.2 - 14/01/2023
+  - u1/ut99->ut3/ut4: all textures are now correctly aligned
+  
 - 1.2.1 - 09/01/2023
   - ut99->ut3/ut4: custom textures are now converted
   - ui: Added UT Converter logo icon + welcome unreal games screenshots
