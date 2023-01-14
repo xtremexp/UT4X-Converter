@@ -155,12 +155,12 @@ public class UPackage {
 		for (UPackageRessource packageRessource : ressources) {
 
 			// matching "pakname.groupname.name"
-			if (fullName.equals(packageRessource.getFullName().toLowerCase()) || fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutGroup())) {
+			if (fullName.equals(packageRessource.getFullName(true).toLowerCase()) || fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutGroup())) {
 				return packageRessource;
 			}
 
 			// matching "pakname_groupname_name"
-			else if (fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutDots())) {
+			else if (fullName.equalsIgnoreCase(packageRessource.getFullNameWithoutDots(true))) {
 				return packageRessource;
 			}
 

@@ -190,7 +190,7 @@ public class T3DUE2Terrain extends T3DActor {
 					}
 				}
 			} else {
-				mapConverter.getLogger().log(Level.INFO, "Could not find terrain heightmap texture for resource " + heightMapTexture.getFullName());
+				mapConverter.getLogger().log(Level.INFO, "Could not find terrain heightmap texture for resource " + heightMapTexture.getFullName(true));
 			}
 
 		}

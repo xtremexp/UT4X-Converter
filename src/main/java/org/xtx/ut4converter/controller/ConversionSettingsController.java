@@ -143,6 +143,11 @@ public class ConversionSettingsController implements Initializable {
 	private Button changeUe4RefPathBtn;
 
 	/**
+	 * Export option combo box
+	 */
+	final ComboBox<MapConverter.ExportOption> exportOptComboBox = new ComboBox<>();
+
+	/**
 	 * Initializes the controller class.
 	 *
 	 * @param url Url
@@ -162,6 +167,26 @@ public class ConversionSettingsController implements Initializable {
 		soundVolumeFactor.getSelectionModel().select(1f);
 
 		texExtractorChoiceBox.getSelectionModel().select("umodel");
+
+		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_TYPE);
+		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_PACKAGE);
+		exportOptComboBox.getSelectionModel().select(MapConverter.ExportOption.BY_TYPE);
+		exportOptComboBox.setConverter(new StringConverter<>() {
+			@Override
+			public String toString(MapConverter.ExportOption exportOption) {
+				return exportOption.getLabel();
+			}
+
+			@Override
+			public MapConverter.ExportOption fromString(String s) {
+				for (MapConverter.ExportOption eop : MapConverter.ExportOption.values()) {
+					if (eop.getLabel().equals(s)) {
+						return eop;
+					}
+				}
+				return null;
+			}
+		});
 	}
 
 	public void setDialogStage(Stage dialogStage) {
@@ -248,6 +273,13 @@ public class ConversionSettingsController implements Initializable {
 		});
 		gridPaneMainSettings.add(scaleFactorList, 1, rowIdx++);
 
+		// Added export options
+		// 14012023 - disabled for input UE2+ games since staticmeshes don't have right texture path for now
+		if (this.outputGame.getUeVersion() >= 4 && this.inputGame.getUeVersion() == 1) {
+			gridPaneMainSettings.add(createLabelWithTooltip("Export structure: ", "How ressources will be split into folder.\nE.g:\nBy type: /CTF-Face/Textures/GenEarth_Rock_Rock9.tga\nBy package: /CTF-Face/GenEarth/Rock_Rock9.tga"), 0, rowIdx);
+			gridPaneMainSettings.add(exportOptComboBox, 1, rowIdx++);
+		}
+
 		gridPaneMainSettings.add(createLabelWithTooltip(outputGame.getShortName() + " Map Name :", "Output map name"), 0, rowIdx);
 		outMapNameLbl = new Label("");
 		gridPaneMainSettings.add(outMapNameLbl, 1, rowIdx);
@@ -332,10 +364,6 @@ public class ConversionSettingsController implements Initializable {
 		boolean canConvertMusic = mapConverter.canConvertMusic();
 		mapConverter.setConvertMusic(canConvertMusic);
 		convMusicCheckBox.setDisable(!canConvertMusic);
-
-		boolean canConvertStaticMeshes = mapConverter.canConvertStaticMeshes();
-		mapConverter.setConvertStaticMeshes(canConvertStaticMeshes);
-		convSmCheckBox.setDisable(!canConvertStaticMeshes);
 	}
 
 	/**
@@ -416,6 +444,7 @@ public class ConversionSettingsController implements Initializable {
 
 			try {
 				mapConverter.setScale(scaleFactorList.getSelectionModel().getSelectedItem());
+				mapConverter.setExportOption(exportOptComboBox.getSelectionModel().getSelectedItem());
 			} catch (ClassCastException ce) {
 				ce.printStackTrace();
 				Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -444,7 +444,7 @@ public class UModelExporter extends UTPackageExtractor {
 			}
 
 		} catch (IOException exception) {
-			logger.log(Level.WARNING, "Could not get material info from " + parentRessource.getFullName());
+			logger.log(Level.WARNING, "Could not get material info from " + parentRessource.getFullName(true));
 		}
 
 		return mi;

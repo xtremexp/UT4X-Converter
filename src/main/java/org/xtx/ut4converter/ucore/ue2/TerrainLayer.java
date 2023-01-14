@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,7 +161,7 @@ public class TerrainLayer implements T3D {
 		uccExporter.setForcedUccOption(UCCExporter.UccOptions.TEXTURE_TGA);
 
 		final File exportFolder = new File(mapConverter.getTempExportFolder() + File.separator + "Terrain" + File.separator);
-		exportFolder.mkdirs();
+		Files.createDirectories(exportFolder.toPath());
 		uccExporter.setForcedExportFolder(exportFolder);
 		uccExporter.setForceSetNotExported(true);
 
