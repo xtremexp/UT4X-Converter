@@ -290,64 +290,54 @@ public class T3DPolygon {
 				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));
 			}
 
-			// FOR UE3/UE4 conversion, need to update texture scale with texture dimension values
-			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2) && mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
+			// UE1/UE2 -> UE3+
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
-				// maybe bufferedimagereader could not read the dimensions of
-				// texture
-				if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+				// need to get texture dimension from UE1/UE2 to UE4 to get
+				// the right UV scaling
+				texture.readTextureDimensions();
 
-					// need to get texture dimension from UE1/UE2 to UE4 to get
-					// the right UV scaling
-					texture.readTextureDimensions();
+				Dimension texDimension;
 
-					Dimension texDimension;
-
-					if (texture.getReplacement() != null) {
-						texDimension = texture.getReplacement().getTextureDimensions();
-					} else {
-						texDimension = texture.getTextureDimensions();
-					}
-
-					/*
-					if("A_stt2a".equals(this.getTexture().getName())){
-						System.out.println("CONVERT");
-						System.out.println("Origin:" + this.origin);
-						System.out.println("Vertex: "+ this.vertices.get(0));
-					}*/
-
-					// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
-					if (origin != null) {
-						// Since UE2, panU, panV is reverted
-						origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
-						this.panU = 0;
-						this.panV = 0;
-					}
-
-					if (texDimension != null) {
-
-						// since UE4, grid base unit is 100
-						if (textureU != null) {
-							textureU.scale(1 / (texDimension.width / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
-						}
-
-						if (textureV != null) {
-							textureV.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
-						}
-					}
-
+				if (texture.getReplacement() != null) {
+					texDimension = texture.getReplacement().getTextureDimensions();
+				} else {
+					texDimension = texture.getTextureDimensions();
 				}
 
-				// UE3->UE4, viewport grid has changed of scale, need to update texture scale
-				else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+				// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
+				if (origin != null) {
+					// Since UE2, panU, panV is reverted
+					origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
+					this.panU = 0;
+					this.panV = 0;
+				}
 
+				if (texDimension != null) {
+
+					// since UE3, texture U/V depends on texture dimension
+					// since UE4, grid base unit is 100
 					if (textureU != null) {
-						textureU.scale(UE3_UE4_UV_SCALE_FACTOR);
+						textureU.scale(1 / (texDimension.width / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 					}
 
 					if (textureV != null) {
-						textureV.scale(UE3_UE4_UV_SCALE_FACTOR);
+						textureV.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 					}
+				}
+
+			}
+
+			// UE3->UE4+
+			// since UE4, grid base unit is 100
+			else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+
+				if (textureU != null) {
+					textureU.scale(100d / 128d);
+				}
+
+				if (textureV != null) {
+					textureV.scale(100d / 128d);
 				}
 			}
 		}
