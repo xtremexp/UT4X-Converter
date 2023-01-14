@@ -318,7 +318,8 @@ public class T3DPolygon {
 
 					// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
 					if (origin != null) {
-						origin = Geometry.computeNewOrigin(origin, textureU, textureV, panU, panV);
+						// Since UE2, panU, panV is reverted
+						origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
 						this.panU = 0;
 						this.panV = 0;
 					}
