@@ -23,7 +23,7 @@ public class UTGames {
 	 * Default internal UT4 Editor folder where converted map stuff should by
 	 * copied to
 	 */
-	public static final String UE4_FOLDER_MAP = "/Game/RestrictedAssets/Maps/WIP";
+	public static final String UE4_FOLDER_MAP = "/Game/Converted";
 
 
 

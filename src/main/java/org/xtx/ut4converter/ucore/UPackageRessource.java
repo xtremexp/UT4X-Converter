@@ -357,7 +357,7 @@ public class UPackageRessource {
 	/**
 	 * Export the ressource from unreal package to file
 	 * 
-	 * @param packageExtractor
+	 * @param packageExtractor Package extractor to use
 	 * @param forceExport
 	 *            Force export of package even if it has ever been extracted
 	 */
@@ -389,11 +389,12 @@ public class UPackageRessource {
 	/**
 	 * returns
 	 * <pkgName>_<group>_<name>_<suffix>.<pkgName>_<group>_<name>_<suffix>
-	 * 
+	 * or <group>_<name>_<suffix>.<group>_<name>_<suffix>
+	 * if it has export option by package in map converted
 	 * with suffix depending on type of ressource (_Mat for texture, _Cue for
 	 * sound, ...)
 	 * 
-	 * @return
+	 * @return Converted base name
 	 */
 	public String getConvertedBaseName() {
 
@@ -418,7 +419,7 @@ public class UPackageRessource {
 			suffix = "_Mat";
 		}
 
-		String baseName = getFullNameWithoutDots() + suffix;
+		String baseName = getFullNameWithoutDots(this.mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) + suffix;
 
 		// have to fit base material name with max size of material names in
 		// .psk
@@ -427,7 +428,7 @@ public class UPackageRessource {
 
 			// try <packagename>_<name>
 			if (baseName.length() > Material.MATNAME_MAX_SIZE) {
-				String fullNameWithoutGroup = getFullNameWithoutGroup().replaceAll("\\.", "\\_");
+				String fullNameWithoutGroup = getFullNameWithoutGroup().replaceAll("\\.", "_");
 				baseName = fullNameWithoutGroup + "_" + fullNameWithoutGroup + suffix;
 				forcedFileName = fullNameWithoutGroup + "_" + fullNameWithoutGroup;
 			}
@@ -454,7 +455,6 @@ public class UPackageRessource {
 	 * Returns: //
 	 * /Game/Maps/<convertedmapname>/<pkgName>_<group>_<name>_<suffix
 	 * >.<pkgName>_<group>_<name>_<suffix>
-	 * 
 	 *            Map Converter
 	 * @return Converted name
 	 */
@@ -467,16 +467,24 @@ public class UPackageRessource {
 		final String baseName = getConvertedBaseName();
 		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 
-		if(mapConverter.isTo(UnrealEngine.UE4)){
-			// e.g: Texture=/Game/RestrictedAssets/Maps/WIP/DmFith-U1/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
-			return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+		if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+			// e.g: Texture=/Game/Converted/DmFith-U1/Texture/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
+			if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_PACKAGE) {
+				return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.getUnrealPackage().getName() + "/" + baseName + "." + baseName;
+			}
+			// e.g: Texture=/Game/Converted/DmFith-U1/Starship/Base_sh_bs4_Mat.Base_sh_bs4_Mat
+			else {
+				//return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.type.getName() + "/" + baseName + "." + baseName;
+				// no split by type for now else staticmeshes won't have textures applied (relative path)
+				return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+			}
 		} else {
 			// e.g: Texture=DM-Malevolence-UT99.Starship_Base_basic9_Mat
 			return mapConverter.getOutMapName() + "." + baseName;
 		}
 	}
 	
-	public String getConvertedFileName(File exportedFile) {
+	public String getConvertedFileName(File exportedFile, boolean includePackageName) {
 		
 		// don't change original name for .mtl file
 		if(exportedFile.getName().endsWith(".mtl")){
@@ -496,7 +504,7 @@ public class UPackageRessource {
 		if (forcedFileName != null) {
 			return forcedFileName.replaceAll("\\.", "_") + "." + currentFileExt;
 		} else {
-			return getFullNameWithoutDots() + "." + currentFileExt;
+			return getFullNameWithoutDots(includePackageName) + "." + currentFileExt;
 		}
 	}
 
@@ -505,14 +513,22 @@ public class UPackageRessource {
 	 * 
 	 * @return <packagename>.<group>.<name>
 	 */
-	public String getFullName() {
+	public String getFullName(boolean includePackageName) {
 
-		if (unrealPackage.name != null && group != null && name != null) {
-			return unrealPackage.name + "." + group + "." + name;
-		}
+		if (includePackageName) {
+			if (unrealPackage.name != null && group != null && name != null) {
+				return unrealPackage.name + "." + group + "." + name;
+			}
 
-		if (unrealPackage.name != null && group == null && name != null) {
-			return unrealPackage.name + "." + name;
+			if (unrealPackage.name != null && group == null && name != null) {
+				return unrealPackage.name + "." + name;
+			}
+		} else {
+			if (group != null && name != null) {
+				return group + "." + name;
+			} else if (group == null && name != null) {
+				return name;
+			}
 		}
 
 		if (unrealPackage.name == null && group == null && name != null) {
@@ -538,8 +554,8 @@ public class UPackageRessource {
 	 * 
 	 * @return Full name without dots
 	 */
-	public String getFullNameWithoutDots() {
-		return getFullName().replaceAll("\\.", "_");
+	public String getFullNameWithoutDots(boolean includePackageName) {
+		return getFullName(includePackageName).replaceAll("\\.", "_");
 	}
 
 	public String getGroupAndNameWithoutDots() {
@@ -646,13 +662,13 @@ public class UPackageRessource {
 		try {
 			if (type == Type.SOUND) {
 				SoundConverter scs = new SoundConverter(logger);
-				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".wav");
+				File tempFile = File.createTempFile(getFullNameWithoutDots(true), ".wav");
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
 			}
 			// have to convert files to .bmp, because sometimes UT3 fails to import .pcx
 			else if (type == Type.TEXTURE) {
-				File tempFile = File.createTempFile(getFullNameWithoutDots(), ".bmp");
+				File tempFile = File.createTempFile(getFullNameWithoutDots(true), ".bmp");
 				final BufferedImage img = ImageIO.read(exportInfo.getExportedFiles().get(0));
 				ImageIO.write(img, "bmp", tempFile);
 				return tempFile;
@@ -692,7 +708,7 @@ public class UPackageRessource {
 	/**
 	 * Return material info Only for textures type
 	 * 
-	 * @return
+	 * @return Material info
 	 */
 	public MaterialInfo getMaterialInfo() {
 		return materialInfo;
@@ -704,7 +720,7 @@ public class UPackageRessource {
 
 	@Override
 	public String toString() {
-		return getFullName();
+		return getFullName(true);
 	}
 
 	/**

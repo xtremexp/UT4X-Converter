@@ -33,7 +33,7 @@ public class CopyExporter extends UTPackageExtractor {
 
 		File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
 		File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
-		outputFile.mkdirs();
+		Files.createDirectories(outputFile.toPath().getParent());
 
 		logger.log(Level.INFO, "Copying " + inputFile.getName() + " " + ressource.getType() + " package");
 		Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);

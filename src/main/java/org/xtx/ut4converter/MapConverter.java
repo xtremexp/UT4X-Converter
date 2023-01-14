@@ -80,13 +80,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private String mapName;
 
-	/**
-	 * Relative subfolder from: <UT4Folder>/UnrealTournament/Content path
-	 * E.g: "MyMaps" would give /UnrealTournament/Content/MyMaps path
-	 * but /Game/MyMaps for .t3d actor path
-	 *
-	 */
-	private String relativeUtMapPath;
 
 	/**
 	 * getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator
@@ -270,6 +263,40 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		this.lightMapResolution = lightMapResolution;
 	}
 
+	private ExportOption exportOption = ExportOption.BY_TYPE;
+
+	/**
+	 *
+	 */
+	public enum ExportOption {
+
+		/**
+		 * All resources might be imported for each type
+		 * E.g:
+		 * \Content\Converted\DM-Arcane-UT99\Textures
+		 * \Content\Converted\DM-Arcane-UT99\Textures
+		 */
+		BY_TYPE("<MapName>/<Type>"),
+		/**
+		 * All resources might be imported by package
+		 * E.g:
+		 * \Content\Converted\DM-Arcane-UT99\GenEarth
+		 * \Content\Converted\DM-Arcane-UT99\GenFluid
+		 */
+		BY_PACKAGE("<MapName>/<Package>");
+
+		private final String label;
+
+
+		ExportOption(String label) {
+			this.label = label;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+	}
+
 	/**
 	 *
 	 * @param inputGame
@@ -375,25 +402,21 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		IIORegistry registry = IIORegistry.getDefaultInstance();
 		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 
+		tm = new T3DMatch(this);
 
-			tm = new T3DMatch(this);
-
-			if (inMap != null) {
-				if (inMap.getName().endsWith(".t3d")) {
-					inT3d = inMap;
-				}
-
-				if (isTeamGameType == null) {
-					isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
-				}
-
-				getTempExportFolder().mkdirs();
-
-				initConvertedResourcesFolder();
-				this.relativeUtMapPath = UTGames.UE4_FOLDER_MAP + "/" + getOutMapName() + "/" + getOutMapName();
+		if (inMap != null) {
+			if (inMap.getName().endsWith(".t3d")) {
+				inT3d = inMap;
 			}
 
-			supportedActorClasses = new SupportedClasses(this);
+			if (isTeamGameType == null) {
+				isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
+			}
+
+			initConvertedResourcesFolder();
+		}
+
+		supportedActorClasses = new SupportedClasses(this);
 
 
 		// init available extractors
@@ -490,15 +513,16 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 
 		try {
+			Files.createDirectories(getTempExportFolder().toPath());
 
 			// File for logging all events during conversion process
 			File logFile = new File(outPath.toFile().getAbsolutePath() + File.separator + "conversion.log");
 
 			if (logFile.exists()) {
-				logFile.delete();
+				Files.delete(logFile.toPath());
 			}
 
-			logFile.getParentFile().mkdirs();
+			Files.createDirectories(logFile.getParentFile().toPath());
 
 			logFileWriter = new FileWriter(logFile);
 			logBuffWriter = new BufferedWriter(logFileWriter);
@@ -535,7 +559,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			if (!outPath.toFile().exists()) {
-				outPath.toFile().mkdirs();
+				Files.createDirectories(outPath);
 			}
 
 			// Export unreal map to Unreal Text map
@@ -615,7 +639,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * Log to file all unconverted actors and properties of all actors from
 	 * original map
 	 *
-	 * @throws IOException
+	 * @throws IOException IO error
 	 */
 	private void writeUnconvertedActorsPropertiesToLogFile() throws IOException {
 
@@ -712,9 +736,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 						final File tempPskDir = new File(staticMeshFile.getParent() + File.separator + "NEWPSK");
 
 						if (!tempPskDir.exists()) {
-							tempPskDir.mkdirs();
+							Files.createDirectories(tempPskDir.toPath());
 						}
-
 
 						File mtlObjFile = new File(tempPskDir.getAbsolutePath() + File.separator + staticMeshFile.getName());
 						mtlObjFile = FileUtils.changeExtension(mtlObjFile, ObjStaticMesh.FILE_EXTENSION_MTL);
@@ -856,6 +879,11 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         return null;
 	}
 
+	private File getDummyUAssetFile(){
+		// TODO for UE5, make custom dummy uasset file
+		return new File(outputGame.getPath() + "/UnrealTournament/Content/RestrictedAssets/Blueprints/Lift/Curves/EaseIn-Out.uasset");
+	}
+
 	/**
 	 * Delete unused files and convert them to good format if needed. (e.g:
 	 * convert staticmeshes to .ase or .fbx format for import in UE4)
@@ -906,22 +934,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		// created in UT4 editor ...
 		if (isTo(UnrealEngine.UE4)) {
 
-			final File restrictedAssetsFolder = new File(outputGame.getPath() + File.separator + "UnrealTournament" + File.separator + "Content" + File.separator + "RestrictedAssets");
 			// TEMP thingy use custom one if user changed it
 			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
 			File wipConvertedMapFolder = getUt4ReferenceBaseFolderFile();
 
-			wipConvertedMapFolder.mkdirs();
+			Files.createDirectories(wipConvertedMapFolder.toPath());
 
 			logger.log(Level.FINE, "Creating " + wipConvertedMapFolder);
 
 			// copy small .uasset file so the folder will appear in UT4 editor
-			// ....
-			File uassetFile = new File(restrictedAssetsFolder + File.separator + "Blueprints" + File.separator + "Lift" + File.separator + "Curves" + File.separator + "EaseIn-Out.uasset");
-			File uassetCopy = new File(wipConvertedMapFolder + File.separator + "dummyfile.uasset");
+			File uassetCopy = new File(wipConvertedMapFolder + File.separator + getDummyUAssetFile().getName());
 
 			if (!uassetCopy.exists()) {
-				Files.copy(uassetFile.toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(getDummyUAssetFile().toPath(), uassetCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
 
 			// for each terrain converted copy the UT4X landscape material to output folder
@@ -938,7 +963,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 						if (!landscapeMatCopy.exists()) {
 							try {
-								Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								Files.move(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 								ue4Terrain.setLandscapeMatFile(landscapeMatCopy);
 							} catch (IOException e) {
 								logger.log(Level.SEVERE, "Error while copying landscapemap file " + landscapeMat);
@@ -964,23 +989,38 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			if (ressource.needsConversion(this)) {
 				final File newExportedFile = ressource.convert(logger);
 
-				if(newExportedFile != null) {
+				if (newExportedFile != null) {
 					ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
 					exportedFile = newExportedFile;
 					wasConverted = true;
 				}
 			}
 
-			// rename file and move file to /UT4Converter/Converter/Map/<StaticMeshes/Textures/...>/resourcename
-			File newFile = new File(getMapConvertFolder().getAbsolutePath() + File.separator + ressource.getType().getName() + File.separator + ressource.getConvertedFileName(exportedFile));
-			newFile.getParentFile().mkdirs();
-			newFile.createNewFile();
+			// rename file and move file to /UT4x-Converter/Converted/<MapName>/<Type>/RessourceName
+			Path movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getType().getName() + "/" + ressource.getConvertedFileName(exportedFile, true));
 
-			// sometimes it does not find the exported texture
-			// (?
-			// ... weird)
+			// rename file and move file to /UT4x-Converter/Converted/<MapName>/<PackageName>/RessourceName
+			if (this.exportOption == ExportOption.BY_PACKAGE) {
+				movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getUnrealPackage().getName() + "/" + ressource.getConvertedFileName(exportedFile, false));
+			}
+
+
+			Files.createDirectories(movedRessourceFile.getParent());
+
+			if (this.exportOption == ExportOption.BY_PACKAGE) {
+				File dummyUAssetFileForPackage = new File(getUt4ReferenceBaseFolderFile() + "/" + ressource.getUnrealPackage().getName() + "/" + getDummyUAssetFile().getName());
+
+				if(!dummyUAssetFileForPackage.exists()) {
+					Files.createDirectories(dummyUAssetFileForPackage.toPath().getParent());
+					Files.createFile(dummyUAssetFileForPackage.toPath());
+
+					Files.copy(getDummyUAssetFile().toPath(), dummyUAssetFileForPackage.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+
+			// sometimes it does not find the exported texture (weird)
 			if (exportedFile.exists() && exportedFile.isFile()) {
-				Files.copy(exportedFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(exportedFile.toPath(), movedRessourceFile, StandardCopyOption.REPLACE_EXISTING);
 			}
 
 			if (exportedFile.delete()) {
@@ -988,14 +1028,14 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			//exportedFile = newFile;
-			ressource.getExportInfo().replaceExportedFile(exportedFile, newFile);
+			ressource.getExportInfo().replaceExportedFile(exportedFile, movedRessourceFile.toFile());
 
 			if (wasConverted) {
-				logger.fine("Converted " + ressource.getType().name() + " :" + newFile.getName());
+				logger.fine("Converted " + ressource.getType().name() + " :" + movedRessourceFile.toFile().getName());
 			}
 		}
 		} catch (Exception e) {
-			System.out.println("Error while converting ressource " + ressource.getFullName() + " with file " + exportedFile.getName());
+			System.out.println("Error while converting ressource " + ressource.getFullName(true) + " with file " + exportedFile.getName());
 			e.printStackTrace();
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -1019,10 +1059,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 
-	/**
-	 *
-	 * @return
-	 */
+
 	public UnrealEngine getUnrealEngineTo() {
 		return UnrealEngine.from(this.getOutputGame().getUeVersion());
 	}
@@ -1363,28 +1400,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return convertStaticMeshes;
 	}
 
-	/**
-	 * Says if program can export staticmeshes
-	 *
-	 * @return
-	 */
-	public boolean canConvertStaticMeshes() {
-
-		// no staticmeshes for UE1 (UT99 + Unreal 1)
-		// commented because meshes will be converted to staticmeshes
-		/*
-		if (inputGame.engine == UnrealEngine.UE1) {
-			return false;
-		}*/
-
-		// note: can export with ucc for UT2003/UT2004 but .t3d mesh format
-		// not working for import with UE4
-		// conversion only partial for umodel
-		// since pskx cannot be used by UE4 but can be imported with blender
-		// and exported to fbx or obj format file allowed by UE4
-		return true;
-	}
-
 	public boolean convertMusic() {
 		return convertMusic;
 	}
@@ -1410,15 +1425,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 	/**
-	 * relativeUtMapPath
-	 *
-	 * @return /Game/Maps/<mapname>/<mapname>
-	 */
-	public String getRelativeUtMapPath() {
-		return relativeUtMapPath;
-	}
-
-	/**
 	 * From map file return map package name E.g: DM-Ranking.ut2 -> DM-Ranking
 	 *
 	 * @return map package name E.g: DM-Ranking.ut2 -> DM-Ranking
@@ -1432,7 +1438,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *
 	 * @param name
 	 *            Name of package (not case sensitive)
-	 * @return
+	 * @return Package found
 	 */
 	public UPackage findPackageByName(String name) {
 
@@ -1514,5 +1520,13 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public void setNoUi(boolean noUi) {
 		this.noUi = noUi;
+	}
+
+	public void setExportOption(ExportOption exportOption) {
+		this.exportOption = exportOption;
+	}
+
+	public ExportOption getExportOption() {
+		return exportOption;
 	}
 }
