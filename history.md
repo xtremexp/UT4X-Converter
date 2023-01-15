@@ -1,3 +1,34 @@
+- 1.2.2 - 14/01/2023
+ - u1/ut99->ut3/ut4: all textures are now correctly aligned
+
+- 1.2.1 - 09/01/2023
+  - ut99->ut3/ut4: custom textures are now converted
+  - ui: Added UT Converter logo icon + welcome unreal games screenshots
+  - ui: conversion settings page is now less confusing
+  - ui: changed style to dark theme
+  - u1/ut99->ut3/ut4: much more textures got correct alignment now (still WIP)
+  - ui: removed auto launch browser to wiki after conversion (replaced with visible link at bottom)
+  - ui: decreased log level for unsupported material type (less log spam for ue3 converted maps)
+  - Legal: Set licence to Attribution-NonCommercial-ShareAlike 4.0
+  - Legal: Added license user agreement for install
+  - all: reverted default texture export format to .tga (some textures in .png were washed out)
+  - all: fixed regression default volume sound factor was 2 instead of 1
+  - udk->ut4: fixed regression conversion non working
+  - ut3->ut4: fixed regression bug AmbientSound actor radius conversion error
+  - tech: UserConfig.json is now ApplicationConfig.json with format changed containing some game config (user will need to set again the game paths at next start in ui)
+
+- 1.2.0 - 03/01/2023
+  - Added support for Duke Nukem Forever 2001 (Experimental)
+  - ui: map scale factor can now be customized
+  - u1/ut99->ut3: interpactors (movers) now collide_all by default
+  - u1/ut99->ut3: sheet brushes causing BSP holes are now converted into semi-solid brushes (will remove many bsp holes)
+  - ut99->ut3/ut4: fixed convertor crash when converting SpectatorCam (Assault maps)
+  - dependencies: now umodel is embedded in program
+  - all: better lightning radius
+  - ui: now opens wiki github page at end of conversion
+  - ui: now program checks for updates at startup (can be desactivated in settings)
+  - all: if actor filter is on and contains brush actor, the big additive brush will still be added
+
 - 1.1.1 - 22/12/2022
   - u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
   - tech: upgraded to latest java version (17->19)
