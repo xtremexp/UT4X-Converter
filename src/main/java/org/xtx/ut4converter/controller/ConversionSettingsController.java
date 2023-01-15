@@ -21,12 +21,12 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.config.ConversionSettings;
+import org.xtx.ut4converter.config.GameConversionConfig;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
-import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
 import javax.swing.*;
@@ -85,36 +85,6 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private ComboBox<String> texExtractorChoiceBox;
 
-	/**
-	 * Default light map resolution applied to brushes from Unreal Engine 1/2 converted maps
-	 */
-	static final int DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2 = 128;
-
-	/**
-	 * Default light map resolution applied to brushes from Unreal Engine 3 converted maps.
-	 */
-	static final int DEFAULT_LIGHTMAP_RESOLUTION_UE3 = 64;
-
-	/**
-	 * Default scale factor of converted maps from UE1 (Unreal, UT99) ut games to UT4
-	 */
-	public static final Double DEFAULT_SCALE_FACTOR_UE1_UE4 = 2.5d;
-
-	/**
-	 * Default scale when converting Unreal 2 map to UT4
-	 */
-	public static final Double DEFAULT_SCALE_UNREAL2_UE4 = 2.5d;
-
-	/**
-	 * Default scale factor of converted maps from UE2 (UT2003, UT2004) ut games to UT4
-	 */
-	public static final Double DEFAULT_SCALE_FACTOR_UE2_UE4 = 2.2d;
-
-	/**
-	 * Default scale factor of converted maps from UT3 (Unreal Engine 3) to UT4
-	 */
-	static final Double DEFAULT_SCALE_FACTOR_UE3_UE4 = 2.2d;
-
 	@FXML
 	private ComboBox<Integer> lightMapResolutionList;
 	@FXML
@@ -149,6 +119,8 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	final ComboBox<MapConverter.ExportOption> exportOptComboBox = new ComboBox<>();
 
+	ApplicationConfig applicationConfig;
+
 	/**
 	 * Initializes the controller class.
 	 *
@@ -158,21 +130,36 @@ public class ConversionSettingsController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
-		lightningBrightnessFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
-		lightningBrightnessFactor.getSelectionModel().select(2); //1
+		try {
+			this.applicationConfig = ApplicationConfig.loadApplicationConfig();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-		lightMapResolutionList.getItems().addAll(16,32,DEFAULT_LIGHTMAP_RESOLUTION_UE3,128,256,512,1024,2048,4096);
+		// populate combobox list settings from config
+		scaleFactorList = new ComboBox<>();
+		scaleFactorList.setEditable(true);
+		scaleFactorList.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getScaleFactorList());
+		scaleFactorList.getItems().sort(Comparator.naturalOrder());
+		scaleFactorList.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultScaleFactor());
+
+		lightningBrightnessFactor.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getLightBrightnessFactorList());
+		lightningBrightnessFactor.getItems().sort(Comparator.naturalOrder());
+		lightningBrightnessFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultLightBrightnessFactor());
+
+		lightMapResolutionList.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getLightMapResolutionList());
 		lightMapResolutionList.getItems().sort(Comparator.naturalOrder());
-		lightMapResolutionList.getSelectionModel().select(lightMapResolutionList.getItems().indexOf(DEFAULT_LIGHTMAP_RESOLUTION_UE3));
+		lightMapResolutionList.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultLightMapResolution());
 
-		soundVolumeFactor.getItems().addAll(0.6f,0.8f,1f,1.2f,1.4f,1.6f,1.8f,2f);
-		soundVolumeFactor.getSelectionModel().select(1f);
+		soundVolumeFactor.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getSoundVolumeFactorList());
+		soundVolumeFactor.getItems().sort(Comparator.naturalOrder());
+		soundVolumeFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultSoundVolumeFactor());
 
 		texExtractorChoiceBox.getSelectionModel().select("umodel");
 
 		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_TYPE);
 		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_PACKAGE);
-		exportOptComboBox.getSelectionModel().select(MapConverter.ExportOption.BY_TYPE);
+		exportOptComboBox.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultExport());
 		exportOptComboBox.setConverter(new StringConverter<>() {
 			@Override
 			public String toString(MapConverter.ExportOption exportOption) {
@@ -189,6 +176,7 @@ public class ConversionSettingsController implements Initializable {
 				return null;
 			}
 		});
+
 	}
 
 	public void setDialogStage(Stage dialogStage) {
@@ -214,9 +202,8 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	public void initFromConversionSettings(ConversionSettings conversionSettings) throws IOException {
 
-		final ApplicationConfig appConfig = ApplicationConfig.loadApplicationConfig();
-		final UnrealGame inputGame = appConfig.getUnrealGameById(conversionSettings.getInputGameId());
-		final UnrealGame outputGame = appConfig.getUnrealGameById(conversionSettings.getOutputGameId());
+		final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getInputGameId());
+		final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getOutputGameId());
 
 		initFromInputAndOutputGame(inputGame, outputGame);
 		setInputMap(conversionSettings.getInputMap());
@@ -278,9 +265,18 @@ public class ConversionSettingsController implements Initializable {
 		gridPaneMainSettings.add(outputFolderLbl, 1, rowIdx++);
 
 		gridPaneMainSettings.add(createLabelWithTooltip("Scale Factor:", "How much the map will be scaled to."), 0, rowIdx);
-		scaleFactorList = new ComboBox<>();
-		scaleFactorList.setEditable(true);
-		scaleFactorList.getItems().addAll(.5, .8, .9, 1., 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2., 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, DEFAULT_SCALE_FACTOR_UE1_UE4, 2.55, 2.6, 2.7, 2.8, 2.9, 3., 3.125, 3.5, 4., 4.5, 5.);
+
+
+		// set default scale depending on config
+		final GameConversionConfig inGame = this.inputGame.getConvertsTo().stream().filter(g -> g.getGameId().equals(this.outputGame.getShortName())).findFirst().orElse(null);
+
+		if (inGame != null && inGame.getScale() != null) {
+			if (!scaleFactorList.getItems().contains(inGame.getScale())) {
+				scaleFactorList.getItems().add(inGame.getScale());
+			}
+			scaleFactorList.getSelectionModel().select(inGame.getScale());
+		}
+
 		scaleFactorList.getItems().sort(Comparator.naturalOrder());
 		scaleFactorList.setConverter(new StringConverter<>() {
 
@@ -337,31 +333,6 @@ public class ConversionSettingsController implements Initializable {
 			mapConverter.setUseUbClasses(false);
 		}
 
-
-		// set default scale value depending on input and output engine
-		if(mapConverter.isTo(UnrealEngine.UE4)) {
-			switch (mapConverter.getInputGame().getUeVersion()) {
-				case 1 -> {
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE1_UE4);
-					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-				}
-				case 2 -> {
-					if ("U2".equals(inputGame.getShortName())) {
-						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_UNREAL2_UE4);
-					} else {
-						scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE2_UE4);
-					}
-					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE1_UE2);
-				}
-				default -> {
-					scaleFactorList.getSelectionModel().select(DEFAULT_SCALE_FACTOR_UE3_UE4);
-					lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
-				}
-			}
-		} else if (mapConverter.isTo(UnrealEngine.UE3)) {
-			scaleFactorList.getSelectionModel().select(1.25d);
-			lightMapResolutionList.getSelectionModel().select(DEFAULT_LIGHTMAP_RESOLUTION_UE3);
-		}
 
 		disableConversionType();
 

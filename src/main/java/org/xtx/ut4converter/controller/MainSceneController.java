@@ -24,6 +24,7 @@ import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.config.ConversionSettings;
+import org.xtx.ut4converter.config.GameConversionConfig;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
@@ -108,9 +109,9 @@ public class MainSceneController implements Initializable {
 				final Menu gameFromMenu = new Menu(inputGame.getName());
 				gameFromMenu.setId("convert" + inputGame.getShortName());
 
-				for (final String outputShortNameGame : inputGame.getConvertsTo()) {
+				for (final GameConversionConfig gameConvConfig : inputGame.getConvertsTo()) {
 
-					final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(outputShortNameGame);
+					final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(gameConvConfig.getGameId());
 					final MenuItem gameToMenuItem = new MenuItem("Convert map to " + outputGame.getShortName() + " ...");
 
 					gameToMenuItem.setId("convert" + inputGame.getShortName() + outputGame);

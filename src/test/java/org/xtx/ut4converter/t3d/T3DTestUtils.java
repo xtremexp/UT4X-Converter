@@ -29,9 +29,9 @@ public class T3DTestUtils {
         final MapConverter mc = new MapConverter(inputGame, outputGame);
 
         if (inputGame != null && UTGames.UTGame.U2.shortName.equals(inputGame.getShortName())) {
-            mc.setScale(ConversionSettingsController.DEFAULT_SCALE_UNREAL2_UE4);
+            mc.setScale(2.5d);
         } else {
-            mc.setScale(ConversionSettingsController.DEFAULT_SCALE_FACTOR_UE2_UE4);
+            mc.setScale(2.5d);
         }
 
 

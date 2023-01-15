@@ -2,10 +2,6 @@
  * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
  */
 
-/*
- * UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
- */
-
 package org.xtx.ut4converter.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -72,6 +68,8 @@ public class ApplicationConfig implements Serializable {
     private List<UnrealGame> games = new ArrayList<>();
 
     private Set<ConversionSettings> recentConversions = new LinkedHashSet<>();
+
+    private ConversionSettingsPanelConfig conversionSettingsPanelConfig;
 
     public List<UnrealGame> getGames() {
         return games;
@@ -203,6 +201,8 @@ public class ApplicationConfig implements Serializable {
 
         final List<UnrealGame> defAppConfigGamesCopy = new ArrayList<>(defaultConfig.games);
         defaultConfig.setCheckForUpdates(this.checkForUpdates);
+
+        this.conversionSettingsPanelConfig =  defaultConfig.getConversionSettingsPanelConfig();
         // the reference app config must not be updated !
 
         for (final UnrealGame userGame : defAppConfigGamesCopy) {
@@ -283,6 +283,14 @@ public class ApplicationConfig implements Serializable {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public ConversionSettingsPanelConfig getConversionSettingsPanelConfig() {
+        return conversionSettingsPanelConfig;
+    }
+
+    public void setConversionSettingsPanelConfig(ConversionSettingsPanelConfig conversionSettingsPanelConfig) {
+        this.conversionSettingsPanelConfig = conversionSettingsPanelConfig;
     }
 
     @Override

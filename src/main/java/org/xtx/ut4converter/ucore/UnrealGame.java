@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.xtx.ut4converter.config.GameConversionConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -106,7 +107,8 @@ public class UnrealGame {
     /**
      * List of id (=shortName) where the game can be converted to
      */
-    private List<String> convertsTo = new ArrayList<>();
+    @JsonProperty("convertsToGames")
+    private List<GameConversionConfig> convertsTo = new ArrayList<>();
 
 
 
@@ -236,11 +238,11 @@ public class UnrealGame {
         isCustom = custom;
     }
 
-    public List<String> getConvertsTo() {
+    public List<GameConversionConfig> getConvertsTo() {
         return convertsTo;
     }
 
-    public void setConvertsTo(List<String> convertsTo) {
+    public void setConvertsTo(List<GameConversionConfig> convertsTo) {
         this.convertsTo = convertsTo;
     }
 

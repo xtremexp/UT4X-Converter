@@ -2,6 +2,17 @@
   "version" : 1,
   "isFirstRun" : true,
   "checkForUpdates" : true,
+  "conversionSettingsPanelConfig": {
+    "scaleFactorList": [0.5, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2, 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.55, 2.6, 2.7, 2.8, 2.9, 3, 3.125, 3.5, 4, 4.5, 5],
+    "defaultScaleFactor" : 1,
+    "lightBrightnessFactorList": [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
+    "defaultLightBrightnessFactor" : 1,
+    "lightMapResolutionList" : [16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
+    "defaultLightMapResolution": 64,
+    "soundVolumeFactorList": [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
+    "defaultSoundVolumeFactor" : 1,
+    "defaultExport": "BY_TYPE"
+  },
   "games" : [ {
     "name" : "Unreal 1",
     "ueVersion" : 1,
@@ -15,7 +26,16 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : "uax",
-    "convertsTo" : [ "UT3", "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
     "id" : "U1"
   }, {
     "name" : "Unreal Tournament",
@@ -30,7 +50,16 @@
     "useTexDb" : true,
     "isCustom" : false,
     "soundExt" : "uax",
-    "convertsTo" : [ "UT3", "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
     "id" : "UT99"
   }, {
     "name" : "Duke Nukem Forever 2001",
@@ -45,7 +74,16 @@
     "useTexDb" : true,
     "isCustom" : false,
     "soundExt" : "dfx",
-    "convertsTo" : [ "UT3", "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.6
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.6
+      }
+    ],
     "id" : "DNF"
   }, {
     "name" : "Unreal 2",
@@ -60,7 +98,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : "uax",
-    "convertsTo" : [ "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
     "id" : "U2"
   }, {
     "name" : "Unreal Tournament 2003",
@@ -75,7 +118,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : "uax",
-    "convertsTo" : [ "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
     "id" : "UT2003"
   }, {
     "name" : "Unreal Tournament 2004",
@@ -90,7 +138,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : "uax",
-    "convertsTo" : [ "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.2
+      }
+    ],
     "id" : "UT2004"
   }, {
     "name" : "Unreal Development Kit",
@@ -105,7 +158,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : null,
-    "convertsTo" : [ "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.2
+      }
+    ],
     "id" : "UDK"
   }, {
     "name" : "Unreal Tournament 3",
@@ -120,7 +178,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : null,
-    "convertsTo" : [ "UT4" ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 1.25
+      }
+    ],
     "id" : "UT3"
   }, {
     "name" : "Unreal Tournament 4",
@@ -135,7 +198,12 @@
     "useTexDb" : false,
     "isCustom" : false,
     "soundExt" : "pak",
-    "convertsTo" : [ ],
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 1.25
+      }
+    ],
     "id" : "UT4"
   } ]
 }
