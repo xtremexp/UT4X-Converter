@@ -7,10 +7,17 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
+ * Unreal Engine 1 only
  * A mover is a brush that moves in level.
  *
  * @author XtremeXp
@@ -90,6 +97,10 @@ public class T3DMover extends T3DBrush {
 			// e.g: liftexit)
 			this.name = originalName;
 
+			// TODO replace with staticmesh
+			// T3DStaticMesh staticMesh = new T3DStaticMesh(this.mapConverter, "T3DMover");
+
+
 			return sbf.toString();
 		}
 		else {
@@ -102,7 +113,30 @@ public class T3DMover extends T3DBrush {
 
 		moverProperties.convert();
 
+		// transform permanently, update origin with panU/V
 		super.convert();
+
+		// convert brush to .obj staticmesh
+		try {
+			Files.createDirectories(Paths.get(this.mapConverter.getOutPath() + "/StaticMesh/"));
+			// super.convert changes name to "name_tag->event" which is incompatible with a filename
+			String baseName = this.name;
+
+			if(baseName.contains("_")){
+				baseName = baseName.substring(0, baseName.indexOf("_"));
+			}
+
+			if(baseName.contains("-")){
+				baseName = baseName.substring(0, baseName.indexOf("-"));
+			}
+
+			File mtlFile = new File(this.mapConverter.getOutPath() + "/StaticMesh/" + baseName + ".mtl");
+			File objFile = new File(this.mapConverter.getOutPath() + "/StaticMesh/" + baseName + ".obj");
+			ObjStaticMesh.writeMtlObjFile(this, mtlFile);
+			ObjStaticMesh.writeObj(this, objFile, mtlFile);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

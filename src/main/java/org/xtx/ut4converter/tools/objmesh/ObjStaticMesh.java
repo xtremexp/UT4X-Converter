@@ -1,12 +1,7 @@
 package org.xtx.ut4converter.tools.objmesh;
 
-import org.apache.commons.math3.geometry.Point;
-import org.apache.commons.math3.geometry.euclidean.threed.Plane;
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-import org.xtx.ut4converter.t3d.T3DActor;
 import org.xtx.ut4converter.t3d.T3DBrush;
 import org.xtx.ut4converter.t3d.T3DPolygon;
-import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.tools.t3dmesh.StaticMesh;
 import org.xtx.ut4converter.tools.t3dmesh.Triangle;
 import org.xtx.ut4converter.tools.t3dmesh.Vertex;
@@ -15,11 +10,11 @@ import org.xtx.ut4converter.tools.vertmesh.VertMesh;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class ObjStaticMesh {
@@ -146,6 +141,30 @@ public class ObjStaticMesh {
     }
 
     /**
+     * Write .mtl file from t3d brush
+     *
+     * @param brush   T3D Brush
+     * @param mtlFile .mtl file to create
+     * @throws IOException Error writing .mtl file
+     */
+    public static void writeMtlObjFile(T3DBrush brush, final File mtlFile) throws IOException {
+
+        final Map<String, File> matNameToTexFile = new HashMap<>();
+
+
+
+        for (T3DPolygon p : brush.getPolyList()) {
+            if (p.getTexture() != null && !p.getTexture().getExportedFiles().isEmpty()) {
+                // p.getTexture().getExportedFiles().get(0) is in /temp folder at this stage
+                // it will be deleted or moved after conversion ends so need to link to new filename and location
+                matNameToTexFile.put(p.getTexture().getConvertedBaseName(), brush.getMapConverter().getRessourceUpdatedPath(p.getTexture(), p.getTexture().getExportedFiles().get(0)).toFile());
+            }
+        }
+
+        writeMtlObjFile(mtlFile, matNameToTexFile);
+    }
+
+    /**
      * Write .mtl wavefront file
      * @param mtlFile .mtl file to write
      * @param materialNameList List of material names
@@ -158,16 +177,45 @@ public class ObjStaticMesh {
             fw.write("# UT4 Converter MTL File:\n");
             for (final String materialName : materialNameList) {
                 fw.write("newmtl " + materialName + " \n");
-                fw.write("Ns 96.078431\n");
-                fw.write("Ka 1.000000 1.000000 1.000000\n");
-                fw.write("Kd 0.640000 0.640000 0.640000\n");
-                fw.write("Ks 0.500000 0.500000 0.500000\n");
-                fw.write("Ke 0.000000 0.000000 0.000000\n");
-                fw.write("Ni 1.000000\n");
-                fw.write("d 1.000000\n");
-                fw.write("illum 2\n");
+                writeDefaultMtlValues(fw);
             }
         }
+    }
+
+    /**
+     * Write mtl obj file with link to texture file
+     *
+     * @param mtlFile       Material file to create
+     * @param matNameToFile Material and texture file map
+     * @throws IOException Error writing .mtl file
+     */
+    public static void writeMtlObjFile(final File mtlFile, Map<String, File> matNameToFile) throws IOException {
+
+        try (FileWriter fw = new FileWriter(mtlFile)) {
+
+            fw.write("# UT4 Converter MTL File:\n");
+
+            for (final Map.Entry<String, File> mapEntry : matNameToFile.entrySet()) {
+
+                fw.write("newmtl " + mapEntry.getKey() + " \n");
+                writeDefaultMtlValues(fw);
+
+                if (mapEntry.getValue() != null) {
+                    fw.write("map_Kd " + mapEntry.getValue().getAbsolutePath() + "\n");
+                }
+            }
+        }
+    }
+
+    private static void writeDefaultMtlValues(FileWriter fw) throws IOException {
+        fw.write("Ns 96.078431\n");
+        fw.write("Ka 1.000000 1.000000 1.000000\n");
+        fw.write("Kd 0.640000 0.640000 0.640000\n");
+        fw.write("Ks 0.500000 0.500000 0.500000\n");
+        fw.write("Ke 0.000000 0.000000 0.000000\n");
+        fw.write("Ni 1.000000\n");
+        fw.write("d 1.000000\n");
+        fw.write("illum 2\n");
     }
 
 
@@ -218,20 +266,22 @@ public class ObjStaticMesh {
         }
     }
 
+
+
     /**
      * Transform a t3d brush into a staticmesh
-     * @param brush
-     * @param objFile
-     * @param mtlFile
-     * @throws IOException
+     *
+     * @param brush   T3D Brush to convert
+     * @param objFile Obj file to create
+     * @param mtlFile Obj mtl file to create
+     * @throws IOException Error writing obj file
      */
     public static void writeObj(T3DBrush brush, File objFile, File mtlFile) throws IOException {
 
-        final List<String> matNameList = brush.getPolyList().stream().filter(p -> p.getTexture() != null).map(p -> p.getTexture().getName()).distinct().toList();
-        final List<Vector3d> vertices = new ArrayList<>();//brush.getPolyList().stream().map(T3DPolygon::getVertices).flatMap(List::stream).toList();
+        final List<String> matNameList = brush.getPolyList().stream().filter(p -> p.getTexture() != null).map(p -> p.getTexture().getConvertedBaseName()).distinct().toList();
+        final List<Vector3d> vertices = new ArrayList<>();
         final List<Vector2d> uvs = new ArrayList<>();
-
-        writeMtlObjFile(mtlFile, matNameList);
+        final List<Vector3d> normals = new ArrayList<>();
 
         try (FileWriter fw = new FileWriter(objFile)) {
 
@@ -241,14 +291,31 @@ public class ObjStaticMesh {
 
             // TextureU, TextureV Vector3d to [u,v] conversion
             for (T3DPolygon poly : brush.getPolyList()) {
+
+
+                poly.getTexture().readTextureDimensions();
+                final Dimension dim = poly.getTexture().getTextureDimensions();
+
+                // real uv depends on texture dimension
+                double uFactor = dim != null ? 1 / dim.getWidth() : 1;
+                double vFactor = dim != null ? 1 / dim.getHeight() : 1;
+
                 /*
                  * As seen in UnShadow.cpp
                  * FVector Vertex	= Poly.Vertex[k] - Poly.Base;
                  * 			FLOAT	U		= Vertex | Poly.TextureU;
                  * 			FLOAT	V		= Vertex | Poly.TextureV;
                  */
-                Vector3d vect = new Vector3d(poly.getOrigin());
-                uvs.add(new Vector2d(vect.dot(poly.getTextureU())/256d, vect.dot(poly.getTextureV())/256d));
+                for (final Vector3d vect : poly.getVertices()) {
+
+                    Vector3d v = new Vector3d(vect);
+                    v.sub(poly.getOrigin());
+
+                    uvs.add(new Vector2d(v.dot(poly.getTextureU()) * uFactor, v.dot(poly.getTextureV()) * vFactor));
+                    //uvs.add(new Vector2d(v.dot(poly.getTextureU()) , v.dot(poly.getTextureV()) ));
+                }
+
+                normals.add(poly.getNormal());
                 vertices.addAll(poly.getVertices());
             }
 
@@ -263,12 +330,17 @@ public class ObjStaticMesh {
                 fw.write("vt " + w.x + " " + w.y + "\n");
             }
 
-            int idx = 1;
-            int idxUV = 1;
+            fw.write("# NORMALS\n");
+            for (Vector3d n : normals) {
+                fw.write("vn " + n.x + " " + n.y + " " + n.z + "\n");
+            }
 
             fw.write("# Faces\n");
             String currentMat = null;
             fw.write("s 0\n");
+
+            int idx = 1;
+            int idxN = 1;
 
             for (T3DPolygon poly : brush.getPolyList()) {
 
@@ -277,16 +349,15 @@ public class ObjStaticMesh {
                     currentMat = poly.getTexture().getName();
                 }
 
+                // vertexIdx/uvIdx/normalIdx
                 if (poly.getVertices().size() == 4) {
-                    //fw.write("f " + idx + " " + (idx + 1) + " " + (idx + 2) + " " + (idx + 3) + "\n");
-                    fw.write("f " + idx + "/" + idxUV + " " + (idx + 1) + "/" + idxUV + " " + (idx + 2) + "/" + idxUV  + " " + (idx + 3) + "/" + idxUV +"\n");
+                    fw.write("f " + idx + "/" + idx + "/" + idxN + " " + (idx + 1) + "/" + (idx + 1) + "/" + idxN + " " + (idx + 2) + "/" + (idx + 2) + "/" + idxN + " " + (idx + 3) + "/" + (idx + 3) + "/" + idxN + "\n");
                 } else if (poly.getVertices().size() == 3) {
-                    //fw.write("f " + idx + " " + (idx + 1) + " " + (idx + 2) + "\n");
-                    fw.write("f " + idx + "/" + idxUV + " " + (idx + 1) + "/" + idxUV + " " + (idx + 2) + "/" + idxUV + "\n");
+                    fw.write("f " + idx + "/" + idx + "/" + idxN + " " + (idx + 1) + "/" + (idx + 1) + "/" + idxN + " " + (idx + 2) + "/" + (idx + 2) + "/" + idxN + "\n");
                 }
 
                 idx += poly.getVertices().size();
-                idxUV ++;
+                idxN++;
             }
         }
 

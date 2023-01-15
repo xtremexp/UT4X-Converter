@@ -499,7 +499,7 @@ public abstract class T3DActor extends T3DObject {
 	 *
 	 * @return Map converter instance
 	 */
-	protected MapConverter getMapConverter() {
+	public MapConverter getMapConverter() {
 		return this.mapConverter;
 	}
 

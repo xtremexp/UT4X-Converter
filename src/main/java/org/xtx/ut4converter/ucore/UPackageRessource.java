@@ -706,6 +706,14 @@ public class UPackageRessource {
 	}
 
 	/**
+	 * For testing purpose only
+	 * @param textureDimensions Texture dimensions
+	 */
+	public void setTextureDimensions(Dimension textureDimensions) {
+		this.textureDimensions = textureDimensions;
+	}
+
+	/**
 	 * Return material info Only for textures type
 	 * 
 	 * @return Material info
