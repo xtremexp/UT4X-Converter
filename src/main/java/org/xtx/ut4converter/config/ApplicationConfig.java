@@ -21,8 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.xtx.ut4converter.ucore.UnrealGame.fromUeVersion;
 
@@ -71,6 +70,8 @@ public class ApplicationConfig implements Serializable {
      * List of supported games by the converter
      */
     private List<UnrealGame> games = new ArrayList<>();
+
+    private Set<ConversionSettings> recentConversions = new LinkedHashSet<>();
 
     public List<UnrealGame> getGames() {
         return games;
@@ -218,6 +219,33 @@ public class ApplicationConfig implements Serializable {
 
         this.games = defAppConfigGamesCopy;
         this.games.addAll(appConfigCustomGames);
+    }
+
+    public Set<ConversionSettings> getRecentConversions() {
+        return recentConversions;
+    }
+
+    public void setRecentConversions(Set<ConversionSettings> recentConversions) {
+        this.recentConversions = recentConversions;
+    }
+
+    public void addRecentConversion(final ConversionSettings conversionSettings) {
+
+        this.recentConversions.add(conversionSettings);
+
+        // limit historic of conversions to 6
+        final Set<ConversionSettings> cappedConvList = new LinkedHashSet<>();
+        int i = 0;
+
+        for (ConversionSettings c : this.recentConversions) {
+            cappedConvList.add(c);
+            if (i > 5) {
+                break;
+            }
+            i++;
+        }
+
+        this.recentConversions = cappedConvList;
     }
 
     public int getVersion() {

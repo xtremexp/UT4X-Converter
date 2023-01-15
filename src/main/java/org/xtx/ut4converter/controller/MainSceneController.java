@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MainApp.FXMLoc;
 import org.xtx.ut4converter.config.ApplicationConfig;
+import org.xtx.ut4converter.config.ConversionSettings;
 import org.xtx.ut4converter.tools.GitHubReleaseJson;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
@@ -63,6 +64,10 @@ public class MainSceneController implements Initializable {
 
 	@FXML
 	private Menu menuFile;
+
+
+	@FXML
+	final Menu menuRecent = new Menu("Recent conversions");
 
 	public MainSceneController() {
 	}
@@ -117,6 +122,7 @@ public class MainSceneController implements Initializable {
 				menuFile.getItems().add(menuFile.getItems().size() - 2, gameFromMenu);
 			}
 
+			addRecentConversationsMenu(this.applicationConfig);
 
 			if (applicationConfig.getIsFirstRun() == null || applicationConfig.getIsFirstRun()) {
 				applicationConfig.setIsFirstRun(Boolean.FALSE);
@@ -131,6 +137,23 @@ public class MainSceneController implements Initializable {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 			logger.error("initialize " + url, e);
+		}
+	}
+
+	public void addRecentConversationsMenu(ApplicationConfig appConfig) throws IOException {
+
+
+		if (!appConfig.getRecentConversions().isEmpty()) {
+
+			for (ConversionSettings convSettings : appConfig.getRecentConversions()) {
+				final MenuItem menuItemRecentConv = new MenuItem(convSettings.getInputMap().getName() + " (" + convSettings.getInputGameId() + "->" + convSettings.getOutputGameId() + ", " + convSettings.getScaleFactor() + "X)");
+				menuItemRecentConv.setOnAction(t -> convertUtxMap(convSettings));
+				menuRecent.getItems().add(menuItemRecentConv);
+			}
+
+			if (!menuFile.getItems().contains(menuRecent)) {
+				menuFile.getItems().add(menuFile.getItems().size() - 2, menuRecent);
+			}
 		}
 	}
 
@@ -256,6 +279,37 @@ public class MainSceneController implements Initializable {
 		openUrl("https://github.com/xtremexp/UT4X-Converter", true, null);
 	}
 
+	private void convertUtxMap(final ConversionSettings conversionSettings)  {
+
+		try {
+			this.applicationConfig = ApplicationConfig.loadApplicationConfig();
+			final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getInputGameId());
+			final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getOutputGameId());
+
+			if (checkGamePathSet(inputGame, outputGame)) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(MainApp.class.getResource(FXMLoc.CONV_SETTINGS.getPath()));
+				VBox page = loader.load();
+
+				Stage dialogStage = new Stage();
+				dialogStage.setTitle("Conversion Settings");
+				dialogStage.initModality(Modality.WINDOW_MODAL);
+				dialogStage.initOwner(mainStage);
+				Scene scene = new Scene(page);
+				dialogStage.setScene(scene);
+
+				ConversionSettingsController controller = loader.getController();
+				controller.setDialogStage(dialogStage);
+				controller.setMainApp(mainApp);
+				controller.initFromConversionSettings(conversionSettings);
+
+				// Show the dialog and wait until the user closes it
+				dialogStage.showAndWait();
+			}
+		} catch (Exception e) {
+			logger.error("Error loading file", e);
+		}
+	}
 
 	/**
 	 *
@@ -298,10 +352,8 @@ public class MainSceneController implements Initializable {
 
 				ConversionSettingsController controller = loader.getController();
 				controller.setDialogStage(dialogStage);
-				controller.setInputGame(inputGame);
-				controller.setOutputGame(outputGame);
 				controller.setMainApp(mainApp);
-				controller.load();
+				controller.initFromInputAndOutputGame(inputGame, outputGame);
 
 				// Show the dialog and wait until the user closes it
 				dialogStage.showAndWait();

@@ -19,6 +19,8 @@ import javafx.util.StringConverter;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
+import org.xtx.ut4converter.config.ApplicationConfig;
+import org.xtx.ut4converter.config.ConversionSettings;
 import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.export.UModelExporter;
@@ -193,14 +195,6 @@ public class ConversionSettingsController implements Initializable {
 		this.dialogStage = dialogStage;
 	}
 
-	public void setInputGame(UnrealGame inputGame) {
-		this.inputGame = inputGame;
-	}
-
-	public void setOutputGame(UnrealGame outputGame) {
-		this.outputGame = outputGame;
-	}
-
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
@@ -212,7 +206,41 @@ public class ConversionSettingsController implements Initializable {
 		return lbl;
 	}
 
-	public void load() throws IOException {
+	/**
+	 * Load conversion settings from conversion settings config object
+	 *
+	 * @param conversionSettings Conversion settings
+	 * @throws IOException IO error while reading conversion settings
+	 */
+	public void initFromConversionSettings(ConversionSettings conversionSettings) throws IOException {
+
+		final ApplicationConfig appConfig = ApplicationConfig.loadApplicationConfig();
+		final UnrealGame inputGame = appConfig.getUnrealGameById(conversionSettings.getInputGameId());
+		final UnrealGame outputGame = appConfig.getUnrealGameById(conversionSettings.getOutputGameId());
+
+		initFromInputAndOutputGame(inputGame, outputGame);
+		setInputMap(conversionSettings.getInputMap());
+		setNewMapName(conversionSettings.getOutputMapName());
+
+		if (outputGame.getUeVersion() >= 4) {
+			setUt4RefFolder(conversionSettings.getUe4RefBaseFolder());
+		}
+
+		if (!scaleFactorList.getItems().contains(conversionSettings.getScaleFactor())) {
+			scaleFactorList.getItems().add(conversionSettings.getScaleFactor());
+		}
+
+		scaleFactorList.getSelectionModel().select(conversionSettings.getScaleFactor());
+		exportOptComboBox.getSelectionModel().select(MapConverter.ExportOption.valueOf(conversionSettings.getExportOption()));
+	}
+
+	public void initFromInputAndOutputGame(UnrealGame inputGame, UnrealGame outputGame) throws IOException {
+		this.inputGame = inputGame;
+		this.outputGame = outputGame;
+		loadComponents();
+	}
+
+	private void loadComponents() throws IOException {
 
 		// INPUT MAP SETTINGS
 		gridPaneMainSettings.add( createLabelWithTooltip("Input Game:", "Input unreal game"), 0, 0);
@@ -383,19 +411,23 @@ public class ConversionSettingsController implements Initializable {
 
 		if (result.isPresent()) {
 			String newMapName = result.get();
-			newMapName = T3DUtils.filterName(newMapName);
-
-			if (newMapName.length() > 3) {
-				mapConverter.setOutMapName(newMapName);
-				outMapNameLbl.setText(mapConverter.getOutMapName());
-				mapConverter.initConvertedResourcesFolder();
-
-				if(ue4RefPathLbl != null) {
-					ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
-				}
-			}
+			setNewMapName(newMapName);
 		}
 
+	}
+
+	private void setNewMapName(String newMapName) {
+		newMapName = T3DUtils.filterName(newMapName);
+
+		if (newMapName.length() > 3) {
+			mapConverter.setOutMapName(newMapName);
+			outMapNameLbl.setText(mapConverter.getOutMapName());
+			mapConverter.initConvertedResourcesFolder();
+
+			if (ue4RefPathLbl != null) {
+				ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+			}
+		}
 	}
 
 	@FXML
@@ -421,24 +453,31 @@ public class ConversionSettingsController implements Initializable {
 		File unrealMap = chooser.showOpenDialog(new Stage());
 
 		if (unrealMap != null) {
-			changeMapNameBtn.setDisable(false);
-			inputMapPathLbl.setText(unrealMap.getPath());
-			mapConverter.setInMap(unrealMap);
-			mapConverter.initConvertedResourcesFolder();
-			if (ue4RefPathLbl != null) {
-				ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
-			}
-
-			if(changeUe4RefPathBtn != null){
-				changeUe4RefPathBtn.setDisable(false);
-			}
-			outputFolderLbl.setText(mapConverter.getOutPath().toString());
-			outMapNameLbl.setText(mapConverter.getOutMapName());
+			setInputMap(unrealMap);
 		}
 	}
 
+	private void setInputMap(File unrealMap) {
+
+		changeMapNameBtn.setDisable(false);
+		inputMapPathLbl.setText(unrealMap.getPath());
+		mapConverter.setInMap(unrealMap);
+		mapConverter.initConvertedResourcesFolder();
+
+		if (ue4RefPathLbl != null) {
+			ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+		}
+
+		if (changeUe4RefPathBtn != null) {
+			changeUe4RefPathBtn.setDisable(false);
+		}
+
+		outputFolderLbl.setText(mapConverter.getOutPath().toString());
+		outMapNameLbl.setText(mapConverter.getOutMapName());
+	}
+
 	@FXML
-	private void convert() {
+	private void convert() throws IOException {
 
 		if (checkConversionSettings()) {
 
@@ -478,6 +517,26 @@ public class ConversionSettingsController implements Initializable {
 			}
 
 			mapConverter.setConversionViewController(mainApp.showConversionView());
+
+			final ConversionSettings conversionSettings = new ConversionSettings();
+			conversionSettings.setInputGameId(mapConverter.getInputGame().getShortName());
+			conversionSettings.setOutputGameId(mapConverter.getOutputGame().getShortName());
+			conversionSettings.setExportOption(mapConverter.getExportOption().name());
+			conversionSettings.setUe4RefBaseFolder(mapConverter.getUt4ReferenceBaseFolder());
+			conversionSettings.setScaleFactor(mapConverter.getScale());
+			conversionSettings.setOutputMapName(mapConverter.getOutMapName());
+			conversionSettings.setInputMap(mapConverter.getInMap());
+
+			final ApplicationConfig appConfig = ApplicationConfig.loadApplicationConfig();
+			appConfig.addRecentConversion(conversionSettings);
+			appConfig.saveFile();
+
+			// refresh main menu and add recent conversation
+			// not working yet, controller returned is null
+			/*
+			MainSceneController sc = (MainSceneController) this.mainApp.getPrimaryStage().getUserData();
+			sc.addRecentConversationsMenu(appConfig);
+			*/
 
 			SwingUtilities.invokeLater(mapConverter);
 		}
@@ -531,8 +590,6 @@ public class ConversionSettingsController implements Initializable {
 			return false;
 		}
 
-
-
 		return true;
 	}
 
@@ -569,8 +626,7 @@ public class ConversionSettingsController implements Initializable {
 					String ut4BaseRef = "/Game" + ut4RefFolder.getAbsolutePath().substring(ut4RootContentPath.getAbsolutePath().length());
 					ut4BaseRef = ut4BaseRef.replace("\\", "/");
 
-					ue4RefPathLbl.setText(ut4BaseRef);
-					mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
+					setUt4RefFolder(ut4BaseRef);
 				} else {
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					alert.setTitle("Error");
@@ -583,6 +639,11 @@ public class ConversionSettingsController implements Initializable {
 			Logger.getGlobal().severe("UT4 Editor path not set !");
 		}
 
+	}
+
+	private void setUt4RefFolder(String ut4BaseRef) {
+		ue4RefPathLbl.setText(ut4BaseRef);
+		mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
 	}
 
 	@FXML
