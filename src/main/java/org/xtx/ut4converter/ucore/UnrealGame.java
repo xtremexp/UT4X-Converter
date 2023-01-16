@@ -104,6 +104,13 @@ public class UnrealGame {
      */
     private String soundExt;
 
+
+    /**
+     * Default package extractor for game.
+     * Levels will still always be exported to .t3d with UCC
+     */
+    private String pkgExtractor = "umodel";
+
     /**
      * List of id (=shortName) where the game can be converted to
      */
@@ -270,6 +277,14 @@ public class UnrealGame {
         this.exportExecPath = exportExecPath;
     }
 
+    public String getPkgExtractor() {
+        return pkgExtractor;
+    }
+
+    public void setPkgExtractor(String pkgExtractor) {
+        this.pkgExtractor = pkgExtractor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -296,6 +311,7 @@ public class UnrealGame {
                 ", exportExecPath='" + exportExecPath + '\'' +
                 ", path=" + path +
                 ", suggestedPath='" + suggestedPath + '\'' +
+                ", pkgExtractor='" + pkgExtractor + '\'' +
                 ", useTexDb=" + useTexDb +
                 ", isCustom=" + isCustom +
                 ", soundExt='" + soundExt + '\'' +

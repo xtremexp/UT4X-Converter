@@ -51,16 +51,6 @@
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="5">Detailled logs</Label>
                     <CheckBox fx:id="debugLogLevel" onAction="#toggleDebugLogLevel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                   <Label text="Texture Extractor" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                    <ComboBox fx:id="texExtractorChoiceBox"  GridPane.columnIndex="3" GridPane.rowIndex="5">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="umodel" />
-                                <String fx:value="UCC" />
-                                <String fx:value="Simple Texture Extractor" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
                 </GridPane>
             </TitledPane>
 

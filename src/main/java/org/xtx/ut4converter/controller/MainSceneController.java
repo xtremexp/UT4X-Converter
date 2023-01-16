@@ -308,6 +308,7 @@ public class MainSceneController implements Initializable {
 				dialogStage.showAndWait();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Error loading file", e);
 		}
 	}

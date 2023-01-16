@@ -83,9 +83,6 @@ public class ConversionSettingsController implements Initializable {
 	private CheckBox convMusicCheckBox;
 
 	@FXML
-	private ComboBox<String> texExtractorChoiceBox;
-
-	@FXML
 	private ComboBox<Integer> lightMapResolutionList;
 	@FXML
 	private ComboBox<Double> scaleFactorList;
@@ -154,8 +151,6 @@ public class ConversionSettingsController implements Initializable {
 		soundVolumeFactor.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getSoundVolumeFactorList());
 		soundVolumeFactor.getItems().sort(Comparator.naturalOrder());
 		soundVolumeFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultSoundVolumeFactor());
-
-		texExtractorChoiceBox.getSelectionModel().select("umodel");
 
 		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_TYPE);
 		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_PACKAGE);
@@ -466,18 +461,6 @@ public class ConversionSettingsController implements Initializable {
 				return;
 			}
 			dialogStage.close();
-
-			if (!"U2".equals(inputGame.getShortName())) {
-				if ("umodel".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
-					mapConverter.setPreferedTextureExtractorClass(UModelExporter.class);
-				} else if ("UCC".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
-					mapConverter.setPreferedTextureExtractorClass(UCCExporter.class);
-				} else if ("Simple Texture Extractor".equals(texExtractorChoiceBox.getSelectionModel().getSelectedItem())) {
-					mapConverter.setPreferedTextureExtractorClass(SimpleTextureExtractor.class);
-				} else {
-					mapConverter.setPreferedTextureExtractorClass(UModelExporter.class);
-				}
-			}
 
 
 			mapConverter.setLightMapResolution(lightMapResolutionList.getSelectionModel().getSelectedItem());

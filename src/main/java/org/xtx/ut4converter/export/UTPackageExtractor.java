@@ -130,8 +130,9 @@ public abstract class UTPackageExtractor {
 			}
 		}
 		else {
-			if (mapConverter.getPreferedTextureExtractorClass() != null) {
-				return getUtPackageExtractor(mapConverter, mapConverter.getPreferedTextureExtractorClass());
+
+			if ("ucc".equals(mapConverter.getInputGame().getPkgExtractor())) {
+				return getUtPackageExtractor(mapConverter, UCCExporter.class);
 			} else {
 				return getUtPackageExtractor(mapConverter, UModelExporter.class);
 			}
