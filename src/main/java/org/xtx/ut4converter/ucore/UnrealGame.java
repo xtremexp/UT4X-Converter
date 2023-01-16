@@ -73,7 +73,7 @@ public class UnrealGame {
      * E.g: /System/ucc.exe
      */
     @NotBlank
-    private String exportExecPath;
+    private String pkgExtractorPath;
 
     /**
      * Where this unreal game is installed
@@ -112,6 +112,11 @@ public class UnrealGame {
     private String pkgExtractor = "umodel";
 
     /**
+     * If true, game will not show in menu or either in settings
+     */
+    private boolean isDisabled;
+
+    /**
      * List of id (=shortName) where the game can be converted to
      */
     @JsonProperty("convertsToGames")
@@ -142,7 +147,7 @@ public class UnrealGame {
         unrealGame.setShortName(shortNameId);
 
         if (ueVersion <= 2) {
-            unrealGame.setExportExecPath("/System/ucc.exe");
+            unrealGame.setPkgExtractorPath("/System/ucc.exe");
             unrealGame.setMapFolder("/Maps");
             unrealGame.setTexExt("utx");
             unrealGame.setSoundExt("uax");
@@ -155,7 +160,7 @@ public class UnrealGame {
                 unrealGame.setMusicExt("ogg");
             }
         } else if (ueVersion == 4) {
-            unrealGame.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
+            unrealGame.setPkgExtractorPath("/Engine/Binaries/Win64/UnrealPak.exe");
             unrealGame.setMusicExt("pak");
             unrealGame.setTexExt("pak");
             unrealGame.setSoundExt("pak");
@@ -269,12 +274,12 @@ public class UnrealGame {
         this.musicExt = musicExt;
     }
 
-    public String getExportExecPath() {
-        return exportExecPath;
+    public String getPkgExtractorPath() {
+        return pkgExtractorPath;
     }
 
-    public void setExportExecPath(String exportExecPath) {
-        this.exportExecPath = exportExecPath;
+    public void setPkgExtractorPath(String pkgExtractorPath) {
+        this.pkgExtractorPath = pkgExtractorPath;
     }
 
     public String getPkgExtractor() {
@@ -285,17 +290,25 @@ public class UnrealGame {
         this.pkgExtractor = pkgExtractor;
     }
 
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UnrealGame that = (UnrealGame) o;
-        return ueVersion == that.ueVersion && useTexDb == that.useTexDb && isCustom == that.isCustom && name.equals(that.name) && Objects.equals(mapFolder, that.mapFolder) && mapExt.equals(that.mapExt) && Objects.equals(texExt, that.texExt) && Objects.equals(musicExt, that.musicExt) && exportExecPath.equals(that.exportExecPath) && Objects.equals(path, that.path) && Objects.equals(suggestedPath, that.suggestedPath) && Objects.equals(soundExt, that.soundExt) && Objects.equals(convertsTo, that.convertsTo);
+        return ueVersion == that.ueVersion && useTexDb == that.useTexDb && isCustom == that.isCustom && name.equals(that.name) && Objects.equals(mapFolder, that.mapFolder) && mapExt.equals(that.mapExt) && Objects.equals(texExt, that.texExt) && Objects.equals(musicExt, that.musicExt) && pkgExtractorPath.equals(that.pkgExtractorPath) && Objects.equals(path, that.path) && Objects.equals(suggestedPath, that.suggestedPath) && Objects.equals(soundExt, that.soundExt) && Objects.equals(convertsTo, that.convertsTo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, ueVersion, mapFolder, mapExt, texExt, musicExt, exportExecPath, path, suggestedPath, useTexDb, isCustom, soundExt, convertsTo);
+        return Objects.hash(name, ueVersion, mapFolder, mapExt, texExt, musicExt, pkgExtractorPath, path, suggestedPath, useTexDb, isCustom, soundExt, convertsTo);
     }
 
     @Override
@@ -308,12 +321,13 @@ public class UnrealGame {
                 ", mapExt='" + mapExt + '\'' +
                 ", texExt='" + texExt + '\'' +
                 ", musicExt='" + musicExt + '\'' +
-                ", exportExecPath='" + exportExecPath + '\'' +
+                ", exportExecPath='" + pkgExtractorPath + '\'' +
                 ", path=" + path +
                 ", suggestedPath='" + suggestedPath + '\'' +
                 ", pkgExtractor='" + pkgExtractor + '\'' +
                 ", useTexDb=" + useTexDb +
                 ", isCustom=" + isCustom +
+                ", isDisabled=" + isDisabled +
                 ", soundExt='" + soundExt + '\'' +
                 ", convertsTo=" + convertsTo +
                 '}';

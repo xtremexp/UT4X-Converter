@@ -22,9 +22,6 @@ import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.config.ConversionSettings;
 import org.xtx.ut4converter.config.GameConversionConfig;
-import org.xtx.ut4converter.export.SimpleTextureExtractor;
-import org.xtx.ut4converter.export.UCCExporter;
-import org.xtx.ut4converter.export.UModelExporter;
 import org.xtx.ut4converter.t3d.T3DUtils;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.ucore.UnrealGame;
@@ -526,7 +523,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		// for Unreal 1, needs to have oldunreal.com installed
-		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getExportExecPath()).exists()) {
+		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getPkgExtractorPath()).exists()) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("OldUnreal Patch not installed");
 			alert.setHeaderText("Patch from oldunreal.com is needed.");
