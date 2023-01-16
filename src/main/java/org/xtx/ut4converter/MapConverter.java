@@ -23,7 +23,6 @@ import org.xtx.ut4converter.ucore.UnrealGame;
 import org.xtx.ut4converter.controller.ConversionViewController;
 import org.xtx.ut4converter.controller.TableRowLog;
 
-import javax.imageio.spi.IIORegistry;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -399,9 +398,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			this.outPath = Paths.get(this.getMapConvertFolder().toURI());
 		}
 
-		// support for reading targa files
-		IIORegistry registry = IIORegistry.getDefaultInstance();
-		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
 
 		tm = new T3DMatch(this);
 
@@ -987,14 +983,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 			// Some sounds and/or textures might need to be
 			// converted for correct import in UE4
-			if (ressource.needsConversion(this)) {
-				final File newExportedFile = ressource.convert(logger);
+			final File newExportedFile = ressource.convertResourceIfNeeded(logger);
 
-				if (newExportedFile != null) {
-					ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
-					exportedFile = newExportedFile;
-					wasConverted = true;
-				}
+			if (newExportedFile != null) {
+				ressource.getExportInfo().replaceExportedFile(exportedFile, newExportedFile);
+				exportedFile = newExportedFile;
+				wasConverted = true;
 			}
 
 			// rename file and move file to /UT4x-Converter/Converted/<MapName>/<Type>/RessourceName
