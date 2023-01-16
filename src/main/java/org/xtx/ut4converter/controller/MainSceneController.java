@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -409,5 +411,22 @@ public class MainSceneController implements Initializable {
 				java.util.logging.Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+
+	public void openExportPackageView(ActionEvent actionEvent) throws IOException {
+
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(MainApp.class.getResource(FXMLoc.EXPORT_PACKAGE.getPath()));
+		BorderPane page = loader.load();
+
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Export package");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(mainStage);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+
+		// Show the dialog and wait until the user closes it
+		dialogStage.showAndWait();
 	}
 }

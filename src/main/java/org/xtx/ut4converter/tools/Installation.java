@@ -24,6 +24,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -240,7 +241,11 @@ public class Installation {
 
 
 	public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
-		return executeProcess(command, logLines, null, null);
+		return executeProcess(command, logLines, null, null, 20000L);
+	}
+
+	public static synchronized int executeProcess(String command, List<String> logLines, Long timeout) throws InterruptedException, IOException {
+		return executeProcess(command, logLines, null, null, timeout);
 	}
 
 	/**
@@ -255,7 +260,7 @@ public class Installation {
 	 * @throws InterruptedException Exception thrown
 	 * @throws IOException Exception thrown
 	 */
-	public static synchronized int executeProcess(String command, List<String> logLines, Logger logger, Level logLevel) throws InterruptedException, IOException {
+	public static synchronized int executeProcess(String command, List<String> logLines, Logger logger, Level logLevel, Long timeOut) throws InterruptedException, IOException {
 
 		Runtime run;
 		Process pp = null;
@@ -276,7 +281,11 @@ public class Installation {
 				}
 			}
 
-			pp.waitFor();
+			if (timeOut != null) {
+				pp.waitFor(timeOut, TimeUnit.MILLISECONDS);
+			} else {
+				pp.waitFor();
+			}
 
 			return pp.exitValue();
 		} finally {
