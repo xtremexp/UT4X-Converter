@@ -58,6 +58,11 @@ public class MainApp extends Application {
 		 */
 		CONV_SETTINGS("/fxml/ConversionSettings.fxml"),
 
+		/**
+		 * View to export selected package
+		 */
+		EXPORT_PACKAGE("/fxml/ExportPackage.fxml"),
+
 		GAMES_EDIT("/fxml/EditGames.fxml"),
 		CONVERSION("/fxml/ConversionView.fxml");
 

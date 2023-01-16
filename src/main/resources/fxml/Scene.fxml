@@ -21,6 +21,9 @@
                 <SeparatorMenuItem />
                 <MenuItem onAction="#handleExit" text="Exit" />
             </Menu>
+            <Menu text="Tools">
+                <MenuItem onAction="#openExportPackageView" text="Export package ..." />
+            </Menu>
             <Menu text="Options">
                 <MenuItem onAction="#handleSettings" text="Settings" />
             </Menu>
