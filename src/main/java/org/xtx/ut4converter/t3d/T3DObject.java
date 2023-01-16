@@ -22,9 +22,16 @@ public abstract class T3DObject {
 	protected String t3dClass;
 
 	/**
-	 * Name or label of actor
+	 * Name or label of actor.
+	 * Might be changed during conversion process
 	 */
 	protected String name;
+
+	/**
+	 * Original name of object
+	 * (never changes)
+	 */
+	protected String originalName;
 
 	/**
 	 * Current game compatibility state for actor. Should automatically change

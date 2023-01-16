@@ -187,8 +187,10 @@ public abstract class T3DActor extends T3DObject {
 	protected List<T3DActor> children = new ArrayList<>();
 
 
-	String currentSubObjectClass;
-	String currentSubObjectName;
+	protected String currentSubObjectClass;
+
+	protected String currentSubObjectName;
+
 
 	/**
 	 * Begin Object Class=DistributionFloatUniform Name=DistributionDelayTime
@@ -346,6 +348,7 @@ public abstract class T3DActor extends T3DObject {
 				return false;
 			}
 			name = line.split("Name=")[1].replaceAll("\"", "");
+			this.originalName = this.name;
 		}
 
 		else if (line.contains("CollisionRadius=")) {
@@ -573,6 +576,8 @@ public abstract class T3DActor extends T3DObject {
 				namePrefix = namePrefixSp[0] + "_" + namePrefixSp[1];
 			}
 
+			// rename name to name_tag->event
+			// so it's easier to see what original UE1 actor may trigger another one (event)
 			if (this.tag != null && !this.tag.equals(namePrefix)) {
 				this.name += "_" + this.tag;
 			}

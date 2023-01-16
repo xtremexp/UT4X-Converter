@@ -1,10 +1,18 @@
-Begin Actor Class=Brush Name=Brush48
+Begin Map
+Begin Actor Class=Mover Name=Brush48
 	CsgOper=CSG_Add
-	Location=(Z=-384.000000)
+	bDynamicLight=True
+	Location=(X=-320.000000,Y=-368.000000,Z=64.000000)
+    MoverEncroachType=ME_CrushWhenEncroach
+    MoveTime=4.000000
+    OpenedSound=Sound'DoorsAnc.GenericThumps.adend61'
+    ClosedSound=Sound'DoorsAnc.GenericThumps.adend61'
+    MoveAmbientSound=Sound'DoorsAnc.Stone.sdoorL1'
+    KeyPos(1)=(Z=-196.000000)
 
 	Begin Brush Name=Model51
 		Begin PolyList
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-1 Link=0
 				Origin   -00128.000000,-00128.000000,-00128.000000
 				Normal   -00001.000000,+00000.000000,+00000.000000
 				TextureU +00000.000000,+00001.000000,+00000.000000
@@ -15,40 +23,40 @@ Begin Actor Class=Brush Name=Brush48
 				Vertex   -00128.000000,+00128.000000,+00128.000000
 				Vertex   -00128.000000,+00128.000000,-00128.000000
 			End Polygon
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-2 Link=1
 				Origin   -00128.000000,+00128.000000,-00128.000000
 				Normal   +00000.000000,+00001.000000,+00000.000000
-				TextureU +00001.000000,+00000.000000,+00000.000000
-				TextureV +00000.000000,+00000.000000,-00001.000000
+				TextureU +00002.000000,+00000.000000,+00000.000000
+				TextureV +00000.000000,+00000.000000,-00002.000000
 				Pan      U=0 V=0
 				Vertex   -00128.000000,+00128.000000,-00128.000000
 				Vertex   -00128.000000,+00128.000000,+00128.000000
 				Vertex   +00128.000000,+00128.000000,+00128.000000
 				Vertex   +00128.000000,+00128.000000,-00128.000000
 			End Polygon
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-3 Link=2
 				Origin   +00128.000000,+00128.000000,-00128.000000
 				Normal   +00001.000000,+00000.000000,+00000.000000
 				TextureU +00000.000000,-00001.000000,+00000.000000
 				TextureV +00000.000000,+00000.000000,-00001.000000
-				Pan      U=0 V=0
+				Pan      U=64 V=0
 				Vertex   +00128.000000,+00128.000000,-00128.000000
 				Vertex   +00128.000000,+00128.000000,+00128.000000
 				Vertex   +00128.000000,-00128.000000,+00128.000000
 				Vertex   +00128.000000,-00128.000000,-00128.000000
 			End Polygon
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-4 Link=3
 				Origin   +00128.000000,-00128.000000,-00128.000000
 				Normal   +00000.000000,-00001.000000,+00000.000000
 				TextureU -00001.000000,-00000.000000,-00000.000000
 				TextureV +00000.000000,+00000.000000,-00001.000000
-				Pan      U=0 V=0
+				Pan      U=0 V=32
 				Vertex   +00128.000000,-00128.000000,-00128.000000
 				Vertex   +00128.000000,-00128.000000,+00128.000000
 				Vertex   -00128.000000,-00128.000000,+00128.000000
 				Vertex   -00128.000000,-00128.000000,-00128.000000
 			End Polygon
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-5 Link=4
 				Origin   -00128.000000,+00128.000000,+00128.000000
 				Normal   +00000.000000,+00000.000000,+00001.000000
 				TextureU +00001.000000,+00000.000000,+00000.000000
@@ -59,7 +67,7 @@ Begin Actor Class=Brush Name=Brush48
 				Vertex   +00128.000000,-00128.000000,+00128.000000
 				Vertex   +00128.000000,+00128.000000,+00128.000000
 			End Polygon
-			Begin Polygon Texture=MyLevel.SampleTex256
+			Begin Polygon Texture=MyLevel.Tex256x256-6 Link=5
 				Origin   -00128.000000,-00128.000000,-00128.000000
 				Normal   +00000.000000,+00000.000000,-00001.000000
 				TextureU +00001.000000,+00000.000000,+00000.000000
@@ -74,3 +82,4 @@ Begin Actor Class=Brush Name=Brush48
 	End Brush
 	Brush=Model'MyLevel.Model51'
 End Actor
+End Map

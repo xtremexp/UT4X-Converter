@@ -219,6 +219,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	static final Logger logger = Logger.getLogger("MapConverter");
 
 	/**
+	 * For JUnit test purpose only.
+	 * If it's true conversion process might be slightly different.
+	 */
+	public boolean isTestMode;
+
+	/**
 	 * Original UT game the map comes from
 	 *
 	 * @return Input unreal game
