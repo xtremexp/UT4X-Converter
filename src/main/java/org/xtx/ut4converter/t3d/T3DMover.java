@@ -10,12 +10,6 @@ import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 
-import javax.vecmath.Vector3d;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

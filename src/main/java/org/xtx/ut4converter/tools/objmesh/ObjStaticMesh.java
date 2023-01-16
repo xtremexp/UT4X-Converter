@@ -10,7 +10,6 @@ import org.xtx.ut4converter.tools.vertmesh.VertMesh;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
