@@ -108,6 +108,10 @@ public class SettingsSceneController implements Initializable {
 
 			for (UnrealGame game : appConfig.getGames()) {
 
+				if (game.isDisabled()) {
+					continue;
+				}
+
 				// For UE4 needs to select the editor path and not the normal packaged game (which does not have editor)
 				final Label gameLabel = new Label(game.getShortName()+ (game.getUeVersion() == 4 ? " Editor":"") + " Folder");
 				final TextField textField = new TextField(game.getPath() != null ? game.getPath().getAbsolutePath() : "");

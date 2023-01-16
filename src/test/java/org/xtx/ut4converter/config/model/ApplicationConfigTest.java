@@ -52,7 +52,7 @@ class ApplicationConfigTest {
         Assertions.assertEquals("/Maps", uGame.getMapFolder());
         Assertions.assertEquals("unr", uGame.getMapExt());
         Assertions.assertEquals("utx", uGame.getTexExt());
-        Assertions.assertEquals("/System/ucc.exe", uGame.getExportExecPath());
+        Assertions.assertEquals("/System/ucc.exe", uGame.getPkgExtractorPath());
         Assertions.assertEquals("uax", uGame.getSoundExt());
         Assertions.assertEquals(2, uGame.getConvertsTo().size());
         Assertions.assertEquals(Arrays.asList("UT3", "UT4"), uGame.getConvertsTo());

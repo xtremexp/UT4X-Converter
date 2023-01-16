@@ -140,18 +140,18 @@ public class ApplicationConfig implements Serializable {
         games.add(fromUeVersion("Unreal Tournament 2003", "UT2003", "ut2", 2));
         games.add(fromUeVersion("Unreal Tournament 2004", "UT2004", "ut2", 2));
         final UnrealGame udkGame = fromUeVersion("Unreal Development Kit", "UDK", "udk", 3);
-        udkGame.setExportExecPath("/Binaries/Win64/UDK.com");
+        udkGame.setPkgExtractorPath("/Binaries/Win64/UDK.com");
         udkGame.setMapFolder("/UDKGame/Content");
         games.add(udkGame);
 
         final UnrealGame ut3Game = fromUeVersion("Unreal Tournament 3", "UT3", "ut3", 3);
         ut3Game.setMapFolder("/UTGame/CookedPC/Maps");
-        ut3Game.setExportExecPath("/Binaries/ut3.com");
+        ut3Game.setPkgExtractorPath("/Binaries/ut3.com");
         games.add(ut3Game);
 
         final UnrealGame ut4Game = fromUeVersion("Unreal Tournament 4", "UT4", "umap", 4);
         ut4Game.setMapFolder("/UnrealTournament/Content");
-        ut4Game.setExportExecPath("/Engine/Binaries/Win64/UnrealPak.exe");
+        ut4Game.setPkgExtractorPath("/Engine/Binaries/Win64/UnrealPak.exe");
         games.add(ut4Game);
 
         return games;

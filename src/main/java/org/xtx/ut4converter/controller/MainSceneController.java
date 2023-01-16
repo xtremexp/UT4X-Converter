@@ -102,7 +102,7 @@ public class MainSceneController implements Initializable {
 			for (final UnrealGame inputGame : this.applicationConfig.getGames()) {
 
 				// Do not add menu for games that have no conversion possible to
-				if (inputGame.getConvertsTo().isEmpty()) {
+				if (inputGame.getConvertsTo().isEmpty() || inputGame.isDisabled()) {
 					continue;
 				}
 
