@@ -207,11 +207,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	private boolean noUi;
 
 
-	/**
-	 * Prefered texture extractor for non Unreal 2 game
-	 * If null will use the default one (umodel)
-	 */
-	private Class<? extends UTPackageExtractor> preferedTextureExtractorClass;
 
 	/**
 	 * Global logger
@@ -1507,15 +1502,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public void setUseUbClasses(boolean useUbClasses) {
 		this.useUbClasses = useUbClasses;
-	}
-
-
-	public void setPreferedTextureExtractorClass(Class<? extends UTPackageExtractor> preferedTextureExtractorClass) {
-		this.preferedTextureExtractorClass = preferedTextureExtractorClass;
-	}
-
-	public Class<? extends UTPackageExtractor> getPreferedTextureExtractorClass() {
-		return preferedTextureExtractorClass;
 	}
 
 	public void setNoUi(boolean noUi) {
