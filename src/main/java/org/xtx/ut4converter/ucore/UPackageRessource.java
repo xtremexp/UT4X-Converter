@@ -615,69 +615,57 @@ public class UPackageRessource {
 		return this.isUsedInMap;
 	}
 
-	/**
-	 * Says if this ressource needs to be converted to be correctly imported in
-	 * unreal engine 4. For example so old sounds from unreal 1 / ut99 are not
-	 * correctly imported we need to convert them to 44k frequency
-	 * 
-	 * @param mc
-	 *            Map Converter
-	 * @return <code>true</code> true if needs conversion
-	 */
-	public boolean needsConversion(MapConverter mc) {
-
-		if (exportInfo.exportedFiles.isEmpty()) {
-			return false;
-		}
-
-		// UE1/2 sounds might be 8 bit 22Khz and UE3 sounds are .ogg files
-		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
-			if (type == Type.SOUND) {
-				return true;
-			} else if (type == Type.TEXTURE && this.exportInfo.getExportedFiles().stream().anyMatch(f -> f.getName().endsWith(".pcx"))) {
-				return true;
-			}
-		}
-
-		// ucc exporter exports malformed .dds textures ...
-		// that can't be imported in UE4
-		//  01022020 disabled since umodel does not export to .dss
-		/*
-        if(mc.isFromUE1UE2ToUE3UE4() && type == Type.TEXTURE &&  exportInfo.exportedFiles.get(0).getName().endsWith(".dds") && (exportInfo.extractor instanceof UCCExporter)){
-        	return true;
-		}*/
-
-		// .3d meshes needs to be converted to staticmeshes
-        return mc.isFromUE1UE2ToUE3UE4() && type == Type.MESH;
-    }
 
 	/**
 	 * Convert ressource to good format if needed for UE3 or UE4
 	 * 
 	 * @param logger Logger
-	 * @return Sound file converted
+	 * @return <code>null</code> If no conversion was needed, else file converted
 	 */
-	public File convert(Logger logger) {
+	public File convertResourceIfNeeded(Logger logger) {
 
 		try {
-			if (type == Type.SOUND) {
+			if (exportInfo.exportedFiles.isEmpty()) {
+				return null;
+			}
+
+			// UE1/UE2 sounds sometimes are 8 bits
+			// UE3+ only supports 16 bits sounds so need to convert
+			if (type == Type.SOUND && this.mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 				SoundConverter scs = new SoundConverter(logger);
 				File tempFile = File.createTempFile(getFullNameWithoutDots(true), ".wav");
 				scs.convertTo16BitSampleSize(exportInfo.getExportedFiles().get(0), tempFile);
 				return tempFile;
 			}
-			// have to convert files to .bmp, because sometimes UT3 fails to import .pcx
+			// UE1 supported formats: .bmp, .pcx
+			// UE2 supported formats: .bmp, .pcx, .tga, .upt, .dds
+			// UE3 supported formats: .bmp, .pcx, .tga, .float, .psd
+			// UE4 supported formats: .bmp, .pcx, .tga, .jpeg/.jpg, .png, .dds, .exr
+			// UE5 supported formats: .bmp, .pcx, .tga, .jpeg/.jpg, .png, .dds, .exr, .tif/.tiff, .psd
+			// .dds textures exported from UE2 (via 'ucc.exe batchexport' cmd) cannot be read by UE4+
 			else if (type == Type.TEXTURE) {
-				File tempFile = File.createTempFile(getFullNameWithoutDots(true), ".bmp");
-				final BufferedImage img = ImageIO.read(exportInfo.getExportedFiles().get(0));
-				ImageIO.write(img, "bmp", tempFile);
-				return tempFile;
+
+				if (getExportedFiles().get(0).getName().endsWith(".dds")) {
+
+					String extFormat = "png";
+
+					// UE3 does not support .png for import
+					if (mapConverter.isTo(UnrealEngine.UE3)) {
+						extFormat = "bmp";
+					}
+
+					File tempFile = File.createTempFile(getFullNameWithoutDots(true), "." + extFormat);
+					final BufferedImage img = ImageIO.read(exportInfo.getExportedFiles().get(0));
+					ImageIO.write(img, extFormat, tempFile);
+
+					return tempFile;
+				}
 			}
+			// TODO handle type MESH (.3d file)
 		} catch (IOException ex) {
-			ex.printStackTrace();
 			mapConverter.getLogger().log(Level.SEVERE, null, ex);
+			throw new RuntimeException(ex);
 		}
-		// TODO handle type MESH
 
 		return null;
 	}

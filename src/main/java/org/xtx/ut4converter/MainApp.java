@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.controller.ConversionViewController;
 import org.xtx.ut4converter.controller.MainSceneController;
 
+import javax.imageio.spi.IIORegistry;
 import java.io.IOException;
 
 /**
@@ -91,7 +92,11 @@ public class MainApp extends Application {
 		}
 
 		logger.info(PROGRAM_NAME + " " + VERSION + " started");
-		//showWelcomeView();
+
+		// support for reading tga and dds file
+		IIORegistry registry = IIORegistry.getDefaultInstance();
+		registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+		registry.registerServiceProvider(new net.nikr.dds.DDSImageReaderSpi());
 	}
 
 	/**

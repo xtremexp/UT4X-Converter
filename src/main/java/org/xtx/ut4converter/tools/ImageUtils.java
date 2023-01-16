@@ -5,8 +5,6 @@
  */
 package org.xtx.ut4converter.tools;
 
-import jogl.DDSImage;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -94,29 +92,20 @@ public class ImageUtils {
 	}
 
 	/**
-	 * Get texture dimension from texture size
-	 * 
-	 * @param ftex
-	 *            Texture file
+	 * Get texture dimension from file texture
+	 *
+	 * @param ftex Texture file
 	 * @return Texture dimensions
-	 * @throws IOException IO exception
+	 * @throws IOException Error reading file texture
 	 */
 	public static Dimension getTextureDimensions(File ftex) throws IOException {
+
 		if (ftex == null || !ftex.exists() || ftex.isDirectory() || Files.size(ftex.toPath()) == 0) {
 			return null;
 		}
 
-		if (ftex.getName().endsWith(".dds")) {
-			DDSImage ddsImage = DDSImage.read(ftex);
-			return new Dimension(ddsImage.getWidth(), ddsImage.getHeight());
-		}
-
-		BufferedImage bufferedImage = loadImage(ftex);
+		BufferedImage bufferedImage = ImageIO.read(ftex);
 
 		return new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight());
-	}
-
-	private static BufferedImage loadImage(File imageFile) throws IOException {
-		return ImageIO.read(imageFile);
 	}
 }
