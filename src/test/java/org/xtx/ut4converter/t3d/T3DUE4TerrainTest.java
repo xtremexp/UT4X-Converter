@@ -2,7 +2,7 @@ package org.xtx.ut4converter.t3d;
 
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import javax.vecmath.Point2d;
 
@@ -15,7 +15,7 @@ public class T3DUE4TerrainTest {
      * (assuming X axis is from left to right
      * and y axis is from top to bottom)
      */
-    @Test
+    @Disabled("Dependant of .exe files")
     void testGetCoordinatesForIndexInSquareSize(){
 
         // index 28 means it's 29th value (0,1, .... 28)

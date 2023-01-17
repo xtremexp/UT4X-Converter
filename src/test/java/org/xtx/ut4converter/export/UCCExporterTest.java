@@ -1,7 +1,6 @@
 package org.xtx.ut4converter.export;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.ApplicationConfig;
@@ -12,86 +11,18 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Not a real JUnit class,
+ * because it would require test environment to have unreal games installed.
+ * TODO make a sample small map for each unreal game for fast testing.
+ */
 public class UCCExporterTest {
 
     public final static String T3D_EXPORT_FOLDER = "C:\\dev\\temp\\UT4X-UT";
 
 
-    /**
-     * Exports all UT2004 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllU1LevelsToUT4() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT4);
-    }
+    private static void exportAllUTXLevels(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws Exception {
 
-    /**
-     * Test convert all U1 maps to UT3
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllU1LevelsToUT3() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT3);
-    }
-
-    /**
-     * Exports all UT2004 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllUT99Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT99, UTGames.UTGame.UT4);
-    }
-
-    /**
-     * Exports all U2 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllU2Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.U2, UTGames.UTGame.UT4);
-    }
-
-    /**
-     * Exports all UT2004 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllUT2003Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT2003, UTGames.UTGame.UT4);
-    }
-
-    /**
-     * Exports all UT2004 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllUT2004Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
-    }
-
-    /**
-     * Exports all UT3 maps to .t3d level file
-     *
-     * @throws Exception
-     */
-    @Test
-    public void testExportAllUT3Levels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
-    }
-
-    @Test
-    public void testExportAllDNFLevels() throws Exception {
-        exportAllUTXLevels(UTGames.UTGame.DNF, UTGames.UTGame.UT3);
-    }
-
-    private void exportAllUTXLevels(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws Exception {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
 
 
@@ -119,7 +50,7 @@ public class UCCExporterTest {
                     final File newT3dFile = new File(exportFolderBase + "/" + map.getName() + ".t3d");
 
                     // might have been ever exported
-                    newT3dFile.delete();
+                    FileUtils.deleteQuietly(newT3dFile);
 
                     FileUtils.moveFile(t3dFile, newT3dFile);
                     System.out.println(newT3dFile + " - " + idx + "/" + utxMapFiles.size());
@@ -127,6 +58,16 @@ public class UCCExporterTest {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT4);
+        exportAllUTXLevels(UTGames.UTGame.UT99, UTGames.UTGame.UT4);
+        exportAllUTXLevels(UTGames.UTGame.U1, UTGames.UTGame.UT3);
+        exportAllUTXLevels(UTGames.UTGame.UT99, UTGames.UTGame.UT3);
+        exportAllUTXLevels(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
+        exportAllUTXLevels(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
     }
 
 }

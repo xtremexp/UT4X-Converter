@@ -1,0 +1,45 @@
+Begin StaticMesh Name=forest
+    Version=2.000000 BoundingBox.Min.X=-91.436951 BoundingBox.Min.Y=-19.052946 BoundingBox.Min.Z=-2.697947 BoundingBox.Max.X=68.563049 BoundingBox.Max.Y=0.000000 BoundingBox.Max.Z=37.302055
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 68.563049 -19.052946 37.302052 0.000500 0.195037
+        Vertex 1 68.563049 -19.052944 -2.697947 0.000500 0.999500
+        Vertex 2 20.577868 -4.093280 37.302052 0.300107 0.195038
+    End Triangle
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 20.577868 -4.093279 -2.697947 0.300107 0.999500
+        Vertex 1 20.577868 -4.093280 37.302052 0.300107 0.195038
+        Vertex 2 68.563049 -19.052944 -2.697947 0.000500 0.999500
+    End Triangle
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 20.577868 -4.093280 37.302052 0.300107 0.195038
+        Vertex 1 20.577868 -4.093279 -2.697947 0.300107 0.999500
+        Vertex 2 -38.103615 -0.000002 37.302055 0.666500 0.195038
+    End Triangle
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 -38.103615 0.000000 -2.697947 0.666500 0.999500
+        Vertex 1 -38.103615 -0.000002 37.302055 0.666500 0.195038
+        Vertex 2 20.577868 -4.093279 -2.697947 0.300107 0.999500
+    End Triangle
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 -38.103615 -0.000002 37.302055 0.666500 0.195038
+        Vertex 1 -38.103615 0.000000 -2.697947 0.666500 0.999500
+        Vertex 2 -91.436951 -17.741287 37.302052 0.999501 0.195038
+    End Triangle
+    Begin Triangle
+        Texture skaarjintrotextures.Base.windytrees
+        SmoothingMask 1
+        Vertex 0 -91.436951 -17.741285 -2.697947 0.999500 0.999501
+        Vertex 1 -91.436951 -17.741287 37.302052 0.999501 0.195038
+        Vertex 2 -38.103615 0.000000 -2.697947 0.666500 0.999500
+    End Triangle
+End StaticMesh

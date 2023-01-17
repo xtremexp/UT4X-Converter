@@ -15,11 +15,17 @@
       "mapExt": "unr",
       "texExt": "utx",
       "musicExt": "umx",
-      "exportExecPath": "/System/ucc.exe",
+      "pkgExtractorPath": "/System/ucc.exe",
       "soundExt": "uax",
-      "convertsTo": [
-        "UT3",
-        "UT4"
+      "convertsToGames": [
+        {
+          "gameId": "UT3",
+          "scale": 2.5
+        },
+        {
+          "gameId": "UT4",
+          "scale": 2.5
+        }
       ]
     },
     {
@@ -35,10 +41,13 @@
       "mapExt": "unr",
       "texExt": "utx",
       "musicExt": "umx",
-      "exportExecPath": "/System/ucc.exe",
+      "pkgExtractorPath": "/System/ucc.exe",
       "soundExt": "uax",
-      "convertsTo": [
-        "UT4"
+      "convertsToGames": [
+        {
+          "gameId": "UT4",
+          "scale": 2.5
+        }
       ]
     }
   ]
