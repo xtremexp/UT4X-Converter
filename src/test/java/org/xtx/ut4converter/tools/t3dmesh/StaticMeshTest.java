@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -28,11 +29,9 @@ public class StaticMeshTest {
      * Test read staticmesh from .t3d file and conversion to Wavefront (.obj) staticmesh file
      */
     @Test
-    void testConvertT3DStaticMeshToObj() throws IOException {
-        final File t3dFile = new File("C:\\dev\\Temp\\crane_cab.t3d");
-        final StaticMesh t3dStaticMesh = new StaticMesh(t3dFile);
+    void testConvertT3DStaticMeshToObj() throws IOException, URISyntaxException {
 
-        final File t3dSmFile = new File(StaticMeshTest.class.getResource("/meshes/Simple.forest.t3d").toURI());
+        final File t3dSmFile = new File(Objects.requireNonNull(StaticMeshTest.class.getResource("/meshes/Simple.forest.t3d")).toURI());
         final StaticMesh t3dStaticMesh = new StaticMesh(t3dSmFile);
 
         File objFile = File.createTempFile("simpleForest", "obj");
@@ -69,12 +68,6 @@ public class StaticMeshTest {
 
         final T3DMover moverBrush = (T3DMover) T3DTestUtils.parseFromT3d(mc, "Mover", T3DMover.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/Brush.t3d")).getPath());
 
-        final File mtlFile = new File("C:\\dev2\\brush.mtl");
-        final File objFile = new File("C:\\dev2\\brush.obj");
-
-        Files.deleteIfExists(mtlFile.toPath());
-        Files.deleteIfExists(objFile.toPath());
-
         // apply this texture to each poly
 
         // simulate texture was exported (ucc.exe not available in github test env)
@@ -84,11 +77,11 @@ public class StaticMeshTest {
 
             final BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(StaticMeshTest.class.getResource("/textures/Tex256x256-" + idx + ".png")));
             final Dimension texDim = new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight());
-            final File texFile = new File("C:\\dev\\Temp\\Tex256x256-" + idx + ".png");
+            final Path texPath = Files.createTempFile("Tex256x256-" + idx, ".png");
 
-            ImageIO.write(bufferedImage, "png", texFile);
+            ImageIO.write(bufferedImage, "png", texPath.toFile());
             p.getTexture().setTextureDimensions(texDim);
-            p.getTexture().getExportedFiles().add(0, texFile);
+            p.getTexture().getExportedFiles().add(0, texPath.toFile());
 
             idx ++;
         }
