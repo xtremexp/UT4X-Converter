@@ -30,7 +30,7 @@ public class PackageExporterService extends Service<List<String>> {
      */
     final File pkgFile;
 
-    private Task<List<String>> task;
+    private PackageExporterTask task;
 
     public PackageExporterService(String exporter, UnrealGame game, File outputFolder, File pkgFile) {
         this.exporter = exporter;
@@ -45,7 +45,21 @@ public class PackageExporterService extends Service<List<String>> {
         return this.task;
     }
 
-    public Task<List<String>> getTask() {
+    public PackageExporterTask getTask() {
         return task;
+    }
+
+    @Override
+    public boolean cancel() {
+
+        // destroy ongoing exports (ucc.exe, umodel.exe, ...)
+        for (Process p : this.task.getProcessList()) {
+
+            if (p.isAlive()) {
+                p.destroy();
+            }
+        }
+
+        return super.cancel();
     }
 }

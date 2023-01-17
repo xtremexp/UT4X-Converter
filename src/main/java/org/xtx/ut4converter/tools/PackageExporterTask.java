@@ -4,12 +4,11 @@ import javafx.concurrent.Task;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_UMODEL;
 
@@ -44,6 +43,11 @@ public class PackageExporterTask extends Task<List<String>> {
      */
     final List<String> logs = new ArrayList<>();
 
+    /**
+     * List of processes associated with the task (umodel, ...)
+     */
+    final List<Process> processList = new ArrayList<>();
+
     public PackageExporterTask(String exporter, UnrealGame game, File pkgFile, File outputFolder) {
         this.exporter = exporter;
         this.game = game;
@@ -72,15 +76,47 @@ public class PackageExporterTask extends Task<List<String>> {
         // UE4/UE5
         else {
             // unrealpak only allows .pak extract
-            command = "\"" + game.getPath() + game.getPkgExtractorPath() + "\" \""+ this.pkgFile + "\" " + " -Extract \"" + this.outputFolder + "\"";
+            command = "\"" + game.getPath() + game.getPkgExtractorPath() + "\" \"" + this.pkgFile + "\" " + " -Extract \"" + this.outputFolder + "\"";
             commands.add(command);
         }
 
 
+        List<CompletableFuture<List<String>>> futureCmdTaskList = new ArrayList<>();
 
         for (String cmd : commands) {
-            logs.add(cmd);
-            Installation.executeProcess(cmd, logs, 10000L);
+
+            CompletableFuture<List<String>> xxx = CompletableFuture.supplyAsync(() -> {
+                List<String> processLogs = new ArrayList<>();
+                try {
+                    Process process = Runtime.getRuntime().exec(cmd);
+
+                    this.processList.add(process);
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                        String log;
+
+                        while ((log = reader.readLine()) != null) {
+                            processLogs.add(log);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return processLogs;
+            });
+
+            futureCmdTaskList.add(xxx);
+        }
+
+
+        // wait all extracts are done
+        CompletableFuture.allOf(futureCmdTaskList.toArray(new CompletableFuture[0])).join();
+
+        try {
+            for (CompletableFuture<List<String>> futureCmdTask : futureCmdTaskList) {
+                logs.addAll(futureCmdTask.get());
+            }
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
 
         return logs;
@@ -159,5 +195,9 @@ public class PackageExporterTask extends Task<List<String>> {
     @Override
     protected List<String> call() throws Exception {
         return exportPackage();
+    }
+
+    public List<Process> getProcessList() {
+        return processList;
     }
 }

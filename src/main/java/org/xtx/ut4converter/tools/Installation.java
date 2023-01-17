@@ -105,14 +105,6 @@ public class Installation {
 		return clazz.getResource("/" + clazz.getName().replace('.', '/'));
 	}
 
-	/**
-	 *
-	 * @return Full path of UT4X converter program
-	 */
-	public static File getProgramFolder() {
-		return Installation.getInstallDirectory(MainApp.class);
-	}
-
 
 	public static File getDocumentProgramFolder(){
 		return new File(Installation.getDocumentUserFolder().getAbsolutePath() + File.separator + "UT4X-Converter");
@@ -240,12 +232,12 @@ public class Installation {
 	}
 
 
-	public static synchronized int executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
+	public static synchronized Process executeProcess(String command, List<String> logLines) throws InterruptedException, IOException {
 		return executeProcess(command, logLines, null, null, 20000L);
 	}
 
-	public static synchronized int executeProcess(String command, List<String> logLines, Long timeout) throws InterruptedException, IOException {
-		return executeProcess(command, logLines, null, null, timeout);
+	public static synchronized Process executeProcess(String command, List<String> logLines, Long timeOut) throws InterruptedException, IOException {
+		return executeProcess(command, logLines, null, null, timeOut);
 	}
 
 	/**
@@ -260,7 +252,7 @@ public class Installation {
 	 * @throws InterruptedException Exception thrown
 	 * @throws IOException Exception thrown
 	 */
-	public static synchronized int executeProcess(String command, List<String> logLines, Logger logger, Level logLevel, Long timeOut) throws InterruptedException, IOException {
+	public static synchronized Process executeProcess(String command, List<String> logLines, Logger logger, Level logLevel, Long timeOut) throws InterruptedException, IOException {
 
 		Runtime run;
 		Process pp = null;
@@ -281,13 +273,14 @@ public class Installation {
 				}
 			}
 
+			// TODO delete, reading inputstream above make function sync
 			if (timeOut != null) {
 				pp.waitFor(timeOut, TimeUnit.MILLISECONDS);
 			} else {
 				pp.waitFor();
 			}
 
-			return pp.exitValue();
+			return pp;
 		} finally {
 
 			if (pp != null) {

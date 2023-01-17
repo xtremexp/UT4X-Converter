@@ -314,7 +314,8 @@ public final class UCCExporter extends UTPackageExtractor {
 				command = getCommandLine(unrealMapCopy.getName(), unrealPackage.type);
 			}
 
-			int exitValue = Installation.executeProcess(command, logLines);
+			final Process process = Installation.executeProcess(command, logLines);
+			int exitValue = process.exitValue();
 
 			// Program did not work as expected
 			// some ressources may have been partially extracted

@@ -131,7 +131,8 @@ public class UModelExporter extends UTPackageExtractor {
 		logger.log(Level.INFO, "Exporting " + fileContainer.getName() + " with " + getName());
 		logger.log(Level.FINE, command);
 
-		int exitCode = Installation.executeProcess(command, logLines);
+		final Process process = Installation.executeProcess(command, logLines);
+		int exitCode = process.exitValue();
 
 		// UModel could not load or extract package correctly
 		// try the generic ucc exporter

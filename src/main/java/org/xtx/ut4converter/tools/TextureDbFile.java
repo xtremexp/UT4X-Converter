@@ -227,7 +227,8 @@ public class TextureDbFile {
             final List<String> logLines = new ArrayList<>();
 
             logger.info("Analyzing " + utxFile.getName());
-            int exitCode = Installation.executeProcess(command, logLines, logger, Level.FINE, null);
+            final Process process = Installation.executeProcess(command, logLines, logger, Level.FINE, null);
+            int exitCode = process.exitValue();
 
             if (exitCode != 0) {
                 logger.warning("Error analyzing " + utxFile.getName());

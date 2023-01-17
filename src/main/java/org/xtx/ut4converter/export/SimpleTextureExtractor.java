@@ -28,18 +28,6 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		super(mapConverter);
 	}
 
-	/**
-	 * Extract all textures from given package
-	 * @param texturePackageFile MyPackage.utx
-	 * @param outputFolder C:\OutputFolder
-	 * @throws IOException Exception thrown
-	 * @throws InterruptedException Exception thrown
-	 */
-	public static void extractSimple(final File texturePackageFile, final File outputFolder) throws IOException, InterruptedException {
-		final List<String> logLines = new ArrayList<>();
-		Installation.executeProcess(getCommand(Installation.getExtractTextures(), texturePackageFile, outputFolder), logLines);
-	}
-
 	private static String getCommand(final File exporterPath, final File texturePackageFile, final File outputFolder){
 		return "\"" + exporterPath + "\"  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
 	}
@@ -60,7 +48,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		logger.log(Level.INFO, "Exporting " + ressource.getUnrealPackage().getFileContainer(mapConverter).getName() + " with " + getName());
 		logger.log(Level.FINE, command);
 
-		int exitCode = Installation.executeProcess(command, logLines);
+		Installation.executeProcess(command, logLines);
 
 		ressource.getUnrealPackage().setExported(true);
 
