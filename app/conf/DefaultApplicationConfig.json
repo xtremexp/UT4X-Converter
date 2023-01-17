@@ -150,14 +150,14 @@
     "ueVersion" : 3,
     "mapFolder" : "/UDKGame/Content",
     "mapExt" : "udk",
-    "texExt" : null,
-    "musicExt" : null,
+    "texExt" : "upk",
+    "musicExt" : "upk",
     "pkgExtractorPath" : "/Binaries/Win64/udk.com",
     "path" : null,
     "suggestedPath" : "C:\\UDK\\UDK-2015-01",
     "useTexDb" : false,
     "isCustom" : false,
-    "soundExt" : null,
+    "soundExt" : "upk",
     "convertsToGames": [
       {
         "gameId": "UT4",
@@ -179,7 +179,7 @@
       "useTexDb": false,
       "isCustom": false,
       "soundExt": "uax",
-      "isDisabled": true,
+      "isDisabled": false,
       "pkgExtractor": "ucc",
       "convertsToGames": [
         {
@@ -194,14 +194,14 @@
       "ueVersion" : 3,
       "mapFolder" : "/UTGame/CookedPC/Maps",
       "mapExt" : "ut3",
-      "texExt" : null,
-      "musicExt" : null,
+      "texExt" : "upk",
+      "musicExt" : "upk",
       "pkgExtractorPath" : "/Binaries/ut3.com",
       "path" : null,
       "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 3",
       "useTexDb" : false,
       "isCustom" : false,
-      "soundExt" : null,
+      "soundExt" : "upk",
       "convertsToGames": [
         {
           "gameId": "UT4",
@@ -214,14 +214,14 @@
       "ueVersion" : 4,
       "mapFolder" : "/UnrealTournament/Content",
       "mapExt" : "umap",
-      "texExt" : "pak",
-      "musicExt" : "pak",
+      "texExt" : "uasset",
+      "musicExt" : "uasset",
       "pkgExtractorPath" : "/Engine/Binaries/Win64/UnrealPak.exe",
       "path" : null,
       "suggestedPath" : "C:\\Program Files\\Epic Games\\UnrealTournamentEditor",
       "useTexDb" : false,
       "isCustom" : false,
-      "soundExt" : "pak",
+      "soundExt" : "uasset",
       "convertsToGames": [
         {
           "gameId": "UT4",

@@ -82,7 +82,13 @@ public final class UCCExporter extends UTPackageExtractor {
 		TEXTURE_TGA("Texture tga"), // not working good always 0 bytes created
 									// files ... (tested UT2004)
 		TEXTURE_PCX("Texture pcx"), // for U1, UT99
-		STATICMESH_T3D("StaticMesh t3d"), CLASS_UC("Class uc");
+		STATICMESH_T3D("StaticMesh t3d"),
+
+		// Also for UE3
+		CLASS_UC("Class uc"),
+		UE3_COMPONENT_T3D("Component T3D"),
+		UE3_SOUNDNODEWAVE("SoundNodeWave wav"),
+		UE3_TEXTURE2D_BMP("Texture2D BMP");
 
 		final String option;
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -10,11 +8,15 @@
   ~ UT Converter © 2023 by Thomas 'WinterIsComing/XtremeXp' P. is licensed under Attribution-NonCommercial-ShareAlike 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
   -->
 
-<?import javafx.collections.FXCollections?>
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.xtx.ut4converter.controller.ExportPackageController"
             prefHeight="400.0" prefWidth="750.0">
+
+    <stylesheets>
+        <URL value="@/styles/Styles.css"/>
+    </stylesheets>
 
     <top>
         <GridPane hgap="10" vgap="10" BorderPane.alignment="CENTER" alignment="CENTER">
@@ -23,31 +25,27 @@
             <ComboBox fx:id="unrealGamesList"  GridPane.columnIndex="1" />
 
             <Label text="Package file" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="unrealPakPath" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="unrealPakPath" disable="true" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Button text="SELECT"  onAction="#selectPackage"  GridPane.columnIndex="2"  GridPane.rowIndex="1"/>
 
             <Label text="Export folder" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="exportFolder" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="exportFolder" disable="true" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             <Button text="SELECT"  onAction="#selectFolder"  GridPane.columnIndex="2"  GridPane.rowIndex="2"/>
 
             <Label text="Exporter" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <ComboBox fx:id="pkgExtractorCbBox"  GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="umodel" />
-                        <String fx:value="UCC" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
+            <ComboBox fx:id="pkgExtractorCbBox"  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
             <Separator GridPane.columnSpan="3" GridPane.rowIndex="4"/>
-            <Button text="Export" disable="true" fx:id="convertBtn" alignment="CENTER" onAction="#exportPackage" GridPane.rowIndex="5"  GridPane.columnSpan="3"/>
+            <Button text="Export" disable="true" fx:id="convertBtn" alignment="CENTER" onAction="#exportPackage" GridPane.rowIndex="5"  GridPane.columnSpan="2"/>
+            <Button text="STOP" fx:id="stopExportBtn" alignment="CENTER" onAction="#stopExport" GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-background-color: red"/>
         </GridPane>
     </top>
     <center>
-        <TextArea fx:id="logContent" >
-
-        </TextArea>
-
+        <TextArea fx:id="logContentTxtArea" disable="true"/>
     </center>
+    <bottom>
+        <VBox alignment="CENTER">
+            <Label fx:id="progressIndicatorLbl" alignment="CENTER" style="-fx-font-size: 20;" BorderPane.alignment="CENTER"/>
+        </VBox>
+    </bottom>
 </BorderPane>
