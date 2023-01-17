@@ -449,10 +449,11 @@ public class MoverProperties implements T3D {
 		}
 
 		if (mover instanceof T3DMoverSM moverSm) {
-
 			if (moverSm.getStaticMesh() != null && moverSm.getMapConverter().convertStaticMeshes()) {
 				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName()).append("'\n");
 			}
+		} else if (mover instanceof T3DMover moverBrush) {
+			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
 		}
 
 		mover.writeSimpleProperties();
@@ -532,5 +533,9 @@ public class MoverProperties implements T3D {
 
 	@Override
 	public void toT3d(StringBuilder sb, String prefix) {
+	}
+
+	public Map<Integer, Vector3d> getPositions() {
+		return positions;
 	}
 }

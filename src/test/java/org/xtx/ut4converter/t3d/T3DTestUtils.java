@@ -4,7 +4,6 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.config.ApplicationConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
-import org.xtx.ut4converter.controller.ConversionSettingsController;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,6 +39,7 @@ public class T3DTestUtils {
         mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
 
         mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
+        mc.isTestMode = true;
 
         return mc;
     }

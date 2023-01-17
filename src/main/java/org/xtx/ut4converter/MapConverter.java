@@ -213,6 +213,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	static final Logger logger = Logger.getLogger("MapConverter");
 
 	/**
+	 * For JUnit test purpose only.
+	 * If it's true conversion process might be slightly different.
+	 */
+	public boolean isTestMode;
+
+	/**
 	 * Original UT game the map comes from
 	 *
 	 * @return Input unreal game
@@ -926,7 +932,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		if (isTo(UnrealEngine.UE4)) {
 
 			// TEMP thingy use custom one if user changed it
-			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getPath(), outputGame) + File.separator + getOutMapName());
+			//File wipConvertedMapFolder = new File(UTGames.getMapsFolder(userGameConfig.getRessourceUpdatedPath(), outputGame) + File.separator + getOutMapName());
 			File wipConvertedMapFolder = getUt4ReferenceBaseFolderFile();
 
 			Files.createDirectories(wipConvertedMapFolder.toPath());
@@ -986,12 +992,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 
 			// rename file and move file to /UT4x-Converter/Converted/<MapName>/<Type>/RessourceName
-			Path movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getType().getName() + "/" + ressource.getConvertedFileName(exportedFile, true));
-
-			// rename file and move file to /UT4x-Converter/Converted/<MapName>/<PackageName>/RessourceName
-			if (this.exportOption == ExportOption.BY_PACKAGE) {
-				movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getUnrealPackage().getName() + "/" + ressource.getConvertedFileName(exportedFile, false));
-			}
+			Path movedRessourceFile = getRessourceUpdatedPath(ressource, exportedFile);
 
 
 			Files.createDirectories(movedRessourceFile.getParent());
@@ -1029,6 +1030,16 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		return wasConverted;
+	}
+
+	public Path getRessourceUpdatedPath(UPackageRessource ressource, File exportedFile) {
+		Path movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getType().getName() + "/" + ressource.getConvertedFileName(exportedFile, true));
+
+		// rename file and move file to /UT4x-Converter/Converted/<MapName>/<PackageName>/RessourceName
+		if (this.exportOption == ExportOption.BY_PACKAGE) {
+			movedRessourceFile = Paths.get(getMapConvertFolder().getAbsolutePath() + "/" + ressource.getUnrealPackage().getName() + "/" + ressource.getConvertedFileName(exportedFile, false));
+		}
+		return movedRessourceFile;
 	}
 
 	public SupportedClasses getSupportedActorClasses() {
