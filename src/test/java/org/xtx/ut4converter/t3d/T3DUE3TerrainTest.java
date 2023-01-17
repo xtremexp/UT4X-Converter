@@ -1,9 +1,6 @@
 package org.xtx.ut4converter.t3d;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
@@ -26,7 +23,7 @@ public class T3DUE3TerrainTest {
     /**
      * Test reading UT3 terrain and converting it to UT4 terrain
      */
-    @Test
+    @Disabled("Dependant of .exe files")
     void testUe3TerrainReadAndConvert() throws ReflectiveOperationException, IOException {
 
         // terrain sample is from VCTF-Sandstorm reduced to 20X20 numpatches
@@ -47,7 +44,7 @@ public class T3DUE3TerrainTest {
 
         Assertions.assertNotNull(ue4Terrrain);
 
-        try (FileWriter fw = new FileWriter(new File("C:\\TEMP\\terrain.t3d"))){
+        try (FileWriter fw = new FileWriter("C:\\TEMP\\terrain.t3d")){
             fw.write(ue4Terrrain.toT3d());
         }
     }

@@ -21,15 +21,6 @@ public class T3DLightTest extends T3DActorBaseTest {
 
 
     @Test
-    void testIsSpotLight(){
-        // t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_Spotlight || lightEffect == UE12_LightEffect.LE_StaticSpot
-        //				|| lightEffect == UE12_LightEffect.LE_Spotlight2 || lightEffect == UE12_LightEffect.LE_SquareSpotlight;
-        final T3DLight light = new T3DLight(mc, T3DLight.UE4_LightActor.SpotLight.name());
-        //Assert.assertTrue(light.is);
-    }
-
-
-    @Test
     void testLight() throws IOException {
 
         final T3DLight pureBlueLight = new T3DLight(T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3), "Light");
@@ -38,6 +29,4 @@ public class T3DLightTest extends T3DActorBaseTest {
         pureBlueLight.setBrightness(255f);
         pureBlueLight.convert();
     }
-
-
 }

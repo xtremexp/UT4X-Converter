@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.tools.t3dmesh;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.net.URISyntaxException;
 
 
 public class StaticMeshTest {

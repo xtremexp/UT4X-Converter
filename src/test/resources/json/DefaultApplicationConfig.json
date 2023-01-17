@@ -1,44 +1,233 @@
 {
-  "version": 1,
+  "version" : 1,
   "isFirstRun" : true,
   "checkForUpdates" : true,
-  "fakeUnknownProp": "fake",
-  "games": [
+  "conversionSettingsPanelConfig": {
+    "scaleFactorList": [0.5, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2, 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.55, 2.6, 2.7, 2.8, 2.9, 3, 3.125, 3.5, 4, 4.5, 5],
+    "defaultScaleFactor" : 1,
+    "lightBrightnessFactorList": [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
+    "defaultLightBrightnessFactor" : 1,
+    "lightMapResolutionList" : [16, 32, 64, 128, 256, 512, 1024, 2048, 4096],
+    "defaultLightMapResolution": 64,
+    "soundVolumeFactorList": [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
+    "defaultSoundVolumeFactor" : 1,
+    "defaultExport": "BY_TYPE"
+  },
+  "games" : [ {
+    "name" : "Unreal 1",
+    "ueVersion" : 1,
+    "mapFolder" : "/Maps",
+    "mapExt" : "unr",
+    "texExt" : "utx",
+    "musicExt" : "umx",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold",
+    "useTexDb" : false,
+    "isCustom" : false,
+    "soundExt" : "uax",
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
+    "id" : "U1"
+  }, {
+    "name" : "Unreal Tournament",
+    "ueVersion" : 1,
+    "mapFolder" : "/Maps",
+    "mapExt" : "unr",
+    "texExt" : "utx",
+    "musicExt" : "umx",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament",
+    "useTexDb" : true,
+    "isCustom" : false,
+    "soundExt" : "uax",
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
+    "id" : "UT99"
+  }, {
+    "name" : "Duke Nukem Forever 2001",
+    "ueVersion" : 1,
+    "mapFolder" : "/Maps",
+    "mapExt" : "dnf",
+    "texExt" : "dtx",
+    "musicExt" : "ext",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\Duke4",
+    "useTexDb" : true,
+    "isCustom" : false,
+    "soundExt" : "dfx",
+    "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.6
+      },
+      {
+        "gameId": "UT4",
+        "scale": 2.6
+      }
+    ],
+    "id" : "DNF"
+  }, {
+    "name" : "Unreal 2",
+    "ueVersion" : 2,
+    "mapFolder" : "/Maps",
+    "mapExt" : "un2",
+    "texExt" : "utx",
+    "musicExt" : "ogg",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal II The Awakening",
+    "useTexDb" : false,
+    "isCustom" : false,
+    "soundExt" : "uax",
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
+    "id" : "U2"
+  }, {
+    "name" : "Unreal Tournament 2003",
+    "ueVersion" : 2,
+    "mapFolder" : "/Maps",
+    "mapExt" : "ut2",
+    "texExt" : "utx",
+    "musicExt" : "ogg",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\UT2003",
+    "useTexDb" : false,
+    "isCustom" : false,
+    "soundExt" : "uax",
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.5
+      }
+    ],
+    "id" : "UT2003"
+  }, {
+    "name" : "Unreal Tournament 2004",
+    "ueVersion" : 2,
+    "mapFolder" : "/Maps",
+    "mapExt" : "ut2",
+    "texExt" : "utx",
+    "musicExt" : "ogg",
+    "pkgExtractorPath" : "/System/ucc.exe",
+    "path" : null,
+    "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 2004",
+    "useTexDb" : false,
+    "isCustom" : false,
+    "soundExt" : "uax",
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.2
+      }
+    ],
+    "id" : "UT2004"
+  }, {
+    "name" : "Unreal Development Kit",
+    "ueVersion" : 3,
+    "mapFolder" : "/UDKGame/Content",
+    "mapExt" : "udk",
+    "texExt" : "upk",
+    "musicExt" : "upk",
+    "pkgExtractorPath" : "/Binaries/Win64/udk.com",
+    "path" : null,
+    "suggestedPath" : "C:\\UDK\\UDK-2015-01",
+    "useTexDb" : false,
+    "isCustom" : false,
+    "soundExt" : "upk",
+    "convertsToGames": [
+      {
+        "gameId": "UT4",
+        "scale": 2.2
+      }
+    ],
+    "id" : "UDK"
+  },
     {
-      "name": "Unreal 1",
-      "path": null,
-      "suggestedPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold",
-      "useTexDb": false,
-      "isCustom": false,
-      "id": "U1",
-      "ueVersion": 1,
+      "name": "Unreal Championship 2",
+      "ueVersion": 2,
       "mapFolder": "/Maps",
       "mapExt": "unr",
       "texExt": "utx",
-      "musicExt": "umx",
-      "exportExecPath": "/System/ucc.exe",
+      "musicExt": "wav",
+      "pkgExtractorPath": "/System/ucc.exe",
+      "path": null,
+      "suggestedPath": "C:\\UC2004",
+      "useTexDb": false,
+      "isCustom": false,
       "soundExt": "uax",
-      "fakeUnknownProp2": "fake2",
-      "convertsTo": [
-        "UT3",
-        "UT4"
-      ]
+      "isDisabled": false,
+      "pkgExtractor": "ucc",
+      "convertsToGames": [
+        {
+          "gameId": "UT4",
+          "scale": 2.2
+        }
+      ],
+      "id": "UC2"
     },
     {
       "name" : "Unreal Tournament 3",
-      "path" : null,
-      "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 3",
-      "useTexDb" : false,
-      "isCustom": false,
-      "id" : "UT3",
       "ueVersion" : 3,
       "mapFolder" : "/UTGame/CookedPC/Maps",
       "mapExt" : "ut3",
-      "texExt" : null,
-      "musicExt" : null,
-      "exportExecPath" : "/Binaries/ut3.com",
-      "soundExt" : null,
-      "convertsTo" : [ "UT4" ]
-    }
-  ]
+      "texExt" : "upk",
+      "musicExt" : "upk",
+      "pkgExtractorPath" : "/Binaries/ut3.com",
+      "path" : null,
+      "suggestedPath" : "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 3",
+      "useTexDb" : false,
+      "isCustom" : false,
+      "soundExt" : "upk",
+      "convertsToGames": [
+        {
+          "gameId": "UT4",
+          "scale": 1.25
+        }
+      ],
+      "id" : "UT3"
+    }, {
+      "name" : "Unreal Tournament 4",
+      "ueVersion" : 4,
+      "mapFolder" : "/UnrealTournament/Content",
+      "mapExt" : "umap",
+      "texExt" : "uasset",
+      "musicExt" : "uasset",
+      "pkgExtractorPath" : "/Engine/Binaries/Win64/UnrealPak.exe",
+      "path" : null,
+      "suggestedPath" : "C:\\Program Files\\Epic Games\\UnrealTournamentEditor",
+      "useTexDb" : false,
+      "isCustom" : false,
+      "soundExt" : "uasset",
+      "convertsToGames": [
+        {
+          "gameId": "UT4",
+          "scale": 1.25
+        }
+      ],
+      "id" : "UT4"
+    }]
 }

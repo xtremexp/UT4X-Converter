@@ -1,10 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 
@@ -15,6 +12,9 @@ import java.io.IOException;
 import static org.xtx.ut4converter.t3d.T3DTestUtils.parseFromT3d;
 
 
+/**
+ * Disable JUNIT test Not usable for linux platform
+ */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class T3DUE2TerrainTest {
 
@@ -53,6 +53,7 @@ public class T3DUE2TerrainTest {
      * @throws InterruptedException
      */
     @Test
+    @Disabled("Dependant of .exe files")
     void testUT2004TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("DM-1on1-Serpentine.ut2", "UT2004-Serpentine-TerrainInfo.t3d");
@@ -62,6 +63,7 @@ public class T3DUE2TerrainTest {
     }
 
     @Test
+    @Disabled("Dependant of .exe files")
     void testUT2004DriaTerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         final T3DUE4Terrain t3DUE4Terrain = testUE2TerrainReadAndConvert("ONS-Dria.ut2", "UT2004-Dria-TerrainInfo.t3d");
@@ -79,7 +81,7 @@ public class T3DUE2TerrainTest {
      * @throws IOException
      * @throws InterruptedException
      */
-    @Test
+    @Disabled("Dependant of .exe files")
     void testUnreal2TerrainReadAndConvert() throws ReflectiveOperationException, IOException, InterruptedException {
 
         this.mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U2, UTGames.UTGame.UT4);

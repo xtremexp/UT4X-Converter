@@ -41,7 +41,7 @@
         </GridPane>
     </top>
     <center>
-        <TextArea fx:id="logContentTxtArea" disable="true"/>
+        <TextArea fx:id="logContentTxtArea"/>
     </center>
     <bottom>
         <VBox alignment="CENTER">

@@ -6,80 +6,28 @@ import org.xtx.ut4converter.UTGames;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static org.xtx.ut4converter.export.UCCExporterTest.T3D_EXPORT_FOLDER;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 
 public class T3DLevelConvertorTest {
 
-
     /**
-     * Converts all .t3d UT99 map file.
-     * Need to use UCCExportTest.testExportAllUT99Levels prior to execute this test
-     *
-     * @throws IOException
+     * Convert t3d unreal 1 map file.
+     * Allows to detect some errors with converter for parsing data.
      */
     @Test
-    void testT3dConvertU1() throws IOException {
-        testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.U1.shortName, UTGames.UTGame.U1);
-    }
-
-    /**
-     * Converts all .t3d UT99 map file.
-     * Need to use UCCExportTest.testExportAllUT99Levels prior to execute this test
-     *
-     * @throws IOException
-     */
-    @Test
-    void testT3dConvertUT99() throws IOException {
-        testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT99.shortName, UTGames.UTGame.UT99);
-    }
-
-    /**
-     * Converts all .t3d Unreal 2 map file.
-     * Need to use UCCExportTest.testExportAllUT99Levels prior to execute this test
-     *
-     * @throws IOException
-     */
-    @Test
-    void testT3dConvertU2() throws IOException {
-        testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.U2.shortName, UTGames.UTGame.U2);
-    }
-
-    /**
-     * Convert all .t3d ut2004 map files.
-     * Allows detect some errors with converter for parsing data.
-     *
-     * @throws IOException
-     */
-    @Test
-    void testT3dConvertUT2003() throws IOException {
-        testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT2003.shortName, UTGames.UTGame.UT2003);
-    }
-
-    /**
-     * Convert all .t3d ut2004 map files.
-     * Allows detect some errors with converter for parsing data.
-     *
-     * @throws IOException
-     */
-    @Test
-    void testT3dConvertUT2004() throws IOException {
-        testT3dConvertForGame(T3D_EXPORT_FOLDER + "\\t3d\\" + UTGames.UTGame.UT2004.shortName, UTGames.UTGame.UT2004);
+    void testT3dConvertU1() throws IOException, URISyntaxException {
+        testT3dConvertForGame(new File((Objects.requireNonNull(T3DLevelConvertorTest.class.getResource("/t3d/U1-SimpleLevel.t3d")).toURI())), UTGames.UTGame.UT2004);
     }
 
 
-
     /**
-     * @param t3dFilesFolder
-     * @param inputGame
-     * @throws IOException
+     * @param t3dUnconvertedLvl Input t3d level file
+     * @param inputGame         Input game
+     * @throws IOException Error reading t3d file
      */
-    private void testT3dConvertForGame(final String t3dFilesFolder, UTGames.UTGame inputGame) throws IOException {
+    private void testT3dConvertForGame(final File t3dUnconvertedLvl, UTGames.UTGame inputGame) throws IOException {
 
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, UTGames.UTGame.UT4);
         mc.setConvertTextures(false);
@@ -87,27 +35,17 @@ public class T3DLevelConvertorTest {
         mc.setConvertSounds(false);
         mc.setConvertStaticMeshes(false);
 
-        final List<Path> t3dFiles = Files.list(Paths.get(t3dFilesFolder)).toList();
+        final File tempFile = File.createTempFile(t3dUnconvertedLvl.getName(), "temp");
 
-        int idx = 0;
-
-        for (final Path t3dPath : t3dFiles) {
-            final File tempFile = File.createTempFile(t3dPath.toFile().getName(), "temp");
-
-            try {
-                final T3DLevelConvertor lc = new T3DLevelConvertor(t3dPath.toFile(), tempFile, mc, true);
-                lc.setNoUi(true);
-                lc.readConvertAndWrite();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Failed conversion of " + t3dPath.toFile().getName() + ":" + e.getMessage());
-            } finally {
-                tempFile.delete();
-            }
-
-            System.out.println(idx + "/" + t3dFiles.size());
-            idx++;
+        try {
+            final T3DLevelConvertor lc = new T3DLevelConvertor(t3dUnconvertedLvl, tempFile, mc, true);
+            lc.setNoUi(true);
+            lc.readConvertAndWrite();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed conversion of " + t3dUnconvertedLvl.getName() + ":" + e.getMessage());
+        } finally {
+            tempFile.delete();
         }
     }
-
 }
