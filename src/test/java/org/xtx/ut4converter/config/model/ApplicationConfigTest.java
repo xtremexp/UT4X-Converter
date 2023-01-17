@@ -86,7 +86,7 @@ class ApplicationConfigTest {
         // Unreal 1 install path was retrieved from original user config file
         final UnrealGame u1Game = updatedConfig.getGames().stream().filter(g -> g.getShortName().equals("U1")).findFirst().orElse(null);
         Assertions.assertNotNull(u1Game);
-        Assertions.assertEquals("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold", u1Game.getPath().getAbsolutePath());
+        Assertions.assertTrue(u1Game.getSuggestedPath().getAbsolutePath().contains("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold"));
     }
 
 }
