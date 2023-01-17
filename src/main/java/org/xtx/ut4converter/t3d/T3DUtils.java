@@ -16,10 +16,7 @@ import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -653,15 +650,7 @@ public class T3DUtils {
 	 * @return GUID in Unreal Engine format
 	 */
 	public static String randomGuid(){
-
-		final Random r = new Random();
-		final StringBuilder sb = new StringBuilder();
-
-		while(sb.length() < 32){
-			sb.append(Integer.toHexString(r.nextInt()).toUpperCase());
-		}
-
-		return sb.toString();
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 
 	/**
