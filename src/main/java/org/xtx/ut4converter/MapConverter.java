@@ -960,7 +960,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 						if (!landscapeMatCopy.exists()) {
 							try {
-								Files.move(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+								Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 								ue4Terrain.setLandscapeMatFile(landscapeMatCopy);
 							} catch (IOException e) {
 								logger.log(Level.SEVERE, "Error while copying landscapemap file " + landscapeMat);
