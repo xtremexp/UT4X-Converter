@@ -1,5 +1,19 @@
+- 1.3.0 - 18/01/2023
+  - uc2: Added support for Unreal Championship 2 (Experimental) 
+  - ui: added recent conversion history in menu
+  - ui: added menu "Tool -> Extract package" that allows extracting package either from umodel or Epic Games extractor easily
+  - ui: conversion settings, deleted 'Prefered extractor'
+  - u1/ut99/ut2003/4: fixed some lights not being properly converted to spotlight actor
+  - u1/ut99/ut2003/4: replaced directional lights to spotlights 
+  - u1/ut99/ut2003/4: ZoneInfo actors with fog info are now converted into AtmosphericFog actors
+  - ut2003/4: fixed bad color if original light had brightness > 255
+  - u2: fixed sometimes staticmeshes from map package not being exported
+  - all: lightning intensity modified (experimental)
+
+
 - 1.2.2 - 14/01/2023
- - u1/ut99->ut3/ut4: all textures are now correctly aligned
+  - u1/ut99->ut3/ut4: all textures are now correctly aligned
+
 
 - 1.2.1 - 09/01/2023
   - ut99->ut3/ut4: custom textures are now converted
@@ -17,6 +31,7 @@
   - ut3->ut4: fixed regression bug AmbientSound actor radius conversion error
   - tech: UserConfig.json is now ApplicationConfig.json with format changed containing some game config (user will need to set again the game paths at next start in ui)
 
+
 - 1.2.0 - 03/01/2023
   - Added support for Duke Nukem Forever 2001 (Experimental)
   - ui: map scale factor can now be customized
@@ -29,9 +44,11 @@
   - ui: now program checks for updates at startup (can be desactivated in settings)
   - all: if actor filter is on and contains brush actor, the big additive brush will still be added
 
+
 - 1.1.1 - 22/12/2022
   - u2/ut2003/4->UT4: fixed menu to convert to UT4 not available
   - tech: upgraded to latest java version (17->19)
+
 
 - 1.1.0 - 21/12/2022
   - Added Unreal 1/UT99 -> UT3 conversion
@@ -41,10 +58,12 @@
   - ui: renamed program from UT4X Converter to UT Converter since it helps converting not to UT4 only
   - ui: added menu entry to github project wiki page
 
+
 - 1.0.4 - 25/11/2021
   - removed references to utforums since it has been set to read-only permanently (https://www.epicgames.com/unrealtournament/forums/unreal-tournament-discussion/announcements/413461-unreal-tournament-forum-changes)
     updated readme for installation procedure
   - "Check for updates" menu now opens github releases page
+
 
 - 1.0.3 - 25/11/2021
   - all: textures are now exported by default to .png (better quality and alpha layer) instead of .tga

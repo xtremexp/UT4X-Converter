@@ -27,7 +27,7 @@ Here are the different conversion possible :
 - Source Game -> Dest Game (Conversion quality)
 - U1/UT99/Duke Nukem Forever (2001) -> UT3/UT4 (Good)
 - UT2003/2004 -> UT4 (Good)
-- Unreal 2/UT3/UDK -> UT4 (Medium)
+- Unreal Championship 2/Unreal 2/UT3/UDK -> UT4 (Medium)
 - X -> Unreal Engine 5 (Not Supported)
 
 Notes:
