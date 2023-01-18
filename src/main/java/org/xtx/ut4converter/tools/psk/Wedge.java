@@ -16,7 +16,7 @@ public class Wedge implements BinReadWrite {
 
 	protected static final int DATA_SIZE = 16;
 
-	private long pointIndex;
+	private int pointIndex;
 	private float u;
 	private float v;
 	private byte matIndex;
@@ -69,7 +69,7 @@ public class Wedge implements BinReadWrite {
 	}
 	
 
-	public long getPointIndex() {
+	public int getPointIndex() {
 		return pointIndex;
 	}
 

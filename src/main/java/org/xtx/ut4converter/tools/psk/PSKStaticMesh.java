@@ -6,12 +6,15 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * PSK staticmesh file reader/writer.
- * 
+ *
  * @author XtremeXp
  */
 public class PSKStaticMesh {
@@ -71,7 +74,7 @@ public class PSKStaticMesh {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pskFile
 	 *            .psk staticmesh file
 	 * @throws Exception
@@ -89,7 +92,7 @@ public class PSKStaticMesh {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param f
 	 * @throws IOException
 	 */
@@ -304,10 +307,10 @@ public class PSKStaticMesh {
 	 * Export .psk staticmesh to wavefront (.obj) staticmesh
 	 */
 	private void writeObjFile(final File objFile, final File mtlFile) {
-		
+
 		try (FileWriter fw = new FileWriter(objFile)) {
-			
-			if(mtlFile != null && !this.getMaterials().isEmpty()){
+
+			if (mtlFile != null && !this.getMaterials().isEmpty()) {
 				fw.write("mtllib " + mtlFile.getName() + "\n");
 			}
 
@@ -324,11 +327,11 @@ public class PSKStaticMesh {
 			fw.write("# Faces\n");
 			String currentMat = null;
 			Integer currentSmoothingGroup = null;
-			
+
 			for (Face fc : this.getFaces()) {
 				Material mat = this.getMaterials().get(fc.getMatIndex());
-				
-				if(currentMat == null || !currentMat.equals(mat.getMaterialName())){
+
+				if (currentMat == null || !currentMat.equals(mat.getMaterialName())) {
 					fw.write("usemtl " + mat.getMaterialName() + "\n");
 					currentMat = mat.getMaterialName();
 				}
@@ -347,6 +350,43 @@ public class PSKStaticMesh {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Export .psk file to .t3d static mesh
+	 *
+	 * @param t3dStaticMesh
+	 */
+	public void exportAsT3d(final File t3dStaticMesh) throws IOException {
+
+		try (FileWriter fw = new FileWriter(t3dStaticMesh)) {
+
+			final DecimalFormat df = new DecimalFormat("0.000000", new DecimalFormatSymbols(Locale.US));
+			fw.write("Begin StaticMesh Name=SkyBoxCylinder\n");
+			fw.write("\tVersion=2.000000\n");
+
+			for (final Face face : this.getFaces()) {
+
+				fw.write("\tBegin Triangle\n");
+				fw.write("\t\tTexture " + this.getMaterials().get(face.getMatIndex()).getMaterialName() + "\n");
+				fw.write("\t\tSmoothingMask " + face.getSmoothingGroups() + "\n");
+
+				final Wedge w0 = this.getWedges().get(face.getWedge0());
+				final Wedge w1 = this.getWedges().get(face.getWedge1());
+				final Wedge w2 = this.getWedges().get(face.getWedge2());
+
+				final Point p0 = this.getPoints().get(w0.getPointIndex());
+				final Point p1 = this.getPoints().get(w1.getPointIndex());
+				final Point p2 = this.getPoints().get(w2.getPointIndex());
+
+				fw.write("\t\tVertex 0 " + df.format(p0.x) + " " + df.format(p0.y) + " " + df.format(p0.z) + " " + df.format(w0.getU()) + " " + df.format(w0.getV()) + " \n");
+				fw.write("\t\tVertex 1 " + df.format(p1.x) + " " + df.format(p1.y) + " " +df.format(p1.z) + " " + df.format(w1.getU()) + " " + df.format(w1.getV()) + " \n");
+				fw.write("\t\tVertex 2 " + df.format(p2.x) + " " + df.format(p2.y) + " " + df.format(p2.z) + " " + df.format(w2.getU()) + " " + df.format(w2.getV()) + " \n");
+				fw.write("\tEnd Triangle\n");
+			}
+
+			fw.write("End StaticMesh\n");
 		}
 	}
 }
