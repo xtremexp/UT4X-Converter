@@ -452,9 +452,12 @@ public class MoverProperties implements T3D {
 			if (moverSm.getStaticMesh() != null && moverSm.getMapConverter().convertStaticMeshes()) {
 				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName()).append("'\n");
 			}
-		} else if (mover instanceof T3DMover moverBrush) {
-			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
 		}
+		/*
+		* disabled until mesh is good
+		else if (mover instanceof T3DMover moverBrush) {
+			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
+		}*/
 
 		mover.writeSimpleProperties();
 

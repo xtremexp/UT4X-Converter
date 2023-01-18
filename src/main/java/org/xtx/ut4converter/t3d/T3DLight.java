@@ -347,7 +347,11 @@ public class T3DLight extends T3DSound {
 		if (isSpotLight()) {
 			this.t3dClass = UE4_LightActor.SpotLight.name();
 		} else if (!isSpotLight() && (isSunLight() || (this.isDirectional != null && this.isDirectional))) {
-			this.t3dClass = UE4_LightActor.DirectionalLight.name();
+			// UE1/UE2 directional lights have no lightning inside brushes (because UE1/UE2 are in substractive mode)
+			// Replacing them with spotlights make them work
+			this.t3dClass = UE4_LightActor.SpotLight.name();
+			this.radius = 20000f;
+			//this.t3dClass = UE4_LightActor.DirectionalLight.name();
 		} else {
 			this.t3dClass = UE4_LightActor.PointLight.name();
 		}
@@ -575,14 +579,14 @@ public class T3DLight extends T3DSound {
 		// UE1/UE2 don't have by default LightFalloffExponent
 		// In UE4 without lightfalloffponent, a default light with intensity = 5000
 		// needs to have a radius
-		if (mapConverter.isFrom(UnrealEngine.UE1, UE2) && mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UE2) && mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4, UnrealEngine.UE5)) {
 			// real radius in UE1/UE2 is 32X more important in game
 			this.radius *= 32;
 
 			// needs to scale up again to fit correct radius in UE4+
 			//this.radius *= 1.12;
 
-			this.lightFalloffExponent = 2d;
+			this.lightFalloffExponent = 3d;
 			this.intensity = mapConverter.isFrom(UE1) ? 35f : 1f;
 
 			// UE2, unlike UE1 can have lights with brightness > 255 so need to increase intensity a bit

@@ -50,6 +50,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 
 		Installation.executeProcess(command, logLines);
 
+		ressource.getUnrealPackage().setExported(true);
 
 		for (String logLine : logLines) {
 

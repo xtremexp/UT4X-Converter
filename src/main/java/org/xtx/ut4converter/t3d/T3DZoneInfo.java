@@ -171,7 +171,7 @@ public class T3DZoneInfo extends T3DActor {
 			}
 
 			// fog zone, replace with HeighFog
-			if (bFogZone) {
+			if (bFogZone != null && bFogZone.equals(Boolean.TRUE)) {
 				// UE1 has no DistanceFogColor property, so assuming it's the ambient color
 				if (mapConverter.isFrom(UE1)) {
 					this.distanceFogColor = hsvConvertedRGBColor;

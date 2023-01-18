@@ -9,6 +9,7 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.ucore.UnrealEngine;
+import org.xtx.ut4converter.ucore.ue1.BrushPolyflag;
 
 import javax.vecmath.Vector3d;
 import java.io.File;
@@ -63,11 +64,54 @@ public class T3DMover extends T3DBrush {
 		super.scale(newScale);
 	}
 
+	public String toT3d(){
+		// no generic mover actor for UE4 but UT4 with Lift blueprint
+		// UE3 movers are InterpActors
+		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName) || mapConverter.isTo(UnrealEngine.UE3)) {
+
+			if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
+				moverProperties.writeUT4MoverActor(sbf);
+			}
+			// UE3
+			else {
+				moverProperties.writeUE3MoverActor(sbf);
+			}
+
+			// TODO for UT4 make converter from brush to .fbx Autodesk file and
+			// transform into StaticMesh
+			// TODO for UT3 make converter from brush to .ase file and transform
+			// into StaticMesh
+
+			// Write the mover as brush as well so we can convert it in
+			// staticmesh in UE4 Editor ...
+			String originalName = this.name;
+			this.brushClass = BrushClass.Brush;
+			this.name += "_Brush";
+
+			// force mover brush to be non-solid so won't cause possible bsp holes around
+			// does not need to be solid since it's going to be transformed to staticmesh anyway in UE4 editor
+			getPolyflags().clear();
+			getPolyflags().add(BrushPolyflag.NON_SOLID);
+
+			// TODO refactor, the way it's been coded is really messy/confusing
+			super.toT3d();
+			// put back original name (might be used later for linked actors .
+			// e.g: liftexit)
+			this.name = originalName;
+
+			return sbf.toString();
+		}
+		else {
+			return super.toString();
+		}
+	}
+
 	/**
+	 * Disabled until mesh is good
 	 * Convert to t3d this mover
 	 * @return String value
 	 */
-	public String toT3d() {
+	public String toT3dTest() {
 
 		// UT4 - Convert to Lift actor
 		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
@@ -95,7 +139,8 @@ public class T3DMover extends T3DBrush {
 
 		// TODO for UE3 make brush to .t3d or .ase conversion (.obj not supported)
 		// convert brush to .obj staticmesh
-		if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+		// disabled for now until mesh is well oriented
+		if (false && mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
 			try {
 				Files.createDirectories(Paths.get(this.mapConverter.getOutPath() + "/StaticMesh/"));
 				// super.convert changes name to "name_tag->event" which is incompatible with a filename
