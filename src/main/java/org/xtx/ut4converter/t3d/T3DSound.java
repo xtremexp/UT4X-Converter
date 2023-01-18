@@ -349,7 +349,14 @@ public class T3DSound extends T3DActor {
 		// UE3: Wave=SoundNodeWave'A_Ambient_Loops.Water.water_drain01'
 		else if (line.startsWith("AmbientSound=") || line.startsWith("Wave=")) {
 			ambientSound = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.SOUND);
-		} else {
+		}
+		// UC2: AmbientSoundCue="A_Whisper.cave_water_loop"
+		// Note: will fail to extract sound package because its microsoft format (.xwb), however the ambient sound actor (without sound) will be in map
+		// see: https://www.lifewire.com/xwb-file-2622644
+		else if (line.startsWith("AmbientSoundCue=")) {
+			ambientSound = mapConverter.getUPackageRessource(line.split("\"")[1], T3DRessource.Type.SOUND);
+		}
+		else {
 			return super.analyseT3DData(line);
 		}
 

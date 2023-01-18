@@ -36,7 +36,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException {
 
 		// Ressource ever extracted, we skip ...
-		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().isExported())) {
+		if ((!forceExport && ressource.isExported()) || ressource.getUnrealPackage().getName().equals("null") || (!forceExport && ressource.getUnrealPackage().getExportedType().contains("STE"))) {
 			return null;
 		}
 
@@ -50,7 +50,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 
 		Installation.executeProcess(command, logLines);
 
-		ressource.getUnrealPackage().setExported(true);
+		ressource.getUnrealPackage().addExported("STE");
 
 		for (String logLine : logLines) {
 

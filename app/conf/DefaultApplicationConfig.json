@@ -178,7 +178,8 @@
       "suggestedPath": "C:\\UC2004",
       "useTexDb": false,
       "isCustom": false,
-      "soundExt": "uax",
+      "soundExt": "xwb",
+      "soundExtNote": "XBW is a microsoft format, sounds will fail to be exported",
       "isDisabled": false,
       "pkgExtractor": "ucc",
       "convertsToGames": [
