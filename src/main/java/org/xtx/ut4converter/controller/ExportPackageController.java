@@ -112,8 +112,14 @@ public class ExportPackageController implements Initializable {
             extList.add("*." + selectedGame.getTexExt());
             extList.add("*." + selectedGame.getMusicExt());
 
+            // staticmeshes - ut2003/4
             if (selectedGame.getUeVersion() == 2) {
                 extList.add("*.usx");
+            }
+
+            // Prefab - unreal 2
+            if (selectedGame.getUeVersion() == 2) {
+                extList.add("*.upx");
             }
 
             if (selectedGame.getUeVersion() <= 3) {
@@ -128,7 +134,7 @@ public class ExportPackageController implements Initializable {
 
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", extList.toArray(new String[0])));
         } else {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", "*.unr", "*.un2", "*.ut2", "*.ut3", "*.utx", "*.uax", "*.usx", "*.dtx", "*.umx"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", "*.unr", "*.un2", "*.ut2", "*.ut3", "*.utx", "*.uax", "*.usx", "*.dtx", "*.umx", "*.upx"));
         }
 
 

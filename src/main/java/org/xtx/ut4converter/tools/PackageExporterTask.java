@@ -158,7 +158,9 @@ public class PackageExporterTask extends Task<List<String>> {
         }
         // UE1/UE2
         else {
-            if ("usx".equals(pakExt)) {
+            if ("upx".equals(pakExt)) {
+                batchExportOptions.add(UCCExporter.UccOptions.PREFAB_T3D);
+            } else if ("usx".equals(pakExt)) {
                 batchExportOptions.add(UCCExporter.UccOptions.STATICMESH_T3D);
             } else if (game.getTexExt().equals(pakExt)) {
                 if (game.getUeVersion() == 2) {
@@ -170,9 +172,8 @@ public class PackageExporterTask extends Task<List<String>> {
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
             } else if (game.getMusicExt().equals(pakExt)) {
                 batchExportOptions.add(UCCExporter.UccOptions.MUSIC_S3M);
-            }
-            // .u or map package files can have many type of stuff inside
-            else if ("u".equals(pakExt) || game.getMapExt().equals(pakExt)) {
+            } else if ("u".equals(pakExt) || game.getMapExt().equals(pakExt)) {
+
                 if (game.getUeVersion() == 2) {
                     batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_DDS);
                 } else if (game.getUeVersion() == 1) {
@@ -181,6 +182,10 @@ public class PackageExporterTask extends Task<List<String>> {
 
                 batchExportOptions.add(UCCExporter.UccOptions.CLASS_UC);
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
+
+                if (game.getMapExt().equals(pakExt)) {
+                    batchExportOptions.add(UCCExporter.UccOptions.LEVEL_T3D);
+                }
             }
         }
 

@@ -62,27 +62,55 @@ public final class UCCExporter extends UTPackageExtractor {
 	public enum UccOptions {
 
 		UNKNOWN("UNKNOWN"), // fake option so will make crash export
-		LEVEL_T3D("Level t3d"), SOUND_WAV("Sound wav"), MUSIC_XM("Music xm"), MUSIC_S3M("Music s3m"), // todo
-		// check
-		// might
-		// not
-		// always
-		// be
-		// s3m
-		// but
-		// it
-		// or
-		// xm
-		TEXTURE_DDS("Texture dds"), TEXTURE_BMP("Texture bmp"), // mainly for
-																// terrain alpha
-																// map
-		TEXTURE_TGA("Texture tga"), // not working good always 0 bytes created
-									// files ... (tested UT2004)
-		TEXTURE_PCX("Texture pcx"), // for U1, UT99
+		/**
+		 * UE1/2/3
+		 */
+		LEVEL_T3D("Level t3d"),
+		/**
+		 * UE1/UE2 - For .uax sound packages
+		 */
+		SOUND_WAV("Sound wav"),
+		/**
+		 * UE1 - For .umx music packages
+		 */
+		MUSIC_XM("Music xm"),
+		/**
+		 * UE1 - For .umx music packages
+		 */
+		MUSIC_S3M("Music s3m"),
+		TEXTURE_DDS("Texture dds"),
+		/**
+		 * Used to get 16bit grey terrain alpha layers
+		 */
+		TEXTURE_BMP("Texture bmp"),
+
+		/**
+		 * Always return 0 from UT2004 packages
+		 */
+		TEXTURE_TGA("Texture tga"),
+
+		/**
+		 * For U1/UT99
+		 */
+		TEXTURE_PCX("Texture pcx"),
+
+		/**
+		 * For .usx/.un2 - UE2 files
+		 */
 		STATICMESH_T3D("StaticMesh t3d"),
+
+		/**
+		 * For .upx files (a few files only in Unreal 2)
+		 */
+		PREFAB_T3D("Prefab t3d"),
 
 		// Also for UE3
 		CLASS_UC("Class uc"),
+
+		/**
+		 * Unknown usage
+		 */
+		POLYS_T3D("Polys T3D"),
 		UE3_COMPONENT_T3D("Component T3D"),
 		UE3_SOUNDNODEWAVE("SoundNodeWave wav"),
 		UE3_TEXTURE2D_BMP("Texture2D BMP");
