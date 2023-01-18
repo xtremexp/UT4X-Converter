@@ -10,7 +10,6 @@ import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.iface.T3D;
-import org.xtx.ut4converter.tools.HSVColor;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -397,38 +396,28 @@ public class T3DUtils {
 	}
 
 	/**
-	 * ¨Get rgb values
-	 *
-	 * @param line
-	 *            t3d line
-	 * @return RGB values
+	 * @param line       Line being parsed
+	 * @param is255Range If true means the values are in [0-255] range
+	 * @return RGBColor returned
 	 */
-	public static RGBColor getRGBColor(String line) {
+	public static RGBColor parseRGBColor(String line, boolean is255Range) {
 
-		RGBColor rgbColor = new RGBColor();
+		final RGBColor rgbColor = new RGBColor(is255Range);
 		String s = line.split("\\(")[1].split("\\)")[0];
 
 		String[] s2 = s.split(",");
 
-		for (int i = 0; i < s2.length; i++) {
+		for (String value : s2) {
 
-			String[] s3 = s2[i].split("=");
+			String[] s3 = value.split("=");
 
 			switch (s3[0]) {
-			case "A":
-				rgbColor.A = Float.parseFloat(s3[1]);
-				break;
-			case "R":
-				rgbColor.R = Float.parseFloat(s3[1]);
-				break;
-			case "G":
-				rgbColor.G = Float.parseFloat(s3[1]);
-				break;
-			case "B":
-				rgbColor.B = Float.parseFloat(s3[1]);
-				break;
-			default:
-				break;
+				case "A" -> rgbColor.A = Float.parseFloat(s3[1]);
+				case "R" -> rgbColor.R = Float.parseFloat(s3[1]);
+				case "G" -> rgbColor.G = Float.parseFloat(s3[1]);
+				case "B" -> rgbColor.B = Float.parseFloat(s3[1]);
+				default -> {
+				}
 			}
 		}
 
@@ -578,32 +567,6 @@ public class T3DUtils {
 		}
 	}
 
-	/**
-	 * Write rgbcolor to t3d (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
-	 *
-	 * @param sb
-	 * @param rgbColor
-	 *            Rgb Color
-	 */
-	public static void writeRGBColor(StringBuilder sb, RGBColor rgbColor) {
-		if (rgbColor != null) {
-			// (R=0.828606,G=0.822917,B=1.000000,A=1.000000)
-			sb.append("(R=").append(rgbColor.R).append(",G=").append(rgbColor.G).append(",B=").append(rgbColor.B).append(",A=").append(rgbColor.A).append(")");
-		}
-	}
-
-	/**
-	 * Writes hsvcolor to t3d in RGB format
-	 *
-	 * @param sb
-	 * @param hsvColor
-	 *            HsvColor
-	 */
-	public static void writeRGBColor(StringBuilder sb, HSVColor hsvColor) {
-		if (hsvColor != null) {
-			writeRGBColor(sb, hsvColor.toRGBColor(true));
-		}
-	}
 
 	/**
 	 * CullDistances(1)=(Size=64.000000,CullDistance=3000.000000)

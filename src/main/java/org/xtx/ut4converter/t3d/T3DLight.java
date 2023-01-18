@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static org.xtx.ut4converter.ucore.UnrealEngine.*;
+
 /**
  * Class for converting lights.
  *
@@ -60,7 +62,7 @@ public class T3DLight extends T3DSound {
 	 * or special light effect + type TODO move out this to some "core class"
 	 */
 	public enum UE12_LightActors {
-		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, SpotLight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight,
+		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, Spotlight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight,
 		// Unreal Engine 2 new light actors
 		Sunlight
 	}
@@ -117,61 +119,69 @@ public class T3DLight extends T3DSound {
 	private boolean isCorona;
 
 	/**
-	 * UE1/2 brightness
-	 * UE1: Range 0->255
-	 * UE2: Range: 0->Infinite
+	 * How bright color is, in UE3+ it's how bright the light is
+	 * UE1/UE2: default 64 - 'LightBrightness' - Range 0->255 (note: UE2 has range 0->Infinite)
+	 * UE3: default 1 - 'Brightness' (note correlated with color) -> replaced with 'intensity' in UE4+
 	 */
 	private float brightness;
 
 	/**
 	 * Hue of the light
-	 * UE1/2 hue: Range 0->255 (White->Red) (default: 0)
-	 * UE3+: replaced with RGB
+	 * UE1/2: default 0 - 'LightHue' - Range 0->255 (White->Red)
+	 * UE3+: N/A replaced with RGB
 	 */
 	private float hue;
 
 	/**
 	 * Light saturation
 	 * UE1/2 saturation: Range 0->255 (default: 255)
-	 * UE3+: replaced with RGB
+	 * UE3+: N/A replaced with RGB
 	 * The higher saturation is, the more light looks white (no matter if hue is not white)
 	 */
 	private float saturation;
 
 	/**
 	 * How far the light goes
-	 * UE1/UE2: Default radius is 64 for lights, real light radius = radius * 32 = 2048
-	 * UE3/UE4: Default radius is 1024 for lights, real light radius = radius (same)
+	 * UE1/UE2: default 64 - 'LightRadius' (note: real light radius in game = radius * 32 = 2048)
+	 * UE3: default 1024 - 'Radius'
+	 * UE4+: default 1000 - 'AttenuationRadius'
 	 */
 	private float radius;
 
 	// *** Unreal Engine 3 / 4 Properties ***
 
 	/**
-	 * UE3+: Range Value 0->1
+	 * UE3+: default 255 - Range [0->1]
 	 */
-	private float red, green, blue, alpha = 255;
+	private RGBColor rgbColor;
 
 	/**
-	 * Default Attenuation Radius for unreal engine 4
+	 * UE3+: default 0 - Range [0->1]
 	 */
-	private static final float DEFAULT_ATTENUATION_RADIUS = 1000f;
+	private float alpha = 0;
 
 	/**
-	 * Intensity.
-	 * Equals to brightness from UE3
+	 * UE4+ Default attenuation radius / radius
+	 */
+	private static final float UE4_DEFAULT_ATTENUATION_RADIUS = 1000f;
+
+	/**
+	 * UE3+: default 1 - 'Brightness'
+	 * UE4+: default 5000 - 'Intensity'
 	 */
 	private Float intensity;
 
 	/**
-	 * UE4 Only
+	 * UE3: default 2 - 'FalloffExponent'
+	 * UE4+: default 8 - 'LightFalloffExponent'
 	 */
 	private Double lightFalloffExponent;
 
 	/**
-	 * Attenuation Radius (dunno how it works yet compared with sourceRadius)
+	 * UE1/2/3: N/A
+	 * UE4+: default 0 - 'SourceRadius'
 	 */
-	private float attenuationRadius = DEFAULT_ATTENUATION_RADIUS;
+	private float sourceRadius;
 
 	private UE4_Mobility mobility = UE4_Mobility.Static;
 
@@ -182,41 +192,37 @@ public class T3DLight extends T3DSound {
 	private Boolean isDirectional = Boolean.FALSE;
 
 	/**
-	 *
-	 * @param mc Map converter instance
+	 * @param mc       Map converter instance
 	 * @param t3dClass T3d class
 	 */
 	public T3DLight(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
 
-		// Default property lights values in UE1/UE2 editor
-		if (mc.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+		// UE1/UE2 default values for lights
+		// default light color is white
+		if (mc.isFrom(UnrealEngine.UE1, UE2)) {
 			this.hue = 0;
 			this.saturation = 255f;
 			this.brightness = 64f;
 			this.radius = 64f;
-
-			this.lightFalloffExponent = 2d;
-
-			if (mc.isFrom(UnrealEngine.UE1)) {
-				this.intensity = 35f;
-			} else if (mc.isFrom(UnrealEngine.UE2)) {
-				this.intensity = 70f;
-			}
 		}
-		// Default Values when u put some light in UE4 editor
+		// UE3 default values for lights
 		else if (mc.isFrom(UnrealEngine.UE3)) {
 			this.radius = 1024f;
 			this.brightness = 1f;
-
-			this.red = 255;
-			this.blue = 255;
-			this.green = 255;
-			this.alpha = 0;
 			this.lightFalloffExponent = 2d;
-			this.intensity = 10f;
+		}
+		// UE4 default values for lights
+		else if (mc.isFrom(UnrealEngine.UE4, UnrealEngine.UE5)) {
+			this.radius = 1000;
+			// for UE5 with IntensityUnits=Unitless else 8.f for Candela
+			this.intensity = 5000f;
 		}
 
+		// UE3+, default light color is white
+		if (mc.isFrom(UE3, UE4, UE5)) {
+			this.rgbColor = new RGBColor(255, 255, 255, 0, true);
+		}
 	}
 
 	@Override
@@ -259,18 +265,17 @@ public class T3DLight extends T3DSound {
 			isCorona = "true".equalsIgnoreCase(line.split("=")[1]);
 		}
 
+		else if (line.startsWith("SourceRadius=")) {
+			this.sourceRadius = T3DUtils.getFloat(line);
+		}
+
 		// UT3
 		// LightColor=(B=58,G=152,R=197,A=0)
 		else if (line.startsWith("LightColor=")) {
-
-			RGBColor rgbColor = T3DUtils.getRGBColor(line);
-			this.green = rgbColor.G;
-			this.blue = rgbColor.B;
-			this.red = rgbColor.R;
-			this.alpha = rgbColor.A;
+			this.rgbColor = T3DUtils.parseRGBColor(line, this.mapConverter.isFrom(UE1, UE2, UE3));
 		}
 
-		else if (line.startsWith("FalloffExponent=")) {
+		else if (line.startsWith("FalloffExponent=") || line.startsWith("LightFalloffExponent")) {
 			lightFalloffExponent = T3DUtils.getDouble(line);
 		}
 
@@ -301,7 +306,9 @@ public class T3DLight extends T3DSound {
 	 * @return <code>true</code> if light is a spot light
 	 */
 	private boolean isSpotLight() {
-		return t3dClass.equals(UE4_LightActor.SpotLight.name()) || lightEffect == UE12_LightEffect.LE_Spotlight || lightEffect == UE12_LightEffect.LE_StaticSpot
+
+		return t3dClass.equalsIgnoreCase(UE12_LightActors.Spotlight.name())
+				|| lightEffect == UE12_LightEffect.LE_Spotlight || lightEffect == UE12_LightEffect.LE_StaticSpot
 				|| lightEffect == UE12_LightEffect.LE_Spotlight2 || lightEffect == UE12_LightEffect.LE_SquareSpotlight;
 	}
 
@@ -324,11 +331,8 @@ public class T3DLight extends T3DSound {
 	private void convertClassAndMobility() {
 
 		if (mapConverter.isFrom(UnrealEngine.UE3)) {
-
 			convertUE3ClassAndMobility();
-
-		} else if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
-
+		} else if (mapConverter.isFrom(UnrealEngine.UE1, UE2)) {
 			convertUE12ClassAndMobility();
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
@@ -340,29 +344,14 @@ public class T3DLight extends T3DSound {
 	 */
 	private void convertUE12ClassAndMobility() {
 
-		this.t3dClass = UE4_LightActor.PointLight.name();
-
 		if (isSpotLight()) {
 			this.t3dClass = UE4_LightActor.SpotLight.name();
-        }
-
-        // seen in some map light as spot but bDirectional set to true
-		// special case as seen in unreal 1 map NyLeve
-		// where some light avec bDirectional=true and LightEffect=LE_StaticSpot
-		// in that case LightEffect StaticSpot is prioritary to bDirectional
-        if (!isSpotLight() && (isSunLight() || (this.isDirectional != null && this.isDirectional))) {
+		} else if (!isSpotLight() && (isSunLight() || (this.isDirectional != null && this.isDirectional))) {
 			this.t3dClass = UE4_LightActor.DirectionalLight.name();
-        }
-
-
-		// disabled for the moment for perf issues
-		/*
-         * if(lightEffect == UE12_LightEffect.LE_None || lightEffect ==
-         * UE12_LightEffect.LE_StaticSpot || lightEffect ==
-         * UE12_LightEffect.LE_Unused || lightEffect ==
-         * UE12_LightEffect.LE_Cylinder ){ return UE4_Mobility.Static; }
-         * else { t3dClass = UE4_Mobility.Stationary; }
-         */}
+		} else {
+			this.t3dClass = UE4_LightActor.PointLight.name();
+		}
+	}
 
 	/**
 	 * Convert UE3 light class and mobility to UE4
@@ -435,19 +424,22 @@ public class T3DLight extends T3DSound {
 
 			// not applicable to directional light
 			if (!UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
-				sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
-				sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
-				sbf.append(IDT).append("\t\tAttenuationRadius=").append(attenuationRadius).append("\n");
+
+				if (lightFalloffExponent != null) {
+					sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
+					sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
+				}
+
+				sbf.append(IDT).append("\t\tAttenuationRadius=").append(radius).append("\n");
 			}
 
+			// not sure if the real source radius is radius / 2
 			if (lightEffect == UE12_LightEffect.LE_Cylinder) {
-				sbf.append(IDT).append("\t\tSourceLength=").append(attenuationRadius / 2).append("\n");
-				sbf.append(IDT).append("\t\tSourceRadius=").append(attenuationRadius / 2).append("\n");
-			} else {
-				sbf.append(IDT).append("\t\tSourceRadius=").append(radius).append("\n");
+				sbf.append(IDT).append("\t\tSourceLength=").append(radius / 2).append("\n");
+				sbf.append(IDT).append("\t\tSourceRadius=").append(radius / 2).append("\n");
 			}
 
-			sbf.append(IDT).append("\t\tLightColor=(B=").append(blue).append(",G=").append(green).append(",R=").append(red).append(",A=").append(alpha).append(")\n");
+			sbf.append(IDT).append("\t\tLightColor=").append(rgbColor.toT3D(true)).append("\n");
 
 			if (intensity != null) {
 				sbf.append(IDT).append("\t\tIntensity=").append(intensity).append("\n");
@@ -494,7 +486,7 @@ public class T3DLight extends T3DSound {
 
 			// CastShadow=False
 			sbf.append(IDT).append("\tBegin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=").append(drawRadObjName).append(" Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'\n");
-			sbf.append(IDT).append("\t\tSphereRadius=").append(attenuationRadius).append("\n");
+			sbf.append(IDT).append("\t\tSphereRadius=").append(radius).append("\n");
 			// for directional lights do not cast shadows because in original UE1/UE2 maps
 			// the sky is "blocked" by a brush (with fakebackdrop sky) thus light rays not going
 			if (isDirectional) {
@@ -507,7 +499,7 @@ public class T3DLight extends T3DSound {
 			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0 ");
 			sbf.append("ObjName=").append(pointCompObjName).append(" Archetype=").append(componentLightClass).append("'Engine.Default__PointLight:").append(componentLightClass).append("0'\n");
 
-			sbf.append(IDT).append("\t\tRadius=").append(attenuationRadius).append("\n");
+			sbf.append(IDT).append("\t\tRadius=").append(radius).append("\n");
 			sbf.append(IDT).append("\t\tBrightness=1.0\n");
 
 			// for directional lights do not cast shadows else it looks very dark
@@ -517,7 +509,7 @@ public class T3DLight extends T3DSound {
 
 			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
 			// R,G,B as integers for UE3
-			sbf.append(IDT).append("\t\tLightColor=(B=").append((int) blue).append(",G=").append((int) green).append(",R=").append((int) red).append(",A=").append((int) alpha).append(")\n");
+			sbf.append(IDT).append("\t\tLightColor=").append(rgbColor.toT3D(true)).append("\n");
 			sbf.append(IDT).append("\tEnd Object\n");
 
 			final String spritCompObjName = "SpriteComponent_" + new Random().nextInt(10000);
@@ -552,43 +544,58 @@ public class T3DLight extends T3DSound {
 			return;
 		}
 
-		// UE1 has brightness range 0-255
-		// but UE2 has not limit for brightness
-		// so we make sure brightness does not go above 255
-		// but give extra intensity "boost"
-		// e.g: brightness of 1000 --> brightness = 255 and intensity = 60 +
-		// log(1000) * 6 = 60 + 3 * 6 = 78
-		if (brightness > 255) {
-			intensity += Double.valueOf(Math.log(brightness - 255f) * 6f).floatValue(); // using log because
-															// brightness can be
-															// nearly infinite
-		}
-
-		brightness = Math.min(brightness, 255);
-
 		// Old engines using hue, brightness, saturation system
-		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-			convertColorToRGB();
+		if (mapConverter.isFrom(UnrealEngine.UE1, UE2) && mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4, UnrealEngine.UE5)) {
+			// in UE1/UE2 saturation is 'reversed' compared with standards, UE2 have sometimes 255+ brightness lights
+			this.rgbColor = ImageUtils.HSVToLinearRGB(hue, Math.abs(saturation - 255), Math.min(brightness, 255), true);
 
 			if (isCorona) {
 				radius = 0;
 			}
-		} else if(mapConverter.isFrom(UnrealEngine.UE3)){
-			this.intensity =  this.brightness;
 		}
 
-		// TODO handle UT3 brightness correctly
+		// UE4 default intensity is 5000
+		// UE3 default brightness is 1 but always using FalloffExponent
+		// brightness seems to have been replaced with intensity in UE4
+		/* Tests in editor with a light inside a 1024x1024 cube (1000x1000 for UE4)
+		* at center at 1/4 of cube height
+		* Game: LightFallOffExponent, Radius -> Real Light Radius
+		* UT3: LFO: 2, RAD: 512 -> 1024
+		* UT4: LFO: 2, RAD: 500 -> 750
+		* UT4: LFO: 2, RAD: 750 -> 1000
+		* -> good radius needs to be 1.25x
+		* */
+		if (mapConverter.isFrom(UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+			this.intensity = this.brightness; // seems right effect
+			// radius needs to be increased to have same real radius range
+			// with LightFallofExponent=2
+			this.radius *= 1.25;
+		}
+
+		// UE1/UE2 don't have by default LightFalloffExponent
+		// In UE4 without lightfalloffponent, a default light with intensity = 5000
+		// needs to have a radius
+		if (mapConverter.isFrom(UnrealEngine.UE1, UE2) && mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+			// real radius in UE1/UE2 is 32X more important in game
+			this.radius *= 32;
+
+			// needs to scale up again to fit correct radius in UE4+
+			//this.radius *= 1.12;
+
+			this.lightFalloffExponent = 2d;
+			this.intensity = mapConverter.isFrom(UE1) ? 35f : 1f;
+
+			// UE2, unlike UE1 can have lights with brightness > 255 so need to increase intensity a bit
+			if (mapConverter.isFrom(UE2) && brightness > 255) {
+				intensity += Double.valueOf(Math.log(Math.min(brightness - 255f, 100)) / 2).floatValue(); // using log because
+			}
+		}
+
 		if (intensity != null && mapConverter.brightnessFactor != null) {
 			intensity *= mapConverter.brightnessFactor;
 		}
 
-		attenuationRadius = radius;
-
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
-
-			// the real radius in UE1/UE2 is 32X more important for real
-			// e.g: Radius(UE1/UE2) = 64 -> Real Radius = 64 * 32 = 2048
-			attenuationRadius *= 32;
 
 			if (outerConeAngle != null) {
 				// 0 -> 255 range to 0 -> 180 range
@@ -598,7 +605,7 @@ public class T3DLight extends T3DSound {
 
 		// UE4 does not care about negative scale for lights
 		// so need to change rotation (for directional lights)
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && scale3d != null) {
+		if (mapConverter.isFrom(UnrealEngine.UE1, UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4) && scale3d != null) {
 
 				if ((scale3d.x < 0 || scale3d.y < 0 || scale3d.z < 0) && rotation == null) {
 					rotation = new Vector3d();
@@ -631,27 +638,10 @@ public class T3DLight extends T3DSound {
 		super.convert();
 	}
 
-	/**
-	 * Convert Hue Saturation Brightness values from old UT2004 lightning system
-	 * to Red Blue Green values with new UT3 lightning system
-	 *
-	 */
-	private void convertColorToRGB() {
-		// Saturation is reversed in Unreal Engine 1/2 compared with standards
-		// ...
-		saturation = Math.abs(saturation - 255);
-
-		RGBColor rgb = ImageUtils.HSVToLinearRGB(hue, saturation, brightness, false);
-
-		this.red = rgb.R;
-		this.blue = rgb.B;
-		this.green = rgb.G;
-	}
 
 	@Override
 	public void scale(double newScale) {
 
-		attenuationRadius *= newScale;
 		radius *= newScale;
 
 		super.scale(newScale);
@@ -668,15 +658,4 @@ public class T3DLight extends T3DSound {
 	}
 
 
-	public void setBrightness(float brightness) {
-		this.brightness = brightness;
-	}
-
-	public void setHue(float hue) {
-		this.hue = hue;
-	}
-
-	public void setSaturation(float saturation) {
-		this.saturation = saturation;
-	}
 }

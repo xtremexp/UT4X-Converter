@@ -1,0 +1,23 @@
+Begin Map
+Begin Actor Class=Light Name=Light117
+    bSelected=True
+    LightHue=100
+    LightSaturation=48
+    LightBrightness=250.000000
+    LightRadius=12.000000
+    AffectType=AT_AffectWorld
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Region=(Zone=ZoneInfo'MyLevel.ZoneInfo25',iLeaf=887,ZoneNumber=1)
+    Tag="Light"
+    PhysicsVolume=DefaultPhysicsVolume'MyLevel.DefaultPhysicsVolume8'
+    Location=(X=2732.790771,Y=-1307.784180,Z=666.330872)
+    Rotation=(Pitch=-237,Yaw=-40305)
+    DrawScale=2.000000
+    CollisionRadius=30.000000
+    CollisionHeight=30.000000
+    SpawnedTime=13.828311
+    Name="Light117"
+End Actor
+Begin Surface
+End Surface
+End Map

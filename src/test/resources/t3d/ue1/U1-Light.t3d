@@ -1,0 +1,16 @@
+Begin Map
+Begin Actor Class=Light Name=Light105
+	Tag="Light12"
+	Location=(X=1151.062500,Y=-4802.717773,Z=-472.000000)
+	Skin=Texture'GenFX.LensFlar.flare6'
+	DrawScale=0.200000
+	SoundRadius=24
+	SoundVolume=255
+	AmbientSound=Sound'AmbAncient.Looping.fire5'
+	LightBrightness=208
+	LightHue=21
+	LightSaturation=84
+	LightRadius=29
+	bCorona=True
+End Actor
+End Map

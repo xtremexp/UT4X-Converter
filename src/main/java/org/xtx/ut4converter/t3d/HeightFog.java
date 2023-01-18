@@ -4,19 +4,25 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 
+/**
+ * UE3 actor
+ */
 public class HeightFog extends T3DActor {
 
-	private Double extinctionDistance;
+	protected Double extinctionDistance;
 
 	private Double density;
 
-	private Double startDistance;
+	protected Double startDistance;
 
-	private RGBColor lightColor;
+	protected RGBColor lightColor;
 
 	public HeightFog(MapConverter mc, String t3dClass) {
 		super(mc, t3dClass);
-		// TODO Auto-generated constructor stub
+	}
+
+	public HeightFog(MapConverter mapConverter, T3DActor actor) {
+		super(mapConverter, actor.t3dClass, actor);
 	}
 
 	public boolean analyseT3DData(String line) {
@@ -27,7 +33,7 @@ public class HeightFog extends T3DActor {
 		} else if (line.startsWith("Density")) {
 			density = T3DUtils.getDouble(line);
 		} else if (line.startsWith("LightColor")) {
-			lightColor = T3DUtils.getRGBColor(line);
+			lightColor = T3DUtils.parseRGBColor(line, true);
 		} else if (line.startsWith("ExtinctionDistance")) {
 			extinctionDistance = T3DUtils.getDouble(line);
 		}
@@ -46,10 +52,6 @@ public class HeightFog extends T3DActor {
 			startDistance *= newScale;
 		}
 
-		if (density != null) {
-			density *= newScale;
-		}
-
 		if (extinctionDistance != null) {
 			extinctionDistance *= newScale;
 		}
@@ -57,10 +59,10 @@ public class HeightFog extends T3DActor {
 		super.scale(newScale);
 	}
 
-	@Override
 	public String toT3d() {
 
 		if (mapConverter.isTo(UnrealEngine.UE4)) {
+
 			sbf.append(IDT).append("Begin Actor Class=AtmosphericFog Name=").append(name).append("\n");
 			sbf.append(IDT).append("\tBegin Object Class=BillboardComponent Name=\"Sprite\" Archetype=BillboardComponent'Default__AtmosphericFog:Sprite'\n");
 			sbf.append(IDT).append("\tEnd Object\n");
@@ -81,12 +83,11 @@ public class HeightFog extends T3DActor {
 			} 
 			
 			if (lightColor != null) {
-				sbf.append(IDT).append("\t\tDefaultLightColor=");
-				lightColor.toT3D(sbf);
-				sbf.append("\n");
+				sbf.append(IDT).append("\t\tDefaultLightColor=").append(lightColor.toT3D(true)).append("\n");
 			}
 			writeLocRotAndScale();
 			sbf.append(IDT).append("\tEnd Object\n");
+
 			sbf.append(IDT).append("\tAtmosphericFogComponent=AtmosphericFogComponent0\n");
 			sbf.append(IDT).append("\tArrowComponent=ArrowComponent0\n");
 			sbf.append(IDT).append("\tSpriteComponent=Sprite\n");

@@ -1,32 +1,54 @@
 package org.xtx.ut4converter.t3d;
 
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
+import org.xtx.ut4converter.tools.t3dmesh.StaticMeshTest;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Testing t3d light
  */
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class T3DLightTest extends T3DActorBaseTest {
+public class T3DLightTest {
 
-    @BeforeAll
-    void setUp() throws IOException {
-        super.setUp(UTGames.UTGame.UT99);
+    @Test
+    void testLightConversionU1toUT4() throws IOException, ReflectiveOperationException {
+
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT4);
+
+        final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-Light.t3d")).getPath());
+        u1Light.convertScaleAndToT3D(2d);
+    }
+
+    @Test
+    void testLightConversionU1toUT3() throws IOException, ReflectiveOperationException {
+
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3);
+
+        final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-Light.t3d")).getPath());
+        u1Light.convertScaleAndToT3D(2d);
+    }
+
+    @Test
+    void testLightConversionUT2004toUT4() throws IOException, ReflectiveOperationException {
+
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
+
+        final T3DLight ut2004Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/UT2004-Light.t3d")).getPath());
+        ut2004Light.convertScaleAndToT3D(2d);
     }
 
 
     @Test
-    void testLight() throws IOException {
+    void testLightConversionUT3toUT4() throws IOException, ReflectiveOperationException {
 
-        final T3DLight pureBlueLight = new T3DLight(T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3), "Light");
-        pureBlueLight.setHue(170f); // blue
-        pureBlueLight.setSaturation(0f); // pure blue (no saturation)
-        pureBlueLight.setBrightness(255f);
-        pureBlueLight.convert();
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT3, UTGames.UTGame.UT4);
+        mc.setConvertSounds(false);
+
+        final T3DLight ut3Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue3/UT3-Light.t3d")).getPath());
+        ut3Light.convertScaleAndToT3D(2d);
     }
 }

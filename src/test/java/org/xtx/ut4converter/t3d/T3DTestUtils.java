@@ -33,12 +33,14 @@ public class T3DTestUtils {
             mc.setScale(2.5d);
         }
 
-
         mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
-
         mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
 
         mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
+        mc.setConvertTextures(false);
+        mc.setConvertSounds(false);
+        mc.setConvertStaticMeshes(false);
+        mc.setConvertMusic(false);
         mc.isTestMode = true;
 
         return mc;

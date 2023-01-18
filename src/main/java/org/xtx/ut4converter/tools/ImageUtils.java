@@ -30,37 +30,30 @@ public class ImageUtils {
 	 *            Saturation
 	 * @param brightness
 	 *            Brightness
-	 * @param zeroOneScale
-	 *            If true will use 0..1 scale else 0...255 (UE1/UE2 scale)
+	 * @param is255Scale
+	 *            If true h,s,v are in [0-255] range
 	 * @return HSV color converted to RGB
 	 */
-	public static RGBColor HSVToLinearRGB(float hue, float saturation, float brightness, boolean zeroOneScale) {
-		return HSVToLinearRGB(new HSVColor(hue, saturation, brightness), zeroOneScale);
+	public static RGBColor HSVToLinearRGB(float hue, float saturation, float brightness, boolean is255Scale) {
+		return HSVToLinearRGB(new HSVColor(hue, saturation, brightness, is255Scale));
 	}
 
 	/**
 	 * Convert color in HSV (Hue, Saturation, Value) format to RGB (Red, Green,
 	 * Blue) format
-	 * 
-	 * @param hsv
-	 *            Color in HSV format
-	 * @param zeroOneScale
-	 *            If true will use 0..1 scale else 0...255 (UE1/UE2 scale)
-	 * @return Color in RGB format
+	 *
+	 * @param hsv Color in HSV format either in [0-255] range or [0-1] Range
+	 * @return Color in RGB format in [0-1] Range
 	 */
-	public static RGBColor HSVToLinearRGB(HSVColor hsv, boolean zeroOneScale) {
-		// Hue normally in 0-360 range
+	public static RGBColor HSVToLinearRGB(HSVColor hsv) {
 
-		// In this color, R = H, G = S, B = V
-		// UE1/2 'range' to UE3/4 range conversion
-		// In Unreal Engine 1/2 to UE3/UE4:
-		// 0 - Hue -> 255 ===> 0 - Hue -> 360
-		// 0 - Sat -> 255 ===> 0 - Sat -> 1.0
-		// 0 - Val -> 255 ===> 0 - Val -> 1.0
+		// Transformation needs to be in [0-1] range
+		hsv.toRange(false);
 
-		float Hue = hsv.H * 360f / 255f;
-		float Saturation = hsv.S / 255f;
-		float Value = hsv.V / 255f;
+		float Hue = hsv.H;
+		float Saturation = hsv.S;
+		// UE2 can sometimes have brightness > 1 (LightBrightness > 255 in [0-255+ range]
+		float Value = Math.min(hsv.V, 1);
 
 		float HDiv60 = Hue / 60.0f;
 		float HDiv60_Floor = (float) Math.floor(HDiv60);
@@ -75,18 +68,11 @@ public class ImageUtils {
 
 		int SwizzleIndex = ((int) HDiv60_Floor) % 6;
 
-		RGBColor rgb = new RGBColor();
+		RGBColor rgb = new RGBColor(false);
 		rgb.R = RGBValues[RGBMatrix[SwizzleIndex][0]];
 		rgb.G = RGBValues[RGBMatrix[SwizzleIndex][1]];
 		rgb.B = RGBValues[RGBMatrix[SwizzleIndex][2]];
 		rgb.A = 1f;
-		
-		if(!zeroOneScale){
-			rgb.R *= 255f;
-			rgb.G *= 255f;
-			rgb.B *= 255f;
-			rgb.A *= 255f;
-		}
 
 		return rgb;
 	}

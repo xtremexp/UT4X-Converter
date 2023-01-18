@@ -760,6 +760,20 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
+	 * For testings purposes only.
+	 * This follows order of execution in T3DLevelConvertor :
+	 * Convert -> Scale -> toT3D()
+	 *
+	 * @param scaleFactor Scale factor
+	 * @return Converted actor as t3d string
+	 */
+	protected String convertScaleAndToT3D(double scaleFactor) {
+		this.convert();
+		this.scale(scaleFactor);
+		return toT3d();
+	}
+
+	/**
 	 * Export current actor to unreal text format.
 	 * @return Actor exported in unreal text format
 	 */

@@ -49,6 +49,11 @@ public class UTGames {
 		UT2004("Unreal Tournament 2004", "UT2004", UnrealEngine.UE2, "ut2"),
 
 		/**
+		 * Unreal Championship 2
+		 */
+		UC2("Unreal Championship 2", "UC2", UnrealEngine.UE2, "unr"),
+
+		/**
 		 * Unreal Tournament 3
 		 */
 		UT3("Unreal Tournament 3", "UT3", UnrealEngine.UE3, "ut3"),

@@ -1,0 +1,40 @@
+Begin Map
+   Begin Level
+      Begin Actor Class=PointLight Name=Light10 Archetype=PointLight'Engine.Default__PointLight'
+         Begin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=DrawLightRadiusComponent_9022 Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'
+            SphereRadius=2560.000000
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="DrawLightRadiusComponent_9022"
+            ObjectArchetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'
+         End Object
+         Begin Object Class=PointLightComponent Name=PointLightComponent0 ObjName=PointLightComponent_3291 Archetype=PointLightComponent'Engine.Default__PointLight:PointLightComponent0'
+            Radius=2560.000000
+            FalloffExponent=5.000000
+            CachedParentToWorld=(XPlane=(W=0.000000,X=1.000000,Y=0.000000,Z=0.000000),YPlane=(W=0.000000,X=0.000000,Y=1.000000,Z=-0.000000),ZPlane=(W=0.000000,X=-0.000000,Y=0.000000,Z=1.000000),WPlane=(W=1.000000,X=-4.600968,Y=-1866.140991,Z=-817.278625))
+            PreviewLightRadius=DrawLightRadiusComponent'DrawLightRadiusComponent_9022'
+            LightGuid=(A=10609874,B=1129087555,C=-857697646,D=-909304838)
+            LightmapGuid=(A=677448592,B=1076220127,C=733092751,D=1248971887)
+            LightColor=(B=32,G=61,R=64,A=255)
+            bHasLightEverBeenBuiltIntoLightMap=True
+            bUseVolumes=True
+            Name="PointLightComponent_3291"
+            ObjectArchetype=PointLightComponent'Engine.Default__PointLight:PointLightComponent0'
+         End Object
+         Begin Object Class=SpriteComponent Name=Sprite ObjName=SpriteComponent_26 Archetype=SpriteComponent'Engine.Default__PointLight:Sprite'
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="SpriteComponent_26"
+            ObjectArchetype=SpriteComponent'Engine.Default__PointLight:Sprite'
+         End Object
+         LightComponent=PointLightComponent'PointLightComponent_3291'
+         Components(0)=SpriteComponent'SpriteComponent_26'
+         Components(1)=DrawLightRadiusComponent'DrawLightRadiusComponent_9022'
+         Components(2)=PointLightComponent'PointLightComponent_3291'
+         Tag="PointLight"
+         Location=(X=-4.600968,Y=-1866.140991,Z=-817.278625)
+         Name="Light10"
+         ObjectArchetype=PointLight'Engine.Default__PointLight'
+      End Actor
+   End Level
+Begin Surface
+End Surface
+End Map

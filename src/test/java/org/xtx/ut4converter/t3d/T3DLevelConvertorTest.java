@@ -30,10 +30,6 @@ public class T3DLevelConvertorTest {
     private void testT3dConvertForGame(final File t3dUnconvertedLvl, UTGames.UTGame inputGame) throws IOException {
 
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, UTGames.UTGame.UT4);
-        mc.setConvertTextures(false);
-        mc.setConvertMusic(false);
-        mc.setConvertSounds(false);
-        mc.setConvertStaticMeshes(false);
 
         final File tempFile = File.createTempFile(t3dUnconvertedLvl.getName(), "temp");
 
