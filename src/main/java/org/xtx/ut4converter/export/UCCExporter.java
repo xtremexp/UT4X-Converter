@@ -22,10 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -299,58 +296,79 @@ public final class UCCExporter extends UTPackageExtractor {
 				Files.copy(unrealPackage.getFileContainer(mapConverter).toPath(), unrealMapCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			}
 
+			List<String> globalLogLines = new ArrayList<>();
 			List<String> logLines = new ArrayList<>();
 
-			String command;
 
-			// For unreal 1 or ut99 we do need to create a batch file
-			// because ucc.exe don't work if executing itself with parent
-			// folders with whitespaces in name
-			// TODO use only if whitespaces in ucc.exe or map folder name
-			if (mapConverter.getInputGame().getUeVersion() <= UnrealEngine.UE2.version) {
-				u1Batch = createExportFileBatch(unrealMapCopy, unrealPackage.type);
-				command = u1Batch.getAbsolutePath();
-			} else {
-				command = getCommandLine(unrealMapCopy.getName(), unrealPackage.type);
+			List<Type> stuffTypeList = new ArrayList<>();
+			stuffTypeList.add(unrealPackage.type);
+
+			if (unrealPackage.isMapPackage(mapConverter.getMapPackageName())) {
+				stuffTypeList = Arrays.asList(Type.SOUND, Type.TEXTURE, Type.STATICMESH);
 			}
 
-			final Process process = Installation.executeProcess(command, logLines);
-			int exitValue = process.exitValue();
+			String command;
+			boolean correctExit = true;
+
+			// for map package need to export all types, else
+			// at first time might export bmp only then since pkg will be marked as exported, won't export
+			// other stuff such as staticmeshes, ...
+			for (Type type : stuffTypeList) {
+				// UE1/UE2 does not support whitespaces paths so creating .bat to execute ucc from its folder
+				if (mapConverter.getInputGame().getUeVersion() <= UnrealEngine.UE2.version) {
+					u1Batch = createExportFileBatch(unrealMapCopy, type);
+					command = u1Batch.getAbsolutePath();
+				} else {
+					command = getCommandLine(unrealMapCopy.getName(), unrealPackage.type);
+				}
+
+				final Process process = Installation.executeProcess(command, logLines);
+
+				int localExitValue = process.exitValue();
+
+				for (String logLine : logLines) {
+					// always display export logs on error
+					if (localExitValue != 0) {
+						logger.log(Level.SEVERE, logLine);
+					} else {
+						logger.log(Level.FINE, logLine);
+					}
+
+					if (logLine.contains("Failed") && !logLine.contains("Warning")) {
+						String missingpackage = logLine.split("'")[2];
+						logger.log(Level.SEVERE, "Impossible to export. Unreal Package " + missingpackage + " missing");
+						localExitValue = 1;
+					} else if (logLine.contains("Commandlet batchexport not found")) {
+						logger.log(Level.SEVERE, logLine);
+						localExitValue = 1;
+					}
+				}
+				globalLogLines.addAll(logLines);
+				correctExit &= (localExitValue == 0);
+			}
+
 
 			// Program did not work as expected
 			// some ressources may have been partially extracted
-			if (exitValue != 0) {
+			if (!correctExit) {
 				logger.log(Level.SEVERE, "Export of " + unrealPackage.getFileContainer(mapConverter).getName() + " with ucc failed.");
 			}
+
 
 			if (!isForceSetNotExported()) {
 				unrealPackage.setExported(true);
 			}
 
+			if (!correctExit) {
+				return exportedFiles;
+			}
+
 			for (String logLine : logLines) {
-
-				// always display export logs on error
-				if (exitValue != 0) {
-					logger.log(Level.SEVERE, logLine);
-				} else {
-					logger.log(Level.FINE, logLine);
-				}
-
-				if (logLine.contains("Failed") && !logLine.contains("Warning")) {
-					String missingpackage = logLine.split("'")[2];
-					logger.log(Level.SEVERE, "Impossible to export. Unreal Package " + missingpackage + " missing");
-					return exportedFiles;
-				}
-
-				else if (logLine.contains("Commandlet batchexport not found")) {
-					logger.log(Level.SEVERE, logLine);
-					return exportedFiles;
-				}
 
 				// Exported Level MapCopy.MyLevel to
 				// Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
 				// Exported Texture GenWarp.Sun128a to Z:\\TEMP\Sun128a.bmp
-				else if (logLine.contains("Exported ")) {
+				if (logLine.contains("Exported ")) {
 
 					File exportedFile = new File(logLine.split(" to ")[1]);
 					exportedFiles.add(exportedFile);
@@ -360,22 +378,15 @@ public final class UCCExporter extends UTPackageExtractor {
 
 					if (uRessource != null) {
 						uRessource.getExportInfo().addExportedFile(exportedFile);
-						uRessource.parseNameAndGroup(ressourceName); // for
-																		// texture
-																		// db
-																		// that
-																		// don't
-																		// have
-																		// group
-																		// we
-																		// retrieve
-																		// the
-																		// group
-																		// ...
+						uRessource.parseNameAndGroup(ressourceName);
 					} else {
 						final List<File> exportedFilesList = new ArrayList<>();
 						exportedFilesList.add(exportedFile);
-						new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFilesList, this);
+						uRessource = new UPackageRessource(mapConverter, ressourceName, unrealPackage, exportedFilesList, this);
+					}
+
+					if (unrealPackage.isMapPackage(mapConverter.getMapPackageName())) {
+						uRessource.setIsUsedInMap(true);
 					}
 				}
 			}
