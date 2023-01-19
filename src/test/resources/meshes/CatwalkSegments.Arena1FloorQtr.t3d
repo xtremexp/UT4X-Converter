@@ -1,0 +1,388 @@
+Begin StaticMesh Name=Arena1FloorQtr
+    Version=2.000000 BoundingBox.Min.X=-1792.000000 BoundingBox.Min.Y=-372.699432 BoundingBox.Min.Z=-45.000000 BoundingBox.Max.X=0.000000 BoundingBox.Max.Y=1390.933228 BoundingBox.Max.Z=0.000000
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -348.217438 840.671204 0.000000 1.218891 2.584049
+        Vertex 1 -235.508743 878.930664 0.000000 1.434626 2.547381
+        Vertex 2 -193.117096 720.723145 -45.000000 1.356285 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 1 -720.723083 -193.117264 -45.000000 0.642515 2.297555
+        Vertex 2 -746.147583 0.000000 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -902.151367 118.770462 0.000000 1.218891 2.584049
+        Vertex 1 -720.723145 193.117096 -45.000000 1.356285 2.297555
+        Vertex 2 -746.147583 0.000000 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -902.151367 -118.770462 0.000000 0.779909 2.584049
+        Vertex 1 -902.151367 118.770462 0.000000 1.218891 2.584049
+        Vertex 2 -746.147583 0.000000 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -720.723083 -193.117264 -45.000000 0.642515 2.297555
+        Vertex 1 -902.151367 -118.770462 0.000000 0.779909 2.584049
+        Vertex 2 -746.147583 0.000000 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -902.151367 118.770462 0.000000 1.218891 2.584049
+        Vertex 1 -878.930664 235.508743 0.000000 1.434626 2.547381
+        Vertex 2 -720.723145 193.117096 -45.000000 1.356285 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -878.930664 -235.508774 0.000000 0.564174 2.547381
+        Vertex 1 -902.151367 -118.770462 0.000000 0.779909 2.584049
+        Vertex 2 -720.723083 -193.117264 -45.000000 0.642515 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -902.151367 118.770462 0.000000 1.218891 2.584049
+        Vertex 1 -1390.933228 372.699432 0.000000 1.688157 3.355885
+        Vertex 2 -878.930664 235.508743 0.000000 1.434626 2.547381
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -902.151367 -118.770462 0.000000 0.779909 2.584049
+        Vertex 1 -1390.933228 372.699432 0.000000 1.688157 3.355885
+        Vertex 2 -902.151367 118.770462 0.000000 1.218891 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1390.933228 -372.699432 0.000000 0.310643 3.355885
+        Vertex 1 -1390.933228 372.699432 0.000000 1.688157 3.355885
+        Vertex 2 -902.151367 -118.770462 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -878.930664 -235.508774 0.000000 0.564174 2.547381
+        Vertex 1 -1390.933228 -372.699432 0.000000 0.310643 3.355885
+        Vertex 2 -902.151367 -118.770462 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -527.606018 527.605896 -45.000000 1.356285 2.297555
+        Vertex 1 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 2 -646.182739 373.073792 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 1 -720.723145 193.117096 -45.000000 0.642515 2.297555
+        Vertex 2 -646.182739 373.073792 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -721.900757 553.933899 0.000000 1.218891 2.584049
+        Vertex 1 -527.606018 527.605896 -45.000000 1.356285 2.297555
+        Vertex 2 -646.182739 373.073792 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -840.671204 348.217438 0.000000 0.779909 2.584049
+        Vertex 1 -721.900757 553.933899 0.000000 1.218891 2.584049
+        Vertex 2 -646.182739 373.073792 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -720.723145 193.117096 -45.000000 0.642515 2.297555
+        Vertex 1 -840.671204 348.217438 0.000000 0.779909 2.584049
+        Vertex 2 -646.182739 373.073792 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -721.900757 553.933899 0.000000 1.218891 2.584049
+        Vertex 1 -643.421936 643.421875 0.000000 1.434626 2.547381
+        Vertex 2 -527.606018 527.605896 -45.000000 1.356285 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -878.930664 235.508743 0.000000 0.564174 2.547381
+        Vertex 1 -840.671204 348.217438 0.000000 0.779909 2.584049
+        Vertex 2 -720.723145 193.117096 -45.000000 0.642515 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -721.900757 553.933899 0.000000 1.218891 2.584049
+        Vertex 1 -1018.233765 1018.233765 0.000000 1.688157 3.355885
+        Vertex 2 -643.421936 643.421875 0.000000 1.434626 2.547381
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -840.671204 348.217438 0.000000 0.779909 2.584049
+        Vertex 1 -1018.233765 1018.233765 0.000000 1.688157 3.355885
+        Vertex 2 -721.900757 553.933899 0.000000 1.218891 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1390.933228 372.699432 0.000000 0.310643 3.355885
+        Vertex 1 -1018.233765 1018.233765 0.000000 1.688157 3.355885
+        Vertex 2 -840.671204 348.217438 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -878.930664 235.508743 0.000000 0.564174 2.547381
+        Vertex 1 -1390.933228 372.699432 0.000000 0.310643 3.355885
+        Vertex 2 -840.671204 348.217438 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -193.117096 720.723145 -45.000000 1.356285 2.297555
+        Vertex 1 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 2 -373.073792 646.182739 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 1 -527.606018 527.605896 -45.000000 0.642515 2.297555
+        Vertex 2 -373.073792 646.182739 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -348.217438 840.671204 0.000000 1.218891 2.584049
+        Vertex 1 -193.117096 720.723145 -45.000000 1.356285 2.297555
+        Vertex 2 -373.073792 646.182739 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -553.933899 721.900757 0.000000 0.779909 2.584049
+        Vertex 1 -348.217438 840.671204 0.000000 1.218891 2.584049
+        Vertex 2 -373.073792 646.182739 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -527.606018 527.605896 -45.000000 0.642515 2.297555
+        Vertex 1 -553.933899 721.900757 0.000000 0.779909 2.584049
+        Vertex 2 -373.073792 646.182739 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -720.723145 193.117096 -45.000000 1.356285 2.297555
+        Vertex 1 0.000000 0.000000 -45.000000 0.999400 1.159460
+        Vertex 2 -746.147583 0.000000 -45.000000 0.999400 2.337703
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -643.421936 643.421875 0.000000 0.564174 2.547381
+        Vertex 1 -553.933899 721.900757 0.000000 0.779909 2.584049
+        Vertex 2 -527.606018 527.605896 -45.000000 0.642515 2.297555
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -348.217438 840.671204 0.000000 1.218891 2.584049
+        Vertex 1 -372.699432 1390.933228 0.000000 1.688157 3.355885
+        Vertex 2 -235.508743 878.930664 0.000000 1.434626 2.547381
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -553.933899 721.900757 0.000000 0.779909 2.584049
+        Vertex 1 -372.699432 1390.933228 0.000000 1.688157 3.355885
+        Vertex 2 -348.217438 840.671204 0.000000 1.218891 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1018.233765 1018.233765 0.000000 0.310643 3.355885
+        Vertex 1 -372.699432 1390.933228 0.000000 1.688157 3.355885
+        Vertex 2 -553.933899 721.900757 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -643.421936 643.421875 0.000000 0.564174 2.547381
+        Vertex 1 -1018.233765 1018.233765 0.000000 0.310643 3.355885
+        Vertex 2 -553.933899 721.900757 0.000000 0.779909 2.584049
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1018.233765 1018.233765 0.000000 0.310643 3.355885
+        Vertex 1 -633.329895 1295.420654 0.000000 1.182780 3.431048
+        Vertex 2 -372.699432 1390.933228 0.000000 1.688157 3.355885
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1390.933228 372.699432 0.000000 1.688157 3.355885
+        Vertex 1 -1441.918213 -232.853836 0.000000 0.569081 3.436396
+        Vertex 2 -1441.918213 232.853836 0.000000 1.429719 3.436396
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1390.933228 372.699432 0.000000 1.688157 3.355885
+        Vertex 1 -1390.933228 -372.699432 0.000000 0.310643 3.355885
+        Vertex 2 -1441.918213 -232.853836 0.000000 0.569081 3.436396
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1295.420654 633.329895 0.000000 1.182780 3.431048
+        Vertex 1 -1018.233765 1018.233765 0.000000 0.310643 3.355885
+        Vertex 2 -1390.933228 372.699432 0.000000 1.688157 3.355885
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 -239.061951 -39.999531 0.034298 1.061600
+        Vertex 1 -1792.000000 -272.899475 -7.000465 -0.031618 1.061600
+        Vertex 2 -1750.740112 -238.934509 -41.731407 0.034547 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 -272.899475 -7.000465 -0.031618 1.061600
+        Vertex 1 -1750.632935 -271.293640 -7.000465 -0.028490 0.988211
+        Vertex 2 -1750.740112 -238.934509 -41.731407 0.034547 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 -256.000000 0.000000 0.001302 1.061600
+        Vertex 1 -1750.632935 -271.293640 -7.000465 -0.028490 0.988211
+        Vertex 2 -1792.000000 -272.899475 -7.000465 -0.031618 1.061600
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 -256.000000 0.000000 0.001302 1.061600
+        Vertex 1 -1745.692139 -255.132492 0.000000 0.002992 0.979446
+        Vertex 2 -1750.632935 -271.293640 -7.000465 -0.028490 0.988211
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 272.899475 -7.000465 1.031618 1.061600
+        Vertex 1 -1792.000000 239.061951 -39.999531 0.965702 1.061600
+        Vertex 2 -1750.740112 238.934509 -41.731407 0.965453 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1750.632935 271.293640 -7.000465 1.028490 0.988211
+        Vertex 1 -1792.000000 272.899475 -7.000465 1.031618 1.061600
+        Vertex 2 -1750.740112 238.934509 -41.731407 0.965453 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1750.632935 271.293640 -7.000465 1.028490 0.988211
+        Vertex 1 -1792.000000 256.000000 0.000000 0.998697 1.061600
+        Vertex 2 -1792.000000 272.899475 -7.000465 1.031618 1.061600
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1745.692139 255.132492 0.000000 0.997008 0.979446
+        Vertex 1 -1792.000000 256.000000 0.000000 0.998697 1.061600
+        Vertex 2 -1750.632935 271.293640 -7.000465 1.028490 0.988211
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1441.918213 232.853836 0.000000 0.953608 0.434315
+        Vertex 1 -1441.918213 -232.853836 0.000000 0.046392 0.434315
+        Vertex 2 -1745.692139 255.132492 0.000000 0.997008 0.979446
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 239.061951 -39.999531 0.965702 1.061600
+        Vertex 1 -1792.000000 -239.061951 -39.999531 0.034298 1.061600
+        Vertex 2 -1750.740112 -238.934509 -41.731407 0.034547 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1745.692139 -255.132492 0.000000 0.002992 0.979446
+        Vertex 1 -1792.000000 -256.000000 0.000000 0.001302 1.061600
+        Vertex 2 -1792.000000 256.000000 0.000000 0.998697 1.061600
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1441.918213 -232.853836 0.000000 0.046392 0.434315
+        Vertex 1 -1745.692139 -255.132492 0.000000 0.002992 0.979446
+        Vertex 2 -1745.692139 255.132492 0.000000 0.997008 0.979446
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1745.692139 255.132492 0.000000 0.997008 0.979446
+        Vertex 1 -1745.692139 -255.132492 0.000000 0.002992 0.979446
+        Vertex 2 -1792.000000 256.000000 0.000000 0.998697 1.061600
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01bAR
+        SmoothingMask 2
+        Vertex 0 -1792.000000 239.061951 -39.999531 0.965702 1.061600
+        Vertex 1 -1750.740112 -238.934509 -41.731407 0.034547 0.988402
+        Vertex 2 -1750.740112 238.934509 -41.731407 0.965453 0.988402
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01ar
+        SmoothingMask 1
+        Vertex 0 -1792.000000 272.899475 -7.000465 -0.603011 0.413295
+        Vertex 1 -1792.000000 256.000000 0.000000 -0.621610 0.406528
+        Vertex 2 -1792.000000 239.061951 -39.999531 -0.640252 0.445192
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01ar
+        SmoothingMask 1
+        Vertex 0 -1792.000000 256.000000 0.000000 -0.621610 0.366528
+        Vertex 1 -1792.000000 -256.000000 0.000000 -0.845301 0.366528
+        Vertex 2 -1792.000000 239.061951 -39.999531 -0.640252 0.405192
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01ar
+        SmoothingMask 1
+        Vertex 0 -1792.000000 -256.000000 0.000000 -0.961419 0.366528
+        Vertex 1 -1792.000000 -239.061951 -39.999531 -1.166468 0.405192
+        Vertex 2 -1792.000000 239.061951 -39.999531 -0.640252 0.405192
+    End Triangle
+    Begin Triangle
+        Texture ArboreaArchitecture.Bases.bone01ar
+        SmoothingMask 1
+        Vertex 0 -1792.000000 -256.000000 0.000000 -1.185110 0.366528
+        Vertex 1 -1792.000000 -272.899475 -7.000465 -1.203709 0.373295
+        Vertex 2 -1792.000000 -239.061951 -39.999531 -1.166468 0.405192
+    End Triangle
+End StaticMesh

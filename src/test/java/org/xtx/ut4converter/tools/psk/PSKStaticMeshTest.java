@@ -50,16 +50,18 @@ public class PSKStaticMeshTest {
 
     @Test
     void testReadAndExportToASE() throws URISyntaxException, IOException {
-        final File pskFile = new File(Objects.requireNonNull(PSKStaticMeshTest.class.getResource("/meshes/Alb_tile1.pskx")).toURI());
+        final File pskFile = new File(Objects.requireNonNull(PSKStaticMeshTest.class.getResource("/meshes/DirtChunk_01aw.pskx")).toURI());
 
-        File t3dFile = File.createTempFile("Alb_tile1", "ase");
+        //File t3dFile = File.createTempFile("Alb_tile1", "ase");
+        File t3dFile = new File("C:\\dev3\\TEMP2\\DirtChunk_01aw.ase");
+        FileUtils.delete(t3dFile);
 
         try {
             final PSKStaticMesh pskStaticMesh = new PSKStaticMesh(pskFile);
             pskStaticMesh.exportToAse(t3dFile);
             Assertions.assertTrue(t3dFile.length() > 0);
         } finally {
-            FileUtils.deleteQuietly(t3dFile);
+            //FileUtils.deleteQuietly(t3dFile);
         }
     }
 }

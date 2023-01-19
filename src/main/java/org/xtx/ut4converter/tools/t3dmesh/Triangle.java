@@ -41,6 +41,10 @@ public class Triangle {
         return texture;
     }
 
+    public void setTexture(String texture) {
+        this.texture = texture;
+    }
+
     public int getSmoothingMask() {
         return smoothingMask;
     }

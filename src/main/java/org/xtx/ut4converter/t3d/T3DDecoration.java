@@ -31,7 +31,7 @@ public class T3DDecoration extends T3DStaticMesh {
 
         sbf.append(IDT).append("Begin Actor Class=UBDecoration_C").append(" Name=").append(name).append("\n");
 
-        writeStaticMeshComponent();
+        //writeStaticMeshComponent();
 
         writeSimpleProperties();
         writeEndActor();

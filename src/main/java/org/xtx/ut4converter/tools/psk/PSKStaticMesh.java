@@ -1,7 +1,9 @@
 package org.xtx.ut4converter.tools.psk;
 
 import org.xtx.ut4converter.MainApp;
+import org.xtx.ut4converter.tools.ase.AseStaticMesh;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
+import org.xtx.ut4converter.tools.t3dmesh.Triangle;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -12,6 +14,9 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import static org.xtx.ut4converter.tools.ase.AseStaticMesh.dfAse;
 
 /**
  * PSK staticmesh file reader/writer.
@@ -24,10 +29,6 @@ public class PSKStaticMesh {
 
 	public static final String FILE_EXTENSION_PSKX = "pskx";
 
-	/**
-	 * Default format for numbers in exported .ase staticmeshes
-	 */
-	private static final  DecimalFormat dfAse = new DecimalFormat("0.0000", new DecimalFormatSymbols(Locale.US));
 
 	/**
 	 * Default format for numbers in exported .t3d staticmeshes
@@ -385,11 +386,8 @@ public class PSKStaticMesh {
 
 		try (FileWriter fw = new FileWriter(aseStaticMeshFile)) {
 
-			fw.write("*3DSMAX_ASCIIEXPORT 200\n");
-			fw.write("*COMMENT \"Imported from " + this.getPskFile() + "\"\n");
-			fw.write("*COMMENT \"Exported with " + MainApp.PROGRAM_NAME + " v" + MainApp.VERSION + "\"\n");
-
-			writeAseMaterials(fw);
+			AseStaticMesh.writeHeader(fw, this.pskFile);
+			AseStaticMesh.writeMaterialWithSubMats(fw, this.getMaterials().stream().map(Material::getMaterialName).distinct().toList());
 
 			fw.write("*GEOMOBJECT {\n");
 			fw.write("\t*MESH {\n");
@@ -403,31 +401,11 @@ public class PSKStaticMesh {
 			writeAseTFaceList(fw);
 
 			fw.write("\t}\n");
+			fw.write("\t*MATERIAL_REF 0\n");
 			fw.write("}\n");
 		}
 	}
 
-	private void writeAseMaterials(FileWriter fw) throws IOException {
-
-		int idx = 0;
-		fw.write("*MATERIAL_LIST {\n");
-		fw.write("\t*MATERIAL_COUNT " + this.getMaterials().size() + "\n");
-
-		for (Material m : this.getMaterials()) {
-			fw.write("\t*MATERIAL " + idx + " {\n");
-			fw.write("\t\t*MATERIAL_NAME \"" + m.getMaterialName() + "\"\n");
-			fw.write("\t\t*NUMSUBMTLS 0\n");
-			fw.write("\t\t*MAP_DIFFUSE {\n");
-			fw.write("\t\t\t*MAP_NAME \"Map #" + idx + "\"\n");
-			fw.write("\t\t\t*MAP_CLASS \"Bitmap\"\n");
-			fw.write("\t\t\t*BITMAP \"" + m.getMaterialName() + "\"\n");
-			fw.write("\t\t}\n");
-			fw.write("\t}\n");
-			idx++;
-		}
-
-		fw.write("}\n");
-	}
 
 	/**
 	 * Write list of vertice values
@@ -489,7 +467,7 @@ public class PSKStaticMesh {
 
 		int idx = 0;
 		fw.write("\t\t*MESH_NUMTVFACES " + this.getFaces().size() + "\n");
-		fw.write("\t\t*MESH_TFACE_LIST {\n");
+		fw.write("\t\t*MESH_TFACELIST {\n");
 
 		for (final Face face : this.getFaces()) {
 			fw.write("\t\t\t*MESH_TFACE " + idx + " " + face.getWedge0() + " " + face.getWedge1() + " " + face.getWedge2() + "\n");
@@ -497,5 +475,14 @@ public class PSKStaticMesh {
 		}
 
 		fw.write("\t\t}\n");
+	}
+
+	public void replaceMaterialNamesBy(Map<String, String> matNameToNewName) {
+		for (final Material mat : this.getMaterials()) {
+
+			if(matNameToNewName.containsKey(mat.getMaterialName())){
+				mat.setMaterialName(matNameToNewName.get(mat.getMaterialName()));
+			}
+		}
 	}
 }

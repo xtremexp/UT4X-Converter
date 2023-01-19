@@ -1,0 +1,16 @@
+Begin Actor Class=StaticMeshActor Name=StaticMeshActor52
+    StaticMesh=StaticMesh'BarrenHardware-epic.Decos.brick-angled-face'
+    Level=LevelInfo'DM-1on1-Serpentine.LevelInfo0'
+    Region=(Zone=LevelInfo'DM-1on1-Serpentine.LevelInfo0',iLeaf=-1)
+    Tag="StaticMeshActor"
+    PhysicsVolume=DefaultPhysicsVolume'DM-1on1-Serpentine.DefaultPhysicsVolume0'
+    Location=(X=366.000000,Y=350.000000,Z=-544.000000)
+    Rotation=(Yaw=16384)
+    StaticMeshInstance=StaticMeshInstance'DM-1on1-Serpentine.StaticMeshInstance19721'
+    DrawScale3D=(X=0.500000,Y=0.500000,Z=0.500000)
+    ScaleGlow=0.600000
+    bStaticLighting=False
+    SoundVolume=76
+    bBlockNonZeroExtentTraces=False
+    ColLocation=(X=366.000000,Y=350.000000,Z=-544.000000)
+End Actor

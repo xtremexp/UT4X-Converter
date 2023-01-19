@@ -18,6 +18,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
 
+import static org.xtx.ut4converter.ucore.UnrealEngine.*;
+
 /**
  * Generic Class for T3D brushes (includes movers as well)
  *
@@ -182,7 +184,7 @@ public class T3DBrush extends T3DVolume {
 	private void init(){
 		brushClass = BrushClass.getBrushClass(t3dClass);
 
-		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
+		if (mapConverter.isFrom(UE1, UE2, UE3)) {
 			brushType = UE123_BrushType.CSG_Add.name();
 		} else {
 			brushType = UE4_BrushType.Brush_Add.name();
@@ -367,7 +369,7 @@ public class T3DBrush extends T3DVolume {
 
 		boolean valid = true;
 
-		if (mapConverter.isTo(UnrealEngine.UE3) || mapConverter.isTo(UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UE3) || mapConverter.isTo(UnrealEngine.UE4)) {
 			// do not convert invisible brushes such as portals and so on
 			if (BrushPolyflag.hasInvisibleFlag(polyflags)) {
 				//logger.warning("Skipped invisible brush " + name);
@@ -530,7 +532,7 @@ public class T3DBrush extends T3DVolume {
 
 		// UT3 has postprocess volumes
 		// TODO merge/refactor/move to T3DPostProcessVolume class
-		if ((mapConverter.getInputGame().getUeVersion() < UnrealEngine.UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
+		if ((mapConverter.getInputGame().getUeVersion() < UE3.version) && (brushClass == BrushClass.UTWaterVolume || brushClass == BrushClass.UTSlimeVolume)) {
 
 			// add post processvolume
 			T3DBrush postProcessVolume = createBox(mapConverter, 95d, 95d, 95d);
@@ -635,28 +637,18 @@ public class T3DBrush extends T3DVolume {
 			transformPermanently();
 		}
 
-		// Update Location if prepivot set
-		// prepivot is the rotating point
+		// UE4+ - no more PrePivot property for brushes and volumes
+		// have to update vertices
 		if (prePivot != null) {
-
 
 			for (T3DPolygon p : polyList) {
 
-				// IN UE1/2/3, prePivot change location of vertices unlike in UE4/5
-				if (this.mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && this.mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
-
-
-					for (Vector3d v : p.getVertices()) {
-						v.sub(prePivot);
-					}
-
+				if (this.mapConverter.isFrom(UE1)) {
 					p.origin.sub(prePivot);
-				} else if (this.mapConverter.isFrom(UnrealEngine.UE4, UnrealEngine.UE5) && this.mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3)) {
-					p.origin.add(prePivot);
+				}
 
-					for (Vector3d v : p.getVertices()) {
-						v.add(prePivot);
-					}
+				for (Vector3d v : p.getVertices()) {
+					v.sub(prePivot);
 				}
 			}
 
@@ -668,7 +660,7 @@ public class T3DBrush extends T3DVolume {
 			p.convert();
 		}
 
-		if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UE3, UnrealEngine.UE4)) {
 
 			// for solid sheet brushes force them to be non-solid
 			// so it won't cause BSP holes and will still be visible

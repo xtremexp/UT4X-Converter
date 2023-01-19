@@ -18,8 +18,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
 
+import static org.xtx.ut4converter.ucore.UnrealEngine.*;
+
 /**
- * 
+ *
  * @author XtremeXp
  */
 public abstract class T3DActor extends T3DObject {
@@ -31,6 +33,11 @@ public abstract class T3DActor extends T3DObject {
 	 * convert it.
 	 */
 	protected Map<String, String> properties;
+
+	/**
+	 * Extra properties that should be written
+	 */
+	protected Map<String, Object> convProperties = new HashMap<>();
 
 	/**
 	 * Possible match for t3d actor
@@ -131,6 +138,11 @@ public abstract class T3DActor extends T3DObject {
 	protected Boolean blockPlayers;
 
 	/**
+	 * UE3+ List of components
+	 */
+	protected List<Component> components = new ArrayList<>();
+
+	/**
 	 * UE3 property
 	 * Default collision type for static meshes in ut3/ue3
 	 */
@@ -195,7 +207,7 @@ public abstract class T3DActor extends T3DObject {
 	/**
 	 * Begin Object Class=DistributionFloatUniform Name=DistributionDelayTime
 	 * For UE3 only used to get subobject definitions
-	 * 
+	 *
 	 * @param line T3D line text to analyse
 	 */
 	public void preAnalyse(String line) {
@@ -216,7 +228,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Read line of t3d file to parse data about current t3d actor being read
-	 * 
+	 *
 	 * @param line Line
 	 * @return true if data has been extracted from line false else (useful to
 	 *         check which data has not been parsed)
@@ -227,11 +239,11 @@ public abstract class T3DActor extends T3DObject {
 
 	public T3DActor(MapConverter mc, String t3dClass){
 		super(mc, t3dClass);
-		
+
 		sceneComponent = new SceneComponent(mc);
 		properties = new HashMap<>();
 	}
-	
+
 	/**
 	 *
 	 * @param mc Map converter instance
@@ -263,7 +275,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Get some important info about actors like location,rotation,drawscale,...
-	 * 
+	 *
 	 * @param line
 	 *            T3D level line being analyzed
 	 * @return true if some Data has been parsed.
@@ -387,7 +399,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Write Location Rotation and drawScale of converted actor
-	 * 
+	 *
 	 * @param sbf String builder
 	 * @param outEngine Unreal Engine out
 	 * @param location Location
@@ -396,42 +408,33 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	private static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
 
-		String baseText = IDT + "\t\t";
+		sbf.append(writeUE4LocRotAndScale(outEngine.version >= 4, location, rotation, scale3d, IDT + "\t"));
+	}
 
-		if (outEngine.version >= UnrealEngine.UE4.version) {
-			if (location != null) {
-				sbf.append(baseText).append("RelativeLocation=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
-			}
+	public static String writeUE4LocRotAndScale(boolean isRelative, Vector3d location, Vector3d rotation, Vector3d scale3d, String baseText) {
 
-			// RelativeRotation=(Pitch=14.179391,Yaw=13.995641,Roll=14.179387)
-			if (rotation != null) {
-				sbf.append(baseText).append("RelativeRotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
-			}
+		StringBuilder sb = new StringBuilder();
+		String prefix = isRelative ? "Relative":"";
 
-			// RelativeScale3D=(X=4.000000,Y=3.000000,Z=2.000000)
-			if (scale3d != null) {
-				sbf.append(baseText).append("RelativeScale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
-			}
+		if (location != null) {
+			sb.append(baseText).append(prefix).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
 		}
-		// checked U1, UT99, U2, UT2004, UT3
-		else {
-			if (location != null) {
-				sbf.append(baseText).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
-			}
 
-			// integer precision for rotation in UE1/2/3
-			if (rotation != null) {
-				sbf.append(baseText).append("Rotation=(Pitch=").append((int) rotation.x).append(",Yaw=").append((int) rotation.y).append(",Roll=").append((int) rotation.z).append(")\n");
-			}
-
-			if (scale3d != null) {
-				sbf.append(baseText).append("Scale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
-			}
+		// RelativeRotation=(Pitch=14.179391,Yaw=13.995641,Roll=14.179387)
+		if (rotation != null) {
+			sb.append(baseText).append(prefix).append("Rotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
 		}
+
+		// RelativeScale3D=(X=4.000000,Y=3.000000,Z=2.000000)
+		if (scale3d != null) {
+			sb.append(baseText).append(prefix).append("Scale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
+		}
+
+		return sb.toString();
 	}
 
 	/**
-	 * 
+	 *
 	 * @param newScale New scale
 	 */
 	public void scale(double newScale) {
@@ -482,7 +485,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Get the input game this actor come from
-	 * 
+	 *
 	 * @return Input game
 	 */
 	protected UnrealGame getInputGame() {
@@ -491,7 +494,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Get the output game to which it must be converted
-	 * 
+	 *
 	 * @return Output game
 	 */
 	protected UnrealGame getOutputGame() {
@@ -554,9 +557,9 @@ public abstract class T3DActor extends T3DObject {
 
 			double rotFac = 1d;
 
-			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UnrealEngine.UE4)) {
+			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isTo(UE4)) {
 				rotFac = 360d / 65536d;
-			} else if (mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isFrom(UnrealEngine.UE4)) {
+			} else if (mapConverter.isTo(UnrealEngine.UE1, UnrealEngine.UE2, UnrealEngine.UE3) && mapConverter.isFrom(UE4)) {
 				rotFac = 65536d / 360d;
 			}
 
@@ -564,7 +567,7 @@ public abstract class T3DActor extends T3DObject {
 			rotation.y *= rotFac;
 			rotation.z *= rotFac;
 		}
-		
+
 		// Brush name need to be the original one to fix ut3 brushes order (based on actor name)
 		if (this.name != null && !(this instanceof T3DBrush && this.mapConverter.isFrom(UnrealEngine.UE3))) {
 
@@ -618,7 +621,7 @@ public abstract class T3DActor extends T3DObject {
 	/**
 	 * We may not want to convert this t3d actor after analyzing data, that's
 	 * the purpose of this.
-	 * 
+	 *
 	 * @return true is this t3d actor is allowed to be converted else not
 	 */
 	public boolean isValidConverting() {
@@ -639,7 +642,7 @@ public abstract class T3DActor extends T3DObject {
 			return;
 		}
 
-		if (mapConverter.isTo(UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UE4)) {
 			if (drawScale != null) {
 				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}
@@ -676,7 +679,7 @@ public abstract class T3DActor extends T3DObject {
 	 * for write. E.g: sheet brushes not valid for write but valid for
 	 * convert(auto-create sheet static mesh) isValidConverting() --> convert()
 	 * -> isValidWritting() -> write(actor.writeMoverProperties())
-	 * 
+	 *
 	 * @return <code>true</code> if this actor should be written in converted .t3d file
 	 */
 	public boolean isValidWriting() {
@@ -690,7 +693,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Indicates if this actor needs to be converted
-	 * 
+	 *
 	 * @return <code>true</code>> If actor needs to be converted
 	 */
 	private boolean needsConverting() {
@@ -703,7 +706,7 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * Replace current actor that won't be converted with another one.
-	 * 
+	 *
 	 * @param actor
 	 *            Actor replacement
 	 */
@@ -760,7 +763,7 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
-	 * For testings purposes only.
+	 * FOR TESTING PURPOSE ONLY
 	 * This follows order of execution in T3DLevelConvertor :
 	 * Convert -> Scale -> toT3D()
 	 *
@@ -770,7 +773,16 @@ public abstract class T3DActor extends T3DObject {
 	protected String convertScaleAndToT3D(double scaleFactor) {
 		this.convert();
 		this.scale(scaleFactor);
-		return toT3d();
+
+		return "Begin Map\nBegin Level\n" + toT3d() + "End Level\nEnd Map";
+	}
+
+	protected void addComponent(final Component component){
+		this.components.add(component);
+	}
+
+	protected void addConvProperty(String key, Object value){
+		this.convProperties.put(key, value);
 	}
 
 	/**
@@ -778,4 +790,66 @@ public abstract class T3DActor extends T3DObject {
 	 * @return Actor exported in unreal text format
 	 */
 	public abstract String toT3d();
+
+	public void toT3dNew(int ueVersion){
+
+		sbf.append("\tBegin Actor Class=").append(this.t3dClass).append(" Name=").append(this.name);
+
+		// Archetype=StaticMeshActor'Engine.Default__StaticMeshActor'
+		if (ueVersion == 3) {
+			sbf.append(" Archetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'");
+		}
+		sbf.append("\n");
+
+		for (final Component comp : components) {
+
+			if (ueVersion >= 4) {
+				sbf.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=\"").append(comp.getName()).append("\"\n");
+				sbf.append("\t\tEnd Object\n");
+			}
+
+			sbf.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=").append(comp.getName()).append(" ObjName=").append(comp.getObjName()).append("\n");
+
+			for (Map.Entry<String, Object> entry : comp.getProperties().entrySet()) {
+				sbf.append("\t\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString() : "None").append("\n");
+			}
+
+			// location is inside component for UE4
+			if (ueVersion >= 4) {
+				writeLocRotAndScale();
+			}
+
+			sbf.append("\t\tName=\"").append(comp.getName()).append("\"\n");
+			sbf.append("\t\tEnd Object\n");
+		}
+
+		int idx = 0;
+
+		for (final Component comp : components) {
+
+			if (ueVersion == 3) {
+				sbf.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getReference(ueVersion)).append("\n");
+				sbf.append("\t\tComponents(").append(idx).append(")=").append(comp.getReference(ueVersion)).append("\n");
+			} else if (ueVersion == 4) {
+				if (idx == 0) {
+					sbf.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getName()).append("\n");
+					sbf.append("\t\tRootComponent=").append(comp.getName()).append("\n");
+				} else {
+					sbf.append("\t\tInstanceComponents(").append(idx - 1).append(")=").append(comp.getName()).append("\n");
+				}
+			}
+			idx++;
+		}
+
+		// actor specific properties
+		for (Map.Entry<String, Object> entry : convProperties.entrySet()) {
+			sbf.append("\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString(): "None").append("\n");
+		}
+
+		if (ueVersion <= 3) {
+			writeLocRotAndScale();
+		}
+
+		writeEndActor();
+	}
 }

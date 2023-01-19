@@ -100,6 +100,10 @@
     "soundExt" : "uax",
     "convertsToGames": [
       {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
         "gameId": "UT4",
         "scale": 2.5
       }
@@ -120,6 +124,10 @@
     "soundExt" : "uax",
     "convertsToGames": [
       {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
+      {
         "gameId": "UT4",
         "scale": 2.5
       }
@@ -139,6 +147,10 @@
     "isCustom" : false,
     "soundExt" : "uax",
     "convertsToGames": [
+      {
+        "gameId": "UT3",
+        "scale": 2.5
+      },
       {
         "gameId": "UT4",
         "scale": 2.2
@@ -183,6 +195,10 @@
       "isDisabled": false,
       "pkgExtractor": "ucc",
       "convertsToGames": [
+        {
+          "gameId": "UT3",
+          "scale": 2.5
+        },
         {
           "gameId": "UT4",
           "scale": 2.2

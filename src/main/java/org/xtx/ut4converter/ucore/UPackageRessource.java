@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE4;
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE5;
+
 /**
  * Some ressource such as texture, sound, ... embedded into some unreal package
  * 
@@ -409,7 +412,7 @@ public class UPackageRessource {
 			// but better use cue since lift sounds need volume attenuation
 			// depending on player distance
 			// ("AttenuationSettings=Attenuation_Lifts")
-			if (mapConverter.isTo(UnrealEngine.UE4)) {
+			if (mapConverter.isTo(UE4)) {
 				suffix = "_Cue";
 			}
 			// in UE3 using AmbientSoundSimple as sound actor which does not require Cue
@@ -467,7 +470,7 @@ public class UPackageRessource {
 		final String baseName = getConvertedBaseName();
 		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 
-		if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+		if (mapConverter.isTo(UE4, UE5)) {
 			// e.g: Texture=/Game/Converted/DmFith-U1/Texture/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
 			if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_PACKAGE) {
 				return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.getUnrealPackage().getName() + "/" + baseName + "." + baseName;
@@ -497,7 +500,11 @@ public class UPackageRessource {
 		// umodel does export staticmeshes as .pskx or .psk
 		// therefore UT4 converter convert them to .obj
 		if (getType() == Type.STATICMESH) {
-			currentFileExt = "obj";
+			if(mapConverter.isTo(UE4, UE5)) {
+				currentFileExt = "obj";
+			} else {
+				currentFileExt = "t3d";
+			}
 		}
 
 		// used with materials whose name have been reduced to 64 max (due to psk staticmeshes)
@@ -587,8 +594,17 @@ public class UPackageRessource {
 		return exportInfo.getExportedFiles();
 	}
 
+
+	public void addExportedFiles(File... exportedFileList) {
+		for (File exportedFile : exportedFileList) {
+			addExportedFile(exportedFile);
+		}
+	}
+
 	public void addExportedFile(File exportedFile) {
-		this.exportInfo.addExportedFile(exportedFile);
+		if (exportedFile != null && exportedFile.length() > 0) {
+			this.exportInfo.addExportedFile(exportedFile);
+		}
 	}
 
 	/**

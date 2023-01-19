@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.tools.t3dmesh;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
@@ -18,9 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.util.Objects;
-
 
 public class StaticMeshTest {
 
@@ -47,9 +45,33 @@ public class StaticMeshTest {
     }
 
     /**
+     * Test read staticmesh from .t3d file and convert it to Ascii Scene (.ase) staticmesh file
+     *
+     * @throws IOException        Error reading .t3d or writing .ase file
+     * @throws URISyntaxException Error reading resource
+     */
+    @Test
+    void testConvertT3DStaticMeshToAse() throws IOException, URISyntaxException {
+
+        final File t3dSmFile = new File(Objects.requireNonNull(StaticMeshTest.class.getResource("/meshes/CatwalkSegments.Arena1FloorQtr.t3d")).toURI());
+        final StaticMesh t3dStaticMesh = new StaticMesh(t3dSmFile);
+
+        //File aseFile = File.createTempFile("simpleForest", "ase");
+        File aseFile = new File("C:\\dev3\\TEMP2\\CatwalkSegments.Arena1FloorQtr.ase");
+        try {
+            t3dStaticMesh.exportToAse(aseFile);
+        } finally {
+            //FileUtils.deleteQuietly(aseFile);
+        }
+
+        Assertions.assertTrue(aseFile.exists());
+        Assertions.assertTrue(aseFile.length() > 0);
+    }
+
+    /**
      * Test converting unreal UE1 mover brush
      *
-     * @throws IOException Error read/write obj file
+     * @throws IOException                  Error read/write obj file
      * @throws ReflectiveOperationException Error
      */
     @Test
@@ -83,7 +105,7 @@ public class StaticMeshTest {
             p.getTexture().setTextureDimensions(texDim);
             p.getTexture().getExportedFiles().add(0, texPath.toFile());
 
-            idx ++;
+            idx++;
         }
 
         moverBrush.convert();

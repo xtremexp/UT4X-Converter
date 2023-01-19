@@ -9,11 +9,12 @@ import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
-import org.xtx.ut4converter.ucore.ue4.BodyInstance;
 
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.xtx.ut4converter.ucore.UnrealEngine.*;
 
 /**
  *
@@ -22,14 +23,11 @@ import java.util.List;
 public class T3DStaticMesh extends T3DSound {
 
 
-	private final List<String> overiddeMaterials = new ArrayList<>();
-
 	/**
-	 * 
+	 * List of overriding staticmesh materials
 	 */
-	private List<UPackageRessource> skins;
+	private final List<UPackageRessource> skins = new ArrayList<>();
 
-	private BodyInstance bodyInstance;
 
 	/**
 	 * e.g:
@@ -38,19 +36,22 @@ public class T3DStaticMesh extends T3DSound {
 	 */
 	private UPackageRessource staticMesh;
 
+
 	/**
-	 * Temp hack
+	 * Min distance until staticmesh is rendered.
+	 * UE2/UE3 - default 0 - 'CullDistance'
+	 * UE4 - default 0 - 'MinDrawDistance'
 	 */
-	private String forcedStaticMesh;
+	private float cullDistance;
 
 	/**
 	 * If not null overiddes light map resolution for this static mesh (which is
-	 * normally equal to 64 by default) TODO move this to some "Lightning" class
+	 * normally equal to 64 by default)
 	 */
 	private Integer overriddenLightMapRes;
 
 	/**
-	 * CastShadow=False TODO move this to some "Lightning" class
+	 * CastShadow=False
 	 */
 	private Boolean castShadow;
 	
@@ -113,6 +114,9 @@ public class T3DStaticMesh extends T3DSound {
 		else if (line.startsWith("CollideActors")) {
 			this.collideActors = T3DUtils.getBoolean(line);
 		}
+		else if(line.startsWith("CullDistance")){
+			this.cullDistance = T3DUtils.getFloat(line);
+		}
 		// UE3
 		else if(line.startsWith("CollisionType=")){
 			this.collisionType = UE3CollisionType.valueOf(T3DUtils.getString(line));
@@ -121,9 +125,6 @@ public class T3DStaticMesh extends T3DSound {
 		// UT3      - Materials(0)=MaterialInstanceConstant'HU_Deck.SM.Materials.M_HU_Deck_SM_BioPot_Goo'
 		else if (line.startsWith("Skins(") || line.startsWith("Materials(")) {
 
-			if (skins == null) {
-				skins = new ArrayList<>();
-			}
 			// can be Materials(0)=None as seen in VCTF-Kargo
 			if (line.contains("\\'")) {
 				skins.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
@@ -137,81 +138,56 @@ public class T3DStaticMesh extends T3DSound {
 		return true;
 	}
 
+	public String toT3d() {
 
-	protected void writeStaticMeshComponent(){
+		final Component smComp = new Component("StaticMeshComponent", this);
+		this.addComponent(smComp);
 
-		sbf.append(IDT).append("\tBegin Object Class=StaticMeshComponent Name=\"StaticMeshComponent0\"\n");
-		sbf.append(IDT).append("\tEnd Object\n");
+		if (staticMesh != null) {
+			smComp.addProp("StaticMesh", "StaticMesh'" + staticMesh.getConvertedName() + "'");
+		}
 
-		sbf.append(IDT).append("\tBegin Object Name=\"StaticMeshComponent0\"\n");
-
-		// backward compatibility for created sheet SM from brushes
-		if (forcedStaticMesh != null) {
-			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(forcedStaticMesh).append("'\n");
-		} else if (staticMesh != null) {
-			sbf.append(IDT).append("\t\tStaticMesh=StaticMesh'").append(staticMesh.getConvertedName()).append("'\n");
+		if (this.cullDistance > 0) {
+			smComp.addProp(isTo(UE3) ? "CullDistance" : "MinDrawDistance", this.cullDistance);
 		}
 
 		if (overriddenLightMapRes != null) {
-			sbf.append(IDT).append("\t\tbOverrideLightMapRes=True\n");
-			sbf.append(IDT).append("\t\tOverriddenLightMapRes=").append(overriddenLightMapRes).append("\n");
+			smComp.addProp("bOverrideLightMapRes", "True");
+			smComp.addProp(isTo(UE3) ? "OverriddenLightMapResolution" : "OverriddenLightMapRes", overriddenLightMapRes);
 		}
 
-		// TODO handle other collisionType
+		// Collision
 		if (UE3CollisionType.COLLIDE_NoCollision == collisionType || Boolean.FALSE == collideActors) {
-			sbf.append(IDT).append("\t\tbUseDefaultCollision=False\n");
-			sbf.append(IDT).append("\t\tBodyInstance=(CollisionProfileName=\"NoCollision\",CollisionEnabled=NoCollision)\n");
-		}
-
-		// TODO REFACTOR (was originally for quick set texture for sheet
-		// brushes)
-		if (!overiddeMaterials.isEmpty()) {
-			for (int idx = 0; idx < overiddeMaterials.size(); idx++) {
-				sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(overiddeMaterials.get(idx)).append("'\n");
+			if (isTo(UE4)) {
+				smComp.addProp("bUseDefaultCollision", "True");
+				smComp.addProp("BodyInstance", "(CollisionProfileName=\"NoCollision\",CollisionEnabled=NoCollision)");
+			} else if (isTo(UE3)) {
+				this.addConvProperty("CollisionType", UE3CollisionType.COLLIDE_NoCollision.name());
 			}
 		}
 
-		if (skins != null && !skins.isEmpty()) {
-			int idx = 0;
-
-			for (UPackageRessource skin : skins) {
-				if (skin != null) {
-					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=Material'").append(skin.getConvertedName()).append("'\n");
-				} else {
-					sbf.append(IDT).append("\t\tOverrideMaterials(").append(idx).append(")=None\n");
-				}
-
-				idx++;
+		// Material override
+		int idx = 0;
+		for (UPackageRessource skin : skins) {
+			if (isTo(UE4)) {
+				smComp.addProp("OverrideMaterials(" + idx + ")", skin != null ? "Material'" + skin.getConvertedName() + "'" : "None");
+			} else if (isTo(UE3)) {
+				smComp.addProp("Materials(" + idx + ")", skin != null ? "Material'" + skin.getConvertedName() + "'" : "None");
 			}
+			idx++;
 		}
 
 		if (castShadow != null) {
-			sbf.append(IDT).append("\t\tCastShadow=").append(castShadow).append("\n");
+			smComp.addProp("CastShadow", castShadow);
 		}
 
-		writeLocRotAndScale();
-
-		if (bodyInstance != null) {
-			sbf.append(IDT).append("\t\t");
-			bodyInstance.toT3d(sbf);
-			sbf.append("\n");
+		// UE3 collide complex staticmesh by default
+		// UE4 no property on actor, have to set it in the content browser
+		if (isTo(UE3)) {
+			this.addConvProperty("bCollideComplex", true);
 		}
 
-		sbf.append(IDT).append("\t\tCustomProperties\n"); // ?
-		sbf.append(IDT).append("\tEnd Object\n");
-
-		sbf.append(IDT).append("\tStaticMeshComponent=StaticMeshComponent0\n");
-		sbf.append(IDT).append("\tRootComponent=StaticMeshComponent0\n");
-	}
-
-	public String toT3d() {
-
-		sbf.append(IDT).append("Begin Actor Class=StaticMeshActor").append(" Name=").append(name).append("\n");
-
-
-		writeStaticMeshComponent();
-
-		writeEndActor();
+		super.toT3dNew(mapConverter.getOutputGame().getUeVersion());
 
 		return sbf.toString();
 	}
@@ -245,18 +221,13 @@ public class T3DStaticMesh extends T3DSound {
 
 		if(mapConverter.convertTextures()) {
 			if (this.uv2Texture != null && this.uv2Mode == UV2Mode.UVM_Skin) {
-				if(this.skins == null){
-					this.skins = new ArrayList<>();
-				}
 				this.skins.clear();
 				this.skins.add(this.uv2Texture);
 			}
 
-			if (this.skins != null) {
-				for (final UPackageRessource matSkin : skins) {
-					if (matSkin != null) {
-						matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
-					}
+			for (final UPackageRessource matSkin : skins) {
+				if (matSkin != null) {
+					matSkin.export(UTPackageExtractor.getExtractor(mapConverter, matSkin));
 				}
 			}
 		}
@@ -267,7 +238,7 @@ public class T3DStaticMesh extends T3DSound {
 	@Override
 	public boolean isValidWriting() {
 		// TODO remove test instancof decoration for testing purpose only
-		return this instanceof T3DDecoration || staticMesh != null || forcedStaticMesh != null;
+		return this instanceof T3DDecoration || staticMesh != null;
 	}
 
 	public UPackageRessource getStaticMesh() {
