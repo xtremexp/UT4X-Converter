@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.tools.psk;
 
+import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 
 import java.io.*;
@@ -22,6 +23,16 @@ public class PSKStaticMesh {
 	public static final String FILE_EXTENSION_PSK = "psk";
 
 	public static final String FILE_EXTENSION_PSKX = "pskx";
+
+	/**
+	 * Default format for numbers in exported .ase staticmeshes
+	 */
+	private static final  DecimalFormat dfAse = new DecimalFormat("0.0000", new DecimalFormatSymbols(Locale.US));
+
+	/**
+	 * Default format for numbers in exported .t3d staticmeshes
+	 */
+	private static final DecimalFormat dfT3d = new DecimalFormat("0.000000", new DecimalFormatSymbols(Locale.US));
 
 	/**
 	 * Order how bytes are read for .psk files
@@ -74,14 +85,15 @@ public class PSKStaticMesh {
 	}
 
 	/**
+	 * Read .psk staticmesh from file
 	 *
-	 * @param pskFile
-	 *            .psk staticmesh file
-	 * @throws Exception
+	 * @param pskFile .psk staticmesh file
+	 * @throws IOException Error reading psk file
 	 */
 	public PSKStaticMesh(File pskFile) throws IOException {
 		this.pskFile = pskFile;
 		read();
+		dfAse.setPositivePrefix(" ");
 	}
 
 
@@ -93,8 +105,8 @@ public class PSKStaticMesh {
 
 	/**
 	 *
-	 * @param f
-	 * @throws IOException
+	 * @param f Psk file to write
+	 * @throws IOException Error writing psk file
 	 */
 	public void write(File f) throws IOException {
 
@@ -154,11 +166,8 @@ public class PSKStaticMesh {
 			return;
 		}
 
-		FileChannel inChannel = null;
+		try (FileInputStream fis = new FileInputStream(pskFile); FileChannel inChannel = fis.getChannel()) {
 
-		try (FileInputStream fis = new FileInputStream(pskFile)) {
-
-			inChannel = fis.getChannel();
 			ByteBuffer buffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) pskFile.length());
 			buffer.order(BYTE_ORDER_LE);
 
@@ -174,93 +183,64 @@ public class PSKStaticMesh {
 				final String chunkId = ch2.chunkID.trim();
 
 				switch (chunkId) {
-
-				case CHUNK_HEADER_POINTS_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						points.add(new Point(buffer));
+					case CHUNK_HEADER_POINTS_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							points.add(new Point(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_WEDGES_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						wedges.add(new Wedge(buffer, ch2.dataCount > 65536));
+					case CHUNK_HEADER_WEDGES_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							wedges.add(new Wedge(buffer, ch2.dataCount > 65536));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_FACES_ID:
-					for (int i = 0; i < ch2.dataCount; i++) {
-						faces.add(new Face(buffer, false));
+					case CHUNK_HEADER_FACES_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							faces.add(new Face(buffer, false));
+						}
 					}
-					break;
 
-				// Unreal Engine >= 3
-				case CHUNK_HEADER_FACES32_ID:
-
-					usingFace32 = true;
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						faces.add(new Face(buffer, true));
+					// Unreal Engine >= 3
+					case CHUNK_HEADER_FACES32_ID -> {
+						usingFace32 = true;
+						for (int i = 0; i < ch2.dataCount; i++) {
+							faces.add(new Face(buffer, true));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_MATT_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						materials.add(new Material(buffer));
+					case CHUNK_HEADER_MATT_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							materials.add(new Material(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_SKEL_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						skeletons.add(new Skeleton(buffer));
+					case CHUNK_HEADER_SKEL_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							skeletons.add(new Skeleton(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_RAWWHT_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						rawWeights.add(new RawWeight(buffer));
+					case CHUNK_HEADER_RAWWHT_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							rawWeights.add(new RawWeight(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_EXTRAUV0_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						extraUv0s.add(new ExtraUv(buffer));
+					case CHUNK_HEADER_EXTRAUV0_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							extraUv0s.add(new ExtraUv(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_EXTRAUV1_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						extraUv1s.add(new ExtraUv(buffer));
+					case CHUNK_HEADER_EXTRAUV1_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							extraUv1s.add(new ExtraUv(buffer));
+						}
 					}
-					break;
-
-				case CHUNK_HEADER_EXTRAUV2_ID:
-
-					for (int i = 0; i < ch2.dataCount; i++) {
-						extraUv2s.add(new ExtraUv(buffer));
+					case CHUNK_HEADER_EXTRAUV2_ID -> {
+						for (int i = 0; i < ch2.dataCount; i++) {
+							extraUv2s.add(new ExtraUv(buffer));
+						}
 					}
-					break;
-
-				default:
-					break;
+					default -> {
+					}
 				}
-
-			}
-		} finally {
-			try {
-				inChannel.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
-
 	}
 
 	public File getPskFile() {
@@ -283,20 +263,10 @@ public class PSKStaticMesh {
 		return materials;
 	}
 
-	public List<Skeleton> getSkeletons() {
-		return skeletons;
-	}
-
-	public List<RawWeight> getRawWeights() {
-		return rawWeights;
-	}
-
 	/**
-	 * TODO move/delete to ObjStaticMesh class
-	 * @param mtlFile
-	 * @param objFile
+	 * @param mtlFile Material file to create
+	 * @param objFile Obj file to create
 	 */
-	@Deprecated
 	public void exportToObj(final File mtlFile, final File objFile) throws IOException {
 		ObjStaticMesh.writeMtlObjFile(mtlFile, this.getMaterials().stream().map(Material::getMaterialName).toList());
 		writeObjFile(objFile, mtlFile);
@@ -306,7 +276,7 @@ public class PSKStaticMesh {
 	/**
 	 * Export .psk staticmesh to wavefront (.obj) staticmesh
 	 */
-	private void writeObjFile(final File objFile, final File mtlFile) {
+	private void writeObjFile(final File objFile, final File mtlFile) throws IOException {
 
 		try (FileWriter fw = new FileWriter(objFile)) {
 
@@ -347,22 +317,20 @@ public class PSKStaticMesh {
 				fw.write((this.getWedges().get(fc.getWedge0()).getPointIndex() + 1) + "/" + (fc.getWedge0() + 1) + "\n");
 			}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Export .psk file to .t3d static mesh
+	 * Export .psk staticmesh to .t3d static mesh
 	 *
-	 * @param t3dStaticMesh
+	 * @param t3dStaticMeshFile T3D staticmesh file to export to
 	 */
-	public void exportAsT3d(final File t3dStaticMesh) throws IOException {
+	public void exportToT3d(final File t3dStaticMeshFile) throws IOException {
 
-		try (FileWriter fw = new FileWriter(t3dStaticMesh)) {
+		this.removeDuplicatesPoints();
 
-			final DecimalFormat df = new DecimalFormat("0.000000", new DecimalFormatSymbols(Locale.US));
+		try (FileWriter fw = new FileWriter(t3dStaticMeshFile)) {
+
 			fw.write("Begin StaticMesh Name=SkyBoxCylinder\n");
 			fw.write("\tVersion=2.000000\n");
 
@@ -380,13 +348,154 @@ public class PSKStaticMesh {
 				final Point p1 = this.getPoints().get(w1.getPointIndex());
 				final Point p2 = this.getPoints().get(w2.getPointIndex());
 
-				fw.write("\t\tVertex 0 " + df.format(p0.x) + " " + df.format(p0.y) + " " + df.format(p0.z) + " " + df.format(w0.getU()) + " " + df.format(w0.getV()) + " \n");
-				fw.write("\t\tVertex 1 " + df.format(p1.x) + " " + df.format(p1.y) + " " +df.format(p1.z) + " " + df.format(w1.getU()) + " " + df.format(w1.getV()) + " \n");
-				fw.write("\t\tVertex 2 " + df.format(p2.x) + " " + df.format(p2.y) + " " + df.format(p2.z) + " " + df.format(w2.getU()) + " " + df.format(w2.getV()) + " \n");
+				fw.write("\t\tVertex 0 " + dfT3d.format(p0.x) + " " + dfT3d.format(p0.y) + " " + dfT3d.format(p0.z) + " " + dfT3d.format(w0.getU()) + " " + dfT3d.format(w0.getV()) + " \n");
+				fw.write("\t\tVertex 1 " + dfT3d.format(p1.x) + " " + dfT3d.format(p1.y) + " " + dfT3d.format(p1.z) + " " + dfT3d.format(w1.getU()) + " " + dfT3d.format(w1.getV()) + " \n");
+				fw.write("\t\tVertex 2 " + dfT3d.format(p2.x) + " " + dfT3d.format(p2.y) + " " + dfT3d.format(p2.z) + " " + dfT3d.format(w2.getU()) + " " + dfT3d.format(w2.getV()) + " \n");
 				fw.write("\tEnd Triangle\n");
 			}
 
 			fw.write("End StaticMesh\n");
 		}
+	}
+
+	/**
+	 * Strip duplicate points values
+	 * and update point indexes in wedges
+	 */
+	private void removeDuplicatesPoints() {
+
+		final List<Point> pointsUnique = this.getPoints().stream().distinct().toList();
+
+		for (final Wedge w : this.getWedges()) {
+			w.setPointIndex(pointsUnique.indexOf(this.getPoints().get(w.getPointIndex())));
+		}
+
+		this.getPoints().clear();
+		this.getPoints().addAll(pointsUnique);
+	}
+
+	/**
+	 * Export this staticmesh to ase staticmesh
+	 *
+	 * @param aseStaticMeshFile Staticmesh file to export to
+	 */
+	public void exportToAse(final File aseStaticMeshFile) throws IOException {
+
+		this.removeDuplicatesPoints();
+
+		try (FileWriter fw = new FileWriter(aseStaticMeshFile)) {
+
+			fw.write("*3DSMAX_ASCIIEXPORT 200\n");
+			fw.write("*COMMENT \"Imported from " + this.getPskFile() + "\"\n");
+			fw.write("*COMMENT \"Exported with " + MainApp.PROGRAM_NAME + " v" + MainApp.VERSION + "\"\n");
+
+			writeAseMaterials(fw);
+
+			fw.write("*GEOMOBJECT {\n");
+			fw.write("\t*MESH {\n");
+			fw.write("\t\t*TIMEVALUE 0\n");
+			fw.write("\t\t*MESH_NUMVERTEX " + this.getWedges().size() + "\n");
+			fw.write("\t\t*MESH_NUMFACES " + this.getFaces().size() + "\n");
+
+			writeAseMeshVertexList(fw);
+			writeAseMeshFaceList(fw);
+			writeAseTVertList(fw);
+			writeAseTFaceList(fw);
+
+			fw.write("\t}\n");
+			fw.write("}\n");
+		}
+	}
+
+	private void writeAseMaterials(FileWriter fw) throws IOException {
+
+		int idx = 0;
+		fw.write("*MATERIAL_LIST {\n");
+		fw.write("\t*MATERIAL_COUNT " + this.getMaterials().size() + "\n");
+
+		for (Material m : this.getMaterials()) {
+			fw.write("\t*MATERIAL " + idx + " {\n");
+			fw.write("\t\t*MATERIAL_NAME \"" + m.getMaterialName() + "\"\n");
+			fw.write("\t\t*NUMSUBMTLS 0\n");
+			fw.write("\t\t*MAP_DIFFUSE {\n");
+			fw.write("\t\t\t*MAP_NAME \"Map #" + idx + "\"\n");
+			fw.write("\t\t\t*MAP_CLASS \"Bitmap\"\n");
+			fw.write("\t\t\t*BITMAP \"" + m.getMaterialName() + "\"\n");
+			fw.write("\t\t}\n");
+			fw.write("\t}\n");
+			idx++;
+		}
+
+		fw.write("}\n");
+	}
+
+	/**
+	 * Write list of vertice values
+	 *
+	 * @param fw Write
+	 * @throws IOException Error writting
+	 */
+	private void writeAseMeshVertexList(FileWriter fw) throws IOException {
+
+		int idx = 0;
+		fw.write("\t\t*MESH_VERTEX_LIST {\n");
+
+		for (final Point point : this.getPoints()) {
+			fw.write("\t\t\t*MESH_VERTEX " + idx + " " + dfAse.format(point.x) + " " + dfAse.format(point.y) + " " + dfAse.format(point.z) + "\n");
+			idx++;
+		}
+
+		fw.write("\t\t}\n");
+	}
+
+	private void writeAseMeshFaceList(FileWriter fw) throws IOException {
+
+		int idx = 0;
+		fw.write("\t\t*MESH_FACE_LIST {\n");
+
+		for (final Face face : this.getFaces()) {
+			int p0Idx = this.getWedges().get(face.getWedge0()).getPointIndex();
+			int p1Idx = this.getWedges().get(face.getWedge1()).getPointIndex();
+			int p2Idx = this.getWedges().get(face.getWedge2()).getPointIndex();
+
+			fw.write("\t\t\t*MESH_FACE " + idx + ": A: " + p0Idx + " B: " + p2Idx + " C: " + p1Idx + " AB: 0 BC: 0 CA: 0 *MESH_SMOOTHING " + face.getSmoothingGroups() + " *MESH_MTLID " + face.getMatIndex() + "\n");
+			idx++;
+		}
+
+		fw.write("\t\t}\n");
+	}
+
+	/**
+	 * Write list of uv values
+	 *
+	 * @param fw Writer
+	 * @throws IOException Error writing file
+	 */
+	private void writeAseTVertList(FileWriter fw) throws IOException {
+
+		int idx = 0;
+		fw.write("\t\t*MESH_NUMTVERTEX " + this.getWedges().size() + "\n");
+		fw.write("\t\t*MESH_TVERTLIST {\n");
+
+		for (final Wedge wedge : this.getWedges()) {
+			fw.write("\t\t\t*MESH_TVERT " + idx + " " + dfAse.format(wedge.getU()) + " " + dfAse.format(wedge.getV()) + " 0.0000\n");
+			idx++;
+		}
+
+		fw.write("\t\t}\n");
+	}
+
+	private void writeAseTFaceList(FileWriter fw) throws IOException {
+
+		int idx = 0;
+		fw.write("\t\t*MESH_NUMTVFACES " + this.getFaces().size() + "\n");
+		fw.write("\t\t*MESH_TFACE_LIST {\n");
+
+		for (final Face face : this.getFaces()) {
+			fw.write("\t\t\t*MESH_TFACE " + idx + " " + face.getWedge0() + " " + face.getWedge1() + " " + face.getWedge2() + "\n");
+			idx++;
+		}
+
+		fw.write("\t\t}\n");
 	}
 }

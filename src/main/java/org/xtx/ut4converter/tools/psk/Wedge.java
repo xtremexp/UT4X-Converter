@@ -27,7 +27,7 @@ public class Wedge implements BinReadWrite {
 	private byte reserved;
 	private short pad;
 
-	boolean isBigWedge = false;
+	boolean isBigWedge;
 
 	/**
 	 * 
@@ -45,7 +45,7 @@ public class Wedge implements BinReadWrite {
 	public void write(FileOutputStream bos) throws IOException {
 
 		if (!isBigWedge) {
-			BinUtils.writeInt(bos, (int) pointIndex);
+			BinUtils.writeInt(bos, pointIndex);
 			BinUtils.writeFloat(bos, u);
 			BinUtils.writeFloat(bos, v);
 			BinUtils.writeInt(bos, matIndexInt);
@@ -71,6 +71,10 @@ public class Wedge implements BinReadWrite {
 
 	public int getPointIndex() {
 		return pointIndex;
+	}
+
+	public void setPointIndex(int pointIndex) {
+		this.pointIndex = pointIndex;
 	}
 
 	@Override
