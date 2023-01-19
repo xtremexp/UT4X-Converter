@@ -11,7 +11,7 @@
 	<name>UT Converter</name>
 
 	<properties>
-		<java.version>19.0.1</java.version>
+		<java.version>19.0.2</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 		<javafx.version>19</javafx.version>
 		<slf4j.version>2.0.5</slf4j.version>
