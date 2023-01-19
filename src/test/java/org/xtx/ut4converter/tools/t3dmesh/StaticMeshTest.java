@@ -56,16 +56,15 @@ public class StaticMeshTest {
         final File t3dSmFile = new File(Objects.requireNonNull(StaticMeshTest.class.getResource("/meshes/CatwalkSegments.Arena1FloorQtr.t3d")).toURI());
         final StaticMesh t3dStaticMesh = new StaticMesh(t3dSmFile);
 
-        //File aseFile = File.createTempFile("simpleForest", "ase");
-        File aseFile = new File("C:\\dev3\\TEMP2\\CatwalkSegments.Arena1FloorQtr.ase");
+        File aseFile = File.createTempFile("CatwalkSegments.Arena1FloorQtr", "ase");
+        //File aseFile = new File("C:\\dev3\\TEMP2\\CatwalkSegments.Arena1FloorQtr.ase");
         try {
             t3dStaticMesh.exportToAse(aseFile);
+            Assertions.assertTrue(aseFile.exists());
+            Assertions.assertTrue(aseFile.length() > 0);
         } finally {
-            //FileUtils.deleteQuietly(aseFile);
+            FileUtils.deleteQuietly(aseFile);
         }
-
-        Assertions.assertTrue(aseFile.exists());
-        Assertions.assertTrue(aseFile.length() > 0);
     }
 
     /**
