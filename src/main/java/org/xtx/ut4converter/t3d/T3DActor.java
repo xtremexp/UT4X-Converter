@@ -138,6 +138,12 @@ public abstract class T3DActor extends T3DObject {
 	protected Boolean blockPlayers;
 
 	/**
+	 * UE1/UE2 for all actors - 'bShadowCast'
+	 * UE3 for some actors - 'CastShadows' (Light)
+	 */
+	protected Boolean bShadowCast;
+
+	/**
 	 * UE3+ List of components
 	 */
 	protected List<Component> components = new ArrayList<>();
@@ -287,16 +293,13 @@ public abstract class T3DActor extends T3DObject {
 		if ((!(this instanceof T3DBrush) || "BlockAll".equals(t3dClass)) && equalsIdx != -1) {
 			properties.put(line.substring(0, equalsIdx).trim(), line.substring(equalsIdx + 1));
 		}
-
 		if (line.startsWith("Location=") || line.contains("\tLocation=")) {
 			location = T3DUtils.getVector3d(line, 0D);
 			sceneComponent.setRelativeLocation(location);
 		}
-
 		else if (line.startsWith("OldLocation=") || line.contains("\tOldLocation=")) {
 			oldLocation = T3DUtils.getVector3d(line, 0D);
 		}
-
 		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
 			coLocation = T3DUtils.getVector3d(line, 0D);
 		}
@@ -314,6 +317,9 @@ public abstract class T3DActor extends T3DObject {
 		}
 		else if (line.startsWith("bBlockPlayers=")) {
 			this.blockPlayers = T3DUtils.getBoolean(line);
+		}
+		else if (line.startsWith("bShadowCast=") || line.startsWith("CastShadows=")) {
+			this.bShadowCast = T3DUtils.getBoolean(line);
 		}
 
 		else if (line.startsWith("DrawScale3D")) {
@@ -393,26 +399,21 @@ public abstract class T3DActor extends T3DObject {
 		return true;
 	}
 
+	/**
+	 * Will be deleted later.
+	 */
 	protected void writeLocRotAndScale() {
-		writeLocRotAndScale(sbf, Objects.requireNonNull(UnrealEngine.from(getOutputGame().getUeVersion())), location, rotation, scale3d);
+		sbf.append(writeLocRotAndScaleAsString());
 	}
 
 	/**
 	 * Write Location Rotation and drawScale of converted actor
 	 *
-	 * @param sbf String builder
-	 * @param outEngine Unreal Engine out
-	 * @param location Location
-	 * @param rotation Rotation
-	 * @param scale3d Scale 3D
 	 */
-	private static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
+	private String writeLocRotAndScaleAsString() {
 
-		sbf.append(writeUE4LocRotAndScale(outEngine.version, location, rotation, scale3d, IDT + "\t"));
-	}
-
-	private static String writeUE4LocRotAndScale(int ueVersion, Vector3d location, Vector3d rotation, Vector3d scale3d, String baseText) {
-
+		int ueVersion = getOutputGame().getUeVersion();
+		final String baseText = IDT + "\t";
 		final StringBuilder sb = new StringBuilder();
 
 		if (location != null) {
@@ -644,44 +645,50 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
+	 * Kept for compatibility but will be removed later.
+	 */
+	protected void writeEndActor() {
+		sbf.append(writeEndActorAsString());
+	}
+
+	/**
      *
      */
-	protected void writeEndActor() {
+	protected String writeEndActorAsString() {
 
-		// means we did not even write "begin actor" so we skip ...
-		if (sbf.length() == 0) {
-			return;
-		}
+		final StringBuilder sb = new StringBuilder();
 
 		if (mapConverter.isTo(UE4)) {
 			if (drawScale != null) {
-				sbf.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
+				sb.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}
-			sbf.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
+			sb.append(IDT).append("\tActorLabel=\"").append(name).append("\"\n");
 
 			if (this.tag != null) {
-				sbf.append(IDT).append("\tTags(0)=\"").append(this.tag).append("\"\n");
+				sb.append(IDT).append("\tTags(0)=\"").append(this.tag).append("\"\n");
 			}
 
 			// not handle by UE4 natively but by some of our custom blueprints !
 			if (this.event != null) {
-				sbf.append(IDT).append("\tEvent=\"").append(this.event).append("\"\n");
+				sb.append(IDT).append("\tEvent=\"").append(this.event).append("\"\n");
 			}
 		}
 		// Checked u1, ut99, ut2004, ut3
 		else {
 			if (drawScale != null) {
-				sbf.append(IDT).append("\tDrawScale=").append(drawScale).append("\n");
-            }
-			sbf.append(IDT).append("\tName=\"").append(name).append("\"\n");
+				sb.append(IDT).append("\tDrawScale=").append(drawScale).append("\n");
+			}
+			sb.append(IDT).append("\tName=\"").append(name).append("\"\n");
 		}
 
 		if (group != null) {
 			// need check for UE4
-			sbf.append(IDT).append("\tGroup=\"").append(group).append("\n");
+			sb.append(IDT).append("\tGroup=\"").append(group).append("\"\n");
 		}
 
-		sbf.append(IDT).append("End Actor\n");
+		sb.append(IDT).append("End Actor\n");
+
+		return sb.toString();
 	}
 
 	/**
@@ -737,6 +744,14 @@ public abstract class T3DActor extends T3DObject {
 		return writeSimpleActor(actorClass, "SceneComponent");
 	}
 
+	/**
+	 * TODO refactor and use toT3DNew
+	 *
+	 * @param actorClass    Actor class
+	 * @param componentType Component type
+	 * @return T3D actor
+	 */
+	@Deprecated
 	protected String writeSimpleActor(final String actorClass, final String componentType){
 
 		final String rootComponentName = componentType + "0";
@@ -785,7 +800,17 @@ public abstract class T3DActor extends T3DObject {
 		this.convert();
 		this.scale(scaleFactor);
 
-		return "Begin Map\nBegin Level\n" + toT3d() + "End Level\nEnd Map";
+		String convT3d = toT3d();
+
+		if(convT3d == null) {
+			convT3d = "";
+
+			for (T3DActor repActor : this.children) {
+				convT3d += repActor.toT3d();
+			}
+		}
+
+		return "Begin Map\nBegin Level\n" + convT3d + "End Level\nEnd Map";
 	}
 
 	protected void addComponent(final Component component){
@@ -802,36 +827,55 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public abstract String toT3d();
 
-	public void toT3dNew(int ueVersion){
+	/**
+	 * Write actor. New version using component class to make easier to convert UT3/UT4 actors
+	 *
+	 */
+	public String toT3dNew() {
 
-		sbf.append("\tBegin Actor Class=").append(this.t3dClass).append(" Name=").append(this.name);
+		int ueVersion = this.getMapConverter().getOutputGame().getUeVersion();
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("\tBegin Actor Class=").append(this.t3dClass).append(" Name=").append(this.name);
 
 		// Archetype=StaticMeshActor'Engine.Default__StaticMeshActor'
 		if (ueVersion == 3) {
-			sbf.append(" Archetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'");
+			sb.append(" Archetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'");
 		}
-		sbf.append("\n");
+		sb.append("\n");
 
 		for (final Component comp : components) {
 
 			if (ueVersion >= 4) {
-				sbf.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=\"").append(comp.getName()).append("\"\n");
-				sbf.append("\t\tEnd Object\n");
+				sb.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=\"").append(comp.getName()).append("\"\n");
+				sb.append("\t\tEnd Object\n");
 			}
 
-			sbf.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=").append(comp.getName()).append(" ObjName=").append(comp.getObjName()).append("\n");
+			// Archetype=StaticMeshComponent'Engine.Default__StaticMeshActor:StaticMeshComponent0'
+			final String compArchetype = comp.getComponentClass() + "'Engine.Default__" + this.t3dClass + ":" + comp.getName() + "'";
+
+			sb.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=").append(comp.getName());
+
+			if (ueVersion == 3) {
+				sb.append(" ObjName=").append(comp.getObjName()).append(" Archetype=").append(compArchetype);
+			}
+			sb.append("\n");
 
 			for (Map.Entry<String, Object> entry : comp.getProperties().entrySet()) {
-				sbf.append("\t\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString() : "None").append("\n");
+				sb.append("\t\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString() : "None").append("\n");
 			}
 
 			// location is inside component for UE4
 			if (ueVersion >= 4) {
-				writeLocRotAndScale();
+				sb.append(writeLocRotAndScaleAsString());
 			}
 
-			sbf.append("\t\tName=\"").append(comp.getName()).append("\"\n");
-			sbf.append("\t\tEnd Object\n");
+			if (ueVersion == 3) {
+				sb.append("\t\t\tName=\"").append(comp.getObjName()).append("\"\n");
+				sb.append("\t\t\tObjectArchetype=").append(compArchetype).append("\n");
+			}
+
+			sb.append("\t\tEnd Object\n");
 		}
 
 		int idx = 0;
@@ -839,14 +883,14 @@ public abstract class T3DActor extends T3DObject {
 		for (final Component comp : components) {
 
 			if (ueVersion == 3) {
-				sbf.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getReference(ueVersion)).append("\n");
-				sbf.append("\t\tComponents(").append(idx).append(")=").append(comp.getReference(ueVersion)).append("\n");
+				sb.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getReference(ueVersion)).append("\n");
+				sb.append("\t\tComponents(").append(idx).append(")=").append(comp.getReference(ueVersion)).append("\n");
 			} else if (ueVersion == 4) {
 				if (idx == 0) {
-					sbf.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getName()).append("\n");
-					sbf.append("\t\tRootComponent=").append(comp.getName()).append("\n");
+					sb.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getName()).append("\n");
+					sb.append("\t\tRootComponent=").append(comp.getName()).append("\n");
 				} else {
-					sbf.append("\t\tInstanceComponents(").append(idx - 1).append(")=").append(comp.getName()).append("\n");
+					sb.append("\t\tInstanceComponents(").append(idx - 1).append(")=").append(comp.getName()).append("\n");
 				}
 			}
 			idx++;
@@ -854,13 +898,19 @@ public abstract class T3DActor extends T3DObject {
 
 		// actor specific properties
 		for (Map.Entry<String, Object> entry : convProperties.entrySet()) {
-			sbf.append("\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString(): "None").append("\n");
+			sb.append("\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString() : "None").append("\n");
 		}
 
 		if (ueVersion <= 3) {
-			writeLocRotAndScale();
+			sb.append(writeLocRotAndScaleAsString());
 		}
 
-		writeEndActor();
+		if (ueVersion == 3) {
+			sb.append("\t\tObjectArchetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'\n");
+		}
+
+		sb.append(writeEndActorAsString());
+
+		return sb.toString();
 	}
 }

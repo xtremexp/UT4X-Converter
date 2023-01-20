@@ -1,0 +1,14 @@
+Begin Map
+Begin Actor Class=Light Name=Light78
+	Tag="Light74"
+	Location=(X=3311.620850,Y=4169.147949,Z=726.565552)
+	Rotation=(Pitch=-6688,Yaw=-16368)
+	bDirectional=True
+	LightEffect=LE_StaticSpot
+	LightBrightness=91
+	LightHue=159
+	LightSaturation=152
+	LightRadius=192
+	LightCone=86
+End Actor
+End Map

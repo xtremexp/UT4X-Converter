@@ -124,7 +124,7 @@ public class PSKStaticMesh {
 			chWedges.write(fos);
 
 			// Write faces
-			Chunk chFaces = null;
+			Chunk chFaces;
 
 			if (usingFace32) {
 				chFaces = new Chunk(CHUNK_HEADER_FACES32_ID, faces, Face.DATA_SIZE_FACE32);
@@ -453,8 +453,9 @@ public class PSKStaticMesh {
 		fw.write("\t\t*MESH_NUMTVERTEX " + this.getWedges().size() + "\n");
 		fw.write("\t\t*MESH_TVERTLIST {\n");
 
+		// need v flip for correct uv align in UE3 editor
 		for (final Wedge wedge : this.getWedges()) {
-			fw.write("\t\t\t*MESH_TVERT " + idx + " " + dfAse.format(wedge.getU()) + " " + dfAse.format(wedge.getV()) + " 0.0000\n");
+			fw.write("\t\t\t*MESH_TVERT " + idx + " " + dfAse.format(wedge.getU()) + " " + dfAse.format(-wedge.getV()) + " 0.0000\n");
 			idx++;
 		}
 
@@ -467,8 +468,9 @@ public class PSKStaticMesh {
 		fw.write("\t\t*MESH_NUMTVFACES " + this.getFaces().size() + "\n");
 		fw.write("\t\t*MESH_TFACELIST {\n");
 
+		// need wedge flip for correct uv align in UE3 editor
 		for (final Face face : this.getFaces()) {
-			fw.write("\t\t\t*MESH_TFACE " + idx + " " + face.getWedge0() + " " + face.getWedge1() + " " + face.getWedge2() + "\n");
+			fw.write("\t\t\t*MESH_TFACE " + idx + " " + face.getWedge0() + " " + face.getWedge2() + " " + face.getWedge1() + "\n");
 			idx++;
 		}
 

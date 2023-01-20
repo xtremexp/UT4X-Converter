@@ -17,7 +17,6 @@ import org.xtx.ut4converter.ucore.UnrealEngine;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.xtx.ut4converter.ucore.UnrealEngine.*;
 
@@ -417,118 +416,88 @@ public class T3DLight extends T3DSound {
 			componentLightClass = "PointLightComponent";
 		}
 
-		sbf.append(IDT).append("Begin Actor Class=").append(t3dClass).append(" Name=").append(name).append("\n");
+		final Component lightComp = new Component(componentLightClass, this);
 
-		if (isTo(UnrealEngine.UE4)) {
+		// For UE3 there are extra components
+		final Component ue3RadiusComp = new Component("DrawLightRadiusComponent", this);
+		final Component ue3SpriteComp = new Component("SpriteComponent", "Sprite",this);
 
-			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"LightComponent0\"\n");
-			sbf.append(IDT).append("\tEnd Object\n");
+		if (!UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
 
-			sbf.append(IDT).append("\tBegin Object Name=\"LightComponent0\"\n");
-
-			// not applicable to directional light
-			if (!UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {
-
-				if (lightFalloffExponent != null) {
-					sbf.append(IDT).append("\t\tbUseInverseSquaredFalloff=False\n");
-					sbf.append(IDT).append("\t\tLightFalloffExponent=").append(lightFalloffExponent).append("\n");
+			if (lightFalloffExponent != null) {
+				if (isTo(UE4)) {
+					lightComp.addProp("bUseInverseSquaredFalloff", false);
 				}
-
-				sbf.append(IDT).append("\t\tAttenuationRadius=").append(radius).append("\n");
+				lightComp.addProp(isTo(UE4) ? "LightFalloffExponent" : "FalloffExponent", lightFalloffExponent);
 			}
 
-			// not sure if the real source radius is radius / 2
-			if (lightEffect == UE12_LightEffect.LE_Cylinder) {
-				sbf.append(IDT).append("\t\tSourceLength=").append(radius / 2).append("\n");
-				sbf.append(IDT).append("\t\tSourceRadius=").append(radius / 2).append("\n");
+			if (isTo(UE4)) {
+				lightComp.addProp("AttenuationRadius", radius);
+			} else {
+				lightComp.addProp("Radius", radius);
+				ue3RadiusComp.addProp("SphereRadius", radius);
 			}
-
-			sbf.append(IDT).append("\t\tLightColor=").append(rgbColor.toT3D(true)).append("\n");
-
-			if (intensity != null) {
-				sbf.append(IDT).append("\t\tIntensity=").append(intensity).append("\n");
-			}
-
-			if (isSpotLight()) {
-				// 128 is default angle for UE1/2 (in 0 -> 255 range) = 90 in (0
-				// -> 180° range)
-				double angle = outerConeAngle != null ? outerConeAngle : 90d;
-				sbf.append(IDT).append("\t\tInnerConeAngle=").append((angle / 2)).append("\n");
-				sbf.append(IDT).append("\t\tOuterConeAngle=").append(angle).append("\n");
-			}
-
-			sbf.append(IDT).append("\t\tMobility=").append(mobility.name()).append("\n");
-
-			writeLocRotAndScale();
-			sbf.append(IDT).append("\tEnd Object\n");
-
-			writeSimpleProperties();
-
-			if(this instanceof final T3DTriggerLight t3DTriggerLight){
-
-				if(t3DTriggerLight.getInitialState() != null){
-					sbf.append(IDT).append("\tInitialState=NewEnumerator").append(t3DTriggerLight.getInitialState().ordinal()).append("\n");
-				}
-			}
-
-			// FOR UBLIGHT ONLY
-			if(this.lightEffect != null){
-				sbf.append(IDT).append("\tLightEffect=NewEnumerator").append(lightEffect.ordinal()).append("\n");
-			}
-
-			if(this.lightType != null){
-				sbf.append(IDT).append("\tLightType=NewEnumerator").append(lightType.ordinal()).append("\n");
-			}
-
-			sbf.append(IDT).append("\tLightComponent=\"LightComponent0\"\n");
-            sbf.append(IDT).append("\tRootComponent=\"LightComponent0\"\n");
-
-
-		} else if (isTo(UnrealEngine.UE3)) {
-
-			final String drawRadObjName = "DrawLightRadiusComponent_" + new Random().nextInt(10000);
-
-			// CastShadow=False
-			sbf.append(IDT).append("\tBegin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=").append(drawRadObjName).append(" Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'\n");
-			sbf.append(IDT).append("\t\tSphereRadius=").append(radius).append("\n");
-			// for directional lights do not cast shadows because in original UE1/UE2 maps
-			// the sky is "blocked" by a brush (with fakebackdrop sky) thus light rays not going
-			if (isDirectional) {
-				sbf.append(IDT).append("\t\tCastShadow=False\n");
-			}
-			sbf.append(IDT).append("\tEnd Object\n");
-
-			final String pointCompObjName = componentLightClass + "_" + new Random().nextInt(10000);
-
-			sbf.append(IDT).append("\tBegin Object Class=").append(componentLightClass).append(" Name=\"").append(componentLightClass).append("_0 ");
-			sbf.append("ObjName=").append(pointCompObjName).append(" Archetype=").append(componentLightClass).append("'Engine.Default__PointLight:").append(componentLightClass).append("0'\n");
-
-			sbf.append(IDT).append("\t\tRadius=").append(radius).append("\n");
-			sbf.append(IDT).append("\t\tBrightness=1.0\n");
-
-			// for directional lights do not cast shadows else it looks very dark
-			if (isDirectional) {
-				sbf.append(IDT).append("\t\tCastShadows=False\n");
-			}
-
-			sbf.append(IDT).append("\t\tName=\"").append(pointCompObjName).append("\"\n");
-			// R,G,B as integers for UE3
-			sbf.append(IDT).append("\t\tLightColor=").append(rgbColor.toT3D(true)).append("\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-
-			final String spritCompObjName = "SpriteComponent_" + new Random().nextInt(10000);
-			sbf.append(T3DUtils.writeSimpleObject("\t\t", "SpriteComponent", "Sprite", spritCompObjName, "SpriteComponent'Engine.Default__PointLight:Sprite'", null, null));
-
-			writeLocRotAndScale();
-			sbf.append(IDT).append("\tLightComponent=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
-
-			sbf.append(IDT).append("\tComponents(0)=SpriteComponent'").append(spritCompObjName).append("'\n");
-			sbf.append(IDT).append("\tComponents(1)=DrawLightRadiusComponent'").append(drawRadObjName).append("'\n");
-			sbf.append(IDT).append("\tComponents(2)=").append(componentLightClass).append("'").append(pointCompObjName).append("'\n");
 		}
 
-		writeEndActor();
+		// UE4 only props
+		if (lightEffect == UE12_LightEffect.LE_Cylinder && isTo(UE4)) {
+			lightComp.addProp("SourceLength", (radius / 2));
+			lightComp.addProp("SourceRadius", (radius / 2));
+		}
 
+		// UE3/UE4 same prob/comp
+		lightComp.addProp("LightColor", rgbColor.toT3D(true));
+
+		// UE4 prop only (maybe UE3 brightness prop ?)
+		if (intensity != null && isTo(UE4)) {
+			lightComp.addProp("Intensity", intensity);
+		}
+
+		if (isSpotLight()) {
+			// 128 is default angle for UE1/2 (in 0 -> 255 range) = 90 in (0
+			// -> 180° range)
+			double angle = outerConeAngle != null ? outerConeAngle : 90d;
+			lightComp.addProp("InnerConeAngle", (angle / 2));
+			lightComp.addProp("OuterConeAngle", angle);
+		}
+
+		// UE4 only property
+		if (isTo(UE4)) {
+			lightComp.addProp("Mobility", mobility.name());
+		}
+
+		// UB custome blueprints
+		if (this instanceof final T3DTriggerLight t3DTriggerLight && t3DTriggerLight.getInitialState() != null) {
+			this.addConvProperty("InitialState", "NewEnumerator" + t3DTriggerLight.getInitialState().ordinal());
+		}
+
+		if (this.lightEffect != null) {
+			this.addConvProperty("LightEffect", "NewEnumerator" + lightEffect.ordinal());
+		}
+
+		if (this.lightType != null) {
+			this.addConvProperty("LightType", "NewEnumerator" + lightType.ordinal());
+		}
+
+		// UE3/UE4 same prop/comp
+		if (bShadowCast != null) {
+			lightComp.addProp("CastShadows", bShadowCast);
+		}
+
+		// For UE3, components must be in this order
+		if (isTo(UE3)) {
+			this.addComponent(ue3SpriteComp);
+			this.addComponent(ue3RadiusComp);
+		}
+
+		this.addComponent(lightComp);
+
+		// LightComponent=PointLightComponent'PointLightComponent_91'
+		this.addConvProperty("LightComponent", lightComp.getReference(this.mapConverter.getOutputGame().getUeVersion()));
+
+		sbf.append(super.toT3dNew());
+
+		// for possible embedded sound
 		return super.toT3d();
 	}
 
@@ -605,6 +574,11 @@ public class T3DLight extends T3DSound {
 				// 0 -> 255 range to 0 -> 180 range
 				outerConeAngle *= (255d / 360d) / 2;
 			}
+		}
+
+		// UE1/UE2 only substractive maps else light wont have lightning if castshadows=true
+		if (isDirectional && mapConverter.isFrom(UE1, UE2)) {
+			this.bShadowCast = false;
 		}
 
 		// UE4 does not care about negative scale for lights

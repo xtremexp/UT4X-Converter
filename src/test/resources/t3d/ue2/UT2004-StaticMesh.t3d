@@ -1,16 +1,20 @@
-Begin Actor Class=StaticMeshActor Name=StaticMeshActor52
-    StaticMesh=StaticMesh'BarrenHardware-epic.Decos.brick-angled-face'
-    Level=LevelInfo'DM-1on1-Serpentine.LevelInfo0'
-    Region=(Zone=LevelInfo'DM-1on1-Serpentine.LevelInfo0',iLeaf=-1)
+
+Begin Actor Class=StaticMeshActor Name=StaticMeshActor37
+    StaticMesh=StaticMesh'AnubisStatic.All.pharoh'
+    bLightChanged=True
+    AmbientSound=Sound'GeneralAmbience.firefx9'
+    Level=LevelInfo'myLevel.LevelInfo0'
+    Region=(Zone=ZoneInfo'myLevel.ZoneInfo1',iLeaf=22,ZoneNumber=1)
     Tag="StaticMeshActor"
-    PhysicsVolume=DefaultPhysicsVolume'DM-1on1-Serpentine.DefaultPhysicsVolume0'
-    Location=(X=366.000000,Y=350.000000,Z=-544.000000)
-    Rotation=(Yaw=16384)
-    StaticMeshInstance=StaticMeshInstance'DM-1on1-Serpentine.StaticMeshInstance19721'
-    DrawScale3D=(X=0.500000,Y=0.500000,Z=0.500000)
-    ScaleGlow=0.600000
-    bStaticLighting=False
+    PhysicsVolume=DefaultPhysicsVolume'myLevel.DefaultPhysicsVolume0'
+    Location=(X=-64.000000,Y=-864.000000,Z=-67.000000)
+    Rotation=(Yaw=-49152)
+    StaticMeshInstance=StaticMeshInstance'myLevel.StaticMeshInstance19881'
+    DrawScale=0.095000
+    DrawScale3D=(X=1.300000,Y=1.300000,Z=1.300000)
+    Skins(0)=Texture'AnubisTextures.All.Pharoh_t'
+    AmbientGlow=20
     SoundVolume=76
-    bBlockNonZeroExtentTraces=False
-    ColLocation=(X=366.000000,Y=350.000000,Z=-544.000000)
+    ColLocation=(X=-64.000000,Y=-864.000000,Z=-67.000000)
+    bSelected=True
 End Actor

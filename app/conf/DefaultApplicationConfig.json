@@ -101,7 +101,7 @@
     "convertsToGames": [
       {
         "gameId": "UT3",
-        "scale": 2.5
+        "scale": 2.2
       },
       {
         "gameId": "UT4",
@@ -125,7 +125,7 @@
     "convertsToGames": [
       {
         "gameId": "UT3",
-        "scale": 2.5
+        "scale": 2.2
       },
       {
         "gameId": "UT4",
@@ -149,11 +149,11 @@
     "convertsToGames": [
       {
         "gameId": "UT3",
-        "scale": 2.5
+        "scale": 2.2
       },
       {
         "gameId": "UT4",
-        "scale": 2.2
+        "scale": 2.5
       }
     ],
     "id" : "UT2004"
@@ -197,11 +197,11 @@
       "convertsToGames": [
         {
           "gameId": "UT3",
-          "scale": 2.5
+          "scale": 2.2
         },
         {
           "gameId": "UT4",
-          "scale": 2.2
+          "scale": 2.5
         }
       ],
       "id": "UC2"

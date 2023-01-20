@@ -65,7 +65,13 @@ public class RGBColor {
      */
     public String toT3D(boolean use255Range) {
         toRange(use255Range);
-        return "(B=" + this.B + ",G=" + this.G + ",R=" + this.R + ",A=" + this.A + ")";
+
+        // light color prop as int for 255 range
+        if (use255Range) {
+            return "(B=" + (int) this.B + ",G=" + (int) this.G + ",R=" + (int) this.R + ",A=" + (int) this.A + ")";
+        } else {
+            return "(B=" + this.B + ",G=" + this.G + ",R=" + this.R + ",A=" + this.A + ")";
+        }
     }
 
     /**

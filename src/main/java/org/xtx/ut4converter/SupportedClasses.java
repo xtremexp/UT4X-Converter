@@ -129,7 +129,7 @@ public class SupportedClasses {
 
 		//registerUClass()
 		registerUClass(T3DPlayerStart.class, "PlayerStart", "UTTeamPlayerStart", "UTWarfarePlayerStart");
-		registerUClass(T3DStaticMesh.class, "StaticMeshActor");
+		registerUClass(T3DStaticMesh.class, "StaticMeshActor", "UTTeamStaticMesh");
 		registerUClass(Camera.class, "CameraActor", "SpectatorCam", "AttractCamera");
 
 

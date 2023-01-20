@@ -1,0 +1,15 @@
+Begin Map
+Begin Actor Class=Light Name=Light50
+    LightBrightness=25.000000
+    Level=LevelInfo'myLevel.LevelInfo0'
+    Region=(Zone=LevelInfo'myLevel.LevelInfo0',iLeaf=36,ZoneNumber=1)
+    Tag="Light"
+    PhysicsVolume=DefaultPhysicsVolume'myLevel.DefaultPhysicsVolume0'
+    Location=(X=-69.075821,Y=-73.074799,Z=-309.082642)
+    DrawScale=2.000000
+    SoundVolume=76
+    bSelected=True
+End Actor
+Begin Surface
+End Surface
+End Map

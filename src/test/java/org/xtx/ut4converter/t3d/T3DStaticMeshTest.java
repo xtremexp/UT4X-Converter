@@ -18,7 +18,7 @@ class T3DStaticMeshTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);
 
         final T3DStaticMesh ut2004Sm = (T3DStaticMesh) T3DTestUtils.parseFromT3d(mc, "StaticMeshActor", T3DStaticMesh.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/UT2004-StaticMesh.t3d")).getPath());
-        ut2004Sm.convertScaleAndToT3D(2d);
+        System.out.println(ut2004Sm.convertScaleAndToT3D(1d));
     }
 
     @Test
@@ -27,6 +27,6 @@ class T3DStaticMeshTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT3);
 
         final T3DStaticMesh ut2004Sm = (T3DStaticMesh) T3DTestUtils.parseFromT3d(mc, "StaticMeshActor", T3DStaticMesh.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/UT2004-StaticMesh.t3d")).getPath());
-        ut2004Sm.convertScaleAndToT3D(2d);
+        System.out.println(ut2004Sm.convertScaleAndToT3D(1d));
     }
 }

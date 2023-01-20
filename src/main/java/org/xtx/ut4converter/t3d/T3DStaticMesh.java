@@ -11,7 +11,7 @@ import org.xtx.ut4converter.tools.Geometry;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.xtx.ut4converter.ucore.UnrealEngine.*;
@@ -26,7 +26,7 @@ public class T3DStaticMesh extends T3DSound {
 	/**
 	 * List of overriding staticmesh materials
 	 */
-	private final List<UPackageRessource> skins = new ArrayList<>();
+	private final List<UPackageRessource> skins = new LinkedList<>();
 
 
 	/**
@@ -126,7 +126,7 @@ public class T3DStaticMesh extends T3DSound {
 		else if (line.startsWith("Skins(") || line.startsWith("Materials(")) {
 
 			// can be Materials(0)=None as seen in VCTF-Kargo
-			if (line.contains("\\'")) {
+			if (line.contains("'")) {
 				skins.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
 			} else {
 				skins.add(null); // simulating 'None'
@@ -185,11 +185,13 @@ public class T3DStaticMesh extends T3DSound {
 		// UE4 no property on actor, have to set it in the content browser
 		if (isTo(UE3)) {
 			this.addConvProperty("bCollideComplex", true);
+			this.addConvProperty("CollisionComponent", "StaticMeshComponent'" + smComp.getObjName() + "'");
 		}
 
-		super.toT3dNew(mapConverter.getOutputGame().getUeVersion());
+		sbf.append(super.toT3dNew());
 
-		return sbf.toString();
+		// for possible embedded sound
+		return super.toT3d();
 	}
 
 	@Override
