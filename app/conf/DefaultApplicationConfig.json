@@ -101,11 +101,11 @@
     "convertsToGames": [
       {
         "gameId": "UT3",
-        "scale": 2.2
+        "scale": 2
       },
       {
         "gameId": "UT4",
-        "scale": 2.5
+        "scale": 2.2
       }
     ],
     "id" : "U2"
@@ -239,12 +239,7 @@
       "useTexDb" : false,
       "isCustom" : false,
       "soundExt" : "uasset",
-      "convertsToGames": [
-        {
-          "gameId": "UT4",
-          "scale": 1.25
-        }
-      ],
+      "convertsToGames": [],
       "id" : "UT4"
     }]
 }
