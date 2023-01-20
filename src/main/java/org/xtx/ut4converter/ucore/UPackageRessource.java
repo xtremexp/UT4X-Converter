@@ -503,7 +503,7 @@ public class UPackageRessource {
 			if(mapConverter.isTo(UE4, UE5)) {
 				currentFileExt = "obj";
 			} else {
-				currentFileExt = "t3d";
+				currentFileExt = "ase";
 			}
 		}
 

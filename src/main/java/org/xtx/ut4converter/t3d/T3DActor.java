@@ -408,26 +408,37 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	private static void writeLocRotAndScale(StringBuilder sbf, UnrealEngine outEngine, Vector3d location, Vector3d rotation, Vector3d scale3d) {
 
-		sbf.append(writeUE4LocRotAndScale(outEngine.version >= 4, location, rotation, scale3d, IDT + "\t"));
+		sbf.append(writeUE4LocRotAndScale(outEngine.version, location, rotation, scale3d, IDT + "\t"));
 	}
 
-	public static String writeUE4LocRotAndScale(boolean isRelative, Vector3d location, Vector3d rotation, Vector3d scale3d, String baseText) {
+	private static String writeUE4LocRotAndScale(int ueVersion, Vector3d location, Vector3d rotation, Vector3d scale3d, String baseText) {
 
-		StringBuilder sb = new StringBuilder();
-		String prefix = isRelative ? "Relative":"";
+		final StringBuilder sb = new StringBuilder();
 
 		if (location != null) {
-			sb.append(baseText).append(prefix).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
+			if (ueVersion >= 4) {
+				sb.append(baseText).append("RelativeLocation=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
+			} else {
+				sb.append(baseText).append("Location=(X=").append(fmt(location.x)).append(",Y=").append(fmt(location.y)).append(",Z=").append(fmt(location.z)).append(")\n");
+			}
 		}
 
 		// RelativeRotation=(Pitch=14.179391,Yaw=13.995641,Roll=14.179387)
 		if (rotation != null) {
-			sb.append(baseText).append(prefix).append("Rotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
+			if (ueVersion >= 4) {
+				sb.append(baseText).append("RelativeRotation=(Pitch=").append(fmt(rotation.x)).append(",Yaw=").append(fmt(rotation.y)).append(",Roll=").append(fmt(rotation.z)).append(")\n");
+			} else {
+				sb.append(baseText).append("Rotation=(Pitch=").append((int) rotation.x).append(",Yaw=").append((int) rotation.y).append(",Roll=").append((int) rotation.z).append(")\n");
+			}
 		}
 
 		// RelativeScale3D=(X=4.000000,Y=3.000000,Z=2.000000)
 		if (scale3d != null) {
-			sb.append(baseText).append(prefix).append("Scale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
+			if (ueVersion >= 4) {
+				sb.append(baseText).append("RelativeScale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
+			} else {
+				sb.append(baseText).append("DrawScale3D=(X=").append(fmt(scale3d.x)).append(",Y=").append(fmt(scale3d.y)).append(",Z=").append(fmt(scale3d.z)).append(")\n");
+			}
 		}
 
 		return sb.toString();

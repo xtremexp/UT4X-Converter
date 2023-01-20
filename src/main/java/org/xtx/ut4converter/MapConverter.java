@@ -10,7 +10,6 @@ import org.xtx.ut4converter.t3d.T3DRessource.Type;
 import org.xtx.ut4converter.tools.Installation;
 import org.xtx.ut4converter.tools.TextureDbFile;
 import org.xtx.ut4converter.tools.UIUtils;
-import org.xtx.ut4converter.tools.objmesh.ObjMaterial;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
 import org.xtx.ut4converter.tools.psk.Material;
 import org.xtx.ut4converter.tools.psk.PSKStaticMesh;
@@ -762,6 +761,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 					}
 				}
 
+				logger.info("Converting " + smFile.getName() + " -> " + ((smObjFile.length() > 0) ? smObjFile.getName() : "") + ((smAseFile.length() > 0) ? smAseFile.getName() : ""));
 				smPkgResUsed.addExportedFiles(smObjFile, smMtlFile, smAseFile);
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error converting " + smFile, e);
@@ -788,27 +788,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 
 		return matNameToNewName;
-	}
-
-	/**
-	 *
-	 * @param exportedFile Psk file
-	 * @return Psk staticmesh with renames material
-	 * @throws IOException Error reading psk file
-	 */
-	private PSKStaticMesh listAndRenameMaterialsForPsk(File exportedFile) throws IOException {
-
-		final PSKStaticMesh pskMesh = new PSKStaticMesh(exportedFile);
-
-		for (final Material mat : pskMesh.getMaterials()) {
-			final String newMapName = listMatAndGetNewMatName(mat.getMaterialName());
-
-			if(newMapName != null){
-				mat.setMaterialName(newMapName);
-			}
-		}
-
-		return pskMesh;
 	}
 
 	final List<UPackageRessource> pendingExport = new ArrayList<>();

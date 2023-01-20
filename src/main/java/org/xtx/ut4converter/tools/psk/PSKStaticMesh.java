@@ -1,9 +1,7 @@
 package org.xtx.ut4converter.tools.psk;
 
-import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.tools.ase.AseStaticMesh;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
-import org.xtx.ut4converter.tools.t3dmesh.Triangle;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -392,7 +390,7 @@ public class PSKStaticMesh {
 			fw.write("*GEOMOBJECT {\n");
 			fw.write("\t*MESH {\n");
 			fw.write("\t\t*TIMEVALUE 0\n");
-			fw.write("\t\t*MESH_NUMVERTEX " + this.getWedges().size() + "\n");
+			fw.write("\t\t*MESH_NUMVERTEX " + this.getPoints().size() + "\n");
 			fw.write("\t\t*MESH_NUMFACES " + this.getFaces().size() + "\n");
 
 			writeAseMeshVertexList(fw);
