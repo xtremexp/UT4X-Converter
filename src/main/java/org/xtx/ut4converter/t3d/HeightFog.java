@@ -2,7 +2,9 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.tools.RGBColor;
-import org.xtx.ut4converter.ucore.UnrealEngine;
+
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE3;
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE4;
 
 /**
  * UE3 actor
@@ -61,41 +63,32 @@ public class HeightFog extends T3DActor {
 
 	public String toT3d() {
 
-		if (mapConverter.isTo(UnrealEngine.UE4)) {
+		this.t3dClass = isTo(UE4) ? "AtmosphericFog" :"HeightFog";
+		final Component fogComp = new Component(isTo(UE4) ? "AtmosphericFogComponent" : "HeightFogComponent", this);
 
-			sbf.append(IDT).append("Begin Actor Class=AtmosphericFog Name=").append(name).append("\n");
-			sbf.append(IDT).append("\tBegin Object Class=BillboardComponent Name=\"Sprite\" Archetype=BillboardComponent'Default__AtmosphericFog:Sprite'\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Class=ArrowComponent Name=\"ArrowComponent0\" Archetype=ArrowComponent'Default__AtmosphericFog:ArrowComponent0'\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Class=AtmosphericFogComponent Name=\"AtmosphericFogComponent0\" Archetype=AtmosphericFogComponent'Default__AtmosphericFog:AtmosphericFogComponent0'\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Name=\"Sprite\"\n");
-			sbf.append(IDT).append("\t\tAttachParent=AtmosphericFogComponent0\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Name=\"ArrowComponent0\"\n");
-			sbf.append(IDT).append("\t\tAttachParent=AtmosphericFogComponent0\n");
-			sbf.append(IDT).append("\tEnd Object\n");
-			sbf.append(IDT).append("\tBegin Object Name=\"AtmosphericFogComponent0\"\n");
-
-			if (startDistance != null) {
-				sbf.append(IDT).append("\t\tStartDistance='").append(startDistance).append("\n");
-			} 
-			
-			if (lightColor != null) {
-				sbf.append(IDT).append("\t\tDefaultLightColor=").append(lightColor.toT3D(true)).append("\n");
-			}
-			writeLocRotAndScale();
-			sbf.append(IDT).append("\tEnd Object\n");
-
-			sbf.append(IDT).append("\tAtmosphericFogComponent=AtmosphericFogComponent0\n");
-			sbf.append(IDT).append("\tArrowComponent=ArrowComponent0\n");
-			sbf.append(IDT).append("\tSpriteComponent=Sprite\n");
-			sbf.append(IDT).append("\tRootComponent=AtmosphericFogComponent0\n");
-			writeEndActor();
+		// UE3/UE4 same prop name/comp
+		if (startDistance != null) {
+			fogComp.addProp("StartDistance", startDistance);
 		}
 
-		return super.toString();
+		if (lightColor != null) {
+			fogComp.addProp(isTo(UE4) ? "DefaultLightColor" : "LightColor", lightColor.toT3D(true));
+		}
+
+		// UE3/UE4 same prop name/comp
+		if (extinctionDistance != null) {
+			fogComp.addProp("ExtinctionDistance", extinctionDistance);
+		}
+
+		if (isTo(UE3)) {
+			this.addComponent(new Component("SpriteComponent", "Sprite", this));
+		}
+
+		this.addComponent(fogComp);
+
+		sbf.append(super.toT3dNew());
+
+		return sbf.toString();
 	}
 
 }
