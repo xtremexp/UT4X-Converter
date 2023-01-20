@@ -244,7 +244,7 @@ public class T3DUE2Terrain extends T3DActor {
 			// extract heightmap texture to get terrain size
 			loadHeightMap();
 		} catch (InterruptedException | IOException e) {
-			mapConverter.getLogger().log(Level.SEVERE, "Error while extracting heightmap", e);
+			mapConverter.getLogger().log(Level.SEVERE, "Error while loading terrain heightmap", e);
 		}
 
 		if (heightMapTextureDimensions == null) {

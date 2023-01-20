@@ -576,7 +576,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			// and directly convert it
 			t3dLvlConvertor = new T3DLevelConvertor(inT3d, outT3d, this, noUi);
 			t3dLvlConvertor.setCreateNoteForUnconvertedActors(createNoteForUnconvertedActors);
-			updateMessage("Converting " + inT3d.getName() + " to " + outT3d.getName());
+			updateMessage("Converting " + inT3d.getName() + " -> " + outT3d.getName());
 			t3dLvlConvertor.readConvertAndWrite();
 			updateProgress(80, 100);
 

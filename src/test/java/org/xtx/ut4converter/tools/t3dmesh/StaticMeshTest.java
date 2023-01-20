@@ -53,11 +53,11 @@ public class StaticMeshTest {
     @Test
     void testConvertT3DStaticMeshToAse() throws IOException, URISyntaxException {
 
-        final File t3dSmFile = new File(Objects.requireNonNull(StaticMeshTest.class.getResource("/meshes/CatwalkSegments.Arena1FloorQtr.t3d")).toURI());
+        final File t3dSmFile = new File(Objects.requireNonNull(StaticMeshTest.class.getResource("/meshes/Cube256.t3d")).toURI());
         final StaticMesh t3dStaticMesh = new StaticMesh(t3dSmFile);
 
-        File aseFile = File.createTempFile("CatwalkSegments.Arena1FloorQtr", "ase");
-        //File aseFile = new File("C:\\dev3\\TEMP2\\CatwalkSegments.Arena1FloorQtr.ase");
+        File aseFile = File.createTempFile("Cube256", "ase");
+        //File aseFile = new File("C:\\dev3\\TEMP2\\Cube256.ase");
         try {
             t3dStaticMesh.exportToAse(aseFile);
             Assertions.assertTrue(aseFile.exists());

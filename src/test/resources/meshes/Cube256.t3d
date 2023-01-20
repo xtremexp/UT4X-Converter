@@ -1,0 +1,87 @@
+Begin StaticMesh Name=Cube256
+    Version=2.000000 BoundingBox.Min.X=-128.000000 BoundingBox.Min.Y=-128.000000 BoundingBox.Min.Z=-128.000000 BoundingBox.Max.X=128.000000 BoundingBox.Max.Y=128.000000 BoundingBox.Max.Z=128.000000
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-2
+        SmoothingMask 0
+        Vertex 0 -128.000000 128.000000 -128.000000 1.000000 0.000000
+        Vertex 1 -128.000000 128.000000 128.000000 1.000000 -1.000000
+        Vertex 2 -128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-2
+        SmoothingMask 0
+        Vertex 0 -128.000000 128.000000 128.000000 1.000000 -1.000000
+        Vertex 1 -128.000000 -128.000000 128.000000 0.000000 -1.000000
+        Vertex 2 -128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-3
+        SmoothingMask 0
+        Vertex 0 128.000000 128.000000 -128.000000 1.000000 0.000000
+        Vertex 1 128.000000 128.000000 128.000000 1.000000 -1.000000
+        Vertex 2 -128.000000 128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-3
+        SmoothingMask 0
+        Vertex 0 128.000000 128.000000 128.000000 1.000000 -1.000000
+        Vertex 1 -128.000000 128.000000 128.000000 0.000000 -1.000000
+        Vertex 2 -128.000000 128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-4
+        SmoothingMask 0
+        Vertex 0 128.000000 -128.000000 -128.000000 1.000000 -0.125000
+        Vertex 1 128.000000 -128.000000 128.000000 1.000000 -1.125000
+        Vertex 2 128.000000 128.000000 -128.000000 0.000000 -0.125000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-4
+        SmoothingMask 0
+        Vertex 0 128.000000 -128.000000 128.000000 1.000000 -1.125000
+        Vertex 1 128.000000 128.000000 128.000000 0.000000 -1.125000
+        Vertex 2 128.000000 128.000000 -128.000000 0.000000 -0.125000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-1
+        SmoothingMask 0
+        Vertex 0 -128.000000 -128.000000 128.000000 1.000000 -1.000000
+        Vertex 1 128.000000 -128.000000 128.000000 0.000000 -1.000000
+        Vertex 2 128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-1
+        SmoothingMask 0
+        Vertex 0 -128.000000 -128.000000 -128.000000 1.000000 0.000000
+        Vertex 1 -128.000000 -128.000000 128.000000 1.000000 -1.000000
+        Vertex 2 128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-5
+        SmoothingMask 0
+        Vertex 0 128.000000 128.000000 128.000000 0.937500 0.000000
+        Vertex 1 128.000000 -128.000000 128.000000 0.937500 -1.000000
+        Vertex 2 -128.000000 128.000000 128.000000 -0.062500 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-5
+        SmoothingMask 0
+        Vertex 0 128.000000 -128.000000 128.000000 0.937500 -1.000000
+        Vertex 1 -128.000000 -128.000000 128.000000 -0.062500 -1.000000
+        Vertex 2 -128.000000 128.000000 128.000000 -0.062500 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-6
+        SmoothingMask 0
+        Vertex 0 128.000000 -128.000000 -128.000000 1.000000 0.000000
+        Vertex 1 128.000000 128.000000 -128.000000 1.000000 -1.000000
+        Vertex 2 -128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+    Begin Triangle
+        Texture DM-LightTest.Tex256x256-6
+        SmoothingMask 0
+        Vertex 0 128.000000 128.000000 -128.000000 1.000000 -1.000000
+        Vertex 1 -128.000000 128.000000 -128.000000 0.000000 -1.000000
+        Vertex 2 -128.000000 -128.000000 -128.000000 0.000000 0.000000
+    End Triangle
+End StaticMesh

@@ -182,6 +182,7 @@ public class PackageExporterTask extends Task<List<String>> {
 
                 batchExportOptions.add(UCCExporter.UccOptions.CLASS_UC);
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
+                batchExportOptions.add(UCCExporter.UccOptions.STATICMESH_T3D);
 
                 if (game.getMapExt().equals(pakExt)) {
                     batchExportOptions.add(UCCExporter.UccOptions.LEVEL_T3D);

@@ -661,11 +661,12 @@ public class UPackageRessource {
 			// .dds textures exported from UE2 (via 'ucc.exe batchexport' cmd) cannot be read by UE4+
 			else if (type == Type.TEXTURE) {
 
-				if (getExportedFiles().get(0).getName().endsWith(".dds")) {
+				if (getExportedFiles().get(0).getName().endsWith(".dds") || getExportedFiles().get(0).getName().endsWith(".bmp")) {
 
 					String extFormat = "png";
 
 					// UE3 does not support .png for import
+					// For UT3 need to resave to bmp because Unreal 2 export textures in an unsupported format
 					if (mapConverter.isTo(UnrealEngine.UE3)) {
 						extFormat = "bmp";
 					}
