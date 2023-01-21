@@ -67,7 +67,7 @@ public class ApplicationConfig implements Serializable {
      */
     private List<UnrealGame> games = new ArrayList<>();
 
-    private Set<ConversionSettings> recentConversions = new LinkedHashSet<>();
+    private List<ConversionSettings> recentConversions = new ArrayList<>();
 
     private ConversionSettingsPanelConfig conversionSettingsPanelConfig;
 
@@ -221,25 +221,26 @@ public class ApplicationConfig implements Serializable {
         this.games.addAll(appConfigCustomGames);
     }
 
-    public Set<ConversionSettings> getRecentConversions() {
+    public List<ConversionSettings> getRecentConversions() {
         return recentConversions;
-    }
-
-    public void setRecentConversions(Set<ConversionSettings> recentConversions) {
-        this.recentConversions = recentConversions;
     }
 
     public void addRecentConversion(final ConversionSettings conversionSettings) {
 
         this.recentConversions.add(conversionSettings);
 
-        // limit historic of conversions to 6
-        final Set<ConversionSettings> cappedConvList = new LinkedHashSet<>();
+        // limit historic of conversions to 8
+        final List<ConversionSettings> cappedConvList = new ArrayList<>();
         int i = 0;
 
         for (ConversionSettings c : this.recentConversions) {
-            cappedConvList.add(c);
-            if (i > 5) {
+            if(cappedConvList.contains(c)){
+                cappedConvList.remove(c);
+            }
+
+            cappedConvList.add(0, c);
+
+            if (i > 6) {
                 break;
             }
             i++;
