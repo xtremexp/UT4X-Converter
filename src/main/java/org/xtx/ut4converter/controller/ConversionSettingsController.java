@@ -84,7 +84,7 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private ComboBox<Double> scaleFactorList;
 	@FXML
-	private ComboBox<Float> lightningBrightnessFactor;
+	private ComboBox<Float> lightningRadiusFactor;
 	@FXML
 	private ComboBox<Float> soundVolumeFactor;
 	@FXML
@@ -137,9 +137,9 @@ public class ConversionSettingsController implements Initializable {
 		scaleFactorList.getItems().sort(Comparator.naturalOrder());
 		scaleFactorList.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultScaleFactor());
 
-		lightningBrightnessFactor.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getLightBrightnessFactorList());
-		lightningBrightnessFactor.getItems().sort(Comparator.naturalOrder());
-		lightningBrightnessFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultLightBrightnessFactor());
+		lightningRadiusFactor.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getLightRadiusFactorList());
+		lightningRadiusFactor.getItems().sort(Comparator.naturalOrder());
+		lightningRadiusFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultLightRadiusFactor());
 
 		lightMapResolutionList.getItems().addAll(this.applicationConfig.getConversionSettingsPanelConfig().getLightMapResolutionList());
 		lightMapResolutionList.getItems().sort(Comparator.naturalOrder());
@@ -405,8 +405,6 @@ public class ConversionSettingsController implements Initializable {
 			chooser.setInitialDirectory(mapFolder);
 		}
 
-		// TODO check U1 uccbin oldunreal.com patch for export U1 maps to unreal
-		// text files with linux
 		if (Installation.isLinux()) {
 			chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(inputGame.getName() + " Map (*.t3d)", "*.t3d"));
 		} else {
@@ -461,7 +459,7 @@ public class ConversionSettingsController implements Initializable {
 
 
 			mapConverter.setLightMapResolution(lightMapResolutionList.getSelectionModel().getSelectedItem());
-			mapConverter.brightnessFactor = lightningBrightnessFactor.getSelectionModel().getSelectedItem();
+			mapConverter.lightRadiusFactor = lightningRadiusFactor.getSelectionModel().getSelectedItem();
 			mapConverter.soundVolumeFactor = soundVolumeFactor.getSelectionModel().getSelectedItem();
 			if (classesNameFilter.getLength() > 1) {
 				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));

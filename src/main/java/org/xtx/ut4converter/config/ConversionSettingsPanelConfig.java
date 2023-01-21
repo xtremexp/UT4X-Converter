@@ -10,9 +10,9 @@ public class ConversionSettingsPanelConfig {
 
     private Double defaultScaleFactor;
 
-    private List<Float> lightBrightnessFactorList;
+    private List<Float> lightRadiusFactorList;
 
-    private Float defaultLightBrightnessFactor;
+    private Float defaultLightRadiusFactor;
 
     private List<Integer> lightMapResolutionList;
 
@@ -29,12 +29,12 @@ public class ConversionSettingsPanelConfig {
 
     }
 
-    public List<Float> getLightBrightnessFactorList() {
-        return lightBrightnessFactorList;
+    public List<Float> getLightRadiusFactorList() {
+        return lightRadiusFactorList;
     }
 
-    public void setLightBrightnessFactorList(List<Float> lightBrightnessFactorList) {
-        this.lightBrightnessFactorList = lightBrightnessFactorList;
+    public void setLightRadiusFactorList(List<Float> lightRadiusFactorList) {
+        this.lightRadiusFactorList = lightRadiusFactorList;
     }
 
     public List<Integer> getLightMapResolutionList() {
@@ -53,12 +53,12 @@ public class ConversionSettingsPanelConfig {
         this.soundVolumeFactorList = soundVolumeFactorList;
     }
 
-    public Float getDefaultLightBrightnessFactor() {
-        return defaultLightBrightnessFactor;
+    public Float getDefaultLightRadiusFactor() {
+        return defaultLightRadiusFactor;
     }
 
-    public void setDefaultLightBrightnessFactor(Float defaultLightBrightnessFactor) {
-        this.defaultLightBrightnessFactor = defaultLightBrightnessFactor;
+    public void setDefaultLightRadiusFactor(Float defaultLightRadiusFactor) {
+        this.defaultLightRadiusFactor = defaultLightRadiusFactor;
     }
 
     public Integer getDefaultLightMapResolution() {

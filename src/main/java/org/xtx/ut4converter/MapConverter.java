@@ -155,10 +155,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	public Float soundVolumeFactor;
 
 	/**
-	 * Changes sound volume of sound actors. For exemple, if soundVolumeRatio <
-	 * 100%, volume will be decreased
+	 * Scales radius of lights (default 1)
 	 */
-	public Float brightnessFactor;
+	public Float lightRadiusFactor;
 
 	/**
 	 * If <code>true</code> staticmeshes of the map will be exported and
@@ -531,7 +530,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			System.out.println("Converting " + inMap.getAbsolutePath());
 			logger.log(Level.INFO, MainApp.PROGRAM_NAME + " v" + MainApp.VERSION);
 			logger.log(Level.INFO, "Conversion of " + inMap.getName() + " to " + outputGame.getName());
-			logger.log(Level.INFO, "Scale Factor: " + scale);
+			logger.log(Level.INFO, "Scale Factor: " + scale + " Light Radius Factor: " + this.lightRadiusFactor);
 
 			if (filteredClasses != null && filteredClasses.length > 0) {
 				getSupportedActorClasses().setConvertOnly(filteredClasses);

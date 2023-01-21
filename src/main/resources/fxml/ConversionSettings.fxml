@@ -39,8 +39,8 @@
                     <ComboBox fx:id="lightMapResolutionList" promptText="Lightmap resolution for brushes. The smaller, the bigger the map filesize will be!" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
 
-                    <Label GridPane.columnIndex="2" GridPane.rowIndex="2">Lightning Brightness Factor:</Label>
-                    <ComboBox fx:id="lightningBrightnessFactor" promptText="changes brightness of all lights of map" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                    <Label GridPane.columnIndex="2" GridPane.rowIndex="2">Light Radius Factor:</Label>
+                    <ComboBox fx:id="lightningRadiusFactor" promptText="Scales radius of all lights." GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="3">Sound Volume Factor:</Label>
                     <ComboBox fx:id="soundVolumeFactor" promptText="changes volume of all sounds of map" GridPane.columnIndex="1" GridPane.rowIndex="3"/>

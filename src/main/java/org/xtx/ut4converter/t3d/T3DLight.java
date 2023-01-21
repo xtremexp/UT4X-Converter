@@ -562,9 +562,6 @@ public class T3DLight extends T3DSound {
 			}
 		}
 
-		if (intensity != null && mapConverter.brightnessFactor != null) {
-			intensity *= mapConverter.brightnessFactor;
-		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
 
@@ -618,7 +615,11 @@ public class T3DLight extends T3DSound {
 	@Override
 	public void scale(double newScale) {
 
-		radius *= newScale;
+		this.radius *= newScale;
+
+		if (this.mapConverter.lightRadiusFactor != null) {
+			this.radius *= this.mapConverter.lightRadiusFactor;
+		}
 
 		super.scale(newScale);
 	}
