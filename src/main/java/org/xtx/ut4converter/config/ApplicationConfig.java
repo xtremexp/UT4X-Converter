@@ -229,7 +229,7 @@ public class ApplicationConfig implements Serializable {
 
         this.recentConversions.add(0, conversionSettings);
         // limit history to 8
-        this.recentConversions = recentConversions.subList(0, 7);
+        this.recentConversions = recentConversions.subList(0, Math.min(this.recentConversions.size() - 1, 7));
     }
 
     public int getVersion() {
