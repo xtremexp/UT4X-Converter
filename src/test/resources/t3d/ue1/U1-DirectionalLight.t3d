@@ -1,0 +1,14 @@
+Begin Map
+	Begin Actor Class=Light Name=Light14
+		DrawScale=2.0
+		Tag="Light141"
+		Location=(X=2801.81,Y=6140.19,Z=664.0)
+		Rotation=(Pitch=-9216,Yaw=16384)
+		LightBrightness=49
+		LightHue=159
+		LightSaturation=180
+		LightRadius=192
+		LightCone=253
+		bDirectional=True
+	End Actor
+End Map

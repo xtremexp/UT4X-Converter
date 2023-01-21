@@ -813,8 +813,8 @@ public abstract class T3DActor extends T3DObject {
 		return "Begin Map\nBegin Level\n" + convT3d + "End Level\nEnd Map";
 	}
 
-	protected void addComponent(final Component component){
-		this.components.add(component);
+	protected void addComponent(final Component... components){
+		this.components.addAll(Arrays.asList(components));
 	}
 
 	protected void addConvProperty(String key, Object value){

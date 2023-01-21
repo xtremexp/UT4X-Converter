@@ -154,7 +154,11 @@ public abstract class T3DObject {
 		this.game = game;
 	}
 
-	protected boolean isTo(UnrealEngine unrealEngine){
-		return this.mapConverter.getUnrealEngineTo() == unrealEngine;
+	protected boolean isFrom(UnrealEngine... unrealEngine) {
+		return this.mapConverter.isFrom(unrealEngine);
+	}
+
+	protected boolean isTo(UnrealEngine... unrealEngine) {
+		return this.mapConverter.isTo(unrealEngine);
 	}
 }

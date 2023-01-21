@@ -23,7 +23,7 @@ import static org.xtx.ut4converter.ucore.UnrealEngine.*;
 /**
  * Class for converting lights.
  *
- * @author XtremeXp TODO handle "light skins" (coronas)
+ * @author XtremeXp
  */
 public class T3DLight extends T3DSound {
 
@@ -106,7 +106,7 @@ public class T3DLight extends T3DSound {
 	/**
 	 * Skins of light for corona
 	 */
-	private List<UPackageRessource> skins;
+	private final List<UPackageRessource> skins = new ArrayList<>();
 
 
 	/**
@@ -280,10 +280,6 @@ public class T3DLight extends T3DSound {
 
 		// Skin=Texture'GenFX.LensFlar.3'
 		else if (line.startsWith("Skin=") || line.startsWith("Skins(")) {
-			if(this.skins == null){
-				this.skins = new ArrayList<>();
-			}
-
 			this.skins.add(mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
 		}
 
@@ -329,9 +325,9 @@ public class T3DLight extends T3DSound {
 	 */
 	private void convertClassAndMobility() {
 
-		if (mapConverter.isFrom(UnrealEngine.UE3)) {
+		if (mapConverter.isFrom(UE3)) {
 			convertUE3ClassAndMobility();
-		} else if (mapConverter.isFrom(UnrealEngine.UE1, UE2)) {
+		} else if (mapConverter.isFrom(UE1, UE2)) {
 			convertUE12ClassAndMobility();
 		} else {
 			t3dClass = UE4_LightActor.PointLight.name();
@@ -345,7 +341,7 @@ public class T3DLight extends T3DSound {
 
 		if (isSpotLight()) {
 			this.t3dClass = UE4_LightActor.SpotLight.name();
-		} else if (!isSpotLight() && (isSunLight() || (this.isDirectional != null && this.isDirectional))) {
+		} else if (!isSpotLight() && (isSunLight() || Boolean.TRUE.equals(this.isDirectional))) {
 			// UE1/UE2 directional lights have no lightning inside brushes (because UE1/UE2 are in substractive mode)
 			// Replacing them with spotlights make them work
 			this.t3dClass = UE4_LightActor.SpotLight.name();
@@ -448,8 +444,8 @@ public class T3DLight extends T3DSound {
 		// UE3/UE4 same prob/comp
 		lightComp.addProp("LightColor", rgbColor.toT3D(true));
 
-		// UE4 prop only (maybe UE3 brightness prop ?)
-		if (intensity != null && isTo(UE4)) {
+		// UE3('Brightness')/UE4 prop
+		if (intensity != null) {
 			lightComp.addProp("Intensity", intensity);
 		}
 
@@ -461,8 +457,8 @@ public class T3DLight extends T3DSound {
 			lightComp.addProp("OuterConeAngle", angle);
 		}
 
-		// UE4 only property
-		if (isTo(UE4)) {
+		// UE4/UE5 only property
+		if (isTo(UE4, UE5)) {
 			lightComp.addProp("Mobility", mobility.name());
 		}
 
@@ -479,7 +475,7 @@ public class T3DLight extends T3DSound {
 			this.addConvProperty("LightType", "NewEnumerator" + lightType.ordinal());
 		}
 
-		// UE3/UE4 same prop/comp
+		// UE3/UE4/UE5 same prop/comp
 		if (bShadowCast != null) {
 			lightComp.addProp("CastShadows", bShadowCast);
 		}
@@ -487,7 +483,9 @@ public class T3DLight extends T3DSound {
 		// For UE3, components must be in this order
 		if (isTo(UE3)) {
 			this.addComponent(ue3SpriteComp);
-			this.addComponent(ue3RadiusComp);
+			if (!"DirectionalLightComponent".equals(componentLightClass)) {
+				this.addComponent(ue3RadiusComp);
+			}
 		}
 
 		this.addComponent(lightComp);
@@ -507,7 +505,7 @@ public class T3DLight extends T3DSound {
 	@Override
 	public void convert() {
 
-		if (isCorona && skins != null && !skins.isEmpty() && mapConverter.convertTextures()) {
+		if (isCorona && !skins.isEmpty() && mapConverter.convertTextures()) {
 
 			for(final UPackageRessource skinMaterial : this.skins) {
 				skinMaterial.export(UTPackageExtractor.getExtractor(mapConverter, skinMaterial));
