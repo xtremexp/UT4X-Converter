@@ -1,3 +1,15 @@
+- 1.4.0 - 21/01/2023
+  - Added support for ut2003/4/unreal 2 conversion to Unreal Tournament 3 (note: terrain not yet converted)
+  - u1->all: fixed conversion crash with Unreal 1 patch v227f
+  - u1->u2/ut2003/4: fixed messed up brushes if they originally had PrePivot value set
+  - u2->ut4: fixed bad uv of converted staticmeshes
+  - tool: package extractor now also export staticmeshes from map package when using Epic Games extractor
+  - ut2003/4/ut3: fixed overidded materials not being converted properly for staticmeshes
+  - ui: conversion history, last conversion is now on top of list
+  - ui: added extra logs when converting staticmeshes
+  - tech: java upgrade 19.0.1 -> 19.0.2
+  
+
 - 1.3.0 - 18/01/2023
   - uc2: Added support for Unreal Championship 2 (Experimental) 
   - ui: added recent conversion history in menu
