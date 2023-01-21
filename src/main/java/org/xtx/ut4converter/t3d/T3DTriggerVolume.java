@@ -34,7 +34,7 @@ public class T3DTriggerVolume extends T3DBrush {
 	/**
 	 * Trigger type
 	 */
-	private TriggerType triggerType = TriggerType.TT_AnyProximity;
+	private String triggerType = TriggerType.TT_AnyProximity.name();
 
 	/**
 	 * Message displayed to player when triggered
@@ -98,7 +98,7 @@ public class T3DTriggerVolume extends T3DBrush {
 	public boolean analyseT3DData(String line) {
 
 		if (line.startsWith("TriggerType=")) {
-			triggerType = TriggerType.valueOf(T3DUtils.getString(line));
+			triggerType = T3DUtils.getString(line);
 		} else if (line.startsWith("bInitiallyActive=")) {
 			bInitiallyActive = Boolean.getBoolean((T3DUtils.getString(line)));
 		} else if (line.startsWith("ClassProximityType=")) {
