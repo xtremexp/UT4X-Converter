@@ -393,8 +393,10 @@ public final class UCCExporter extends UTPackageExtractor {
 
 			for (String logLine : logLines) {
 
-				// Exported Level MapCopy.MyLevel to
-				// Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
+				// UE1 patch 227j has null chars between each char
+				logLine = logLine.replaceAll("\0", "");
+
+				// Exported Level MapCopy.MyLevel to Z:\TEMP\UT4Converter\Conversion\UT99\MyLevel.t3d
 				// Exported Texture GenWarp.Sun128a to Z:\\TEMP\Sun128a.bmp
 				if (logLine.contains("Exported ")) {
 
