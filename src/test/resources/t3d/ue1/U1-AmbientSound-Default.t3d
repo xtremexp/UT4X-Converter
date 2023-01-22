@@ -1,0 +1,8 @@
+Begin Map
+	Begin Actor Class=AmbientSound Name=AmbientSound18
+		DrawScale=6.0
+		AmbientSound=Sound'AmbOutside.Looping.wind23'
+		Tag="AmbientSound15"
+		Location=(X=1000.0,Y=2000.0,Z=3000.0)
+	End Actor
+End Map

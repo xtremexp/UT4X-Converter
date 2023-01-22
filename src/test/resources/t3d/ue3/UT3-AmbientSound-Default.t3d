@@ -1,0 +1,84 @@
+Begin Map
+   Begin Level
+      Begin Actor Class=AmbientSoundSimple Name=AmbientSoundSimple_16 Archetype=AmbientSoundSimple'Engine.Default__AmbientSoundSimple'
+         Begin Object Class=SoundNodeAmbient Name=SoundNodeAmbient_17 ObjName=SoundNodeAmbient_17 Archetype=SoundNodeAmbient'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0'
+            Begin Object Class=DistributionFloatUniform Name=DistributionMinRadius ObjName=DistributionFloatUniform_189 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionMinRadius'
+               bIsDirty=False
+               Name="DistributionFloatUniform_189"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionMinRadius'
+            End Object
+            Begin Object Class=DistributionFloatUniform Name=DistributionMaxRadius ObjName=DistributionFloatUniform_190 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionMaxRadius'
+               bIsDirty=False
+               Name="DistributionFloatUniform_190"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionMaxRadius'
+            End Object
+            Begin Object Class=DistributionFloatUniform Name=DistributionLPFMinRadius ObjName=DistributionFloatUniform_191 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionLPFMinRadius'
+               bIsDirty=False
+               Name="DistributionFloatUniform_191"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionLPFMinRadius'
+            End Object
+            Begin Object Class=DistributionFloatUniform Name=DistributionLPFMaxRadius ObjName=DistributionFloatUniform_192 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionLPFMaxRadius'
+               bIsDirty=False
+               Name="DistributionFloatUniform_192"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionLPFMaxRadius'
+            End Object
+            Begin Object Class=DistributionFloatUniform Name=DistributionVolume ObjName=DistributionFloatUniform_193 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionVolume'
+               bIsDirty=False
+               Name="DistributionFloatUniform_193"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionVolume'
+            End Object
+            Begin Object Class=DistributionFloatUniform Name=DistributionPitch ObjName=DistributionFloatUniform_194 Archetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionPitch'
+               bIsDirty=False
+               Name="DistributionFloatUniform_194"
+               ObjectArchetype=DistributionFloatUniform'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0.DistributionPitch'
+            End Object
+            MinRadius=(Distribution=DistributionFloatUniform'DistributionFloatUniform_189')
+            MaxRadius=(Distribution=DistributionFloatUniform'DistributionFloatUniform_190')
+            LPFMinRadius=(Distribution=DistributionFloatUniform'DistributionFloatUniform_191')
+            LPFMaxRadius=(Distribution=DistributionFloatUniform'DistributionFloatUniform_192')
+            Wave=SoundNodeWave'DoorsMod_General_mdend50'
+            VolumeModulation=(Distribution=DistributionFloatUniform'DistributionFloatUniform_193')
+            PitchModulation=(Distribution=DistributionFloatUniform'DistributionFloatUniform_194')
+            Name="SoundNodeAmbient_17"
+            ObjectArchetype=SoundNodeAmbient'Engine.Default__AmbientSoundSimple:SoundNodeAmbient0'
+         End Object
+         Begin Object Class=SoundCue Name=SoundCue_17 ObjName=SoundCue_17 Archetype=SoundCue'Engine.Default__AmbientSoundSimple:SoundCue0'
+            FirstNode=SoundNodeAmbient'SoundNodeAmbient_17'
+            Duration=10000.000000
+            Name="SoundCue_17"
+            ObjectArchetype=SoundCue'Engine.Default__AmbientSoundSimple:SoundCue0'
+         End Object
+         Begin Object Class=DrawSoundRadiusComponent Name=DrawSoundRadius0 ObjName=DrawSoundRadiusComponent_17 Archetype=DrawSoundRadiusComponent'Engine.Default__AmbientSoundSimple:DrawSoundRadius0'
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="DrawSoundRadiusComponent_17"
+            ObjectArchetype=DrawSoundRadiusComponent'Engine.Default__AmbientSoundSimple:DrawSoundRadius0'
+         End Object
+         Begin Object Class=AudioComponent Name=AudioComponent0 ObjName=AudioComponent_22 Archetype=AudioComponent'Engine.Default__AmbientSoundSimple:AudioComponent0'
+            SoundCue=SoundCue'SoundCue_17'
+            PreviewSoundRadius=DrawSoundRadiusComponent'DrawSoundRadiusComponent_17'
+            Name="AudioComponent_22"
+            ObjectArchetype=AudioComponent'Engine.Default__AmbientSoundSimple:AudioComponent0'
+         End Object
+         Begin Object Class=SpriteComponent Name=Sprite ObjName=SpriteComponent_334 Archetype=SpriteComponent'Engine.Default__AmbientSoundSimple:Sprite'
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="SpriteComponent_334"
+            ObjectArchetype=SpriteComponent'Engine.Default__AmbientSoundSimple:Sprite'
+         End Object
+         AmbientProperties=SoundNodeAmbient'SoundNodeAmbient_17'
+         SoundCueInstance=SoundCue'SoundCue_17'
+         SoundNodeInstance=SoundNodeAmbient'SoundNodeAmbient_17'
+         bIsPlaying=True
+         AudioComponent=AudioComponent'AudioComponent_22'
+         Components(0)=SpriteComponent'SpriteComponent_334'
+         Components(1)=AudioComponent'AudioComponent_22'
+         Components(2)=DrawSoundRadiusComponent'DrawSoundRadiusComponent_17'
+         CreationTime=30486.214844
+         Tag="AmbientSoundSimple"
+         Location=(X=-336.000000,Y=128.000000,Z=-672.000000)
+         Name="AmbientSoundSimple_16"
+         ObjectArchetype=AmbientSoundSimple'Engine.Default__AmbientSoundSimple'
+      End Actor
+   End Level
+Begin Surface
+End Surface
+End Map

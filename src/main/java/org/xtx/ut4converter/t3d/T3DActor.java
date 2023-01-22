@@ -410,7 +410,7 @@ public abstract class T3DActor extends T3DObject {
 	 * Write Location Rotation and drawScale of converted actor
 	 *
 	 */
-	private String writeLocRotAndScaleAsString() {
+	String writeLocRotAndScaleAsString() {
 
 		int ueVersion = getOutputGame().getUeVersion();
 		final String baseText = IDT + "\t";
@@ -845,37 +845,7 @@ public abstract class T3DActor extends T3DObject {
 		sb.append("\n");
 
 		for (final Component comp : components) {
-
-			if (ueVersion >= 4) {
-				sb.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=\"").append(comp.getName()).append("\"\n");
-				sb.append("\t\tEnd Object\n");
-			}
-
-			// Archetype=StaticMeshComponent'Engine.Default__StaticMeshActor:StaticMeshComponent0'
-			final String compArchetype = comp.getComponentClass() + "'Engine.Default__" + this.t3dClass + ":" + comp.getName() + "'";
-
-			sb.append("\t\tBegin Object Class=").append(comp.getComponentClass()).append(" Name=").append(comp.getName());
-
-			if (ueVersion == 3) {
-				sb.append(" ObjName=").append(comp.getObjName()).append(" Archetype=").append(compArchetype);
-			}
-			sb.append("\n");
-
-			for (Map.Entry<String, Object> entry : comp.getProperties().entrySet()) {
-				sb.append("\t\t\t").append(entry.getKey()).append("=").append(entry.getValue() != null ? entry.getValue().toString() : "None").append("\n");
-			}
-
-			// location is inside component for UE4
-			if (ueVersion >= 4) {
-				sb.append(writeLocRotAndScaleAsString());
-			}
-
-			if (ueVersion == 3) {
-				sb.append("\t\t\tName=\"").append(comp.getObjName()).append("\"\n");
-				sb.append("\t\t\tObjectArchetype=").append(compArchetype).append("\n");
-			}
-
-			sb.append("\t\tEnd Object\n");
+			sb.append(comp.toT3D(ueVersion));
 		}
 
 		int idx = 0;
@@ -884,7 +854,9 @@ public abstract class T3DActor extends T3DObject {
 
 			if (ueVersion == 3) {
 				sb.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getReference(ueVersion)).append("\n");
-				sb.append("\t\tComponents(").append(idx).append(")=").append(comp.getReference(ueVersion)).append("\n");
+				if(!comp.noListInActorComponends) {
+					sb.append("\t\tComponents(").append(idx).append(")=").append(comp.getReference(ueVersion)).append("\n");
+				}
 			} else if (ueVersion == 4) {
 				if (idx == 0) {
 					sb.append("\t\t").append(comp.getComponentClass()).append("=").append(comp.getName()).append("\n");

@@ -71,6 +71,7 @@ public class T3DTestUtils {
                 // apply trim as used by the t3dlevel convertor
                 line = line.trim();
                 uta.analyseT3DData(line);
+                uta.preAnalyse(line);
             }
         }
 

@@ -48,20 +48,21 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
         super.convert();
     }
 
+    /**
+     * UE4 only
+     * @return
+     */
     public String toT3d() {
 
-        sbf.append(IDT).append("Begin Actor Class=UBDynamicAmbientSound_C  \n");
+        this.t3dClass = "UBDynamicAmbientSound_C";
 
-        writeAudioComponent();
-
-        sbf.append(IDT).append("\tAudioComponent=AudioComponent0\n");
-        sbf.append(IDT).append("\tRootComponent=AudioComponent0\n");
+        final Component mainAudioComp = buildMainAudioComponent();
 
         // Sounds(0)=SoundCue'/Game/UB/Blueprints/Sounds/TransA3_Cue.TransA3_Cue'
         int idx = 0;
 
         for(final UPackageRessource sound : sounds){
-            sbf.append(IDT).append("Sounds(").append(idx).append(")=SoundCue'").append(sound.getConvertedName()).append("'\n");
+            mainAudioComp.addProp("Sounds(" + idx + ")", "SoundCue'" + sound.getConvertedName() + "'");
             idx ++;
         }
 

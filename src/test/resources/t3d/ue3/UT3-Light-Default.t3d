@@ -1,0 +1,36 @@
+Begin Map
+   Begin Level
+      Begin Actor Class=PointLight Name=PointLight_0 Archetype=PointLight'Engine.Default__PointLight'
+         Begin Object Class=DrawLightRadiusComponent Name=DrawLightRadius0 ObjName=DrawLightRadiusComponent_0 Archetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'
+            SphereRadius=1024.000000
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="DrawLightRadiusComponent_0"
+            ObjectArchetype=DrawLightRadiusComponent'Engine.Default__PointLight:DrawLightRadius0'
+         End Object
+         Begin Object Class=PointLightComponent Name=PointLightComponent0 ObjName=PointLightComponent_12 Archetype=PointLightComponent'Engine.Default__PointLight:PointLightComponent0'
+            CachedParentToWorld=(XPlane=(W=0.000000,X=1.000000,Y=0.000000,Z=0.000000),YPlane=(W=0.000000,X=0.000000,Y=1.000000,Z=-0.000000),ZPlane=(W=0.000000,X=-0.000000,Y=0.000000,Z=1.000000),WPlane=(W=1.000000,X=-32.000000,Y=0.000000,Z=-16.000000))
+            PreviewLightRadius=DrawLightRadiusComponent'DrawLightRadiusComponent_0'
+            LightGuid=(A=-1470352223,B=1205439855,C=-1235216766,D=1095368391)
+            LightmapGuid=(A=1118572032,B=1262585590,C=-593881938,D=1269539562)
+            Name="PointLightComponent_12"
+            ObjectArchetype=PointLightComponent'Engine.Default__PointLight:PointLightComponent0'
+         End Object
+         Begin Object Class=SpriteComponent Name=Sprite ObjName=SpriteComponent_335 Archetype=SpriteComponent'Engine.Default__PointLight:Sprite'
+            LightingChannels=(bInitialized=True,Dynamic=True)
+            Name="SpriteComponent_335"
+            ObjectArchetype=SpriteComponent'Engine.Default__PointLight:Sprite'
+         End Object
+         LightComponent=PointLightComponent'PointLightComponent_12'
+         Components(0)=SpriteComponent'SpriteComponent_335'
+         Components(1)=DrawLightRadiusComponent'DrawLightRadiusComponent_0'
+         Components(2)=PointLightComponent'PointLightComponent_12'
+         CreationTime=37992.812500
+         Tag="PointLight"
+         Location=(X=-32.000000,Y=0.000000,Z=-16.000000)
+         Name="PointLight_0"
+         ObjectArchetype=PointLight'Engine.Default__PointLight'
+      End Actor
+   End Level
+Begin Surface
+End Surface
+End Map

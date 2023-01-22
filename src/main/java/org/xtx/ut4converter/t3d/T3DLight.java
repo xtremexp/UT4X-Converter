@@ -122,14 +122,14 @@ public class T3DLight extends T3DSound {
 	 * UE1/UE2: default 64 - 'LightBrightness' - Range 0->255 (note: UE2 has range 0->Infinite)
 	 * UE3: default 1 - 'Brightness' (note correlated with color) -> replaced with 'intensity' in UE4+
 	 */
-	private float brightness;
+	protected float brightness;
 
 	/**
 	 * Hue of the light
 	 * UE1/2: default 0 - 'LightHue' - Range 0->255 (White->Red)
 	 * UE3+: N/A replaced with RGB
 	 */
-	private float hue;
+	protected float hue;
 
 	/**
 	 * Light saturation
@@ -137,7 +137,7 @@ public class T3DLight extends T3DSound {
 	 * UE3+: N/A replaced with RGB
 	 * The higher saturation is, the more light looks white (no matter if hue is not white)
 	 */
-	private float saturation;
+	protected float saturation;
 
 	/**
 	 * How far the light goes
@@ -145,14 +145,15 @@ public class T3DLight extends T3DSound {
 	 * UE3: default 1024 - 'Radius'
 	 * UE4+: default 1000 - 'AttenuationRadius'
 	 */
-	private float radius;
+	protected float radius;
 
 	// *** Unreal Engine 3 / 4 Properties ***
 
 	/**
 	 * UE3+: default 255 - Range [0->1]
+	 * TODO replace with java Color class
 	 */
-	private RGBColor rgbColor;
+	protected RGBColor rgbColor;
 
 	/**
 	 * UE3+: default 0 - Range [0->1]
