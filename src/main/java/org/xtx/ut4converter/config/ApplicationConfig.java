@@ -227,9 +227,11 @@ public class ApplicationConfig implements Serializable {
 
     public void addRecentConversion(final ConversionSettings conversionSettings) {
 
-        this.recentConversions.add(0, conversionSettings);
-        // limit history to 8
-        this.recentConversions = recentConversions.subList(0, Math.min(this.recentConversions.size(), 7));
+        if (!this.recentConversions.contains(conversionSettings)) {
+            this.recentConversions.add(0, conversionSettings);
+            // limit history to 8
+            this.recentConversions = recentConversions.subList(0, Math.min(this.recentConversions.size(), 8));
+        }
     }
 
     public int getVersion() {

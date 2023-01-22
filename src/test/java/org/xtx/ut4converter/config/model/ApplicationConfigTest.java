@@ -7,6 +7,7 @@ package org.xtx.ut4converter.config.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.config.ApplicationConfig;
+import org.xtx.ut4converter.config.ConversionSettings;
 import org.xtx.ut4converter.config.GameConversionConfig;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
@@ -87,6 +88,34 @@ class ApplicationConfigTest {
         final UnrealGame u1Game = updatedConfig.getGames().stream().filter(g -> g.getShortName().equals("U1")).findFirst().orElse(null);
         Assertions.assertNotNull(u1Game);
         Assertions.assertTrue(u1Game.getSuggestedPath().getAbsolutePath().contains("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Gold"));
+    }
+
+    @Test
+    void testAddConversion() {
+        final ApplicationConfig appConfig = new ApplicationConfig();
+
+        final ConversionSettings cs = new ConversionSettings();
+        appConfig.addRecentConversion(cs);
+
+        Assertions.assertEquals(1, appConfig.getRecentConversions().size());
+
+        // same conversion added, should not add same conversion
+        appConfig.addRecentConversion(cs);
+        Assertions.assertEquals(1, appConfig.getRecentConversions().size());
+
+        final ConversionSettings cs2 = new ConversionSettings();
+        cs2.setInputMap(new File("c://mymap.unr"));
+        appConfig.addRecentConversion(cs2);
+        Assertions.assertEquals(2, appConfig.getRecentConversions().size());
+
+        for (int i = 0; i <= 10; i++) {
+            final ConversionSettings csx = new ConversionSettings();
+            csx.setInputMap(new File("c://mymap.unr" + i));
+            appConfig.addRecentConversion(csx);
+        }
+
+        // recent conversion history limited to 8
+        Assertions.assertEquals(8, appConfig.getRecentConversions().size());
     }
 
 }
