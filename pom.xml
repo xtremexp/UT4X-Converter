@@ -5,7 +5,7 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT-Converter</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.1</version>
 	<packaging>jar</packaging>
 
 	<name>UT Converter</name>

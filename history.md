@@ -1,3 +1,9 @@
+- 1.4.1 - 22/01/2023
+  - all->ut4: fixed all converted sound actors have same radius
+  - extractor tool: now staticmeshes are now also exported from map package when using Epic Games extractor
+  - conversion settings: now allow change the radius factor of all lights
+  - ui: fixed recent conversion history not working properly
+
 - 1.4.0 - 21/01/2023
   - Added support for ut2003/4/unreal 2 conversion to Unreal Tournament 3 (note: terrain not yet converted)
   - u1->all: fixed conversion crash with Unreal 1 patch v227f
