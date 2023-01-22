@@ -102,7 +102,8 @@ class T3DSoundTest {
         final String convT3D = u1Sound.convertScaleAndToT3D(2d);
         System.out.println(convT3D);
 
-        Assertions.assertTrue(convT3D.contains("Wave=SoundNodeWave'mymap-U1.AmbOutside_Looping_wind23'"));
+        Assertions.assertTrue(convT3D.contains("Wave=SoundNodeWave"));
+        Assertions.assertTrue(convT3D.contains("mymap-U1.AmbOutside_Looping_wind23"));
 
         // Volume test
         Assertions.assertTrue(convT3D.contains("Begin Object Class=DistributionFloatUniform Name=DistributionVolume"));

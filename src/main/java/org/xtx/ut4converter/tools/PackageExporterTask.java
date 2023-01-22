@@ -176,13 +176,14 @@ public class PackageExporterTask extends Task<List<String>> {
 
                 if (game.getUeVersion() == 2) {
                     batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_DDS);
+                    batchExportOptions.add(UCCExporter.UccOptions.STATICMESH_T3D);
                 } else if (game.getUeVersion() == 1) {
                     batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_PCX);
                 }
 
                 batchExportOptions.add(UCCExporter.UccOptions.CLASS_UC);
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
-                batchExportOptions.add(UCCExporter.UccOptions.STATICMESH_T3D);
+
 
                 if (game.getMapExt().equals(pakExt)) {
                     batchExportOptions.add(UCCExporter.UccOptions.LEVEL_T3D);
