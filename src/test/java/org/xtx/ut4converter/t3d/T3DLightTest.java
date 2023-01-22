@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.MapConverter;
@@ -21,7 +22,21 @@ public class T3DLightTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT4);
 
         final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-Light.t3d")).getPath());
-        u1Light.convertScaleAndToT3D(2d);
+
+        Assertions.assertEquals(29, u1Light.radius);
+
+        Assertions.assertEquals(21, u1Light.hue);
+        Assertions.assertEquals(84, u1Light.saturation);
+        Assertions.assertEquals(208, u1Light.brightness);
+
+        final String convT3d = u1Light.convertScaleAndToT3D(2d);
+
+        Assertions.assertTrue(convT3d.contains("Intensity=35.0"));
+        Assertions.assertTrue(convT3d.contains("LightColor=(B=68,G=137,R=208,A=255)"));
+        Assertions.assertTrue(convT3d.contains("bUseInverseSquaredFalloff=false"));
+        Assertions.assertTrue(convT3d.contains("LightFalloffExponent=3.0"));
+        Assertions.assertTrue(convT3d.contains("AttenuationRadius=1856.0")); // radius * 32 * {ScaleFactor}
+        System.out.println(convT3d);
     }
 
     @Test
@@ -137,7 +152,7 @@ public class T3DLightTest {
     }
 
     /**
-     * Test conversion of light Unreal 1 actor with sound properties.
+     * Test conversion of light Unreal 1 actor with sound properties to UT3
      * After conversion it should create both a Light actor and an AmbientSound actor
      *
      * @throws IOException                  Error reading t3d file
@@ -162,5 +177,31 @@ public class T3DLightTest {
         // test has created both light and sound actors
         Assertions.assertTrue(convT3d.contains("Begin Actor Class=PointLight"));
         Assertions.assertTrue(convT3d.contains("Begin Actor Class=AmbientSoundSimple"));
+    }
+
+
+    /**
+     * Test conversion of light Unreal 1 actor with sound properties to UT4
+     * After conversion it should create both a Light actor and an AmbientSound actor
+     *
+     * @throws IOException                  Error reading t3d file
+     * @throws ReflectiveOperationException Error instancing light actor
+     */
+    @Test
+    void testLightSoundConversionUT1toUT4() throws IOException, ReflectiveOperationException {
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT4);
+        mc.setConvertSounds(false);
+
+        final T3DLight ut3Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-LightSound.t3d")).getPath());
+
+        final String convT3d = ut3Light.convertScaleAndToT3D(2d);
+
+        // There must be only one point light component
+        Assertions.assertEquals(2, StringUtils.countMatches(convT3d, "Begin Object Class=PointLightComponent")); // it's declared 2x
+
+        // There must be only one audio component
+        Assertions.assertEquals(2, StringUtils.countMatches(convT3d, "Begin Object Class=AudioComponent")); // it's declared 2x
+
+        System.out.println(convT3d);
     }
 }

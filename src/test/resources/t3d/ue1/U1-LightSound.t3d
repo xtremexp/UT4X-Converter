@@ -12,6 +12,5 @@ Begin Actor Class=Light Name=Light105
 	LightHue=21
 	LightSaturation=84
 	LightRadius=29
-	bCorona=True
 End Actor
 End Map

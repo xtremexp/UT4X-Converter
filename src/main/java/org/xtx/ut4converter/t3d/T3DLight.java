@@ -413,7 +413,8 @@ public class T3DLight extends T3DSound {
 			componentLightClass = "PointLightComponent";
 		}
 
-		final Component lightComp = new Component(componentLightClass, this);
+		// name must be lightcomponent0
+		final Component lightComp = new Component(componentLightClass, "LightComponent0", this);
 
 		// For UE3 there are extra components
 		final Component ue3RadiusComp = new Component("DrawLightRadiusComponent", this);
@@ -495,6 +496,10 @@ public class T3DLight extends T3DSound {
 		this.addConvProperty("LightComponent", lightComp.getReference(this.mapConverter.getOutputGame().getUeVersion()));
 
 		sbf.append(super.toT3dNew());
+
+		// NOTE, in UE4 it would be possible to add an audio component to the main light component
+		// do not include light component again with upper sound actor class
+		super.components.clear();
 
 		// for possible embedded sound
 		return super.toT3d();
