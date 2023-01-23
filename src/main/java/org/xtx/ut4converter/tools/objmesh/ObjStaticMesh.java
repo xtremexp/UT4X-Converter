@@ -109,7 +109,7 @@ public class ObjStaticMesh {
 
             final ObjFace face = new ObjFace();
 
-            final ObjMaterial material = materials.stream().filter(e -> e.getMaterialName().equals(t3dTriangle.getTexture())).findAny().orElse(new ObjMaterial(t3dTriangle.getTexture()));
+            final ObjMaterial material = materials.stream().filter(e -> e.getMaterialName() != null && e.getMaterialName().equals(t3dTriangle.getTexture())).findAny().orElse(new ObjMaterial(t3dTriangle.getTexture()));
             face.setMaterial(material);
             face.setSmoothingGroup(t3dTriangle.getSmoothingMask());
 
