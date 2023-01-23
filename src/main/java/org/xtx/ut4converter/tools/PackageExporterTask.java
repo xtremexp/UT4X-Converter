@@ -1,9 +1,14 @@
 package org.xtx.ut4converter.tools;
 
 import javafx.concurrent.Task;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +21,9 @@ import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_U
  * Generic package exporter using either ucc.exe or umodel.exe
  */
 public class PackageExporterTask extends Task<List<String>> {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(PackageExporterTask.class);
 
     /**
      * Exporter to use
@@ -38,6 +46,8 @@ public class PackageExporterTask extends Task<List<String>> {
      */
     final File pkgFile;
 
+    final String textureFileExt;
+
     /**
      * Logs during extract
      */
@@ -48,11 +58,12 @@ public class PackageExporterTask extends Task<List<String>> {
      */
     final List<Process> processList = new ArrayList<>();
 
-    public PackageExporterTask(String exporter, UnrealGame game, File pkgFile, File outputFolder) {
+    public PackageExporterTask(String exporter, UnrealGame game, File pkgFile, File outputFolder, final String textureFileExt) {
         this.exporter = exporter;
         this.game = game;
         this.outputFolder = outputFolder;
         this.pkgFile = pkgFile;
+        this.textureFileExt = textureFileExt;
     }
 
     public List<String> exportPackage() throws IOException, InterruptedException {
@@ -117,6 +128,33 @@ public class PackageExporterTask extends Task<List<String>> {
             }
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
+        }
+
+
+        // texture format conversion
+        if (textureFileExt != null) {
+            for (final File texFile : org.apache.commons.io.FileUtils.listFiles(this.outputFolder, new String[]{"pcx", "tga", "dds", "bmp", "psd"}, true)) {
+
+                String currentFileExt = FilenameUtils.getExtension(texFile.getName());
+
+                if (textureFileExt.equals(currentFileExt)) {
+                    continue;
+                }
+
+                try {
+                    final BufferedImage img = ImageIO.read(texFile);
+                    final File convTexFile = new File(texFile.getParent() + File.separator + texFile.getName().replaceAll("." + currentFileExt, "." + textureFileExt));
+                    System.out.println(convTexFile);
+
+                    if (ImageIO.write(img, textureFileExt, convTexFile)) {
+                        logs.add(texFile.getName() + " -> " + convTexFile.getName());
+                    } else {
+                        logs.add("Could not convert " + texFile.getName() + " to " + convTexFile.getName());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return logs;
@@ -200,8 +238,14 @@ public class PackageExporterTask extends Task<List<String>> {
     }
 
     @Override
-    protected List<String> call() throws Exception {
-        return exportPackage();
+    protected List<String> call() {
+        try {
+            return exportPackage();
+        } catch (Exception e) {
+            logger.error("Error extracting package " + this.pkgFile, e);
+            this.failed();
+            return logs;
+        }
     }
 
     public List<Process> getProcessList() {

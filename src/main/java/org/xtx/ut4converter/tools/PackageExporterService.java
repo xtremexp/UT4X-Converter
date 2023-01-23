@@ -30,18 +30,21 @@ public class PackageExporterService extends Service<List<String>> {
      */
     final File pkgFile;
 
+    final String textureFileExt;
+
     private PackageExporterTask task;
 
-    public PackageExporterService(String exporter, UnrealGame game, File outputFolder, File pkgFile) {
+    public PackageExporterService(String exporter, UnrealGame game, File outputFolder, File pkgFile, String textureFileExt) {
         this.exporter = exporter;
         this.game = game;
         this.outputFolder = outputFolder;
         this.pkgFile = pkgFile;
+        this.textureFileExt = textureFileExt;
     }
 
     @Override
     protected Task<List<String>> createTask() {
-        this.task = new PackageExporterTask(this.exporter, this.game, this.pkgFile, this.outputFolder);
+        this.task = new PackageExporterTask(this.exporter, this.game, this.pkgFile, this.outputFolder, this.textureFileExt);
         return this.task;
     }
 
