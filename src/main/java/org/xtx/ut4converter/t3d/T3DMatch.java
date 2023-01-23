@@ -567,14 +567,14 @@ public class T3DMatch {
 		for (GlobalMatch matchesForName : list) {
 
 			for (Match matchForName : matchesForName.matches) {
-				if (matchForName.game.shortName == inputGame.getShortName() && matchForName.t3dClass != null) {
+				if (Objects.equals(matchForName.game.shortName, inputGame.getShortName()) && matchForName.t3dClass != null) {
 					inputClasses = matchForName.actorClass;
 					break;
 				}
 			}
 
 			for (Match matchForName : matchesForName.matches) {
-				if (matchForName.game.shortName == outputGame.getShortName()) {
+				if (Objects.equals(matchForName.game.shortName, outputGame.getShortName())) {
 
 					for (String inputClass : inputClasses) {
 						hm.put(inputClass, matchForName);

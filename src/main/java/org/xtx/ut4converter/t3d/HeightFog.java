@@ -64,7 +64,7 @@ public class HeightFog extends T3DActor {
 	public String toT3d() {
 
 		this.t3dClass = isTo(UE4) ? "AtmosphericFog" :"HeightFog";
-		final Component fogComp = new Component(isTo(UE4) ? "AtmosphericFogComponent" : "HeightFogComponent", this);
+		final Component fogComp = new Component(this.t3dClass + "Component", this.t3dClass + "Component0", this);
 
 		// UE3/UE4 same prop name/comp
 		if (startDistance != null) {

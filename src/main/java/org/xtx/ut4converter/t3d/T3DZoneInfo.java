@@ -61,19 +61,19 @@ public class T3DZoneInfo extends T3DActor {
 	 * UE2 - default 3000 - 'distanceFogStart'
 	 * UE4 - HeightFog actor -
 	 */
-	private double distanceFogStart;
+	protected double distanceFogStart;
 
 	/**
 	 * UE1 - N/A
 	 * UE2 - default 8000 - 'distanceFogEnd'
 	 */
-	private double distanceFogEnd;
+	protected double distanceFogEnd;
 
 	/**
 	 * UE1 - N/A
 	 * UE2 - default 0 - 'distanceFogEndMin'
 	 */
-	private float distanceFogEndMin;
+	protected float distanceFogEndMin;
 
 	/**
 	 * UE1 - N/A
