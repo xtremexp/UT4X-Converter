@@ -289,8 +289,9 @@ public class PSKStaticMesh {
 			}
 
 			fw.write("# UV\n");
+			// unreal always flips v value
 			for (Wedge w : this.getWedges()) {
-				fw.write("vt " + w.getU() + " " + w.getV() + "\n");
+				fw.write("vt " + w.getU() + " " + -w.getV() + "\n");
 			}
 
 			fw.write("# Faces\n");
