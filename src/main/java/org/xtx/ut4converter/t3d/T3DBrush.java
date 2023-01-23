@@ -266,6 +266,10 @@ public class T3DBrush extends T3DVolume {
 		else if (line.contains("Begin Polygon")) {
 			polyList.add(new T3DPolygon(line, mapConverter));
 		}
+		// LightMapScale 256.000000
+		else if(line.contains("LightMapScale")) {
+			polyList.getLast().lightMapScale = (int) Float.parseFloat(line.split("LightMapScale")[1].trim());
+		}
 
 		// Origin -00128.000000,-00128.000000,-00128.000000
 		else if (line.contains("Origin ")) {
@@ -633,7 +637,9 @@ public class T3DBrush extends T3DVolume {
 			}
 		}
 
-		if (mapConverter.isFromUE1UE2ToUE3UE4()) {
+		// UE1 - When a brush is scaled or rotated it is stored in MainScale, PostScale and Rotation properties
+		// UE2+ - For the same action, all vertices, origin, .. are recomputed so we need to recompute here
+		if (mapConverter.isFrom(UE1)) {
 			transformPermanently();
 		}
 

@@ -59,12 +59,12 @@ public class T3DPolygon {
 	private Integer flag;
 
 	/**
-	 * UE3+ Only
 	 * Light map resolution
-	 * UE4: LightMapScale
-	 * UE3: ShadowMapScale
+	 * UE2+: 'LightMapScale'
+	 * UE3: 'ShadowMapScale'
+	 * UE4: 'LightMapScale' - default 32
 	 */
-	private int lightMapScale;
+	protected Integer lightMapScale;
 
 	/**
 	 * UE1 only
@@ -306,7 +306,7 @@ public class T3DPolygon {
 				}
 
 				// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
-				if (origin != null) {
+				if (origin != null && (this.panU > 0 || this.panV > 0)) {
 					// Since UE2, panU, panV is reverted
 					origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
 					this.panU = 0;
@@ -342,10 +342,7 @@ public class T3DPolygon {
 			}
 		}
 
-		// originally UE1 had a low light resolution
-		// default is 32 in UE4
-		// 128 seems good enough
-		if (mapConverter != null) {
+		if (mapConverter != null && lightMapScale == null) {
 			lightMapScale = mapConverter.getLightMapResolution();
 		}
 	}
