@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -26,6 +27,14 @@ public class ExportPackageController implements Initializable {
 
     public static final String EXPORTER_UMODEL = "Umodel";
 
+    private static final String TEX_LABEL_NO_CONV = "No conversion";
+
+    private static final String TEX_LABEL_DDS = "Convert to .dds";
+
+    private static final String TEX_LABEL_BMP = "Convert to .bmp";
+
+    private static final String TEX_LABEL_PCX = "Convert to .pcx";
+
     @FXML
     public TextField exportFolder;
     public ComboBox<String> pkgExtractorCbBox;
@@ -33,6 +42,8 @@ public class ExportPackageController implements Initializable {
 
     @FXML
     public Button stopExportBtn;
+    public Button selectPackageBtn;
+    public ComboBox<String> textureConvCb;
     /**
      * Package to export ressources
      */
@@ -61,6 +72,12 @@ public class ExportPackageController implements Initializable {
 
         try {
             stopExportBtn.setVisible(false);
+
+            this.textureConvCb.getItems().add(TEX_LABEL_NO_CONV);
+            this.textureConvCb.getItems().add(TEX_LABEL_BMP);
+            this.textureConvCb.getItems().add(TEX_LABEL_DDS);
+            this.textureConvCb.getItems().add(TEX_LABEL_PCX);
+            this.textureConvCb.getSelectionModel().select(TEX_LABEL_NO_CONV);
 
             this.pkgExtractorCbBox.getItems().add(EXPORTER_EPIC_GAMES);
             this.pkgExtractorCbBox.getItems().add(EXPORTER_UMODEL);
@@ -169,14 +186,37 @@ public class ExportPackageController implements Initializable {
             this.pkgExtractorCbBox.getSelectionModel().select(EXPORTER_UMODEL);
         }
 
-        this.pkgExporterService = new PackageExporterService(pkgExtractorCbBox.getSelectionModel().getSelectedItem(), selectedGame, this.outputFolder, this.unrealPakFile);
+        // exports to /outputfolder/<PackageName>
+        File outputFolder2 = outputFolder;
 
+        // umodel split export folders by package unlike UCC
+        // for better visibility export to /exportfolder/<PackageName> when using UCC
+        if (this.pkgExtractorCbBox.getSelectionModel().getSelectedItem().equals(EXPORTER_EPIC_GAMES)) {
+            outputFolder2 = new File(this.outputFolder + File.separator + this.unrealPakFile.getName().substring(0, this.unrealPakFile.getName().lastIndexOf(".")).replaceAll("\\.", ""));
+        }
+
+
+        String textureFileExt = null;
+
+        switch (this.textureConvCb.getSelectionModel().getSelectedItem()) {
+            case TEX_LABEL_BMP -> textureFileExt = "bmp";
+            case TEX_LABEL_DDS -> textureFileExt = "dds";
+            case TEX_LABEL_PCX -> textureFileExt = "pcx";
+            default -> {
+            }
+        }
+
+        System.out.println(this.textureConvCb.getSelectionModel().getSelectedItem());
+        this.pkgExporterService = new PackageExporterService(pkgExtractorCbBox.getSelectionModel().getSelectedItem(), selectedGame, outputFolder2, this.unrealPakFile, textureFileExt);
+
+        File finalOutputFolder = outputFolder2;
         pkgExporterService.setOnSucceeded(t -> {
             pkgExporterService.reset();
             displayLogs(pkgExporterService);
             progressIndicatorLbl.setText("All done !");
-            UIUtils.openExplorer(this.outputFolder);
+            UIUtils.openExplorer(finalOutputFolder);
             convertBtn.setDisable(false);
+            convertBtn.setVisible(true);
             stopExportBtn.setVisible(false);
         });
 
@@ -185,6 +225,7 @@ public class ExportPackageController implements Initializable {
             displayLogs(pkgExporterService);
             progressIndicatorLbl.setText("Error !");
             convertBtn.setDisable(false);
+            convertBtn.setVisible(true);
             stopExportBtn.setVisible(false);
         });
 
@@ -192,12 +233,14 @@ public class ExportPackageController implements Initializable {
             pkgExporterService.reset();
             progressIndicatorLbl.setText("Cancelled");
             convertBtn.setDisable(false);
+            convertBtn.setVisible(false);
             stopExportBtn.setVisible(false);
         });
 
         this.logContentTxtArea.setText("");
         stopExportBtn.setVisible(true);
         convertBtn.setDisable(true);
+        convertBtn.setVisible(false);
         pkgExporterService.start();
         progressIndicatorLbl.setText("Please wait ...");
     }
@@ -239,5 +282,9 @@ public class ExportPackageController implements Initializable {
 
     public void stopExport() {
         this.pkgExporterService.cancel();
+    }
+
+    public void selectGame() {
+        this.selectPackageBtn.setDisable(false);
     }
 }

@@ -140,7 +140,7 @@ public class T3DStaticMesh extends T3DSound {
 
 	public String toT3d() {
 
-		final Component smComp = new Component("StaticMeshComponent", this);
+		final Component smComp = new Component("StaticMeshComponent", "StaticMeshComponent0", this);
 		this.addComponent(smComp);
 
 		if (staticMesh != null) {
