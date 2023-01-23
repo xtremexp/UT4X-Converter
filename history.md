@@ -1,3 +1,7 @@
+- 1.4.3 - 23/01/2023
+  - u2/ut2003/ut2004/uc2->ut4: fixed staticmeshes hidden after map save in editor
+  - ui: export panel - better design
+  
 - 1.4.2 - 23/01/2023
   - u2/ut2003/ut2004/uc2->ut3/ut4: fixed converted staticmeshes bad export format (.obj fliped with .mtl)
 
