@@ -649,7 +649,7 @@ public class T3DBrush extends T3DVolume {
 
 			for (T3DPolygon p : polyList) {
 
-				if (this.mapConverter.isFrom(UE1)) {
+				if (this.mapConverter.isFrom(UE1, UE2)) {
 					p.origin.sub(prePivot);
 				}
 
