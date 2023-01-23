@@ -1,3 +1,9 @@
+- 1.4.4 - 23/01/2023
+  - u2/uc2/ut2003/4->ut3/ut4: fixed bad texture alignement for brushes with prepivot set
+  - u2/uc2/ut2003/4->ut3/ut4: fixed some rare brushes converted causing either editor crash on import
+  or having bad scale.
+  - u2/uc2->ut4: fixed staticmesh conversion crash when no material set
+  
 - 1.4.3 - 23/01/2023
   - u2/ut2003/ut2004/uc2->ut4: fixed staticmeshes hidden after map save in editor
   - ui: export panel - better design
