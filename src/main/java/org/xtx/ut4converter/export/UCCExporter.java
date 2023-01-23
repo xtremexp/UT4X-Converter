@@ -357,7 +357,7 @@ public final class UCCExporter extends UTPackageExtractor {
 				for (String logLine : logLines) {
 					// always display export logs on error
 					if (localExitValue != 0) {
-						logger.log(Level.SEVERE, logLine);
+						logger.log(Level.WARNING, logLine);
 					} else {
 						logger.log(Level.FINE, logLine);
 					}

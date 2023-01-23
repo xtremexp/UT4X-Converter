@@ -406,7 +406,7 @@ public class T3DUE3Terrain extends T3DActor {
 	public boolean isValidConverting() {
 		// FIXME converter does not support yet large terrain size
 		if (Math.max(this.getTerrainHeight().getHeight(), this.getTerrainHeight().getWidth()) > 255) {
-			mapConverter.getLogger().log(Level.SEVERE, "Terrain conversion with size greater than 256X256 not supported");
+			mapConverter.getLogger().log(Level.WARNING, "Terrain conversion with size greater than 256X256 not supported");
 			return false;
 		} else {
 			return super.isValidConverting();

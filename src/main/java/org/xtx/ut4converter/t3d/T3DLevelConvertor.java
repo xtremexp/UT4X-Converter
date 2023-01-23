@@ -205,7 +205,7 @@ public class T3DLevelConvertor extends Task<Object> {
 		try {
 			countTotalActors();
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.log(Level.WARNING, e.getMessage(), e);
 		}
 
 		logger.info("Converting t3d map " + inT3dFile.getName() + " to " + mapConverter.getOutputGame().getName() + " t3d level");
@@ -327,7 +327,7 @@ public class T3DLevelConvertor extends Task<Object> {
 						}
 					}
 				} catch (Exception e) {
-					logger.log(Level.SEVERE, "Error while writting actor " + actor.getName() + ":", e);
+					logger.log(Level.WARNING, "Error while writting actor " + actor.getName() + ":", e);
 				}
 
 				updateProgress(++actorsWriten, convertedActors.size());
@@ -337,7 +337,7 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			logger.info("Written file " + outT3dFile.getName());
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "ERROR:", e);
+			logger.log(Level.WARNING, "ERROR:", e);
 		} finally {
 			bwr.close();
 		}
@@ -367,7 +367,7 @@ public class T3DLevelConvertor extends Task<Object> {
 						uta.scale(mapConverter.getScale());
 					}
 				} catch (Exception e) {
-					logger.log(Level.SEVERE, "Error converting actor " + uta.getName(), e);
+					logger.log(Level.WARNING, "Error converting actor " + uta.getName(), e);
 					e.printStackTrace();
 				}
 
@@ -410,12 +410,12 @@ public class T3DLevelConvertor extends Task<Object> {
 					linenumber++;
 				} catch (Exception e) {
 					e.printStackTrace();
-					logger.log(Level.SEVERE, "Error parsing Line #" + linenumber + " for " + inT3dFile.getName());
+					logger.log(Level.WARNING, "Error parsing Line #" + linenumber + " for " + inT3dFile.getName());
 					if (uta != null) {
-						logger.log(Level.SEVERE, "Current Actor Class: " + uta.t3dClass + " Line:");
+						logger.log(Level.WARNING, "Current Actor Class: " + uta.t3dClass + " Line:");
 					}
-					logger.log(Level.SEVERE, "\"" + line + "\"");
-					logger.log(Level.SEVERE, "ERROR:", e);
+					logger.log(Level.WARNING, "\"" + line + "\"");
+					logger.log(Level.WARNING, "ERROR:", e);
 				}
 			}
 

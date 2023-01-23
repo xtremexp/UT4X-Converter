@@ -35,7 +35,7 @@ public class UIUtils {
 		try {
 			desktop.open(dirToOpen);
 		} catch (IOException ex) {
-			Logger.getLogger(UIUtils.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(UIUtils.class.getName()).log(Level.WARNING, null, ex);
 		}
 	}
 
@@ -87,7 +87,7 @@ public class UIUtils {
 
 				desktop.browse(new URI(url));
 			} catch (URISyntaxException | IOException ex) {
-				Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+				Logger.getLogger(MainSceneController.class.getName()).log(Level.WARNING, null, ex);
 			}
 		} else {
 			Alert alert = new Alert(AlertType.ERROR);

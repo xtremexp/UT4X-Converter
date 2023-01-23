@@ -63,7 +63,7 @@ public class SoundConverter {
 		try {
 			Installation.executeProcess(cmd, logLines);
 		} catch (InterruptedException | IOException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.log(Level.WARNING, e.getMessage(), e);
 		}
 	}
 	

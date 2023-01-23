@@ -307,7 +307,7 @@ public class UPackageRessource {
 				mapConverter.getLogger().log(Level.FINE, texRessource.exportInfo.getExportedFiles().get(0) + " dimension read: " + texRessource.textureDimensions.toString());
 			}
 		} catch (Exception e) {
-			mapConverter.getLogger().log(Level.SEVERE, e.getMessage());
+			mapConverter.getLogger().log(Level.WARNING, e.getMessage());
 		}
 	}
 
@@ -370,7 +370,7 @@ public class UPackageRessource {
 			try {
 				packageExtractor.extract(this, forceExport, perfectMatchOnly);
 			} catch (Exception ex) {
-				packageExtractor.logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+				packageExtractor.logger.log(Level.WARNING, ex.getLocalizedMessage(), ex);
 			}
 		}
 	}
@@ -680,7 +680,7 @@ public class UPackageRessource {
 			}
 			// TODO handle type MESH (.3d file)
 		} catch (IOException ex) {
-			mapConverter.getLogger().log(Level.SEVERE, null, ex);
+			mapConverter.getLogger().log(Level.WARNING, null, ex);
 			throw new RuntimeException(ex);
 		}
 

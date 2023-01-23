@@ -408,7 +408,7 @@ public class MainSceneController implements Initializable {
 			try {
 				Desktop.getDesktop().browse(new URI("https://github.com/xtremexp/UT4X-Converter/wiki"));
 			} catch (URISyntaxException | IOException ex) {
-				java.util.logging.Logger.getLogger(MainSceneController.class.getName()).log(Level.SEVERE, null, ex);
+				java.util.logging.Logger.getLogger(MainSceneController.class.getName()).log(Level.WARNING, null, ex);
 			}
 		}
 	}

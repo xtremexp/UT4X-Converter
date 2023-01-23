@@ -763,7 +763,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				logger.info("Converting " + smFile.getName() + " -> " + ((smObjFile.length() > 0) ? smObjFile.getName() : "") + ((smAseFile.length() > 0) ? smAseFile.getName() : ""));
 				smPkgResUsed.addExportedFiles(smObjFile, smMtlFile, smAseFile);
 			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error converting " + smFile, e);
+				logger.log(Level.WARNING, "Error converting " + smFile, e);
 			}
 		}
 
@@ -931,7 +931,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 								Files.copy(landscapeMat.toPath(), landscapeMatCopy.toPath(), StandardCopyOption.REPLACE_EXISTING);
 								ue4Terrain.setLandscapeMatFile(landscapeMatCopy);
 							} catch (IOException e) {
-								logger.log(Level.SEVERE, "Error while copying landscapemap file " + landscapeMat);
+								logger.log(Level.WARNING, "Error while copying landscapemap file " + landscapeMat);
 							}
 						}
 				}
@@ -995,7 +995,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		} catch (Exception e) {
 			System.out.println("Error while converting ressource " + ressource.getFullName(true) + " with file " + exportedFile.getName());
 			e.printStackTrace();
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			logger.log(Level.WARNING, e.getMessage(), e);
 		}
 		return wasConverted;
 	}
