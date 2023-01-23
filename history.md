@@ -1,3 +1,6 @@
+- 1.4.2 - 23/01/2023
+  - u2/ut2003/ut2004/uc2->ut3/ut4: fixed converted staticmeshes bad export format (.obj fliped with .mtl)
+
 - 1.4.1 - 22/01/2023
   - all->ut4: fixed all converted sound actors have same radius
   - extractor tool: now staticmeshes are now also exported from map package when using Epic Games extractor

@@ -345,9 +345,9 @@ public class T3DLight extends T3DSound {
 		} else if (!isSpotLight() && (isSunLight() || Boolean.TRUE.equals(this.isDirectional))) {
 			// UE1/UE2 directional lights have no lightning inside brushes (because UE1/UE2 are in substractive mode)
 			// Replacing them with spotlights make them work
-			this.t3dClass = UE4_LightActor.SpotLight.name();
-			this.radius = 20000f;
-			//this.t3dClass = UE4_LightActor.DirectionalLight.name();
+			//this.t3dClass = UE4_LightActor.SpotLight.name();
+			//this.radius = 20000f;
+			this.t3dClass = UE4_LightActor.DirectionalLight.name();
 		} else {
 			this.t3dClass = UE4_LightActor.PointLight.name();
 		}

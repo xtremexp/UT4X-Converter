@@ -743,7 +743,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 					pskSm.replaceMaterialNamesBy(getReplacementMatName(pskSm.getMaterials().stream().map(Material::getMaterialName).toList()));
 
 					if (isTo(UE4, UE5)) {
-						pskSm.exportToObj(smObjFile, smMtlFile);
+						pskSm.exportToObj(smMtlFile, smObjFile);
 					} else if (isTo(UE3)) {
 						pskSm.exportToAse(smAseFile);
 					}
@@ -754,7 +754,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 					smT3dFile.replaceMaterialNamesBy(getReplacementMatName(smT3dFile.getTriangles().stream().map(Triangle::getTexture).toList()));
 
 					if (isTo(UE4, UE5)) {
-						new ObjStaticMesh(smT3dFile).export(smObjFile, smMtlFile);
+						new ObjStaticMesh(smT3dFile).export(smMtlFile, smObjFile);
 					} else if (isTo(UE3)) {
 						smT3dFile.exportToAse(smAseFile);
 					}
