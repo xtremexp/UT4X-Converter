@@ -16,4 +16,9 @@ Begin Actor Class=StaticMeshActor Name=StaticMeshActor37
     AmbientGlow=20
     ColLocation=(X=-64.000000,Y=-864.000000,Z=-67.000000)
     bSelected=True
+    bCollideActors=False
+    bBlockActors=False
+    bBlockZeroExtentTraces=False
+    bBlockNonZeroExtentTraces=False
+    bBlockKarma=False
 End Actor

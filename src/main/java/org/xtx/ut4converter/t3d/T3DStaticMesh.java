@@ -18,6 +18,7 @@ import static org.xtx.ut4converter.ucore.UnrealEngine.*;
 
 /**
  *
+ * TODO UE4 staticmesh handle CollisionRadius, CollisionHeight (some sm have these properties)
  * @author XtremeXp
  */
 public class T3DStaticMesh extends T3DSound {
@@ -26,7 +27,7 @@ public class T3DStaticMesh extends T3DSound {
 	/**
 	 * List of overriding staticmesh materials
 	 */
-	private final List<UPackageRessource> skins = new LinkedList<>();
+	protected final List<UPackageRessource> skins = new LinkedList<>();
 
 
 	/**
@@ -34,7 +35,7 @@ public class T3DStaticMesh extends T3DSound {
 	 * "/Game/RestrictedAssets/Environments/ShellResources/Meshes/Generic/SM_Sheet_500.SM_Sheet_500"
 	 * e.g/ StaticMesh=StaticMesh'BarrenHardware-epic.Decos.rec-lift'
 	 */
-	private UPackageRessource staticMesh;
+	protected UPackageRessource staticMesh;
 
 
 	/**
@@ -43,18 +44,18 @@ public class T3DStaticMesh extends T3DSound {
 	 * UE4 - default 0 - 'LDMaxDrawDistance' and 'CachedMaxDrawDistance'
 	 *
 	 */
-	private float cullDistance;
+	protected float cullDistance;
 
 	/**
 	 * If not null overiddes light map resolution for this static mesh (which is
 	 * normally equal to 64 by default)
 	 */
-	private Integer overriddenLightMapRes;
+	protected Integer overriddenLightMapRes;
 
 	/**
 	 * CastShadow=False
 	 */
-	private Boolean castShadow;
+	protected Boolean castShadow;
 	
 	/**
 	 * UT3 (UT2004 as well) property
@@ -70,7 +71,7 @@ public class T3DStaticMesh extends T3DSound {
 	/**
 	 * UV2Texture
 	 */
-	private UPackageRessource uv2Texture;
+	protected UPackageRessource uv2Texture;
 
 
 	public enum UV2Mode {

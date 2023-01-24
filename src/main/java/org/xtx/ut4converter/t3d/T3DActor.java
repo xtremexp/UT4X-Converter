@@ -150,9 +150,9 @@ public abstract class T3DActor extends T3DObject {
 
 	/**
 	 * UE3 property
-	 * Default collision type for static meshes in ut3/ue3
+	 * Default collision type for actors in ut3/ue3
 	 */
-	protected UE3CollisionType collisionType = UE3CollisionType.COLLIDE_NoCollision;
+	protected UE3CollisionType collisionType;
 
 	public enum UE3CollisionType {
 		COLLIDE_CustomDefault,
