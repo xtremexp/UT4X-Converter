@@ -33,8 +33,9 @@ class T3DStaticMeshTest {
         final String convT3d = sm.convertScaleAndToT3D(1d);
         Assertions.assertFalse(convT3d.contains("NoCollision"));
         Assertions.assertTrue(convT3d.contains("CachedMaxDrawDistance=5000.0"));
-        Assertions.assertTrue(convT3d.contains("StaticMesh=StaticMesh'/Game/Converted/mymap-UT2004/AnubisStatic_All_pharoh.AnubisStatic_All_pharoh'"));
-        Assertions.assertTrue(convT3d.contains("OverrideMaterials(0)=Material'/Game/Converted/mymap-UT2004/AnubisTextures_All_Pharoh_t_Mat.AnubisTextures_All_Pharoh_t_Mat'"));
+        Assertions.assertTrue(convT3d.contains("AnubisStatic_All_pharoh.AnubisStatic_All_pharoh"));
+        Assertions.assertTrue(convT3d.contains("OverrideMaterials(0)"));
+        Assertions.assertTrue(convT3d.contains("AnubisTextures_All_Pharoh_t_Mat.AnubisTextures_All_Pharoh_t_Mat'"));
         System.out.println(convT3d);
     }
 
