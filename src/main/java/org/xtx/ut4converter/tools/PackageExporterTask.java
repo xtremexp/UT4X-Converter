@@ -206,6 +206,8 @@ public class PackageExporterTask extends Task<List<String>> {
                 } else if (game.getUeVersion() == 1) {
                     batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_PCX);
                 }
+
+                batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_BMP);
             } else if (game.getSoundExt().equals(pakExt)) {
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
             } else if (game.getMusicExt().equals(pakExt)) {
@@ -219,9 +221,9 @@ public class PackageExporterTask extends Task<List<String>> {
                     batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_PCX);
                 }
 
+                batchExportOptions.add(UCCExporter.UccOptions.TEXTURE_BMP);
                 batchExportOptions.add(UCCExporter.UccOptions.CLASS_UC);
                 batchExportOptions.add(UCCExporter.UccOptions.SOUND_WAV);
-
 
                 if (game.getMapExt().equals(pakExt)) {
                     batchExportOptions.add(UCCExporter.UccOptions.LEVEL_T3D);
