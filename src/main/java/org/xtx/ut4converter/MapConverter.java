@@ -778,12 +778,19 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	}
 
 
+	/**
+	 * Return map to get the converted name of some ressource.
+	 * E.G: 'RadarDish_AlphaTwoSided -> WinX_radar_RadarDish_AlphaTwoSided_Mat'
+	 * @param materialNameList
+	 * @return
+	 */
 	private Map<String, String> getReplacementMatName(List<String> materialNameList){
 
 		Map<String, String> matNameToNewName = new HashMap<>();
 
 		for(String matName : materialNameList){
-			matNameToNewName.put(matName, listMatAndGetNewMatName(matName));
+			final String newMatName = listMatAndGetNewMatName(matName);
+			matNameToNewName.put(matName, newMatName != null ? newMatName :  matName);
 		}
 
 		return matNameToNewName;
