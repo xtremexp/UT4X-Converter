@@ -1,4 +1,13 @@
+- 1.4.5 - 24/01/2023
+  - package exporter tool: now also export to bmp texture packages 
+  - conversion settings: added extra scale factors
+  - uc2/u2/ut2OO3/4->ut4: fixed staticmeshes CullDistance and NoColision properties not properly converted
+  - uc2/u2/ut2OO3/4->ut4: fixed terrain fliped visibility if original had DrawScale3D.Z < 0 (made material double sided) 
+  - uc2/u2/ut2003/4->ut4: fixed terrain bad scale3d for Z axis
+
 - 1.4.4 - 23/01/2023
+  - uc2->ut3/ut4: added support for UCCTFBlueFlagBase, UCCTFRedFlagBase, UCJumpSpot, UCPickup_Health_Super,UCPickup_Health_Medium, 
+  UCPickup_Health_Small, UCPickup_PowerUp_Invis, UCPickup_PowerUp_UDamage actors
   - u2/uc2/ut2003/4->ut3/ut4: fixed bad texture alignement for brushes with prepivot set
   - u2/uc2/ut2003/4->ut3/ut4: fixed some rare brushes converted causing either editor crash on import
   or having bad scale.
