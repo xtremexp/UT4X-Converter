@@ -1,5 +1,9 @@
 package org.xtx.ut4converter;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.xtx.ut4converter.t3d.T3DTestUtils;
 
 import java.io.File;
@@ -7,9 +11,44 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Class to test conversion of maps in batch
+ * These tests should be run manually before releasing a new version
  */
+@Disabled("Only enable when environement has unreal games installed")
 class MapConverterTest {
+
+    /**
+     * Test UT2004 to UT4 map conversion
+     * @throws Exception
+     */
+    @Test
+    void testUt2004toUT4MapConversion() throws Exception {
+        final File uMap = new File("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 2004\\maps\\ONS-Dria.ut2");
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4, uMap, true, true);
+
+        final File outputFolder = mc.getMapConvertFolder();
+
+        System.out.print("Cleaning " + mc.getMapConvertFolder() + "... ");
+        FileUtils.deleteDirectory(mc.getMapConvertFolder());
+        System.out.println("OK");
+
+        System.out.print("Converting " + uMap + " ... ");
+        mc.convert();
+        System.out.println("OK");
+
+        // Testing some key ressources were exported
+        // Sounds exported
+        Assertions.assertTrue(new File(outputFolder + "/Sounds/OutdoorAmbience_BThunder_wind1.wav").exists());
+
+        // Textures exported either from map package (with terrain ones as .bmp) or other package
+        Assertions.assertTrue(new File(outputFolder + "/Texture/ONS-Dria_flare614.tga").exists());
+        Assertions.assertTrue(new File(outputFolder + "/Texture/SkyRenders_BarrenPlanet_ICEFLOWroof.tga").exists());
+        Assertions.assertTrue(new File(outputFolder + "/Texture/ONS-Dria_Terraintexalphalayerdetailsand.bmp").exists());
+
+        // Staticmeshes exported either from map package or other package
+        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/cp_wasteland_mesh_DecoLayers_cp_rubble1_deco.obj").exists());
+        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.obj").exists());
+        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.mtl").exists());
+    }
 
 
     /**
@@ -50,6 +89,7 @@ class MapConverterTest {
             }
         }
     }
+
 
     public static void main(String[] args) throws IOException {
         //testConvertAllMapsOfGameToGame(UTGames.UTGame.U1, UTGames.UTGame.UT3);

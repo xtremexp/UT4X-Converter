@@ -14,33 +14,44 @@ import java.lang.reflect.Constructor;
 public class T3DTestUtils {
 
 
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inGame, final UTGames.UTGame outGame) throws IOException {
+        return getMapConverterInstance(inGame, outGame, null, false, false);
+    }
+
     /**
      * Initialise a map converter instance from input and output game
      * @param inGame Input game
      * @param outGame Output game
      * @return Map converter instance
      */
-    public static MapConverter getMapConverterInstance(final UTGames.UTGame inGame, final UTGames.UTGame outGame) throws IOException {
+    public static MapConverter getMapConverterInstance(final UTGames.UTGame inGame, final UTGames.UTGame outGame, final File uMap, boolean convertRessources, boolean useUserConfig) throws IOException {
 
-        final UnrealGame inputGame = ApplicationConfig.getBaseGames().stream().filter(g -> g.getShortName().equals(inGame.shortName)).findFirst().orElse(null);
-        final UnrealGame outputGame = ApplicationConfig.getBaseGames().stream().filter(g -> g.getShortName().equals(outGame.shortName)).findFirst().orElse(null);
+        ApplicationConfig appConfig;
+
+        if (useUserConfig) {
+            appConfig = ApplicationConfig.loadApplicationConfig();
+        } else {
+            appConfig = ApplicationConfig.loadDefaultApplicationConfig();
+        }
+
+        final UnrealGame inputGame = appConfig.getGames().stream().filter(g -> g.getShortName().equals(inGame.shortName)).findFirst().orElse(null);
+        final UnrealGame outputGame = appConfig.getGames().stream().filter(g -> g.getShortName().equals(outGame.shortName)).findFirst().orElse(null);
 
         final MapConverter mc = new MapConverter(inputGame, outputGame);
 
-        if (inputGame != null && UTGames.UTGame.U2.shortName.equals(inputGame.getShortName())) {
-            mc.setScale(2.5d);
+
+        if (uMap != null) {
+            mc.setInMap(uMap);
         } else {
-            mc.setScale(2.5d);
+            mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
+            mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
         }
 
-        mc.setInMap(new File("C:\\Temp\\mymap.uxx"));
-        mc.setInMap(new File("C:\\Temp\\mymap.uxx")); // fake map file
-
-        mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
-        mc.setConvertTextures(false);
-        mc.setConvertSounds(false);
-        mc.setConvertStaticMeshes(false);
-        mc.setConvertMusic(false);
+        mc.setConvertTextures(convertRessources);
+        mc.setConvertSounds(convertRessources);
+        mc.setConvertStaticMeshes(convertRessources);
+        mc.setConvertMusic(convertRessources);
+        mc.setNoUi(true);
         mc.isTestMode = true;
 
         return mc;

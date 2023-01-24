@@ -387,9 +387,8 @@ public final class UCCExporter extends UTPackageExtractor {
 				unrealPackage.setExported(true);
 			}
 
-			if (!correctExit) {
-				return exportedFiles;
-			}
+			// note: do not return right now if ucc return exit error code, some packages may still have been exported
+			// e.g: ONS-Dria (UT2004) exports terrain file but fails at the end -> no terrain converted
 
 			for (String logLine : logLines) {
 
