@@ -28,19 +28,21 @@
             <ComboBox fx:id="unrealGamesList"  GridPane.columnIndex="1" onAction="#selectGame"/>
 
             <Label text="2 - Package file" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="unrealPakPath" disable="true" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="unrealPakPath" editable="false" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Button text="SELECT"  onAction="#selectPackage" fx:id="selectPackageBtn"  GridPane.columnIndex="2"  GridPane.rowIndex="1" disable="true"/>
 
             <Label text="3 - Export folder" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="exportFolder" disable="true" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="exportFolder" editable="false" prefWidth="500" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             <Button text="SELECT"  onAction="#selectFolder"  GridPane.columnIndex="2"  GridPane.rowIndex="2"/>
 
             <Label text="4 - Exporter" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <ComboBox fx:id="pkgExtractorCbBox"  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
             <Label GridPane.rowIndex="5" GridPane.columnSpan="2">Note: some packages may only work with one exporter only.</Label>
+            <!--
             <Label GridPane.rowIndex="6" GridPane.columnIndex="0">Textures</Label>
             <ComboBox fx:id="textureConvCb"  GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            -->
 
             <Separator GridPane.columnSpan="3" GridPane.rowIndex="7"/>
         </GridPane>

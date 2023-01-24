@@ -73,6 +73,7 @@ public class ExportPackageController implements Initializable {
         try {
             stopExportBtn.setVisible(false);
 
+            this.textureConvCb = new ComboBox<>();
             this.textureConvCb.getItems().add(TEX_LABEL_NO_CONV);
             this.textureConvCb.getItems().add(TEX_LABEL_BMP);
             this.textureConvCb.getItems().add(TEX_LABEL_DDS);
@@ -155,9 +156,10 @@ public class ExportPackageController implements Initializable {
         }
 
 
-        this.unrealPakFile = chooser.showOpenDialog(new Stage());
+        File uPakFile = chooser.showOpenDialog(new Stage());
 
-        if (this.unrealPakFile != null) {
+        if (uPakFile != null) {
+            this.unrealPakFile = uPakFile;
             this.unrealPakPath.setText(this.unrealPakFile.getAbsolutePath());
             this.convertBtn.setDisable(this.outputFolder == null);
         }
@@ -178,12 +180,14 @@ public class ExportPackageController implements Initializable {
         }
 
         // .pak files can only be extracted with UCC
-        if (this.unrealPakFile.getName().endsWith(".pak")) {
-            this.pkgExtractorCbBox.getSelectionModel().select(EXPORTER_EPIC_GAMES);
-        }
-        // uasset files can only be extracted with umodel
-        else if (this.unrealPakFile.getName().endsWith(".uasset")) {
-            this.pkgExtractorCbBox.getSelectionModel().select(EXPORTER_UMODEL);
+        if (this.unrealPakFile != null) {
+            if (this.unrealPakFile.getName().endsWith(".pak")) {
+                this.pkgExtractorCbBox.getSelectionModel().select(EXPORTER_EPIC_GAMES);
+            }
+            // uasset files can only be extracted with umodel
+            else if (this.unrealPakFile.getName().endsWith(".uasset")) {
+                this.pkgExtractorCbBox.getSelectionModel().select(EXPORTER_UMODEL);
+            }
         }
 
         // exports to /outputfolder/<PackageName>
@@ -272,9 +276,10 @@ public class ExportPackageController implements Initializable {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select output folder");
 
-        this.outputFolder = chooser.showDialog(new Stage());
+        File outputFolder2 = chooser.showDialog(new Stage());
 
-        if (this.outputFolder != null) {
+        if (outputFolder2 != null) {
+            this.outputFolder = outputFolder2;
             exportFolder.setText(this.outputFolder.getAbsolutePath());
             this.convertBtn.setDisable(this.unrealPakFile == null);
         }
