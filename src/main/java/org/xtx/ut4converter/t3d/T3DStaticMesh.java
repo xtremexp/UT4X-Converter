@@ -38,9 +38,10 @@ public class T3DStaticMesh extends T3DSound {
 
 
 	/**
-	 * Min distance until staticmesh is rendered.
+	 * Max distance until staticmesh is no longer rendered.
 	 * UE2/UE3 - default 0 - 'CullDistance'
-	 * UE4 - default 0 - 'MinDrawDistance'
+	 * UE4 - default 0 - 'LDMaxDrawDistance' and 'CachedMaxDrawDistance'
+	 *
 	 */
 	private float cullDistance;
 
@@ -148,7 +149,12 @@ public class T3DStaticMesh extends T3DSound {
 		}
 
 		if (this.cullDistance > 0) {
-			smComp.addProp(isTo(UE3) ? "CullDistance" : "MinDrawDistance", this.cullDistance);
+			if (isTo(UE4, UE5)) {
+				smComp.addProp("LDMaxDrawDistance", this.cullDistance);
+				smComp.addProp("CachedMaxDrawDistance", this.cullDistance);
+			} else if (isTo(UE3)) {
+				smComp.addProp("CullDistance", this.cullDistance);
+			}
 		}
 
 		if (overriddenLightMapRes != null) {
@@ -158,8 +164,8 @@ public class T3DStaticMesh extends T3DSound {
 
 		// Collision
 		if (UE3CollisionType.COLLIDE_NoCollision == collisionType || Boolean.FALSE == collideActors) {
-			if (isTo(UE4)) {
-				smComp.addProp("bUseDefaultCollision", "True");
+			if (isTo(UE4, UE5)) {
+				smComp.addProp("bUseDefaultCollision", false);
 				smComp.addProp("BodyInstance", "(CollisionProfileName=\"NoCollision\",CollisionEnabled=NoCollision)");
 			} else if (isTo(UE3)) {
 				this.addConvProperty("CollisionType", UE3CollisionType.COLLIDE_NoCollision.name());
@@ -169,7 +175,7 @@ public class T3DStaticMesh extends T3DSound {
 		// Material override
 		int idx = 0;
 		for (UPackageRessource skin : skins) {
-			if (isTo(UE4)) {
+			if (isTo(UE4, UE5)) {
 				smComp.addProp("OverrideMaterials(" + idx + ")", skin != null ? "Material'" + skin.getConvertedName() + "'" : "None");
 			} else if (isTo(UE3)) {
 				smComp.addProp("Materials(" + idx + ")", skin != null ? "Material'" + skin.getConvertedName() + "'" : "None");
@@ -241,6 +247,14 @@ public class T3DStaticMesh extends T3DSound {
 	public boolean isValidWriting() {
 		// TODO remove test instancof decoration for testing purpose only
 		return this instanceof T3DDecoration || staticMesh != null;
+	}
+
+	@Override
+	public void scale(double newScale) {
+
+		this.cullDistance *= newScale;
+
+		super.scale(newScale);
 	}
 
 	public UPackageRessource getStaticMesh() {
