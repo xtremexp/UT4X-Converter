@@ -14,6 +14,7 @@ import org.xtx.ut4converter.ucore.ue4.LandscapeComponent;
 import org.xtx.ut4converter.ucore.ue4.LandscapeComponentAlphaLayer;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Vector3d;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -470,10 +471,16 @@ public class T3DUE4Terrain extends T3DActor {
 
 		buildLandscapeAndCollisionComponents(compQuadSize, nbCompX, nbCompY, ue2Terrain.getHeightMap(), alphaLayers, visibilityData, ue2TerrainWidth, ue2TerrainHeight);
 
+		if (this.scale3d == null) {
+			this.scale3d = new Vector3d(1, 1, 1);
+		}
 
-		// In Unreal Engine 2, terrain pivot is "centered"
-		// unlike UE3/4, so need update location
-		if (this.location != null && this.scale3d != null) {
+		// In UE2, terrain location reference is at center
+		// Size of terrain is Dimensions[AlphaLayerTexture] * Scale3D
+		// ONS-Dria (UT2004), terrain size is [256*256] * [448,448] = [114688,114688]
+		// In UE4, terrain location reference is at the top left edge
+		// So need to update location
+		if (this.location != null) {
 
 			double offsetX = (nbCompX * this.scale3d.x * this.componentSizeQuads) / 2;
 			double offsetY = (nbCompY * this.scale3d.y * this.componentSizeQuads) / 2;
@@ -482,6 +489,10 @@ public class T3DUE4Terrain extends T3DActor {
 			this.location.y -= (offsetY + 100);
 			this.location.z *= mapConverter.getScale();
 		}
+
+		// apparently the good z scale is to divide the original z scale by 2
+		// Tested ONS-Dria, ONS-Torlan, ONS-Dawn
+		this.scale3d.z /= 2;
 	}
 
 	/**
@@ -528,9 +539,7 @@ public class T3DUE4Terrain extends T3DActor {
 						String radix = Long.toString(visibility, 2);
 						radix = radix.replaceAll("-", "");
 
-						for (int k = 0; k < (32 - radix.length()); k++) {
-							tmpRadix.append("0");
-						}
+						tmpRadix.append("0".repeat(Math.max(0, (32 - radix.length()))));
 
 						radix = tmpRadix + radix;
 
