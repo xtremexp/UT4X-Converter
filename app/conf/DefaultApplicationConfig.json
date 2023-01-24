@@ -3,7 +3,7 @@
   "isFirstRun" : true,
   "checkForUpdates" : true,
   "conversionSettingsPanelConfig": {
-    "scaleFactorList": [0.5, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.5625, 1.75, 1.875, 2, 2.1878, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.55, 2.6, 2.7, 2.8, 2.9, 3, 3.125, 3.5, 4, 4.5, 5],
+    "scaleFactorList": [0.5, 0.78125, 0.9, 1, 1.1, 1.17192, 1.25, 1.5, 1.5625, 1.75, 1.875, 1.953125, 2, 2.1878, 2.2, 2.25, 2.3, 2.34375, 2.4, 2.45, 2.55, 2.6, 2.7, 2.8, 2.9, 3, 3.125, 3.5, 4, 4.5, 5],
     "defaultScaleFactor" : 1,
     "lightRadiusFactorList": [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
     "defaultLightRadiusFactor" : 1,
