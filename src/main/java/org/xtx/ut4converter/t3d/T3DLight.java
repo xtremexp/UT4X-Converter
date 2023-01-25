@@ -560,7 +560,7 @@ public class T3DLight extends T3DSound {
 			//this.radius *= 1.12;
 
 			this.lightFalloffExponent = 3d;
-			this.intensity = mapConverter.isFrom(UE1) ? 35f : 1f;
+			this.intensity = mapConverter.isFrom(UE1) ? 15f : 1f;
 
 			// UE2, unlike UE1 can have lights with brightness > 255 so need to increase intensity a bit
 			if (mapConverter.isFrom(UE2) && brightness > 255) {
@@ -578,9 +578,11 @@ public class T3DLight extends T3DSound {
 		}
 
 		// UE1/UE2 only substractive maps else light wont have lightning if castshadows=true
+		// disabled lightning not that good
+		/*
 		if (isDirectional && mapConverter.isFrom(UE1, UE2)) {
 			this.bShadowCast = false;
-		}
+		}*/
 
 		// UE4 does not care about negative scale for lights
 		// so need to change rotation (for directional lights)
