@@ -5,6 +5,7 @@ Begin Actor Class=Mover Name=Brush48
 	Location=(X=-320.000000,Y=-368.000000,Z=64.000000)
     MoverEncroachType=ME_CrushWhenEncroach
     MoveTime=4.000000
+    StayOpenTime=6.000000
     OpenedSound=Sound'DoorsAnc.GenericThumps.adend61'
     ClosedSound=Sound'DoorsAnc.GenericThumps.adend61'
     MoveAmbientSound=Sound'DoorsAnc.Stone.sdoorL1'

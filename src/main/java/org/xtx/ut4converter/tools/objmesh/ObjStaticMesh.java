@@ -21,37 +21,30 @@ import java.util.List;
  */
 public class ObjStaticMesh {
 
-    public static final String FILE_EXTENSION_OBJ = "obj";
-
-    public static final String FILE_EXTENSION_MTL = "mtl";
-
+    /**
+     * List of materials
+     */
     private final List<ObjMaterial> materials;
 
+    /**
+     * List of vertices
+     */
     private final List<Vector3d> vertices;
 
+    /**
+     * List of uvs
+     */
     private final List<Vector2d> uvs;
 
+    /**
+     * List of faces
+     */
     private final List<ObjFace> faces;
 
-    public List<ObjMaterial> getMaterials() {
-        return materials;
-    }
-
-    public List<Vector3d> getVertices() {
-        return vertices;
-    }
-
-    public List<Vector2d> getUvs() {
-        return uvs;
-    }
-
-    public List<ObjFace> getFaces() {
-        return faces;
-    }
 
     /**
      * Vertmesh .3d (UE1) to .OBJ StaticMesh conversion
-     * FIXME Not working properly
+     * FIXME Not working properly (bad brush shape)
      *
      * @param vertMesh Unreal vertmesh
      */
@@ -275,7 +268,6 @@ public class ObjStaticMesh {
      * T3D Brush to .OBJ StaticMesh conversion
      * For UE1, brush must have been "Transformed permanently" prior to use this function
      * See T3DBrush.transformPermanently()
-     * FIXME Good brush, good texture scale but faces order seems wrong sometimes
      *
      * @param brush   T3D Brush to convert (UNTESTED WITH UE2/UE3/UE4 brush)
      * @param objFile Obj file to create
@@ -306,12 +298,16 @@ public class ObjStaticMesh {
                  */
                 for (final Vector3d vect : poly.getVertices()) {
 
-                    Vector3d v = new Vector3d(vect);
+                    final Vector3d v = new Vector3d(vect);
                     v.sub(poly.getOrigin());
 
+                    final Vector2d uv = new Vector2d(v.dot(poly.getTextureU()), v.dot(poly.getTextureV()));
+
+                    // uv.y always has to be fliped for good uv mapping in unreal world
+                    uv.y = -uv.y;
+
                     // real uv is 100x less in UE world
-                    Vector2d uv = new Vector2d(v.dot(poly.getTextureU()) * 0.01d, v.dot(poly.getTextureV()) * 0.01d);
-                    uv.negate();
+                    uv.scale(0.01d);
                     uvs.add(uv);
                 }
 
@@ -339,7 +335,10 @@ public class ObjStaticMesh {
             String currentMat = null;
             fw.write("s 0\n");
 
+            // index of vertices and uv
             int idx = 1;
+
+            // index of normal
             int idxN = 1;
 
             for (T3DPolygon poly : brush.getPolyList()) {
@@ -349,16 +348,36 @@ public class ObjStaticMesh {
                     currentMat = poly.getTexture().getName();
                 }
 
-                // vertexIdx/uvIdx/normalIdx
-                if (poly.getVertices().size() == 4) {
-                    fw.write("f " + idx + "/" + idx + "/" + idxN + " " + (idx + 1) + "/" + (idx + 1) + "/" + idxN + " " + (idx + 2) + "/" + (idx + 2) + "/" + idxN + " " + (idx + 3) + "/" + (idx + 3) + "/" + idxN + "\n");
-                } else if (poly.getVertices().size() == 3) {
-                    fw.write("f " + idx + "/" + idx + "/" + idxN + " " + (idx + 1) + "/" + (idx + 1) + "/" + idxN + " " + (idx + 2) + "/" + (idx + 2) + "/" + idxN + "\n");
+                // minimum vertices for a face is 3
+                // Format: f vertexIdx0/uvIdx0/normalIdx0 vertexIdx1/uvIdx1/normalIdx1
+                StringBuilder objFace = new StringBuilder("f " + idx + "/" + idx + "/" + idxN + " " + (idx + 1) + "/" + (idx + 1) + "/" + idxN + " " + (idx + 2) + "/" + (idx + 2) + "/" + idxN);
+
+                // a polygon may have more than 3 vertices
+                for (int i = 0; i < poly.getVertices().size() - 3; i++) {
+                    objFace.append(" ").append(idx + 3 + i).append("/").append(idx + 3 + i).append("/").append(idxN);
                 }
+
+                fw.write(objFace + "\n");
 
                 idx += poly.getVertices().size();
                 idxN++;
             }
         }
+    }
+
+    public List<ObjMaterial> getMaterials() {
+        return materials;
+    }
+
+    public List<Vector3d> getVertices() {
+        return vertices;
+    }
+
+    public List<Vector2d> getUvs() {
+        return uvs;
+    }
+
+    public List<ObjFace> getFaces() {
+        return faces;
     }
 }

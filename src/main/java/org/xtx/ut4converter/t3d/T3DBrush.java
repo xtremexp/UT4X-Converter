@@ -699,7 +699,7 @@ public class T3DBrush extends T3DVolume {
 	 * Rotate) * PostScale PrePivot = PrePivot * Rotation Normal = Normal *
 	 * Rotation MainScale * Vector -> Rotation * Vector -> PostScale * Vector
 	 */
-	private void transformPermanently() {
+	public void transformPermanently() {
 
 		if (prePivot != null) {
 			Geometry.transformPermanently(prePivot, mainScale, rotation, postScale, false);

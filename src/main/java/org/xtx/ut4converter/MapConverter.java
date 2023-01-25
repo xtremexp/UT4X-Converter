@@ -851,7 +851,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
         return null;
 	}
 
-	private File getDummyUAssetFile(){
+	public File getDummyUAssetFile(){
 		// TODO for UE5, make custom dummy uasset file
 		return new File(outputGame.getPath() + "/UnrealTournament/Content/RestrictedAssets/Blueprints/Lift/Curves/EaseIn-Out.uasset");
 	}
@@ -1146,7 +1146,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return <UT4ConverterFolder>/Converted/<MapName>
 	 */
 	public File getMapConvertFolder() {
-		return new File(getBaseConvertFolder() + File.separator + getInMap().getName().split("\\.")[0]);
+		return new File(getBaseConvertFolder() + File.separator + getInMapAsPackageName());
+	}
+
+	/**
+	 * Return map file as package name.
+	 * E.G: 'Passage.unr' -> 'Passage'
+	 *
+	 * @return Map as package name
+	 */
+	public String getInMapAsPackageName() {
+		return getInMap().getName().split("\\.")[0];
 	}
 
 	/**

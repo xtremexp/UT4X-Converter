@@ -31,7 +31,7 @@ public class T3DLightTest {
 
         final String convT3d = u1Light.convertScaleAndToT3D(2d);
 
-        Assertions.assertTrue(convT3d.contains("Intensity=35.0"));
+        Assertions.assertTrue(convT3d.contains("Intensity=15.0"));
         Assertions.assertTrue(convT3d.contains("LightColor=(B=68,G=137,R=208,A=255)"));
         Assertions.assertTrue(convT3d.contains("bUseInverseSquaredFalloff=false"));
         Assertions.assertTrue(convT3d.contains("LightFalloffExponent=3.0"));

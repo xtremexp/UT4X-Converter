@@ -121,7 +121,7 @@ public class SupportedClasses {
 		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2);
 
 		registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
-				"LoopMover", "InterpActor");
+				"LoopMover", "InterpActor", "ClientMover");
 
 		if(useUbClasses) {
 			registerUClass(T3DGradualMover.class, "GradualMover");

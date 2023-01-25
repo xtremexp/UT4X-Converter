@@ -15,7 +15,7 @@ import javax.vecmath.Vector3d;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Unreal Engine 1 only
@@ -64,23 +64,22 @@ public class T3DMover extends T3DBrush {
 		super.scale(newScale);
 	}
 
-	public String toT3d(){
-		// no generic mover actor for UE4 but UT4 with Lift blueprint
-		// UE3 movers are InterpActors
-		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName) || mapConverter.isTo(UnrealEngine.UE3)) {
 
-			if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
-				moverProperties.writeUT4MoverActor(sbf);
-			}
-			// UE3
-			else {
-				moverProperties.writeUE3MoverActor(sbf);
-			}
+	/**
+	 * Disabled until mesh is good
+	 * Convert to t3d this mover
+	 * @return String value
+	 */
+	public String toT3d() {
 
-			// TODO for UT4 make converter from brush to .fbx Autodesk file and
-			// transform into StaticMesh
-			// TODO for UT3 make converter from brush to .ase file and transform
-			// into StaticMesh
+		// UT4 - Convert to Lift actor
+		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
+			moverProperties.writeUT4MoverActor(sbf);
+		}
+		// UE3, movers not yet converted to staticmesh
+		// writting the original brush as well
+		else if (mapConverter.isTo(UnrealEngine.UE3)) {
+			moverProperties.writeUE3MoverActor(sbf);
 
 			// Write the mover as brush as well so we can convert it in
 			// staticmesh in UE4 Editor ...
@@ -101,29 +100,6 @@ public class T3DMover extends T3DBrush {
 
 			return sbf.toString();
 		}
-		else {
-			return super.toString();
-		}
-	}
-
-	/**
-	 * Disabled until mesh is good
-	 * Convert to t3d this mover
-	 * @return String value
-	 */
-	public String toT3dTest() {
-
-		// UT4 - Convert to Lift actor
-		if (mapConverter.getOutputGame().getShortName().equals(UTGames.UTGame.UT4.shortName)) {
-			moverProperties.writeUT4MoverActor(sbf);
-		}
-		// UE4/UE5 - TODO Convert to generic StaticMesh actor (No UT4 Lift actor)
-		//else if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
-		//}
-		// UE3 - Convert to InterpActor
-		else if (mapConverter.isTo(UnrealEngine.UE3)) {
-			moverProperties.writeUE3MoverActor(sbf);
-		}
 
 		return sbf.toString();
 	}
@@ -137,22 +113,54 @@ public class T3DMover extends T3DBrush {
 		super.convert();
 
 
-		// TODO for UE3 make brush to .t3d or .ase conversion (.obj not supported)
+		// TODO UE3 make brush to .t3d or .ase conversion (.obj not supported by editor)
 		// convert brush to .obj staticmesh
-		// disabled for now until mesh is well oriented
-		if (false && mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
+		if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
 			try {
-				Files.createDirectories(Paths.get(this.mapConverter.getOutPath() + "/StaticMesh/"));
+				File smMoversFolder;
+
+				// E.G: \UT4X-Converter\Converted\Passage\StaticMesh
+				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) {
+					smMoversFolder = new File(this.mapConverter.getOutPath() + "/StaticMesh/");
+				}
+				// E.G: \UT4X-Converter\Converted\Passage\Passage[MapPackageName]
+				else {
+					smMoversFolder = new File(this.mapConverter.getOutPath() + File.separator + mapConverter.getInMapAsPackageName() + "/");
+				}
+
+				if (!smMoversFolder.exists()) {
+					Files.createDirectories(smMoversFolder.toPath());
+				}
+
 				// super.convert changes name to "name_tag->event" which is incompatible with a filename
 				// so need to use the original name
 				String baseName = this.originalName;
 
-				// e.g: '/Game/Converted/Unreal1/Movers/Passage/Mover0.Mover0'
-				// TODO create intermediate folders and copy .uasset file for folder visibility in UE4
-				this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/Movers/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 
-				File mtlFile = new File(this.mapConverter.getOutPath() + "/Movers/" + baseName + ".mtl");
-				File objFile = new File(this.mapConverter.getOutPath() + "/Movers/" + baseName + ".obj");
+				// E.G: /Game/Converted/Passage-U1/Mover0.Mover0
+				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) {
+					this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+				}
+				// Export by package
+				else {
+					// E.G: /Game/Converted/Passage-U1/Passage/Mover0.Mover0
+					this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/" + mapConverter.getInMapAsPackageName() + "/" + baseName + "." + baseName;
+
+					// E.G: /UnrealTournamentEditor/Content/Converted/Passage-U1/Passage/Mover0.Mover0
+					File dummyUAssetFileForPackage = new File(mapConverter.getUt4ReferenceBaseFolderFile() + "/" + mapConverter.getInMapAsPackageName() + "/" + mapConverter.getDummyUAssetFile().getName());
+					System.out.println(dummyUAssetFileForPackage);
+
+					if (!dummyUAssetFileForPackage.exists()) {
+						Files.createDirectories(dummyUAssetFileForPackage.toPath().getParent());
+						Files.createFile(dummyUAssetFileForPackage.toPath());
+
+						Files.copy(mapConverter.getDummyUAssetFile().toPath(), dummyUAssetFileForPackage.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					}
+				}
+
+				final File mtlFile = new File(smMoversFolder + "/" + baseName + ".mtl");
+				final File objFile = new File(smMoversFolder + "/" + baseName + ".obj");
+
 				ObjStaticMesh.writeMtlObjFile(this, mtlFile, mapConverter.isTestMode);
 				ObjStaticMesh.writeObj(this, objFile, mtlFile);
 
@@ -161,10 +169,6 @@ public class T3DMover extends T3DBrush {
 				// scaled 3d is null, init to 1X so the upcoming super.scale() function will scale it correctly
 				// Seems all is fliped by Y axis
 				this.scale3d = new Vector3d(1, -1, 1);
-
-				for( Vector3d position : this.moverProperties.getPositions().values() ) {
-					position.y = -position.y;
-				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -173,5 +177,9 @@ public class T3DMover extends T3DBrush {
 
 	public String getStaticMeshReference() {
 		return staticMeshReference;
+	}
+
+	public MoverProperties getMoverProperties() {
+		return moverProperties;
 	}
 }

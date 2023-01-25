@@ -89,7 +89,6 @@ public class UModelExporter extends UTPackageExtractor {
 
 		for (String logLine : logLines) {
 
-			System.out.println(logLine);
 			logger.log(Level.FINE, logLine);
 
 			if (logLine.startsWith("Exporting") && !logLine.startsWith("Exporting objects")) {

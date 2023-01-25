@@ -30,7 +30,7 @@ public class MoverProperties implements T3D {
 	 * Sounds used by movers when it started moving, is moving ... TODO make a
 	 * list of UPackageRessource binded with some property name
 	 */
-	private UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
+	protected UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
 
 	/**
 	 * CHECK usage?
@@ -59,19 +59,19 @@ public class MoverProperties implements T3D {
     /**
 	 * How long it takes for the mover to get to next position
 	 */
-	private Double moveTime;
+	protected double moveTime;
 
 	/**
 	 * How long the mover stay static in his final position before returning to
 	 * home
 	 */
-	private Double stayOpenTime;
+	protected double stayOpenTime;
 
 	/**
 	 * How long time the mover is available again after getting back to home
 	 * position
 	 */
-	private Double delayTime;
+	protected Double delayTime;
 
 	private final T3DActor mover;
 
@@ -86,9 +86,9 @@ public class MoverProperties implements T3D {
 
 	private BumpType bumpType;
 
-	private MoverEncroachType moverEncroachType;
+	protected MoverEncroachType moverEncroachType;
 
-	private MoverGlideType moverGlideType;
+	protected MoverGlideType moverGlideType;
 
 	/**
 	 * Default number of keys a mover has assuming, first key is initial position
@@ -118,6 +118,13 @@ public class MoverProperties implements T3D {
 		mover.registerSimpleProperty("OtherTime", Float.class);
 		mover.registerSimpleProperty("PlayerBumpEvent", String.class);
 		mover.registerSimpleProperty("AttachTag", String.class);
+
+		// UE1/UE2 default values
+		// UE3 no default values since movement is managed via matinee
+		this.moveTime = 1d;
+		this.stayOpenTime = 4d;
+		this.moverEncroachType = MoverEncroachType.ME_ReturnWhenEncroach;
+		this.moverGlideType = MoverGlideType.MV_GlideByTime;
 	}
 
 	enum BumpType {
@@ -330,9 +337,7 @@ public class MoverProperties implements T3D {
 		sbf.append(IDT).append("\tScene1=Scene\n");
 		sbf.append(IDT).append("\tRootComponent=Scene1\n");
 
-		if (moveTime != null) {
-			sbf.append(IDT).append("\tLift Time=").append(moveTime).append("\n");
-		}
+		sbf.append(IDT).append("\tLift Time=").append(moveTime).append("\n");
 
 		// TODO handle multi position / rotation later
 		// because we use last position but there might more than one position !
@@ -418,9 +423,7 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tMoveLoopSound=None\n");
 		}
 
-		if (stayOpenTime != null) {
-			sbf.append(IDT).append("\tWait at top time=").append(stayOpenTime).append("\n");
-		}
+		sbf.append(IDT).append("\tWait at top time=").append(stayOpenTime).append("\n");
 
 		if (delayTime != null) {
 			sbf.append(IDT).append("\tRetrigger Delay=").append(delayTime).append("\n");
@@ -453,11 +456,9 @@ public class MoverProperties implements T3D {
 				sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverSm.getStaticMesh().getConvertedName()).append("'\n");
 			}
 		}
-		/*
-		* disabled until mesh is good
 		else if (mover instanceof T3DMover moverBrush) {
 			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
-		}*/
+		}
 
 		mover.writeSimpleProperties();
 
@@ -470,12 +471,6 @@ public class MoverProperties implements T3D {
 		// used to match very similar sound resources by name (e.g:
 		// A_Movers.Movers.Elevator01.Loop -> A_Movers.Movers.Elevator01.LoopCue
 		final boolean isFromUe3 = mapConverter.isFrom(UnrealEngine.UE3);
-
-		if(stayOpenTime == null){
-			// default stay open time with UE1 (TODO check UE2/UE3)
-			stayOpenTime = 4d;
-		}
-
 
 		if(mapConverter.convertSounds()) {
 			if (openingSound != null) {
@@ -509,7 +504,7 @@ public class MoverProperties implements T3D {
 		// as see, with Dig (Unreal 1 map)
 		// if movetime = 0, then mover won't move at all
 		// so need to force to some tiny value
-		if(moveTime != null && moveTime == 0d){
+		if (moveTime == 0d) {
 			moveTime = 0.1d;
 		}
 
