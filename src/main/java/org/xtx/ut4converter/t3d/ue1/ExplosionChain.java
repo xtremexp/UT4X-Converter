@@ -17,10 +17,10 @@ public class ExplosionChain extends Effects {
     @Override
     public void convert() {
         super.convert();
-        this.t3dClass = "UBExplosionChain_C";
+        this.t3dClass = "UExplosionChain_C";
     }
 
     public String toT3d() {
-        return writeSimpleActor("UBExplosionChain_C");
+        return writeSimpleActor("UExplosionChain_C", "SceneComponent", "UExplosionChain_C'/Game/UEActors/UExplosionChain.Default__UExplosionChain_C'");
     }
 }

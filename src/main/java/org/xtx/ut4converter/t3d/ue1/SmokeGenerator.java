@@ -17,10 +17,10 @@ public class SmokeGenerator extends Effects {
     @Override
     public void convert() {
         super.convert();
-        this.t3dClass = "UBSmokeGenerator_C";
+        this.t3dClass = "USmokeGenerator_C";
     }
 
     public String toT3d() {
-        return writeSimpleActor("UBSmokeGenerator_C");
+        return writeSimpleActor("USmokeGenerator_C", "SceneComponent", "USmokeGenerator_C'/Game/UEActors/USmokeGenerator.Default__USmokeGenerator_C'");
     }
 }

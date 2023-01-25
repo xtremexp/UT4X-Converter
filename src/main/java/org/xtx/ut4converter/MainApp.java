@@ -96,6 +96,8 @@ public class MainApp extends Application {
 			this.useUbClasses = true;
 		}
 
+		this.useUbClasses = true;
+
 		logger.info(PROGRAM_NAME + " " + VERSION + " started");
 
 		// support for reading tga and dds file

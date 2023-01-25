@@ -24,6 +24,6 @@ public class Barrel extends T3DDecoration {
     }
 
     public String toT3d() {
-        return writeSimpleActor("U1Barrel_C", "StaticMeshComponent");
+        return writeSimpleActor("U1Barrel_C", "StaticMeshComponent", null);
     }
 }

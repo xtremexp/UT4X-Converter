@@ -56,7 +56,7 @@ public class T3DUE1Trigger extends T3DSound {
 
     public String toT3d() {
 
-        sbf.append(IDT).append("Begin Actor Class=UBTrigger_C \n");
+        sbf.append(IDT).append("Begin Actor Class=UTrigger_C Archetype=UTrigger_C'/Game/UEActors/UTrigger.Default__UTrigger_C'\n");
 
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
         sbf.append(IDT).append("\tEnd Object\n");

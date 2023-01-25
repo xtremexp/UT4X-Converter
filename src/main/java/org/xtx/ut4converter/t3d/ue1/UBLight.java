@@ -23,7 +23,11 @@ public class UBLight extends T3DLight {
             // only apply special light if point light
             // because UBPointLight extends PointLight
             // TODO handle spotlight
-            this.t3dClass = "UBPointLight_C";
+            this.t3dClass = "UEPointLight_C";
+            this.archetype = "UEPointLight_C'/Game/UEActors/UEPointLight.Default__UEPointLight_C'";
+
+            // UELight can change of intensity and color so need to force to be stationary
+            this.mobility = UE4_Mobility.Stationary;
         }
     }
 }

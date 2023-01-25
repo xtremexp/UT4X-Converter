@@ -47,7 +47,7 @@ public class T3DDispatcher extends T3DActor {
 
     public String toT3d() {
 
-        sbf.append(IDT).append("Begin Actor Class=Dispatcher_C \n");
+        sbf.append(IDT).append("Begin Actor Class=UDispatcher_C Archetype=UDispatcher_C'/Game/UEActors/UDispatcher.Default__UDispatcher_C'\n");
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
         sbf.append(IDT).append("\tEnd Object\n");
         sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");

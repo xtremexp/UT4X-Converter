@@ -50,7 +50,7 @@ public class T3DLight extends T3DSound {
 	/**
      *
      */
-	enum UE4_Mobility {
+	public static enum UE4_Mobility {
 		Static, // don't move and don't change color
 		Stationary, // don't move but can change of color and switch off/on
 		Movable // can move and change color
@@ -183,7 +183,7 @@ public class T3DLight extends T3DSound {
 	 */
 	private float sourceRadius;
 
-	private UE4_Mobility mobility = UE4_Mobility.Static;
+	protected UE4_Mobility mobility = UE4_Mobility.Static;
 
 	/**
 	 * As seen in UT2004 and UE1

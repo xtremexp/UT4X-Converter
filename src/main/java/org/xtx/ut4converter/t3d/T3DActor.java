@@ -746,7 +746,7 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	protected String writeSimpleActor(final String actorClass){
-		return writeSimpleActor(actorClass, "SceneComponent");
+		return writeSimpleActor(actorClass, "SceneComponent", null);
 	}
 
 	/**
@@ -757,11 +757,17 @@ public abstract class T3DActor extends T3DObject {
 	 * @return T3D actor
 	 */
 	@Deprecated
-	protected String writeSimpleActor(final String actorClass, final String componentType){
+	protected String writeSimpleActor(final String actorClass, final String componentType, String archetype){
 
 		final String rootComponentName = componentType + "0";
 
-		sbf.append(IDT).append("Begin Actor Class=").append(actorClass).append(" \n");
+		sbf.append(IDT).append("Begin Actor Class=").append(actorClass);
+
+		if(archetype != null){
+			sbf.append(" Archetype=").append(archetype);
+		}
+
+		sbf.append("\n");
 
 		sbf.append(IDT).append("\tBegin Object Class=\"").append(componentType).append("\" Name=\"").append(rootComponentName).append("\"\n");
 		sbf.append(IDT).append("\tEnd Object\n");

@@ -2,7 +2,7 @@ package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
 
-public class T3DCounter extends T3DSound{
+public class T3DCounter extends T3DSound {
     public T3DCounter(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
@@ -13,6 +13,6 @@ public class T3DCounter extends T3DSound{
     }
 
     public String toT3d() {
-        return writeSimpleActor("UBCounter_C");
+        return writeSimpleActor("UCounter_C", "SceneComponent", "UCounter_C'/Game/UEActors/UCounter.Default__UCounter_C'");
     }
 }
