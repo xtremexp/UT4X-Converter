@@ -33,7 +33,7 @@ public class T3DDecoration extends T3DStaticMesh {
 
         //writeStaticMeshComponent();
 
-        writeSimpleProperties();
+        writeSimplePropertiesOld();
         writeEndActor();
 
         return sbf.toString();

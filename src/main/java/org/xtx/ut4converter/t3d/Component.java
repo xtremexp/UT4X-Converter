@@ -41,20 +41,6 @@ public class Component {
 
     private final List<Component> subComponents = new ArrayList<>();
 
-    /**
-     * Creates a component given class
-     *
-     * @param componentClass Component class
-     * @param actor          Actor this component belongs to
-     */
-    public Component(String componentClass, final T3DActor actor) {
-        this.componentClass = componentClass;
-        int idxComp = new Random().nextInt(10000);
-        this.name = this.componentClass +  idxComp;
-        //this.objName = this.componentClass + "_" + this.name;
-        this.objName = this.name; //this.componentClass + "_" + new Random().nextInt(10000);
-        this.actor = actor;
-    }
 
     /**
      * Creates a component given class and name

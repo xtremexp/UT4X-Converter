@@ -1,0 +1,15 @@
+Begin Map
+	Begin Actor Class=DynamicAmbientSound Name=DynamicAmbientSound1
+		playProbability=0.1
+		maxReCheckTime=8.0
+		Sounds(0)=Sound'vrikers.vrikers.ambD2a'
+		Sounds(1)=Sound'vrikers.vrikers.ambB3a'
+		Sounds(2)=Sound'vrikers.vrikers.ambC2a'
+		bInitiallyOn=True
+		bDontRepeat=True
+		Tag="DynamicAmbientSound0"
+		Location=(X=-954.047,Y=288.794,Z=242.521)
+		SoundRadius=64
+		SoundVolume=170
+	End Actor
+End Map

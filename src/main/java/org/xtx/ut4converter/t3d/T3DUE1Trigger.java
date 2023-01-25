@@ -83,7 +83,7 @@ public class T3DUE1Trigger extends T3DSound {
             sbf.append(IDT).append("\tInitialState=NewEnumerator").append(this.initialState.ordinal()).append("\n");
         }
 
-        writeSimpleProperties();
+        writeSimplePropertiesOld();
 
         sbf.append(IDT).append("\tRootComponent=CollisionComp\n");
 

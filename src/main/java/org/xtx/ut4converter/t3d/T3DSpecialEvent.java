@@ -32,7 +32,7 @@ public class T3DSpecialEvent extends T3DActor {
 
         sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
 
-        writeSimpleProperties();
+        writeSimplePropertiesOld();
 
         sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
 

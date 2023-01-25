@@ -470,7 +470,8 @@ public class T3DSound extends T3DActor {
 	protected Component buildMainAudioComponent() {
 
 		int ueVersion = this.getOutputGame().getUeVersion();
-		final Component mainComp = new Component(isTo(UE3) ? "SoundNodeAmbient" : "AudioComponent", this);
+		final String compClass = isTo(UE3) ? "SoundNodeAmbient" : "AudioComponent";
+		final Component mainComp = new Component(compClass, compClass + "0", this);
 
 		// if this component is referenced in actor, it won't import correctly in UE3
 		// E.G: "Components(0)=SoundNodeAmbient'SoundNodeAmbient3908'" -> ""

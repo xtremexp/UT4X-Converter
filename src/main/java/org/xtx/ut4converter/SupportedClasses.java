@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE4;
+import static org.xtx.ut4converter.ucore.UnrealEngine.UE5;
+
 /**
  * Tells which UT actor classes will be converted
  * 
@@ -192,7 +195,7 @@ public class SupportedClasses {
 
 		registerUClass(T3DLevelInfo.class, "LevelInfo");
 
-		if (mapConverter.isTo(UnrealEngine.UE3, UnrealEngine.UE4)) {
+		if (mapConverter.isTo(UnrealEngine.UE3, UE4)) {
 			// disabled until working good
 			registerUClass(T3DZoneInfo.class, "ZoneInfo");
 		}
@@ -224,7 +227,7 @@ public class SupportedClasses {
 
 		registerUClass(T3DTeleporter.class, "Teleporter", "FavoritesTeleporter", "VisibleTeleporter", "UTTeleporter", "UTTeleporterCustomMesh");
 
-		if(useUbClasses) {
+		if(useUbClasses && mapConverter.isTo(UE4, UE5)) {
 			registerUClass(T3DSound.class, "AmbientSound", "AmbientSoundSimple");
 			registerUClass(T3DDynamicAmbientSound.class, "DynamicAmbientSound");
 		} else {

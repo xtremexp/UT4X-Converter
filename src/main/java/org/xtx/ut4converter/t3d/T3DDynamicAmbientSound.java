@@ -54,20 +54,22 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
      */
     public String toT3d() {
 
-        this.t3dClass = "UBDynamicAmbientSound_C";
+        this.archetype = "UE1DynamicAmbientSound_C'/Game/UEActors/UE1DynamicAmbientSound.Default__UE1DynamicAmbientSound_C'";
+        this.t3dClass = "UE1DynamicAmbientSound_C";
 
         final Component mainAudioComp = buildMainAudioComponent();
 
         // Sounds(0)=SoundCue'/Game/UB/Blueprints/Sounds/TransA3_Cue.TransA3_Cue'
         int idx = 0;
 
-        for(final UPackageRessource sound : sounds){
-            mainAudioComp.addProp("Sounds(" + idx + ")", "SoundCue'" + sound.getConvertedName() + "'");
-            idx ++;
+        for (final UPackageRessource sound : sounds) {
+            this.addConvProperty("Sounds(" + idx + ")", "SoundCue'" + sound.getConvertedName() + "'");
+            idx++;
         }
 
-        writeSimpleProperties();
-        writeEndActor();
+        this.addComponent(mainAudioComp);
+
+        sbf.append(super.toT3dNew());
 
         return super.toString();
     }

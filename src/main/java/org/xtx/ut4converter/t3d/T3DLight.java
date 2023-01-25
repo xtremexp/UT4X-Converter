@@ -417,7 +417,7 @@ public class T3DLight extends T3DSound {
 		final Component lightComp = new Component(componentLightClass, "LightComponent0", this);
 
 		// For UE3 there are extra components
-		final Component ue3RadiusComp = new Component("DrawLightRadiusComponent", this);
+		final Component ue3RadiusComp = new Component("DrawLightRadiusComponent", "DrawLightRadiusComponent0", this);
 		final Component ue3SpriteComp = new Component("SpriteComponent", "Sprite",this);
 
 		if (!UE4_LightActor.DirectionalLight.name().equals(t3dClass)) {

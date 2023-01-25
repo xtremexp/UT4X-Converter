@@ -140,9 +140,16 @@ public abstract class T3DObject {
 		return simpleProperty;
 	}
 
-	void writeSimpleProperties(){
+	@Deprecated
+	void writeSimplePropertiesOld(){
 		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
 			simpleProperty.writeProperty(sbf, mapConverter);
+		}
+	}
+
+	void writeSimpleProperties(StringBuilder sb){
+		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
+			simpleProperty.writeProperty(sb, mapConverter);
 		}
 	}
 

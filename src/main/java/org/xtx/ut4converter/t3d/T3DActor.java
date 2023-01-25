@@ -70,6 +70,11 @@ public abstract class T3DActor extends T3DObject {
 	protected String event;
 
 	/**
+	 * E.G: PointLight'/Script/Engine.Default__PointLight'
+	 */
+	protected String archetype;
+
+	/**
 	 * If true actor should be hidden in-game
 	 */
 	private Boolean bHidden;
@@ -771,7 +776,7 @@ public abstract class T3DActor extends T3DObject {
 			sbf.append(IDT).append("\tStaticMeshComponent=").append(rootComponentName).append("\n");
 		}
 
-		writeSimpleProperties();
+		writeSimplePropertiesOld();
 
 		if (this.bHidden != null) {
 			sbf.append(IDT).append("\tbHidden=").append(this.bHidden).append("\n");
@@ -839,7 +844,9 @@ public abstract class T3DActor extends T3DObject {
 		sb.append("\tBegin Actor Class=").append(this.t3dClass).append(" Name=").append(this.name);
 
 		// Archetype=StaticMeshActor'Engine.Default__StaticMeshActor'
-		if (ueVersion == 3) {
+		if (this.archetype != null) {
+			sb.append(" Archetype=").append(this.archetype);
+		} else if (ueVersion == 3) {
 			sb.append(" Archetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'");
 		}
 		sb.append("\n");
@@ -880,6 +887,8 @@ public abstract class T3DActor extends T3DObject {
 		if (ueVersion == 3) {
 			sb.append("\t\tObjectArchetype=").append(this.t3dClass).append("'Engine.Default__").append(this.t3dClass).append("'\n");
 		}
+
+		writeSimpleProperties(sb);
 
 		sb.append(writeEndActorAsString());
 

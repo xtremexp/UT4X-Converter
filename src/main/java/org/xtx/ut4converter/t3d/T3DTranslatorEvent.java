@@ -73,7 +73,7 @@ public class T3DTranslatorEvent extends T3DActor {
         sbf.append(IDT).append("\tEnd Object\n");
 
 
-        writeSimpleProperties();
+        writeSimplePropertiesOld();
 
         if(newMessageSound != null){
             sbf.append(IDT).append("\tNewMessageSound=SoundCue'").append(newMessageSound.getConvertedName()).append("'\n");

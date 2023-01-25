@@ -460,7 +460,7 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
 		}
 
-		mover.writeSimpleProperties();
+		mover.writeSimplePropertiesOld();
 
 		mover.writeEndActor();
 	}

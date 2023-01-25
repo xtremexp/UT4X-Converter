@@ -81,7 +81,7 @@ public class T3DMusicEvent extends T3DActor {
             sbf.append(IDT).append("\tTransition=NewEnumerator").append(transition.ordinal()).append("\n");
         }
 
-        writeSimpleProperties();
+        writeSimplePropertiesOld();
 
         sbf.append(IDT).append("\tLevelMusic=LevelMusic\n");
         sbf.append(IDT).append("\tRootComponent=LevelMusic\n");
