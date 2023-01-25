@@ -1,3 +1,8 @@
+- 1.4.6 - 25/01/2023
+  - u1/ut99->ut4: brush movers are now converted into staticmeshes
+  - u1/ut99/u2/uc2/ut2003/4->ut3/4: increased light radius by 10%
+  - u1/ut99->ut3/4: decreased light intensity from 35 to 15
+
 - 1.4.5 - 24/01/2023
   - package exporter tool: now also export to bmp texture packages 
   - conversion settings: added extra scale factors

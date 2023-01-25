@@ -143,8 +143,8 @@ public class T3DLightTest {
         // Fao always 1
         Assertions.assertTrue(convT3d.contains("FalloffExponent=3.0"));
 
-        // test radius = radius * 32 * {ScaleFactor} = 2048 * 2
-        Assertions.assertTrue(convT3d.contains("Radius=4096.0"));
+        // test radius = radius * 32 * 1.1 * {ScaleFactor} = 2048 * 2.2
+        Assertions.assertTrue(convT3d.contains("Radius=4505.6"));
 
         // test color converted is white
         Assertions.assertTrue(convT3d.contains("LightColor=(B=64,G=64,R=64,A=255)"));
