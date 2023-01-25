@@ -41,69 +41,6 @@ public class UModelExporter extends UTPackageExtractor {
 		super(mapConverter);
 	}
 
-	/**
-	 * Builds the /conf/
-	 *
-	 * @throws IOException Exception thrown
-	 * @throws InterruptedException Exception thrown
-	 */
-	/*
-	public void buildUT99TexToPackageFile(UnrealGame unrealGame) throws InterruptedException, IOException{
-
-		final UserConfig userConfig = mapConverter.getIn();
-		Map<String, String> texToPack = new HashMap<>();
-
-		if(userConfig != null){
-			final UserGameConfig ut99GameConfig = mapConverter.getUserConfig().getGameConfigByGame(UTGame.UT99);
-
-			if(ut99GameConfig != null){
-				final File texFolder = UTGames.getTexturesFolder(ut99GameConfig.getPath(), UTGame.UT99);
-				assert texFolder != null;
-				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, texFolder));
-
-				final File sysFolder = UTGames.getSystemFolder(ut99GameConfig.getPath(), UTGame.UT99);
-				assert sysFolder != null;
-				texToPack.putAll(getUT99TexToPackageInfo(ut99GameConfig, sysFolder));
-
-				// copy paste result of this in the .txt file
-				for(String texName : texToPack.keySet()){
-					System.out.println(texName + ":" + texToPack.get(texName));
-				}
-			}
-		}
-	}
-
-
-	private Map<String, String> getUT99TexToPackageInfo(final UserGameConfig ut99GameConfig, final File texFolder) throws InterruptedException, IOException {
-
-		Map<String, String> texToPac = new HashMap<>();
-
-		for(final File texFile : Objects.requireNonNull(texFolder.listFiles())){
-			if(texFile.isFile() && (texFile.getName().endsWith(".utx") || texFile.getName().endsWith(".u"))){
-				String command = "\"" + getExporterPath() + "\" -export -sounds -groups \"" + texFile.getAbsolutePath() + "\"";
-				command += " -out=\"D:\\TEMP\"";
-				command += " -path=\"" + ut99GameConfig.getPath() + "\"";
-
-
-				List<String> logLines = new ArrayList<>();
-				Installation.executeProcess(command, logLines);
-
-				for (final String logLine : logLines) {
-					// Exporting Texture newgreen to D:/TEMP/Belt_fx/ShieldBelt
-					if (logLine.startsWith("Exporting Texture")) {
-						//System.out.println(logLine);
-						final String texName = logLine.split("Exporting Texture ")[1].split(" to ")[0].toLowerCase();
-
-						texToPac.put(texName, texFile.getName().split("\\.")[0]);
-					}
-				}
-
-			}
-		}
-
-		return texToPac;
-	}
-	*/
 
 	@Override
 	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException, InterruptedException {
@@ -152,6 +89,7 @@ public class UModelExporter extends UTPackageExtractor {
 
 		for (String logLine : logLines) {
 
+			System.out.println(logLine);
 			logger.log(Level.FINE, logLine);
 
 			if (logLine.startsWith("Exporting") && !logLine.startsWith("Exporting objects")) {
