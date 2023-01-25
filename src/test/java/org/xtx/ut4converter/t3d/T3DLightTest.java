@@ -30,13 +30,12 @@ public class T3DLightTest {
         Assertions.assertEquals(208, u1Light.brightness);
 
         final String convT3d = u1Light.convertScaleAndToT3D(2d);
-
+        System.out.println(convT3d);
         Assertions.assertTrue(convT3d.contains("Intensity=15.0"));
         Assertions.assertTrue(convT3d.contains("LightColor=(B=68,G=137,R=208,A=255)"));
         Assertions.assertTrue(convT3d.contains("bUseInverseSquaredFalloff=false"));
         Assertions.assertTrue(convT3d.contains("LightFalloffExponent=3.0"));
-        Assertions.assertTrue(convT3d.contains("AttenuationRadius=1856.0")); // radius * 32 * {ScaleFactor}
-        System.out.println(convT3d);
+        Assertions.assertTrue(convT3d.contains("AttenuationRadius=2041.6")); // radius * 32 * 1.1 * {ScaleFactor}
     }
 
     @Test

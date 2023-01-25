@@ -557,7 +557,7 @@ public class T3DLight extends T3DSound {
 			this.radius *= 32;
 
 			// needs to scale up again to fit correct radius in UE4+
-			//this.radius *= 1.12;
+			this.radius *= 1.1;
 
 			this.lightFalloffExponent = 3d;
 			this.intensity = mapConverter.isFrom(UE1) ? 15f : 1f;
