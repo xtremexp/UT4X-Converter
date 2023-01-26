@@ -28,13 +28,19 @@ public class T3DSimpleProperty {
      */
     private String clonePropertyName;
 
-    private final Object propertyClass;
+    /**
+     * E.G: Float, Integer, Enum
+     */
+    private final Class propertyClass;
 
     /**
      * If true then this property is scalable.
      */
     private boolean scalable;
 
+    /**
+     * Value
+     */
     private Object propertyValue;
 
     private final boolean isList;
@@ -43,22 +49,30 @@ public class T3DSimpleProperty {
      */
     private T3DRessource.Type ressourceType;
 
+    /**
+     * Default value
+     */
+    private Object defaultValue;
+
 
     /**
      * Register simple property from single float, string, ...
-     * @param propertyName Property name
+     *
+     * @param propertyName  Property name
      * @param propertyClass Property class
      */
-    public T3DSimpleProperty(final String propertyName, final Object propertyClass, final Object defaultValue, boolean isList) {
+    public T3DSimpleProperty(final String propertyName, final Class<?> propertyClass, final Object defaultValue, boolean isList) {
         this.propertyName = propertyName;
         this.propertyNameConverted = this.propertyName;
         this.propertyClass = propertyClass;
         this.isList = isList;
+        this.defaultValue = defaultValue;
     }
 
     /**
      * Register simple property ressource
-     * @param propertyName Property name
+     *
+     * @param propertyName  Property name
      * @param ressourceType Ressource type
      */
     public T3DSimpleProperty(final String propertyName, final T3DRessource.Type ressourceType, boolean isList) {
@@ -72,14 +86,14 @@ public class T3DSimpleProperty {
     public boolean readPropertyFromT3dLine(final String line, final MapConverter mapConverter){
 
         // property ever parsed before and not a list
-        if(this.propertyValue != null && !this.isList){
+        if (this.propertyValue != null && !this.isList) {
             return false;
         }
 
         boolean hasLineProp;
 
-        if(this.isList){
-            if(this.propertyValue == null) {
+        if (this.isList) {
+            if (this.propertyValue == null) {
                 this.propertyValue = new LinkedList<>();
             }
             hasLineProp = line.toLowerCase().startsWith(this.propertyName.toLowerCase() + "(");
@@ -89,7 +103,7 @@ public class T3DSimpleProperty {
 
         Object value = null;
 
-        if(hasLineProp){
+        if (hasLineProp) {
             if(propertyClass == String.class){
                 value = T3DUtils.getString(line);
             }
@@ -114,12 +128,15 @@ public class T3DSimpleProperty {
             else if(propertyClass == Rotator.class){
                 value = T3DUtils.getVector3dRot(line);
             }
+            else if (propertyClass.isEnum()) {
+                value = Enum.valueOf(propertyClass, T3DUtils.getString(line));
+            }
             else if(propertyClass == UPackageRessource.class){
                 value = T3DUtils.getUPackageRessource(mapConverter, line, this.ressourceType);
             }
         }
 
-        if(value != null) {
+        if (value != null) {
             if (this.propertyValue instanceof List) {
                 final List<Object> theList = (List<Object>) this.propertyValue;
                 theList.add(value);
@@ -132,46 +149,48 @@ public class T3DSimpleProperty {
         return value != null;
     }
 
-    void writeProperty(final StringBuilder sbf, final MapConverter mapConverter){
+    void writeProperty(final StringBuilder sbf) {
 
-        if(this.propertyValue != null) {
+        if (this.propertyValue != null) {
 
-            if(this.propertyValue instanceof List) {
+            if (this.propertyValue instanceof List) {
                 final List<Object> values = (List<Object>) this.propertyValue;
 
                 int idx = 0;
 
-                for(final Object value : values){
+                for (final Object value : values) {
                     sbf.append("\t\t").append(propertyNameConverted).append("(").append(idx).append(")=");
-                    writeValueProperty(sbf, mapConverter, value);
-                    idx ++;
+                    writeValueProperty(sbf, value);
+                    idx++;
                 }
             } else {
                 sbf.append("\t\t").append(propertyNameConverted).append("=");
-                writeValueProperty(sbf, mapConverter, this.propertyValue);
+                writeValueProperty(sbf, this.propertyValue);
 
-                if(clonePropertyName != null){
+                if (clonePropertyName != null) {
                     sbf.append("\t\t").append(clonePropertyName).append("=");
-                    writeValueProperty(sbf, mapConverter, this.propertyValue.toString());
+                    writeValueProperty(sbf, this.propertyValue.toString());
                 }
             }
         }
     }
 
-    private void writeValueProperty(StringBuilder sbf, MapConverter mapConverter, Object value) {
+    private void writeValueProperty(StringBuilder sbf, Object value) {
         if (value instanceof String) {
             sbf.append("\"").append(value).append("\"\n");
         } else if (value instanceof final UPackageRessource packageRessource) {
 
-            if(ressourceType == T3DRessource.Type.SOUND) {
+            if (ressourceType == T3DRessource.Type.SOUND) {
                 sbf.append("SoundCue'").append((packageRessource).getConvertedName()).append("'\n");
             }
             // MESHES will be converted to staticmeshes
-            else if(ressourceType == T3DRessource.Type.STATICMESH || ressourceType == T3DRessource.Type.MESH) {
+            else if (ressourceType == T3DRessource.Type.STATICMESH || ressourceType == T3DRessource.Type.MESH) {
                 sbf.append("StaticMesh'").append((packageRessource).getConvertedName()).append("'\n");
-            } else if(ressourceType == T3DRessource.Type.TEXTURE) {
+            } else if (ressourceType == T3DRessource.Type.TEXTURE) {
                 sbf.append("Material'").append((packageRessource).getConvertedName()).append("'\n");
             }
+        } else if (value instanceof Enum<?> enumValue) {
+            sbf.append("NewEnumerator").append(enumValue.ordinal()).append("\n");
         } else {
             sbf.append(value).append("\n");
         }

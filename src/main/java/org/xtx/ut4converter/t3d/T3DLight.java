@@ -464,10 +464,6 @@ public class T3DLight extends T3DSound {
 			lightComp.addProp("Mobility", mobility.name());
 		}
 
-		// UB custome blueprints
-		if (this instanceof final T3DTriggerLight t3DTriggerLight && t3DTriggerLight.getInitialState() != null) {
-			this.addConvProperty("InitialState", "NewEnumerator" + t3DTriggerLight.getInitialState().ordinal());
-		}
 
 		if (this.lightEffect != null) {
 			this.addConvProperty("LightEffect", "NewEnumerator" + lightEffect.ordinal());

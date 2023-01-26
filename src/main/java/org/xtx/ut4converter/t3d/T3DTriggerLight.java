@@ -5,8 +5,6 @@ import org.xtx.ut4converter.MapConverter;
 public class T3DTriggerLight extends T3DLight {
 
 
-    private InitialStateTL initialState;
-
     enum InitialStateTL {
         None, TriggerPound, TriggerControl, TriggerToggle, TriggerTurnsOff, TriggerTurnsOn
     }
@@ -21,26 +19,19 @@ public class T3DTriggerLight extends T3DLight {
         registerSimpleProperty("bInitiallyOn", Boolean.class);
         registerSimpleProperty("bDelayFullOn", Boolean.class);
         registerSimpleProperty("ChangeTime", Float.class);
+        registerSimpleProperty("InitialState", InitialStateTL.class);
     }
 
     @Override
     public boolean analyseT3DData(String line) {
-        if (line.startsWith("InitialState=")) {
-            this.initialState = InitialStateTL.valueOf(T3DUtils.getString(line));
-        } else {
-            return super.analyseT3DData(line);
-        }
-
-        return true;
+        return super.analyseT3DData(line);
     }
 
     @Override
     public void convert() {
         super.convert();
-        this.t3dClass = "UBTriggerLight_C";
-    }
-
-    public InitialStateTL getInitialState() {
-        return initialState;
+        this.t3dClass = "UTriggerLight_C";
+        this.archetype = "UTriggerLight_C'/Game/UEActors/UTriggerLight.Default__UTriggerLight_C'";
+        this.mobility = UE4_Mobility.Stationary;
     }
 }

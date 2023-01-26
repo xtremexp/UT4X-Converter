@@ -8,7 +8,6 @@ public class T3DMusicEvent extends T3DActor {
 
     private UPackageRessource song;
 
-    private MTran transition = MTran.MTRAN_Fade;
 
     /**
      * How fast music transition is done
@@ -25,6 +24,7 @@ public class T3DMusicEvent extends T3DActor {
         registerSimpleProperty("bSilence", Boolean.class);
         registerSimpleProperty("CdTrack", Short.class);
         registerSimpleProperty("SongSection", Short.class);
+        registerSimpleProperty("Transition", MTran.class, MTran.MTRAN_Fade);
 
         // for unreal 2 only
         registerSimpleProperty("Script", String.class).clonePropertyAs("SongOriginal");
@@ -32,11 +32,9 @@ public class T3DMusicEvent extends T3DActor {
 
     @Override
     public boolean analyseT3DData(String line) {
+
         if (line.startsWith("Song=")) {
             this.song = mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.MUSIC);
-        }
-        else if (line.startsWith("Transition=")) {
-            this.transition = MTran.valueOf(T3DUtils.getString(line));
         }
 
         else {
@@ -58,7 +56,7 @@ public class T3DMusicEvent extends T3DActor {
 
     public String toT3d() {
 
-        sbf.append(IDT).append("Begin Actor Class=MusicEvent_C \n");
+        sbf.append(IDT).append("Begin Actor Class=UMusicEvent_C Archetype=UMusicEvent_C'/Game/UEActors/UMusicEvent.Default__UMusicEvent_C'\n");
 
         sbf.append(IDT).append("\tBegin Object Class=AudioComponent Name=\"LevelMusic\"\n");
         sbf.append(IDT).append("\tEnd Object\n");
@@ -75,10 +73,6 @@ public class T3DMusicEvent extends T3DActor {
             // TODO maybe modify to add _<songSection> to Song property ?? (this would mean convert .s3m/.xm, and extract
             // wave by section
             sbf.append(IDT).append("\tSongOriginal=\"").append(song.getFullName(true)).append("\"\n");
-        }
-
-        if(transition != null){
-            sbf.append(IDT).append("\tTransition=NewEnumerator").append(transition.ordinal()).append("\n");
         }
 
         writeSimplePropertiesOld();

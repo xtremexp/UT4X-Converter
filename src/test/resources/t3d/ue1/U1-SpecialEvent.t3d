@@ -1,0 +1,8 @@
+Begin Map
+	Begin Actor Class=SpecialEvent Name=SpecialEvent16
+		Sound=Sound'vrikers.vrikers.prisonEa'
+		InitialState="PlaySoundEffect"
+		Tag="xcape31"
+		Location=(X=-1890.65,Y=447.126,Z=-199.99)
+	End Actor
+End Map

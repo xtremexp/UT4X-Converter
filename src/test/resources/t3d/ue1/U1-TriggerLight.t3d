@@ -1,0 +1,12 @@
+Begin Map
+	Begin Actor Class=TriggerLight Name=TriggerLight4
+		bInitiallyOn=True
+		InitialState="TriggerTurnsOff"
+		Tag="medo4"
+		Location=(X=27.2579,Y=-525.365,Z=-192.0)
+		LightBrightness=255
+		LightHue=180
+		LightSaturation=48
+		LightRadius=12
+	End Actor
+End Map

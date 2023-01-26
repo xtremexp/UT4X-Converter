@@ -316,12 +316,21 @@ public class MoverProperties implements T3D {
 	 * @param sbf String builder
 	 */
 	public void writeUT4MoverActor(final StringBuilder sbf) {
-		// Write the mover as Destination Lift
-		// TODO write as well matinee actor (once implementation done)
-		// because it's impossible to know ("guess") if a mover is a lift or
-		// another kind of mover (button, door, ...)
-		// TODO use UBMover once UBMover blueprint done
-		sbf.append(IDT).append("Begin Actor Class=").append(mover.t3dClass).append(" Name=").append(mover.name).append("_Lift\n");
+
+		sbf.append(IDT).append("Begin Actor Class=").append(mover.t3dClass).append(" Name=").append(mover.name).append("_Lift");
+
+		if (mover.archetype != null) {
+			sbf.append(" Archetype=").append(mover.archetype);
+		}
+
+		sbf.append("\n");
+
+		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"Scene1\"\n");
+		sbf.append(IDT).append("\tEnd Object\n");
+
+		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
+		mover.writeLocRotAndScale();
+		sbf.append(IDT).append("\tEnd Object\n");
 
 		// if scale 3D set need to use Mesh Scale property and set scale3d to null
 		// else scale within game is not good at all !
@@ -330,10 +339,6 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tMesh Scale=(X=").append(T3DActor.fmt(mover.scale3d.x)).append(",Y=").append(T3DActor.fmt(mover.scale3d.y)).append(",Z=").append(T3DActor.fmt(mover.scale3d.z)).append(")\n");
 			mover.scale3d = null;
 		}
-
-		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
-		mover.writeLocRotAndScale();
-		sbf.append(IDT).append("\tEnd Object\n");
 		sbf.append(IDT).append("\tScene1=Scene\n");
 		sbf.append(IDT).append("\tRootComponent=Scene1\n");
 
@@ -509,7 +514,8 @@ public class MoverProperties implements T3D {
 		}
 
 		if(mapConverter.isUseUbClasses()) {
-			mover.t3dClass = "UE1Mover_C";
+			mover.t3dClass = "UMover_C";
+			mover.archetype = "UMover_C'/Game/UEActors/UMover.Default__UMover_C'";
 		} else {
 			mover.t3dClass = "Generic_Lift_C";
 		}

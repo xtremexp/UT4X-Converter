@@ -7,21 +7,27 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DSpecialEvent extends T3DActor {
 
+
+    enum InitialState {
+        PlayerPath, PlayAmbientSoundEffect, PlayersPlaySoundEffect, PlaySoundEffect, KillInstigator, DamageInstigator, DisplayMessage, None
+    }
+
     public T3DSpecialEvent(final MapConverter mc, final String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("bBroadcast", Boolean.class);
+        registerSimpleProperty("bBroadcast", Boolean.class, false);
         registerSimpleProperty("bPlayerViewRot", Boolean.class);
-        registerSimpleProperty("Damage", Float.class);
+        registerSimpleProperty("Damage", Float.class, 0);
         registerSimpleProperty("DamageString", String.class);
         registerSimpleProperty("DamageType", String.class);
         registerSimpleProperty("Message", String.class);
+        registerSimpleProperty("InitialState", InitialState.class);
         registerSimplePropertyRessource("Sound", T3DRessource.Type.SOUND);
     }
 
     public String toT3d() {
 
-        sbf.append(IDT).append("Begin Actor Class=Dispatcher_C \n");
+        sbf.append(IDT).append("Begin Actor Class=USpecialEvent_C Name=").append(name).append(" Archetype=USpecialEvent_C'/Game/UEActors/USpecialEvent.Default__USpecialEvent_C'\n");
 
         sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
         sbf.append(IDT).append("\tEnd Object\n");

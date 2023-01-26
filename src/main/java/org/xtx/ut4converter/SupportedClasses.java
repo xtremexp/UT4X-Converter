@@ -141,16 +141,16 @@ public class SupportedClasses {
 			/*
 			registerUClass(T3DDecoration.class, "Seaweed", "Tree1","Tree2","Tree3","Tree4","Tree5","Tree6","Tree7", "Tree8", "Tree9", "Tree10", "Tree11", "Plant1","Plant2","Plant3","Plant4", "Plant5", "Plant6", "Plant7");
 			registerUClass(Barrel.class, "Barrel");
-			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
-			registerUClass(T3DMusicEvent.class, "MusicEvent", "MusicScriptEvent");
 			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
-			registerUClass(T3DAlarmPoint.class, "AlarmPoint");
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");
 			*/
+			registerUClass(T3DAlarmPoint.class, "AlarmPoint");
+			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
+			registerUClass(T3DMusicEvent.class, "MusicEvent", "MusicScriptEvent");
 			registerUClass(SmokeGenerator.class, "SmokeGenerator");
 			registerUClass(T3DDispatcher.class, "Dispatcher", "U2Dispatcher");
 			registerUClass(T3DCounter.class, "Counter");
@@ -174,7 +174,7 @@ public class SupportedClasses {
 
 				if(useUbClasses ){
 					if(ut99LightActor == T3DLight.UE12_LightActors.TriggerLight) {
-						//registerUClass(T3DTriggerLight.class, ut99LightActor.name());
+						registerUClass(T3DTriggerLight.class, ut99LightActor.name());
 					} else {
 						registerUClass(UBLight.class, ut99LightActor.name());
 					}
@@ -255,10 +255,6 @@ public class SupportedClasses {
 		uneededActors.add("UTArmorPickupLight"); // ut3
 		uneededActors.add("UTHealthPickupLight"); // ut3
 		uneededActors.add("ProscribedReachSpec"); // ut3
-
-		if (USE_CUSTOM) {
-			registerUClass(SpecialEvent.class, "SpecialEvent");
-		}
 	}
 
 	/**

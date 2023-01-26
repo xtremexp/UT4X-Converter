@@ -120,11 +120,11 @@ public abstract class T3DObject {
 		return simpleProperty;
 	}
 
-	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Object classType){
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Class classType){
 		return registerSimpleProperty(propertyName, classType, null);
 	}
 
-	public void registerSimpleArrayProperty(final String propertyName, final Object classType){
+	public void registerSimpleArrayProperty(final String propertyName, final Class classType){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, null, true);
 		this.registeredProperties.add(simpleProperty);
 	}
@@ -134,7 +134,7 @@ public abstract class T3DObject {
 	 * @param propertyName Property name
 	 * @param classType Type of property (String, Float, or other)
 	 */
-	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Object classType, final Object defaultValue){
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Class classType, final Object defaultValue){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, defaultValue, false);
 		this.registeredProperties.add(simpleProperty);
 		return simpleProperty;
@@ -143,13 +143,13 @@ public abstract class T3DObject {
 	@Deprecated
 	void writeSimplePropertiesOld(){
 		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
-			simpleProperty.writeProperty(sbf, mapConverter);
+			simpleProperty.writeProperty(sbf);
 		}
 	}
 
 	void writeSimpleProperties(StringBuilder sb){
 		for(final T3DSimpleProperty simpleProperty : this.registeredProperties){
-			simpleProperty.writeProperty(sb, mapConverter);
+			simpleProperty.writeProperty(sb);
 		}
 	}
 
