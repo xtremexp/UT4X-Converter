@@ -1,3 +1,6 @@
+- 1.4.7 - 26/01/2023
+  - u1/ut99->ut4: fixed converted brush movers to staticmeshes having 'flipped' uv if original MainScale < 0
+  
 - 1.4.6 - 25/01/2023
   - u1/ut99->ut4: brush movers are now converted into staticmeshes
   - u1/ut99/u2/uc2/ut2003/4->ut3/4: increased light radius by 10%
