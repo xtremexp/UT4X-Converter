@@ -274,8 +274,12 @@ public class T3DPolygon {
 
 	public void convert() {
 
-		if (mapConverter != null && mapConverter.convertTextures() && texture != null) {
+		if (mapConverter == null) {
+			return;
+		}
 
+		// extract textures if requested
+		if (mapConverter.convertTextures() && texture != null) {
 			texture.export(UTPackageExtractor.getExtractor(mapConverter, texture));
 
 			if (texture.getMaterialInfo() != null) {
@@ -289,10 +293,21 @@ public class T3DPolygon {
 			if (texture.getReplacement() != null) {
 				texture.getReplacement().export(UTPackageExtractor.getExtractor(mapConverter, texture.getReplacement()));
 			}
+		}
 
-			// UE1/UE2 -> UE3+
-			if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
+		// UE1/UE2 -> UE3+
+		// Updates uv scaling
+		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
+			// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
+			if (origin != null && (this.panU > 0 || this.panV > 0)) {
+				// Since UE2 the former panU, panV effect is reverted
+				origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
+				this.panU = 0;
+				this.panV = 0;
+			}
+
+			if (texture != null) {
 				// need to get texture dimension from UE1/UE2 to UE4 to get
 				// the right UV scaling
 				texture.readTextureDimensions();
@@ -303,14 +318,6 @@ public class T3DPolygon {
 					texDimension = texture.getReplacement().getTextureDimensions();
 				} else {
 					texDimension = texture.getTextureDimensions();
-				}
-
-				// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
-				if (origin != null && (this.panU > 0 || this.panV > 0)) {
-					// Since UE2, panU, panV is reverted
-					origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
-					this.panU = 0;
-					this.panV = 0;
 				}
 
 				if (texDimension != null) {
@@ -325,24 +332,23 @@ public class T3DPolygon {
 						textureV.scale(1 / (texDimension.height / (mapConverter.isTo(UnrealEngine.UE3) ? 128d : 100d)));
 					}
 				}
-
-			}
-
-			// UE3->UE4+
-			// since UE4, grid base unit is 100
-			else if (mapConverter.isFrom(UnrealEngine.UE3)) {
-
-				if (textureU != null) {
-					textureU.scale(100d / 128d);
-				}
-
-				if (textureV != null) {
-					textureV.scale(100d / 128d);
-				}
 			}
 		}
 
-		if (mapConverter != null && lightMapScale == null) {
+		// UE3->UE4+
+		// since UE4, grid base unit is 100
+		else if (mapConverter.isFrom(UnrealEngine.UE3)) {
+
+			if (textureU != null) {
+				textureU.scale(100d / 128d);
+			}
+
+			if (textureV != null) {
+				textureV.scale(100d / 128d);
+			}
+		}
+
+		if (lightMapScale == null) {
 			lightMapScale = mapConverter.getLightMapResolution();
 		}
 	}

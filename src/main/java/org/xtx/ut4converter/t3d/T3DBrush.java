@@ -194,13 +194,6 @@ public class T3DBrush extends T3DVolume {
 		modelName = "Model_6";
 	}
 
-	/**
-	 * If true reverse the order of vertices when writting converted t3d. This
-	 * is due to MainScale factor. Depending on it it.
-	 */
-	boolean reverseVertexOrder = false;
-
-
 	@Override
 	public boolean analyseT3DData(String line) {
 
@@ -226,8 +219,6 @@ public class T3DBrush extends T3DVolume {
 			if(line.contains("SheerRate=")){
 				mainScale.sheerRate = T3DUtils.getFloat(line, "SheerRate");
 			}
-
-			reverseVertexOrder = mainScale.scale.x * mainScale.scale.y * mainScale.scale.z < 0;
 		}
 
 
@@ -495,16 +486,6 @@ public class T3DBrush extends T3DVolume {
 
 		for (T3DPolygon t3dPolygon : polyList) {
 
-			if (reverseVertexOrder) {
-				List<Vector3d> verticesReverted = new LinkedList<>();
-
-				for (Vector3d vertex : t3dPolygon.vertices) {
-					verticesReverted.add(0, vertex);
-				}
-
-				t3dPolygon.vertices = verticesReverted;
-			}
-
 			t3dPolygon.toT3D(sbf, decimalFormatVector, IDT, numPoly, mapConverter.getUnrealEngineTo());
 			numPoly++;
 		}
@@ -645,10 +626,9 @@ public class T3DBrush extends T3DVolume {
 
 		// UE4+ - no more PrePivot property for brushes and volumes
 		// have to update vertices
-		if (prePivot != null) {
+		for (T3DPolygon p : polyList) {
 
-			for (T3DPolygon p : polyList) {
-
+			if (prePivot != null) {
 				if (this.mapConverter.isFrom(UE1, UE2)) {
 					p.origin.sub(prePivot);
 				}
@@ -658,13 +638,10 @@ public class T3DBrush extends T3DVolume {
 				}
 			}
 
-			prePivot = null;
-		}
-
-		// TODO check texture alignement after convert
-		for (T3DPolygon p : polyList) {
 			p.convert();
 		}
+
+		prePivot = null;
 
 		if (mapConverter.isTo(UE3, UnrealEngine.UE4)) {
 
@@ -681,7 +658,7 @@ public class T3DBrush extends T3DVolume {
 
 		if (mapConverter.isTo(UnrealEngine.UE4)) {
 			// ReverbVolume replaced with audio volume from ut3 to ut4
-			// TODO convert specific properties of these volume
+			// TODO brush convert specific properties of ReverbVolume, DynamicTriggerVolume
 			if (brushClass == BrushClass.ReverbVolume) {
 				brushClass = BrushClass.AudioVolume;
 			}
@@ -705,8 +682,15 @@ public class T3DBrush extends T3DVolume {
 			Geometry.transformPermanently(prePivot, mainScale, rotation, postScale, false);
 		}
 
+		// need to reverse vertice order else uv mapping is 'flipped'
+		boolean reverseVertexOrder = mainScale != null && mainScale.scale.x * mainScale.scale.y * mainScale.scale.z < 0;
+
 		for (T3DPolygon polygon : polyList) {
 			polygon.transformPermanently(mainScale, rotation, postScale);
+
+			if (reverseVertexOrder) {
+				Collections.reverse(polygon.vertices);
+			}
 		}
 
 		rotation = null;
