@@ -463,27 +463,38 @@ public class UPackageRessource {
 	 */
 	public String getConvertedName() {
 
+		String convName;
+
 		if (replacement != null) {
-			return replacement.getConvertedName();
+			convName =  replacement.getConvertedName();
+		} else {
+
+			final String baseName = getConvertedBaseName();
+
+			//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
+			if (mapConverter.isTo(UE4, UE5)) {
+				// e.g: Texture=/Game/Converted/DmFith-U1/Texture/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
+				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_PACKAGE) {
+					convName = mapConverter.getUt4ReferenceBaseFolder() + "/" + this.getUnrealPackage().getName() + "/" + baseName + "." + baseName;
+				}
+				// e.g: Texture=/Game/Converted/DmFith-U1/Starship/Base_sh_bs4_Mat.Base_sh_bs4_Mat
+				else {
+					//return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.type.getName() + "/" + baseName + "." + baseName;
+					// no split by type for now else staticmeshes won't have textures applied (relative path)
+					convName = mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
+				}
+			} else {
+				// e.g: Texture=DM-Malevolence-UT99.Starship_Base_basic9_Mat
+				convName = mapConverter.getOutMapName() + "." + baseName;
+			}
 		}
 
-		final String baseName = getConvertedBaseName();
-		//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
-
-		if (mapConverter.isTo(UE4, UE5)) {
-			// e.g: Texture=/Game/Converted/DmFith-U1/Texture/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
-			if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_PACKAGE) {
-				return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.getUnrealPackage().getName() + "/" + baseName + "." + baseName;
-			}
-			// e.g: Texture=/Game/Converted/DmFith-U1/Starship/Base_sh_bs4_Mat.Base_sh_bs4_Mat
-			else {
-				//return mapConverter.getUt4ReferenceBaseFolder() + "/" + this.type.getName() + "/" + baseName + "." + baseName;
-				// no split by type for now else staticmeshes won't have textures applied (relative path)
-				return mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
-			}
+		if (convName != null) {
+			// UT4 editor replaces "~" with "_" when importing ressources files in content browser
+			// e.g: 'PlayrShp_Wall_Hullpn~1' will be imported as 'PlayrShp.Wall.Hullpn_1'
+			return convName.replaceAll("~", "_");
 		} else {
-			// e.g: Texture=DM-Malevolence-UT99.Starship_Base_basic9_Mat
-			return mapConverter.getOutMapName() + "." + baseName;
+			return null;
 		}
 	}
 	
