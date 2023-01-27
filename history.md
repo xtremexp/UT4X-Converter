@@ -1,3 +1,10 @@
+- 1.4.8 - 27/01/2023
+  - all: fixed ressources (textures, sounds, staticmeshes) not being visible in converted map if original ressource filename 
+  had unsupported char "~" (replaced by "_" on ut4 editor import) 
+  - all: .t3d file provided by user as map input is no longer being deleted
+  - u1/ut99: fixed bad texture align when panU or panV < 0
+
+
 - 1.4.7 - 26/01/2023
   - u1/ut99->ut4: fixed converted brush movers to staticmeshes having 'flipped' uv if original MainScale < 0
   
