@@ -746,53 +746,25 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	protected String writeSimpleActor(final String actorClass){
-		return writeSimpleActor(actorClass, "SceneComponent", null);
+		return writeSimpleActor(actorClass, "SceneComponent", null, null);
 	}
 
 	/**
 	 * TODO refactor and use toT3DNew
 	 *
 	 * @param actorClass    Actor class
-	 * @param componentType Component type
+	 * @param rootComponentClass Component type
 	 * @return T3D actor
 	 */
-	@Deprecated
-	protected String writeSimpleActor(final String actorClass, final String componentType, String archetype){
+	protected String writeSimpleActor(final String actorClass, final String rootComponentClass, final String rootComponentName, final String archetype){
 
-		final String rootComponentName = componentType + "0";
+		this.t3dClass = actorClass;
+		this.addComponent(new Component(rootComponentClass, rootComponentName, archetype, this));
 
-		sbf.append(IDT).append("Begin Actor Class=").append(actorClass);
-
-		if(archetype != null){
-			sbf.append(" Archetype=").append(archetype);
-		}
-
-		sbf.append("\n");
-
-		sbf.append(IDT).append("\tBegin Object Class=\"").append(componentType).append("\" Name=\"").append(rootComponentName).append("\"\n");
-		sbf.append(IDT).append("\tEnd Object\n");
-
-		sbf.append(IDT).append("\tBegin Object Name=\"").append(rootComponentName).append("\"\n");
-		writeLocRotAndScale();
-		sbf.append(IDT).append("\tEnd Object\n");
-
-		if ("SceneComponent".equals(componentType)) {
-			sbf.append(IDT).append("\tDefaultSceneRoot=").append(rootComponentName).append("\n");
-		} else if ("StaticMeshComponent".equals(componentType)) {
-			sbf.append(IDT).append("\tStaticMeshComponent=").append(rootComponentName).append("\n");
-		}
-
-		writeSimplePropertiesOld();
-
-		if (this.bHidden != null) {
-			sbf.append(IDT).append("\tbHidden=").append(this.bHidden).append("\n");
-		}
-
-		sbf.append(IDT).append("\tRootComponent=").append(rootComponentName).append("\n");
-
-		writeEndActor();
-
-		return sbf.toString();
+		final StringBuilder sb= new StringBuilder();
+		writeSimpleProperties(sb);
+		sb.append(toT3dNew());
+		return sb.toString();
 	}
 
 	public List<T3DActor> getChildren() {

@@ -13,6 +13,6 @@ public class T3DCounter extends T3DSound {
     }
 
     public String toT3d() {
-        return writeSimpleActor("UCounter_C", "SceneComponent", "UCounter_C'/Game/UEActors/UCounter.Default__UCounter_C'");
+        return writeSimpleActor("UCounter_C", "BillboardComponent", "Billboard", "UCounter_C'/Game/UEActors/UCounter.Default__UCounter_C'");
     }
 }

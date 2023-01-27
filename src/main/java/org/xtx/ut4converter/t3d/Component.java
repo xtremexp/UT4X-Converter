@@ -39,6 +39,8 @@ public class Component {
 
     private Component parentComponent;
 
+    private String archetype;
+
     private final List<Component> subComponents = new ArrayList<>();
 
 
@@ -49,12 +51,13 @@ public class Component {
      * @param name           Name of component
      * @param actor          Actor this compoennt belongs to
      */
-    public Component(final String componentClass, final String name, final T3DActor actor) {
+    public Component(final String componentClass, final String name, final String archetype, final T3DActor actor) {
         this.componentClass = componentClass;
         this.name = name;
         //this.objName = this.componentClass + "_" + this.name;
         this.objName = this.componentClass + "_" + new Random().nextInt(10000);
         this.actor = actor;
+        this.archetype = archetype;
     }
 
     /**
@@ -78,12 +81,14 @@ public class Component {
         }
 
         // Archetype=StaticMeshComponent'Engine.Default__StaticMeshActor:StaticMeshComponent0'
-        final String compArchetype = this.getComponentClass() + "'Engine.Default__" + this.actor.getT3dClass() + ":" + this.getName() + "'";
+        if (this.archetype == null) {
+            this.archetype = this.getComponentClass() + "'Engine.Default__" + this.actor.getT3dClass() + ":" + this.getName() + "'";
+        }
 
         sb.append(IDT).append("\t\tBegin Object Class=").append(this.getComponentClass()).append(" Name=").append(this.getName());
 
         if (ueVersion == 3) {
-            sb.append(" ObjName=").append(this.getObjName()).append(" Archetype=").append(compArchetype);
+            sb.append(" ObjName=").append(this.getObjName()).append(" Archetype=").append(this.archetype);
         }
         sb.append("\n");
 
@@ -102,7 +107,7 @@ public class Component {
 
         if (ueVersion == 3) {
             sb.append(IDT).append("\t\t\tName=\"").append(this.getObjName()).append("\"\n");
-            sb.append(IDT).append("\t\t\tObjectArchetype=").append(compArchetype).append("\n");
+            sb.append(IDT).append("\t\t\tObjectArchetype=").append(this.archetype).append("\n");
         }
 
         sb.append(IDT).append("\t\tEnd Object\n");

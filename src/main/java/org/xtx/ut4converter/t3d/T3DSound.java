@@ -471,7 +471,7 @@ public class T3DSound extends T3DActor {
 
 		int ueVersion = this.getOutputGame().getUeVersion();
 		final String compClass = isTo(UE3) ? "SoundNodeAmbient" : "AudioComponent";
-		final Component mainComp = new Component(compClass, compClass + "0", this);
+		final Component mainComp = new Component(compClass, compClass + "0", null, this);
 
 		// if this component is referenced in actor, it won't import correctly in UE3
 		// E.G: "Components(0)=SoundNodeAmbient'SoundNodeAmbient3908'" -> ""
@@ -489,7 +489,7 @@ public class T3DSound extends T3DActor {
 
 		if (soundVolume != null) {
 			if (isTo(UE3)) {
-				final Component ue3VolumeComp = new Component("DistributionFloatUniform", "DistributionVolume", this);
+				final Component ue3VolumeComp = new Component("DistributionFloatUniform", "DistributionVolume", null, this);
 				ue3VolumeComp.addProp("Min", soundVolume).addProp("Max", soundVolume);
 
 				final String volModStr = "1.000000," + soundVolume + ",1.000000," + soundVolume + ",1.000000," + soundVolume;
@@ -503,7 +503,7 @@ public class T3DSound extends T3DActor {
 
 		if (soundPitch != null) {
 			if (isTo(UE3)) {
-				final Component ue3PitchComp = new Component("DistributionFloatUniform", "DistributionPitch", this);
+				final Component ue3PitchComp = new Component("DistributionFloatUniform", "DistributionPitch", null, this);
 				ue3PitchComp.addProp("Min", soundPitch).addProp("Max", soundPitch);
 
 				final String pitchModStr = soundPitch + "," + soundPitch + "," + soundPitch + "," + soundPitch + "," + soundPitch + "," + soundPitch;
@@ -517,8 +517,8 @@ public class T3DSound extends T3DActor {
 
 		if (soundMaxRadius != null) {
 			if (isTo(UE3)) {
-				final Component ue3MinRadiusComp = new Component("DistributionFloatUniform", "DistributionMinRadius", this);
-				final Component ue3MaxRadiusComp = new Component("DistributionFloatUniform", "DistributionMaxRadius", this);
+				final Component ue3MinRadiusComp = new Component("DistributionFloatUniform", "DistributionMinRadius", null, this);
+				final Component ue3MaxRadiusComp = new Component("DistributionFloatUniform", "DistributionMaxRadius", null, this);
 				ue3MaxRadiusComp.addProp("Min", soundMaxRadius).addProp("Max", soundMaxRadius);
 
 				final String maxRadValuesStr = soundMaxRadius + "," + soundMaxRadius + "," + soundMaxRadius + "," + soundMaxRadius + "," + soundMaxRadius + "," + soundMaxRadius;

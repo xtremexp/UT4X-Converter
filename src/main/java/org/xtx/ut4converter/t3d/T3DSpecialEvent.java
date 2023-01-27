@@ -26,24 +26,6 @@ public class T3DSpecialEvent extends T3DActor {
     }
 
     public String toT3d() {
-
-        sbf.append(IDT).append("Begin Actor Class=USpecialEvent_C Name=").append(name).append(" Archetype=USpecialEvent_C'/Game/UEActors/USpecialEvent.Default__USpecialEvent_C'\n");
-
-        sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"DefaultSceneRoot\"\n");
-        sbf.append(IDT).append("\tEnd Object\n");
-
-        sbf.append(IDT).append("\tBegin Object Name=\"DefaultSceneRoot\"\n");
-        writeLocRotAndScale();
-        sbf.append(IDT).append("\tEnd Object\n");
-
-        sbf.append(IDT).append("\tDefaultSceneRoot=DefaultSceneRoot\n");
-
-        writeSimplePropertiesOld();
-
-        sbf.append(IDT).append("\tRootComponent=DefaultSceneRoot\n");
-
-        writeEndActor();
-
-        return super.toString();
+        return writeSimpleActor("USpecialEvent_C", "BillboardComponent", "Billboard", "USpecialEvent_C'/Game/UEActors/USpecialEvent.Default__USpecialEvent_C'");
     }
 }

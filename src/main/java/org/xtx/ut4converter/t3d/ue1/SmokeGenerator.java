@@ -21,6 +21,6 @@ public class SmokeGenerator extends Effects {
     }
 
     public String toT3d() {
-        return writeSimpleActor("USmokeGenerator_C", "SceneComponent", "USmokeGenerator_C'/Game/UEActors/USmokeGenerator.Default__USmokeGenerator_C'");
+        return writeSimpleActor("USmokeGenerator_C", "BillboardComponent", "Billboard", "USmokeGenerator_C'/Game/UEActors/USmokeGenerator.Default__USmokeGenerator_C'");
     }
 }

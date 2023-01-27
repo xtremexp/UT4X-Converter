@@ -54,8 +54,8 @@ public class T3DDynamicAmbientSound extends T3DKeyPoint {
      */
     public String toT3d() {
 
-        this.archetype = "UE1DynamicAmbientSound_C'/Game/UEActors/UE1DynamicAmbientSound.Default__UE1DynamicAmbientSound_C'";
-        this.t3dClass = "UE1DynamicAmbientSound_C";
+        this.archetype = "UDynamicAmbientSound_C'/Game/UEActors/UDynamicAmbientSound.Default__UDynamicAmbientSound_C'";
+        this.t3dClass = "UDynamicAmbientSound_C";
 
         final Component mainAudioComp = buildMainAudioComponent();
 

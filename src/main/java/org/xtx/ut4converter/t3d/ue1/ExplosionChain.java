@@ -21,6 +21,6 @@ public class ExplosionChain extends Effects {
     }
 
     public String toT3d() {
-        return writeSimpleActor("UExplosionChain_C", "SceneComponent", "UExplosionChain_C'/Game/UEActors/UExplosionChain.Default__UExplosionChain_C'");
+        return writeSimpleActor("UExplosionChain_C", "BillboardComponent", "Billboard", "UExplosionChain_C'/Game/UEActors/UExplosionChain.Default__UExplosionChain_C'");
     }
 }
