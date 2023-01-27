@@ -890,9 +890,15 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 			}
 		}
 
-		// always keep original .t3d file
 		try {
-			Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
+			// t3d provided by user, keep it at its original location and copy to /UT4X-Converter/Converter/[MapName]/myLevel_unconverted.t3d
+			if (inMap == inT3d) {
+				Files.copy(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+			// t3d from ucc batchexport commandlet
+			else {
+				Files.move(inT3d.toPath(), new File(getOutPath().toString() + File.separator + "myLevel_unconverted.t3d").toPath(), StandardCopyOption.ATOMIC_MOVE);
+			}
 		} catch (IOException e) {
 			logger.warning(e.getMessage());
 		}
