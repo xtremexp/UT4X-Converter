@@ -1,6 +1,5 @@
 package org.xtx.ut4converter.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -73,7 +72,7 @@ public class ExportPackageController implements Initializable {
         try {
             stopExportBtn.setVisible(false);
 
-            this.textureConvCb = new ComboBox<>();
+            //this.textureConvCb = new ComboBox<>();
             this.textureConvCb.getItems().add(TEX_LABEL_NO_CONV);
             this.textureConvCb.getItems().add(TEX_LABEL_BMP);
             this.textureConvCb.getItems().add(TEX_LABEL_DDS);

@@ -9,8 +9,6 @@
   -->
 
 <?import java.net.URL?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.xtx.ut4converter.controller.ExportPackageController"
@@ -39,10 +37,10 @@
             <ComboBox fx:id="pkgExtractorCbBox"  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
             <Label GridPane.rowIndex="5" GridPane.columnSpan="2">Note: some packages may only work with one exporter only.</Label>
-            <!--
+
             <Label GridPane.rowIndex="6" GridPane.columnIndex="0">Textures</Label>
             <ComboBox fx:id="textureConvCb"  GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-            -->
+
 
             <Separator GridPane.columnSpan="3" GridPane.rowIndex="7"/>
         </GridPane>
