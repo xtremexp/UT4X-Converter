@@ -299,8 +299,8 @@ public class T3DPolygon {
 		// Updates uv scaling
 		if (mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2)) {
 
-			// Recompute origin if panU and panV > 0 (these properties no longer exist in UE2+)
-			if (origin != null && (this.panU > 0 || this.panV > 0)) {
+			// Recompute origin if panU and panV != 0 (these properties no longer exist in UE2+)
+			if (origin != null && (this.panU != 0 || this.panV != 0)) {
 				// Since UE2 the former panU, panV effect is reverted
 				origin = Geometry.computeNewOrigin(origin, textureU, textureV, -panU, -panV);
 				this.panU = 0;
