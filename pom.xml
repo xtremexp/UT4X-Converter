@@ -17,6 +17,7 @@
 		<slf4j.version>2.0.5</slf4j.version>
 		<log4j.version>2.19.0</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
+		<twelvemonkeysio.version>3.9.4</twelvemonkeysio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
 		<junit.version>5.9.0</junit.version>
@@ -361,6 +362,28 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.13.4.1</version>
 		</dependency>
+
+		<!-- read/write tga/bmp picture files -->
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-core</artifactId>
+			<version>${twelvemonkeysio.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-tga</artifactId>
+			<version>${twelvemonkeysio.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-bmp</artifactId>
+			<version>${twelvemonkeysio.version}</version>
+		</dependency>
+
+
+
 
 
 		<!-- JAVA FX  -->

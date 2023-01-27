@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.tools;
 
+import com.twelvemonkeys.imageio.plugins.tga.TGAImageReaderSpi;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,12 +8,9 @@ import org.junit.jupiter.api.Test;
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 class ImageUtilsTest {
@@ -21,7 +19,7 @@ class ImageUtilsTest {
     void testImageConversion() throws IOException {
 
         IIORegistry registry = IIORegistry.getDefaultInstance();
-        registry.registerServiceProvider(new com.realityinteractive.imageio.tga.TGAImageReaderSpi());
+        registry.registerServiceProvider(new TGAImageReaderSpi());
         registry.registerServiceProvider(new net.nikr.dds.DDSImageReaderSpi());
 
         Path pngFile = Files.createTempFile("test", ".png");
@@ -49,4 +47,20 @@ class ImageUtilsTest {
         }
     }
 
+    /**
+     * Test read unreal 1 .tga texture file
+     *
+     * @throws IOException Error reading file
+     */
+    @Test
+    void testReadTga() throws IOException {
+
+        final IIORegistry registry = IIORegistry.getDefaultInstance();
+        registry.registerServiceProvider(new TGAImageReaderSpi());
+        BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(ImageUtilsTest.class.getResource("/textures/gscr1.tga")));
+
+        Assertions.assertNotNull(bufferedImage);
+        Assertions.assertEquals(256, bufferedImage.getHeight());
+        Assertions.assertEquals(256, bufferedImage.getWidth());
+    }
 }

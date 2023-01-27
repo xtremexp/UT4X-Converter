@@ -148,7 +148,6 @@ public class T3DMover extends T3DBrush {
 
 					// E.G: /UnrealTournamentEditor/Content/Converted/Passage-U1/Passage/Mover0.Mover0
 					File dummyUAssetFileForPackage = new File(mapConverter.getUt4ReferenceBaseFolderFile() + "/" + mapConverter.getInMapAsPackageName() + "/" + mapConverter.getDummyUAssetFile().getName());
-					System.out.println(dummyUAssetFileForPackage);
 
 					if (!dummyUAssetFileForPackage.exists()) {
 						Files.createDirectories(dummyUAssetFileForPackage.toPath().getParent());
