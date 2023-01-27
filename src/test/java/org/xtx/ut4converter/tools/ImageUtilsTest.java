@@ -1,8 +1,12 @@
 package org.xtx.ut4converter.tools;
 
+import com.twelvemonkeys.imageio.plugins.bmp.BMPImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.pcx.PCXImageReaderSpi;
 import com.twelvemonkeys.imageio.plugins.tga.TGAImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReaderSpi;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
@@ -15,12 +19,18 @@ import java.util.Objects;
 
 class ImageUtilsTest {
 
+    @BeforeAll
+    static void initIIORegistry() {
+        final IIORegistry registry = IIORegistry.getDefaultInstance();
+        registry.registerServiceProvider(new TGAImageReaderSpi());
+        registry.registerServiceProvider(new BMPImageReaderSpi());
+        registry.registerServiceProvider(new PCXImageReaderSpi());
+        registry.registerServiceProvider(new TIFFImageReaderSpi());
+        registry.registerServiceProvider(new net.nikr.dds.DDSImageReaderSpi());
+    }
+
     @Test
     void testImageConversion() throws IOException {
-
-        IIORegistry registry = IIORegistry.getDefaultInstance();
-        registry.registerServiceProvider(new TGAImageReaderSpi());
-        registry.registerServiceProvider(new net.nikr.dds.DDSImageReaderSpi());
 
         Path pngFile = Files.createTempFile("test", ".png");
         Path bmpFile = Files.createTempFile("test", ".bmp");
@@ -55,12 +65,20 @@ class ImageUtilsTest {
     @Test
     void testReadTga() throws IOException {
 
-        final IIORegistry registry = IIORegistry.getDefaultInstance();
-        registry.registerServiceProvider(new TGAImageReaderSpi());
         BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(ImageUtilsTest.class.getResource("/textures/gscr1.tga")));
 
         Assertions.assertNotNull(bufferedImage);
         Assertions.assertEquals(256, bufferedImage.getHeight());
         Assertions.assertEquals(256, bufferedImage.getWidth());
+    }
+
+    @Test
+    void testReadPcx() throws IOException {
+
+        BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(ImageUtilsTest.class.getResource("/textures/warer3.pcx")));
+
+        Assertions.assertNotNull(bufferedImage);
+        Assertions.assertEquals(128, bufferedImage.getHeight());
+        Assertions.assertEquals(128, bufferedImage.getWidth());
     }
 }

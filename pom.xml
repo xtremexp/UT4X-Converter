@@ -330,12 +330,6 @@
 			<artifactId>vecmath</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-		<!-- for reading .pcx textures -->
-		<dependency>
-			<groupId>com.github.jai-imageio</groupId>
-			<artifactId>jai-imageio-core</artifactId>
-			<version>1.4.0</version>
-		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -363,7 +357,7 @@
 			<version>2.13.4.1</version>
 		</dependency>
 
-		<!-- read/write tga/bmp picture files -->
+		<!-- read/write tga/bmp/pcx/tiff texture files -->
 		<dependency>
 			<groupId>com.twelvemonkeys.imageio</groupId>
 			<artifactId>imageio-core</artifactId>
@@ -382,9 +376,17 @@
 			<version>${twelvemonkeysio.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-pcx</artifactId>
+			<version>${twelvemonkeysio.version}</version>
+		</dependency>
 
-
-
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-tiff</artifactId>
+			<version>${twelvemonkeysio.version}</version>
+		</dependency>
 
 		<!-- JAVA FX  -->
 		<dependency>

@@ -1,7 +1,9 @@
 package org.xtx.ut4converter;
 
 import com.twelvemonkeys.imageio.plugins.bmp.BMPImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.pcx.PCXImageReaderSpi;
 import com.twelvemonkeys.imageio.plugins.tga.TGAImageReaderSpi;
+import com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReaderSpi;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -102,10 +104,12 @@ public class MainApp extends Application {
 
 		logger.info(PROGRAM_NAME + " " + VERSION + " started");
 
-		// support for reading/writing tga/bmp/dds texture files
+		// support for reading/writing tga/bmp/dds/tiff/pcx texture files
 		final IIORegistry registry = IIORegistry.getDefaultInstance();
 		registry.registerServiceProvider(new TGAImageReaderSpi());
 		registry.registerServiceProvider(new BMPImageReaderSpi());
+		registry.registerServiceProvider(new PCXImageReaderSpi());
+		registry.registerServiceProvider(new TIFFImageReaderSpi());
 		registry.registerServiceProvider(new net.nikr.dds.DDSImageReaderSpi());
 	}
 
