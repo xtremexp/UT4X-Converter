@@ -26,11 +26,18 @@ public class ExportPackageController implements Initializable {
 
     public static final String EXPORTER_UMODEL = "Umodel";
 
+    /**
+     * Exporter for UE1/UE2 games only. The only one that can extract Unreal 2 textures
+     */
+    public static final String EXPORTER_STE = "Simple Texture Exporter (UE1/2 only)";
+
     private static final String TEX_LABEL_NO_CONV = "No conversion";
 
     private static final String TEX_LABEL_DDS = "Convert to .dds";
 
     private static final String TEX_LABEL_BMP = "Convert to .bmp";
+
+    private static final String TEX_LABEL_PNG = "Convert to .png";
 
     private static final String TEX_LABEL_PCX = "Convert to .pcx";
 
@@ -75,8 +82,9 @@ public class ExportPackageController implements Initializable {
             //this.textureConvCb = new ComboBox<>();
             this.textureConvCb.getItems().add(TEX_LABEL_NO_CONV);
             this.textureConvCb.getItems().add(TEX_LABEL_BMP);
-            this.textureConvCb.getItems().add(TEX_LABEL_DDS);
-            this.textureConvCb.getItems().add(TEX_LABEL_PCX);
+            //this.textureConvCb.getItems().add(TEX_LABEL_DDS);
+            //this.textureConvCb.getItems().add(TEX_LABEL_PCX);
+            this.textureConvCb.getItems().add(TEX_LABEL_PNG);
             this.textureConvCb.getSelectionModel().select(TEX_LABEL_NO_CONV);
 
             this.pkgExtractorCbBox.getItems().add(EXPORTER_EPIC_GAMES);
@@ -113,6 +121,9 @@ public class ExportPackageController implements Initializable {
         }
     }
 
+    /**
+     * Action when choosing Unreal Package from file dialog
+     */
     public void selectPackage() {
 
         FileChooser chooser = new FileChooser();
@@ -151,7 +162,7 @@ public class ExportPackageController implements Initializable {
 
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", extList.toArray(new String[0])));
         } else {
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", "*.unr", "*.un2", "*.ut2", "*.ut3", "*.utx", "*.uax", "*.usx", "*.dtx", "*.umx", "*.upx"));
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Unreal package", "*.unr", "*.un2", "*.ut2", "*.ut3", "*.utx", "*.uax", "*.usx", "*.umx", "*.upx", "*.dtx", "*.dnf"));
         }
 
 
@@ -192,9 +203,9 @@ public class ExportPackageController implements Initializable {
         // exports to /outputfolder/<PackageName>
         File outputFolder2 = outputFolder;
 
-        // umodel split export folders by package unlike UCC
-        // for better visibility export to /exportfolder/<PackageName> when using UCC
-        if (this.pkgExtractorCbBox.getSelectionModel().getSelectedItem().equals(EXPORTER_EPIC_GAMES)) {
+        // umodel split export folders by package unlike UCC and SimpleTextureExtractor
+        // for better visibility export to /exportfolder/<PackageName> when using them
+        if (this.pkgExtractorCbBox.getSelectionModel().getSelectedItem().equals(EXPORTER_EPIC_GAMES) || this.pkgExtractorCbBox.getSelectionModel().getSelectedItem().equals(EXPORTER_STE)) {
             outputFolder2 = new File(this.outputFolder + File.separator + this.unrealPakFile.getName().substring(0, this.unrealPakFile.getName().lastIndexOf(".")).replaceAll("\\.", ""));
         }
 
@@ -205,11 +216,11 @@ public class ExportPackageController implements Initializable {
             case TEX_LABEL_BMP -> textureFileExt = "bmp";
             case TEX_LABEL_DDS -> textureFileExt = "dds";
             case TEX_LABEL_PCX -> textureFileExt = "pcx";
+            case TEX_LABEL_PNG -> textureFileExt = "png";
             default -> {
             }
         }
 
-        System.out.println(this.textureConvCb.getSelectionModel().getSelectedItem());
         this.pkgExporterService = new PackageExporterService(pkgExtractorCbBox.getSelectionModel().getSelectedItem(), selectedGame, outputFolder2, this.unrealPakFile, textureFileExt);
 
         File finalOutputFolder = outputFolder2;
@@ -290,5 +301,12 @@ public class ExportPackageController implements Initializable {
 
     public void selectGame() {
         this.selectPackageBtn.setDisable(false);
+
+        // simple texture exporter only works for Unreal Engine 1/2 games
+        if (this.unrealGamesList.getSelectionModel().getSelectedItem().getUeVersion() <= 2) {
+            this.pkgExtractorCbBox.getItems().add(EXPORTER_STE);
+        } else {
+            this.pkgExtractorCbBox.getItems().remove(EXPORTER_STE);
+        }
     }
 }

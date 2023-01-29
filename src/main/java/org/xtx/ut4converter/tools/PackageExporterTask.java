@@ -4,17 +4,20 @@ import javafx.concurrent.Task;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xtx.ut4converter.export.SimpleTextureExtractor;
 import org.xtx.ut4converter.export.UCCExporter;
 import org.xtx.ut4converter.ucore.UnrealGame;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_STE;
 import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_UMODEL;
 
 /**
@@ -71,10 +74,15 @@ public class PackageExporterTask extends Task<List<String>> {
         final List<String> commands = new ArrayList<>();
         String command;
 
+        Files.createDirectories(outputFolder.toPath());
+
         if (exporter.equals(EXPORTER_UMODEL)) {
             command = Installation.getUModelPath() + " -export -sounds -groups -notgacomp -nooverwrite -nolightmap -lods -uc \"" + pkgFile + "\"";
             command += " -out=\"" + outputFolder + "\" -path=\"" + game.getPath() + "\"";
             commands.add(command);
+        }
+        else if (exporter.equals(EXPORTER_STE)) {
+            commands.add(SimpleTextureExtractor.getCommand(pkgFile, outputFolder));
         }
         // UCC
         // For UE1/UE2 need to execute some .bat file
@@ -144,9 +152,8 @@ public class PackageExporterTask extends Task<List<String>> {
                 try {
                     final BufferedImage img = ImageIO.read(texFile);
                     final File convTexFile = new File(texFile.getParent() + File.separator + texFile.getName().replaceAll("." + currentFileExt, "." + textureFileExt));
-                    System.out.println(convTexFile);
 
-                    if (ImageIO.write(img, textureFileExt, convTexFile)) {
+                    if (img != null && ImageIO.write(img, textureFileExt, convTexFile)) {
                         logs.add(texFile.getName() + " -> " + convTexFile.getName());
                     } else {
                         logs.add("Could not convert " + texFile.getName() + " to " + convTexFile.getName());
@@ -188,6 +195,7 @@ public class PackageExporterTask extends Task<List<String>> {
         String pakExt = FileUtils.getExtension(pkgFile);
 
 
+        // TODO find other export commands for UE3
         if (game.getUeVersion() == 3) {
             //batchExportOptions.add(UCCExporter.UccOptions.CLASS_UC);
             batchExportOptions.add(UCCExporter.UccOptions.UE3_SOUNDNODEWAVE);

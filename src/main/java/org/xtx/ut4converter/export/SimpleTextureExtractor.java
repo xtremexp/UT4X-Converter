@@ -28,8 +28,15 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 		super(mapConverter);
 	}
 
-	private static String getCommand(final File exporterPath, final File texturePackageFile, final File outputFolder){
-		return "\"" + exporterPath + "\"  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
+	/**
+	 * Get command for exporting texture package with this extractor
+	 *
+	 * @param texturePackageFile UE1/2 texture package to export
+	 * @param outputFolder       Output folder
+	 * @return Command line
+	 */
+	public static String getCommand(final File texturePackageFile, final File outputFolder) {
+		return "\"" + Installation.getExtractTextures() + "\"  \"" + texturePackageFile + "\" \"" + outputFolder + "\"";
 	}
 
 	@Override
@@ -40,7 +47,7 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 			return null;
 		}
 
-		String command = getCommand(getExporterPath(), ressource.getUnrealPackage().getFileContainer(mapConverter), mapConverter.getTempExportFolder());
+		String command = getCommand(ressource.getUnrealPackage().getFileContainer(mapConverter), mapConverter.getTempExportFolder());
 		command += " \"" + mapConverter.getTempExportFolder() + "\"";
 
 		List<String> logLines = new ArrayList<>();
