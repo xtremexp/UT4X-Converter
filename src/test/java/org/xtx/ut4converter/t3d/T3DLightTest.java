@@ -75,6 +75,16 @@ public class T3DLightTest {
     }
 
     @Test
+    void testSunLightConversionU2toUT4() throws IOException, ReflectiveOperationException {
+
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U2, UTGames.UTGame.UT4);
+
+        final T3DLight light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "SunLight", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/U2-SunLight.t3d")).getPath());
+        String convT3d = light.convertScaleAndToT3D(2d);
+        Assertions.assertTrue(convT3d.contains("DirectionalLight"));
+    }
+
+    @Test
     void testLightConversionUT2004toUT4() throws IOException, ReflectiveOperationException {
 
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4);

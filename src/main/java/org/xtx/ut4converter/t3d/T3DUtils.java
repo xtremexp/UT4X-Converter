@@ -10,6 +10,7 @@ import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.tools.IdxValuePair;
 import org.xtx.ut4converter.tools.RGBColor;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
@@ -431,6 +432,27 @@ public class T3DUtils {
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	/**
+	 * E.G: 'Skins(2)=Texture'Mission_08T.Doors.MetlDoor_U08G394')
+	 *
+	 * @param line Line to parse
+	 * @return Idx and value (e.g: 2, Texture'Mission_08T.Doors.MetlDoor_U08G394')
+	 */
+	public static IdxValuePair parseIdxValuePair(String line) {
+
+		final IdxValuePair idxValuePair = new IdxValuePair();
+
+		try {
+			final String[] splitEq = line.split("=");
+			idxValuePair.setIndex(Integer.parseInt(splitEq[0].split("\\(")[1].replaceAll("\\)", "")));
+			idxValuePair.setValue(splitEq[1]);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		return idxValuePair;
 	}
 
 	public static boolean write(StringBuilder sb, String propName, Object propValue) {

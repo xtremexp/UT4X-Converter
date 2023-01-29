@@ -9,13 +9,6 @@ import org.xtx.ut4converter.MapConverter;
  */
 public class T3DUE1Trigger extends T3DSound {
 
-    private TriggerType triggerType;
-
-    /**
-     * Default is "NormalTrigger"
-     */
-    private InitialState initialState;
-
     public T3DUE1Trigger(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
@@ -26,33 +19,43 @@ public class T3DUE1Trigger extends T3DSound {
         registerSimpleProperty("Message", String.class);
         registerSimpleProperty("RepeatTriggerTime", Float.class);
         registerSimpleProperty("ReTriggerDelay", Float.class);
-    }
+        registerSimpleProperty("TriggerType", TriggerType.class, TriggerType.TT_PlayerProximity);
+        registerSimpleProperty("InitialState", InitialState.class, InitialState.NormalTrigger);}
 
     enum TriggerType{
-        TT_PlayerProximity, TT_PawnProximity, TT_ClassProximity, TT_AnyProximity, TT_Shoot,
+        /**
+         * Can be triggered by players only
+         */
+        TT_PlayerProximity,
+        /**
+         * Can be triggered by monsters only
+         */
+        TT_PawnProximity,
+        /**
+         * Trigger by any specific class actor
+         */
+        TT_ClassProximity,
+        /**
+         * Can be triggered by either monsters or players
+         */
+        TT_AnyProximity,
+        /**
+         * Triggered shotting at it
+         */
+        TT_Shoot,
         /**
          * Unreal 2 specific - Triggered when pressing key 'E'
          */
         TT_Use
     }
 
+    /**
+     * Default is NormalTrigger
+     */
     enum InitialState{
         None, OtherTriggerTurnsOff, OtherTriggerTurnsOn, OtherTriggerToggles, NormalTrigger
     }
 
-    @Override
-    public boolean analyseT3DData(String line) {
-
-        if (line.startsWith("TriggerType=")) {
-            this.triggerType = TriggerType.valueOf(T3DUtils.getString(line));
-        } else if (line.startsWith("InitialState=")) {
-            this.initialState = InitialState.valueOf(T3DUtils.getString(line));
-        } else {
-            return super.analyseT3DData(line);
-        }
-
-        return false;
-    }
 
     public String toT3d() {
 
@@ -73,14 +76,6 @@ public class T3DUE1Trigger extends T3DSound {
 
         if(collisionHeight != null){
             sbf.append(IDT).append("\tCollisionHeight=").append(collisionHeight).append("\n");
-        }
-
-        if(this.triggerType != null){
-            sbf.append(IDT).append("\tTriggerType=NewEnumerator").append(this.triggerType.ordinal()).append("\n");
-        }
-
-        if(this.initialState != null){
-            sbf.append(IDT).append("\tInitialState=NewEnumerator").append(this.initialState.ordinal()).append("\n");
         }
 
         writeSimplePropertiesOld();

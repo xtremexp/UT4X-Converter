@@ -9,6 +9,7 @@ import org.apache.commons.math3.util.Pair;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.iface.T3D;
+import org.xtx.ut4converter.tools.IdxValuePair;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 
@@ -31,6 +32,11 @@ public class MoverProperties implements T3D {
 	 * list of UPackageRessource binded with some property name
 	 */
 	protected UPackageRessource closedSound, closingSound, openedSound, openingSound, moveAmbientSound;
+
+	/**
+	 * List of override materials (not mandatory)
+	 */
+	private Map<Integer, UPackageRessource> skins = new HashMap<>();
 
 	/**
 	 * CHECK usage?
@@ -306,6 +312,11 @@ public class MoverProperties implements T3D {
 			final Pair<Integer, String> arrayEntry = T3DUtils.getArrayEntry(line);
 			rotations.put(arrayEntry.getKey(), T3DUtils.getVector3dRot(arrayEntry.getValue()));
 		}
+		else if (line.startsWith("Skins(")) {
+
+			final IdxValuePair idxValuePair = T3DUtils.parseIdxValuePair(line);
+			this.skins.put(idxValuePair.getIndex(), mover.mapConverter.getUPackageRessource(line.split("'")[1], T3DRessource.Type.TEXTURE));
+		}
 
 		// UE1 -> 'Saved Positions' (UE12)
 		else if (line.contains("KeyPos")) {
@@ -527,6 +538,19 @@ public class MoverProperties implements T3D {
 			sbf.append(IDT).append("\tLift Mesh=StaticMesh'").append(moverBrush.getStaticMeshReference()).append("'\n");
 		}
 
+		// Note: the default UT4 lift actor does not cares about overridematerials
+		if (!this.skins.isEmpty()) {
+			int maxIdx = this.skins.keySet().stream().max(Comparator.naturalOrder()).get();
+
+			for (int i = 0; i <= maxIdx; i++) {
+				if (this.skins.containsKey(i)) {
+					sbf.append(IDT).append("\tOverrideMaterialArray(").append(i).append(")=Material'").append(this.skins.get(i).getConvertedName()).append("'\n");
+				} else {
+					sbf.append(IDT).append("\tOverrideMaterialArray(").append(i).append(")=None\n");
+				}
+			}
+		}
+
 		mover.writeSimplePropertiesOld();
 
 		mover.writeEndActor();
@@ -559,6 +583,10 @@ public class MoverProperties implements T3D {
 			if (moveAmbientSound != null) {
 				moveAmbientSound.export(UTPackageExtractor.getExtractor(mover.mapConverter, moveAmbientSound), !isFromUe3);
 			}
+		}
+
+		if (mapConverter.convertTextures()) {
+			this.skins.values().forEach(s -> s.export(UTPackageExtractor.getExtractor(mover.mapConverter, s)));
 		}
 
 		for(Vector3d rotator : rotations.values()){

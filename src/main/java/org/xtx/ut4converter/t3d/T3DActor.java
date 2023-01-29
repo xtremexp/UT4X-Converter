@@ -775,7 +775,7 @@ public abstract class T3DActor extends T3DObject {
 	 * @param scaleFactor Scale factor
 	 * @return Converted actor as t3d string
 	 */
-	protected String convertScaleAndToT3D(double scaleFactor) {
+	public String convertScaleAndToT3D(double scaleFactor) {
 		this.convert();
 		this.scale(scaleFactor);
 

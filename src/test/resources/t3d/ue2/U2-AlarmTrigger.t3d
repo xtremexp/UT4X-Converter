@@ -1,0 +1,27 @@
+Begin Map
+Begin Actor Class=AlarmTrigger Name=AlarmTrigger18
+	bToggleable=false
+	bAmbient=false
+	AlarmSound=Sound'U2AmbientA.DoorSlams.Slam_19'
+	bNetDirty=true
+	LastRenderTime=253.653381
+	Tag=ElectricBrokenSound1
+	Level=LevelInfo'MyLevel.LevelInfo0'
+	Region=(Zone=ZoneInfo'MyLevel.ZoneInfo9',iLeaf=1270,ZoneNumber=7)
+	PhysicsVolume=DefaultPhysicsVolume'MyLevel.DefaultPhysicsVolume2'
+	Location=(X=-1833.999023,Y=1229.910278,Z=6024.000000)
+	CollisionRadius=0.000000
+	CollisionHeight=0.000000
+	bCollideActors=false
+	PrimaryStaticLight=Light'MyLevel.Light74'
+	bSelected=true
+    UseReticleOnEvents(0)="UseReticleText"
+    UseReticleOnEvents(1)="UseReticleCorners"
+    UseReticleOnEvents(2)="UseReticleTopBars"
+    ProximityReticleOnEvents(0)="ProximityReticleCorners"
+    ProximityReticleOnEvents(1)="ProximityReticleTopBars"
+	Name=AlarmTrigger18
+End Actor
+Begin Surface
+End Surface
+End Map

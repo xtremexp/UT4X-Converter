@@ -67,7 +67,6 @@ public class T3DSimpleProperty {
         this.propertyClass = propertyClass;
         this.isList = isList;
         this.defaultValue = defaultValue;
-        this.propertyValue = defaultValue;
     }
 
     /**
