@@ -209,6 +209,8 @@ public class T3DUE4Terrain extends T3DActor {
 			compQuadSize = 15;
 		} else if (compQuadSize <= 31) {
 			compQuadSize = 31;
+		} else if (compQuadSize <= 63) {
+			compQuadSize = 63;
 		} else if (compQuadSize <= 127) {
 			compQuadSize = 127;
 		} else if (compQuadSize <= 255) {
