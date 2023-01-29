@@ -50,7 +50,7 @@ public class T3DLight extends T3DSound {
 	/**
      *
      */
-	public static enum UE4_Mobility {
+	public enum UE4_Mobility {
 		Static, // don't move and don't change color
 		Stationary, // don't move but can change of color and switch off/on
 		Movable // can move and change color
@@ -63,6 +63,9 @@ public class T3DLight extends T3DSound {
 	public enum UE12_LightActors {
 		Light, ChargeLight, DistanceLightning, FlashLightBeam, OverHeatLight, QueenTeleportLight, SightLight, Spotlight, TorchFlame, TriggerLight, TriggerLightRad, WeaponLight, EffectLight, PurpleLight,
 		// Unreal Engine 2 new light actors
+		/**
+		 * In U2 it's SunLight (different case)
+		 */
 		Sunlight
 	}
 
@@ -314,7 +317,7 @@ public class T3DLight extends T3DSound {
 	 * @return <code>true</code> if light is a sun light
 	 */
 	private boolean isSunLight() {
-		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equals(UE12_LightActors.Sunlight.name());
+		return lightEffect == UE12_LightEffect.LE_Sunlight || t3dClass.equalsIgnoreCase(UE12_LightActors.Sunlight.name());
 	}
 
 	public UE12_LightType getLightType() {

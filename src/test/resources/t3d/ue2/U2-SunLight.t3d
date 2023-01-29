@@ -1,0 +1,25 @@
+Begin Map
+Begin Actor Class=SunLight Name=SunLight1
+	LightBrightness=32
+	LightHue=30
+	LightSaturation=130
+	bNetDirty=true
+	LastRenderTime=5452.520996
+	Tag=SunLight
+	Level=LevelInfo'MyLevel.LevelInfo0'
+	Region=(Zone=ZoneInfo'MyLevel.ZoneInfo0',iLeaf=134,ZoneNumber=3)
+	PhysicsVolume=DefaultPhysicsVolume'MyLevel.DefaultPhysicsVolume2'
+	Location=(X=539.417480,Y=-5185.567871,Z=8950.890625)
+	DrawScale=16.000000
+	PrimaryStaticLight=Light'MyLevel.Light195'
+	bSelected=true
+    UseReticleOnEvents(0)="UseReticleText"
+    UseReticleOnEvents(1)="UseReticleCorners"
+    UseReticleOnEvents(2)="UseReticleTopBars"
+    ProximityReticleOnEvents(0)="ProximityReticleCorners"
+    ProximityReticleOnEvents(1)="ProximityReticleTopBars"
+	Name=SunLight1
+End Actor
+Begin Surface
+End Surface
+End Map
