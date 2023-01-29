@@ -39,14 +39,19 @@ public class MoverProperties implements T3D {
 
 	/**
 	 * Map of [NumKey, Position]
-	 * List of positions where mover moves UTUE4: Lift
-	 * Destination=(X=0.000000,Y=0.000000,Z=730.000000) (no support for several
-	 * nav localisations unlike UE1/2) UT99: KeyPos(1)=(Y=72.000000)
+	 * List of relative positions from start location where mover moves to.
+	 * E.G:
+	 * KeyPos(1)=(X=-272.0) (moves by -272 X axis)
+	 * KeyPos(2)=(X=-272.0,Z=-288.0) (moves by -288 Z axis relative to KeyPos(1))
 	 */
 	private final Map<Integer, Vector3d> positions = new LinkedHashMap<>();
 
 	/**
 	 * Map of [NumKey, Rotation]
+	 * List of relative rotation from start rotation where mover rotates.
+	 * E.G:
+	 * KeyRot(1)=(Pitch=-49152) (rotates by 270°)
+	 * KeyRot(2)=(Pitch=-49152) (rotates by 0° relative to KeyRot(1))
 	 */
 	private final Map<Integer, Vector3d> rotations = new LinkedHashMap<>();
 
@@ -127,20 +132,83 @@ public class MoverProperties implements T3D {
 		this.moverGlideType = MoverGlideType.MV_GlideByTime;
 	}
 
+	/**
+	 * Info about which kind of creature can bump mover
+	 */
 	enum BumpType {
-		BT_PlayerBump, BT_PawnBump, BT_AnyBump
+		/**
+		 * Only players can bump
+		 */
+		BT_PlayerBump,
+		/**
+		 * Only monsters (non-players) can bump it
+		 */
+		BT_PawnBump,
+		/**
+		 * Either players or monsters can bump it
+		 */
+		BT_AnyBump
 	}
 
+	/**
+	 *
+	 */
 	enum MoverEncroachType {
-		ME_StopWhenEncroach, ME_ReturnWhenEncroach, ME_CrushWhenEncroach, ME_IgnoreWhenEncroach, ME_LiftWhenEncroach
+
+		/**
+		 * Mover stops at its position when player encroaches it
+		 */
+		ME_StopWhenEncroach,
+		/**
+		 * Mover goes back to its start position when player encroaches it
+		 */
+		ME_ReturnWhenEncroach,
+		/**
+		 * Player should be instant killed when encroached
+		 */
+		ME_CrushWhenEncroach,
+		/**
+		 * Mover ignore player and continue its way
+		 */
+		ME_IgnoreWhenEncroach,
+		/**
+		 * ???
+		 */
+		ME_LiftWhenEncroach
 	}
 
 	enum MoverGlideType {
 		MV_GlideByTime, MV_MoveByTime
 	}
 
+	/**
+	 * Controls how mover is activated
+	 */
 	enum InitialState {
-		StandOpenTimed, BumpButton, BumpOpenTimed, ConstantLoop, TriggerPound, TriggerControl, TriggerToggle, TriggerOpenTimed, GradualTriggerOpenTimed, GradualTriggerToggle,
+		/**
+		 * Mover activated by player standing on it
+		 */
+		StandOpenTimed, BumpButton,
+		/**
+		 * ??
+		 */
+		BumpOpenTimed,
+		/**
+		 * Mover just moving constantly
+		 */
+		ConstantLoop, TriggerPound,
+		/**
+		 * Mover activated by trigger, closes when player out of range of trigger
+		 */
+		TriggerControl,
+		/**
+		 * Mover activated by trigger (returns to it's position if triggered again)
+		 */
+		TriggerToggle,
+		/**
+		 * Mover activated by trigger
+		 */
+		TriggerOpenTimed, GradualTriggerOpenTimed, GradualTriggerToggle,
 		/**
 		 * UT2004
 		 */
@@ -332,13 +400,7 @@ public class MoverProperties implements T3D {
 		mover.writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
 
-		// if scale 3D set need to use Mesh Scale property and set scale3d to null
-		// else scale within game is not good at all !
-		if (mover.scale3d != null) {
-			// Mesh Scale=(X=2.000000,Y=2.000000,Z=2.000000)
-			sbf.append(IDT).append("\tMesh Scale=(X=").append(T3DActor.fmt(mover.scale3d.x)).append(",Y=").append(T3DActor.fmt(mover.scale3d.y)).append(",Z=").append(T3DActor.fmt(mover.scale3d.z)).append(")\n");
-			mover.scale3d = null;
-		}
+		// Note: no need use Mesh Scale property since scale has ever been written in writeLocRotAndScale() function
 		sbf.append(IDT).append("\tScene1=Scene\n");
 		sbf.append(IDT).append("\tRootComponent=Scene1\n");
 
