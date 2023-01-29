@@ -750,7 +750,6 @@ public abstract class T3DActor extends T3DObject {
 	}
 
 	/**
-	 * TODO refactor and use toT3DNew
 	 *
 	 * @param actorClass    Actor class
 	 * @param rootComponentClass Component type
@@ -761,10 +760,7 @@ public abstract class T3DActor extends T3DObject {
 		this.t3dClass = actorClass;
 		this.addComponent(new Component(rootComponentClass, rootComponentName, archetype, this));
 
-		final StringBuilder sb= new StringBuilder();
-		writeSimpleProperties(sb);
-		sb.append(toT3dNew());
-		return sb.toString();
+		return toT3dNew();
 	}
 
 	public List<T3DActor> getChildren() {
@@ -783,17 +779,7 @@ public abstract class T3DActor extends T3DObject {
 		this.convert();
 		this.scale(scaleFactor);
 
-		String convT3d = toT3d();
-
-		if(convT3d == null) {
-			convT3d = "";
-
-			for (T3DActor repActor : this.children) {
-				convT3d += repActor.toT3d();
-			}
-		}
-
-		return "Begin Map\nBegin Level\n" + convT3d + "End Level\nEnd Map";
+		return "Begin Map\nBegin Level\n" + toT3d() + "End Level\nEnd Map";
 	}
 
 	protected void addComponent(final Component... components){

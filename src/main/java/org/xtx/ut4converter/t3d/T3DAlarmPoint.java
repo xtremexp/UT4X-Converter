@@ -29,6 +29,6 @@ public class T3DAlarmPoint extends T3DNavigationPoint {
     }
 
     public String toT3d() {
-        return writeSimpleActor("UAlarmPoint_C", "SceneComponent", "Billboard", "UAlarmPoint_C'/Game/UEActors/UAlarmPoint.Default__UAlarmPoint_C'");
+        return writeSimpleActor("UAlarmPoint_C", "BillboardComponent", "Billboard", "UAlarmPoint_C'/Game/UEActors/UAlarmPoint.Default__UAlarmPoint_C'");
     }
 }

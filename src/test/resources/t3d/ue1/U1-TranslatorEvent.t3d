@@ -1,0 +1,8 @@
+Begin Map
+	Begin Actor Class=TranslatorEvent Name=TranslatorEvent3
+		Message="Chief Medical Officer's Log: Prison vessel 254 Vortex Rikers. The constant fighting between prisoners seems to be getting worse. At this rate, I will be out of supplies long before we reach the prison moon."
+		CollisionRadius=90.0
+		CollisionHeight=100.0
+		Location=(X=145.054,Y=-859.798,Z=-194.952)
+	End Actor
+End Map

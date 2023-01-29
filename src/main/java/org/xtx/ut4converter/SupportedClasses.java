@@ -24,8 +24,6 @@ import static org.xtx.ut4converter.ucore.UnrealEngine.UE5;
  */
 public class SupportedClasses {
 
-	private static final boolean USE_CUSTOM = true;
-
 	MapConverter mapConverter;
 
 	/**
@@ -141,13 +139,13 @@ public class SupportedClasses {
 			/*
 			registerUClass(T3DDecoration.class, "Seaweed", "Tree1","Tree2","Tree3","Tree4","Tree5","Tree6","Tree7", "Tree8", "Tree9", "Tree10", "Tree11", "Plant1","Plant2","Plant3","Plant4", "Plant5", "Plant6", "Plant7");
 			registerUClass(Barrel.class, "Barrel");
-			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");
 			*/
+			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");
 			registerUClass(T3DAlarmPoint.class, "AlarmPoint");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");
 			registerUClass(T3DMusicEvent.class, "MusicEvent", "MusicScriptEvent");

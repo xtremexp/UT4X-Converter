@@ -67,6 +67,7 @@ public class T3DSimpleProperty {
         this.propertyClass = propertyClass;
         this.isList = isList;
         this.defaultValue = defaultValue;
+        this.propertyValue = defaultValue;
     }
 
     /**
@@ -175,6 +176,21 @@ public class T3DSimpleProperty {
         }
     }
 
+    void scaleProperty(double scale) {
+
+        if (this.propertyValue == null) {
+            return;
+        }
+
+        if (this.getPropertyValue() instanceof Float f) {
+            this.propertyValue = (int) scale * f;
+        } else if (this.getPropertyValue() instanceof Integer i) {
+            this.propertyValue = (int) scale * i;
+        } else if (this.getPropertyValue() instanceof Double d) {
+            this.propertyValue = scale * d;
+        }
+    }
+
     private void writeValueProperty(StringBuilder sbf, Object value) {
         if (value instanceof String) {
             sbf.append("\"").append(value).append("\"\n");
@@ -194,6 +210,18 @@ public class T3DSimpleProperty {
         } else {
             sbf.append(value).append("\n");
         }
+    }
+
+    public void setScalable(boolean scalable) {
+        this.scalable = scalable;
+    }
+
+    public boolean isScalable() {
+        return scalable;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
     }
 
     public Object getPropertyValue() {
