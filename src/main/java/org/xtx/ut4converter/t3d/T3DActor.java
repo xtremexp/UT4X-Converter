@@ -779,7 +779,17 @@ public abstract class T3DActor extends T3DObject {
 		this.convert();
 		this.scale(scaleFactor);
 
-		return "Begin Map\nBegin Level\n" + toT3d() + "End Level\nEnd Map";
+		String convT3d = toT3d();
+
+		if (convT3d == null) {
+			convT3d = "";
+
+			for (T3DActor repActor : this.children) {
+				convT3d += repActor.toT3d();
+			}
+		}
+
+		return "Begin Map\nBegin Level\n" + convT3d + "End Level\nEnd Map";
 	}
 
 	protected void addComponent(final Component... components){
