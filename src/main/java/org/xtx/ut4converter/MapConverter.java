@@ -709,7 +709,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void convertStaticMeshFiles()  {
 
-		final String msg = "Identifying staticmeshes textures";
+		final String msg = "Converting staticmeshes";
 		updateMessage(msg);
 		logger.log(Level.INFO, msg);
 
@@ -769,11 +769,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 		// export textures being used in staticmeshes
 		// if they have not ever been exported
+		int idx = 1;
 		for (final UPackageRessource matRessource : pendingExport) {
+
+			updateMessage("Exporting sm textures (" + idx + "/" + pendingExport.size() + ")");
 
 			if (!matRessource.isExported() && this.convertTextures()) {
 				matRessource.export(UTPackageExtractor.getExtractor(this, matRessource));
 			}
+
+			updateProgress(80 + 10 * (idx / (float) pendingExport.size()), 100);
+			idx ++;
 		}
 	}
 
@@ -864,13 +870,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	private void cleanAndConvertRessources() throws IOException {
 
-		updateMessage("Converting ressource files");
+
 		boolean wasConverted;
 
 		// remove unecessary exported files
 		// convert them to some new file format if needed
 		// and rename them to fit with "naming" standards
+		int idx = 1;
+
 		for (UPackage unrealPackage : mapPackages.values()) {
+
+			updateMessage("Converting ressource files (" + idx + "/" + mapPackages.values().size() + ")");
 
 			for (UPackageRessource ressource : unrealPackage.getRessources()) {
 
@@ -888,6 +898,9 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 					}
 				}
 			}
+
+			updateProgress(90 + 10 * (idx / (float) mapPackages.values().size()), 100);
+			idx ++;
 		}
 
 		try {
