@@ -8,12 +8,14 @@ package org.xtx.ut4converter.t3d;
 
 import javafx.concurrent.Task;
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.tools.FileUtils;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.controller.ConversionViewController;
 
 import javax.vecmath.Vector3d;
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,10 +43,6 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private final File outT3dFile;
 
-	/**
-	 * Reader for input t3d file
-	 */
-	private BufferedReader bfr;
 
 	/**
 	 * Writer for converted t3d file
@@ -159,6 +157,8 @@ public class T3DLevelConvertor extends Task<Object> {
 		updateProgress(0, 100);
 	}
 
+
+
 	/**
 	 * Count the total number of actors. Used to track progress for conversion
 	 */
@@ -169,9 +169,10 @@ public class T3DLevelConvertor extends Task<Object> {
 			throw new Exception("File " + inT3dFile.getAbsolutePath() + " does not exists!");
 		}
 
-		try {
+		final Charset charset = FileUtils.detectEncoding(inT3dFile);
 
-			bfr = new BufferedReader(new FileReader(inT3dFile));
+		try (final FileInputStream fis = new FileInputStream(inT3dFile); final InputStreamReader isr = new InputStreamReader(fis, charset); final BufferedReader bfr = new BufferedReader(isr)) {
+
 			String line;
 
 			// Read input t3d file and convert actors
@@ -184,10 +185,7 @@ public class T3DLevelConvertor extends Task<Object> {
 					isEndActor(line);
 				}
 			}
-		} finally {
-			bfr.close();
 		}
-
 	}
 
 	/**
@@ -385,7 +383,6 @@ public class T3DLevelConvertor extends Task<Object> {
 		}
 
 		logger.info(convertedActors.size() + " converted actors ");
-
 	}
 
 	/**
@@ -395,9 +392,9 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	private void readActors() throws IOException {
 
-		try {
+		final Charset charset = FileUtils.detectEncoding(inT3dFile);
 
-			bfr = new BufferedReader(new FileReader(inT3dFile));
+		try (final FileInputStream fis = new FileInputStream(inT3dFile); final InputStreamReader isr = new InputStreamReader(fis, charset); final BufferedReader bfr = new BufferedReader(isr)) {
 
 			String line;
 			// Current line of T3D File being analyzed
@@ -420,8 +417,6 @@ public class T3DLevelConvertor extends Task<Object> {
 			}
 
 			logger.info(convertedActors.size() + " actors read");
-		} finally {
-			bfr.close();
 		}
 	}
 
