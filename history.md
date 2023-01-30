@@ -1,3 +1,14 @@
+- 1.4.9 - 30/01/2023
+  - all: fixed no conversion from .t3d file with UTF-16 encoding
+  - u2/uc2/ut2003/4->ut4: added support for mover materials override u1: alarm trigger
+  - u2->ut3/ut4: fixed Sunlight actors being converted to PointLight instead of DirectionalLight
+  - u2/uc2/ut2003/4->ut4: fixed 64x64 terrains not being converted
+  - package exporter tool: can now also use the Simple Texture Exporter (UE1/UE2 only) + fixed crash if folder not existing
+  - package exporter tool: enabled texture format conversion
+  - all: fixed converted movers having bad scale
+  - ui: progress bar refreshed more often before end of conversion
+
+
 - 1.4.8 - 27/01/2023
   - all: fixed ressources (textures, sounds, staticmeshes) not being visible in converted map if original ressource filename 
   had unsupported char "~" (replaced by "_" on ut4 editor import) 
