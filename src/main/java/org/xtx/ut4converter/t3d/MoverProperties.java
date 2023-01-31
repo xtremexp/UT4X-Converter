@@ -407,9 +407,21 @@ public class MoverProperties implements T3D {
 		sbf.append(IDT).append("\tBegin Object Class=SceneComponent Name=\"Scene1\"\n");
 		sbf.append(IDT).append("\tEnd Object\n");
 
+		Vector3d scale3dClone = null;
+
+		if(mover.scale3d != null) {
+			scale3dClone = new Vector3d(mover.scale3d.x, mover.scale3d.y, mover.scale3d.z);
+		}
+		mover.scale3d = null;
+
 		sbf.append(IDT).append("\tBegin Object Name=\"Scene1\"\n");
 		mover.writeLocRotAndScale();
 		sbf.append(IDT).append("\tEnd Object\n");
+
+		if (scale3dClone != null) {
+			// Mesh Scale=(X=2.000000,Y=2.000000,Z=2.000000)
+			sbf.append(IDT).append("\tMesh Scale=(X=").append(T3DActor.fmt(scale3dClone.x)).append(",Y=").append(T3DActor.fmt(scale3dClone.y)).append(",Z=").append(T3DActor.fmt(scale3dClone.z)).append(")\n");
+		}
 
 		// Note: no need use Mesh Scale property since scale has ever been written in writeLocRotAndScale() function
 		sbf.append(IDT).append("\tScene1=Scene\n");
