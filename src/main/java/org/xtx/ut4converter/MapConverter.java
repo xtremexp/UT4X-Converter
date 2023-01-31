@@ -622,9 +622,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 	}
 
-	protected void updateProgress(long workDone, long max) {
+	@Override
+	protected void updateProgress(double workDone, double max) {
 		if(!noUi) {
-			super.updateProgress((double) workDone, (double) max);
+			super.updateProgress(workDone, max);
 		}
 	}
 
@@ -1511,6 +1512,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 
 	public void setUseUbClasses(boolean useUbClasses) {
 		this.useUbClasses = useUbClasses;
+		this.supportedActorClasses = new SupportedClasses(this);
 	}
 
 	public void setNoUi(boolean noUi) {

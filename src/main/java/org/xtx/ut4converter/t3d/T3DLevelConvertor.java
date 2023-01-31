@@ -121,10 +121,6 @@ public class T3DLevelConvertor extends Task<Object> {
 	 */
 	public T3DLevelConvertor(File originalT3d, File convertedT3d, MapConverter mc, boolean noUi) {
 
-		if (originalT3d == null || !originalT3d.exists()) {
-			throw new IllegalArgumentException("T3D file not specified or not existing.");
-		}
-
 		this.inT3dFile = originalT3d;
 		this.outT3dFile = convertedT3d;
 		this.mapConverter = mc;
@@ -183,6 +179,11 @@ public class T3DLevelConvertor extends Task<Object> {
 	 * @throws IOException Error writing t3d file
 	 */
 	public void readConvertAndWrite() throws IOException {
+
+
+		if (this.inT3dFile == null || !this.inT3dFile.exists()) {
+			throw new IllegalArgumentException("T3D file not specified or not existing.");
+		}
 
 		countTotalActors();
 
