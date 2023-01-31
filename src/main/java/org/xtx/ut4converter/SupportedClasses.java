@@ -122,7 +122,7 @@ public class SupportedClasses {
 		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2);
 
 		registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
-				"LoopMover", "InterpActor", "ClientMover");
+				"LoopMover", "InterpActor", "ClientMover", "DoorMover");
 
 		if(useUbClasses) {
 			registerUClass(T3DGradualMover.class, "GradualMover");
@@ -211,10 +211,6 @@ public class SupportedClasses {
 			registerUClass(T3DLight.class, ue34LightActor.name());
 		}
 
-		// UT99 Assault
-		registerUClass(T3DASObjective.class, "FortStandard");
-		registerUClass(T3DASCinematicCamera.class, "SpectatorCam");
-		registerUClass(T3DASInfo.class, "AssaultInfo");
 
 		// UT2004, UT99 Dom
 		registerUClass(DomPoint.class, "xDomPointA", "xDomPointB", "ControlPoint");
