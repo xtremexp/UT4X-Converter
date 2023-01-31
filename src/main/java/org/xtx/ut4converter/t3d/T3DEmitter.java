@@ -38,6 +38,7 @@ public class T3DEmitter extends T3DSound {
 
 		T3DEmitter emitter = new T3DEmitter(mc, light.t3dClass);
 		emitter.location = light.location;
+		emitter.rotation = light.rotation;
 		emitter.drawScale = light.drawScale;
 		emitter.scale3d = light.scale3d;
 		emitter.name = light.name + "_LF";
