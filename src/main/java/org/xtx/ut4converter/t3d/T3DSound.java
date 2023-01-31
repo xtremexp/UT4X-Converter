@@ -450,9 +450,9 @@ public class T3DSound extends T3DActor {
 				soundPitch /= 64D; // default pitch is 64 in UE1/2
 			}
 
-			// need to scale up radius for UE1/2 -> UE3/4
-			// tested DM-ArcaneTemple (UT99)
-			soundMaxRadius *= 24;
+			// Seen in AActor.h from Unreal Engine source code
+			// FLOAT WorldSoundRadius() const {return 25.f * ((int)SoundRadius+1);}
+			soundMaxRadius = 25 * (soundMaxRadius + 1);
 		}
 
 		if (isTo(UE4, UE5)) {
