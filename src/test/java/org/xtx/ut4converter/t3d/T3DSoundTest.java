@@ -44,9 +44,9 @@ class T3DSoundTest {
         // Volume test - "SoundVolume=137" (U1) -> "VolumeMultiplier={value}/128=137/128" (UT4)
         Assertions.assertTrue(convT3D.contains("VolumeMultiplier=1.0703125"), "VolumeMultiplier!={value}/128");
 
-        // Radius test - "SoundRadius=102" (U1) -> FalloffDistance={value} * 24 * {ScaleFactor} (UT) = 102 * 24 * 2
+        // Radius test - "SoundRadius=102" (U1) -> FalloffDistance=({radius} + 1) * 25 * {ScaleFactor} (UT) = 102 * 25 * 2
         Assertions.assertTrue(convT3D.contains("bOverrideAttenuation=true"));
-        Assertions.assertTrue(convT3D.contains("FalloffDistance=4896.0"), "FalloffDistance!={value} * 24 * {ScaleFactor}");
+        Assertions.assertTrue(convT3D.contains("FalloffDistance=5150.0"), "FalloffDistance!=({radius} + 1) * 25 * {ScaleFactor}");
 
         // Actor generic
         // Drawscale test - "DrawScale=6.0" (U1) -> SpriteScale={value} * {ScaleFactor} = 6 * 2
@@ -83,8 +83,8 @@ class T3DSoundTest {
         // Pitch test - no change
         Assertions.assertTrue(convT3D.contains("PitchMultiplier=1.0"));
 
-        // Radius test - Radius=64 (default U1) -> FalloffDistance=64 * 24 * {ScaleFactor} (UT) = 1536 * 2
-        Assertions.assertTrue(convT3D.contains("FalloffDistance=3072.0"), "FalloffDistance!=64 * 24 * {ScaleFactor}");
+        // Radius test - Radius=64 (default U1) -> FalloffDistance= (64 + 1) * 25 * {ScaleFactor} (UT) = 1625 * 2
+        Assertions.assertTrue(convT3D.contains("FalloffDistance=3250.0"), "FalloffDistance!= (64 + 1) * 25 * {ScaleFactor}");
     }
 
     /**
@@ -117,8 +117,8 @@ class T3DSoundTest {
 
         // Radius test
         Assertions.assertTrue(convT3D.contains("Begin Object Class=DistributionFloatUniform Name=DistributionMaxRadius"));
-        Assertions.assertTrue(convT3D.contains("Min=4896.0"));
-        Assertions.assertTrue(convT3D.contains("Max=4896.0"));
+        Assertions.assertTrue(convT3D.contains("Min=5150.0"));
+        Assertions.assertTrue(convT3D.contains("Max=5150.0"));
     }
 
     /**
