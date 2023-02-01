@@ -14,6 +14,7 @@ public class T3DDispatcher extends T3DActor {
 
         registerSimpleArrayProperty("OutDelays", Float.class);
         registerSimpleArrayProperty("OutEvents", String.class);
+        registerSimpleArrayProperty("Event", String.class);
     }
 
     public String toT3d() {

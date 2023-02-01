@@ -142,9 +142,9 @@ public class SupportedClasses {
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
+			*/
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");
-			*/
 			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");
 			registerUClass(T3DAlarmPoint.class, "AlarmPoint");
 			registerUClass(T3DSpecialEvent.class, "SpecialEvent");

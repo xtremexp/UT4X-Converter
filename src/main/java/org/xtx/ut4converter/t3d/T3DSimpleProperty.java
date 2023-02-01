@@ -13,12 +13,14 @@ import java.util.List;
  */
 public class T3DSimpleProperty {
 
+    /**
+     * Original property name
+     */
     private final String propertyName;
 
     /**
-     * Default will be originalName
-     * but we might need to have name different
-     * than original
+     * Converted property.
+     * By default is the original property name.
      */
     private final String propertyNameConverted;
 
@@ -34,7 +36,8 @@ public class T3DSimpleProperty {
     private final Class propertyClass;
 
     /**
-     * If true then this property is scalable.
+     * If true then this property is scalable. (e.g: 'Radius' property)
+     * Used for map scale.
      */
     private boolean scalable;
 
@@ -43,9 +46,14 @@ public class T3DSimpleProperty {
      */
     private Object propertyValue;
 
-    private final boolean isList;
     /**
-     *
+     * If true the given property is an array
+     */
+    private final boolean isList;
+
+    /**
+     * If propertyClass is an UPackageRessource,
+     * this is the type of ressources asssociated with. (texture, sound, ...)
      */
     private T3DRessource.Type ressourceType;
 
@@ -187,6 +195,8 @@ public class T3DSimpleProperty {
             this.propertyValue = (int) scale * i;
         } else if (this.getPropertyValue() instanceof Double d) {
             this.propertyValue = scale * d;
+        } else if (this.getPropertyValue() instanceof Short s) {
+            this.propertyValue = scale * s;
         }
     }
 
@@ -233,5 +243,17 @@ public class T3DSimpleProperty {
 
     public void clonePropertyAs(String clonePropertyName) {
         this.clonePropertyName = clonePropertyName;
+    }
+
+    public Class getPropertyClass() {
+        return propertyClass;
+    }
+
+    @Override
+    public String toString() {
+        return "T3DSimpleProperty{" +
+                "propertyName='" + propertyName + '\'' +
+                ", propertyClass=" + propertyClass +
+                '}';
     }
 }

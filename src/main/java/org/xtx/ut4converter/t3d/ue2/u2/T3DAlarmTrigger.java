@@ -25,6 +25,6 @@ public class T3DAlarmTrigger extends T3DActor {
     }
 
     public String toT3d() {
-        return writeSimpleActor("U2AlarmTrigger_C", "BillboardComponent", "Billboard", "U2AlarmTrigger_C'/Game/UEActors/U2AlarmTrigge.Default__U2AlarmTrigger_C'");
+        return writeSimpleActor("U2AlarmTrigger_C", "BillboardComponent", "Billboard", "U2AlarmTrigger_C'/Game/UEActors/U2AlarmTrigger.Default__U2AlarmTrigger_C'");
     }
 }

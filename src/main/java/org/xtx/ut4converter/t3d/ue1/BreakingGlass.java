@@ -6,17 +6,12 @@ public class BreakingGlass extends ExplodingWall {
     public BreakingGlass(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("Numparticles", Float.class);
-        registerSimpleProperty("ParticleSize", Float.class);
+        registerSimpleProperty("Numparticles", Float.class, 16f);
+        registerSimpleProperty("ParticleSize", Float.class, 0.75f);
     }
 
-    @Override
-    public void convert() {
-        super.convert();
-        this.t3dClass = "UBBreakingGlass_C";
-    }
 
     public String toT3d() {
-        return writeSimpleActor("UBBreakingGlass_C");
+        return writeSimpleActor("UBreakingGlass_C", "SceneComponent", "DefaultSceneRoot", "UBreakingGlass_C'/Game/UEActors/UBreakingGlass.Default__UBreakingGlass_C'");
     }
 }

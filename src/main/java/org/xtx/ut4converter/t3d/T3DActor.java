@@ -21,7 +21,7 @@ import java.util.*;
 import static org.xtx.ut4converter.ucore.UnrealEngine.*;
 
 /**
- *
+ * T3D actor class, unlike T3DObject, this class is placeable in level.
  * @author XtremeXp
  */
 public abstract class T3DActor extends T3DObject {
@@ -278,6 +278,8 @@ public abstract class T3DActor extends T3DObject {
 			this.tag = actor.tag;
 			this.name = actor.name;
 		}
+
+		registerSimpleProperty("Event", String.class);
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {
@@ -617,23 +619,35 @@ public abstract class T3DActor extends T3DObject {
 			}
 		});
 
-		for(final T3DSimpleProperty simpleProperty : registeredProperties){
-			if(simpleProperty.getPropertyValue() instanceof final UPackageRessource packageRessource){
-				final T3DRessource.Type type = simpleProperty.getRessourceType();
 
-				if(type == T3DRessource.Type.SOUND && mapConverter.convertSounds()){
-					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
-				}
-				else if(type == T3DRessource.Type.TEXTURE && mapConverter.convertTextures()){
-					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
-				}
-				// MESHES have to be converted to staticmeshes
-				else if((type == T3DRessource.Type.STATICMESH  ||  type == T3DRessource.Type.MESH) && mapConverter.convertStaticMeshes()){
-					packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+		for (final T3DSimpleProperty simpleProperty : registeredProperties) {
+
+			if (simpleProperty.getPropertyValue() instanceof final UPackageRessource packageRessource) {
+				exportRessource(simpleProperty, packageRessource);
+			} else if (simpleProperty.getPropertyValue() instanceof List l) {
+				for (final Object value : l) {
+					if (value instanceof final UPackageRessource packageRessource) {
+						exportRessource(simpleProperty, packageRessource);
+					}
 				}
 			}
 		}
 	}
+
+	private void exportRessource(T3DSimpleProperty simpleProperty, UPackageRessource packageRessource) {
+		final T3DRessource.Type type = simpleProperty.getRessourceType();
+
+		if (type == T3DRessource.Type.SOUND && mapConverter.convertSounds()) {
+			packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+		} else if (type == T3DRessource.Type.TEXTURE && mapConverter.convertTextures()) {
+			packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+		}
+		// MESHES have to be converted to staticmeshes
+		else if ((type == T3DRessource.Type.STATICMESH || type == T3DRessource.Type.MESH) && mapConverter.convertStaticMeshes()) {
+			packageRessource.export(UTPackageExtractor.getExtractor(mapConverter, packageRessource));
+		}
+	}
+
 
 	/**
 	 * We may not want to convert this t3d actor after analyzing data, that's

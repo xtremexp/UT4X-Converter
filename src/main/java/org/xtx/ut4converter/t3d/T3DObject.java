@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Master class of all t3d class
+ */
 public abstract class T3DObject {
 
 	/**
@@ -90,20 +93,7 @@ public abstract class T3DObject {
 	}
 
 
-	public void writeBeginObj(StringBuilder sbf, String prefix) {
-
-		if (prefix != null) {
-			sbf.append(prefix);
-		}
-
-		if (this instanceof T3DActor) {
-			sbf.append("Begin Actor Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
-		} else {
-			sbf.append("Begin Object Name=\"").append(name).append("\" Class=").append(t3dClass).append("\n");
-		}
-	}
-
-	boolean parseSimpleProperty(final String line){
+	boolean parseSimpleProperty(final String line) {
 
 		boolean propFound = false;
 
@@ -114,16 +104,50 @@ public abstract class T3DObject {
 		return propFound;
 	}
 
-	public T3DSimpleProperty registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource){
+	/**
+	 * Register a ressource property
+	 *
+	 * @param propertyName  Property name (e.g: 'OpeningSound')
+	 * @param typeRessource Ressource type (e.g: 'Sound','Texture',...)
+	 * @return Registered property
+	 */
+	public T3DSimpleProperty registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource) {
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, typeRessource, false);
 		this.registeredProperties.add(simpleProperty);
 		return simpleProperty;
 	}
 
-	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Class classType){
+	/**
+	 * Register a ressource property array
+	 *
+	 * @param propertyName  Property name (e.g: 'OpeningSound')
+	 * @param typeRessource Ressource type (e.g: 'Sound','Texture',...)
+	 * @return Registered property
+	 */
+	public T3DSimpleProperty registerSimpleArrayPropertyRessource(final String propertyName, final T3DRessource.Type typeRessource) {
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, typeRessource, true);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
+	}
+
+	/**
+	 * Register a property
+	 *
+	 * @param propertyName Property name (e.g: 'Radius')
+	 * @param classType    Class (e.g: 'Float.class')
+	 * @return Registered property
+	 */
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Class classType) {
 		return registerSimpleProperty(propertyName, classType, null);
 	}
 
+	/**
+	 * Register a property array
+	 *
+	 * @param propertyName Property name (e.g: 'Radius')
+	 * @param classType    Class (e.g: 'Float.class')
+	 * @return Registered property
+	 */
 	public void registerSimpleArrayProperty(final String propertyName, final Class classType){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, null, true);
 		this.registeredProperties.add(simpleProperty);
@@ -133,6 +157,7 @@ public abstract class T3DObject {
 	 *
 	 * @param propertyName Property name
 	 * @param classType Type of property (String, Float, or other)
+	 * @param defaultValue Default value of property
 	 */
 	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final Class classType, final Object defaultValue){
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, defaultValue, false);
