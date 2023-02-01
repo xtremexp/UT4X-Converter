@@ -5,6 +5,7 @@
 
 package org.xtx.ut4converter.controller;
 
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.xtx.ut4converter.ConversionSettings.ExportOption;
 import org.xtx.ut4converter.MainApp;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames.UTGame;
@@ -39,6 +41,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.xtx.ut4converter.tools.UIUtils.createLabelWithTooltip;
+
 /**
  * FXML Controller class
  *
@@ -54,21 +58,9 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private Label outputFolderLbl;
 
-
 	private MainApp mainApp;
 
-	private MapConverter mapConverter;
-
-	/**
-	 * Input unreal game to convert from
-	 */
-	private UnrealGame inputGame;
-
-	/**
-	 * Output unreal game to convert to
-	 */
-	private UnrealGame outputGame;
-
+	private org.xtx.ut4converter.ConversionSettings conversionSettings;
 
 	@FXML
 	private CheckBox convTexCheckBox;
@@ -91,7 +83,7 @@ public class ConversionSettingsController implements Initializable {
 	private Label outMapNameLbl;
 
 	@FXML
-	private CheckBox debugLogLevel;
+	private CheckBox debugLogLevelCheckBox;
 
 	@FXML
 	private TextField classesNameFilter;
@@ -100,7 +92,6 @@ public class ConversionSettingsController implements Initializable {
 	private GridPane gridPaneMainSettings;
 
 	private Label inputMapPathLbl;
-
 
 	private Label ue4RefPathLbl;
 
@@ -111,7 +102,7 @@ public class ConversionSettingsController implements Initializable {
 	/**
 	 * Export option combo box
 	 */
-	final ComboBox<MapConverter.ExportOption> exportOptComboBox = new ComboBox<>();
+	final ComboBox<ExportOption> exportOptComboBox = new ComboBox<>();
 
 	ApplicationConfig applicationConfig;
 
@@ -149,18 +140,18 @@ public class ConversionSettingsController implements Initializable {
 		soundVolumeFactor.getItems().sort(Comparator.naturalOrder());
 		soundVolumeFactor.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultSoundVolumeFactor());
 
-		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_TYPE);
-		exportOptComboBox.getItems().add(MapConverter.ExportOption.BY_PACKAGE);
+		exportOptComboBox.getItems().add(ExportOption.BY_TYPE);
+		exportOptComboBox.getItems().add(ExportOption.BY_PACKAGE);
 		exportOptComboBox.getSelectionModel().select(this.applicationConfig.getConversionSettingsPanelConfig().getDefaultExport());
 		exportOptComboBox.setConverter(new StringConverter<>() {
 			@Override
-			public String toString(MapConverter.ExportOption exportOption) {
+			public String toString(ExportOption exportOption) {
 				return exportOption.getLabel();
 			}
 
 			@Override
-			public MapConverter.ExportOption fromString(String s) {
-				for (MapConverter.ExportOption eop : MapConverter.ExportOption.values()) {
+			public ExportOption fromString(String s) {
+				for (ExportOption eop : ExportOption.values()) {
 					if (eop.getLabel().equals(s)) {
 						return eop;
 					}
@@ -180,19 +171,13 @@ public class ConversionSettingsController implements Initializable {
 	}
 
 
-	private Label createLabelWithTooltip(String text, String tooltip){
-		final Label lbl = new Label(text);
-		lbl.setTooltip(new Tooltip(tooltip));
-		return lbl;
-	}
 
 	/**
-	 * Load conversion settings from conversion settings config object
+	 * Init from menu File-> "Recent conversions"
 	 *
 	 * @param conversionSettings Conversion settings
-	 * @throws IOException IO error while reading conversion settings
 	 */
-	public void initFromConversionSettings(ConversionSettings conversionSettings) throws IOException {
+	public void initFromConversionSettings(final ConversionSettings conversionSettings) {
 
 		final UnrealGame inputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getInputGameId());
 		final UnrealGame outputGame = this.applicationConfig.getUnrealGameById(conversionSettings.getOutputGameId());
@@ -210,16 +195,18 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		scaleFactorList.getSelectionModel().select(conversionSettings.getScaleFactor());
-		exportOptComboBox.getSelectionModel().select(MapConverter.ExportOption.valueOf(conversionSettings.getExportOption()));
+		exportOptComboBox.getSelectionModel().select(ExportOption.valueOf(conversionSettings.getExportOption()));
 	}
 
-	public void initFromInputAndOutputGame(UnrealGame inputGame, UnrealGame outputGame) throws IOException {
-		this.inputGame = inputGame;
-		this.outputGame = outputGame;
-		loadComponents();
-	}
+	/**
+	 * Init from File->[Game]-> Convert to [Game] Menu and "File-> "Recent conversions""
+	 *
+	 * @param inputGame  Input Unreal game
+	 * @param outputGame Output Unreal game
+	 */
+	public void initFromInputAndOutputGame(final UnrealGame inputGame, final UnrealGame outputGame) {
 
-	private void loadComponents() throws IOException {
+		this.conversionSettings = new org.xtx.ut4converter.ConversionSettings(inputGame, outputGame);
 
 		// INPUT MAP SETTINGS
 		gridPaneMainSettings.add( createLabelWithTooltip("Input Game:", "Input unreal game"), 0, 0);
@@ -260,7 +247,7 @@ public class ConversionSettingsController implements Initializable {
 
 
 		// set default scale depending on config
-		final GameConversionConfig inGame = this.inputGame.getConvertsTo().stream().filter(g -> g.getGameId().equals(this.outputGame.getShortName())).findFirst().orElse(null);
+		final GameConversionConfig inGame = inputGame.getConvertsTo().stream().filter(g -> g.getGameId().equals(outputGame.getShortName())).findFirst().orElse(null);
 
 		if (inGame != null && inGame.getScale() != null) {
 			if (!scaleFactorList.getItems().contains(inGame.getScale())) {
@@ -291,7 +278,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// Added export options
 		// 14012023 - disabled for input UE2+ games since staticmeshes don't have right texture path for now
-		if (this.outputGame.getUeVersion() >= 4 && this.inputGame.getUeVersion() == 1) {
+		if (outputGame.getUeVersion() >= 4 && inputGame.getUeVersion() == 1) {
 			gridPaneMainSettings.add(createLabelWithTooltip("Export structure: ", "How ressources will be split into folder.\nE.g:\nBy type: /CTF-Face/Textures/GenEarth_Rock_Rock9.tga\nBy package: /CTF-Face/GenEarth/Rock_Rock9.tga"), 0, rowIdx);
 			gridPaneMainSettings.add(exportOptComboBox, 1, rowIdx++);
 		}
@@ -316,45 +303,14 @@ public class ConversionSettingsController implements Initializable {
 			gridPaneMainSettings.add(changeUe4RefPathBtn, 2, rowIdx);
 		}
 
-		mapConverter = new MapConverter(inputGame, outputGame);
+		this.conversionSettings = new org.xtx.ut4converter.ConversionSettings(inputGame, outputGame);
 
 		// games we are working on and testing and adding blueprints
 		if("U1".equals(inputGame.getShortName()) || "U2".equals(inputGame.getShortName())) {
-			mapConverter.setUseUbClasses(mainApp.isUseUbClasses());
+			this.conversionSettings.setUseU1BPActorClasses(mainApp.isUseUbClasses());
 		} else {
-			mapConverter.setUseUbClasses(false);
+			this.conversionSettings.setUseU1BPActorClasses(false);
 		}
-
-
-		disableConversionType();
-
-		initConvCheckBoxes();
-	}
-
-	private void initConvCheckBoxes() {
-		convSndCheckBox.setSelected(mapConverter.convertSounds());
-		convTexCheckBox.setSelected(mapConverter.convertTextures());
-		convMusicCheckBox.setSelected(mapConverter.convertMusic());
-		convSmCheckBox.setSelected(mapConverter.convertStaticMeshes());
-	}
-
-	/**
-	 * Disable conversion of some type of ressources depending on game because
-	 * all ressource converter not done yet
-	 */
-	private void disableConversionType() {
-
-		boolean canConvertTextures = mapConverter.canConvertTextures();
-		mapConverter.setConvertTextures(canConvertTextures);
-		convTexCheckBox.setDisable(!canConvertTextures);
-
-		boolean canConvertSounds = mapConverter.canConvertSounds();
-		mapConverter.setConvertSounds(canConvertSounds);
-		convSndCheckBox.setDisable(!canConvertSounds);
-
-		boolean canConvertMusic = mapConverter.canConvertMusic();
-		mapConverter.setConvertMusic(canConvertMusic);
-		convMusicCheckBox.setDisable(!canConvertMusic);
 	}
 
 	/**
@@ -363,7 +319,7 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private void changeMapName() {
 
-		TextInputDialog dialog = new TextInputDialog(mapConverter.getOutMapName());
+		TextInputDialog dialog = new TextInputDialog(this.conversionSettings.getOutputMapName());
 
 		dialog.setTitle("Text Input Dialog");
 		dialog.setHeaderText("Map Name Change");
@@ -383,12 +339,12 @@ public class ConversionSettingsController implements Initializable {
 		newMapName = T3DUtils.filterName(newMapName);
 
 		if (newMapName.length() > 3) {
-			mapConverter.setOutMapName(newMapName);
-			outMapNameLbl.setText(mapConverter.getOutMapName());
-			mapConverter.initConvertedResourcesFolder();
+			this.conversionSettings.setOutputMapName(newMapName);
+			outMapNameLbl.setText(this.conversionSettings.getOutputMapName());
+			this.conversionSettings.refreshOutputMapNameAndUT4RefBaseFolder();
 
 			if (ue4RefPathLbl != null) {
-				ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+				ue4RefPathLbl.setText(this.conversionSettings.getUt4ReferenceBaseFolder());
 			}
 		}
 	}
@@ -396,10 +352,11 @@ public class ConversionSettingsController implements Initializable {
 	@FXML
 	private void selectInputMap()  {
 
+		final UnrealGame inputGame = this.conversionSettings.getInputGame();
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select " + inputGame.getName() + " map");
+		chooser.setTitle("Select " + this.conversionSettings.getInputGame().getName() + " map");
 
-		File mapFolder = new File(this.inputGame.getPath() + File.separator + this.inputGame.getMapFolder());
+		File mapFolder = new File(inputGame.getPath() + File.separator + inputGame.getMapFolder());
 
 		if (mapFolder.exists()) {
 			chooser.setInitialDirectory(mapFolder);
@@ -422,19 +379,19 @@ public class ConversionSettingsController implements Initializable {
 
 		changeMapNameBtn.setDisable(false);
 		inputMapPathLbl.setText(unrealMap.getPath());
-		mapConverter.setInMap(unrealMap);
-		mapConverter.initConvertedResourcesFolder();
+		this.conversionSettings.setInputMapFile(unrealMap);
+		this.conversionSettings.refreshOutputMapNameAndUT4RefBaseFolder();
 
 		if (ue4RefPathLbl != null) {
-			ue4RefPathLbl.setText(mapConverter.getUt4ReferenceBaseFolder());
+			ue4RefPathLbl.setText(this.conversionSettings.getUt4ReferenceBaseFolder());
 		}
 
 		if (changeUe4RefPathBtn != null) {
 			changeUe4RefPathBtn.setDisable(false);
 		}
 
-		outputFolderLbl.setText(mapConverter.getOutPath().toString());
-		outMapNameLbl.setText(mapConverter.getOutMapName());
+		outputFolderLbl.setText(this.conversionSettings.getOutputFolder().toString());
+		outMapNameLbl.setText(this.conversionSettings.getOutputMapName());
 	}
 
 	@FXML
@@ -443,8 +400,8 @@ public class ConversionSettingsController implements Initializable {
 		if (checkConversionSettings()) {
 
 			try {
-				mapConverter.setScale(scaleFactorList.getSelectionModel().getSelectedItem());
-				mapConverter.setExportOption(exportOptComboBox.getSelectionModel().getSelectedItem());
+				this.conversionSettings.setScaleFactor(scaleFactorList.getSelectionModel().getSelectedItem());
+				this.conversionSettings.setExportOption(exportOptComboBox.getSelectionModel().getSelectedItem());
 			} catch (ClassCastException ce) {
 				ce.printStackTrace();
 				Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -458,23 +415,22 @@ public class ConversionSettingsController implements Initializable {
 			dialogStage.close();
 
 
-			mapConverter.setLightMapResolution(lightMapResolutionList.getSelectionModel().getSelectedItem());
-			mapConverter.lightRadiusFactor = lightningRadiusFactor.getSelectionModel().getSelectedItem();
-			mapConverter.soundVolumeFactor = soundVolumeFactor.getSelectionModel().getSelectedItem();
+			this.conversionSettings.setLightMapResolution(lightMapResolutionList.getSelectionModel().getSelectedItem());
+			this.conversionSettings.setLightRadiusFactor(lightningRadiusFactor.getSelectionModel().getSelectedItem());
+			this.conversionSettings.setSoundVolumeFactor(soundVolumeFactor.getSelectionModel().getSelectedItem());
 			if (classesNameFilter.getLength() > 1) {
-				mapConverter.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
+				this.conversionSettings.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
 			}
 
-			mapConverter.setConversionViewController(mainApp.showConversionView());
 
 			final ConversionSettings conversionSettings = new ConversionSettings();
-			conversionSettings.setInputGameId(mapConverter.getInputGame().getShortName());
-			conversionSettings.setOutputGameId(mapConverter.getOutputGame().getShortName());
-			conversionSettings.setExportOption(mapConverter.getExportOption().name());
-			conversionSettings.setUe4RefBaseFolder(mapConverter.getUt4ReferenceBaseFolder());
-			conversionSettings.setScaleFactor(mapConverter.getScale());
-			conversionSettings.setOutputMapName(mapConverter.getOutMapName());
-			conversionSettings.setInputMap(mapConverter.getInMap());
+			conversionSettings.setInputGameId(this.conversionSettings.getInputGame().getShortName());
+			conversionSettings.setOutputGameId(this.conversionSettings.getOutputGame().getShortName());
+			conversionSettings.setExportOption(this.conversionSettings.getExportOption().name());
+			conversionSettings.setUe4RefBaseFolder(this.conversionSettings.getUt4ReferenceBaseFolder());
+			conversionSettings.setScaleFactor(this.conversionSettings.getScaleFactor());
+			conversionSettings.setOutputMapName(this.conversionSettings.getOutputMapName());
+			conversionSettings.setInputMap(this.conversionSettings.getInputMapFile());
 
 			final ApplicationConfig appConfig = ApplicationConfig.loadApplicationConfig();
 			appConfig.addRecentConversion(conversionSettings);
@@ -487,6 +443,9 @@ public class ConversionSettingsController implements Initializable {
 			sc.addRecentConversationsMenu(appConfig);
 			*/
 
+			final MapConverter mapConverter = new MapConverter(this.conversionSettings);
+			mapConverter.setConversionViewController(mainApp.showConversionView());
+			mapConverter.getLogger().setLevel(debugLogLevelCheckBox.isSelected() ? Level.FINE : Level.INFO);
 			SwingUtilities.invokeLater(mapConverter);
 		}
 	}
@@ -498,7 +457,9 @@ public class ConversionSettingsController implements Initializable {
 	 */
 	private boolean checkConversionSettings() {
 
-		if (mapConverter.getInMap() == null) {
+		final UnrealGame inputGame = this.conversionSettings.getInputGame();
+
+		if (this.conversionSettings.getInputMapFile() == null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Input map not set");
 			alert.setHeaderText("Input map not set");
@@ -510,7 +471,7 @@ public class ConversionSettingsController implements Initializable {
 
 		// FOR UT3 need to have .t3d file created from UT3 editor
 		// because the ut3.com batchexport command is buggy and messes up actors !
-		if (UTGame.UT3.shortName.equals(mapConverter.getInputGame().getShortName()) && mapConverter.getInT3d() == null) {
+		if (UTGame.UT3.shortName.equals(this.conversionSettings.getInputGame().getShortName()) && this.conversionSettings.getInputT3DMapFile() == null) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Input .t3d map not set");
 			alert.setHeaderText("Input map not set");
@@ -521,7 +482,7 @@ public class ConversionSettingsController implements Initializable {
 		}
 
 		// for Unreal 1, needs to have oldunreal.com installed
-		if (UTGame.U1.shortName.equals(mapConverter.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getPkgExtractorPath()).exists()) {
+		if (UTGame.U1.shortName.equals(this.conversionSettings.getInputGame().getShortName()) && !new File(inputGame.getPath() + File.separator + inputGame.getPkgExtractorPath()).exists()) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("OldUnreal Patch not installed");
 			alert.setHeaderText("Patch from oldunreal.com is needed.");
@@ -592,7 +553,7 @@ public class ConversionSettingsController implements Initializable {
 
 	private void setUt4RefFolder(String ut4BaseRef) {
 		ue4RefPathLbl.setText(ut4BaseRef);
-		mapConverter.setUt4ReferenceBaseFolder(ut4BaseRef);
+		this.conversionSettings.setUt4ReferenceBaseFolder(ut4BaseRef);
 	}
 
 	@FXML
@@ -602,39 +563,34 @@ public class ConversionSettingsController implements Initializable {
 
 	@FXML
 	private void toggleTexConversion() {
-		mapConverter.setConvertTextures(convTexCheckBox.isSelected());
+		this.conversionSettings.setConvertTextures(convTexCheckBox.isSelected());
 	}
 
 	@FXML
 	private void toggleSndConversion() {
-		mapConverter.setConvertSounds(convSndCheckBox.isSelected());
+		this.conversionSettings.setConvertSounds(convSndCheckBox.isSelected());
 	}
 
 	@FXML
 	private void toggleSmConversion() {
-		mapConverter.setConvertStaticMeshes(convSmCheckBox.isSelected());
+		this.conversionSettings.setConvertStaticMeshes(convSmCheckBox.isSelected());
 	}
 
 	@FXML
 	private void toggleMusicConversion() {
-		mapConverter.setConvertMusic(convMusicCheckBox.isSelected());
+		this.conversionSettings.setConvertMusic(convMusicCheckBox.isSelected());
 	}
 
-	/**
-	 * Changes the log level
-	 */
-	@FXML
-	private void toggleDebugLogLevel() {
-		mapConverter.getLogger().setLevel(debugLogLevel.isSelected() ? Level.FINE : Level.INFO);
-	}
 
 	/**
 	 * // FOR UT3 need to have the copied/pasted .td3 level from UT3 editor to have right order of brushes
 	 * // because the UT3 commandlet is kinda in "alpha" stages
 	 */
 	public void selectInputT3dMap() {
+
+		final UnrealGame inputGame = this.conversionSettings.getInputGame();
 		FileChooser chooser = new FileChooser();
-		chooser.setTitle("Select " + inputGame.getShortName() + " .t3d map you created from " + mapConverter.getInputGame().getShortName() + " editor ");
+		chooser.setTitle("Select " + inputGame.getShortName() + " .t3d map you created from " + this.conversionSettings.getInputGame().getShortName() + " editor ");
 
 		File mapFolder = new File(inputGame.getPath() + File.separator + inputGame.getMapFolder());
 
@@ -649,7 +605,7 @@ public class ConversionSettingsController implements Initializable {
 		// UT3 commandlet export too buggy and messed .t3d file so need to use the exported one from UT3 editor
 		if (t3dUt3EditorFile != null) {
 			inputMapT3dLbl.setText(t3dUt3EditorFile.getPath());
-			mapConverter.setInT3d(t3dUt3EditorFile);
+			this.conversionSettings.setInputT3DMapFile(t3dUt3EditorFile);
 		}
 	}
 

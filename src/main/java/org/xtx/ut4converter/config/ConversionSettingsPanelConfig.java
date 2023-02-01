@@ -1,6 +1,6 @@
 package org.xtx.ut4converter.config;
 
-import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.ConversionSettings;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ConversionSettingsPanelConfig {
 
     private Float defaultSoundVolumeFactor;
 
-    private MapConverter.ExportOption defaultExport;
+    private ConversionSettings.ExportOption defaultExport;
 
 
     public ConversionSettingsPanelConfig() {
@@ -93,11 +93,11 @@ public class ConversionSettingsPanelConfig {
         this.defaultScaleFactor = defaultScaleFactor;
     }
 
-    public MapConverter.ExportOption getDefaultExport() {
+    public ConversionSettings.ExportOption getDefaultExport() {
         return defaultExport;
     }
 
-    public void setDefaultExport(MapConverter.ExportOption defaultExport) {
+    public void setDefaultExport(ConversionSettings.ExportOption defaultExport) {
         this.defaultExport = defaultExport;
     }
 }

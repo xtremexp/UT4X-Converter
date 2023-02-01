@@ -24,11 +24,10 @@ public class UCCExporterTest {
     private static void exportAllUTXLevels(final UTGames.UTGame inputGame, final UTGames.UTGame outputGame) throws Exception {
 
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(inputGame, outputGame);
-        mc.setConvertMusic(true);
-        mc.setConvertSounds(true);
-        mc.setConvertTextures(true);
-        mc.setConvertStaticMeshes(true);
-
+        mc.getConversionSettings().setConvertMusic(true);
+        mc.getConversionSettings().setConvertSounds(true);
+        mc.getConversionSettings().setConvertTextures(true);
+        mc.getConversionSettings().setConvertStaticMeshes(true);
 
         final List<UnrealGame> games = ApplicationConfig.getBaseGames();
         final UnrealGame inputGame2 = games.stream().filter(g -> g.getShortName().equals(inputGame.shortName)).findFirst().orElse(null);

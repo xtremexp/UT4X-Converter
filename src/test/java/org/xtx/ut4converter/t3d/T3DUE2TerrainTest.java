@@ -81,7 +81,7 @@ public class T3DUE2TerrainTest {
         File t3dFile = new File(T3DUE2TerrainTest.class.getResource("/t3d/ue2/U2-M08A1-TerrainInfo.t3d").toURI());
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U2, UTGames.UTGame.UT4, t3dFile, true, true);
 
-        mc.setScale(2.2d);
+        mc.getConversionSettings().setScaleFactor(2.2d);
         mc.convert();
     }
 }

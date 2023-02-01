@@ -47,10 +47,11 @@ public class T3DTestUtils {
             mc.setT3dLvlConvertor(new T3DLevelConvertor(null, null, mc, true));
         }
 
-        mc.setConvertTextures(convertRessources);
-        mc.setConvertSounds(convertRessources);
-        mc.setConvertStaticMeshes(convertRessources);
-        mc.setConvertMusic(convertRessources);
+        mc.getConversionSettings().setConvertMusic(convertRessources);
+        mc.getConversionSettings().setConvertTextures(convertRessources);
+        mc.getConversionSettings().setConvertSounds(convertRessources);
+        mc.getConversionSettings().setConvertStaticMeshes(convertRessources);
+
         mc.setNoUi(true);
         mc.isTestMode = true;
 

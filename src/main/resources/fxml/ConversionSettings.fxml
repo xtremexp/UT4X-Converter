@@ -23,16 +23,16 @@
                 <GridPane hgap="10" vgap="10">
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="0">Convert Textures:</Label>
-                    <CheckBox fx:id="convTexCheckBox" onAction="#toggleTexConversion" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <CheckBox fx:id="convTexCheckBox" onAction="#toggleTexConversion" GridPane.columnIndex="1" GridPane.rowIndex="0" selected="true"/>
 
                     <Label GridPane.columnIndex="2" GridPane.rowIndex="0">Convert Sounds:</Label>
-                    <CheckBox fx:id="convSndCheckBox" onAction="#toggleSndConversion" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                    <CheckBox fx:id="convSndCheckBox" onAction="#toggleSndConversion" GridPane.columnIndex="3" GridPane.rowIndex="0" selected="true"/>
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="1">Convert Music:</Label>
-                    <CheckBox fx:id="convMusicCheckBox" onAction="#toggleMusicConversion" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <CheckBox fx:id="convMusicCheckBox" onAction="#toggleMusicConversion" GridPane.columnIndex="1" GridPane.rowIndex="1" selected="true"/>
 
                     <Label GridPane.columnIndex="2" GridPane.rowIndex="1">Convert StaticMeshes:</Label>
-                    <CheckBox fx:id="convSmCheckBox" onAction="#toggleSmConversion" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                    <CheckBox fx:id="convSmCheckBox" onAction="#toggleSmConversion" GridPane.columnIndex="3" GridPane.rowIndex="1" selected="true"/>
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="2">Brush lightmap resolution:</Label>
                     <!-- values populated in controller -->
@@ -50,7 +50,7 @@
 
 
                     <Label GridPane.columnIndex="0" GridPane.rowIndex="5">Detailled logs</Label>
-                    <CheckBox fx:id="debugLogLevel" onAction="#toggleDebugLogLevel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                    <CheckBox fx:id="debugLogLevelCheckBox" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 </GridPane>
             </TitledPane>
 

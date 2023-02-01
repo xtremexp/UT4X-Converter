@@ -623,10 +623,7 @@ public class T3DLight extends T3DSound {
 	public void scale(double newScale) {
 
 		this.radius *= newScale;
-
-		if (this.mapConverter.lightRadiusFactor != null) {
-			this.radius *= this.mapConverter.lightRadiusFactor;
-		}
+		this.radius *= this.mapConverter.getConversionSettings().getLightRadiusFactor();
 
 		super.scale(newScale);
 	}

@@ -427,8 +427,8 @@ public class T3DSound extends T3DActor {
 	@Override
 	public void convert() {
 
-		if (soundVolume !=  null && mapConverter.soundVolumeFactor != null) {
-			soundVolume *= mapConverter.soundVolumeFactor;
+		if (soundVolume !=  null) {
+			soundVolume *= mapConverter.getConversionSettings().getSoundVolumeFactor();
 		}
 
 		if (mapConverter.isFromUE1UE2ToUE3UE4()) {

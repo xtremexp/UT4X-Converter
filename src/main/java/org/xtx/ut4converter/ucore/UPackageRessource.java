@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.ucore;
 
+import org.xtx.ut4converter.ConversionSettings;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.export.UTPackageExtractor;
 import org.xtx.ut4converter.t3d.T3DRessource.Type;
@@ -422,7 +423,7 @@ public class UPackageRessource {
 			suffix = "_Mat";
 		}
 
-		String baseName = getFullNameWithoutDots(this.mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) + suffix;
+		String baseName = getFullNameWithoutDots(this.mapConverter.getExportOption() == ConversionSettings.ExportOption.BY_TYPE) + suffix;
 
 		// have to fit base material name with max size of material names in
 		// .psk
@@ -474,7 +475,7 @@ public class UPackageRessource {
 			//return UTGames.UE4_FOLDER_MAP + "/" + mapConverter.getOutMapName() + "/" + baseName + "." + baseName;
 			if (mapConverter.isTo(UE4, UE5)) {
 				// e.g: Texture=/Game/Converted/DmFith-U1/Texture/Starship_Base_sh_bs4_Mat.Starship_Base_sh_bs4_Mat
-				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_PACKAGE) {
+				if (mapConverter.getExportOption() == ConversionSettings.ExportOption.BY_PACKAGE) {
 					convName = mapConverter.getUt4ReferenceBaseFolder() + "/" + this.getUnrealPackage().getName() + "/" + baseName + "." + baseName;
 				}
 				// e.g: Texture=/Game/Converted/DmFith-U1/Starship/Base_sh_bs4_Mat.Base_sh_bs4_Mat

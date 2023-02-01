@@ -81,7 +81,7 @@ class MapConverterTest {
                     System.out.println("Error while converting " + mapFile.getName());
                 } finally {
                     // need to reset null to force map export to t3d
-                    mc.setInT3d(null);
+                    mc.getConversionSettings().setInputT3DMapFile(null);
                     i++;
                 }
             } else {

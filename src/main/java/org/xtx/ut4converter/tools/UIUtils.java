@@ -8,6 +8,8 @@ package org.xtx.ut4converter.tools;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import org.xtx.ut4converter.controller.MainSceneController;
 
 import java.awt.*;
@@ -97,5 +99,11 @@ public class UIUtils {
 
 			alert.showAndWait();
 		}
+	}
+
+	public static javafx.scene.control.Label createLabelWithTooltip(String text, String tooltip) {
+		final javafx.scene.control.Label lbl = new Label(text);
+		lbl.setTooltip(new Tooltip(tooltip));
+		return lbl;
 	}
 }

@@ -5,6 +5,7 @@
  */
 package org.xtx.ut4converter.t3d;
 
+import org.xtx.ut4converter.ConversionSettings;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.UTGames;
 import org.xtx.ut4converter.tools.objmesh.ObjStaticMesh;
@@ -120,7 +121,7 @@ public class T3DMover extends T3DBrush {
 				File smMoversFolder;
 
 				// E.G: \UT4X-Converter\Converted\Passage\StaticMesh
-				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) {
+				if (mapConverter.getExportOption() == ConversionSettings.ExportOption.BY_TYPE) {
 					smMoversFolder = new File(this.mapConverter.getOutPath() + "/StaticMesh/");
 				}
 				// E.G: \UT4X-Converter\Converted\Passage\Passage[MapPackageName]
@@ -138,7 +139,7 @@ public class T3DMover extends T3DBrush {
 
 
 				// E.G: /Game/Converted/Passage-U1/Mover0.Mover0
-				if (mapConverter.getExportOption() == MapConverter.ExportOption.BY_TYPE) {
+				if (mapConverter.getExportOption() == ConversionSettings.ExportOption.BY_TYPE) {
 					this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/" + baseName + "." + baseName;
 				}
 				// Export by package

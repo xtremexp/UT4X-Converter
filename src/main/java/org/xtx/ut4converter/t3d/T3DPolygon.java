@@ -349,7 +349,7 @@ public class T3DPolygon {
 		}
 
 		if (lightMapScale == null) {
-			lightMapScale = mapConverter.getLightMapResolution();
+			lightMapScale = this.mapConverter.getConversionSettings().getLightMapResolution();
 		}
 	}
 
