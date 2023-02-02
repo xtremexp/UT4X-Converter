@@ -7,6 +7,7 @@ import org.xtx.ut4converter.ucore.UnrealGame;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.logging.Level;
 
 /**
  * Settings for map conversion
@@ -17,7 +18,6 @@ public class ConversionSettings {
      * Input map. Can be either a map (.unr, ...) or unreal text map (.t3d)
      */
     @Getter
-    @Setter
     private File inputMapFile;
 
     /**
@@ -136,6 +136,10 @@ public class ConversionSettings {
     @Setter
     private String[] filteredClasses;
 
+    @Getter
+    @Setter
+    private Level logLevel = Level.INFO;
+
     /**
      *
      */
@@ -168,17 +172,14 @@ public class ConversionSettings {
         }
     }
 
-    public ConversionSettings(UnrealGame inputGame, UnrealGame outputGame){
+    public ConversionSettings(final UnrealGame inputGame, final UnrealGame outputGame) {
         this.inputGame = inputGame;
         this.outputGame = outputGame;
     }
 
-    public ConversionSettings(File inputMapFile, UnrealGame inputGame, UnrealGame outputGame, String outputMapName, ExportOption exportOption) {
+    public void setInputMapFile(File inputMapFile) {
         this.inputMapFile = inputMapFile;
-        this.inputGame = inputGame;
-        this.outputGame = outputGame;
-        this.outputMapName = outputMapName;
-        this.exportOption = exportOption;
+        this.outputFolder = MapConverter.getMapConvertFolder(this.inputMapFile).toPath();
     }
 
     public void refreshOutputMapNameAndUT4RefBaseFolder() {

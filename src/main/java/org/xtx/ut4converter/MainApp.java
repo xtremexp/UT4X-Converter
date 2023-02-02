@@ -68,7 +68,7 @@ public class MainApp extends Application {
 		EXPORT_PACKAGE("/fxml/ExportPackage.fxml"),
 
 		GAMES_EDIT("/fxml/EditGames.fxml"),
-		CONVERSION("/fxml/ConversionView.fxml");
+		CONV_VIEW("/fxml/ConversionView.fxml");
 
 		final String path;
 
@@ -177,7 +177,7 @@ public class MainApp extends Application {
 	 * @return Controller of view
 	 */
 	public ConversionViewController showConversionView() {
-		return (ConversionViewController) showView(FXMLoc.CONVERSION.path);
+		return (ConversionViewController) showView(FXMLoc.CONV_VIEW.path);
 	}
 
 	/**

@@ -11,7 +11,7 @@
 <?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.xtx.ut4converter.controller.ExportPackageController"
+            fx:controller="org.xtx.ut4converter.controller.PackageExporterController"
             prefHeight="400.0" prefWidth="750.0" style="-fx-padding: 10 0 0 0;">
 
     <stylesheets>

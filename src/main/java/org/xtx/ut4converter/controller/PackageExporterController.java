@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.xtx.ut4converter.config.ApplicationConfig.loadApplicationConfig;
 
-public class ExportPackageController implements Initializable {
+public class PackageExporterController implements Initializable {
 
     public static final String EXPORTER_EPIC_GAMES = "Epic Games";
 

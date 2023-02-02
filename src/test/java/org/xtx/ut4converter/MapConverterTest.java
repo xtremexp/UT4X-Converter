@@ -25,10 +25,10 @@ class MapConverterTest {
         final File uMap = new File("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Unreal Tournament 2004\\maps\\ONS-Dria.ut2");
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT4, uMap, true, true);
 
-        final File outputFolder = mc.getMapConvertFolder();
+        final File mapConvertFolder =  MapConverter.getMapConvertFolder(mc.getConversionSettings().getInputMapFile());
 
-        System.out.print("Cleaning " + mc.getMapConvertFolder() + "... ");
-        FileUtils.deleteDirectory(mc.getMapConvertFolder());
+        System.out.print("Cleaning " + mapConvertFolder + "... ");
+        FileUtils.deleteDirectory(mapConvertFolder);
         System.out.println("OK");
 
         System.out.print("Converting " + uMap + " ... ");
@@ -37,17 +37,17 @@ class MapConverterTest {
 
         // Testing some key ressources were exported
         // Sounds exported
-        Assertions.assertTrue(new File(outputFolder + "/Sounds/OutdoorAmbience_BThunder_wind1.wav").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/Sounds/OutdoorAmbience_BThunder_wind1.wav").exists());
 
         // Textures exported either from map package (with terrain ones as .bmp) or other package
-        Assertions.assertTrue(new File(outputFolder + "/Texture/ONS-Dria_flare614.tga").exists());
-        Assertions.assertTrue(new File(outputFolder + "/Texture/SkyRenders_BarrenPlanet_ICEFLOWroof.tga").exists());
-        Assertions.assertTrue(new File(outputFolder + "/Texture/ONS-Dria_Terraintexalphalayerdetailsand.bmp").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/Texture/ONS-Dria_flare614.tga").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/Texture/SkyRenders_BarrenPlanet_ICEFLOWroof.tga").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/Texture/ONS-Dria_Terraintexalphalayerdetailsand.bmp").exists());
 
         // Staticmeshes exported either from map package or other package
-        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/cp_wasteland_mesh_DecoLayers_cp_rubble1_deco.obj").exists());
-        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.obj").exists());
-        Assertions.assertTrue(new File(outputFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.mtl").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/StaticMesh/cp_wasteland_mesh_DecoLayers_cp_rubble1_deco.obj").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.obj").exists());
+        Assertions.assertTrue(new File(mapConvertFolder + "/StaticMesh/ONS-Dria_pssneeuwvleklang.mtl").exists());
     }
 
 

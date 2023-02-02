@@ -2,6 +2,7 @@ package org.xtx.ut4converter;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.TableView;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 import org.xtx.ut4converter.UTGames.UTGame;
 import org.xtx.ut4converter.export.*;
@@ -136,6 +137,12 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 */
 	public boolean isTestMode;
 
+	/**
+	 * If true conversion will stop.
+	 */
+	@Setter
+	public boolean stopConversion;
+
 
 	/**
 	 * Creates a map converter instance from ConversionSettings (initially from Conversion Settings panel ui)
@@ -235,7 +242,6 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * All logs redirect to user interface thought table TODO write log file
 	 */
 	private void addLoggerHandlers() {
-
 
 		if (conversionViewController == null || conversionViewController.getConvLogTableView() == null) {
 			return;
@@ -417,6 +423,23 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		}
 	}
 
+	/**
+	 * If javafx task is cancelled, delete temp files and updates progress bar
+	 *
+	 * @return true is conversion is cancelled else false
+	 */
+	public boolean checkConversionCancelled() {
+
+		if (this.isCancelled()) {
+			org.apache.commons.io.FileUtils.deleteQuietly(getTempExportFolder());
+			updateMessage("Conversion cancelled !");
+			updateProgress(100, 100);
+			logger.log(Level.WARNING, "Conversion stopped as requested.");
+		}
+
+		return this.stopConversion;
+	}
+
 	protected void updateMessage(String message) {
 		if(!noUi) {
 			super.updateMessage(message);
@@ -523,6 +546,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		final List<UPackageRessource> smPkgResUsedList = mapPackagesCopy.values().stream().map(UPackage::getRessources).flatMap(Set::stream).filter(r -> r.isUsedInMap() && r.getType() == Type.STATICMESH).toList();
 
 		for (final UPackageRessource smPkgResUsed : smPkgResUsedList) {
+
+			if (checkConversionCancelled()) {
+				break;
+			}
 
 			// e.g: /Converted/ONS-Dria/SkyBoxCylinder.pskx
 			final File smFile = smPkgResUsed.getExportInfo().getExportedFileByExtension(PSKStaticMesh.FILE_EXTENSION_PSKX, PSKStaticMesh.FILE_EXTENSION_PSK, StaticMesh.FILE_EXTENSION_T3D);
@@ -681,6 +708,10 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		int idx = 1;
 
 		for (UPackage unrealPackage : mapPackages.values()) {
+
+			if (checkConversionCancelled()) {
+				break;
+			}
 
 			updateMessage("Converting ressource files (" + idx + "/" + mapPackages.values().size() + ")");
 
@@ -961,13 +992,17 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 		return new File(Installation.getDocumentProgramFolder() + File.separator +  "Converted");
 	}
 
+	public File getMapConvertFolder() {
+		return getMapConvertFolder(this.conversionSettings.getInputMapFile());
+	}
+
 	/**
 	 * <UT4ConverterFolder>/Converted/<MapName>
 	 *
 	 * @return <UT4ConverterFolder>/Converted/<MapName>
 	 */
-	public File getMapConvertFolder() {
-		return new File(getBaseConvertFolder() + File.separator + getInMapAsPackageName());
+	public static File getMapConvertFolder(File inputMap) {
+		return new File(getBaseConvertFolder() + File.separator + getInMapAsPackageName(inputMap));
 	}
 
 	/**
@@ -976,8 +1011,8 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 *
 	 * @return Map as package name
 	 */
-	public String getInMapAsPackageName() {
-		return getInMap().getName().split("\\.")[0];
+	public static String getInMapAsPackageName(File inputMap) {
+		return inputMap.getName().split("\\.")[0];
 	}
 
 	/**
@@ -986,7 +1021,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 	 * @return <UT4ConverterFolder>/Converted/<MapName>/Temp
 	 */
 	public File getTempExportFolder() {
-		return new File(getMapConvertFolder() + File.separator + "Temp");
+		return new File(getMapConvertFolder(this.conversionSettings.getInputMapFile()) + File.separator + "Temp");
 	}
 
 	/**

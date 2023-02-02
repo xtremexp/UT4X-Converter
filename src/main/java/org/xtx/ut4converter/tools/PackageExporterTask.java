@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_STE;
-import static org.xtx.ut4converter.controller.ExportPackageController.EXPORTER_UMODEL;
+import static org.xtx.ut4converter.controller.PackageExporterController.EXPORTER_STE;
+import static org.xtx.ut4converter.controller.PackageExporterController.EXPORTER_UMODEL;
 
 /**
  * Generic package exporter using either ucc.exe or umodel.exe

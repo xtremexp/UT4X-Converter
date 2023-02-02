@@ -320,6 +320,11 @@ public class T3DLevelConvertor extends Task<Object> {
 		updateProgress(0, convertedActors.size());
 
 		for (T3DActor uta : convertedActors) {
+
+			if (this.mapConverter.checkConversionCancelled()) {
+				break;
+			}
+
 			if (uta != null) {
 
 				try {
@@ -373,6 +378,11 @@ public class T3DLevelConvertor extends Task<Object> {
 
 			// Read input t3d file and convert actors
 			while ((line = bfr.readLine()) != null) {
+
+				if (this.mapConverter.checkConversionCancelled()) {
+					break;
+				}
+
 				try {
 					analyzeLine(line.trim());
 					linenumber++;

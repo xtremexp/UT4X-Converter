@@ -9,6 +9,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import lombok.Getter;
+import lombok.Setter;
+import org.xtx.ut4converter.ConversionSettings;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,31 +26,54 @@ import java.util.logging.Level;
 public class ConversionViewController implements Initializable {
 
 	@FXML
+	@Getter
 	private TableView<TableRowLog> convLogTableView;
+
 	@FXML
+	@Getter
 	private TableColumn<TableRowLog, String> logTime;
+
 	@FXML
+	@Getter
 	private TableColumn<TableRowLog, Level> logLevel;
+
 	@FXML
+	@Getter
 	private TableColumn<TableRowLog, String> logMsg;
+
 	@FXML
+	@Getter
 	private ProgressBar progressBar;
+
 	@FXML
+	@Getter
 	private ProgressBar progressBarDetail;
 	@FXML
+	@Getter
 	private ProgressIndicator progressIndicator;
+
 	@FXML
+	@Getter
 	private ProgressIndicator progressIndicatorDetail;
+
 	@FXML
+	@Getter
 	private Label progressMessageDetail;
+
 	@FXML
+	@Getter
 	private Label progressMessage;
+
+	@Getter
+	@Setter
+	private ConversionSettings conversionSettings;
+
 
 	/**
 	 * Initializes the controller class.
-	 * 
+	 *
 	 * @param url Url
-	 * @param rb Resource Bundle
+	 * @param rb  Resource Bundle
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
@@ -76,33 +102,4 @@ public class ConversionViewController implements Initializable {
 			}
 		});
 	}
-
-	public TableView<TableRowLog> getConvLogTableView() {
-		return convLogTableView;
-	}
-
-	public ProgressBar getProgressBar() {
-		return progressBar;
-	}
-
-	public ProgressBar getProgressBarDetail() {
-		return progressBarDetail;
-	}
-
-	public ProgressIndicator getProgressIndicator() {
-		return progressIndicator;
-	}
-
-	public ProgressIndicator getProgressIndicatorDetail() {
-		return progressIndicatorDetail;
-	}
-
-	public Label getProgressMessageDetail() {
-		return progressMessageDetail;
-	}
-
-	public Label getProgressMessage() {
-		return progressMessage;
-	}
-
 }

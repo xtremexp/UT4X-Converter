@@ -418,6 +418,7 @@ public class ConversionSettingsController implements Initializable {
 			this.conversionSettings.setLightMapResolution(lightMapResolutionList.getSelectionModel().getSelectedItem());
 			this.conversionSettings.setLightRadiusFactor(lightningRadiusFactor.getSelectionModel().getSelectedItem());
 			this.conversionSettings.setSoundVolumeFactor(soundVolumeFactor.getSelectionModel().getSelectedItem());
+			this.conversionSettings.setLogLevel(debugLogLevelCheckBox.isSelected() ? Level.FINE : Level.INFO);
 			if (classesNameFilter.getLength() > 1) {
 				this.conversionSettings.setFilteredClasses(classesNameFilter.getText().trim().split(";"));
 			}

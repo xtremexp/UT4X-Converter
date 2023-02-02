@@ -119,6 +119,7 @@ public class T3DMover extends T3DBrush {
 		if (mapConverter.isTo(UnrealEngine.UE4, UnrealEngine.UE5)) {
 			try {
 				File smMoversFolder;
+				String inMapAsPackageName = MapConverter.getInMapAsPackageName(mapConverter.getConversionSettings().getInputMapFile());
 
 				// E.G: \UT4X-Converter\Converted\Passage\StaticMesh
 				if (mapConverter.getExportOption() == ConversionSettings.ExportOption.BY_TYPE) {
@@ -126,7 +127,7 @@ public class T3DMover extends T3DBrush {
 				}
 				// E.G: \UT4X-Converter\Converted\Passage\Passage[MapPackageName]
 				else {
-					smMoversFolder = new File(this.mapConverter.getOutPath() + File.separator + mapConverter.getInMapAsPackageName() + "/");
+					smMoversFolder = new File(this.mapConverter.getOutPath() + File.separator + inMapAsPackageName + "/");
 				}
 
 				if (!smMoversFolder.exists()) {
@@ -145,10 +146,10 @@ public class T3DMover extends T3DBrush {
 				// Export by package
 				else {
 					// E.G: /Game/Converted/Passage-U1/Passage/Mover0.Mover0
-					this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/" + mapConverter.getInMapAsPackageName() + "/" + baseName + "." + baseName;
+					this.staticMeshReference = mapConverter.getUt4ReferenceBaseFolder() + "/" + inMapAsPackageName + "/" + baseName + "." + baseName;
 
 					// E.G: /UnrealTournamentEditor/Content/Converted/Passage-U1/Passage/Mover0.Mover0
-					File dummyUAssetFileForPackage = new File(mapConverter.getUt4ReferenceBaseFolderFile() + "/" + mapConverter.getInMapAsPackageName() + "/" + mapConverter.getDummyUAssetFile().getName());
+					File dummyUAssetFileForPackage = new File(mapConverter.getUt4ReferenceBaseFolderFile() + "/" + inMapAsPackageName + "/" + mapConverter.getDummyUAssetFile().getName());
 
 					if (!dummyUAssetFileForPackage.exists()) {
 						Files.createDirectories(dummyUAssetFileForPackage.toPath().getParent());

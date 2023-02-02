@@ -55,7 +55,7 @@ public class CopyExporter extends UTPackageExtractor {
 
 	@Override
 	protected File getExportFolder(T3DRessource.Type type) {
-		return new File(mapConverter.getMapConvertFolder() + File.separator + type.name() + File.separator);
+		return new File(MapConverter.getMapConvertFolder(mapConverter.getInMap()) + File.separator + type.name() + File.separator);
 	}
 
 	@Override
