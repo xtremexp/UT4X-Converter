@@ -1,21 +1,15 @@
 Begin Map
-	Begin Actor Class=Dispatcher Name=Dispatcher5
-		OutDelays(0)=1.0
-		OutDelays(1)=1.0
-		OutDelays(2)=1.0
-		OutDelays(3)=1.0
-		OutDelays(4)=1.0
-		OutDelays(5)=1.0
-		OutDelays(6)=1.0
-		OutEvents(0)="scary1"
-		OutEvents(1)="scary2"
-		OutEvents(2)="scary3"
-		OutEvents(3)="scary4"
-		OutEvents(4)="scary5"
-		OutEvents(5)="scary6"
-		OutEvents(6)="scary7"
-		OutEvents(7)="dispatcho2"
-		Tag="trap2"
-		Location=(X=-784.0,Y=-208.0,Z=-392.0)
+	Begin Actor Class=Dispatcher Name=Dispatcher0
+		OutDelays(2)=1.1
+		OutDelays(4)=7.0
+		OutEvents(0)="Hell"
+		OutEvents(1)="WF1"
+		OutEvents(2)="MW1"
+		OutEvents(3)="STS"
+		OutEvents(4)="EntryDoor"
+		OutEvents(5)="Water1"
+		OutEvents(6)="wATERsPLASH"
+		Tag="DIS1"
+		Location=(X=3058.65,Y=6281.61,Z=628.47)
 	End Actor
 End Map

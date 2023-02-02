@@ -26,6 +26,6 @@ class T3DDispatcherTest {
 
         Assertions.assertNotNull(dispatcher);
         final String convT3D = dispatcher.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
+        Assertions.assertTrue(convT3D.contains("OutDelays(4)=7.0"));
     }
 }

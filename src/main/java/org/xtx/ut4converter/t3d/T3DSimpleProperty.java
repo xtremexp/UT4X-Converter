@@ -5,8 +5,7 @@ import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.ucore.UPackageRessource;
 
 import javax.vecmath.Vector3d;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -42,7 +41,8 @@ public class T3DSimpleProperty {
     private boolean scalable;
 
     /**
-     * Value
+     * Value.
+     * Is a map of [Index, Value] if isList is true
      */
     private Object propertyValue;
 
@@ -102,7 +102,7 @@ public class T3DSimpleProperty {
 
         if (this.isList) {
             if (this.propertyValue == null) {
-                this.propertyValue = new LinkedList<>();
+                this.propertyValue = new HashMap<>();
             }
             hasLineProp = line.toLowerCase().startsWith(this.propertyName.toLowerCase() + "(");
         } else {
@@ -145,9 +145,9 @@ public class T3DSimpleProperty {
         }
 
         if (value != null) {
-            if (this.propertyValue instanceof List) {
-                final List<Object> theList = (List<Object>) this.propertyValue;
-                theList.add(value);
+            if (this.propertyValue instanceof HashMap hashMap) {
+                int index = T3DUtils.parseArrayIndex(line);
+                hashMap.put(index, value);
             } else {
                 this.propertyValue = value;
             }
@@ -161,15 +161,11 @@ public class T3DSimpleProperty {
 
         if (this.propertyValue != null) {
 
-            if (this.propertyValue instanceof List) {
-                final List<Object> values = (List<Object>) this.propertyValue;
+            if (this.propertyValue instanceof HashMap hashMap) {
 
-                int idx = 0;
-
-                for (final Object value : values) {
-                    sbf.append("\t\t").append(propertyNameConverted).append("(").append(idx).append(")=");
-                    writeValueProperty(sbf, value);
-                    idx++;
+                for (Object index : hashMap.keySet()) {
+                    sbf.append("\t\t").append(propertyNameConverted).append("(").append(index).append(")=");
+                    writeValueProperty(sbf, hashMap.get(index));
                 }
             } else {
                 sbf.append("\t\t").append(propertyNameConverted).append("=");

@@ -435,6 +435,17 @@ public class T3DUtils {
 	}
 
 	/**
+	 * Skins(2)=Texture'Mission_08T.Doors.MetlDoor_U08G394'
+	 * -> returns 2
+	 *
+	 * @param line Line to be parsed
+	 * @return Index
+	 */
+	public static int parseArrayIndex(String line){
+		return Integer.parseInt(line.split("=")[0].split("\\(")[1].replaceAll("\\)", ""));
+	}
+
+	/**
 	 * E.G: 'Skins(2)=Texture'Mission_08T.Doors.MetlDoor_U08G394')
 	 *
 	 * @param line Line to parse
