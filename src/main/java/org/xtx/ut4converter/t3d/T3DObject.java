@@ -1,5 +1,6 @@
 package org.xtx.ut4converter.t3d;
 
+import lombok.Getter;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 import org.xtx.ut4converter.ucore.UnrealGame;
@@ -51,7 +52,8 @@ public abstract class T3DObject {
 	 */
 	protected final StringBuilder sbf;
 
-	final List<T3DSimpleProperty> registeredProperties;
+	@Getter
+	final List<T3DSimpleProperty> registeredProperties = new ArrayList<>();
 
 	/**
 	 * Minimal indentation when writing t3d converted actor
@@ -62,7 +64,6 @@ public abstract class T3DObject {
 		initialise(mc);
 		this.t3dClass = this.getClass().getSimpleName();
 		this.name = this.t3dClass;
-		this.registeredProperties = new ArrayList<>();
 		this.sbf = new StringBuilder();
 	}
 
@@ -70,7 +71,6 @@ public abstract class T3DObject {
 		initialise(mc);
 		this.t3dClass = t3dClass;
 		this.name = this.t3dClass + "_0";
-		this.registeredProperties = new ArrayList<>();
 		this.sbf = new StringBuilder();
 	}
 

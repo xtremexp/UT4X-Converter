@@ -1,0 +1,9 @@
+Begin Map
+	Begin Actor Class=MaleBodyTwo Name=MaleBodyTwo2
+		Skin=Texture'Male2Skins.Ash'
+		AnimSequence="Drape1"
+		Location=(X=305.976,Y=-654.907,Z=-268.9)
+		Rotation=(Yaw=-33184)
+		bHighDetail=True
+	End Actor
+End Map

@@ -182,7 +182,7 @@ public class MapConverter extends Task<T3DLevelConvertor> {
 				isTeamGameType = UTGameTypes.isTeamBasedFromMapName(inT3d != null ? inT3d.getName() : inMap.getName());
 			}
 
-			this.conversionSettings.refreshOutputMapNameAndUT4RefBaseFolder();
+			this.conversionSettings.initOutputMapNameAndUT4RefBaseFolder();
 		}
 
 		supportedActorClasses = new SupportedClasses(this);

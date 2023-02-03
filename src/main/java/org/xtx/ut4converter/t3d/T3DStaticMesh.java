@@ -246,8 +246,7 @@ public class T3DStaticMesh extends T3DSound {
 
 	@Override
 	public boolean isValidWriting() {
-		// TODO remove test instancof decoration for testing purpose only
-		return this instanceof T3DDecoration || staticMesh != null;
+		return staticMesh != null;
 	}
 
 	@Override

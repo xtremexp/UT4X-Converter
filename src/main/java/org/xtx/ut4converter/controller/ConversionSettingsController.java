@@ -341,7 +341,7 @@ public class ConversionSettingsController implements Initializable {
 		if (newMapName.length() > 3) {
 			this.conversionSettings.setOutputMapName(newMapName);
 			outMapNameLbl.setText(this.conversionSettings.getOutputMapName());
-			this.conversionSettings.refreshOutputMapNameAndUT4RefBaseFolder();
+			this.conversionSettings.initOutputMapNameAndUT4RefBaseFolder();
 
 			if (ue4RefPathLbl != null) {
 				ue4RefPathLbl.setText(this.conversionSettings.getUt4ReferenceBaseFolder());
@@ -380,7 +380,7 @@ public class ConversionSettingsController implements Initializable {
 		changeMapNameBtn.setDisable(false);
 		inputMapPathLbl.setText(unrealMap.getPath());
 		this.conversionSettings.setInputMapFile(unrealMap);
-		this.conversionSettings.refreshOutputMapNameAndUT4RefBaseFolder();
+		this.conversionSettings.initOutputMapNameAndUT4RefBaseFolder();
 
 		if (ue4RefPathLbl != null) {
 			ue4RefPathLbl.setText(this.conversionSettings.getUt4ReferenceBaseFolder());

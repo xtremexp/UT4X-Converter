@@ -13,6 +13,7 @@ import org.xtx.ut4converter.ucore.UnrealEngine;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.xtx.ut4converter.ucore.UnrealEngine.UE4;
 import static org.xtx.ut4converter.ucore.UnrealEngine.UE5;
@@ -29,7 +30,7 @@ public class SupportedClasses {
 	/**
 	 * If in t3d
 	 */
-	protected HashMap<String, Class<? extends T3DActor>> classToUtActor = new HashMap<>();
+	protected Map<String, Class<? extends T3DActor>> classToUtActor = new HashMap<>();
 
 	/**
 	 * Actors that are no longer needed for output game. E.G: PathNodes in
@@ -119,7 +120,8 @@ public class SupportedClasses {
             }
         }
 
-		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2);
+		// blueprints only for UT4
+		final boolean useUbClasses = mapConverter.isUseUbClasses() && mapConverter.isFrom(UnrealEngine.UE1, UnrealEngine.UE2) && mapConverter.isTo(UE4);
 
 		registerUClass(mapConverter.isFrom(UnrealEngine.UE1) ? T3DMover.class : T3DMoverSM.class, "Mover", "AttachMover", "AssertMover", "RotatingMover", "ElevatorMover", "MixMover", "GradualMover",
 				"LoopMover", "InterpActor", "ClientMover", "DoorMover");
@@ -143,6 +145,9 @@ public class SupportedClasses {
 			registerUClass(T3DThingFactory.class, "ThingFactory");
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			*/
+			registerUClass(T3DPawn.class, "SkaarjWarrior");
+			registerUClass(T3DDecoration.class, "Fan2");
+			registerUClass(T3DCarcass.class, "FemaleBody", "MaleBody", "MaleBodyTwo", "MaleBodyThree");
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");
 			registerUClass(T3DTranslatorEvent.class, "TranslatorEvent");

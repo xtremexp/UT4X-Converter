@@ -74,10 +74,6 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	protected String archetype;
 
-	/**
-	 * If true actor should be hidden in-game
-	 */
-	private Boolean bHidden;
 
 	/**
 	 * Location of actor (if null means 0 location)
@@ -279,7 +275,11 @@ public abstract class T3DActor extends T3DObject {
 			this.name = actor.name;
 		}
 
-		registerSimpleProperty("Event", String.class);
+		if (mapConverter.isFrom(UE1)) {
+			registerSimpleProperty("Event", String.class);
+			registerSimpleProperty("bHidden", Boolean.class, false);
+			registerSimplePropertyRessource("Skin", T3DRessource.Type.TEXTURE);
+		}
 	}
 
 	public void setT3dOriginClass(String t3dOriginClass) {
@@ -309,9 +309,6 @@ public abstract class T3DActor extends T3DObject {
 		}
 		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
 			coLocation = T3DUtils.getVector3d(line, 0D);
-		}
-		else if (line.startsWith("bHidden=")) {
-			bHidden = T3DUtils.getBoolean(line);
 		}
 		else if (line.startsWith("bCollideActors=")) {
 			this.collideActors = T3DUtils.getBoolean(line);

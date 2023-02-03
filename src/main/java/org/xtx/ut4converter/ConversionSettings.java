@@ -182,7 +182,7 @@ public class ConversionSettings {
         this.outputFolder = MapConverter.getMapConvertFolder(this.inputMapFile).toPath();
     }
 
-    public void refreshOutputMapNameAndUT4RefBaseFolder() {
+    public void initOutputMapNameAndUT4RefBaseFolder() {
         if (this.outputMapName == null) {
             this.outputMapName = this.getInputMapFile().getName().split("\\.")[0] + "-" + this.getInputGame().getShortName();
 
@@ -191,6 +191,8 @@ public class ConversionSettings {
             this.outputMapName = T3DUtils.filterName(outputMapName);
         }
 
-        this.setUt4ReferenceBaseFolder(UTGames.UE4_FOLDER_MAP + "/" + this.outputMapName);
+        if (this.ut4ReferenceBaseFolder == null) {
+            this.setUt4ReferenceBaseFolder(UTGames.UE4_FOLDER_MAP + "/" + this.outputMapName);
+        }
     }
 }
