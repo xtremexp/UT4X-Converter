@@ -26,18 +26,12 @@ public class T3DDecoration extends T3DSound {
         registerSimplePropertyRessource("EndPushSound", T3DRessource.Type.SOUND);
         registerSimplePropertyRessource("PushSound", T3DRessource.Type.SOUND);
         registerSimplePropertyRessource("Skin", T3DRessource.Type.TEXTURE);
-
-        classToSMRef.put("Fan2", "Fan2M");
     }
 
 
     public String toT3d() {
 
-        if (classToSMRef.containsKey(this.t3dClass)) {
-
-            String sm = classToSMRef.get(this.t3dClass);
-            this.convProperties.put("StaticMesh", "StaticMesh'" + UE4_DECO_FOLDER + sm + "." + sm + "'");
-        }
+        this.convProperties.put("StaticMesh", "StaticMesh'" + UE4_DECO_FOLDER + this.t3dClass + "M." + this.t3dClass + "M'");
 
         String decoT3d = writeSimpleActor("UDecoration_C", "BillboardComponent", "Billboard", "UDecoration_C'/Game/UEActors/UDecoration.Default__UDecoration_C'");
 

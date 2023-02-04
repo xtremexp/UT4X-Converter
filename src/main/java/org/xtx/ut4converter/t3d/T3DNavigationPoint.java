@@ -4,8 +4,8 @@ import org.xtx.ut4converter.MapConverter;
 
 import java.lang.reflect.Array;
 
-abstract class T3DNavigationPoint extends T3DActor {
-    T3DNavigationPoint(MapConverter mc, String t3dClass) {
+public abstract class T3DNavigationPoint extends T3DActor {
+    public T3DNavigationPoint(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
         // Pawn should never use serpentine movement upon entering this path.
@@ -18,22 +18,22 @@ abstract class T3DNavigationPoint extends T3DActor {
         registerSimpleProperty("bPlayerOnly", Boolean.class);
 
         //added cost to visit this pathnode
-        registerSimpleProperty("ExtraCost", Short.class);
+        registerSimpleProperty("ExtraCost", Short.class, 0);
 
         // list of names or tags of NavigationPoints which should always be connected from this path
         registerSimpleProperty("ForcedPaths", Array.class);
 
         // When path is forced, use this as path size.
-        registerSimpleProperty("ForcedPathSize", Integer.class);
+        registerSimpleProperty("ForcedPathSize", Integer.class, 150);
 
         // Maximum path distance (used in editor while binding paths).
-        registerSimpleProperty("MaxPathDistance", Integer.class);
+        registerSimpleProperty("MaxPathDistance", Integer.class, 1000).setScalable(true);
 
         //creature clan owning this area (area visible from this point)
         registerSimpleProperty("OwnerTeam", String.class);
 
         // pointer to path description in zoneinfo LocationStrings array
-        registerSimpleProperty("PathDescription", Short.class);
+        registerSimpleProperty("PathDescription", Short.class, 12);
 
         // list of names or tags of NavigationPoints which should never be connected from this path
         registerSimpleProperty("ProscribedPaths", Array.class);

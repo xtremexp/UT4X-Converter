@@ -104,6 +104,12 @@ public abstract class T3DObject {
 		return propFound;
 	}
 
+	public T3DSimpleProperty registerSimplePropertyRessource(final String propertyName, final String group, final T3DRessource.Type typeRessource, final String defaultValue) {
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, group, typeRessource, false);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
+	}
+
 	/**
 	 * Register a ressource property
 	 *
@@ -112,7 +118,7 @@ public abstract class T3DObject {
 	 * @return Registered property
 	 */
 	public T3DSimpleProperty registerSimplePropertyRessource(final String propertyName, final T3DRessource.Type typeRessource) {
-		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, typeRessource, false);
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, "None", typeRessource, false);
 		this.registeredProperties.add(simpleProperty);
 		return simpleProperty;
 	}
@@ -125,7 +131,7 @@ public abstract class T3DObject {
 	 * @return Registered property
 	 */
 	public T3DSimpleProperty registerSimpleArrayPropertyRessource(final String propertyName, final T3DRessource.Type typeRessource) {
-		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, typeRessource, true);
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, "None", typeRessource, true);
 		this.registeredProperties.add(simpleProperty);
 		return simpleProperty;
 	}
@@ -153,6 +159,12 @@ public abstract class T3DObject {
 		this.registeredProperties.add(simpleProperty);
 	}
 
+	public T3DSimpleProperty registerSimpleProperty(final String propertyName, final String group, final Class classType, final Object defaultValue){
+		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, group, classType, defaultValue, false);
+		this.registeredProperties.add(simpleProperty);
+		return simpleProperty;
+	}
+
 	/**
 	 *
 	 * @param propertyName Property name
@@ -163,6 +175,13 @@ public abstract class T3DObject {
 		final T3DSimpleProperty simpleProperty = new T3DSimpleProperty(propertyName, classType, defaultValue, false);
 		this.registeredProperties.add(simpleProperty);
 		return simpleProperty;
+	}
+
+	public void setDefaultForProperty(String propertyName, final Object defaultValue) {
+		final T3DSimpleProperty sp = this.registeredProperties.stream().filter(p -> p.getPropertyName().equals(propertyName)).findFirst().orElse(null);
+		if (sp != null) {
+			sp.setDefaultValue(defaultValue);
+		}
 	}
 
 	@Deprecated

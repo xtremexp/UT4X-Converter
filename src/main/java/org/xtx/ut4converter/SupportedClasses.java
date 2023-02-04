@@ -139,14 +139,15 @@ public class SupportedClasses {
 		// SPECIFIC Unreal 1 conversion test
 		if(useUbClasses) {
 			/*
-			registerUClass(T3DDecoration.class, "Seaweed", "Tree1","Tree2","Tree3","Tree4","Tree5","Tree6","Tree7", "Tree8", "Tree9", "Tree10", "Tree11", "Plant1","Plant2","Plant3","Plant4", "Plant5", "Plant6", "Plant7");
 			registerUClass(Barrel.class, "Barrel");
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
 			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			*/
-			registerUClass(T3DPawn.class, "SkaarjWarrior");
-			registerUClass(T3DDecoration.class, "Fan2");
+			registerUClass(T3DPatrolPoint.class, "PatrolPoint");
+			registerUClass(T3DFlockPawn.class, "Bird1");
+			registerUClass(T3DScriptedPawn.class, "SkaarjWarrior", "Tentacle", "Brute", "LesserBrute");
+			registerUClass(T3DDecoration.class, "Fan2", "WoodenBox", "Tree5", "Tree7", "Plant3", "Plant6", "Plant4", "Plant5", "Plant7", "SeaWeed");
 			registerUClass(T3DCarcass.class, "FemaleBody", "MaleBody", "MaleBodyTwo", "MaleBodyThree");
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");

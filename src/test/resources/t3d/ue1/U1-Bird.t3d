@@ -1,0 +1,8 @@
+Begin Map
+	Begin Actor Class=Bird1 Name=Bird1
+		CircleRadius=1024.0
+		ViewRotation=(Yaw=-39040)
+		Location=(X=7313.21,Y=-6816.22,Z=631.108)
+		Rotation=(Yaw=-39040)
+	End Actor
+End Map

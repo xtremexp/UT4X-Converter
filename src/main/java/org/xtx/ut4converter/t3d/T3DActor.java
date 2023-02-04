@@ -275,9 +275,10 @@ public abstract class T3DActor extends T3DObject {
 			this.name = actor.name;
 		}
 
+		registerSimpleProperty("bHidden", Boolean.class, false);
+
 		if (mapConverter.isFrom(UE1)) {
 			registerSimpleProperty("Event", String.class);
-			registerSimpleProperty("bHidden", Boolean.class, false);
 			registerSimplePropertyRessource("Skin", T3DRessource.Type.TEXTURE);
 		}
 	}
@@ -455,19 +456,33 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	public void scale(double newScale) {
 
-		if (newScale > 1) {
-			if (location != null)
+		if (newScale != 0) {
+			if (location != null) {
 				location.scale(newScale);
-			if (coLocation != null)
+			}
+
+			if (coLocation != null) {
 				coLocation.scale(newScale);
-			if (drawScale != null)
+		    }
+
+			if (drawScale != null) {
 				drawScale *= newScale;
-			if (collisionHeight != null)
+			}
+
+			if (collisionHeight != null) {
 				collisionHeight *= newScale;
-			if (collisionRadius != null)
+			}
+
+			if (collisionRadius != null) {
 				collisionRadius *= newScale;
-			if (scale3d != null)
+			}
+			if (scale3d != null) {
 				scale3d.scale(newScale);
+			}
+
+			for(T3DSimpleProperty sp : this.registeredProperties){
+				sp.scaleProperty(newScale);
+			}
 		}
 	}
 
@@ -616,6 +631,18 @@ public abstract class T3DActor extends T3DObject {
 			}
 		});
 
+		// Unreal 1 deco actors using both drawscale  and drawscale3d for 3d scale
+		if (this instanceof T3DDecoration) {
+			if (this.scale3d == null) {
+				this.scale3d = new Vector3d(this.drawScale, this.drawScale, this.drawScale);
+			} else {
+				if (this.drawScale != null) {
+					this.scale3d.scale(this.drawScale);
+				}
+			}
+			this.drawScale = 1d;
+		}
+
 
 		for (final T3DSimpleProperty simpleProperty : registeredProperties) {
 
@@ -674,7 +701,7 @@ public abstract class T3DActor extends T3DObject {
 
 		final StringBuilder sb = new StringBuilder();
 
-		if (mapConverter.isTo(UE4)) {
+		if (mapConverter.isTo(UE4, UE5)) {
 			if (drawScale != null) {
 				sb.append(IDT).append("\tSpriteScale=").append(drawScale).append("\n");
 			}

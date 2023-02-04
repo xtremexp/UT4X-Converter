@@ -1,0 +1,9 @@
+Begin Map
+	Begin Actor Class=Plant5 Name=Plant6
+		DrawScale=3.0
+		CollisionRadius=36.0
+		CollisionHeight=200.0
+		Location=(X=-1876.07,Y=-8703.64,Z=-5631.87)
+		Rotation=(Yaw=29632)
+	End Actor
+End Map

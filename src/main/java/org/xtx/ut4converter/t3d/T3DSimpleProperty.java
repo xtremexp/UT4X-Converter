@@ -1,5 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.geom.Rotator;
 import org.xtx.ut4converter.ucore.UPackageRessource;
@@ -15,7 +17,14 @@ public class T3DSimpleProperty {
     /**
      * Original property name
      */
+    @Getter
+    @Setter
     private final String propertyName;
+
+    /**
+     * Group this property belong to
+     */
+    private String propertyGroup;
 
     /**
      * Converted property.
@@ -44,6 +53,7 @@ public class T3DSimpleProperty {
      * Value.
      * Is a map of [Index, Value] if isList is true
      */
+    @Getter
     private Object propertyValue;
 
     /**
@@ -55,13 +65,24 @@ public class T3DSimpleProperty {
      * If propertyClass is an UPackageRessource,
      * this is the type of ressources asssociated with. (texture, sound, ...)
      */
+    @Getter
     private T3DRessource.Type ressourceType;
 
     /**
      * Default value
      */
+    @Getter
+    @Setter
     private Object defaultValue;
 
+    public T3DSimpleProperty(final String propertyName, final String propertyGroup, final Class<?> propertyClass, final Object defaultValue, boolean isList) {
+        this.propertyName = propertyName;
+        this.propertyNameConverted = this.propertyName;
+        this.propertyGroup = propertyGroup;
+        this.propertyClass = propertyClass;
+        this.isList = isList;
+        this.defaultValue = defaultValue;
+    }
 
     /**
      * Register simple property from single float, string, ...
@@ -83,7 +104,7 @@ public class T3DSimpleProperty {
      * @param propertyName  Property name
      * @param ressourceType Ressource type
      */
-    public T3DSimpleProperty(final String propertyName, final T3DRessource.Type ressourceType, boolean isList) {
+    public T3DSimpleProperty(final String propertyName, final String group, final T3DRessource.Type ressourceType, boolean isList) {
         this.propertyName = propertyName;
         this.propertyNameConverted = this.propertyName;
         this.propertyClass = UPackageRessource.class;
@@ -181,18 +202,26 @@ public class T3DSimpleProperty {
 
     void scaleProperty(double scale) {
 
-        if (this.propertyValue == null) {
+        if (!this.isScalable()) {
             return;
         }
 
-        if (this.getPropertyValue() instanceof Float f) {
-            this.propertyValue = (int) scale * f;
-        } else if (this.getPropertyValue() instanceof Integer i) {
-            this.propertyValue = (int) scale * i;
-        } else if (this.getPropertyValue() instanceof Double d) {
-            this.propertyValue = scale * d;
-        } else if (this.getPropertyValue() instanceof Short s) {
-            this.propertyValue = scale * s;
+        if (this.propertyValue == null) {
+            this.propertyValue = defaultValue;
+        }
+
+        if (this.propertyValue != null) {
+            if (this.getPropertyValue() instanceof Float f) {
+                this.propertyValue = scale * f;
+            } else if (this.getPropertyValue() instanceof Integer i) {
+                this.propertyValue = scale * i;
+            } else if (this.getPropertyValue() instanceof Double d) {
+                this.propertyValue = scale * d;
+            } else if (this.getPropertyValue() instanceof Short s) {
+                this.propertyValue = scale * s;
+            } else if (this.getPropertyValue() instanceof Vector3d v) {
+                v.scale(scale);
+            }
         }
     }
 
@@ -225,25 +254,11 @@ public class T3DSimpleProperty {
         return scalable;
     }
 
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public Object getPropertyValue() {
-        return propertyValue;
-    }
-
-    public T3DRessource.Type getRessourceType() {
-        return ressourceType;
-    }
 
     public void clonePropertyAs(String clonePropertyName) {
         this.clonePropertyName = clonePropertyName;
     }
 
-    public Class getPropertyClass() {
-        return propertyClass;
-    }
 
     @Override
     public String toString() {
