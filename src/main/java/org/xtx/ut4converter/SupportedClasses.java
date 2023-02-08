@@ -7,6 +7,7 @@ package org.xtx.ut4converter;
 
 import org.xtx.ut4converter.t3d.*;
 import org.xtx.ut4converter.t3d.ue1.*;
+import org.xtx.ut4converter.t3d.ue1.T3DThingFactory;
 import org.xtx.ut4converter.t3d.ue2.u2.T3DAlarmTrigger;
 import org.xtx.ut4converter.ucore.UnrealEngine;
 
@@ -142,12 +143,14 @@ public class SupportedClasses {
 			registerUClass(Barrel.class, "Barrel");
 			registerUClass(T3DCreatureFactory.class, "CreatureFactory");
 			registerUClass(T3DThingFactory.class, "ThingFactory");
-			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			*/
+			registerUClass(T3DEarthquake.class, "Earthquake");
+			registerUClass(T3DThingFactory.class, "ThingFactory");
+			registerUClass(T3DSpawnPoint.class, "SpawnPoint");
 			registerUClass(T3DPatrolPoint.class, "PatrolPoint");
 			registerUClass(T3DFlockPawn.class, "Bird1");
 			registerUClass(T3DScriptedPawn.class, "SkaarjWarrior", "Tentacle", "Brute", "LesserBrute");
-			registerUClass(T3DDecoration.class, "Fan2", "WoodenBox", "Tree5", "Tree7", "Plant3", "Plant6", "Plant4", "Plant5", "Plant7", "SeaWeed");
+			registerUClass(T3DDecoration.class, "Fan2", "WoodenBox", "Tree5", "Tree7", "Plant3", "Plant6", "Plant4", "Plant5", "Plant7", "SeaWeed", "PHeart", "Stomach");
 			registerUClass(T3DCarcass.class, "FemaleBody", "MaleBody", "MaleBodyTwo", "MaleBodyThree");
 			registerUClass(BreakingGlass.class, "BreakingGlass");
 			registerUClass(ExplodingWall.class, "ExplodingWall");

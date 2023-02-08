@@ -7,11 +7,13 @@ public class SmokeGenerator extends Effects {
     public SmokeGenerator(MapConverter mc, String t3dClass) {
         super(mc, t3dClass);
 
-        registerSimpleProperty("BasePuffSize", Float.class);
-        registerSimpleProperty("bRepeating", Boolean.class);
-        registerSimpleProperty("GenerationType", String.class);
-        registerSimpleProperty("TotalNumPuffs", Integer.class);
-        registerSimpleProperty("SmokeDelay", Float.class);
+        registerSimpleProperty("BasePuffSize", Float.class, 1.75f).setScalable(true);
+        registerSimpleProperty("bRepeating", Boolean.class, false);
+        registerSimpleProperty("GenerationType", String.class, "Class'UnrealShare.SpriteSmokePuff'");
+        registerSimpleProperty("TotalNumPuffs", Integer.class, 200);
+        registerSimpleProperty("SmokeDelay", Float.class, 0.15f);
+        registerSimpleProperty("SizeVariance", Float.class, 1f);
+        registerSimpleProperty("RisingVelocity", Float.class, 75f).setScalable(true);
     }
 
     @Override

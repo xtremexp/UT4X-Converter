@@ -1,6 +1,7 @@
 package org.xtx.ut4converter.t3d;
 
 import org.xtx.ut4converter.MapConverter;
+import org.xtx.ut4converter.t3d.ue1.T3DThingFactory;
 
 /**
  * CreatureFactory actor found in Unreal 1.

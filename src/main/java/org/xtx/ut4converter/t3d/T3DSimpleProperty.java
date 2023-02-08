@@ -107,6 +107,7 @@ public class T3DSimpleProperty {
     public T3DSimpleProperty(final String propertyName, final String group, final T3DRessource.Type ressourceType, boolean isList) {
         this.propertyName = propertyName;
         this.propertyNameConverted = this.propertyName;
+        this.propertyGroup = group;
         this.propertyClass = UPackageRessource.class;
         this.ressourceType = ressourceType;
         this.isList = isList;
@@ -255,8 +256,9 @@ public class T3DSimpleProperty {
     }
 
 
-    public void clonePropertyAs(String clonePropertyName) {
+    public T3DSimpleProperty clonePropertyAs(String clonePropertyName) {
         this.clonePropertyName = clonePropertyName;
+        return this;
     }
 
 

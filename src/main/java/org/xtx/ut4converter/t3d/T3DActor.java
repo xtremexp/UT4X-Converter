@@ -632,13 +632,11 @@ public abstract class T3DActor extends T3DObject {
 		});
 
 		// Unreal 1 deco actors using both drawscale  and drawscale3d for 3d scale
-		if (this instanceof T3DDecoration) {
+		if (this instanceof T3DDecoration && this.drawScale != null) {
 			if (this.scale3d == null) {
 				this.scale3d = new Vector3d(this.drawScale, this.drawScale, this.drawScale);
 			} else {
-				if (this.drawScale != null) {
-					this.scale3d.scale(this.drawScale);
-				}
+				this.scale3d.scale(this.drawScale);
 			}
 			this.drawScale = 1d;
 		}
