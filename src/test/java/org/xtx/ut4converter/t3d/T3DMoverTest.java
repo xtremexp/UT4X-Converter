@@ -76,4 +76,27 @@ class T3DMoverTest {
         Assertions.assertTrue(convT3D.contains("Lift Destination=(X=0.000000,Y=0.000000,Z=-392.000000)"));
     }
 
+    /**
+     * Test converting unreal UE1 mover brush
+     *
+     * @throws IOException                  Error read/write obj file
+     * @throws ReflectiveOperationException Error
+     */
+    @Test
+    void testConvertUT99MoverToUT3() throws IOException, ReflectiveOperationException {
+
+
+        final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT99, UTGames.UTGame.UT3);
+        mc.setConvertSounds(false);
+
+        final T3DMover moverBrush = (T3DMover) T3DTestUtils.parseFromT3d(mc, "Mover", T3DMover.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/UT99-Mover.t3d")).getPath());
+        String convT3d = moverBrush.convertScaleAndToT3D(2d);
+        // scale check
+        Assertions.assertTrue(convT3d.contains("Location=(X=2528.000000,Y=3808.000000,Z=-2528.000000)"));
+        Assertions.assertTrue(convT3d.contains("Begin Actor Class=InterpActor"));
+        Assertions.assertTrue(convT3d.contains("Begin Actor Class=Brush"));
+        Assertions.assertTrue(convT3d.contains("OpenedSound=SoundCue'mymap-UT99.DoorsMod_General_mdend51Cue'"));
+        Assertions.assertTrue(convT3d.contains("ClosedSound=SoundCue'mymap-UT99.DoorsMod_General_mdend51Cue'"));
+        Assertions.assertTrue(convT3d.contains("CollisionType=COLLIDE_BlockAll"));
+    }
 }

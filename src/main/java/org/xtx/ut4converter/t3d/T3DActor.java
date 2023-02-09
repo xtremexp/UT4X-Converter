@@ -80,11 +80,7 @@ public abstract class T3DActor extends T3DObject {
 	 */
 	protected Vector3d location;
 
-	/**
-	 * Co-Location of actor Used by some old Unreal 1 / UT99 maps ... Useless
-	 * for convert.
-	 */
-	protected Vector3d coLocation;
+
 
 	/**
 	 * Old-Location of actor Used by some old Unreal 1 / UT99 maps ...
@@ -308,9 +304,6 @@ public abstract class T3DActor extends T3DObject {
 		else if (line.startsWith("OldLocation=") || line.contains("\tOldLocation=")) {
 			oldLocation = T3DUtils.getVector3d(line, 0D);
 		}
-		else if (line.startsWith("ColLocation=") || line.contains("\tColLocation=")) {
-			coLocation = T3DUtils.getVector3d(line, 0D);
-		}
 		else if (line.startsWith("bCollideActors=")) {
 			this.collideActors = T3DUtils.getBoolean(line);
 		}
@@ -461,10 +454,6 @@ public abstract class T3DActor extends T3DObject {
 				location.scale(newScale);
 			}
 
-			if (coLocation != null) {
-				coLocation.scale(newScale);
-		    }
-
 			if (drawScale != null) {
 				drawScale *= newScale;
 			}
@@ -558,16 +547,6 @@ public abstract class T3DActor extends T3DObject {
             // default collision radius for UE1
             collisionRadius = 40d;
         }
-
-		if (coLocation != null && mapConverter.getInputGame().getUeVersion() == UnrealEngine.UE1.version) {
-			if (location != null) {
-				location.add(coLocation);
-			} else {
-				location = coLocation;
-			}
-
-			coLocation = null;
-		}
 
 		// changes height of actor if needed (so aligned with floor for example)
 		if (offsetZLocation != null) {
