@@ -1,3 +1,10 @@
+- 1.4.10 - 09/02/2023
+  - u1/ut99->ut3/4: fixed bad converted location for some movers that were using CoLocation property
+  - ue1/ue2->ut3/4: fixed bad rotation of emitters converted from light lensflares
+  - ue1/2->ut3/4: changed effective sound radius to be exactly like in UE1/UE2
+  - u2->ut3/4: added support for DoorMover
+
+
 - 1.4.9 - 30/01/2023
   - all: fixed no conversion from .t3d file with UTF-16 encoding
   - u2/uc2/ut2003/4->ut4: added support for mover materials override u1: alarm trigger
