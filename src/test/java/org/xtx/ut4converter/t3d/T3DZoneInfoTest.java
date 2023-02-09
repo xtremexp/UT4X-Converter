@@ -17,7 +17,7 @@ class T3DZoneInfoTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT3);
 
         final T3DZoneInfo ut2004ZoneInfo = (T3DZoneInfo) T3DTestUtils.parseFromT3d(mc, "ZoneInfo", T3DZoneInfo.class, Objects.requireNonNull(T3DZoneInfoTest.class.getResource("/t3d/ue2/UT2004-ZoneInfo.t3d")).getPath());
-        System.out.println(ut2004ZoneInfo.convertScaleAndToT3D(2d));
+        ut2004ZoneInfo.convertScaleAndToT3D(2d);
     }
 
     @Test

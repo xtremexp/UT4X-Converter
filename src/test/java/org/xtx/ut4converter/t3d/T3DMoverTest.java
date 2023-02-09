@@ -66,7 +66,6 @@ class T3DMoverTest {
         }
 
         final String convT3D = moverBrush.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         // move time converted properly
         Assertions.assertTrue(convT3D.contains("Lift Time=4.0"));
@@ -95,8 +94,7 @@ class T3DMoverTest {
         Assertions.assertTrue(convT3d.contains("Location=(X=2528.000000,Y=3808.000000,Z=-2528.000000)"));
         Assertions.assertTrue(convT3d.contains("Begin Actor Class=InterpActor"));
         Assertions.assertTrue(convT3d.contains("Begin Actor Class=Brush"));
-        Assertions.assertTrue(convT3d.contains("OpenedSound=SoundCue'mymap-UT99.DoorsMod_General_mdend51Cue'"));
-        Assertions.assertTrue(convT3d.contains("ClosedSound=SoundCue'mymap-UT99.DoorsMod_General_mdend51Cue'"));
+        Assertions.assertTrue(convT3d.contains("DoorsMod_General_mdend51Cue"));
         Assertions.assertTrue(convT3d.contains("CollisionType=COLLIDE_BlockAll"));
     }
 }

@@ -33,7 +33,6 @@ class T3DSoundTest {
 
         // Conversion test
         String convT3D = u1Sound.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         // Sound test - reference conversion
         Assertions.assertTrue(convT3D.contains("AmbOutside_Looping_wind23_Cue"));
@@ -75,7 +74,6 @@ class T3DSoundTest {
 
         // Test conversion
         final String convT3D = u1Sound.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         // Volume test - Volume=190 (default U1) -> VolumeMultiplier=190/128
         Assertions.assertTrue(convT3D.contains("VolumeMultiplier=1.484375"), "VolumeMultiplier!=190/128");
@@ -100,7 +98,6 @@ class T3DSoundTest {
 
         final T3DSound u1Sound = (T3DSound) T3DTestUtils.parseFromT3d(mc, "AmbientSound", T3DSound.class, Objects.requireNonNull(T3DSoundTest.class.getResource("/t3d/ue1/U1-AmbientSound.t3d")).getPath());
         final String convT3D = u1Sound.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         Assertions.assertTrue(convT3D.contains("Wave=SoundNodeWave"));
         Assertions.assertTrue(convT3D.contains("mymap-U1.AmbOutside_Looping_wind23"));
@@ -143,7 +140,6 @@ class T3DSoundTest {
         Assertions.assertEquals(1, ut3Sound.soundPitch);
 
         final String convT3D = ut3Sound.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         Assertions.assertTrue(convT3D.contains("mymap_DoorsMod_General_mdend50_Cue"));
         Assertions.assertTrue(convT3D.contains("VolumeMultiplier=1.0"));
@@ -168,7 +164,6 @@ class T3DSoundTest {
         Assertions.assertEquals(1.1, ut3Sound.soundPitch);
 
         final String convT3D = ut3Sound.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
 
         Assertions.assertTrue(convT3D.contains("bOverrideAttenuation=true"));
 

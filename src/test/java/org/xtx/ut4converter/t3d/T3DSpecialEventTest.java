@@ -25,6 +25,5 @@ class T3DSpecialEventTest {
 
         Assertions.assertNotNull(specialEvent);
         final String convT3D = specialEvent.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
     }
 }

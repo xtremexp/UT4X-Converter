@@ -26,7 +26,6 @@ class T3DFlockPawnTest {
         Assertions.assertNotNull(bird);
 
         final String convT3D = bird.convertScaleAndToT3D(2.5d);
-        System.out.println(convT3D);
 
         // properties have been scaled
         // default property value scaled

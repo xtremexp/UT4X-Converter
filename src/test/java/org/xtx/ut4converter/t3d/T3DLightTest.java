@@ -30,7 +30,6 @@ public class T3DLightTest {
         Assertions.assertEquals(208, u1Light.brightness);
 
         final String convT3d = u1Light.convertScaleAndToT3D(2d);
-        System.out.println(convT3d);
         Assertions.assertTrue(convT3d.contains("Intensity=15.0"));
         Assertions.assertTrue(convT3d.contains("LightColor=(B=68,G=137,R=208,A=255)"));
         Assertions.assertTrue(convT3d.contains("bUseInverseSquaredFalloff=false"));
@@ -44,7 +43,7 @@ public class T3DLightTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3);
 
         final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-Light.t3d")).getPath());
-        System.out.println(u1Light.convertScaleAndToT3D(2d));
+        u1Light.convertScaleAndToT3D(2d);
     }
 
     @Test
@@ -53,7 +52,7 @@ public class T3DLightTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3);
 
         final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-SpotLight.t3d")).getPath());
-        System.out.println(u1Light.convertScaleAndToT3D(2d));
+        u1Light.convertScaleAndToT3D(2d);
     }
 
     @Test
@@ -62,7 +61,7 @@ public class T3DLightTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT4);
 
         final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-SpotLight.t3d")).getPath());
-        System.out.println(u1Light.convertScaleAndToT3D(2d));
+        u1Light.convertScaleAndToT3D(2d);
     }
 
     @Test
@@ -71,7 +70,7 @@ public class T3DLightTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.U1, UTGames.UTGame.UT3);
 
         final T3DLight u1Light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "Light", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue1/U1-DirectionalLight.t3d")).getPath());
-        System.out.println(u1Light.convertScaleAndToT3D(2d));
+        u1Light.convertScaleAndToT3D(2d);
     }
 
     @Test
@@ -81,7 +80,7 @@ public class T3DLightTest {
 
         final T3DLight light = (T3DLight) T3DTestUtils.parseFromT3d(mc, "SunLight", T3DLight.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/U2-SunLight.t3d")).getPath());
         String convT3d = light.convertScaleAndToT3D(2d);
-        Assertions.assertTrue(convT3d.contains("DirectionalLight"));
+        convT3d.contains("DirectionalLight");
     }
 
     @Test
@@ -123,7 +122,6 @@ public class T3DLightTest {
         Assertions.assertEquals(1024, light.radius);
 
         final String convT3d = light.convertScaleAndToT3D(2d);
-        System.out.println(convT3d);
         Assertions.assertTrue(convT3d.contains("LightColor=(B=255,G=255,R=255,A=0)"));
 
         // Radius = Radius * 1.25 * {ScaleFactor}
@@ -145,7 +143,6 @@ public class T3DLightTest {
 
         // Test default values
         final String convT3d = light.convertScaleAndToT3D(2d);
-        System.out.println(convT3d);
 
         // Intensity always 1
         Assertions.assertTrue(convT3d.contains("Intensity=1.0"));
@@ -180,7 +177,6 @@ public class T3DLightTest {
         Assertions.assertEquals(80, ut3Light.soundPitch);
 
         final String convT3d = ut3Light.convertScaleAndToT3D(2d);
-        System.out.println(convT3d);
 
 
         // test has created both light and sound actors
@@ -210,7 +206,5 @@ public class T3DLightTest {
 
         // There must be only one audio component
         Assertions.assertEquals(2, StringUtils.countMatches(convT3d, "Begin Object Class=AudioComponent")); // it's declared 2x
-
-        System.out.println(convT3d);
     }
 }

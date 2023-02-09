@@ -36,7 +36,6 @@ class T3DStaticMeshTest {
         Assertions.assertTrue(convT3d.contains("AnubisStatic_All_pharoh.AnubisStatic_All_pharoh"));
         Assertions.assertTrue(convT3d.contains("OverrideMaterials(0)"));
         Assertions.assertTrue(convT3d.contains("AnubisTextures_All_Pharoh_t_Mat.AnubisTextures_All_Pharoh_t_Mat'"));
-        System.out.println(convT3d);
     }
 
     /**
@@ -59,7 +58,6 @@ class T3DStaticMeshTest {
         final String convT3d = sm.convertScaleAndToT3D(1d);
         Assertions.assertTrue(convT3d.contains("bUseDefaultCollision=false"));
         Assertions.assertTrue(convT3d.contains("NoCollision"));
-        System.out.println(convT3d);
     }
 
     @Test
@@ -68,6 +66,6 @@ class T3DStaticMeshTest {
         final MapConverter mc = T3DTestUtils.getMapConverterInstance(UTGames.UTGame.UT2004, UTGames.UTGame.UT3);
 
         final T3DStaticMesh ut2004Sm = (T3DStaticMesh) T3DTestUtils.parseFromT3d(mc, "StaticMeshActor", T3DStaticMesh.class, Objects.requireNonNull(StaticMeshTest.class.getResource("/t3d/ue2/UT2004-StaticMesh.t3d")).getPath());
-        System.out.println(ut2004Sm.convertScaleAndToT3D(1d));
+        ut2004Sm.convertScaleAndToT3D(1d);
     }
 }

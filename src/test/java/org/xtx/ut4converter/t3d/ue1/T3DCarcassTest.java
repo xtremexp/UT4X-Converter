@@ -29,7 +29,6 @@ class T3DCarcassTest {
 
         Assertions.assertNotNull(carcass);
         final String convT3D = carcass.convertScaleAndToT3D(2d);
-        System.out.println(convT3D);
     }
 
 
