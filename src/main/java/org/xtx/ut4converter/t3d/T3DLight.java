@@ -66,7 +66,9 @@ public class T3DLight extends T3DSound {
 		/**
 		 * In U2 it's SunLight (different case)
 		 */
-		Sunlight
+		Sunlight,
+		// Harry Potter 2
+		candleflame, Darklight, FogLight, SpecialLit, ThunderLightning, Torch_light
 	}
 
 	/**
