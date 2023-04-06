@@ -1,7 +1,11 @@
 package org.xtx.ut4converter.t3d;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.javafx.collections.ObservableMapWrapper;
 import org.xtx.ut4converter.MapConverter;
 import org.xtx.ut4converter.t3d.T3DMatch.UE4_RCType;
+
+import java.util.Map;
 
 /**
  * 
@@ -21,21 +25,27 @@ public class DomPoint extends T3DSound {
 		this.name = "Control Point";
 	}
 
+	public void initLineDataHandlers() {
+		// Initialize the map with line types and their corresponding handlers
+		ObjectNode lineDataHandlers = null;
+		lineDataHandlers.put("DefenseScriptTags", new DefenseScriptTagsHandler().toString());
+		lineDataHandlers.put("PointName", new PointNameHandler().toString());
+		// Add other line types and their handlers
+	}
 	@Override
 	public boolean analyseT3DData(String line) {
 
-		// UT2004
-		if (line.startsWith("DefenseScriptTags")) {
-			this.name = T3DUtils.getString(line);
-		}
-		// UT99 PointName
-		else if (line.startsWith("PointName")) {
-			this.name = T3DUtils.getString(line);
-		} else {
-			return super.analyseT3DData(line);
+		ObservableMapWrapper<Object, Object> lineDataHandlers = null	;
+		for (Map.Entry<Object, Object> entry : lineDataHandlers.entrySet()) {
+			String lineType = (String) entry.getKey();
+			LineDataHandler handler = (LineDataHandler) entry.getValue();
+
+			if (line.startsWith(lineType)) {
+				return handler.analyseT3DData(line);
+			}
 		}
 
-		return true;
+		return super.analyseT3DData(line);
 	}
 
 	/**

@@ -81,8 +81,9 @@ public class SimpleTextureExtractor extends UTPackageExtractor {
 
 		String name = logLine.split("texture ")[1].split("\\.")[0];
 		// not sharing group info unfortunately ..
-
-		File exportedFile = new File(mapConverter.getTempExportFolder().getAbsolutePath() + File.separator + name + ".bmp");
+		//Introduce explaining variable
+		String pathname = mapConverter.getTempExportFolder().getAbsolutePath() + File.separator + name + ".bmp";
+		File exportedFile = new File(pathname);
 
 		name = unrealPackage.getName() + "." + name;
 

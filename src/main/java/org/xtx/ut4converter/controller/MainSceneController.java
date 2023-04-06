@@ -245,6 +245,7 @@ public class MainSceneController implements Initializable {
 				openUrl(newLatestRelease.getHtmlUrl(), false, null);
 			}
 		} else if(showAlertIfNoUpdate) {
+
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Information");
 			alert.setHeaderText("No new update is available");
@@ -252,6 +253,16 @@ public class MainSceneController implements Initializable {
 
 			alert.showAndWait();
 		}
+
+	}
+
+	private void showNoUpdateAlert() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText("No new update is available");
+		alert.setContentText("No new update is available");
+
+		alert.showAndWait();
 	}
 
 	/**

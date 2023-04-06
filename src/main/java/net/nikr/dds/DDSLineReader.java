@@ -461,20 +461,22 @@ public class DDSLineReader {
 		}
 	}
 
-	private void decodeAtiAndDxt5AlphaBlock(byte[] bytes, int offset, int start, int x, int lineOffset, int bank) throws IOException{
+
+	// rename variable
+	private void decodeAtiAndDxt5AlphaBlock(byte[] inputBytes , int blockOffset, int byteOffset , int blockX , int lineByteOffset , int colorBank ) throws IOException{
 		int color0, color1, bits0, bits1, bits2, bits3, bits4, bits5;
 		int[] color = new int[8];
 		int[] bits = new int[6];
 
 		//Read 8 Bytes
-		color0 = bytes[lineOffset+(x/4*offset)+(0+start)] & 0xff;
-		color1 = bytes[lineOffset+(x/4*offset)+(1+start)] & 0xff;
-		bits0 =  bytes[lineOffset+(x/4*offset)+(2+start)] & 0xff;
-		bits1 =  bytes[lineOffset+(x/4*offset)+(3+start)] & 0xff;
-		bits2 =  bytes[lineOffset+(x/4*offset)+(4+start)] & 0xff;
-		bits3 =  bytes[lineOffset+(x/4*offset)+(5+start)] & 0xff;
-		bits4 =  bytes[lineOffset+(x/4*offset)+(6+start)] & 0xff;
-		bits5 =  bytes[lineOffset+(x/4*offset)+(7+start)] & 0xff;
+		color0 = inputBytes[lineByteOffset +(blockX /4*blockOffset)+(0+byteOffset )] & 0xff;
+		color1 = inputBytes[lineByteOffset +(blockX /4*blockOffset)+(1+byteOffset )] & 0xff;
+		bits0 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(2+byteOffset )] & 0xff;
+		bits1 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(3+byteOffset )] & 0xff;
+		bits2 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(4+byteOffset )] & 0xff;
+		bits3 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(5+byteOffset )] & 0xff;
+		bits4 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(6+byteOffset )] & 0xff;
+		bits5 =  inputBytes[lineByteOffset +(blockX /4*blockOffset)+(7+byteOffset )] & 0xff;
 
 		//64bit UNSIGNED LONG - broke up into 6 ints
 		bits[0] = bits0 + 256 * (bits1 + 256);
@@ -528,7 +530,7 @@ public class DDSLineReader {
 				code = (byte)((bits[bit] >> i) & 7);
 				
 				//Add the value to the alpha map
-				linesColor[yi][x+xi][bank] = (byte) color[code];
+				linesColor[yi][blockX+xi][colorBank ] = (byte) color[code];
 			}
 		}
 	}
