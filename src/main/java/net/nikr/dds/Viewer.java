@@ -116,11 +116,11 @@ public class Viewer{
 	private JLabel jBlueLabel;
 	private JLabel jPosLabel;
 	
-	private List<File> files = new ArrayList<File>();
+	public static List<File> files = new ArrayList<File>();
 	private Item item;
 	private ColorType type;
-	private int fileIndex = 0;
-	private int mipMap;
+	public static int fileIndex = 0;
+	public static int mipMap;
 	private int mipMapMax;
 	private String format;
 	private boolean updating = false;
@@ -397,25 +397,13 @@ public class Viewer{
 		files = Arrays.asList(file.getParentFile().listFiles(new DdsFilter(false)));
 		Collections.sort(files);
 		fileIndex = files.indexOf(file);
-		loadFile(file);
+		LoadFileOperation.loadFile(file);
 	}
-	
-	private void loadFile(){
-		if (!files.isEmpty()) {
-			loadFile(files.get(fileIndex), mipMap);
-		}
-	}
-	
-	private void loadFile(File file){
-		if (!files.isEmpty()) {
-			loadFile(file, 0);
-		}
-	}
-	
-	private void loadFile(File file, int imageIndex){
-		LoadFile load = new LoadFile(file, imageIndex);
-		load.execute();
-	}
+
+
+
+
+
 
 	private void clearFile() {
 		jFormatLabel.setText("  Format:  -");
@@ -465,38 +453,38 @@ public class Viewer{
 			if (ACTION_RBG.equals(e.getActionCommand())){
 				jModeLabel.setText("  Mode: RBG");
 				type = ColorType.RBG;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_YCOCG.equals(e.getActionCommand())){
 				jModeLabel.setText("  Mode: YCoCg");
 				type = ColorType.YCOCG;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_YCOCG_SCALED.equals(e.getActionCommand())){
 				jModeLabel.setText("  Mode: YCoCg Scaled");
 				type = ColorType.YCOCG_SCALED;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_ALPHA_EXPONENT.equals(e.getActionCommand())){
 				jModeLabel.setText("  Mode: Alpha Exponent");
 				type = ColorType.ALPHA_EXPONENT;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_SHOW_ALPHA.equals(e.getActionCommand())){
 				alpha = !alpha;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_SHOW_RED.equals(e.getActionCommand())){
 				red = !red;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_SHOW_GREEN.equals(e.getActionCommand())){
 				green = !green;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_SHOW_BLUE.equals(e.getActionCommand())){
 				blue = !blue;
-				loadFile();
+				LoadFileOperation.loadFile();
 			}
 			if (ACTION_BACKGROUND_COLOR.equals(e.getActionCommand())){
 				Color color = JColorChooser.showDialog(jFrame, "Choose Background Color", jImageLabel.getBackground());
@@ -554,7 +542,7 @@ public class Viewer{
 						fileIndex++;
 						if (fileIndex >= files.size()) fileIndex = 0;
 						mipMap = 0;
-						loadFile();
+						LoadFileOperation.loadFile();
 					} else {
 						Toolkit.getDefaultToolkit().beep();
 					}
@@ -565,7 +553,7 @@ public class Viewer{
 						fileIndex--;
 						if (fileIndex < 0) fileIndex = files.size()-1;
 						mipMap = 0;
-						loadFile();
+						LoadFileOperation.loadFile();
 					} else {
 						Toolkit.getDefaultToolkit().beep();
 					}
@@ -575,7 +563,7 @@ public class Viewer{
 						updating = true;
 						mipMap--;
 						if (mipMap >= 0 && mipMap < item.getMapMapCount()){
-							loadFile();
+							LoadFileOperation.loadFile();
 						} else {
 							mipMap++;
 							updating = false;
@@ -589,7 +577,7 @@ public class Viewer{
 						updating = true;
 						mipMap++;
 						if (mipMap >= 0 && mipMap < item.getMapMapCount()){
-							loadFile();
+							LoadFileOperation.loadFile();
 						} else {
 							mipMap--;
 							updating = false;
