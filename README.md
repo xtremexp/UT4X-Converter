@@ -29,6 +29,8 @@ Here are the different conversion possible :
 - UT2003/2004 -> UT4 (Good)
 - Unreal Championship 2/Unreal 2/UT3/UDK -> UT4 (Medium)
 - X -> Unreal Engine 5 (Not Supported)
+- Star Wars Republic Commando
+- Stargate SG-1 : The Alliance
 
 Notes:
 - All: Custom scripts and blueprints are not converted
