@@ -5,22 +5,21 @@
 
 	<groupId>org.xtx</groupId>
 	<artifactId>UT-Converter</artifactId>
-	<version>1.4.10</version>
+	<version>1.4.11</version>
 	<packaging>jar</packaging>
 
 	<name>UT Converter</name>
 
 	<properties>
-		<java.version>19.0.2</java.version>
+		<java.version>21</java.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
-		<javafx.version>19</javafx.version>
-		<slf4j.version>2.0.5</slf4j.version>
-		<log4j.version>2.19.0</log4j.version>
-		<jaxb.version>2.2.11</jaxb.version>
-		<twelvemonkeysio.version>3.9.4</twelvemonkeysio.version>
+		<javafx.version>21</javafx.version>
+		<slf4j.version>2.0.13</slf4j.version>
+		<log4j.version>2.23.1</log4j.version>
+		<twelvemonkeysio.version>3.10.1</twelvemonkeysio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>org.xtx.ut4converter.MainApp</mainClass>
-		<junit.version>5.9.0</junit.version>
+		<junit.version>5.10.2</junit.version>
 		<upgrade.uuid>dd75dbd6-5e0c-4404-904a-a255b632be8b</upgrade.uuid>
 	</properties>
 
@@ -35,11 +34,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.13.0</version>
 				<configuration>
-					<release>19</release>
-					<source>19</source>
-					<target>19</target>
+					<release>21</release>
+					<source>21</source>
+					<target>21</target>
 				</configuration>
 			</plugin>
 
@@ -56,13 +55,13 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M4</version>
+				<version>3.2.5</version>
 			</plugin>
 
 			<!-- creates UT4X-Converter jar file into /libs folder -->
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.4.0</version>
 				<configuration>
 					<outputDirectory>${project.build.directory}/libs</outputDirectory>
 					<archive>
@@ -76,7 +75,7 @@
 
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>copy-resources1</id>
@@ -164,7 +163,7 @@
 
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.6.1</version>
 				<executions>
 					<execution>
 						<id>copy-libs</id>
@@ -211,7 +210,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>exec-maven-plugin</artifactId>
-						<version>1.6.0</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>create-package</id>
@@ -334,7 +333,7 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.11.0</version>
+			<version>2.16.1</version>
 		</dependency>
 
 		<dependency>
@@ -346,19 +345,19 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.12.0</version>
+			<version>3.14.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.13.4.1</version>
+			<version>2.17.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.24</version>
+			<version>1.18.32</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -433,11 +432,17 @@
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>8.0.0.Final</version>
+			<version>8.0.1.Final</version>
 		</dependency>
 
 
 	</dependencies>
 	<description>Converter for Unreal Tournament 4 (UT2015) game</description>
+	<repositories>
+		<repository>
+			<id>MAVEN</id>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
 
 </project>
