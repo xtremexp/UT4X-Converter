@@ -30,6 +30,10 @@ Here are the different conversion possible :
 - Unreal Championship 2/Unreal 2/UT3/UDK -> UT4 (Medium)
 - X -> Unreal Engine 5 (Not Supported)
 
+Some users reported these games to work for conversion (untested/unsupported from me) :
+- Star Wars Republic Commando
+- Stargate SG-1 : The Alliance
+
 Notes:
 - All: Custom scripts and blueprints are not converted
 - All: Shader materials are not converted
