@@ -15,7 +15,7 @@
 		<maven.compiler.release>${java.version}</maven.compiler.release>
 		<javafx.version>19</javafx.version>
 		<slf4j.version>2.0.5</slf4j.version>
-		<log4j.version>2.19.0</log4j.version>
+		<log4j.version>2.25.3</log4j.version>
 		<jaxb.version>2.2.11</jaxb.version>
 		<twelvemonkeysio.version>3.9.4</twelvemonkeysio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
