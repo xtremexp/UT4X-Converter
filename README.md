@@ -79,7 +79,7 @@ Check wiki page at: [UT Converter Wiki](https://github.com/xtremexp/UT4X-Convert
 - Install [maven](https://maven.apache.org/)
 - Clone project using this command line:
 > git clone https://github.com/xtremexp/UT4X-Converter
-- Download and install [OpenJDK19](https://jdk.java.net/19/):
+- Download and install [OpenJDK25](https://jdk.java.net/25/):
 - Build and run with maven command :
 > mvn clean javafx:run
 - Package application with maven command (.exe install file will be generated in <project_path>/target/package folder) :
