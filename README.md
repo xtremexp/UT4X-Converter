@@ -1,113 +1,90 @@
-# UT Converter Readme file
+# UT Converter
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dec0f1a5176748a29195c99d7862339f)](https://app.codacy.com/gh/xtremexp/UT4X-Converter/dashboard)
+[![Release](https://img.shields.io/github/v/release/xtremexp/UT4X-Converter)](https://github.com/xtremexp/UT4X-Converter/releases)
+[![Java CI with Maven](https://github.com/xtremexp/UT4X-Converter/actions/workflows/maven.yml/badge.svg)](https://github.com/xtremexp/UT4X-Converter/actions/workflows/maven.yml)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE)
 
-## Description
+A desktop tool for converting maps from classic Unreal (Tournament) games to
+**UT3 (2007)** and **Unreal Tournament 4 (2015)**.
 
-- Name: UT Converter
-- Author: Thomas 'XtremeXp/WinterIsComing' P.
-- Download: [GitHub - Releases](https://github.com/xtremexp/UT4X-Converter/releases)
-- Source Code: [GitHub](https://github.com/xtremexp/UT4X-Converter)
+> **Please note:** This tool is not fully automated — finishing a converted map
+> usually requires some manual work in the Unreal Editor. Maps from non-Unreal
+> games may convert successfully, but this is neither tested nor supported.
 
+## Supported conversions
 
-UT Converter is a program that **helps converting** maps from Unreal (Tournament) previous games
-to UT3 (2007) and Unreal Tournament 4 (2015).
+| Source game | Target game | Conversion quality |
+|---|---|---|
+| U1 / UT99 / Duke Nukem Forever (2001) | UT3 / UT4 | Good |
+| UT2003 / UT2004 | UT4 | Good |
+| Unreal Championship 2 / U2 / UT3 / UDK | UT4 | Medium |
+| Any game | Unreal Engine 5 | Not supported |
 
-Notes :
-- Conversion from non unreal/ut games might work, but it's not tested and won't be supported at all
-- This is not a 'plug and play' program, user will have to do manual operations
-using Unreal Editor to get results.
+Users have also reported successful conversions from Star Wars Republic Commando
+and Stargate SG-1: The Alliance, although these are untested and unsupported.
 
+### Known limitations
 
-
-## UT games supported
-
-Here are the different conversion possible :
-
-- Source Game -> Dest Game (Conversion quality)
-- U1/UT99/Duke Nukem Forever (2001) -> UT3/UT4 (Good)
-- UT2003/2004 -> UT4 (Good)
-- Unreal Championship 2/Unreal 2/UT3/UDK -> UT4 (Medium)
-- X -> Unreal Engine 5 (Not Supported)
-
-Some users reported these games to work for conversion (untested/unsupported from me) :
-- Star Wars Republic Commando
-- Stargate SG-1 : The Alliance
-
-Notes:
-- All: Custom scripts and blueprints are not converted
-- All: Shader materials are not converted
-- UT3: Since there is no actor possible for conversion of ZoneInfo, converted level might appear too dark sometimes
-- U1/UT99 : Meshes (Unreal Engine 1/2) are not converted
-- U2: Staticmeshes have bad UV
-- UT3/UDK: Music is not converted
-- UTx->UT4: Movers are replaced with the only UT4 mover actor, the lift, which may not suit for some kind of movers (such as doors, switches, ...)
-
-
----
+- Custom scripts, blueprints and shader materials are **not** converted.
+- U1/UT99: meshes are not converted.
+- U2: static meshes have incorrect UV mapping.
+- UT3: converted levels may appear too dark, as there is no direct equivalent of the ZoneInfo actor.
+- UT3/UDK: music is not converted.
+- UT9x → UT4: all movers are converted to the UT4 lift actor, which may not behave correctly for doors or switches.
 
 ## Requirements
 
-- Windows 7/8/10/11 - 64 Bit
-- UT3 or UT4 editor for output converted map
-- Any Unreal (Tournament) game for input map
-- Some minimum skills with unreal engine editors
+- Windows 7/8/10/11 (64-bit)
+- The source Unreal (Tournament) game (for the input map) and the UT3/UT4 editor (for the output map)
+- A basic familiarity with Unreal Engine editors
 
-## Installation and quick start
+## Getting started
 
-------------------------------
+1. Download and install the latest [release](https://github.com/xtremexp/UT4X-Converter/releases) (`.exe`).
+2. Launch the program and point it to your game folders in **Settings**.
+3. Convert a map via **File → Unreal (Tournament) → Convert Map to UT4/UT3...**.
 
-- Install program by clicking on .exe file
-- Launch program (.exe file)
-- Go to Settings and set the unreal games folders
-- Convert your map in Menu: File -> Unreal (Tournament) -> Convert Map to UT4/UT3 ...
+To update to a new version, uninstall the previous one first, then install the new release.
 
-Program Update
-------------------------------
-- Uninstall program in windows applications configuration panel
-- Install new version (.exe file)
+For a detailed, step-by-step conversion guide, see the
+[UT Converter Wiki](https://github.com/xtremexp/UT4X-Converter/wiki).
 
-## How to convert a map?
-Check wiki page at: [UT Converter Wiki](https://github.com/xtremexp/UT4X-Converter/wiki)
+## Building from source
 
+You will need [git](https://gitforwindows.org/), [Maven](https://maven.apache.org/)
+and [OpenJDK 25](https://jdk.java.net/25/).
 
----
+```bash
+git clone https://github.com/xtremexp/UT4X-Converter
+cd UT4X-Converter
 
-## Build and run from source code
+mvn clean javafx:run    # compile and run the UI
+mvn clean install       # build the Windows installer (.exe), output in target/package
+```
 
-- Install [git](https://gitforwindows.org/)
-- Install [maven](https://maven.apache.org/)
-- Clone project using this command line:
-> git clone https://github.com/xtremexp/UT4X-Converter
-- Download and install [OpenJDK25](https://jdk.java.net/25/):
-- Build and run with maven command :
-> mvn clean javafx:run
-- Package application with maven command (.exe install file will be generated in <project_path>/target/package folder) :
-> mvn clean install
+Notes:
+- The UI (`.fxml` files) can be edited with [Scene Builder](https://gluonhq.com/products/scene-builder/).
+- `ExtractTextures.exe` and `UtxAnalyser.exe` are Delphi tools, built from the
+  sources in `src/delphi/` (based on the modified
+  [UT Package Delphi Unit](https://www.acordero.org/projects/unreal-tournament-package-delphi-library/)
+  by Antonio Acordero) using [Delphi Community Edition](https://www.embarcadero.com/products/delphi/starter).
 
-Notes :
--  UI(.fxml files) can be easily modified with [Scene Builder editor](https://gluonhq.com/products/scene-builder/)
--  ExtractTextures.exe and UtxAnalyser.exe programs have been compiled using modified source code from "UT Package Delphi Unit" by Antonio Corbero
-  - Download and install [Delphi Comunity Edition](https://www.embarcadero.com/products/delphi/starter)
-  - Download and extract [UT Package Delphi Unit](https://www.acordero.org/projects/unreal-tournament-package-delphi-library/)
-  - Add the /src/delphi/-.dpr files where you installed UT Package Delphi Unit
-  - Open ExtractTextures.dpr or UtxAnalyser.dpr with the IDE
+## External tools
 
-## External programs used
-These programs are being used during conversion process.
+The following third-party tools are bundled with the application and invoked during conversion:
 
-| Library / Program                     | Description                                       | Author                                                                | Website                                         |
-|---------------------------------------|---------------------------------------------------|-----------------------------------------------------------------------| ----------------------------------------------- |
-| Texture Toolkit<br/>(g16convert.exe)  | Unreal terrain bitmap conversion                  | Alex Stewart                                                          | http://www.foogod.com/UEdTexKit/                |
-| UModel  (umodel_64.exe)               | Unreal package extractor                          | Konstantin Nosov                                                      | http://www.gildor.org/en/projects/umodel        |
-| SoundExchange (sox.exe)               | Sound wave conversion                             | Multiple                                                              | https://sox.sourceforge.net/                                             |
-| UTXAnalyser.exe / ExtractTextures.exe | Texture info / Texture extract<br/>(for Unreal 2) | Me / Modified code of UT Package Delphi Unit by <br/>Antonio Acordero | https://www.acordero.org/projects/unreal-tournament-package-delphi-library/                                                                         |
-
-
+| Tool | Purpose | Author |
+|---|---|---|
+| [g16convert](http://www.foogod.com/UEdTexKit/) | Terrain bitmap conversion | Alex Stewart |
+| [UModel](http://www.gildor.org/en/projects/umodel) | Unreal package extraction | Konstantin Nosov |
+| [SoX](https://sox.sourceforge.net/) | Audio conversion | Multiple |
+| UTXAnalyser / ExtractTextures | U2 texture inspection and extraction | Antonio Acordero (modified) |
 
 ## License
 
-See LICENSE file.
+This project is licensed under the
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE) license.
 
 ## History
-See history.md for complete changes history
+
+A complete changelog is available in [history.md](history.md).

@@ -1,3 +1,7 @@
+- 1.4.11 - 29/08/2026
+  - technical update: updated java 19 -> 25 and libs
+  
+
 - 1.4.10 - 09/02/2023
   - u1/ut99->ut3/4: fixed bad converted location for some movers that were using CoLocation property
   - ue1/ue2->ut3/4: fixed bad rotation of emitters converted from light lensflares
