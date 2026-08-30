@@ -1,0 +1,66 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.github.xtremexp.ut4converter.export;
+
+import io.github.xtremexp.ut4converter.MapConverter;
+import io.github.xtremexp.ut4converter.t3d.T3DRessource;
+import io.github.xtremexp.ut4converter.ucore.UPackageRessource;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+
+/**
+ * A simple "copy" of file Used for copying music .ogg files
+ * 
+ * @author XtremeXp
+ */
+public class CopyExporter extends UTPackageExtractor {
+
+	public CopyExporter(MapConverter mapConverter) {
+		super(mapConverter);
+	}
+
+	@Override
+	public Set<File> extract(UPackageRessource ressource, boolean forceExport, boolean perfectMatchOnly) throws IOException {
+
+		File inputFile = ressource.getUnrealPackage().getFileContainer(mapConverter);
+		File outputFile = new File(getExportFolder(ressource.getType()).getAbsolutePath() + File.separator + inputFile.getName());
+		Files.createDirectories(outputFile.toPath().getParent());
+
+		logger.log(Level.INFO, "Copying " + inputFile.getName() + " " + ressource.getType() + " package");
+		Files.copy(inputFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+		Set<File> files = new HashSet<>();
+		files.add(outputFile);
+		return files;
+	}
+
+	@Override
+	public File getExporterPath() {
+		return null;
+	}
+
+	@Override
+	public boolean supportLinux() {
+		return true;
+	}
+
+	@Override
+	protected File getExportFolder(T3DRessource.Type type) {
+		return new File(MapConverter.getMapConvertFolder(mapConverter.getInMap()) + File.separator + type.name() + File.separator);
+	}
+
+	@Override
+	public String getName() {
+		return "File Copier";
+	}
+
+}

@@ -1,0 +1,88 @@
+package io.github.xtremexp.ut4converter.ucore.ue4.matinee;
+
+import io.github.xtremexp.ut4converter.MapConverter;
+import io.github.xtremexp.ut4converter.t3d.T3DObject;
+import io.github.xtremexp.ut4converter.t3d.T3DUtils;
+import io.github.xtremexp.ut4converter.t3d.iface.T3D;
+import io.github.xtremexp.ut4converter.tools.RGBColor;
+
+import java.util.List;
+
+public class InterpGroup extends T3DObject implements T3D {
+
+	/**
+	 * Ref to interp data
+	 */
+	InterpData interpData;
+
+	/**
+	 * Group Name
+	 */
+	private final String groupName;
+
+	/**
+	 * List of tracks this group have
+	 */
+	public List<InterpTrack> interpTracks;
+
+	/**
+	 * Group color (how it's the track bar is rendered in matinee scene)
+	 */
+	RGBColor groupColor;
+
+	public InterpGroup(MapConverter mc, InterpData interpData, String groupName) {
+		super(mc);
+		this.interpData = interpData;
+		this.groupName = groupName;
+	}
+
+	@Override
+	public void scale(Double newScale) {
+
+		if (interpTracks != null && !interpTracks.isEmpty()) {
+			for (InterpTrack track : interpTracks) {
+				track.scale(newScale);
+			}
+		}
+
+	}
+
+	@Override
+	public void convert() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean analyseT3DData(String line) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void toT3d(StringBuilder sb, String prefix) {
+
+		if (interpTracks != null && !interpTracks.isEmpty()) {
+			for (InterpTrack track : interpTracks) {
+				track.toT3d(sb, prefix);
+			}
+
+			int idx = 0;
+
+			for (InterpTrack track : interpTracks) {
+				// InterpTracks(0)=InterpTrackToggle'InterpTrackToggle_0'
+				sb.append(prefix).append(IDT).append("InterpTracks(").append(idx).append(")=").append(track.getClass().getSimpleName()).append("'").append(track.getName()).append("'\n");
+			}
+
+			T3DUtils.writeLine(sb, "GroupName", groupName, prefix + IDT);
+			T3DUtils.writeLine(sb, "GroupColor", groupColor, prefix + IDT);
+		}
+	}
+
+
+
+	public InterpData getInterpData() {
+		return interpData;
+	}
+
+}
